@@ -1,0 +1,32 @@
+{
+  "components": [
+    {
+      "name": "breadcrumb-nav",
+      "path": "./breadcrumb-nav.json"
+    },
+    {
+      "name": "button",
+      "path": "./button.json"
+    },
+    {
+      "name": "button-preview",
+      "path": "./button-preview.json"
+    },
+    {
+      "name": "file-tree",
+      "path": "./file-tree.json"
+    },
+    {
+      "name": "network-log",
+      "path": "./network-log.json"
+    },
+    {
+      "name": "test",
+      "path": "./test.json"
+    },
+    {
+      "name": "theme",
+      "path": "./theme.json"
+    }
+  ]
+}

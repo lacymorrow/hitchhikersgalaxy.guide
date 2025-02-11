@@ -17,7 +17,7 @@ export function useRegistry() {
 	const [searchQuery, setSearchQuery] = useState("");
 
 	useEffect(() => {
-		const loadRegistries = async () => {
+		const loadRegistries = () => {
 			try {
 				const registries = getRegistries();
 				setRegistries(registries);

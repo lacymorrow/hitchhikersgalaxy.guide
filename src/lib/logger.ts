@@ -1,4 +1,4 @@
-import { bold, green, magenta, red, white, yellow } from "@/lib/utils/pico-colors";
+import { green, magenta, red, white, yellow } from "@/lib/utils/pico-colors";
 import type { LogData, LogLevel } from "@/types/logger";
 
 // let loggerWorker: Worker | null = null;
@@ -21,7 +21,22 @@ const _createLogger =
 				emoji: "🌐",
 				level,
 				message: args
-					.map((arg) => (typeof arg === "object" ? JSON.stringify(arg) : String(arg)))
+					.map((arg) => {
+						if (arg === null) return "null";
+						if (arg === undefined) return "undefined";
+						if (typeof arg === "string") return arg;
+						if (typeof arg === "number") return arg.toString();
+						if (typeof arg === "boolean") return arg.toString();
+						if (typeof arg === "bigint") return arg.toString();
+						if (typeof arg === "symbol") return arg.toString();
+						if (typeof arg === "function") return "[Function]";
+						// Must be an object at this point
+						try {
+							return JSON.stringify(arg);
+						} catch {
+							return "[Object]";
+						}
+					})
 					.join(" "),
 				timestamp: new Date().toISOString(),
 				url: isServer ? "server" : window.location.href,

@@ -36,12 +36,10 @@ export default function NotFound() {
 						<RocketIcon className="h-10 w-10 rotate-45 text-muted-foreground" />
 					</div>
 					<PageHeader className="bg-background/30 backdrop-blur-sm">
-						<PageHeaderHeading className="w-full text-center">
-							Lost in space
-						</PageHeaderHeading>
+						<PageHeaderHeading className="w-full text-center">Lost in space</PageHeaderHeading>
 						<PageHeaderDescription className="mb-8">
-							The page you're looking for has drifted into deep space. Let's get
-							you back to familiar territory.
+							The page you&apos;re looking for has drifted into deep space. Let&apos;s get you back
+							to familiar territory.
 						</PageHeaderDescription>
 					</PageHeader>
 					<Link
@@ -51,12 +49,15 @@ export default function NotFound() {
 								variant: "default",
 								size: "lg",
 							}),
-							"relative overflow-hidden",
+							"relative overflow-hidden"
 						)}
 					>
 						<span className="relative z-10">Launch me back to earth</span>
 						<div className="absolute inset-0 bg-gradient-to-r from-primary/50 to-primary opacity-50 blur-xl transition-all duration-500 hover:opacity-75" />
 					</Link>
+					<p className="text-muted-foreground">
+						We can&apos;t find the page you&apos;re looking for.
+					</p>
 				</div>
 			</div>
 		</RootLayout>

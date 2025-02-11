@@ -5,12 +5,7 @@ import { logger } from "@/lib/logger";
 import { redirectWithCode } from "@/lib/utils/redirect-with-code";
 import { authOptions } from "@/server/auth.config";
 import { db } from "@/server/db";
-import {
-	accounts,
-	sessions,
-	users,
-	verificationTokens,
-} from "@/server/db/schema";
+import { accounts, sessions, users, verificationTokens } from "@/server/db/schema";
 import type { UserRole } from "@/types/user";
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import NextAuth from "next-auth";
@@ -32,18 +27,19 @@ const {
 } = NextAuth({
 	...authOptions,
 	secret: env.AUTH_SECRET ?? "supersecretshipkit",
-	adapter: env?.DATABASE_URL && db
-		? DrizzleAdapter(db, {
-			usersTable: users,
-			accountsTable: accounts,
-			sessionsTable: sessions,
-			verificationTokensTable: verificationTokens,
-		})
-		: undefined,
+	adapter:
+		env?.DATABASE_URL && db
+			? DrizzleAdapter(db, {
+					usersTable: users,
+					accountsTable: accounts,
+					sessionsTable: sessions,
+					verificationTokensTable: verificationTokens,
+				})
+			: undefined,
 	logger: {
-		error: (code: Error, ...message: any[]) => logger.error(code, message),
-		warn: (code: string, ...message: any[]) => logger.warn(code, message),
-		debug: (code: string, ...message: any[]) => logger.debug(code, message),
+		error: (code: Error, ...message: unknown[]) => logger.error(code, message),
+		warn: (code: string, ...message: unknown[]) => logger.warn(code, message),
+		debug: (code: string, ...message: unknown[]) => logger.debug(code, message),
 	},
 });
 interface AuthProps {
@@ -62,14 +58,11 @@ interface AuthProps {
 const authWithOptions = async (props?: AuthProps) => {
 	const session = await nextAuthAuth();
 	const { errorCode, redirect, nextUrl } = props ?? {};
-	const protect =
-		props?.protect ?? props?.redirectTo !== undefined ?? redirect ?? false;
+	const protect = props?.protect ?? props?.redirectTo !== undefined ?? redirect ?? false;
 	const redirectTo = props?.redirectTo ?? routes.auth.signOutIn;
 
 	const handleRedirect = (code: string) => {
-		logger.warn(
-			`[authWithOptions] Redirecting to ${redirectTo} with code ${code}`,
-		);
+		logger.warn(`[authWithOptions] Redirecting to ${redirectTo} with code ${code}`);
 		return redirectWithCode(redirectTo, { code, nextUrl });
 	};
 

@@ -28,26 +28,18 @@ export interface RegistryItem {
 	categories?: string[];
 	componentUrl?: string;
 	style?: string;
-	files?: Array<{
+	files?: {
 		path: string;
 		content?: string;
-		type?:
-			| "preview"
-			| "ui"
-			| "block"
-			| "hook"
-			| "lib"
-			| "component"
-			| "theme"
-			| "page";
+		type?: "preview" | "ui" | "block" | "hook" | "lib" | "component" | "theme" | "page";
 		target?: string;
-	}>;
+	}[];
 	registryDependencies?: string[];
 	registry?: string;
 	meta?: {
 		library?: string;
 		hasPreview?: boolean;
-		[key: string]: any;
+		[key: string]: unknown;
 	};
 }
 

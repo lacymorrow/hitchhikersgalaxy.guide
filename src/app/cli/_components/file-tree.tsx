@@ -35,7 +35,6 @@ function buildTree(files: FileTreeProps["files"]): TreeNode {
 	};
 
 	for (const file of files) {
-		console.log(file);
 		const parts = file?.path?.split("/") || [];
 		let current = root;
 
@@ -98,7 +97,7 @@ function TreeNode({
 				className={cn(
 					"h-8 justify-start px-2 hover:bg-muted",
 					selectedFile === node.path && "bg-muted",
-					currentStyle === "brutalist" && "rounded-none",
+					currentStyle === "brutalist" && "rounded-none"
 				)}
 				style={{ paddingLeft: `${(level + 1) * 12}px` }}
 				onClick={() => {
@@ -143,12 +142,7 @@ function TreeNode({
 	);
 }
 
-export function FileTree({
-	files,
-	onFileSelect,
-	selectedFile,
-	currentStyle,
-}: FileTreeProps) {
+export function FileTree({ files, onFileSelect, selectedFile, currentStyle }: FileTreeProps) {
 	const tree = buildTree(files);
 
 	return (

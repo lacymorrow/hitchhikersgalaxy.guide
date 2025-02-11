@@ -47,7 +47,7 @@ export async function updateProfile(data: ProfileData) {
 			})
 			.where(eq(users.id, session.user.id));
 
-		revalidatePath("/settings");
+		void revalidatePath("/settings");
 		return { success: true, message: "Profile updated successfully" };
 	} catch (error) {
 		console.error("Failed to update profile:", error);
@@ -62,11 +62,8 @@ export async function updateSettings(data: SettingsData) {
 			return { success: false, error: "Not authenticated" };
 		}
 
-		console.log("Server action received data:", data);
-
 		// Ensure boolean type
 		const emailNotifications = Boolean(data.emailNotifications);
-		console.log("Processed emailNotifications:", emailNotifications);
 
 		await db
 			?.update(users)
@@ -77,7 +74,7 @@ export async function updateSettings(data: SettingsData) {
 			})
 			.where(eq(users.id, session.user.id));
 
-		revalidatePath("/settings");
+		void revalidatePath("/settings");
 		return { success: true, message: "Settings updated successfully" };
 	} catch (error) {
 		console.error("Failed to update settings:", error);
@@ -93,6 +90,7 @@ export async function deleteAccount() {
 		}
 
 		await db?.delete(users).where(eq(users.id, session.user.id));
+
 		return { success: true, message: "Account deleted successfully" };
 	} catch (error) {
 		console.error("Failed to delete account:", error);
@@ -115,7 +113,7 @@ export async function updateTheme(theme: "light" | "dark" | "system") {
 			})
 			.where(eq(users.id, session.user.id));
 
-		revalidatePath("/settings");
+		void revalidatePath("/settings");
 		return { success: true, message: "Theme updated successfully" };
 	} catch (error) {
 		console.error("Failed to update theme:", error);

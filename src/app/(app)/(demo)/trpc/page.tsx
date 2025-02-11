@@ -1,12 +1,10 @@
-import { Link } from "@/components/primitives/link-with-transition";
+import Link from "next/link";
 
+import { routes } from "@/config/routes";
+import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { HydrateClient, api } from "@/lib/trpc/server";
 import { auth } from "@/server/auth";
 import { LatestPost } from "./_components/post";
-import { Button } from "@/components/ui/button";
-import { routes } from "@/config/routes";
-import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
-
 
 export default async function Home() {
 	const hello = await api.post.hello({ text: "from tRPC" });
@@ -43,8 +41,8 @@ export default async function Home() {
 						>
 							<h3 className="text-2xl font-bold">First Steps →</h3>
 							<div className="text-lg">
-								Just the basics - Everything you need to know to set up your
-								database and authentication.
+								Just the basics - Everything you need to know to set up your database and
+								authentication.
 							</div>
 						</Link>
 						<Link
@@ -54,8 +52,7 @@ export default async function Home() {
 						>
 							<h3 className="text-2xl font-bold">Documentation →</h3>
 							<div className="text-lg">
-								Learn more about Create T3 App, the libraries it uses, and how
-								to deploy it.
+								Learn more about Create T3 App, the libraries it uses, and how to deploy it.
 							</div>
 						</Link>
 					</div>
@@ -68,7 +65,6 @@ export default async function Home() {
 							<p className="text-center text-2xl text-white">
 								{session && <span>Logged in as {session.user?.name}</span>}
 							</p>
-
 						</div>
 					</div>
 					<SignInOutButton />

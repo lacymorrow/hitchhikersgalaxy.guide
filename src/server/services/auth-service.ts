@@ -1,14 +1,23 @@
+import crypto from "node:crypto";
+import { promisify } from "node:util";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { STATUS_CODES } from "@/config/status-codes";
 import { signInSchema } from "@/lib/schemas/auth";
 import { signIn, signOut } from "@/server/auth";
 import { db } from "@/server/db";
-import { users, type NewUser } from "@/server/db/schema";
-import { promisify } from "util";
-import crypto from "crypto";
-import { eq } from "drizzle-orm";
+import { users } from "@/server/db/schema";
+import type { UserRole } from "@/types/user";
 import "server-only";
+
+interface AuthOptions {
+	redirectTo?: string;
+	redirect?: boolean;
+	protect?: boolean;
+	role?: UserRole;
+	nextUrl?: string;
+	errorCode?: string;
+}
 
 // Constants for password hashing
 const SALT_LENGTH = 32;
@@ -20,13 +29,9 @@ const SCRYPT_OPTIONS = {
 } as const;
 
 // Promisify scrypt
-const scrypt = promisify<
-	string | Buffer,
-	Buffer,
-	number,
-	crypto.ScryptOptions,
-	Buffer
->(crypto.scrypt);
+const scrypt = promisify<string | Buffer, Buffer, number, crypto.ScryptOptions, Buffer>(
+	crypto.scrypt
+);
 
 /**
  * Hash a password using scrypt
@@ -45,10 +50,7 @@ async function hashPassword(password: string): Promise<string> {
  * @param hash The hash to verify against (in format salt:hash)
  * @returns True if the password matches, false otherwise
  */
-async function verifyPassword(
-	password: string,
-	storedHash: string,
-): Promise<boolean> {
+async function verifyPassword(password: string, storedHash: string): Promise<boolean> {
 	try {
 		const parts = storedHash.split(":");
 		if (parts.length !== 2) return false;
@@ -75,14 +77,14 @@ export const AuthService = {
 	/**
 	 * Sign in with OAuth provider
 	 */
-	async signInWithOAuth(providerId: string, options?: any) {
+	async signInWithOAuth(providerId: string, options?: AuthOptions) {
 		await signIn(
 			providerId,
 			{
 				redirectTo: options?.redirectTo ?? routes.home,
 				...options,
 			},
-			{ prompt: "select_account" },
+			{ prompt: "select_account" }
 		);
 		return { success: STATUS_CODES.LOGIN.message };
 	},
@@ -126,7 +128,7 @@ export const AuthService = {
 		try {
 			// Check if user already exists
 			const existingUser = await db?.query.users.findFirst({
-				where: eq(users.email, email),
+				where: (users, { eq }) => eq(users.email, email),
 			});
 
 			if (existingUser) {
@@ -137,7 +139,7 @@ export const AuthService = {
 			const hashedPassword = await hashPassword(password);
 
 			// Create new user
-			const newUser: NewUser = {
+			const newUser = {
 				email,
 				password: hashedPassword,
 				role: "user",
@@ -167,7 +169,7 @@ export const AuthService = {
 	/**
 	 * Sign out the current user
 	 */
-	async signOut(options?: any) {
+	async signOut(options?: AuthOptions) {
 		await signOut({
 			redirectTo: `${routes.home}?${SEARCH_PARAM_KEYS.statusCode}=${STATUS_CODES.LOGOUT.code}`,
 			redirect: true,
@@ -191,7 +193,7 @@ export const AuthService = {
 			const { email, password } = parsedCredentials.data;
 
 			const user = await db?.query.users.findFirst({
-				where: eq(users.email, email),
+				where: (users, { eq }) => eq(users.email, email),
 			});
 
 			if (!user?.password) {

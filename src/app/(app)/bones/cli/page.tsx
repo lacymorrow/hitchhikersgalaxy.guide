@@ -1,7 +1,7 @@
-import { Link } from "@/components/primitives/link-with-transition";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { InstallSection } from "./_components/install-section";
 
 export default function Home() {

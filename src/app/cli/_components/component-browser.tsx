@@ -3,24 +3,13 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { CheckIcon, Cross2Icon, ReloadIcon } from "@radix-ui/react-icons";
 import { motion } from "framer-motion";
 import { CopyIcon, Download } from "lucide-react";
-import {
-	type MouseEvent,
-	type ReactNode,
-	useEffect,
-	useRef,
-	useState,
-} from "react";
+import { type MouseEvent, type ReactNode, useCallback, useEffect, useRef, useState } from "react";
 import { installComponent } from "../_actions/install";
 import { getInstalledComponents } from "../_actions/registry";
 import { useRegistry } from "../_hooks/use-registry";
@@ -61,19 +50,14 @@ interface ComponentBrowserProps {
 }
 
 const copyToClipboard = (text: string) => {
-	navigator.clipboard.writeText(text);
+	void navigator.clipboard.writeText(text);
 	toast({
 		title: "Copied to clipboard",
 		description: "The content has been copied to your clipboard.",
 	});
 };
 
-const ActionButton = ({
-	icon,
-	tooltip,
-	onClick,
-	currentStyle,
-}: ActionButtonProps) => (
+const ActionButton = ({ icon, tooltip, onClick, currentStyle }: ActionButtonProps) => (
 	<TooltipProvider delayDuration={0}>
 		<Tooltip>
 			<TooltipTrigger asChild>
@@ -103,8 +87,8 @@ const ComponentCard = ({
 	onInstall,
 	isInstalled,
 }: ComponentCardProps) => {
-	const registryColor = getColor(component.registry || "default");
-	const categoryColor = getColor(component.categories?.[0] || "default");
+	const registryColor = getColor(component.registry ?? "default");
+	const categoryColor = getColor(component.categories?.[0] ?? "default");
 
 	return (
 		<Card
@@ -115,7 +99,7 @@ const ComponentCard = ({
 				isInstalled &&
 					(currentStyle === "brutalist"
 						? "border-2 border-emerald-500"
-						: "border border-emerald-500/50"),
+						: "border border-emerald-500/50")
 			)}
 			onClick={() => onOpenSidebar(component)}
 		>
@@ -141,25 +125,15 @@ const ComponentCard = ({
 			)}
 			<CardHeader className="pb-2">
 				<div className="mb-2 flex items-start justify-between">
-					<CardTitle className="text-base font-bold">
-						{component.name}
-					</CardTitle>
+					<CardTitle className="text-base font-bold">{component.name}</CardTitle>
 					<div className="flex items-center gap-2">
 						<ActionButton
 							icon={<CopyIcon className="h-4 w-4" />}
 							tooltip="Copy install command"
 							onClick={(e) => {
 								e.stopPropagation();
-								const installCommand = getInstallCommand(
-									component,
-									currentRegistry,
-								);
-								navigator.clipboard.writeText(installCommand);
-								toast({
-									title: "Copied to clipboard",
-									description:
-										"Install command has been copied to your clipboard.",
-								});
+								const installCommand = getInstallCommand(component, currentRegistry);
+								void copyToClipboard(installCommand);
 							}}
 							currentStyle={currentStyle}
 						/>
@@ -182,7 +156,7 @@ const ComponentCard = ({
 						"mt-1 hidden w-auto self-start md:inline-flex",
 						currentStyle === "brutalist"
 							? "rounded-none border-2 border-primary"
-							: "rounded-full border border-muted-foreground text-xs",
+							: "rounded-full border border-muted-foreground text-xs"
 					)}
 					style={{ backgroundColor: `${categoryColor}70`, color: "#fff" }}
 				>
@@ -196,68 +170,56 @@ const ComponentCard = ({
 	);
 };
 
-export function ComponentBrowser({
-	currentStyle: initialStyle = "modern",
-}: ComponentBrowserProps) {
+export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: ComponentBrowserProps) {
 	const [currentStyle, setCurrentStyle] = useState<StyleMode>(initialStyle);
-	const [selectedComponent, setSelectedComponent] =
-		useState<RegistryItem | null>(null);
-	const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-	const [installationProgress, setInstallationProgress] =
-		useState<InstallationProgress>({
-			status: "idle",
-		});
+	const [selectedComponent, setSelectedComponent] = useState<RegistryItem | null>(null);
+	const [installationProgress, setInstallationProgress] = useState<InstallationProgress>({
+		status: "idle",
+	});
 	const [installedComponents, setInstalledComponents] = useState<string[]>([]);
-	const [showInstallation, setShowInstallation] = useState(false);
 	const [overwrite, setOverwrite] = useState(false);
 	const sidebarRef = useRef<HTMLDivElement>(null);
 
 	const {
 		registries,
 		currentRegistry,
-		items,
 		loading,
 		error,
-		filters,
-		searchQuery,
 		setCurrentRegistry: setCurrentRegistryBase,
-		setFilters,
-		setSearchQuery,
-		getCategories,
-		getTypes,
 		setRegistries,
 		filteredItems,
+		getCategories,
+		getTypes,
 	} = useRegistry();
 
 	// Wrap setCurrentRegistry to handle null case
 	const setCurrentRegistry = (registry: Registry | null) => {
-		setCurrentRegistryBase(registry || undefined);
+		setCurrentRegistryBase(registry ?? undefined);
 	};
+
+	// const defaultRegistry = registries.find((r) => !r.custom) ?? registries[0];
 
 	useEffect(() => {
 		const checkInstallations = async () => {
 			const components = await getInstalledComponents();
 			setInstalledComponents(components);
 		};
-		checkInstallations();
+		void checkInstallations();
+	}, []);
+
+	// Type-safe event handler
+	const handleClickOutside = useCallback((event: globalThis.MouseEvent) => {
+		if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+			setSelectedComponent(null);
+		}
 	}, []);
 
 	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				sidebarRef.current &&
-				!sidebarRef.current.contains(event.target as Node)
-			) {
-				setSelectedComponent(null);
-				setIsSidebarOpen(false);
-			}
-		};
-
-		document.addEventListener("mousedown", handleClickOutside as any);
+		document.addEventListener("mousedown", handleClickOutside);
 		return () => {
-			document.removeEventListener("mousedown", handleClickOutside as any);
+			document.removeEventListener("mousedown", handleClickOutside);
 		};
-	}, []);
+	}, [handleClickOutside]);
 
 	const toggleStyle = () => {
 		setCurrentStyle((prev) => (prev === "brutalist" ? "modern" : "brutalist"));
@@ -265,12 +227,10 @@ export function ComponentBrowser({
 
 	const openSidebar = (component: RegistryItem) => {
 		setSelectedComponent(component);
-		setIsSidebarOpen(true);
 	};
 
 	const closeSidebar = () => {
 		setSelectedComponent(null);
-		setIsSidebarOpen(false);
 		setInstallationProgress({ status: "idle" });
 	};
 
@@ -313,7 +273,7 @@ export function ComponentBrowser({
 				let log = "";
 				const reader = stream.getReader();
 				while (true) {
-					const { done, value } = await reader.read();
+					const { done, value } = (await reader.read()) as { done: boolean; value: BufferSource };
 					if (done) break;
 					log += new TextDecoder().decode(value);
 					setInstallationProgress({
@@ -332,10 +292,7 @@ export function ComponentBrowser({
 			.catch((error) => {
 				setInstallationProgress({
 					status: "error",
-					message:
-						error instanceof Error
-							? error.message
-							: "Failed to install component",
+					message: error instanceof Error ? error.message : "Failed to install component",
 				});
 			});
 	};
@@ -344,30 +301,57 @@ export function ComponentBrowser({
 		setInstallationProgress({ status: "idle" });
 	};
 
-	const renderComponentGrid = (registry: string) => {
-		const allFilteredItems = filteredItems();
-		console.log("Registry:", registry, "Filtered Items:", allFilteredItems); // Debug log
+	const renderComponentGrid = (_registry: string) => {
+		const items = filteredItems();
 		return (
-			<div
-				className={cn(
-					"p-4",
-					"grid grid-cols-1 gap-4 overflow-auto sm:grid-cols-2 lg:grid-cols-3",
-				)}
-			>
-				{allFilteredItems.map((component: RegistryItem) => (
+			<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+				{items.map((component) => (
 					<ComponentCard
 						key={component.name}
 						component={component}
 						currentStyle={currentStyle}
 						currentRegistry={currentRegistry}
 						onOpenSidebar={openSidebar}
+						showPreview={true}
 						onInstall={handleInstall}
 						isInstalled={installedComponents.includes(component.name)}
-						showPreview={true}
 					/>
 				))}
 			</div>
 		);
+	};
+
+	const handleAddRegistry = async (registry: Registry) => {
+		try {
+			const registryWithCustom = { ...registry, custom: true };
+			await addCustomRegistry(registryWithCustom);
+			setRegistries((prev: Registry[]) => [...prev, registryWithCustom]);
+			setCurrentRegistry(registryWithCustom);
+		} catch (error) {
+			toast({
+				title: "Failed to add registry",
+				description: error instanceof Error ? error.message : "Unknown error occurred",
+				variant: "destructive",
+			});
+		}
+	};
+
+	const handleRemoveRegistry = (name: string) => {
+		try {
+			void removeCustomRegistry(name);
+			const updatedRegistries = registries.filter((r) => r.name !== name);
+			setRegistries(updatedRegistries);
+			if (currentRegistry?.name === name) {
+				const defaultRegistry = updatedRegistries.find((r) => !r.custom) ?? updatedRegistries[0];
+				setCurrentRegistry(defaultRegistry);
+			}
+		} catch (error) {
+			toast({
+				title: "Failed to remove registry",
+				description: error instanceof Error ? error.message : "Unknown error occurred",
+				variant: "destructive",
+			});
+		}
 	};
 
 	if (error) {
@@ -392,56 +376,23 @@ export function ComponentBrowser({
 				onRegistryChange={setCurrentRegistry}
 				overwrite={overwrite}
 				onOverwriteChange={setOverwrite}
-				onAddRegistry={async (registry: Registry) => {
-					try {
-						const registryWithCustom = { ...registry, custom: true };
-						await addCustomRegistry(registryWithCustom);
-						setRegistries((prev: Registry[]) => [...prev, registryWithCustom]);
-						setCurrentRegistry(registryWithCustom);
-					} catch (error) {
-						toast({
-							title: "Failed to add registry",
-							description:
-								error instanceof Error
-									? error.message
-									: "Unknown error occurred",
-							variant: "destructive",
-						});
-					}
-				}}
-				onRemoveRegistry={(name: string) => {
-					try {
-						removeCustomRegistry(name);
-						const updatedRegistries = registries.filter((r) => r.name !== name);
-						setRegistries(updatedRegistries);
-						if (currentRegistry?.name === name) {
-							const defaultRegistry =
-								updatedRegistries.find((r) => !r.custom) ||
-								updatedRegistries[0];
-							if (defaultRegistry) {
-								setCurrentRegistry(defaultRegistry);
-							}
-						}
-					} catch (error) {
-						toast({
-							title: "Failed to remove registry",
-							description:
-								error instanceof Error
-									? error.message
-									: "Unknown error occurred",
-							variant: "destructive",
-						});
-					}
-				}}
+				onAddRegistry={handleAddRegistry}
+				onRemoveRegistry={handleRemoveRegistry}
 				onStyleChange={toggleStyle}
 			/>
 			<div className="relative flex flex-1 flex-col overflow-hidden md:flex-row">
 				<BrowserSidebar
+					onClose={closeSidebar}
+					ref={sidebarRef}
+					selectedComponent={selectedComponent}
+					currentRegistry={currentRegistry}
 					currentStyle={currentStyle}
-					searchTerm={searchQuery}
-					setSearchTerm={setSearchQuery}
-					filters={filters}
-					setFilters={setFilters}
+					onInstall={handleInstall}
+					isInstalled={
+						selectedComponent ? installedComponents.includes(selectedComponent.name) : false
+					}
+					onOverwriteChange={setOverwrite}
+					overwrite={overwrite}
 					categories={getCategories()}
 					types={getTypes()}
 					filteredItems={filteredItems()}
@@ -525,7 +476,6 @@ export function ComponentBrowser({
 					onClose={closeSidebar}
 					installationProgress={installationProgress}
 					onInstall={handleInstall}
-					onHideInstallation={hideInstallation}
 				/>
 			)}
 		</div>

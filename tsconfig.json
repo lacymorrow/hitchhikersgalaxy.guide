@@ -1,7 +1,7 @@
 {
 	"compilerOptions": {
-		"strict": false,
-		"strictNullChecks": false,
+		"strict": true,
+		"strictNullChecks": true,
 		"inlineSources": false,
 		"sourceMap": false,
 		"allowImportingTsExtensions": true,
@@ -32,7 +32,7 @@
 		"baseUrl": ".",
 		"paths": {
 			"@/public/*": ["./public/*"],
-			"@/*": ["./src/*"],
+			"@/*": ["./src/*"]
 		}
 	},
 	"include": [

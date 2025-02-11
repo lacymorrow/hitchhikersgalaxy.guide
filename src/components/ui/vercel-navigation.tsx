@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";

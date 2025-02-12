@@ -46,7 +46,7 @@ export function OAuthButtons({ variant = "default", className }: OAuthButtonsPro
 	return (
 		<div
 			className={cn(
-				"flex gap-md w-full",
+				"flex gap-xs w-full",
 				variant === "icons" ? "flex-row justify-center" : "flex-col",
 				className
 			)}

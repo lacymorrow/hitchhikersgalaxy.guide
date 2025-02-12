@@ -1,4 +1,4 @@
-import { DeployToVercelButton } from "@/components/buttons/vercel-deploy-button-2";
+import { DeployToVercelButton } from "@/components/buttons/vercel-deploy-button";
 import {
 	PageHeader,
 	PageHeaderDescription,

@@ -45,23 +45,14 @@ export function RootLayout({ children }: { children: ReactNode }) {
 						fontSerif.variable
 					)}
 				>
-					<HolyLoader
-						showSpinner
-						height={"3px"}
-						color={"linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8)"}
-					/>
-					<PageTracker />
 					<SessionProvider>
 						<TRPCReactProvider>
 							<ThemeProvider attribute="class" defaultTheme="dark">
 								<TooltipProvider delayDuration={100}>
-									{/* Web Vitals - Above children to avoid blocking */}
-									<WebVitals />
-
+									{/* Content */}
 									{children}
 
-									{/* Toasts */}
-									<Toaster />
+									{/* Toast - Display messages to the user */}
 									<SonnerToaster />
 								</TooltipProvider>
 							</ThemeProvider>

@@ -3,12 +3,12 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import type { FC } from "react";
 
-interface DeployToVercelButtonProps {
+interface VercelDeployButtonProps {
 	href: string;
 	className?: string;
 }
 
-export const DeployToVercelButton: FC<DeployToVercelButtonProps> = ({ href, className }) => {
+export const VercelDeployButton: FC<VercelDeployButtonProps> = ({ href, className }) => {
 	return (
 		<Link
 			href={href}

@@ -1,4 +1,4 @@
-import { DeployToVercelButton } from "@/components/buttons/vercel-deploy-button";
+import { VercelDeployButton } from "@/components/buttons/vercel-deploy-button";
 import {
 	PageHeader,
 	PageHeaderDescription,
@@ -45,7 +45,7 @@ export default function Page() {
 					>
 						<IconBrandGithub className="mr-2 h-5 w-5" /> View on GitHub
 					</Link>
-					<DeployToVercelButton href={routes.external.vercelDeployBones} />
+					<VercelDeployButton href={routes.external.vercelDeployBones} />
 				</div>
 
 				<div className="mt-auto flex flex-col items-center gap-md text-sm md:flex-row">

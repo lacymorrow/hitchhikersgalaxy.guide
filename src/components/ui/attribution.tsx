@@ -58,6 +58,11 @@ export function Attribution({
 		onClose?.();
 	};
 
+	// Don't render if there's no meaningful content
+	if (!title && !description && !children) {
+		return null;
+	}
+
 	const _Content = () => (
 		<>
 			{(title || description) && (

@@ -59,8 +59,8 @@ export default function Page() {
 			</div>
 			<Attribution
 				variant="popover"
-				title="Built with Shipkit"
-				description="The best way to build with Shadcn/UI."
+				title="Build with Cursor + v0"
+				description="Get full-stack superpowers with Shipkit"
 				href="https://shipkit.io"
 			/>
 		</>

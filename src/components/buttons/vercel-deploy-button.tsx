@@ -20,7 +20,7 @@ export const DeployToVercelButton: FC<DeployToVercelButtonProps> = ({ href, clas
 		>
 			<span className="relative z-10 flex items-center justify-center gap-2">
 				<VercelIcon className="h-5 w-5" />
-				Deploy to Vercel
+				Deploy Now
 			</span>
 			{/* <span className="absolute inset-0 z-0 bg-gradient-to-r from-black to-gray-800 transition-all duration-300 ease-out group-hover:scale-105" /> */}
 		</Link>

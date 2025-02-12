@@ -33,7 +33,7 @@ export default function Page() {
 						The Next.js stack for Shadcn/UI.
 					</PageHeaderDescription>
 					<PageHeaderDescription className="text-lg text-muted-foreground">
-						Next.js v15, Tailwind CSS v4, Auth.JS v5, and a built-in interface for installing UI
+						Next.js v15, Auth.JS v5, Tailwind v4 (soon), and a built-in interface for installing UI
 						components.
 					</PageHeaderDescription>
 				</PageHeader>

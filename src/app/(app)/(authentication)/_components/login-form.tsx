@@ -5,7 +5,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import { authProvidersArray } from "@/server/auth.providers";
-import { Link } from "@/components/primitives/link-with-transition";
+import Link from "next/link";
 
 interface AuthFormProps extends ComponentPropsWithoutRef<"div"> {
 	mode: "sign-in" | "sign-up";

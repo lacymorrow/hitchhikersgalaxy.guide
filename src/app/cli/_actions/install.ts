@@ -1,7 +1,9 @@
 "use server";
 
-import { spawn } from "child_process";
-import { type InstallOptions } from "../_lib/types";
+import { type ChildProcessWithoutNullStreams, spawn } from "child_process";
+import { existsSync } from "fs";
+import { join } from "path";
+import type { InstallOptions } from "../_lib/types";
 
 /**
  * Install a component from a registry
@@ -21,31 +23,40 @@ export async function installComponent(
 				// Add component name
 				args.push(componentUrl);
 
+				// Detect project structure
+				const hasSrcApp = existsSync(join(process.cwd(), "src", "app"));
+				const hasRootApp = existsSync(join(process.cwd(), "app"));
+
+				// If src/app exists, add --path src
+				if (hasSrcApp && !hasRootApp) {
+					args.push("--path", "src");
+				}
+
 				// Add options
 				if (options.overwrite) args.push("--overwrite");
 				if (options.style) args.push("--style", options.style);
 				if (options.typescript) args.push("--typescript");
 				if (options.path) args.push("--path", options.path);
 
-				const process = spawn("npx", args, {
+				const childProcess = spawn("npx", args, {
 					stdio: ["pipe", "pipe", "pipe"],
 				});
 
 				// If not overwriting, automatically answer "n" to prompts
-				if (!options.overwrite && process.stdin) {
-					process.stdin.write("n\n");
-					process.stdin.end();
+				if (!options.overwrite && childProcess.stdin) {
+					childProcess.stdin.write("n\n");
+					childProcess.stdin.end();
 				}
 
-				process.stdout?.on("data", (data) => {
+				childProcess.stdout?.on("data", (data) => {
 					controller.enqueue(encoder.encode(data));
 				});
 
-				process.stderr?.on("data", (data) => {
+				childProcess.stderr?.on("data", (data) => {
 					controller.enqueue(encoder.encode(data));
 				});
 
-				process.on("close", (code) => {
+				childProcess.on("close", (code) => {
 					if (code !== 0) {
 						controller.enqueue(
 							encoder.encode(`\nProcess exited with code ${code}`),
@@ -54,7 +65,7 @@ export async function installComponent(
 					controller.close();
 				});
 
-				process.on("error", (err) => {
+				childProcess.on("error", (err) => {
 					controller.enqueue(encoder.encode(`\nError: ${err.message}`));
 					controller.close();
 				});

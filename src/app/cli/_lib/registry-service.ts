@@ -175,9 +175,12 @@ export async function fetchRegistryIndex(
 	try {
 		const response = await fetch(url, {
 			next: { revalidate: 3600 }, // Cache for 1 hour
+		}).catch((error) => {
+			console.error(`Failed to fetch registry index from ${url}:`, error);
+			return
 		});
 
-		if (!response.ok) {
+		if (!response) {
 			return [];
 		}
 

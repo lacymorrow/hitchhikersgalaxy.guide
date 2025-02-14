@@ -29,14 +29,16 @@ export default function GlobalError({
 
 	return (
 		/* Note: Must include html and body tags since this replaces the entire page */
-		<RootLayout>
-			<Boundary title="Something went wrong!" actionText="Try again" onAction={resetAction}>
-				{process.env.NODE_ENV === "development" && (
-					<div className="text-xs">
-						<pre>{error.message}</pre>
-					</div>
-				)}
-			</Boundary>
-		</RootLayout>
+		<html lang="en">
+			<body>
+				<Boundary title="Something went wrong!" actionText="Try again" onAction={resetAction} className="h-screen w-screen">
+					{process.env.NODE_ENV === "development" && (
+						<div className="text-xs">
+							<pre>{error.message}</pre>
+						</div>
+					)}
+				</Boundary>
+			</body>
+		</html>
 	);
 }

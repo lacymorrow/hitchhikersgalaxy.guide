@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils'
 import { CheckIcon, Cross2Icon, ReloadIcon } from '@radix-ui/react-icons'
 import { motion } from 'framer-motion'
 import { CopyIcon, Download } from 'lucide-react'
-import { type MouseEvent, type ReactNode, useEffect, useRef, useState } from 'react'
+import { type MouseEvent, type ReactNode, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { installComponent } from '../_actions/install'
 import { getInstalledComponents } from '../_actions/registry'
 import { useRegistry } from '../_hooks/use-registry'
@@ -22,6 +22,7 @@ import { ComponentDetails } from './component-details'
 import { buttonStyles, componentCardStyles, containerStyles } from './styles'
 import { Terminal } from './terminal'
 import type { InstallationProgress, StyleMode } from './types'
+import { memo } from 'react'
 
 interface ComponentCardProps {
 	component: RegistryItem
@@ -74,9 +75,24 @@ const ActionButton = ({ icon, tooltip, onClick, currentStyle }: ActionButtonProp
 	</TooltipProvider>
 )
 
-const ComponentCard = ({ component, currentStyle, currentRegistry, onOpenSidebar, showPreview, onInstall, isInstalled }: ComponentCardProps) => {
-	const registryColor = getColor(component.registry || 'default')
-	const categoryColor = getColor(component.categories?.[0] || 'default')
+const ComponentCard = memo(({ component, currentStyle, currentRegistry, onOpenSidebar, showPreview, onInstall, isInstalled }: ComponentCardProps) => {
+	const registryColor = useMemo(() => getColor(component.registry || 'default'), [component.registry])
+	const categoryColor = useMemo(() => getColor(component.categories?.[0] || 'default'), [component.categories])
+
+	const handleCopyCommand = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+		e.stopPropagation()
+		const installCommand = getInstallCommand(component, currentRegistry)
+		navigator.clipboard.writeText(installCommand)
+		toast({
+			title: "Copied to clipboard",
+			description: "Install command has been copied to your clipboard.",
+		})
+	}, [component, currentRegistry])
+
+	const handleInstallClick = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+		e.stopPropagation()
+		onInstall(component)
+	}, [component, onInstall])
 
 	return (
 		<Card
@@ -113,25 +129,14 @@ const ComponentCard = ({ component, currentStyle, currentRegistry, onOpenSidebar
 						<ActionButton
 							icon={<CopyIcon className="h-4 w-4" />}
 							tooltip="Copy install command"
-							onClick={(e) => {
-								e.stopPropagation()
-								const installCommand = getInstallCommand(component, currentRegistry)
-								navigator.clipboard.writeText(installCommand)
-								toast({
-									title: "Copied to clipboard",
-									description: "Install command has been copied to your clipboard.",
-								})
-							}}
+							onClick={handleCopyCommand}
 							currentStyle={currentStyle}
 						/>
 						{showPreview && (
 							<ActionButton
 								icon={<Download className="h-4 w-4" />}
 								tooltip="Install component"
-								onClick={(e) => {
-									e.stopPropagation()
-									onInstall(component)
-								}}
+								onClick={handleInstallClick}
 								currentStyle={currentStyle}
 							/>
 						)}
@@ -156,7 +161,8 @@ const ComponentCard = ({ component, currentStyle, currentRegistry, onOpenSidebar
 			</CardContent>
 		</Card>
 	)
-}
+})
+ComponentCard.displayName = 'ComponentCard'
 
 export function ComponentBrowser({ currentStyle: initialStyle = 'modern' }: ComponentBrowserProps) {
 	const [currentStyle, setCurrentStyle] = useState<StyleMode>(initialStyle)
@@ -214,26 +220,26 @@ export function ComponentBrowser({ currentStyle: initialStyle = 'modern' }: Comp
 		}
 	}, [])
 
-	const toggleStyle = () => {
+	const toggleStyle = useCallback(() => {
 		setCurrentStyle(prev => {
 			if (prev === 'brutalist') return 'modern'
 			if (prev === 'modern') return 'minimalist'
 			return 'brutalist'
 		})
-	}
+	}, [])
 
-	const openSidebar = (component: RegistryItem) => {
+	const openSidebar = useCallback((component: RegistryItem) => {
 		setSelectedComponent(component)
 		setIsSidebarOpen(true)
-	}
+	}, [])
 
-	const closeSidebar = () => {
+	const closeSidebar = useCallback(() => {
 		setSelectedComponent(null)
 		setIsSidebarOpen(false)
 		setInstallationProgress({ status: 'idle' })
-	}
+	}, [])
 
-	const handleInstall = (component: RegistryItem) => {
+	const handleInstall = useCallback((component: RegistryItem) => {
 		// Find the registry for this component
 		const registryName = component.registry
 		if (!registryName) {
@@ -294,9 +300,9 @@ export function ComponentBrowser({ currentStyle: initialStyle = 'modern' }: Comp
 					message: error instanceof Error ? error.message : 'Failed to install component'
 				})
 			})
-	}
+	}, [registries, overwrite])
 
-	const handleCustomInstall = async (command: string) => {
+	const handleCustomInstall = useCallback(async (command: string) => {
 		setInstallationProgress({ status: 'installing' })
 
 		// Extract the component URL or name from the command
@@ -337,15 +343,14 @@ export function ComponentBrowser({ currentStyle: initialStyle = 'modern' }: Comp
 				message: error instanceof Error ? error.message : 'Failed to install component'
 			})
 		}
-	}
+	}, [overwrite])
 
-	const hideInstallation = () => {
+	const hideInstallation = useCallback(() => {
 		setInstallationProgress({ status: 'idle' })
-	}
+	}, [])
 
-	const renderComponentGrid = (registry: string) => {
-		const allFilteredItems = filteredItems();
-		console.log('Registry:', registry, 'Filtered Items:', allFilteredItems); // Debug log
+	const renderComponentGrid = useCallback((registry: string) => {
+		const allFilteredItems = filteredItems()
 		return (
 			<div className={cn(
 				"p-4",
@@ -365,7 +370,7 @@ export function ComponentBrowser({ currentStyle: initialStyle = 'modern' }: Comp
 				))}
 			</div>
 		)
-	}
+	}, [currentStyle, currentRegistry, filteredItems, handleInstall, installedComponents, openSidebar])
 
 	if (error) {
 		return (
@@ -421,7 +426,6 @@ export function ComponentBrowser({ currentStyle: initialStyle = 'modern' }: Comp
 					}
 				}}
 				onStyleChange={toggleStyle}
-				onCustomInstall={handleCustomInstall}
 			/>
 			<div className="flex flex-1 overflow-hidden flex-col md:flex-row relative">
 				<BrowserSidebar
@@ -433,6 +437,8 @@ export function ComponentBrowser({ currentStyle: initialStyle = 'modern' }: Comp
 					categories={getCategories()}
 					types={getTypes()}
 					filteredItems={filteredItems()}
+					onCustomInstall={handleCustomInstall}
+					installationProgress={installationProgress}
 				/>
 				<div className="flex-1 overflow-auto">
 					{loading ? (

@@ -5,6 +5,7 @@
 	"type": "module",
 	"scripts": {
 		"build": "next build",
+		"clean": "rm -rf .next && rm -rf node_modules && rm -rf .turbo && rm next-env.d.ts && rm package-lock.json && rm pnpm-lock.yaml && rm bun.lockb",
 		"dev:all": "npm run dev",
 		"dev": "next dev --turbo",
 		"dev:legacy": "next dev",

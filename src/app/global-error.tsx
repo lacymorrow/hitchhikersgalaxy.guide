@@ -28,6 +28,7 @@ export default function GlobalError({
 
 	return (
 		/* Note: Must include html and body tags since this replaces the entire page */
+		// ! We don't use the RootLayout here because there could be an error in it.
 		<html lang="en" suppressHydrationWarning>
 			<body className="bg-background">
 				<Boundary title="Something went wrong!" actionText="Try again" onAction={resetAction} className="h-screen w-screen">

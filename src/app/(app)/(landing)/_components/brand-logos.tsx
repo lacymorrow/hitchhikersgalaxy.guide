@@ -50,39 +50,37 @@ const brands = [
 
 export const BrandLogos = () => {
 	return (
-		<TooltipProvider>
-			<div className="grid grid-cols-2 gap-4 md:grid-cols-6">
-				{brands.map(({ name, Logo, description }) => (
-					<Tooltip key={name}>
-						<TooltipTrigger asChild>
-							<motion.div
-								initial={{ opacity: 0 }}
-								whileInView={{ opacity: 1 }}
-								viewport={{ once: true }}
-								whileHover={{
-									scale: 1.05,
-									transition: { duration: 0.2 }
-								}}
-								className={cn(
-									"flex flex-col items-center justify-center gap-2",
-									"grayscale hover:grayscale-0",
-									"cursor-pointer rounded-lg p-4",
-									"bg-white/5 hover:bg-white/10",
-									"border border-transparent hover:border-primary/10",
-									"transition-all duration-200",
-								)}
-							>
-								<Logo className="h-16 w-16 transition-colors duration-200" />
-								<span className="text-xs text-muted-foreground">{name}</span>
-							</motion.div>
-						</TooltipTrigger>
-						<TooltipContent side="bottom" className="max-w-[200px] text-center">
-							<p className="font-medium">{name}</p>
-							<p className="text-xs text-muted-foreground">{description}</p>
-						</TooltipContent>
-					</Tooltip>
-				))}
-			</div>
-		</TooltipProvider>
+		<div className="grid grid-cols-2 gap-4 md:grid-cols-6">
+			{brands.map(({ name, Logo, description }) => (
+				<Tooltip key={name}>
+					<TooltipTrigger asChild>
+						<motion.div
+							initial={{ opacity: 0 }}
+							whileInView={{ opacity: 1 }}
+							viewport={{ once: true }}
+							whileHover={{
+								scale: 1.05,
+								transition: { duration: 0.2 }
+							}}
+							className={cn(
+								"flex flex-col items-center justify-center gap-2",
+								"grayscale hover:grayscale-0",
+								"cursor-pointer rounded-lg p-4",
+								"bg-white/5 hover:bg-white/10",
+								"border border-transparent hover:border-primary/10",
+								"transition-all duration-200",
+							)}
+						>
+							<Logo className="h-16 w-16 transition-colors duration-200" />
+							<span className="text-xs text-muted-foreground">{name}</span>
+						</motion.div>
+					</TooltipTrigger>
+					<TooltipContent side="bottom" className="max-w-[200px] text-center">
+						<p className="font-medium">{name}</p>
+						<p className="text-xs text-muted-foreground">{description}</p>
+					</TooltipContent>
+				</Tooltip>
+			))}
+		</div>
 	);
 };

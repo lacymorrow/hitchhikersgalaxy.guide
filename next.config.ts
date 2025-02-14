@@ -1,8 +1,6 @@
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
-import BuilderDevTools from "@builder.io/dev-tools/next";
 import createMDX from "@next/mdx";
-import { withPayload } from "@payloadcms/next/withPayload";
 import type { NextConfig } from "next";
 
 /**
@@ -30,6 +28,10 @@ let nextConfig: NextConfig = {
 			{ hostname: "2.gravatar.com" }, // @dev: for testing
 			{ hostname: "avatars.githubusercontent.com" }, // @dev: github avatars
 			{ hostname: "vercel.com" }, // @dev: vercel button
+			{
+				protocol: "https",
+				hostname: "**.vercel.app",
+			},
 		],
 	},
 
@@ -77,6 +79,7 @@ let nextConfig: NextConfig = {
 		// 	jsxImportSource: "jsx-runtime",
 		// 	mdxType: "gfm",
 		// },
+
 		nextScriptWorkers: true,
 		serverActions: {
 			bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
@@ -86,9 +89,9 @@ let nextConfig: NextConfig = {
 	/*
 	 * Miscellaneous configuration
 	 */
-	devIndicators: {
-		// buildActivityPosition: "bottom-right" as const,
-	},
+	// devIndicators: {
+	// buildActivityPosition: "bottom-right" as const,
+	// },
 
 	/*
 	 * Logging configuration
@@ -101,12 +104,32 @@ let nextConfig: NextConfig = {
 		},
 	},
 
-	compiler: {
-		// Remove all console logs
-		// removeConsole: true
-		// Remove console logs only in production, excluding error logs
-		// removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false
-	},
+	// compiler: {
+	// Remove all console logs
+	// removeConsole: true
+	// Remove console logs only in production, excluding error logs
+	// removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false
+	// },
+
+	// 	webpack: (config, { isServer }) => {
+	// 		// Add custom webpack configuration for handling binary files
+	// 		config.module.rules.push({
+	// 			test: /\.(node|bin|html)$/,
+	// 			use: "raw-loader",
+	// 		});
+
+	// 		if (!isServer) {
+	// 			// Don't attempt to bundle native modules on client-side
+	// 			config.resolve.fallback = {
+	// 				...config.resolve.fallback,
+	// 			};
+	// 		} else {
+	// 			// Externalize native modules on server-side
+	// 			config.externals = [...(config.externals || []), "bcrypt"];
+	// 		}
+
+	// 		return config;
+	// 	},
 };
 
 /*
@@ -114,28 +137,8 @@ let nextConfig: NextConfig = {
  * Order matters!
  */
 
-// Builder config
-nextConfig =
-	!env?.NEXT_PUBLIC_BUILDER_API_KEY || !!env?.DISABLE_BUILDER
-		? nextConfig
-		: BuilderDevTools()(nextConfig);
-
-// Payload config
-nextConfig =
-	!env?.DATABASE_URL || !!env?.DISABLE_PAYLOAD
-		? nextConfig
-		: withPayload(nextConfig);
-
-// const withPWA = pwa({
-// 	dest: "public",
-// 	// disable: process.env.NODE_ENV === "development",
-// 	// register: true,
-// 	// skipWaiting: true,
-// });
-// nextConfig = withPWA(nextConfig);
-
 /*
- * MDX config
+ * MDX config - should be last or second to last
  */
 const withMDX = createMDX({
 	extension: /\.mdx?$/,
@@ -158,7 +161,7 @@ const withMDX = createMDX({
 nextConfig = withMDX(nextConfig);
 
 /*
- * Logflare config
+ * Logflare config - should be last
  */
 /** @type {import("./withLogFlare.js").LogFlareOptions} */
 // const logFlareOptions = {

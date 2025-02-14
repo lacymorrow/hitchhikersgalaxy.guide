@@ -1,4 +1,3 @@
-import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import type { MetadataRoute } from "next";
 
@@ -24,15 +23,14 @@ export default function robots(): MetadataRoute.Robots {
 				 * - Draft/preview content
 				 * - Search pages to avoid duplicate content
 				 */
+
 				disallow: [
-					"/api/*", // Blocks access to API routes
-					"/_next/*", // Blocks access to Next.js internal files
-					"/static/*", // Blocks access to static assets directory
-					routes.admin.root, // Blocks access to admin panel
-					"*/private/*", // Blocks access to private content
-					"*/draft/*", // Blocks access to draft content
-					"*/preview/*", // Blocks access to preview content
-					"/search", // Blocks access to search pages
+					// "/api/*", // Blocks access to API routes
+					// "/static/*", // Blocks access to static assets directory
+					// routes.admin.root, // Blocks access to admin panel
+					// "*/private/*", // Blocks access to private content
+					// "*/draft/*", // Blocks access to draft content
+					// "*/preview/*", // Blocks access to preview content
 				],
 			},
 		],

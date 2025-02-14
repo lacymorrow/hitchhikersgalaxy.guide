@@ -59,7 +59,7 @@ export const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
 			fade = false,
 			...props
 		},
-		ref,
+		ref
 	) => {
 		return (
 			<div
@@ -68,13 +68,13 @@ export const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
 					"flex items-center justify-center",
 					fullPage && "fixed inset-0 z-50",
 					backdrop && "bg-background/80 backdrop-blur-sm",
-					fade && "animate-in fade-in duration-300",
-					className,
+					fade && "duration-300 animate-in fade-in",
+					className
 				)}
 				{...props}
 			>
 				<LoaderAtoms size={size} color={color} label={label} />
 			</div>
 		);
-	},
+	}
 );

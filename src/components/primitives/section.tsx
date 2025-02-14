@@ -1,5 +1,7 @@
+import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
+import type React from "react";
 
 const sectionStyles = cva(
 	// Base styles that apply to all variants
@@ -9,24 +11,25 @@ const sectionStyles = cva(
 			variant: {
 				default: "gap-2xl mt-lg",
 				user: "gap-lg bg-muted/50 rounded-lg p-xl",
+				bleed: "max-w-none",
 			},
 			size: {
 				default: "w-full",
 				narrow: "max-w-2xl",
 				wide: "max-w-4xl",
-				full: "w-full"
+				full: "w-full",
 			},
 		},
 		defaultVariants: {
 			variant: "default",
 			size: "default",
 		},
-	},
+	}
 );
 
 export interface SectionProps
 	extends React.HTMLAttributes<HTMLElement>,
-	VariantProps<typeof sectionStyles> {
+		VariantProps<typeof sectionStyles> {
 	children: React.ReactNode;
 }
 
@@ -37,24 +40,24 @@ export const Section = ({
 	className,
 	...props
 }: SectionProps) => (
-	<section
-		className={cn(sectionStyles({ variant, size }), className)}
-		{...props}
-	>
+	<section className={cn(sectionStyles({ variant, size }), className)} {...props}>
 		{children}
 	</section>
 );
 
-export const SectionTitle = ({
+export const SectionBadge = ({
 	children,
 	className,
 }: {
 	children: React.ReactNode;
 	className?: string;
 }) => (
-	<h2 className={cn("font-bold uppercase text-accent-foreground", className)}>
+	<Badge
+		variant="secondary"
+		className={cn("rounded-full px-4 py-1 text-sm inline-flex gap-2", className)}
+	>
 		{children}
-	</h2>
+	</Badge>
 );
 
 export const SectionHeader = ({
@@ -67,7 +70,7 @@ export const SectionHeader = ({
 	<h3
 		className={cn(
 			"font-heading text-balance text-3xl font-semibold tracking-tight sm:text-4xl",
-			className,
+			className
 		)}
 	>
 		{children}
@@ -81,14 +84,7 @@ export const SectionCopy = ({
 	children: React.ReactNode;
 	className?: string;
 }) => (
-	<p
-		className={cn(
-			"max-w-2xl text-center text-lg text-muted-foreground",
-			className,
-		)}
-	>
-		{children}
-	</p>
+	<p className={cn("max-w-2xl text-center text-lg text-muted-foreground", className)}>{children}</p>
 );
 
 export const SectionContent = ({
@@ -98,12 +94,7 @@ export const SectionContent = ({
 	children: React.ReactNode;
 	className?: string;
 }) => (
-	<div
-		className={cn(
-			"flex w-full flex-col items-center justify-center gap-4",
-			className,
-		)}
-	>
+	<div className={cn("flex w-full flex-col items-center justify-center gap-4", className)}>
 		{children}
 	</div>
 );

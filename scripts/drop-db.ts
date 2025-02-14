@@ -9,7 +9,7 @@ async function dropDatabase() {
 		console.log("📦 Dropping all tables...");
 
 		// Drop Payload tables
-		await db.execute(sql`
+		await db?.execute(sql`
 			DO $$ DECLARE
 				r RECORD;
 			BEGIN
@@ -17,12 +17,12 @@ async function dropDatabase() {
 				FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'payload') LOOP
 					EXECUTE 'DROP TABLE IF EXISTS payload.' || quote_ident(r.tablename) || ' CASCADE';
 				END LOOP;
-				
+
 				-- Drop tables in public schema
 				FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'public') LOOP
 					EXECUTE 'DROP TABLE IF EXISTS public.' || quote_ident(r.tablename) || ' CASCADE';
 				END LOOP;
-				
+
 				-- Drop tables in drizzle schema
 				FOR r IN (SELECT tablename FROM pg_tables WHERE schemaname = 'drizzle') LOOP
 					EXECUTE 'DROP TABLE IF EXISTS drizzle.' || quote_ident(r.tablename) || ' CASCADE';
@@ -31,13 +31,13 @@ async function dropDatabase() {
 		`);
 
 		// Drop schemas
-		await db.execute(sql`
+		await db?.execute(sql`
 			DROP SCHEMA IF EXISTS payload CASCADE;
 			DROP SCHEMA IF EXISTS drizzle CASCADE;
 		`);
 
 		// Drop custom types
-		await db.execute(sql`
+		await db?.execute(sql`
 			DO $$ DECLARE
 				r RECORD;
 			BEGIN

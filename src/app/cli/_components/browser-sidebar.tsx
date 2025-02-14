@@ -7,9 +7,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
 import { Search } from 'lucide-react'
+import { memo, useMemo } from 'react'
 import type { RegistryFilters, RegistryItem } from '../_lib/types'
 import { getColor } from './colors'
-import type { StyleMode } from './types'
+import type { StyleMode, InstallationProgress } from './types'
+import { CustomInstallDialog } from './custom-install-dialog'
 
 export interface BrowserSidebarProps {
 	currentStyle: StyleMode
@@ -20,9 +22,11 @@ export interface BrowserSidebarProps {
 	categories: string[]
 	types: string[]
 	filteredItems: RegistryItem[]
+	onCustomInstall: (command: string) => void
+	installationProgress: InstallationProgress
 }
 
-export function BrowserSidebar({
+export const BrowserSidebar = memo(({
 	currentStyle,
 	searchTerm,
 	setSearchTerm,
@@ -30,17 +34,28 @@ export function BrowserSidebar({
 	setFilters,
 	categories,
 	types,
-	filteredItems
-}: BrowserSidebarProps) {
-	// Count components by type
-	const componentCount = filteredItems.filter(item => item.type === 'registry:ui').length
-	const blockCount = filteredItems.filter(item => item.type === 'registry:block').length
+	filteredItems,
+	onCustomInstall,
+	installationProgress
+}: BrowserSidebarProps) => {
+	// Memoize expensive computations
+	const componentCount = useMemo(() =>
+		filteredItems.filter(item => item.type === 'registry:ui').length,
+		[filteredItems]
+	)
 
-	// Count components by category
-	const categoryCount = categories.reduce((acc, category) => {
-		acc[category] = filteredItems.filter(item => item.categories?.includes(category)).length
-		return acc
-	}, {} as Record<string, number>)
+	const blockCount = useMemo(() =>
+		filteredItems.filter(item => item.type === 'registry:block').length,
+		[filteredItems]
+	)
+
+	const categoryCount = useMemo(() =>
+		categories.reduce((acc, category) => {
+			acc[category] = filteredItems.filter(item => item.categories?.includes(category)).length
+			return acc
+		}, {} as Record<string, number>),
+		[categories, filteredItems]
+	)
 
 	return (
 		<div className={cn(
@@ -81,6 +96,12 @@ export function BrowserSidebar({
 						/>
 					</div>
 				</div>
+
+				<CustomInstallDialog
+					onInstall={onCustomInstall}
+					installationProgress={installationProgress}
+				/>
+				<Separator className="my-2" />
 
 				<div>
 					<Label htmlFor="type" className="text-sm font-medium mb-2 block">
@@ -179,5 +200,6 @@ export function BrowserSidebar({
 			</div>
 		</div>
 	)
-}
+})
+BrowserSidebar.displayName = 'BrowserSidebar'
 

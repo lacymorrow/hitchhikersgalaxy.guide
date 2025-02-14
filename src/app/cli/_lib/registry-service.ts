@@ -175,16 +175,19 @@ export async function fetchRegistryIndex(
 	try {
 		const response = await fetch(url, {
 			next: { revalidate: 3600 }, // Cache for 1 hour
+		}).catch((error) => {
+			console.error(`Failed to fetch registry index from ${url}:`, error);
+			return
 		});
 
-		if (!response.ok) {
-			throw new Error(`Failed to fetch registry: ${response.statusText}`);
+		if (!response) {
+			return [];
 		}
 
-		return response.json();
+		const data = await response.json();
+		return Array.isArray(data) ? data : [];
 	} catch (error) {
-		console.error(`Failed to fetch registry index from ${url}:`, error);
-		throw error;
+		return [];
 	}
 }
 
@@ -323,4 +326,34 @@ export function getDocumentationUrl(
 ): string | undefined {
 	if (!registry?.baseDocsUrl) return undefined;
 	return `${registry.baseDocsUrl}/${component.name}`;
+}
+
+/**
+ * Validate if a string is a URL
+ */
+export function isValidUrl(str: string): boolean {
+	try {
+		new URL(str.trim())
+		return true
+	} catch {
+		return false
+	}
+}
+
+/**
+ * Validate if a string is a valid install command
+ */
+export function isValidCommand(str: string): boolean {
+	const commandPatterns = [
+		/^(npx|pnpm dlx|bunx --bun) shadcn@latest add/,
+		/^(npx|pnpm dlx|bunx --bun) shadcn@latest add "https?:\/\/[^"]+"/,
+	]
+	return commandPatterns.some(pattern => pattern.test(str.trim()))
+}
+
+/**
+ * Format a URL into a valid install command
+ */
+export function formatUrlToCommand(url: string): string {
+	return `npx shadcn@latest add "${url.trim()}"`
 }

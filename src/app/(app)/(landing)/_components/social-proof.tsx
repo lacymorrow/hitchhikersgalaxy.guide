@@ -1,6 +1,6 @@
 "use client";
 
-import { Section } from "@/components/primitives/section";
+import { Section, SectionBadge } from "@/components/primitives/section";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { siteConfig } from "@/config/site";
@@ -10,9 +10,9 @@ import { CustomerAvatars } from "./customer-avatars";
 
 const stats = [
 	{
-		value: "1k+",
-		label: "Developers",
-		description: `trust ${siteConfig.name} for their projects`,
+		value: "$100k+",
+		label: "Saved",
+		description: `in development costs`,
 	},
 	{
 		value: "100+",
@@ -20,7 +20,7 @@ const stats = [
 		description: "production-ready and fully tested",
 	},
 	{
-		value: "99%",
+		value: "100%",
 		label: "Satisfaction",
 		description: "from verified customers",
 	},
@@ -30,10 +30,8 @@ export const SocialProof = () => {
 	return (
 		<Section className="relative overflow-hidden">
 			{/* Trust Badge */}
-			<div className="mb-12 flex justify-center">
-				<Badge variant="secondary" className="rounded-full px-4 py-1 text-sm">
-					Trusted by developers worldwide
-				</Badge>
+			<div className="flex justify-center">
+				<SectionBadge>Trusted by developers worldwide</SectionBadge>
 			</div>
 
 			{/* Stats Grid */}

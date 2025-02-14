@@ -3,17 +3,16 @@ import { FeaturesGrid } from "@/app/(app)/(landing)/_components/features-grid";
 import { Spotlight } from "@/app/(app)/(landing)/_components/spotlight";
 import { AIDemo } from "@/components/blocks/ai-demo";
 import { PricingSectionSingle } from "@/components/blocks/pricing-section";
-import AnimatedButton from "@/components/buttons/animated-button/animated-button";
 import { Icons } from "@/components/images/icons";
 import { JsonLd } from "@/components/primitives/json-ld";
 import { Link } from "@/components/primitives/link-with-transition";
 import ExampleMasonry from "@/components/primitives/masonry";
 import {
 	Section,
+	SectionBadge,
 	SectionContent,
 	SectionCopy,
 	SectionHeader,
-	SectionTitle,
 } from "@/components/primitives/section";
 import AnimatedGradientText from "@/components/ui/animated-gradient-text";
 import BlurFade from "@/components/ui/blur-fade";
@@ -23,32 +22,37 @@ import { FeaturesTimed } from "@/components/ui/cui/features-timed";
 import { SimpleFeaturesCards } from "@/components/ui/cui/simple-features-cards";
 import Meteors from "@/components/ui/meteors";
 import NumberTicker from "@/components/ui/number-ticker";
+import { ShinyButton } from "@/components/ui/shiny-button";
 import { Vortex } from "@/components/ui/vortex";
 import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
+import { cn } from "@/lib/utils";
 import type { SearchParams } from "@/types/utils";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import {
-	IconBrandAdobe,
 	IconBrandDeno,
+	IconBrandDocker,
 	IconBrandOpenai,
-	IconBrandStripeFilled,
-	IconBrandVercelFilled
+	IconBrandVercelFilled,
+	IconRobotFace
 } from "@tabler/icons-react";
 import {
 	ArrowUp,
 	BoneIcon,
 	Calculator,
-	Check,
 	ChevronRight,
 	DatabaseIcon,
+	Headphones,
 	LockKeyholeIcon,
+	MegaphoneIcon,
 	RefreshCw,
 	Shield,
+	ShieldCheckIcon,
 	Sparkles,
 	Star,
-	Timer,
+	TargetIcon,
+	Timer
 } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
@@ -64,7 +68,7 @@ import { SocialMarquee } from "./_components/social-marquee";
 import { SocialProof } from "./_components/social-proof";
 
 const headings = [
-	"Ship Your Next Big Thing",
+	"The Next.js Stack for Startups",
 	"From Idea to Launch in Days",
 	"The Ultimate Dev Toolkit",
 	"Enterprise-Ready in Minutes",
@@ -122,55 +126,38 @@ export default async function Home({
 												<IconBrandVercelFilled className="h-5 w-5" />
 											</div>
 											<div className="h-8 w-8 rounded-full border-2 border-white bg-primary-foreground flex items-center justify-center">
-												<IconBrandStripeFilled className="h-5 w-5" />
+												<IconBrandDocker className="h-5 w-5" />
 											</div>
 											<div className="h-8 w-8 rounded-full border-2 border-white bg-primary-foreground flex items-center justify-center">
-												<IconBrandAdobe className="h-5 w-5" />
+												<IconBrandOpenai className="h-5 w-5" />
 											</div>
 										</div>
-										<span className="text-sm text-gray-600">Built with the stack used by top startups</span>
+										<span className="text-sm text-gray-600">Built with tools you love</span>
 									</div>
 								</div>
 							</BlurFade>
 
 							<BlurFade delay={0.5} duration={0.5} inView>
 								<h1 className="text-balance bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text py-6 text-5xl font-medium leading-none tracking-tighter text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-8xl">
-									Ship Production Apps<br />10x Faster
+									{headings[0]}
 								</h1>
 							</BlurFade>
 
 							<BlurFade delay={1} duration={1} inView>
-								<div className="animate-fade-in mb-8 translate-y-[-1rem] text-balance text-lg tracking-tight [--animation-delay:400ms] md:text-xl">
-									Get a complete startup stack with auth, AI, payments & more.<br />
-									<span className="font-medium text-primary">Save $50k+ in development costs</span> and launch in days, not months.
-								</div>
-								<div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-3xl">
-									<div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-green-50 dark:bg-green-900/20">
-										<Check className="h-5 w-5 text-green-500" />
-										<span className="text-sm">Next.js 15</span>
-									</div>
-									<div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-										<Check className="h-5 w-5 text-blue-500" />
-										<span className="text-sm">Integrated AI Workflows</span>
-									</div>
-									<div className="flex items-center gap-2 px-4 py-2 rounded-lg bg-purple-50 dark:bg-purple-900/20">
-										<Check className="h-5 w-5 text-purple-500" />
-										<span className="text-sm">Authentication + Payments</span>
-									</div>
+								<div className="mb-8 text-balance text-lg tracking-tight md:text-xl">
+									Bulletproof starter kit with pre-built UI, AI workflows built on Next.js 15.<br />
+									<b>Save $100k+ in development costs</b> and launch in minutes.
 								</div>
 							</BlurFade>
-						</div>
 
-						<div className="mt-8 flex flex-col items-center justify-center gap-4">
 							<BlurFade delay={2.5} duration={1} inView>
 								<div className="flex flex-col items-center gap-4">
-									<Countdown targetDate={LAUNCH_END_DATE} variant="warning" className="mb-4" />
-									<div className="flex gap-4">
+									<div className="flex flex-col-reverse sm:flex-row justify-center flex-wrap gap-4">
 										<Link
 											href={routes.auth.signIn}
-											className={buttonVariants({ variant: "outline", size: "lg" })}
+											className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full sm:w-auto")}
 										>
-											View Demo →
+											View Live Demo →
 										</Link>
 										<PrimaryCta />
 									</div>
@@ -186,8 +173,8 @@ export default async function Home({
 										</div>
 										<div className="h-4 w-px bg-gray-200 dark:bg-gray-700" />
 										<div className="flex items-center gap-2">
-											<Star className="h-4 w-4 text-yellow-500" />
-											<span className="text-sm text-gray-600">Only 7 spots left</span>
+											<Headphones className="h-4 w-4 text-blue-500" />
+											<span className="text-sm text-gray-600">Priority Support</span>
 										</div>
 									</div>
 								</div>
@@ -204,13 +191,10 @@ export default async function Home({
 					<SectionHeader>
 						Stop Reinventing the Wheel
 					</SectionHeader>
-					<SectionContent>
-						<p className="text-lg text-center max-w-3xl mx-auto">
-							The average startup spends 6 months and $150,000 building basic infrastructure.
-							ShipKit gives you a production-ready codebase that's powering real companies today.
-							Focus on what makes your product unique, not reinventing auth and payments.
-						</p>
-					</SectionContent>
+					<SectionCopy>
+						ShipKit is a production-ready codebase <span className="underline">powering real companies today</span>.
+						Start with a full dashboard, pre-built payment and user management, and a CMS, so you can focus on your product.
+					</SectionCopy>
 				</Section>
 
 				<Suspense>
@@ -219,26 +203,25 @@ export default async function Home({
 					<FeaturesCards />
 
 					<Section className="relative">
+						<SectionBadge className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-sm font-medium">
+							<StarFilledIcon className="h-4 w-4" /> Loved by Early Adopters</SectionBadge>
 						<SectionHeader>
-							The Enterprise-Grade Stack
+							Built for teams to <span className="underline">scale</span>
 						</SectionHeader>
 						<SectionContent>
 							<div className="text-center max-w-2xl mx-auto mb-8">
-								<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-sm font-medium mb-6">
-									<Star className="h-4 w-4" />
-									<span>Used by Fortune 500 Companies</span>
-								</div>
-								<p className="text-lg mb-6">
-									Launch with the same battle-tested stack used by Vercel, Stripe, and other unicorns.
-									Every component is optimized for scale and maintained by industry experts.
-								</p>
+
+								<SectionCopy className="mb-6">
+									Battle-tested by developers launching their own products. Get a stack that's
+									ready to scale with rock-solid code and best practices in place.
+								</SectionCopy>
 								<div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 									<div className="p-6 rounded-lg border border-gray-100 dark:border-gray-800 relative group hover:border-primary/50 transition-colors">
 										<div className="absolute -top-3 left-4 px-2 py-1 bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-xs font-medium rounded-full">
-											Most Popular
+											Hireable Tech
 										</div>
 										<h3 className="font-semibold mb-2">Lightning Fast</h3>
-										<p className="text-sm text-gray-600 dark:text-gray-300">Next.js 15 + React Server Components for instant page loads</p>
+										<p className="text-sm text-gray-600 dark:text-gray-300">Next.js 15 + React Server Components for instant loads</p>
 									</div>
 									<div className="p-6 rounded-lg border border-gray-100 dark:border-gray-800 relative group hover:border-primary/50 transition-colors">
 										<div className="absolute -top-3 left-4 px-2 py-1 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 text-xs font-medium rounded-full">
@@ -249,212 +232,179 @@ export default async function Home({
 									</div>
 									<div className="p-6 rounded-lg border border-gray-100 dark:border-gray-800 relative group hover:border-primary/50 transition-colors">
 										<div className="absolute -top-3 left-4 px-2 py-1 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 text-xs font-medium rounded-full">
-											New
+											Future-Proof
 										</div>
 										<h3 className="font-semibold mb-2">AI-Powered</h3>
 										<p className="text-sm text-gray-600 dark:text-gray-300">OpenAI integration with custom GPTs built-in</p>
 									</div>
 								</div>
 								<div className="flex flex-col items-center gap-4">
-									<AnimatedButton>Start Building Now</AnimatedButton>
+									<Link href={routes.external.buy}>
+										<ShinyButton>Start Building Now</ShinyButton>
+									</Link>
 									<div className="flex items-center gap-2 text-sm text-gray-500">
-										<Shield className="h-4 w-4" />
-										<span>Enterprise-grade security & scalability included</span>
+										<ShieldCheckIcon className="h-4 w-4" />
+										<span>Production-ready dashboard & AI apps included</span>
 									</div>
 								</div>
 							</div>
 							<div className="text-center space-y-2">
-								<span className="block text-sm font-medium">30-Day Money-Back Guarantee</span>
+								<span className="block text-sm font-medium">Money-Back Guarantee</span>
 								<span className="block text-sm text-gray-500">
-									No questions asked. Not happy? Get a full refund.
-									<Link
-										href={routes.terms}
-										className={buttonVariants({ variant: "link", size: "sm" })}
-									>
-										See Terms →
-									</Link>
+									Not happy? Get a full refund.
 								</span>
 							</div>
 						</SectionContent>
 					</Section>
 
 
-					<Section className="relative bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+					<Section className="relative">
+						<SectionBadge className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm font-medium">
+							<Timer className="h-4 w-4" />
+							<span>Proven Developer Experience</span>
+						</SectionBadge>
 						<SectionHeader>
 							Why Start Building Now?
 						</SectionHeader>
-						<div className="max-w-4xl mx-auto">
-							<div className="text-center mb-8">
-								<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm font-medium mb-6">
-									<Timer className="h-4 w-4" />
-									<span>Limited Time Launch Offer</span>
+						<SectionCopy>
+							Why waste months building foundations? Get straight to creating unique value
+							with production-ready infrastructure.
+						</SectionCopy>
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+							<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
+								<div className="text-purple-500 mb-4">
+									<Sparkles className="h-8 w-8" />
 								</div>
-								<p className="text-lg text-gray-600 dark:text-gray-300 mb-4">
-									The tech landscape is changing faster than ever. Here's why successful founders are launching with ShipKit today:
+								<h3 className="text-xl font-semibold mb-4">The AI Revolution is Here</h3>
+								<p className="text-gray-600 dark:text-gray-300 mb-4">
+									Every day without AI features is a day your competitors get ahead. Launch with production-ready AI capabilities from day one.
 								</p>
-							</div>
-							<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-								<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
-									<div className="text-purple-500 mb-4">
-										<Sparkles className="h-8 w-8" />
-									</div>
-									<h3 className="text-xl font-semibold mb-4">The AI Revolution</h3>
-									<p className="text-gray-600 dark:text-gray-300 mb-4">
-										Every day without AI features is a day your competitors get ahead. Launch with production-ready AI capabilities from day one.
-									</p>
-									<div className="pt-4 border-t border-gray-100 dark:border-gray-700">
-										<div className="text-sm font-medium mb-2">What You Get:</div>
-										<ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-											<li className="flex items-center gap-2">
-												<span className="text-green-500">✓</span>
-												<span>Custom GPT Integration</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<span className="text-green-500">✓</span>
-												<span>AI Analytics Dashboard</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<span className="text-green-500">✓</span>
-												<span>Cost Optimization Built-in</span>
-											</li>
-										</ul>
-									</div>
-								</div>
-								<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
-									<div className="text-blue-500 mb-4">
-										<ArrowUp className="h-8 w-8" />
-									</div>
-									<h3 className="text-xl font-semibold mb-4">Rising Dev Costs</h3>
-									<p className="text-gray-600 dark:text-gray-300 mb-4">
-										The average developer salary hit $150k in 2024. Save months of development time and launch before your runway runs out.
-									</p>
-									<div className="pt-4 border-t border-gray-100 dark:border-gray-700">
-										<div className="text-sm font-medium mb-2">Your Savings:</div>
-										<ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-											<li className="flex items-center gap-2">
-												<span className="text-green-500">✓</span>
-												<span>4-6 Months Dev Time</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<span className="text-green-500">✓</span>
-												<span>$50k+ in Development</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<span className="text-green-500">✓</span>
-												<span>Faster Time to Market</span>
-											</li>
-										</ul>
-									</div>
-								</div>
-								<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
-									<div className="text-green-500 mb-4">
-										<StarFilledIcon className="h-8 w-8" />
-									</div>
-									<h3 className="text-xl font-semibold mb-4">Launch Price</h3>
-									<p className="text-gray-600 dark:text-gray-300 mb-4">
-										Get lifetime access at our special launch price. After launch, prices will increase to match market rates.
-									</p>
-									<div className="pt-4 border-t border-gray-100 dark:border-gray-700">
-										<div className="text-sm font-medium mb-2">Limited Time:</div>
-										<ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
-											<li className="flex items-center gap-2">
-												<span className="text-green-500">✓</span>
-												<span>40% Launch Discount</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<span className="text-green-500">✓</span>
-												<span>Only 7 Spots Left</span>
-											</li>
-											<li className="flex items-center gap-2">
-												<span className="text-green-500">✓</span>
-												<span>Lifetime Updates</span>
-											</li>
-										</ul>
-									</div>
+								<div className="pt-4 border-t border-gray-100 dark:border-gray-700">
+									<div className="text-sm font-medium mb-2">What You Get:</div>
+									<ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+										<li className="flex items-center gap-2">
+											<span className="text-green-500">✓</span>
+											<span>Cursor, Cline, Windsurf, and v0 integration</span>
+										</li>
+										<li className="flex items-center gap-2">
+											<span className="text-green-500">✓</span>
+											<span>AI Search from your own Documentation</span>
+										</li>
+										<li className="flex items-center gap-2">
+											<span className="text-green-500">✓</span>
+											<span>RAG, Vector Search, and pre-built AI apps</span>
+										</li>
+									</ul>
 								</div>
 							</div>
-							<div className="text-center mb-12">
-								<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-medium mb-8">
-									<StarFilledIcon className="h-4 w-4" />
-									<span>Recent Success Stories</span>
+							<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
+								<div className="text-blue-500 mb-4">
+									<ArrowUp className="h-8 w-8" />
 								</div>
-								<div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
-									<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
-										<div className="font-medium mb-2">TaskFlow AI</div>
-										<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">Launched in 5 days</div>
-										<div className="text-2xl font-bold text-primary">$21k MRR</div>
-									</div>
-									<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
-										<div className="font-medium mb-2">DevKits Pro</div>
-										<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">Series A Funded</div>
-										<div className="text-2xl font-bold text-primary">$2.1M</div>
-									</div>
-									<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
-										<div className="font-medium mb-2">SaaSify</div>
-										<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">2 Weeks to MVP</div>
-										<div className="text-2xl font-bold text-primary">15k Users</div>
-									</div>
-									<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
-										<div className="font-medium mb-2">BuildSpace</div>
-										<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">3 Days to Launch</div>
-										<div className="text-2xl font-bold text-primary">98% Less Code</div>
-									</div>
+								<h3 className="text-xl font-semibold mb-4">Rising Dev Costs</h3>
+								<p className="text-gray-600 dark:text-gray-300 mb-4">
+									The average developer salary hit $150k in 2024. Save months of development time and launch before your runway runs out.
+								</p>
+								<div className="pt-4 border-t border-gray-100 dark:border-gray-700">
+									<div className="text-sm font-medium mb-2">Your Savings:</div>
+									<ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+										<li className="flex items-center gap-2">
+											<span className="text-green-500">✓</span>
+											<span>4-6 Months Dev Time</span>
+										</li>
+										<li className="flex items-center gap-2">
+											<span className="text-green-500">✓</span>
+											<span>$50k+ in Development</span>
+										</li>
+										<li className="flex items-center gap-2">
+											<span className="text-green-500">✓</span>
+											<span>Faster Time to Market</span>
+										</li>
+									</ul>
 								</div>
 							</div>
-							<div className="text-center">
-								<div className="max-w-2xl mx-auto mb-8">
-									<div className="space-y-4">
-										<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
-											<StarFilledIcon className="h-4 w-4" />
-											<span className="text-sm font-medium">Special Launch Pricing - Save 40%</span>
-										</div>
-										<Countdown targetDate={LAUNCH_END_DATE} variant="default" className="justify-center" />
-									</div>
-									<p className="text-sm text-gray-500 mt-4">
-										Join these successful founders and launch your product in days, not months.
-										Lock in our special launch pricing before it's gone.
-									</p>
+							<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
+								<div className="text-green-500 mb-4">
+									<Headphones className="h-8 w-8" />
 								</div>
-								<div className="flex justify-center gap-4">
-									<Link
-										href={routes.docs}
-										className={buttonVariants({ variant: "default", size: "lg" })}
-									>
-										Start Building Now
-									</Link>
-									<Link
-										href={routes.docs}
-										className={buttonVariants({ variant: "outline", size: "lg" })}
-									>
-										Compare All Features →
-									</Link>
+								<h3 className="text-xl font-semibold mb-4">Launch Price</h3>
+								<p className="text-gray-600 dark:text-gray-300 mb-4">
+									Get lifetime access at our special launch price. After launch (and my wedding), prices will increase to match market rates.
+								</p>
+								<div className="pt-4 border-t border-gray-100 dark:border-gray-700">
+									<div className="text-sm font-medium mb-2">Limited Time:</div>
+									<ul className="space-y-2 text-sm text-gray-600 dark:text-gray-300">
+										<li className="flex items-center gap-2">
+											<span className="text-green-500">✓</span>
+											<span>40% Launch Discount</span>
+										</li>
+										<li className="flex items-center gap-2">
+											<span className="text-green-500">✓</span>
+											<span>Founder-First Support</span>
+										</li>
+										<li className="flex items-center gap-2">
+											<span className="text-green-500">✓</span>
+											<span>Lifetime Updates</span>
+										</li>
+									</ul>
 								</div>
 							</div>
 						</div>
-					</Section>
+						<div className="text-center mb-12">
+							<SectionBadge className="mb-6">
+								<MegaphoneIcon className="h-4 w-4" />
+								<span>Recent Success Stories</span>
+							</SectionBadge>
+							<div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
+								<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
+									<div className="font-medium mb-2">Indie Hackers</div>
+									<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">Launched in days</div>
+									<div className="text-2xl font-bold text-primary">10+ Apps</div>
+								</div>
+								<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
+									<div className="font-medium mb-2">Fly5</div>
+									<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">MVP created in 4 hours</div>
+									<div className="text-2xl font-bold text-primary">4 Weeks → 4 hours</div>
+								</div>
+								<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
+									<div className="font-medium mb-2">Ship Log</div>
+									<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">2 days to MVP</div>
+									<div className="text-2xl font-bold text-primary">Users in a week</div>
+								</div>
+								<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
+									<div className="font-medium mb-2">Illish</div>
+									<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">3 Days to Launch</div>
+									<div className="text-2xl font-bold text-primary">98% Less Code</div>
+								</div>
+							</div>
+						</div>
+						<div className="text-center">
+							<div className="max-w-2xl mx-auto mb-8">
+								<div className="space-y-4">
+									<SectionBadge>
+										<TargetIcon className="h-4 w-4" />
+										<span>Special Launch Pricing - Save 50%</span>
+									</SectionBadge>
+								</div>
 
-					<Section>
-						<SectionHeader>Choose Your Launch Plan</SectionHeader>
-						<div className="max-w-4xl mx-auto text-center">
-							<p className="text-lg mb-6">
-								Start with everything you need, upgrade as you grow. All plans include our core features and expert support.
-							</p>
-							<div className="space-y-4">
-								<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary">
-									<Star className="h-4 w-4" />
-									<span className="text-sm font-medium">Special Launch Pricing - Save 40%</span>
-								</div>
-								<Countdown targetDate={LAUNCH_END_DATE} variant="default" className="justify-center" />
 							</div>
 						</div>
+
+						<SectionHeader>Choose Your Launch Plan</SectionHeader>
+						<SectionCopy>Join these successful founders and launch your product in days, not months.</SectionCopy>
+
 						<PricingSectionSingle />
+
+						<Countdown targetDate={LAUNCH_END_DATE} variant="default" className="justify-center" />
 						<div className="mt-6 text-center">
 							<div className="mb-8">
 								<p className="text-sm font-medium text-primary mb-2">Limited Time Launch Offer</p>
-								<p className="text-sm text-gray-500">Only 7 spots remaining at this price</p>
+								<p className="text-sm text-gray-500">
+									Lock in our special launch pricing before it's gone.
+								</p>
 							</div>
 							<p className="text-sm text-gray-500 mb-4">
-								All plans include: Next.js 15, TypeScript, Authentication, Database, UI Components, and more
+								Everything included: Next.js 15, TypeScript, Authentication, Database, UI Components, and more
 							</p>
 							<div className="flex items-center justify-center gap-8">
 								<div className="flex items-center gap-2">
@@ -474,12 +424,12 @@ export default async function Home({
 					</Section>
 
 					<Section className="max-w-3xl">
-						<SectionTitle>Common Questions</SectionTitle>
+						<SectionBadge>Common Questions</SectionBadge>
 						<SectionHeader>Everything You Need to Know</SectionHeader>
 						<SectionCopy>
-							Can't find what you're looking for? Reach out on{" "}
-							<Link href={routes.external.email}>email</Link> or{" "}
-							<Link href={routes.external.x_follow}>Twitter</Link>
+							Can't find what you're looking for? Reach out on
+							<Link className={cn(buttonVariants({ variant: "link", size: "lg" }), "px-1")} href={routes.external.email}>email</Link>
+							<Link className={cn(buttonVariants({ variant: "link", size: "lg" }), "px-1")} href={routes.external.x_follow}>or Twitter</Link>
 						</SectionCopy>
 						<SectionContent>
 							<FAQ />
@@ -488,7 +438,7 @@ export default async function Home({
 							Have a special requirement?{" "}
 							<Link
 								href={routes.external.email}
-								className={buttonVariants({ variant: "link", size: "sm" })}
+								className={cn(buttonVariants({ variant: "link", size: "sm" }), "px-1")}
 							>
 								Let's chat →
 							</Link>
@@ -496,21 +446,15 @@ export default async function Home({
 					</Section>
 
 					<Section>
-						<SectionHeader>
-							<AnimatedGradientText className="bg-purple">AI-First Development</AnimatedGradientText>
-						</SectionHeader>
-						<SectionContent>
-							<div className="max-w-4xl mx-auto text-center mb-12">
-								<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 text-sm font-medium mb-6">
-									<StarFilledIcon className="h-4 w-4" />
-									<span>Built-in AI Features</span>
-								</div>
-								<p className="text-lg mb-8">
-									Don't just integrate AI - make it your competitive advantage. Launch with production-ready AI features that your users will love.
-								</p>
-								<AIDemo />
-							</div>
-						</SectionContent>
+						<SectionBadge className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 text-sm font-medium">
+							<IconRobotFace className="h-4 w-4" />
+							<span>Practical AI Integration</span>
+						</SectionBadge>
+						<SectionCopy>
+							Don't just integrate AI - make it your competitive advantage. Launch with production-ready AI features that your users will love.
+						</SectionCopy>
+
+						<AIDemo />
 					</Section>
 
 					<Section>
@@ -658,10 +602,10 @@ export default async function Home({
 								</div>
 								<div className="flex justify-center gap-4">
 									<Link
-										href={routes.docs}
+										href={routes.features}
 										className={buttonVariants({ variant: "default", size: "lg" })}
 									>
-										View Tech Stack
+										View Features →
 									</Link>
 									<Link
 										href={routes.docs}
@@ -676,7 +620,7 @@ export default async function Home({
 
 					<Section>
 						<SectionHeader>
-							Join <NumberTicker value={150} />+ Successful Launches
+							Join <NumberTicker value={12} /> Production-Proven Apps
 						</SectionHeader>
 						<SectionContent>
 							<div className="max-w-3xl mx-auto text-center mb-8">
@@ -685,16 +629,16 @@ export default async function Home({
 								</p>
 								<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
 									<div className="p-4">
-										<div className="text-3xl font-bold mb-2">3-6x</div>
-										<div className="text-sm text-gray-600 dark:text-gray-300">Faster Development</div>
+										<div className="text-3xl font-bold mb-2">10+</div>
+										<div className="text-sm text-gray-600 dark:text-gray-300">Production Apps</div>
 									</div>
 									<div className="p-4">
-										<div className="text-3xl font-bold mb-2">$50k+</div>
-										<div className="text-sm text-gray-600 dark:text-gray-300">Average Savings</div>
+										<div className="text-3xl font-bold mb-2">90%+</div>
+										<div className="text-sm text-gray-600 dark:text-gray-300">Time Saved</div>
 									</div>
 									<div className="p-4">
 										<div className="text-3xl font-bold mb-2">24/7</div>
-										<div className="text-sm text-gray-600 dark:text-gray-300">Expert Support</div>
+										<div className="text-sm text-gray-600 dark:text-gray-300">Developer Support</div>
 									</div>
 								</div>
 							</div>
@@ -702,16 +646,16 @@ export default async function Home({
 						</SectionContent>
 					</Section>
 
-					<Section className="relative bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+					<Section variant="bleed" className="relative bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+						<SectionBadge className="inline-flex items-center gap-2 px-4 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-medium mb-4">
+							<Star className="h-4 w-4" />
+							<span>Feature Comparison</span>
+						</SectionBadge>
 						<SectionHeader>
 							Compare AI Features
 						</SectionHeader>
 						<div className="max-w-4xl mx-auto">
 							<div className="text-center mb-12">
-								<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-medium mb-4">
-									<Star className="h-4 w-4" />
-									<span>Feature Comparison</span>
-								</div>
 								<p className="text-lg text-gray-600 dark:text-gray-300">
 									See how ShipKit's AI features compare to building from scratch
 								</p>
@@ -755,7 +699,7 @@ export default async function Home({
 										</li>
 										<li className="flex items-center gap-2 text-sm">
 											<span className="text-red-500">×</span>
-											<span>Security vulnerabilities risk</span>
+											<span>Security risks</span>
 										</li>
 										<li className="flex items-center gap-2 text-sm">
 											<span className="text-red-500">×</span>
@@ -800,35 +744,33 @@ export default async function Home({
 							Feature Comparison
 						</SectionHeader>
 						<SectionContent>
-							<div className="max-w-5xl mx-auto">
-								<div className="text-center mb-8">
-									<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-medium mb-6">
-										<Star className="h-4 w-4" />
-										<span>Compare Solutions</span>
-									</div>
-									<p className="text-lg text-gray-600 dark:text-gray-300">
-										See how ShipKit stacks up against other options
-									</p>
+							<div className="text-center mb-8">
+								<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-medium mb-6">
+									<Star className="h-4 w-4" />
+									<span>Compare Solutions</span>
 								</div>
-								<ComparisonTable />
-								<div className="mt-8 text-center">
-									<p className="text-sm text-gray-500 mb-4">
-										Don't waste months reinventing the wheel. Get a production-ready stack today.
-									</p>
-									<div className="flex justify-center gap-4">
-										<Link
-											href={routes.docs}
-											className={buttonVariants({ variant: "default", size: "lg" })}
-										>
-											Start Building Now
-										</Link>
-										<Link
-											href={routes.docs}
-											className={buttonVariants({ variant: "outline", size: "lg" })}
-										>
-											Compare All Features →
-										</Link>
-									</div>
+								<p className="text-lg text-gray-600 dark:text-gray-300">
+									See how ShipKit stacks up against other options
+								</p>
+							</div>
+							<ComparisonTable />
+							<div className="mt-8 text-center">
+								<p className="text-sm text-gray-500 mb-4">
+									Don't waste months reinventing the wheel. Get a production-ready stack today.
+								</p>
+								<div className="flex justify-center gap-4">
+									<Link
+										href={routes.external.buy}
+										className={buttonVariants({ variant: "default", size: "lg" })}
+									>
+										Start Building Now
+									</Link>
+									<Link
+										href={routes.features}
+										className={buttonVariants({ variant: "outline", size: "lg" })}
+									>
+										Compare All Features →
+									</Link>
 								</div>
 							</div>
 						</SectionContent>
@@ -980,15 +922,15 @@ export default async function Home({
 										<div className="flex justify-center gap-4">
 											<Link
 												href={routes.docs}
+												className={buttonVariants({ variant: "outline", size: "lg" })}
+											>
+												Read More →
+											</Link>
+											<Link
+												href={routes.external.buy}
 												className={buttonVariants({ variant: "default", size: "lg" })}
 											>
 												Start Building Now
-											</Link>
-											<Link
-												href={routes.docs}
-												className={buttonVariants({ variant: "outline", size: "lg" })}
-											>
-												Read More Stories →
 											</Link>
 										</div>
 									</div>
@@ -996,7 +938,7 @@ export default async function Home({
 							</Section>
 
 							<Section>
-								<SectionTitle>AI Workflows</SectionTitle>
+								<SectionBadge>AI Workflows</SectionBadge>
 								<SectionHeader>Supercharged AI tools</SectionHeader>
 								<SectionCopy>
 									We ❤️ v0. <br />
@@ -1024,7 +966,7 @@ export default async function Home({
 							<Section>Tabs: designers, developers, founders</Section>
 
 							<Section>
-								<SectionTitle>Showcase</SectionTitle>
+								<SectionBadge>Showcase</SectionBadge>
 								<SectionHeader>We can't wait to see what you build</SectionHeader>
 								<ExampleMasonry />
 							</Section>
@@ -1083,9 +1025,9 @@ export default async function Home({
 
 						</>
 					)}
-				</Suspense>
+				</Suspense >
 
-			</div>
+			</div >
 		</>
 	);
 }

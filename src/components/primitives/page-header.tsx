@@ -1,11 +1,7 @@
-import { cn } from "@/lib/utils"
-import type React from "react"
+import { cn } from "@/lib/utils";
+import type React from "react";
 
-function PageHeader({
-	className,
-	children,
-	...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+function PageHeader({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
 	return (
 		<section
 			className={cn(
@@ -16,13 +12,10 @@ function PageHeader({
 		>
 			{children}
 		</section>
-	)
+	);
 }
 
-function PageHeaderHeading({
-	className,
-	...props
-}: React.HTMLAttributes<HTMLHeadingElement>) {
+function PageHeaderHeading({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
 	return (
 		<h1
 			className={cn(
@@ -31,7 +24,7 @@ function PageHeaderHeading({
 			)}
 			{...props}
 		/>
-	)
+	);
 }
 
 function PageHeaderDescription({
@@ -40,28 +33,19 @@ function PageHeaderDescription({
 }: React.HTMLAttributes<HTMLParagraphElement>) {
 	return (
 		<p
-			className={cn(
-				"max-w-2xl text-balance text-lg font-light text-foreground",
-				className
-			)}
+			className={cn("max-w-2xl text-balance text-lg font-light text-foreground", className)}
 			{...props}
 		/>
-	)
+	);
 }
 
-function PageActions({
-	className,
-	...props
-}: React.HTMLAttributes<HTMLDivElement>) {
+function PageActions({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) {
 	return (
 		<div
-			className={cn(
-				"flex w-full items-center justify-start gap-2 py-2",
-				className
-			)}
+			className={cn("flex w-full items-center justify-start gap-2 py-2", className)}
 			{...props}
 		/>
-	)
+	);
 }
 
-export { PageActions, PageHeader, PageHeaderDescription, PageHeaderHeading }
+export { PageActions, PageHeader, PageHeaderDescription, PageHeaderHeading };

@@ -1,14 +1,11 @@
 "use server";
 
 import { openai } from "@/lib/open-ai";
-import { db } from "@/server/db";
-import { guideEntries } from "@/server/db/schema";
 import {
 	rateLimitService,
 	rateLimits,
 } from "@/server/services/rate-limit-service";
-import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
-import { cache } from "react";
+import { guideService } from "@/server/services/guide-service";
 
 const generateGuideEntry = async (searchTerm: string) => {
 	if (!openai) {
@@ -96,73 +93,19 @@ export const searchGuide = async (searchTerm: string) => {
 		throw new Error("Too many searches. Please try again in a minute.");
 	}
 
-	const normalizedTerm = searchTerm.toLowerCase().trim();
-
-	// First, try to find an existing entry with fuzzy matching
-	const existingEntry = await db.query.guideEntries.findFirst({
-		where: or(
-			eq(guideEntries.searchTerm, normalizedTerm),
-			ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
-		),
-		with: {
-			category: true,
-			sourceCrossReferences: {
-				with: {
-					targetEntry: true,
-				},
-			},
-		},
-	});
-
+	// First, try to find an existing entry
+	const existingEntry = await guideService.findExistingEntry(searchTerm);
 	if (existingEntry) {
-		// Increment popularity
-		await db
-			.update(guideEntries)
-			.set({
-				popularity: sql`${guideEntries.popularity} + 1`,
-				updatedAt: new Date(),
-			})
-			.where(eq(guideEntries.id, existingEntry.id));
 		return existingEntry;
 	}
 
 	// If no entry exists, generate one using AI
 	try {
 		const entry = await generateGuideEntry(searchTerm);
-
-		// Generate search vector
-		const searchVector = [
-			normalizedTerm,
-			...normalizedTerm.split(" "),
-			...entry.content.toLowerCase().split(/\W+/),
-			...entry.whereToFind.toLowerCase().split(/\W+/),
-			...entry.whatToAvoid.toLowerCase().split(/\W+/),
-		]
-			.filter(Boolean)
-			.join(" ");
-
-		// Store the new entry
-		const [newEntry] = await db
-			.insert(guideEntries)
-			.values({
-				searchTerm: normalizedTerm,
-				content: entry.content,
-				travelAdvice: entry.travelAdvice,
-				whereToFind: entry.whereToFind,
-				whatToAvoid: entry.whatToAvoid,
-				funFact: entry.funFact,
-				advertisement: entry.advertisement,
-				reliability: entry.reliability,
-				dangerLevel: entry.dangerLevel,
-				contributorId: "ai-researcher",
-				searchVector,
-				popularity: 1,
-				createdAt: new Date(),
-				updatedAt: new Date(),
-			})
-			.returning();
-
-		return newEntry;
+		return await guideService.createEntry({
+			searchTerm,
+			...entry,
+		});
 	} catch (error) {
 		console.error("Error generating entry:", error);
 		throw new Error(
@@ -170,46 +113,3 @@ export const searchGuide = async (searchTerm: string) => {
 		);
 	}
 };
-
-export const getRecentEntries = cache(async (limit = 10) => {
-	return db.query.guideEntries.findMany({
-		orderBy: [desc(guideEntries.createdAt)],
-		limit,
-		with: {
-			category: true,
-		},
-	});
-});
-
-export const getPopularEntries = cache(async (limit = 10) => {
-	return db.query.guideEntries.findMany({
-		orderBy: [desc(guideEntries.popularity)],
-		limit,
-		with: {
-			category: true,
-		},
-	});
-});
-
-export const getSimilarSearches = cache(
-	async (searchTerm: string, limit = 5) => {
-		if (!searchTerm?.trim()) return [];
-
-		const normalizedTerm = searchTerm.toLowerCase().trim();
-
-		return db.query.guideEntries.findMany({
-			where: and(
-				or(
-					ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
-					ilike(guideEntries.searchVector, `%${normalizedTerm}%`),
-				),
-				sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.1`,
-			),
-			orderBy: [desc(guideEntries.popularity)],
-			limit,
-			with: {
-				category: true,
-			},
-		});
-	},
-);

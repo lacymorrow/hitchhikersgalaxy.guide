@@ -8,6 +8,11 @@ async function syncDatabase() {
 	console.log("🔄 Starting database synchronization...");
 
 	try {
+		if (!db) {
+			console.error("❌ Database connection not found");
+			process.exit(1);
+		}
+
 		// 1. Run Drizzle migrations
 		console.log("📦 Running Drizzle migrations...");
 		try {

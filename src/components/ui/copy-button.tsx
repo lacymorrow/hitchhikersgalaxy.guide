@@ -1,12 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
@@ -21,7 +16,14 @@ interface CopyButtonProps {
 	timeout?: number;
 }
 
-export const CopyButton = ({ value, className, timeout = 2000, successTitle = "Copied", successDescription = "Copied to clipboard", ...props }: CopyButtonProps) => {
+export const CopyButton = ({
+	value,
+	className,
+	timeout = 2000,
+	successTitle = "Copied",
+	successDescription = "Copied to clipboard",
+	...props
+}: CopyButtonProps) => {
 	const { toast } = useToast();
 	const { isCopied, copyToClipboard } = useCopyToClipboard({
 		timeout: 2000,
@@ -34,7 +36,7 @@ export const CopyButton = ({ value, className, timeout = 2000, successTitle = "C
 	});
 
 	return (
-		<TooltipProvider>
+
 			<Tooltip>
 				<TooltipTrigger asChild>
 					<Button
@@ -56,7 +58,7 @@ export const CopyButton = ({ value, className, timeout = 2000, successTitle = "C
 									damping: 30,
 									mass: 0.5,
 								}}
-							// className="absolute inset-0 flex items-center justify-center"
+								// className="absolute inset-0 flex items-center justify-center"
 							>
 								{isCopied ? (
 									<Check className="h-4 w-4 text-green-500" />
@@ -71,6 +73,6 @@ export const CopyButton = ({ value, className, timeout = 2000, successTitle = "C
 					<p>{isCopied ? successTitle : "Copy to clipboard"}</p>
 				</TooltipContent>
 			</Tooltip>
-		</TooltipProvider>
+
 	);
 };

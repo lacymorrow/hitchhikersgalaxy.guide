@@ -36,7 +36,7 @@ export function BrowserHeader({
 	onOverwriteChange,
 	onAddRegistry,
 	onRemoveRegistry,
-	onStyleChange
+	onStyleChange,
 }: BrowserHeaderProps) {
 	const [open, setOpen] = useState(false)
 
@@ -176,6 +176,7 @@ export function BrowserHeader({
 											))}
 									</CommandGroup>
 								)}
+								<Separator />
 								<CommandGroup>
 									<CommandItem className="border-t p-0">
 										<AddRegistryDialog onAdd={onAddRegistry} />

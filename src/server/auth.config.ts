@@ -25,8 +25,7 @@ declare module "next-auth" {
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthConfig = {
-	// debug: process.env.NODE_ENV !== "production"
-	trustHost: true,
+	debug: process.env.NODE_ENV !== "production",
 	providers,
 	pages: {
 		error: routes.auth.error,

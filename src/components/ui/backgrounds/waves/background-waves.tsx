@@ -1,7 +1,27 @@
 'use client'
 
-import { calculateWaveY, getWaveColor } from '@/lib/utils/colors';
-import { type FC, useEffect, useRef } from 'react';
+import { type FC, useEffect, useRef } from "react";
+
+export const calculateWaveY = (
+	x: number,
+	time: number,
+	layer: number,
+	height: number,
+	config: WaveConfig
+): number => {
+	const baseY = height / 2;
+	return (
+		baseY +
+		Math.sin(x * config.frequency * 0.01 + time + layer) * (50 * config.amplitude) +
+		Math.sin(x * config.frequency * 0.02 + time * 1.2) * (30 * config.amplitude) +
+		Math.sin(x * config.frequency * 0.003 + time * 0.3) * (100 * config.amplitude)
+	);
+};
+
+export const getWaveColor = (time: number, layer: number, config: WaveConfig): string => {
+	const hue = (time + layer * 120) % 360;
+	return `hsl(${hue}, ${config.saturation}%, ${config.brightness}%)`;
+};
 
 export interface WaveConfig {
 	speed: number;

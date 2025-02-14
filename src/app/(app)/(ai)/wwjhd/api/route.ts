@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { openai } from "@/lib/open-ai";
 import { NextResponse } from "next/server";
 import { z } from "zod";

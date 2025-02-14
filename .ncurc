@@ -1,7 +1,8 @@
 {
   "reject": [
-    "eslint",
+		"eslint",
 		"lexical",
-    "pg"
-  ]
+		"pg",
+		"sharp"
+	]
 }

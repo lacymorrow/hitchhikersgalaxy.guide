@@ -6,8 +6,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Tooltip,
 	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
+	TooltipTrigger
 } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
@@ -24,7 +23,7 @@ interface GitHubSession {
 	};
 }
 
-export const GitHubConnectButton = () => {
+export const GitHubConnectButton = ({ className }: { className?: string }) => {
 	const { data: session, update: updateSession } = useSession();
 	const [isLoading, setIsLoading] = useState(false);
 	const user = (session as GitHubSession)?.user;
@@ -57,51 +56,58 @@ export const GitHubConnectButton = () => {
 	};
 
 	return (
-		<TooltipProvider>
-			<Tooltip>
-				<TooltipTrigger asChild>
-					{isConnected ? (
-						<div className="flex flex-col items-center justify-center gap-1">
-							<Link
-								href={siteConfig.repo.url}
-								className={cn(
-									buttonVariants({
-										variant: "outline",
-										size: "lg",
-									}),
-									"w-full",
-								)}
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								<Icons.github className="mr-2 h-4 w-4" />
-								View Repository
-							</Link>
-							<Button
-								onClick={() => void handleDisconnect()}
-								variant={"link"}
-								size={"sm"}
-								disabled={isLoading}
-								className="text-muted-foreground"
-							>
-								Not {githubUsername}? Click to disconnect.
-							</Button>
-						</div>
-					) : (
-						<Button onClick={() => void handleConnect()} disabled={isLoading}>
+		<Tooltip>
+			<TooltipTrigger asChild>
+				{isConnected ? (
+					<div
+						className={cn(
+							"flex flex-col items-center justify-center gap-1",
+							className,
+						)}
+					>
+						<Link
+							href={siteConfig.repo.url}
+							className={cn(
+								buttonVariants({
+									variant: "outline",
+									size: "lg",
+								}),
+								"w-full",
+							)}
+							target="_blank"
+							rel="noopener noreferrer"
+						>
 							<Icons.github className="mr-2 h-4 w-4" />
-							{isLoading ? "Connecting..." : "Connect GitHub"}
+							View Repository
+						</Link>
+						<Button
+							onClick={() => void handleDisconnect()}
+							variant={"link"}
+							size={"sm"}
+							disabled={isLoading}
+							className="text-muted-foreground"
+						>
+							Not {githubUsername}? Click to disconnect.
 						</Button>
-					)}
-				</TooltipTrigger>
-				<TooltipContent>
-					<p>
-						{isConnected
-							? `Remove GitHub repository access for ${githubUsername}`
-							: "Grant access to the private repository"}
-					</p>
-				</TooltipContent>
-			</Tooltip>
-		</TooltipProvider>
+					</div>
+				) : (
+					<Button
+						onClick={() => void handleConnect()}
+						disabled={isLoading}
+						className={cn(className)}
+					>
+						<Icons.github className="mr-2 h-4 w-4" />
+						{isLoading ? "Connecting..." : "Connect GitHub"}
+					</Button>
+				)}
+			</TooltipTrigger>
+			<TooltipContent>
+				<p>
+					{isConnected
+						? `Remove GitHub repository access for ${githubUsername}`
+						: "Grant access to the private repository"}
+				</p>
+			</TooltipContent>
+		</Tooltip>
 	);
 };

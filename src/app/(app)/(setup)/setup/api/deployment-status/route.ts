@@ -17,11 +17,11 @@ export async function GET(request: Request) {
 		}
 
 		// Get Vercel access token
-		const vercelAccount = await db.query.accounts.findFirst({
+		const vercelAccount = await db?.query.accounts.findFirst({
 			where: (accounts, { and, eq }) =>
 				and(
 					eq(accounts.userId, session.user.id),
-					eq(accounts.provider, "vercel")
+					eq(accounts.provider, "vercel"),
 				),
 		});
 
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
 				headers: {
 					Authorization: `Bearer ${vercelAccount.access_token}`,
 				},
-			}
+			},
 		);
 
 		if (!statusResponse.ok) {
@@ -75,7 +75,7 @@ export async function GET(request: Request) {
 			error instanceof Error
 				? error.message
 				: "Failed to check deployment status",
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }

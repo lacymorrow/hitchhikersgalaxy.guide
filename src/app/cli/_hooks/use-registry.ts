@@ -6,7 +6,9 @@ import type { Registry, RegistryFilters, RegistryItem } from "../_lib/types";
 
 export function useRegistry() {
 	const [registries, setRegistries] = useState<Registry[]>([]);
-	const [currentRegistry, setCurrentRegistry] = useState<Registry | undefined>(undefined);
+	const [currentRegistry, setCurrentRegistry] = useState<Registry | undefined>(
+		undefined,
+	);
 	const [items, setItems] = useState<Record<string, RegistryItem[]>>({});
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<Error | null>(null);
@@ -17,15 +19,19 @@ export function useRegistry() {
 	const [searchQuery, setSearchQuery] = useState("");
 
 	useEffect(() => {
-		const loadRegistries = () => {
+		const loadRegistries = async () => {
 			try {
-				const registries = getRegistries();
+				const registries = await getRegistries();
 				setRegistries(registries);
 			} catch (error) {
-				setError(error instanceof Error ? error : new Error("Failed to load registries"));
+				setError(
+					error instanceof Error
+						? error
+						: new Error("Failed to load registries"),
+				);
 			}
 		};
-		void loadRegistries();
+		loadRegistries();
 	}, []);
 
 	useEffect(() => {
@@ -35,36 +41,48 @@ export function useRegistry() {
 			try {
 				if (currentRegistry) {
 					const registryItems = await fetchRegistryIndex(currentRegistry.url);
-					setItems({
-						[currentRegistry.name]: registryItems.map((item) => ({
-							...item,
-							registry: currentRegistry.name,
-						})),
-					});
+					if (Array.isArray(registryItems) && registryItems.length > 0) {
+						setItems({
+							[currentRegistry.name]: registryItems.map((item) => ({
+								...item,
+								registry: currentRegistry.name,
+								componentUrl: `${currentRegistry.baseComponentUrl}/default/${item.name}.json`,
+							})),
+						});
+					} else {
+						// If current registry is invalid, clear it and items
+						setCurrentRegistry(undefined);
+						setItems({});
+					}
 				} else {
 					const allItems: Record<string, RegistryItem[]> = {};
+
 					for (const registry of registries) {
-						try {
-							const items = await fetchRegistryIndex(registry.url);
+						const items = await fetchRegistryIndex(registry.url);
+						if (Array.isArray(items) && items.length > 0) {
 							allItems[registry.name] = items.map((item) => ({
 								...item,
 								registry: registry.name,
+								componentUrl: `${registry.baseComponentUrl}/default/${item.name}.json`,
 							}));
-						} catch (error) {
-							console.error(`Failed to load items from ${registry.name}:`, error);
-							allItems[registry.name] = [];
 						}
 					}
-					setItems(allItems);
+
+					if (Object.keys(allItems).length > 0) {
+						setItems(allItems);
+					} else {
+						setItems({});
+					}
 				}
 			} catch (error) {
-				setError(error instanceof Error ? error : new Error("Failed to load registry items"));
+				// Silently handle any remaining errors
+				setItems({});
 			} finally {
 				setLoading(false);
 			}
 		};
 		if (registries.length > 0) {
-			void loadItems();
+			loadItems();
 		}
 	}, [currentRegistry, registries]);
 
@@ -122,7 +140,9 @@ export function useRegistry() {
 		});
 
 		// Sort by name
-		return filtered.sort((a: RegistryItem, b: RegistryItem) => a.name.localeCompare(b.name));
+		return filtered.sort((a: RegistryItem, b: RegistryItem) =>
+			a.name.localeCompare(b.name),
+		);
 	};
 
 	return {

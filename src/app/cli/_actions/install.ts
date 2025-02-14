@@ -1,6 +1,7 @@
 "use server";
 
-import { spawn } from "node:child_process";
+import { spawn } from "child_process";
+import { type InstallOptions } from "../_lib/types";
 
 /**
  * Install a component from a registry
@@ -8,59 +9,61 @@ import { spawn } from "node:child_process";
  */
 export async function installComponent(
 	componentUrl: string,
-	options: { overwrite?: boolean } = {}
-): Promise<ReadableStream> {
-	const controller = new AbortController();
-	const { signal } = controller;
-
-	const process = await startProcess(componentUrl, options, signal);
-	return process;
-}
-
-async function startProcess(
-	componentUrl: string,
-	options: { overwrite?: boolean },
-	signal: AbortSignal
-): Promise<ReadableStream> {
+	options: InstallOptions = {},
+): Promise<ReadableStream<Uint8Array>> {
 	const encoder = new TextEncoder();
-	const stream = new TransformStream();
-	const writer = stream.writable.getWriter();
 
-	try {
-		const command = `npx shadcn-custom add "${componentUrl}"${options.overwrite ? " --overwrite" : ""}`;
-		const child = spawn(command, {
-			shell: true,
-			signal,
-		});
+	return new ReadableStream({
+		async start(controller) {
+			try {
+				const args = ["shadcn@latest", "add"];
 
-		child.stdout.on("data", (data: Buffer) => {
-			void writer.write(encoder.encode(data.toString()));
-		});
+				// Add component name
+				args.push(componentUrl);
 
-		child.stderr.on("data", (data: Buffer) => {
-			void writer.write(encoder.encode(data.toString()));
-		});
+				// Add options
+				if (options.overwrite) args.push("--overwrite");
+				if (options.style) args.push("--style", options.style);
+				if (options.typescript) args.push("--typescript");
+				if (options.path) args.push("--path", options.path);
 
-		await new Promise<void>((resolve, reject) => {
-			child.on("error", (error: Error) => {
-				reject(error);
-			});
+				const process = spawn("npx", args, {
+					stdio: ["pipe", "pipe", "pipe"],
+				});
 
-			child.on("close", (code: number) => {
-				if (code === 0) {
-					resolve();
-				} else {
-					reject(new Error(`Process exited with code ${code}`));
+				// If not overwriting, automatically answer "n" to prompts
+				if (!options.overwrite && process.stdin) {
+					process.stdin.write("n\n");
+					process.stdin.end();
 				}
-			});
-		});
 
-		await writer.close();
-	} catch (error) {
-		const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
-		await writer.write(encoder.encode(`Error: ${errorMessage}\n`));
-		await writer.close();
-	}
+				process.stdout?.on("data", (data) => {
+					controller.enqueue(encoder.encode(data));
+				});
 
-	return stream.readable;
+				process.stderr?.on("data", (data) => {
+					controller.enqueue(encoder.encode(data));
+				});
+
+				process.on("close", (code) => {
+					if (code !== 0) {
+						controller.enqueue(
+							encoder.encode(`\nProcess exited with code ${code}`),
+						);
+					}
+					controller.close();
+				});
+
+				process.on("error", (err) => {
+					controller.enqueue(encoder.encode(`\nError: ${err.message}`));
+					controller.close();
+				});
+			} catch (error) {
+				const message =
+					error instanceof Error ? error.message : "Unknown error occurred";
+				controller.enqueue(encoder.encode(`\nError: ${message}`));
+				controller.close();
+			}
+		},
+	});
 }

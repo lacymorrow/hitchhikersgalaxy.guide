@@ -2,10 +2,11 @@
 
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
-import { AnimatePresence, motion } from "motion/react";
+import { AnimatePresence, motion } from "framer-motion";
 import type React from "react";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
+import { LinkOrButton } from "../primitives/link-or-button";
 interface NavLink {
 	label: string | React.ReactNode;
 	href: string;
@@ -30,7 +31,7 @@ const navigationVariants = cva(
 
 const buttonVariants = cva(
 	// Base styles
-	"relative inline-flex w-fit whitespace-nowrap rounded px-2 py-1 font-medium text-sm text-neutral-500",
+	"relative z-10 flex w-fit whitespace-nowrap rounded px-2 py-1 font-medium text-sm text-neutral-500",
 	{
 		variants: {
 			variant: {
@@ -60,7 +61,9 @@ export const VercelNavigation = ({
 	],
 	className,
 }: VercelNavigationProps) => {
-	const [elementFocused, setElementFocused] = useState<number | null>(variant === "hover" ? null : 0);
+	const [elementFocused, setElementFocused] = useState<number | null>(
+		variant === "hover" ? null : 0
+	);
 
 	const handleInteraction = (index: number | null) => {
 		setElementFocused(index);
@@ -74,13 +77,13 @@ export const VercelNavigation = ({
 			})}
 		>
 			{navLinks.map((link, index) => (
-				<button
-					className={buttonVariants({ variant })}
+				<LinkOrButton
+					href={link.href}
+					className={cn(buttonVariants({ variant }), "items-center justify-center")}
 					key={uuidv4()}
 					{...(variant === "hover"
 						? { onMouseEnter: () => handleInteraction(index) }
-						: { onClick: () => handleInteraction(index) }
-					)}
+						: { onClick: () => handleInteraction(index) })}
 					type="button"
 				>
 					{link.label}
@@ -88,19 +91,19 @@ export const VercelNavigation = ({
 						{elementFocused === index && (
 							<motion.div
 								animate={{ opacity: 1, scale: 1 }}
-								className="-z-10 absolute top-0 right-0 bottom-0 left-0 rounded-md bg-neutral-200 dark:bg-neutral-800"
+								className="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-md bg-neutral-200 dark:bg-neutral-800"
 								exit={{ opacity: 0, scale: 0.9 }}
 								initial={{ opacity: 0, scale: 0.95 }}
 								layout={true}
 								layoutId="focused-element"
 								transition={{
 									duration: variant === "hover" ? 0.2 : 0.3,
-									ease: variant === "hover" ? "easeOut" : "easeInOut"
+									ease: variant === "hover" ? "easeOut" : "easeInOut",
 								}}
 							/>
 						)}
 					</AnimatePresence>
-				</button>
+				</LinkOrButton>
 			))}
 		</nav>
 	);

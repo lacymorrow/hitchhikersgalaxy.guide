@@ -1,3 +1,4 @@
+
 import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/primitives/page-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -9,15 +10,19 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { GitHubConnectButton } from "@/components/ui/github-connect-button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { siteConfig } from "@/config/site";
+import { downloadRepo } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
 import {
 	ActivityIcon,
 	AlertCircle,
 	Box,
 	Download,
+	DownloadIcon,
 	GitBranch,
 	GitPullRequest,
 	Globe,
@@ -28,7 +33,7 @@ import {
 	Settings,
 	Shield,
 	Star,
-	Users,
+	Users
 } from "lucide-react";
 
 // Recent activity type
@@ -97,24 +102,37 @@ export default async function DashboardPage() {
 	return (
 		<div className="container mx-auto py-10 space-y-4">
 			<PageHeader>
-				<PageHeaderHeading>Welcome back, {session.user.name}</PageHeaderHeading>
-				<PageHeaderDescription>
-					Here's what's happening with your projects
-				</PageHeaderDescription>
-				<div className="flex items-center space-x-2">
-					<Button variant="outline" size="sm">
-						<Download className="mr-2 h-4 w-4" />
-						Download Shipkit
-					</Button>
-					<Button size="sm">
-						<Settings className="mr-2 h-4 w-4" />
-						Settings
-					</Button>
+				<div className="w-full flex flex-wrap items-center justify-between gap-2">
+					<div>
+
+						<PageHeaderHeading>Welcome, {session.user.name}</PageHeaderHeading>
+						<PageHeaderDescription>
+							Here's what's happening with your projects
+						</PageHeaderDescription>
+					</div>
+					<div className="flex flex-wrap items-stretch justify-stretch gap-3">
+
+						{/* GitHub connection section */}
+						<GitHubConnectButton className="w-full" />
+
+						{/* Download button */}
+						<form action={downloadRepo} className="w-full">
+							<Button
+								type="submit"
+								size="lg"
+								variant="outline"
+								className="w-full"
+							>
+								<DownloadIcon className="mr-2 h-4 w-4" />
+								Download {siteConfig.name}
+							</Button>
+						</form>
+					</div>
 				</div>
-			</PageHeader>
+			</PageHeader >
 
 			{/* Search */}
-			<div className="flex items-center space-x-2">
+			<div className="flex items-center space-x-2" >
 				<div className="relative flex-1">
 					<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
 					<Input
@@ -129,7 +147,7 @@ export default async function DashboardPage() {
 			</div>
 
 			{/* Main Grid */}
-			<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+			< div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" >
 				{/* Stats Cards */}
 				<Card>
 					<CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -183,7 +201,7 @@ export default async function DashboardPage() {
 						</div>
 					</CardContent>
 				</Card>
-			</div>
+			</div >
 
 			{/* Tabs Section */}
 			<Tabs defaultValue="overview" className="space-y-4">
@@ -417,6 +435,6 @@ export default async function DashboardPage() {
 					</Card>
 				</TabsContent>
 			</Tabs>
-		</div>
+		</div >
 	);
 }

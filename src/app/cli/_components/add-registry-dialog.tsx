@@ -66,7 +66,7 @@ export function AddRegistryDialog({ onAdd }: AddRegistryDialogProps) {
 		<Dialog open={open} onOpenChange={setOpen}>
 			<DialogTrigger asChild>
 				<Button
-					variant="outline"
+					variant="ghost"
 					size="sm"
 					className="w-full"
 					onClick={(e) => {

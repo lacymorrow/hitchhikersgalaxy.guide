@@ -1,34 +1,32 @@
 import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 import { OAuthButtons } from "@/app/(app)/(authentication)/_components/oauth-buttons";
-import { Link } from "@/components/primitives/link-with-transition";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import { authProvidersArray } from "@/server/auth.providers";
+import Link from "next/link";
 
 interface AuthFormProps extends ComponentPropsWithoutRef<"div"> {
 	mode: "sign-in" | "sign-up";
 	children: ReactNode;
+	title?: string;
+	description?: string;
 }
 
 export function AuthForm({
-	mode,
+	mode = "sign-in",
 	className,
 	children,
+	title,
+	description,
 	...props
 }: AuthFormProps) {
 	const isSignIn = mode === "sign-in";
-	const title = isSignIn ? "Welcome back" : "Create an account";
-	const description = isSignIn
-		? "Login with your favorite provider"
-		: "Sign up with your favorite provider";
+	const cardTitle = typeof title === "string" ? title : (isSignIn ? "Welcome to Shipkit" : "Create an account");
+	const cardDescription = typeof description === "string" ? description : isSignIn
+		? "Login to get started"
+		: "Sign up to get started";
 	const alternateLink = isSignIn
 		? { text: "Don't have an account?", href: routes.auth.signUp, label: "Sign up" }
 		: { text: "Already have an account?", href: routes.auth.signIn, label: "Sign in" };
@@ -37,12 +35,12 @@ export function AuthForm({
 		<div className={cn("flex flex-col gap-6", className)} {...props}>
 			<Card>
 				<CardHeader className="text-center">
-					<CardTitle className="text-xl">{title}</CardTitle>
-					<CardDescription>{description}</CardDescription>
+					<CardTitle className="text-xl">{cardTitle}</CardTitle>
+					<CardDescription>{cardDescription}</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<div className="grid gap-6">
-						<OAuthButtons variant="icons" />
+						<OAuthButtons />
 						{/* Only show email sign-in if credentials provider is enabled */}
 						{authProvidersArray.includes("credentials") && (
 							<>
@@ -64,8 +62,8 @@ export function AuthForm({
 				</CardContent>
 			</Card>
 			<div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary">
-				By clicking continue, you agree to our <Link href={routes.terms}>Terms of Service</Link>{" "}
-				and <Link href={routes.privacy}>Privacy Policy</Link>.
+				By clicking continue, you agree to our <Link href={routes.terms}>Terms of Service</Link> and{" "}
+				<Link href={routes.privacy}>Privacy Policy</Link>.
 			</div>
 		</div>
 	);

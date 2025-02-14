@@ -1,19 +1,18 @@
-import { Link } from "@/components/primitives/link-with-transition";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
-import type React from "react";
+import Link from "next/link";
+import type { FC, HTMLAttributes, ReactNode } from "react";
 import { v4 as uuid } from "uuid";
 
+interface LinkItem {
+	label: string;
+	href: string;
+}
 
-type FooterItem =
-	| {
-		label: string;
-		href: string;
-	}
-	| React.ReactNode;
+type FooterItem = LinkItem | ReactNode;
 
 interface FooterGroup {
 	header: {
@@ -23,9 +22,7 @@ interface FooterGroup {
 	items: FooterItem[];
 }
 
-type FooterElement =
-	| { type: "group"; content: FooterGroup }
-	| { type: "node"; content: React.ReactNode };
+type FooterElement = { type: "group"; content: FooterGroup } | { type: "node"; content: ReactNode };
 
 const defaultGroups: FooterElement[] = [
 	{
@@ -75,19 +72,19 @@ const footerStyles = cva("flex flex-col gap-lg relative", {
 	},
 });
 
-interface FooterProps extends React.HTMLAttributes<HTMLDivElement> {
+interface FooterProps extends HTMLAttributes<HTMLDivElement> {
 	variant?: VariantProps<typeof footerStyles>["variant"];
 	groups?: FooterElement[];
 }
 
-export const Footer: React.FC<FooterProps> = ({
+export const Footer: FC<FooterProps> = ({
 	variant = "default",
 	groups = defaultGroups,
 	...props
 }) => {
 	const { className, ...rest } = props;
 
-	const groupElements = groups.map((element, index) => {
+	const groupElements = groups.map((element) => {
 		if (element.type === "group") {
 			const group = element.content;
 			return (
@@ -100,15 +97,11 @@ export const Footer: React.FC<FooterProps> = ({
 						<h3 className="mb-2 font-semibold">{group.header.label}</h3>
 					)}
 					<ul className="space-y-2">
-						{group.items.map((item, itemIndex) => {
-							if (
-								item &&
-								typeof item === "object" &&
-								"href" in item &&
-								"label" in item
-							) {
+						{group.items.map((item) => {
+							const key = uuid();
+							if (isLinkItem(item)) {
 								return (
-									<li key={uuid()}>
+									<li key={key}>
 										<Link
 											className={cn(buttonVariants({ variant: "link" }), "p-0")}
 											href={item.href}
@@ -118,7 +111,7 @@ export const Footer: React.FC<FooterProps> = ({
 									</li>
 								);
 							}
-							return item;
+							return <li key={key}>{item}</li>;
 						})}
 					</ul>
 				</div>
@@ -134,11 +127,14 @@ export const Footer: React.FC<FooterProps> = ({
 					<div className="flex flex-col gap-2xl">
 						<Link href={routes.home}><h1 className="text-4xl font-bold">{siteConfig.name}</h1></Link>
 					</div>
-					<div className="flex flex-col md:flex-row flex-wrap lg:gap-20">
-						{groupElements}
-					</div>
-				</div>
-			</div>
+					<div className="flex flex-col flex-wrap md:flex-row lg:gap-20">{groupElements}</div>
+				</div >
+			</div >
 		</footer >
 	);
 };
+
+// Type guard for LinkItem
+function isLinkItem(item: FooterItem): item is LinkItem {
+	return item !== null && typeof item === "object" && "href" in item && "label" in item;
+}

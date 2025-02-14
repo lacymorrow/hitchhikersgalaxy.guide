@@ -72,10 +72,7 @@ export const SignUpForm = () => {
 
 	return (
 		<Form {...form}>
-			<form
-				onSubmit={form.handleSubmit(onSubmit)}
-				className="grid gap-4"
-			>
+			<form onSubmit={form.handleSubmit(onSubmit)} className="grid gap-4">
 				<FormField
 					control={form.control}
 					name="email"
@@ -83,12 +80,7 @@ export const SignUpForm = () => {
 						<FormItem>
 							<FormLabel>Email</FormLabel>
 							<FormControl>
-								<Input
-									placeholder="me@example.com"
-									type="email"
-									autoComplete="email"
-									{...field}
-								/>
+								<Input placeholder="me@example.com" type="email" autoComplete="email" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
@@ -101,20 +93,20 @@ export const SignUpForm = () => {
 						<FormItem>
 							<FormLabel>Password</FormLabel>
 							<FormControl>
-								<Input
-									type="password"
-									autoComplete="new-password"
-									{...field}
-								/>
+								<Input type="password" autoComplete="new-password" {...field} />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					)}
 				/>
-				<Button type="submit" className="w-full" disabled={form.formState.isSubmitting || !form.formState.isValid}>
+				<Button
+					type="submit"
+					className="w-full"
+					disabled={form.formState.isSubmitting || !form.formState.isValid}
+				>
 					{form.formState.isSubmitting ? "Creating account..." : "Create account"}
 				</Button>
 			</form>
 		</Form>
 	);
-}
+};

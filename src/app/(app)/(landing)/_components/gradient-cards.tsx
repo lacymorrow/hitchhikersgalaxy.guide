@@ -1,3 +1,5 @@
+"use client";
+
 import { GradientCard } from "@/components/ui/cui/gradient-card";
 import { cn } from "@/lib/utils";
 import type React from "react";
@@ -20,7 +22,7 @@ export const GradientCards: React.FC<GradientCardsProps> = ({ cards, className }
 		<div
 			className={cn(`mx-auto relative grid w-5/6 grid-cols-1 gap-2 p-2 md:grid-cols-${Math.min(cards.length, 4)}`, className)}
 		>
-			{cards.map((card, index) => (
+			{cards.map((card) => (
 				<GradientCard
 					key={uuidv4()}
 					className={card.className ?? "p-4"}

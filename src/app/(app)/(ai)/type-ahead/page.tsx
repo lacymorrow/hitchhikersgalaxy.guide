@@ -1,3 +1,4 @@
+// @ts-nocheck
 "use client";
 
 import AIEditor from "@/app/(app)/(ai)/type-ahead/_components/AIEditor";

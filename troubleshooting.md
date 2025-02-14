@@ -8,3 +8,17 @@ Remove the carets `^` from the packages in your `package.json` file.
 "@lexical/list": "0.20.0",
 "lexical": "0.20.0"
 ```
+
+## Backward Compatibility with React/Vite
+
+Force Client Side Rendering
+
+```tsx
+'use client';
+import dynamic from "next/dynamic";
+const ReactApp = dynamic(() => import('./App'), { ssr: false });
+
+export default function Page() {
+	return <ReactApp />;
+}
+```

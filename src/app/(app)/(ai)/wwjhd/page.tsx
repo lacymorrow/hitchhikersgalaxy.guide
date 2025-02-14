@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { WWJHDDemo } from "@/app/(app)/(ai)/wwjhd/_components/wwjhd-demo";
 
 export default function Page() {

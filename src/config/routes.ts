@@ -1,22 +1,18 @@
 import type { Route } from "next";
 import { siteConfig } from "./site";
 type ParamValue = string | number | null;
-type RouteParams = Record<string, ParamValue>;
+export type RouteParams = Record<string, ParamValue>;
 
-interface RouteObject {
+export interface RouteObject {
 	path: Route;
 	params?: RouteParams;
 }
 
-export const createRoute = (
-	path: Route,
-	params: RouteParams = {},
-): RouteObject => ({
+export const createRoute = (path: Route, params: RouteParams = {}): RouteObject => ({
 	path,
 	params,
 });
 
-// Flattened routes structure for better type safety and easier access
 // Flattened routes structure for better type safety and easier access
 export const routes = {
 	// Public routes
@@ -110,7 +106,8 @@ export const routes = {
 	},
 	// Demo routes
 	demo: {
-		network: "/demo/network",
+		network: "/network",
+		trpc: "/trpc",
 	},
 
 	// External links
@@ -120,6 +117,7 @@ export const routes = {
 		log: "https://log.bones.sh",
 		ui: "https://ui.bones.sh",
 		buy: siteConfig.store.format.buyUrl("muscles"),
+		discord: "https://discord.gg/XxKrKNvEje",
 		twitter: siteConfig.links.twitter,
 		twitter_follow: siteConfig.links.twitter_follow,
 		x: siteConfig.links.x,
@@ -129,9 +127,7 @@ export const routes = {
 		email: `mailto:${siteConfig.creator.email}`,
 		github: siteConfig.repo.url,
 		vercelDeployBones:
-			"https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshipkit-io%2Fbones&env=NEXT_PUBLIC_BUILDER_API_KEY&envDescription=Builder.io%20API&envLink=https%3A%2F%2Fwww.builder.io%2F&project-name=bones-app&repository-name=bones-app&redirect-url=https%3A%2F%2Fshipkit.io%2Fconnect%2Fvercel%2Fdeploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=%2F%2Fshipkit.io%2Fimages%2Fvercel%2Fdemo.png", // &stores=%5B%7B"type"%3A"postgres"%7D%2C%7B"type"%3A"kv"%7D%5D
-		vercelDeployShipkit:
-			"https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flacymorrow%2Fshipkit&env=NEXT_PUBLIC_BUILDER_API_KEY&envDescription=Builder.io%20API&envLink=https%3A%2F%2Fwww.builder.io%2F&project-name=shipkit-app&repository-name=shipkit-app&redirect-url=https%3A%2F%2Fshipkit.io%2Fconnect%2Fvercel%2Fdeploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=%2F%2Fshipkit.io%2Fimages%2Fvercel%2Fdemo.png", // &stores=%5B%7B"type"%3A"postgres"%7D%2C%7B"type"%3A"kv"%7D%5D
+			"https://vercel.com/new/clone?repository-url=https://github.com/shipkit-io/bones&project-name=bones-app&repository-name=bones-app&redirect-url=https://shipkit.io/connect/vercel/deploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards,%20AI%20tools,%20and%20integrations%20with%20Docs,%20Payload,%20and%20Builder.io&demo-url=https://shipkit.io/demo&demo-image=//assets.vercel.com/image/upload/contentful/image/e5382hct74si/4JmubmYDJnFtstwHbaZPev/0c3576832aae5b1a4d98c8c9f98863c3/Vercel_Home_OG.png",
 	},
 };
 
@@ -146,21 +142,15 @@ export const redirects = async (): Promise<Redirect[]> => {
 	return [
 		...createRedirects(["/docs", "/documentation"], routes.docs),
 		...createRedirects(["/join", "/signup", "/sign-up"], routes.auth.signUp),
-		...createRedirects(
-			["/login", "/log-in", "/signin", "/sign-in"],
-			routes.auth.signIn,
-		),
-		...createRedirects(
-			["/logout", "/log-out", "/signout", "/sign-out"],
-			routes.auth.signOut,
-		),
+		...createRedirects(["/login", "/log-in", "/signin", "/sign-in"], routes.auth.signIn),
+		...createRedirects(["/logout", "/log-out", "/signout", "/sign-out"], routes.auth.signOut),
 	];
 };
 
 export const createRedirects = (
 	sources: Route[],
 	destination: Route,
-	permanent = false,
+	permanent = false
 ): Redirect[] => {
 	if (!sources.length) return [];
 

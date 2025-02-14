@@ -1,5 +1,7 @@
 import { siteConfig } from "@/config/site";
 import { CheckIcon } from "lucide-react";
+import type React from "react";
+import advancedGradient from "./advanced-gradient.jpg";
 
 const features = {
 	bones: [
@@ -33,7 +35,7 @@ const features = {
 
 export const PricingSection: React.FC<{
 	backgroundImage?: string;
-}> = ({ backgroundImage = "/ui/pricing/advanced-gradient.jpg" }) => {
+}> = ({ backgroundImage = advancedGradient.src }) => {
 	return (
 		<section className="py-24 text-neutral-800 dark:text-neutral-50 lg:pb-32">
 			<div className="container mx-auto px-4">

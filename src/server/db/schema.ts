@@ -53,9 +53,7 @@ export const payments = createTable("payment", {
 	createdAt: timestamp("created_at", { withTimezone: true })
 		.default(sql`CURRENT_TIMESTAMP`)
 		.notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-		() => new Date(),
-	),
+	updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(() => new Date()),
 });
 export type Payment = typeof payments.$inferSelect;
 export type NewPayment = typeof payments.$inferInsert;
@@ -65,21 +63,22 @@ export const posts = createTable(
 	{
 		id: serial("id").primaryKey(),
 		name: varchar("name", { length: 256 }),
-		createdById: varchar("created_by", { length: 255 })
+		createdById: varchar("createdById", { length: 255 })
 			.notNull()
 			.references(() => users.id),
 		createdAt: timestamp("created_at", { withTimezone: true })
 			.default(sql`CURRENT_TIMESTAMP`)
 			.notNull(),
-		updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-			() => new Date(),
-		),
+		updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(() => new Date()),
 	},
 	(example) => ({
-		createdByIdIdx: index("created_by_idx").on(example.createdById),
+		createdByIdIdx: index("createdById_idx").on(example.createdById),
 		nameIndex: index("name_idx").on(example.name),
-	}),
+	})
 );
+
+export type NewPost = typeof posts.$inferInsert;
+export type Post = typeof posts.$inferSelect;
 
 export const users = createTable("user", {
 	id: varchar("id", { length: 255 })
@@ -103,9 +102,7 @@ export const users = createTable("user", {
 	createdAt: timestamp("created_at", { withTimezone: true })
 		.default(sql`CURRENT_TIMESTAMP`)
 		.notNull(),
-	updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(
-		() => new Date(),
-	),
+	updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(() => new Date()),
 });
 
 export type NewUser = typeof users.$inferInsert;
@@ -137,7 +134,7 @@ export const accounts = createTable(
 			columns: [account.provider, account.providerAccountId],
 		}),
 		userIdIdx: index("account_user_id_idx").on(account.userId),
-	}),
+	})
 );
 
 export const accountsRelations = relations(accounts, ({ one }) => ({
@@ -167,7 +164,7 @@ export const verificationTokens = createTable(
 		compositePk: primaryKey({
 			columns: [verificationToken.identifier, verificationToken.token],
 		}),
-	}),
+	})
 );
 
 export const authenticators = createTable(
@@ -188,7 +185,7 @@ export const authenticators = createTable(
 		compositePK: primaryKey({
 			columns: [authenticator.userId, authenticator.credentialID],
 		}),
-	}),
+	})
 );
 
 /**

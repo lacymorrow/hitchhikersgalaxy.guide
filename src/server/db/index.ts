@@ -3,9 +3,9 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
 
-const client = postgres(env.DATABASE_URL);
+const client = env.DATABASE_URL ? postgres(env.DATABASE_URL) : undefined;
 
-export const db = drizzle(client, { schema });
+export const db = client ? drizzle(client, { schema }) : undefined;
 
 // Export a function to check if the database is initialized
 export const isDatabaseInitialized = () => {

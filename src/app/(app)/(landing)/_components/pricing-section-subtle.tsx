@@ -1,5 +1,6 @@
 "use client";
 import { Link } from "@/components/primitives/link-with-transition";
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { CheckIcon } from "lucide-react";
@@ -9,8 +10,8 @@ const pricingData: OfferCardProps[] = [
 	{
 		title: "Bones",
 		description: "Perfect for indie developers and small projects",
-		href: `https://${siteConfig.store.domain}/buy/${siteConfig.store.products.bones}`,
-		price: 29,
+		href: routes.external.bones,
+		price: 0,
 		features: [
 			"Next.js 15 App Router Setup",
 			"Authentication (NextAuth v5)",
@@ -84,7 +85,7 @@ const OfferCard = ({
 	return (
 		<div
 			className={cn(
-				"h-full transform-gpu rounded-2xl border bg-neutral-800/95 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-neutral-800/100 dark:bg-neutral-800/50",
+				"h-full transform-gpu rounded-2xl overflow-hidden border bg-neutral-800/95 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-neutral-800/100 dark:bg-neutral-800/50",
 				"text-white dark:text-neutral-400",
 				isBestValue ? "border-[#ed8445]" : "border-neutral-500/50",
 			)}
@@ -104,7 +105,7 @@ const OfferCard = ({
 				<div className="mt-2 text-sm text-neutral-400">{description}</div>
 				<div className="mt-4">
 					<div className="text-4xl font-semibold text-neutral-200">
-						{price ? `$${price}` : "Custom"}
+						{price ? `$${price}` : "Free Forever"}
 					</div>
 					<div className="text-sm text-neutral-400">
 						{price ? "one-time payment" : "contact sales"}

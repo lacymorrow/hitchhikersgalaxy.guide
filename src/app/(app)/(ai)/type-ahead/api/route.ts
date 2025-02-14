@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * API Endpoint: /api/ai/text-completion
  * Description:

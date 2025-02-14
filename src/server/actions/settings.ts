@@ -37,7 +37,7 @@ export async function updateProfile(data: ProfileData) {
 		}
 
 		await db
-			.update(users)
+			?.update(users)
 			.set({
 				name: data.name,
 				bio: data.bio,
@@ -47,7 +47,7 @@ export async function updateProfile(data: ProfileData) {
 			})
 			.where(eq(users.id, session.user.id));
 
-		revalidatePath("/settings");
+		void revalidatePath("/settings");
 		return { success: true, message: "Profile updated successfully" };
 	} catch (error) {
 		console.error("Failed to update profile:", error);
@@ -62,14 +62,11 @@ export async function updateSettings(data: SettingsData) {
 			return { success: false, error: "Not authenticated" };
 		}
 
-		console.log("Server action received data:", data);
-
 		// Ensure boolean type
 		const emailNotifications = Boolean(data.emailNotifications);
-		console.log("Processed emailNotifications:", emailNotifications);
 
 		await db
-			.update(users)
+			?.update(users)
 			.set({
 				theme: data.theme,
 				emailNotifications,
@@ -77,7 +74,7 @@ export async function updateSettings(data: SettingsData) {
 			})
 			.where(eq(users.id, session.user.id));
 
-		revalidatePath("/settings");
+		void revalidatePath("/settings");
 		return { success: true, message: "Settings updated successfully" };
 	} catch (error) {
 		console.error("Failed to update settings:", error);
@@ -92,7 +89,8 @@ export async function deleteAccount() {
 			return { success: false, error: "Not authenticated" };
 		}
 
-		await db.delete(users).where(eq(users.id, session.user.id));
+		await db?.delete(users).where(eq(users.id, session.user.id));
+
 		return { success: true, message: "Account deleted successfully" };
 	} catch (error) {
 		console.error("Failed to delete account:", error);
@@ -108,14 +106,14 @@ export async function updateTheme(theme: "light" | "dark" | "system") {
 		}
 
 		await db
-			.update(users)
+			?.update(users)
 			.set({
 				theme,
 				updatedAt: new Date(),
 			})
 			.where(eq(users.id, session.user.id));
 
-		revalidatePath("/settings");
+		void revalidatePath("/settings");
 		return { success: true, message: "Theme updated successfully" };
 	} catch (error) {
 		console.error("Failed to update theme:", error);

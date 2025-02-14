@@ -1,14 +1,42 @@
+<<<<<<< HEAD
 import { Link } from "@/components/primitives/link-with-transition";
 
 import { HydrateClient, api } from "@/lib/trpc/server";
 import { auth } from "@/server/auth";
 import { LatestPost } from "./_components/post";
+=======
+import Link from "next/link";
+
+import { routes } from "@/config/routes";
+import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
+import { HydrateClient, api } from "@/lib/trpc/server";
+import { auth } from "@/server/auth";
+import { LatestPost } from "./_components/post";
+
+>>>>>>> up/main
 export default async function Home() {
 	const hello = await api.post.hello({ text: "from tRPC" });
 	const session = await auth();
 
 	void api.post.getLatest.prefetch();
 
+<<<<<<< HEAD
+=======
+	const SignInOutButton = () => {
+		const urlPath = session ? routes.auth.signOut : routes.auth.signIn;
+		const nextUrl = routes.demo.trpc;
+		const url = `${urlPath}?${SEARCH_PARAM_KEYS.nextUrl}=${nextUrl}`;
+		return (
+			<Link
+				className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+				href={url}
+			>
+				{session ? "Sign out" : "Sign in"}
+			</Link>
+		);
+	};
+
+>>>>>>> up/main
 	return (
 		<HydrateClient>
 			<main className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-b from-[#2e026d] to-[#15162c] text-white">
@@ -24,8 +52,13 @@ export default async function Home() {
 						>
 							<h3 className="text-2xl font-bold">First Steps →</h3>
 							<div className="text-lg">
+<<<<<<< HEAD
 								Just the basics - Everything you need to know to set up your
 								database and authentication.
+=======
+								Just the basics - Everything you need to know to set up your database and
+								authentication.
+>>>>>>> up/main
 							</div>
 						</Link>
 						<Link
@@ -35,8 +68,12 @@ export default async function Home() {
 						>
 							<h3 className="text-2xl font-bold">Documentation →</h3>
 							<div className="text-lg">
+<<<<<<< HEAD
 								Learn more about Create T3 App, the libraries it uses, and how
 								to deploy it.
+=======
+								Learn more about Create T3 App, the libraries it uses, and how to deploy it.
+>>>>>>> up/main
 							</div>
 						</Link>
 					</div>
@@ -49,6 +86,7 @@ export default async function Home() {
 							<p className="text-center text-2xl text-white">
 								{session && <span>Logged in as {session.user?.name}</span>}
 							</p>
+<<<<<<< HEAD
 							<Link
 								href={session ? "/api/auth/signout" : "/api/auth/signin"}
 								className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
@@ -58,6 +96,11 @@ export default async function Home() {
 						</div>
 					</div>
 
+=======
+						</div>
+					</div>
+					<SignInOutButton />
+>>>>>>> up/main
 					{session?.user && <LatestPost />}
 				</div>
 			</main>

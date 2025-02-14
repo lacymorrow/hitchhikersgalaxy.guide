@@ -5,7 +5,6 @@
  */
 "use client";
 
-import { RootLayout } from "@/components/layouts/root-layout";
 import { Boundary } from "@/components/primitives/boundary";
 
 /* GlobalError Component Props
@@ -29,18 +28,17 @@ export default function GlobalError({
 
 	return (
 		/* Note: Must include html and body tags since this replaces the entire page */
-		<RootLayout>
-			<Boundary
-				title="Something went wrong!"
-				actionText="Try again"
-				onAction={resetAction}
-			>
-				{process.env.NODE_ENV === "development" && (
-					<div className="text-xs">
-						<pre>{error.message}</pre>
-					</div>
-				)}
-			</Boundary>
-		</RootLayout>
+		// ! We don't use the RootLayout here because there could be an error in it.
+		<html lang="en" suppressHydrationWarning>
+			<body className="bg-background">
+				<Boundary title="Something went wrong!" actionText="Try again" onAction={resetAction} className="h-screen w-screen">
+					{process.env.NODE_ENV === "development" && (
+						<div className="text-xs">
+							<pre>{error.message}</pre>
+						</div>
+					)}
+				</Boundary>
+			</body>
+		</html>
 	);
 }

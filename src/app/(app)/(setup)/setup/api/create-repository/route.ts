@@ -11,11 +11,11 @@ export async function POST(request: Request) {
 		}
 
 		// Get the GitHub token from the user's accounts
-		const githubAccount = await db.query.accounts.findFirst({
+		const githubAccount = await db?.query.accounts.findFirst({
 			where: (accounts, { and, eq }) =>
 				and(
 					eq(accounts.userId, session.user.id),
-					eq(accounts.provider, "github")
+					eq(accounts.provider, "github"),
 				),
 		});
 
@@ -47,7 +47,7 @@ export async function POST(request: Request) {
 		console.error("Error creating repository:", error);
 		return new NextResponse(
 			error instanceof Error ? error.message : "Failed to create repository",
-			{ status: 500 }
+			{ status: 500 },
 		);
 	}
 }

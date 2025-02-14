@@ -1,11 +1,11 @@
 import AvatarCircles from "@/components/ui/avatar-circles";
 import { Star } from "lucide-react";
 const avatarUrls = [
-	"https://avatars.githubusercontent.com/u/7819639", // @jhenly
-	"https://avatars.githubusercontent.com/u/1311301", // @lacymorrow
 	"https://avatars.githubusercontent.com/u/5619728", // @tedtoy
 	"https://avatars.githubusercontent.com/u/124599", // @shadcn
-	"https://avatars.githubusercontent.com/u/20110627", // @lacymorrow
+	"https://avatars.githubusercontent.com/u/170270", // @sindresorhus
+	"https://avatars.githubusercontent.com/u/7819639", // @jhenly
+	"https://avatars.githubusercontent.com/u/1311301", // @lacymorrow
 ];
 
 export const CustomerAvatars = () => {
@@ -22,7 +22,7 @@ export const CustomerAvatars = () => {
 				</div>
 				<div className="flex flex-col">
 					<span className="text-xs font-medium text-muted-foreground">
-						4.8/5
+						5/5 from our users
 					</span>
 				</div>
 			</div>

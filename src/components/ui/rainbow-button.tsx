@@ -1,7 +1,7 @@
+import { Link } from "@/components/primitives/link-with-transition";
 import { cn } from "@/lib/utils";
-import { Link } from 'next-view-transitions';
-import { type LinkProps } from "next/link";
-import { type ReactNode } from "react";
+import type React from "react";
+import type { ReactNode } from "react";
 
 // Common styles shared between button and link
 const commonStyles = {
@@ -18,7 +18,7 @@ type RainbowButtonProps = {
 	className?: string;
 	children: ReactNode;
 } & (
-		| ({ href: string } & Omit<LinkProps, "href"> &
+		| ({ href: string } & Omit<React.ComponentProps<typeof Link>, "href"> &
 			React.AnchorHTMLAttributes<HTMLAnchorElement>)
 		| ({ href?: never } & React.ButtonHTMLAttributes<HTMLButtonElement>)
 	);
@@ -42,7 +42,7 @@ export const RainbowButton = ({
 			<Link
 				href={href}
 				className={styles}
-				{...(props as Omit<LinkProps, "href">)}
+				{...(props as Omit<React.ComponentProps<typeof Link>, "href">)}
 			>
 				{children}
 			</Link>

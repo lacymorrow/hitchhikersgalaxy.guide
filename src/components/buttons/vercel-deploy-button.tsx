@@ -1,14 +1,15 @@
 import { buttonVariants } from "@/components/ui/button";
+import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import type { FC } from "react";
 
 interface VercelDeployButtonProps {
-	href: string;
+	href?: string;
 	className?: string;
 }
 
-export const VercelDeployButton: FC<VercelDeployButtonProps> = ({ href, className }) => {
+export const VercelDeployButton: FC<VercelDeployButtonProps> = ({ href = routes.external.vercelDeployBones, className }) => {
 	return (
 		<Link
 			href={href}
@@ -22,7 +23,6 @@ export const VercelDeployButton: FC<VercelDeployButtonProps> = ({ href, classNam
 				<VercelIcon className="h-5 w-5" />
 				Deploy Now
 			</span>
-			{/* <span className="absolute inset-0 z-0 bg-gradient-to-r from-black to-gray-800 transition-all duration-300 ease-out group-hover:scale-105" /> */}
 		</Link>
 	);
 };

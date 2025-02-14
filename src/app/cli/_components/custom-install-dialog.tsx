@@ -12,6 +12,7 @@ import { toast } from '@/hooks/use-toast'
 import { ReloadIcon } from '@radix-ui/react-icons'
 import { Terminal as TerminalIcon } from 'lucide-react'
 import { type FormEvent, memo, useCallback, useState } from 'react'
+import { formatUrlToCommand, isValidCommand, isValidUrl } from '../_lib/registry-service'
 import type { InstallationProgress } from './types'
 
 interface CustomInstallDialogProps {
@@ -19,31 +20,10 @@ interface CustomInstallDialogProps {
 	installationProgress: InstallationProgress
 }
 
-export const CustomInstallDialog = memo(({ onInstall, installationProgress }: CustomInstallDialogProps) => {
+export const CustomInstallDialog = memo(({ onInstall }: CustomInstallDialogProps) => {
 	const [open, setOpen] = useState(false)
 	const [input, setInput] = useState('')
 	const [loading, setLoading] = useState(false)
-
-	const isUrl = useCallback((str: string): boolean => {
-		try {
-			new URL(str.trim())
-			return true
-		} catch {
-			return false
-		}
-	}, [])
-
-	const isCommand = useCallback((str: string): boolean => {
-		const commandPatterns = [
-			/^(npx|pnpm dlx|bunx --bun) shadcn@latest add/,
-			/^(npx|pnpm dlx|bunx --bun) shadcn@latest add "https?:\/\/[^"]+"/,
-		]
-		return commandPatterns.some(pattern => pattern.test(str.trim()))
-	}, [])
-
-	const formatUrlToCommand = useCallback((url: string): string => {
-		return `npx shadcn@latest add "${url.trim()}"`
-	}, [])
 
 	const handleSubmit = useCallback(async (e: FormEvent) => {
 		e.preventDefault()
@@ -51,13 +31,13 @@ export const CustomInstallDialog = memo(({ onInstall, installationProgress }: Cu
 
 		try {
 			const trimmedInput = input.trim()
-			let finalCommand: string
+			const finalCommand = isValidUrl(trimmedInput)
+				? formatUrlToCommand(trimmedInput)
+				: isValidCommand(trimmedInput)
+					? trimmedInput
+					: null
 
-			if (isUrl(trimmedInput)) {
-				finalCommand = formatUrlToCommand(trimmedInput)
-			} else if (isCommand(trimmedInput)) {
-				finalCommand = trimmedInput
-			} else {
+			if (!finalCommand) {
 				throw new Error('Please enter a valid URL or install command')
 			}
 
@@ -77,7 +57,7 @@ export const CustomInstallDialog = memo(({ onInstall, installationProgress }: Cu
 		} finally {
 			setLoading(false)
 		}
-	}, [input, isUrl, isCommand, formatUrlToCommand, onInstall])
+	}, [input, onInstall])
 
 	const handleOpenChange = useCallback((isOpen: boolean) => {
 		if (!loading || !isOpen) {

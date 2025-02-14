@@ -327,3 +327,33 @@ export function getDocumentationUrl(
 	if (!registry?.baseDocsUrl) return undefined;
 	return `${registry.baseDocsUrl}/${component.name}`;
 }
+
+/**
+ * Validate if a string is a URL
+ */
+export function isValidUrl(str: string): boolean {
+	try {
+		new URL(str.trim())
+		return true
+	} catch {
+		return false
+	}
+}
+
+/**
+ * Validate if a string is a valid install command
+ */
+export function isValidCommand(str: string): boolean {
+	const commandPatterns = [
+		/^(npx|pnpm dlx|bunx --bun) shadcn@latest add/,
+		/^(npx|pnpm dlx|bunx --bun) shadcn@latest add "https?:\/\/[^"]+"/,
+	]
+	return commandPatterns.some(pattern => pattern.test(str.trim()))
+}
+
+/**
+ * Format a URL into a valid install command
+ */
+export function formatUrlToCommand(url: string): string {
+	return `npx shadcn@latest add "${url.trim()}"`
+}

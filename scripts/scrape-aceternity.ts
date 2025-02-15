@@ -449,11 +449,11 @@ async function extractExamples(page: Page, config: ScraperConfig) {
 
 					const variant = nearestHeading
 						? nearestHeading
-								.toLowerCase()
-								.replace(/variant|example|demo/g, "")
-								.replace(/[^a-z0-9]+/g, "-")
-								.replace(/^-+|-+$/g, "")
-								.trim()
+							.toLowerCase()
+							.replace(/variant|example|demo/g, "")
+							.replace(/[^a-z0-9]+/g, "-")
+							.replace(/^-+|-+$/g, "")
+							.trim()
 						: `demo-${String(demoCount++).padStart(2, "0")}`;
 
 					examples.push({

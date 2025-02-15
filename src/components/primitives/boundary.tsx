@@ -1,7 +1,6 @@
 import { Button, buttonVariants } from "@/components/ui/button";
-
+import { Link } from "@/components/primitives/link-with-transition";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 import type * as React from "react";
 
 export const Boundary = ({

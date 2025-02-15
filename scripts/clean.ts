@@ -79,7 +79,7 @@ const filesToRemove = [
 
 	// Source directories to remove
 	"src/app/(app)/(admin)",
-	"src/app/(app)/(ai)",
+	"src/app/(app)/ai",
 	"src/app/(app)/(dashboard)",
 	"src/app/(app)/(demo)",
 	"src/app/(app)/(landing)",
@@ -140,7 +140,7 @@ const filesToRemove = [
 // Directories that must be removed first
 const dirsToRemove = [
 	"src/app/(app)/(admin)",
-	"src/app/(app)/(ai)",
+	"src/app/(app)/ai",
 	"src/app/(app)/(dashboard)",
 	"src/app/(app)/(demo)",
 	"src/app/(app)/(landing)",

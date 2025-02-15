@@ -216,6 +216,7 @@
     "next-sitemap": "^4.2.3",
     "npm-check-updates": "^17.1.14",
     "payload": "^3.23.0",
+    "playwright": "^1.50.1",
     "postcss": "8.5.2",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "raw-loader": "^4.0.2",

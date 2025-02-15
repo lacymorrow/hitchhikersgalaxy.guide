@@ -155,7 +155,7 @@ export class PushService {
      */
     static async broadcast(notification: PushNotification) {
         try {
-            const subscriptions = await db.select().from(pushSubscriptions);
+            const subscriptions = await db?.select().from(pushSubscriptions);
 
             const results = await Promise.allSettled(
                 subscriptions.map((subscription) =>

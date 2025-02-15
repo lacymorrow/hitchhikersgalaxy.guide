@@ -97,7 +97,7 @@ export async function GET(request: Request) {
 		const { access_token, team_id } = await tokenResponse.json();
 
 		// // Store the access token and team ID
-		// await db.query.accounts.upsert({
+		// await db?.query.accounts.upsert({
 		// 	where: (accounts, { and, eq }) =>
 		// 		and(
 		// 			eq(accounts.userId, session.user.id),

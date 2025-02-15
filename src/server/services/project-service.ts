@@ -26,7 +26,7 @@ export class ProjectService extends BaseService<typeof projects> {
 	) {
 		const projectId = crypto.randomUUID();
 
-		await db.transaction(async (tx) => {
+		await db?.transaction(async (tx) => {
 			await tx.insert(projects).values({
 				id: projectId,
 				name: projectName,
@@ -45,7 +45,7 @@ export class ProjectService extends BaseService<typeof projects> {
 			});
 		});
 
-		const project = await db.query.projects.findFirst({
+		const project = await db?.query.projects.findFirst({
 			where: eq(projects.id, projectId),
 			with: {
 				members: {
@@ -93,7 +93,7 @@ export class ProjectService extends BaseService<typeof projects> {
 		userId: string,
 		projectId: string,
 	): Promise<boolean> {
-		const projectMember = await db.query.projectMembers.findFirst({
+		const projectMember = await db?.query.projectMembers.findFirst({
 			where: and(
 				eq(projectMembers.userId, userId),
 				eq(projectMembers.projectId, projectId),
@@ -135,7 +135,7 @@ export class ProjectService extends BaseService<typeof projects> {
 	 * @returns True if deleted successfully.
 	 */
 	async deleteProject(projectId: string): Promise<boolean> {
-		await db.transaction(async (tx) => {
+		await db?.transaction(async (tx) => {
 			// Delete project members first due to foreign key constraint
 			await tx
 				.delete(projectMembers)

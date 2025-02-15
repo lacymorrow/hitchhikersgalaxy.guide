@@ -31,7 +31,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const post = await db.post.create({
+    const post = await db?.post.create({
       data: result.data,
     });
 
@@ -78,7 +78,7 @@ export async function POST(req: Request) {
       );
     }
 
-    const post = await db.post.create({
+    const post = await db?.post.create({
       data: {
         ...result.data,
         authorId: session.user.id,
@@ -162,7 +162,7 @@ export async function GET(req: Request, { params }: RouteContext) {
       return ErrorService.throwUnauthorized("Not authenticated");
     }
 
-    const post = await db.post.findUnique({
+    const post = await db?.post.findUnique({
       where: { id: params.id },
     });
 
@@ -187,7 +187,7 @@ export async function DELETE(req: Request, { params }: RouteContext) {
       return ErrorService.throwUnauthorized("Not authenticated");
     }
 
-    const post = await db.post.findUnique({
+    const post = await db?.post.findUnique({
       where: { id: params.id },
     });
 
@@ -199,7 +199,7 @@ export async function DELETE(req: Request, { params }: RouteContext) {
       return ErrorService.throwForbidden("Not authorized");
     }
 
-    await db.post.delete({
+    await db?.post.delete({
       where: { id: params.id },
     });
 

@@ -51,7 +51,7 @@ export class ApiKeyService {
 	 * @returns The API key or null if not found
 	 */
 	async findById(id: string) {
-		const apiKey = await db.query.apiKeys.findFirst({
+		const apiKey = await db?.query.apiKeys.findFirst({
 			where: (apiKeys, { eq }) => eq(apiKeys.id, id),
 			// Include related data to ensure we get the userId
 			with: {

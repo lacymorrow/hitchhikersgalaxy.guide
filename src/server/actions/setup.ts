@@ -49,7 +49,7 @@ export async function createRepository(formData: FormData) {
 
 	try {
 		// Get the GitHub token from the user's accounts
-		const githubAccount = await db.query.accounts.findFirst({
+		const githubAccount = await db?.query.accounts.findFirst({
 			where: (accounts, { and, eq }) =>
 				and(
 					eq(accounts.userId, session.user.id),

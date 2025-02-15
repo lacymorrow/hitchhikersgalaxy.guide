@@ -37,7 +37,7 @@ const PaymentService = {
 			throw new Error("Database is not initialized");
 		}
 
-		const userPayments = await db.query.payments.findMany({
+		const userPayments = await db?.query.payments.findMany({
 			where: eq(payments.userId, userId),
 			orderBy: (payments, { desc }) => [desc(payments.createdAt)],
 		});
@@ -172,7 +172,7 @@ const PaymentService = {
 			throw new Error("Database is not initialized");
 		}
 
-		const payment = await db.query.payments.findFirst({
+		const payment = await db?.query.payments.findFirst({
 			where: eq(payments.orderId, orderId),
 		});
 

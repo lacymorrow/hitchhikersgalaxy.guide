@@ -10,7 +10,7 @@ export const streamApiLogs = async function* (apiKeyId: string) {
 	let lastTimestamp = new Date(0); // Start from the beginning of time
 
 	// Check both apiKeys and testApiKeys tables
-	const apiKeyRecord = await db.query.apiKeys.findFirst({
+	const apiKeyRecord = await db?.query.apiKeys.findFirst({
 		where: eq(apiKeys.id, apiKeyId),
 	});
 

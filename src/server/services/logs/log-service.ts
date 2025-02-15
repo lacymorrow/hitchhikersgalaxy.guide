@@ -41,7 +41,7 @@ export async function getUserLogs(userId: string, limit = 100) {
 		return [];
 	}
 
-	const userLogs = await db.query.logs.findMany({
+	const userLogs = await db?.query.logs.findMany({
 		where: inArray(logs.apiKeyId, keyIds),
 		orderBy: [desc(logs.timestamp)],
 		limit: limit,
@@ -86,7 +86,7 @@ export async function createLog(logData: {
 	metadata?: Record<string, unknown>;
 	apiKey: string;
 }) {
-	const apiKeyRecord = await db.query.apiKeys.findFirst({
+	const apiKeyRecord = await db?.query.apiKeys.findFirst({
 		where: eq(apiKeys.key, logData.apiKey),
 	});
 
@@ -125,7 +125,7 @@ export async function userHasAccessToApiKey(
 	userId: string,
 	apiKeyId: string,
 ): Promise<boolean> {
-	const apiKeyRecord = await db.query.apiKeys.findFirst({
+	const apiKeyRecord = await db?.query.apiKeys.findFirst({
 		where: eq(apiKeys.id, apiKeyId),
 		with: {
 			project: true,
@@ -136,7 +136,7 @@ export async function userHasAccessToApiKey(
 		return false;
 	}
 
-	const userProjectMember = await db.query.projectMembers.findFirst({
+	const userProjectMember = await db?.query.projectMembers.findFirst({
 		where: and(
 			eq(projectMembers.projectId, apiKeyRecord.project.id),
 			eq(projectMembers.userId, userId),

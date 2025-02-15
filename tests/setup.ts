@@ -17,7 +17,7 @@ afterEach(() => {
 beforeAll(async () => {
 	// Verify database connection
 	try {
-		await db.execute(sql`SELECT 1`);
+		await db?.execute(sql`SELECT 1`);
 		console.log("✓ Database connection successful");
 	} catch (error) {
 		console.error("✕ Database connection failed:", error);
@@ -40,7 +40,7 @@ beforeAll(async () => {
 afterAll(async () => {
 	// Clean up database
 	try {
-		await db.execute(sql`SELECT 1`);
+		await db?.execute(sql`SELECT 1`);
 		console.log("✓ Database cleanup successful");
 	} catch (error) {
 		console.error("✕ Database cleanup failed:", error);

@@ -1,6 +1,6 @@
 import { Button, type ButtonProps, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import type React from "react";
 import styles from "./animated-button.module.css";
 

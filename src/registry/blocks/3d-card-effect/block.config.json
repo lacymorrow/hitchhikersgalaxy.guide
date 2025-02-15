@@ -1,0 +1,35 @@
+{
+  "name": "3d-card-effect",
+  "type": "registry:block",
+  "description": "A card perspective effect, hover over the card to elevate card elements.",
+  "dependencies": [
+    "react",
+    "@types/react",
+    "@types/node"
+  ],
+  "registryDependencies": [],
+  "categories": [
+    "components",
+    "ui"
+  ],
+  "style": "default",
+  "tags": [
+    "card",
+    "background",
+    "special"
+  ],
+  "version": "1.0.0",
+  "author": "mannupaaji",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/steven-tey/aceternity-ui"
+  },
+  "docsUrl": "https://ui.aceternity.com/components/3d-card-effect",
+  "files": [
+    {
+      "source": "3d-card-effect.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

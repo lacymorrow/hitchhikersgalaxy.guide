@@ -1,6 +1,6 @@
 "use client";
 import { LinkOrButton } from "@/components/primitives/link-or-button";
-import Link from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { LOCAL_STORAGE_KEYS } from "@/config/local-storage-keys";
@@ -28,7 +28,7 @@ const builtByVariants = cva(
 
 export interface AttributionProps
 	extends React.HTMLAttributes<HTMLDivElement>,
-		VariantProps<typeof builtByVariants> {
+	VariantProps<typeof builtByVariants> {
 	title?: string;
 	description?: string;
 	onClose?: () => void;

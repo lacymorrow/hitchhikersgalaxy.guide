@@ -1,6 +1,7 @@
 import { routes } from "@/config/routes";
 import type { NextAuthConfig } from "next-auth";
 import { providers } from "./auth.providers";
+import { AuthService } from "@/server/services/auth-service";
 
 // Extend the default session user type
 declare module "next-auth" {
@@ -51,78 +52,74 @@ export const authOptions: NextAuthConfig = {
 	// 		},
 	// 	},
 	// },
-	// callbacks: {
-	// 	async signIn({ user, account, profile }) {
-	// 		if (!user.id) return false;
+	callbacks: {
+		async signIn({ user, account, profile }) {
+			if (!user.id) return false;
 
-	// 		if (account?.provider === "github-verify") {
-	// 			console.log("github-verify signIn callback", {
-	// 				user,
-	// 				account,
-	// 				profile,
-	// 			});
-	// 			// Store the GitHub username but don't actually sign in
-	// 			// You might want to store this in a temporary session or return it to the client
-	// 			return false; // Prevent actual sign in
-	// 		}
+			if (account?.provider === "github-verify") {
+				console.log("github-verify signIn callback", {
+					user,
+					account,
+					profile,
+				});
+				// Store the GitHub username but don't actually sign in
+				// You might want to store this in a temporary session or return it to the client
+				return false; // Prevent actual sign in
+			}
 
-	// 		console.log("signIn callback", { user, account, profile });
-	// 		// Log the sign in activity
-	// 		return await AuthService.logAuthActivity(
-	// 			user.id,
-	// 			account?.provider ?? "unknown",
-	// 			user.email ?? null,
-	// 		);
-	// 	},
-	// 	jwt({ token, user, account, trigger, session }) {
-	// 		console.log("jwt callback", { token, user, account, trigger, session });
-	// 		// Save user data to the token
-	// 		if (user) {
-	// 			token.id = user.id;
-	// 			token.name = user.name;
-	// 			token.bio = user.bio;
-	// 			token.githubUsername = user.githubUsername;
-	// 			token.theme = user.theme;
-	// 			token.emailNotifications = user.emailNotifications;
-	// 		}
+			console.log("signIn callback", { user, account, profile });
+			// Log the sign in activity
+			return true;
+		},
+		// jwt({ token, user, account, trigger, session }) {
+		// 	console.log("jwt callback", { token, user, account, trigger, session });
+		// 	// Save user data to the token
+		// 	if (user) {
+		// 		token.id = user.id;
+		// 		token.name = user.name;
+		// 		token.bio = user.bio;
+		// 		token.githubUsername = user.githubUsername;
+		// 		token.theme = user.theme;
+		// 		token.emailNotifications = user.emailNotifications;
+		// 	}
 
-	// 		// Save GitHub access token
-	// 		if (account?.provider === "github") {
-	// 			token.githubAccessToken = account.access_token;
-	// 		}
+		// 	// Save GitHub access token
+		// 	if (account?.provider === "github") {
+		// 		token.githubAccessToken = account.access_token;
+		// 	}
 
-	// 		if ("githubUsername" in session) {
-	// 			token.githubUsername = session.githubUsername;
-	// 		}
+		// 	if ("githubUsername" in session) {
+		// 		token.githubUsername = session.githubUsername;
+		// 	}
 
-	// 		// Handle updates
-	// 		if (trigger === "update" && session) {
-	// 			if (session.theme) token.theme = session.theme;
-	// 			if ("emailNotifications" in session)
-	// 				token.emailNotifications = session.emailNotifications;
-	// 			if ("name" in session) token.name = session.name;
-	// 			if ("bio" in session) token.bio = session.bio;
-	// 			if ("githubUsername" in session)
-	// 				token.githubUsername = session.githubUsername;
-	// 		}
-	// 		return token;
-	// 	},
-	// 	session({ session, token }) {
-	// 		if (token) {
-	// 			session.user.id = token.id as string;
-	// 			session.user.name = token.name as string | null;
-	// 			session.user.bio = token.bio as string | null;
-	// 			session.user.githubUsername = token.githubUsername as string | null;
-	// 			session.user.theme = token.theme as
-	// 				| "light"
-	// 				| "dark"
-	// 				| "system"
-	// 				| undefined;
-	// 			session.user.emailNotifications = token.emailNotifications as
-	// 				| boolean
-	// 				| undefined;
-	// 		}
-	// 		return session;
-	// 	},
-	// },
+		// 	// Handle updates
+		// 	if (trigger === "update" && session) {
+		// 		if (session.theme) token.theme = session.theme;
+		// 		if ("emailNotifications" in session)
+		// 			token.emailNotifications = session.emailNotifications;
+		// 		if ("name" in session) token.name = session.name;
+		// 		if ("bio" in session) token.bio = session.bio;
+		// 		if ("githubUsername" in session)
+		// 			token.githubUsername = session.githubUsername;
+		// 	}
+		// 	return token;
+		// },
+		session({ session, token }) {
+			if (token) {
+				session.user.id = token.id as string;
+				session.user.name = token.name as string | null;
+				session.user.bio = token.bio as string | null;
+				session.user.githubUsername = token.githubUsername as string | null;
+				session.user.theme = token.theme as
+					| "light"
+					| "dark"
+					| "system"
+					| undefined;
+				session.user.emailNotifications = token.emailNotifications as
+					| boolean
+					| undefined;
+			}
+			return session;
+		},
+	},
 } satisfies NextAuthConfig;

@@ -12,9 +12,12 @@ import HolyLoader from "holy-loader";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { ViewTransitions } from "next-view-transitions";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { PageTracker } from "react-page-tracker";
 import { WebVitals } from "../primitives/web-vitals";
+import { JsonLd } from "@/components/primitives/json-ld";
+import { Analytics } from "@vercel/analytics/react";
+import { ErrorToast } from "@/components/primitives/error-toast";
 
 const fontSerif = FontSerif({
 	weight: ["400", "500", "600", "700"],
@@ -45,15 +48,31 @@ export function RootLayout({ children }: { children: ReactNode }) {
 						fontSerif.variable
 					)}
 				>
+					<JsonLd organization website />
+					<HolyLoader
+						showSpinner
+						height={"3px"}
+						color={"linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8)"}
+					/>
+					<PageTracker />
 					<SessionProvider>
 						<TRPCReactProvider>
 							<ThemeProvider attribute="class" defaultTheme="dark">
 								<TooltipProvider delayDuration={100}>
+																		{/* Web Vitals - Above children to avoid blocking */}
+									<WebVitals />
 									{/* Content */}
 									{children}
 
+									{/* Metrics - Below children to avoid blocking */}
+									<Analytics />
+
 									{/* Toast - Display messages to the user */}
 									<SonnerToaster />
+
+									<Suspense>
+										<ErrorToast />
+									</Suspense>
 								</TooltipProvider>
 							</ThemeProvider>
 						</TRPCReactProvider>

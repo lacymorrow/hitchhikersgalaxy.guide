@@ -20,7 +20,7 @@ import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { useToast } from "@/hooks/use-toast";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
 import { signInWithCredentialsAction } from "@/server/actions/auth";
-import Link from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { useSearchParams } from "next/navigation";
 
 export const SignInForm = () => {
@@ -60,10 +60,7 @@ export const SignInForm = () => {
 		} catch (error) {
 			if (error instanceof Error) {
 				const errorMessage = error.message.toLowerCase();
-				if (
-					errorMessage.includes("invalid credentials") ||
-					errorMessage.includes("user not found")
-				) {
+				if (errorMessage.includes("invalid credentials") || errorMessage.includes("user not found")) {
 					toast({
 						title: "Error",
 						description: "Invalid email or password. Please try again.",
@@ -123,14 +120,10 @@ export const SignInForm = () => {
 						</FormItem>
 					)}
 				/>
-				<Button
-					type="submit"
-					className="w-full"
-					disabled={form.formState.isSubmitting || !form.formState.isValid}
-				>
+				<Button type="submit" className="w-full" disabled={form.formState.isSubmitting || !form.formState.isValid}>
 					{form.formState.isSubmitting ? "Signing in..." : "Sign in"}
 				</Button>
 			</form>
-		</Form>
+		</Form >
 	);
 };

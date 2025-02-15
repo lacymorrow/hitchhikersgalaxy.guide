@@ -7,6 +7,7 @@ import { users } from "@/server/db/schema";
 import { getCollaboratorDetails } from "@/server/services/github/github-service";
 import { columns } from "./_components/columns";
 import type { GitHubUserData } from "./_components/columns";
+import { notFound } from "next/navigation";
 
 function GitHubUsersTableSkeleton() {
 	return (
@@ -20,7 +21,7 @@ function GitHubUsersTableSkeleton() {
 }
 
 async function GitHubUsersTableContent() {
-	if (!db) throw new Error("Database connection not initialized");
+	if (!db) notFound();
 
 	// Fetch users with GitHub usernames
 	const githubUsers = await db.query.users.findMany({

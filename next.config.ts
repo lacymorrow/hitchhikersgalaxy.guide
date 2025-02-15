@@ -110,33 +110,6 @@ let nextConfig: NextConfig = {
 	// Remove console logs only in production, excluding error logs
 	// removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false
 	// },
-
-	webpack: (config, { isServer }) => {
-		// Enable top-level await
-		config.experiments = { ...config.experiments, topLevelAwait: true };
-
-		// Add custom webpack configuration for handling binary files
-		config.module.rules.push({
-			test: /\.(node|bin|html)$/,
-			use: "raw-loader",
-		});
-
-		if (!isServer) {
-			// Don't attempt to bundle native modules on client-side
-			config.resolve.fallback = {
-				...config.resolve.fallback,
-				"node-gyp": false,
-				npm: false,
-				fs: false,
-				net: false,
-				ts: false,
-				child_process: false,
-				"@mapbox/node-pre-gyp": false,
-			};
-		}
-
-		return config;
-	},
 };
 
 /*

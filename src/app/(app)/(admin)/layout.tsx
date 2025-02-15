@@ -7,6 +7,7 @@ import type React from "react";
 
 const navLinks = [
 	{ href: routes.admin.users, label: "Users" },
+	{ href: routes.admin.github, label: "GitHub" },
 	{ href: routes.admin.cms, label: "CMS" },
 	{ href: routes.admin.feedback, label: "Feedback" },
 	{ href: routes.admin.payments, label: "Payments" },

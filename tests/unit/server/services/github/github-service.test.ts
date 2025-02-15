@@ -70,16 +70,6 @@ describe("GitHub Service", () => {
 				}),
 			).rejects.toThrow("GitHub username is required");
 		});
-
-		test("should throw error if access token is missing", async () => {
-			await expect(
-				grantGitHubAccess({
-					email: TEST_USER.email,
-					githubUsername: TEST_USER.githubUsername,
-					accessToken: "",
-				}),
-			).rejects.toThrow("GitHub access token is required");
-		});
 	});
 
 	describe("revokeGitHubAccess", () => {

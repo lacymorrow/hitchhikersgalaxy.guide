@@ -7,8 +7,7 @@ import { ThemeToggle } from "@/components/ui/theme";
 import {
 	Tooltip,
 	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
+	TooltipTrigger
 } from "@/components/ui/tooltip";
 import { UserMenu } from "@/components/ui/user-menu";
 import { routes } from "@/config/routes";
@@ -17,15 +16,14 @@ import { cn } from "@/lib/utils";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useWindowScroll } from "@uidotdev/usehooks";
 import { cva } from "class-variance-authority";
-import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import type React from "react";
 import { useMemo } from "react";
 
 import { LoginButton } from "@/components/buttons/login-button";
+import { Logo } from "@/components/images/logo";
 import { SearchAi } from "@/components/search/search-ai";
 import styles from "@/styles/header.module.css";
-import { BoxesIcon } from "lucide-react";
 import { BuyButton } from "../buttons/buy-button";
 
 interface NavLink {
@@ -67,7 +65,7 @@ const headerVariants = cva(
 
 export const Header: React.FC<HeaderProps> = ({
 	logoHref = routes.home,
-	logoIcon = <BoxesIcon className="h-5 w-5" />,
+	logoIcon = <Logo className="h-5 w-5" />,
 	logoText = siteConfig.name,
 	navLinks = defaultNavLinks,
 	variant = "default",
@@ -97,7 +95,33 @@ export const Header: React.FC<HeaderProps> = ({
 							<span className="block">{logoText}</span>
 							<span className="sr-only">{logoText}</span>
 						</Link>
-						<SearchAi />
+						<div className="hidden items-center justify-between gap-md text-sm md:flex">
+							{session && (
+								<Link
+									key={routes.docs}
+									href={routes.docs}
+									className={cn(
+										"transition-colors text-muted-foreground hover:text-foreground",
+									)}
+								>
+									Documentation
+								</Link>
+							)}
+							{navLinks.map((link) => (
+								<Link
+									key={`${link.href}-${link.label}`}
+									href={link.href}
+									className={cn(
+										"transition-colors hover:text-foreground",
+										link.isCurrent
+											? "text-foreground"
+											: "text-muted-foreground",
+									)}
+								>
+									{link.label}
+								</Link>
+							))}
+						</div>
 					</div>
 
 					<Sheet>
@@ -174,33 +198,8 @@ export const Header: React.FC<HeaderProps> = ({
 						</SheetContent>
 					</Sheet>
 					<div className="flex items-center gap-2 md:ml-auto lg:gap-4">
-						<div className="hidden items-center justify-between gap-md text-sm md:flex">
-							{session && (
-								<Link
-									key={routes.docs}
-									href={routes.docs}
-									className={cn(
-										"transition-colors text-muted-foreground hover:text-foreground",
-									)}
-								>
-									Documentation
-								</Link>
-							)}
-							{navLinks.map((link) => (
-								<Link
-									key={`${link.href}-${link.label}`}
-									href={link.href}
-									className={cn(
-										"transition-colors hover:text-foreground",
-										link.isCurrent
-											? "text-foreground"
-											: "text-muted-foreground",
-									)}
-								>
-									{link.label}
-								</Link>
-							))}
-						</div>
+						<SearchAi />
+
 						<div className="flex items-center gap-2">
 							{!session && (
 								<ThemeToggle variant="ghost" size="icon" className="rounded-full" />
@@ -209,48 +208,33 @@ export const Header: React.FC<HeaderProps> = ({
 							<UserMenu size="sm" />
 
 							{!session && (
-								<AnimatePresence mode="wait">
-									{y && y > 700 ? (
-										<motion.div
-											key="compact"
-											initial={{ opacity: 0, scale: 0.9 }}
-											animate={{ opacity: 1, scale: 1 }}
-											exit={{ opacity: 0, scale: 0.9 }}
-											transition={{ duration: 0.1 }}
-										>
-											<TooltipProvider delayDuration={0}>
-												<Tooltip>
-													<TooltipTrigger asChild>
-														<div className="relative -m-4 p-4">
-															<BuyButton />
-														</div>
-													</TooltipTrigger>
-													<TooltipContent
-														side="bottom"
-														sideOffset={3}
-														className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
-													>
-														<LoginButton className="hover:text-foreground">
-															or Login
-														</LoginButton>
-													</TooltipContent>
-												</Tooltip>
-											</TooltipProvider>
-										</motion.div>
-									) : (
-										<motion.div
-											key="full"
-											initial={{ opacity: 0, scale: 0.9 }}
-											animate={{ opacity: 1, scale: 1 }}
-											exit={{ opacity: 0, scale: 0.9 }}
-											transition={{ duration: 0.1 }}
-										>
-											<LoginButton
-												className={cn(buttonVariants({ variant: "outline", size: "sm" }), "")}
-											/>
-										</motion.div>
-									)}
-								</AnimatePresence>
+								<Tooltip>
+									<TooltipTrigger asChild>
+										<div className="relative -m-4 p-4" style={{ colorScheme: "light" }}>
+											<BuyButton />
+										</div>
+									</TooltipTrigger>
+									<TooltipContent
+										side="bottom"
+										sideOffset={3}
+										className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
+									>
+										<LoginButton className="hover:text-foreground">
+											or Login
+										</LoginButton>
+									</TooltipContent>
+								</Tooltip>
+
+								// <AnimatePresence>
+								// 	{y && y > 700 ? (
+								// 		// <motion.div
+								// 		// 	key="compact"
+								// 		// 	initial={{ opacity: 0, scale: 0.9 }}
+								// 		// 	animate={{ opacity: 1, scale: 1 }}
+								// 		// 	exit={{ opacity: 0, scale: 0.9 }}
+								// 		// 	transition={{ duration: 0.1 }}
+								// 		// >
+								// 	)}
 							)}
 						</div>
 					</div>

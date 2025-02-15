@@ -72,6 +72,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 	const [searchResults, setSearchResults] = React.useState<SearchResult[]>([]);
 	const [answer, setAnswer] = React.useState<string>("");
 	const [isLoading, setIsLoading] = React.useState(false);
+	const [isSearchInProgress, setIsSearchInProgress] = React.useState(false);
 	const [error, setError] = React.useState<string | null>(null);
 	const [selectedSuggestion, setSelectedSuggestion] = React.useState<
 		string | null
@@ -84,8 +85,9 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 	});
 
 	const handleSearch = async () => {
-		if (!query.trim()) return;
+		if (!query.trim() || isSearchInProgress) return;
 
+		setIsSearchInProgress(true);
 		setIsLoading(true);
 		setError(null);
 		setAnswer("");
@@ -155,6 +157,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 			setError(err instanceof Error ? err.message : "An error occurred");
 		} finally {
 			setIsLoading(false);
+			setIsSearchInProgress(false);
 		}
 	};
 
@@ -257,10 +260,14 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 												<button
 													type="button"
 													onClick={handleSubmit}
+													disabled={isSearchInProgress}
 													className={cn(
 														"inline-flex items-center gap-1.5",
 														"rounded-md border px-2 py-0.5 text-xs font-medium shadow-sm",
-														"animate-fadeIn transition-colors duration-200 hover:bg-black/5 dark:hover:bg-white/5",
+														"animate-fadeIn transition-colors duration-200",
+														isSearchInProgress
+															? "opacity-50 cursor-not-allowed"
+															: "hover:bg-black/5 dark:hover:bg-white/5",
 														currentSuggestion.colors.bg,
 														currentSuggestion.colors.border,
 													)}

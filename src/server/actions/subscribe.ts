@@ -14,19 +14,20 @@ export const addContactToAudience = async (email: string) => {
 			throw new Error("Missing Resend API key or audience ID");
 		}
 
-		const result = await resend.contacts.create({
+		const result = await resend?.contacts.create({
 			email,
 			audienceId: env.RESEND_AUDIENCE_ID,
 		});
-		console.log("result", result);
+
+		console.debug("result", result);
 		return { success: true };
 	} catch (error: unknown) {
 		if (error instanceof Error) {
 			console.error("Error adding contact:", error.message);
 			return { success: false, error: error.message };
-		} else {
-			console.error("Error adding contact:", error);
-			return { success: false, error: "An unknown error occurred" };
 		}
+
+		console.error("Error adding contact:", error);
+		return { success: false, error: "An unknown error occurred" };
 	}
 };

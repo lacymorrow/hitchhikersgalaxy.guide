@@ -35,6 +35,7 @@ export default function SettingsPage() {
 	// Set initial form data from session
 	React.useEffect(() => {
 		if (session?.user) {
+			console.log("Session user:", session.user);
 			const initialData = {
 				name: session.user.name ?? "",
 				bio: session.user.bio ?? "",

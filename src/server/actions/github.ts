@@ -3,7 +3,10 @@
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
-import { revokeGitHubAccess } from "@/server/services/github/github-service";
+import {
+	revokeGitHubAccess,
+	verifyAndStoreGitHubUsername,
+} from "@/server/services/github/github-service";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { getUserRoles } from "./rbac";
@@ -26,7 +29,7 @@ export async function connectGitHub(data: GitHubConnectionData) {
 		}
 
 		// Get current user metadata
-		const user = await db.query.users.findFirst({
+		const user = await db?.query.users.findFirst({
 			where: eq(users.id, session.user.id),
 		});
 
@@ -47,7 +50,7 @@ export async function connectGitHub(data: GitHubConnectionData) {
 
 		// Update user record with GitHub connection
 		await db
-			.update(users)
+			?.update(users)
 			.set({
 				githubUsername: data.githubUsername,
 				metadata: JSON.stringify(newMetadata),
@@ -101,7 +104,7 @@ export async function disconnectGitHub() {
 
 		// Then update user record to remove GitHub connection
 		await db
-			.update(users)
+			?.update(users)
 			.set({
 				githubUsername: null,
 				updatedAt: new Date(),
@@ -118,5 +121,27 @@ export async function disconnectGitHub() {
 			throw error;
 		}
 		throw new Error("Failed to disconnect GitHub account");
+	}
+}
+
+/**
+ * Verifies a GitHub username exists and stores it for the user
+ */
+export async function verifyGitHubUsername(username: string) {
+	try {
+		const session = await auth();
+		if (!session?.user?.id) {
+			throw new Error("Not authenticated");
+		}
+
+		await verifyAndStoreGitHubUsername(session.user.id, username);
+		revalidatePath("/settings");
+		return { success: true };
+	} catch (error) {
+		console.error("Failed to verify GitHub username:", error);
+		if (error instanceof Error) {
+			throw error;
+		}
+		throw new Error("Failed to verify GitHub username");
 	}
 }

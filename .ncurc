@@ -1,6 +1,6 @@
 {
   "reject": [
-		"eslint",
+		"tailwindcss",
 		"lexical",
 		"pg",
 		"sharp"

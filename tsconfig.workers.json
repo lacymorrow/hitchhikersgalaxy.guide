@@ -9,9 +9,10 @@
     "strict": false,
     "sourceMap": true,
     "types": ["node", "ws"],
+    "allowImportingTsExtensions": false,
     "downlevelIteration": true,
     "isolatedModules": false,
-    "noEmit": true
+    "noEmit": false
   },
   "include": ["src/workers/**/*.ts"],
   "exclude": ["node_modules"]

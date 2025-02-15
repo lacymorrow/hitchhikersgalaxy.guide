@@ -14,11 +14,13 @@ import { useEffect, useState } from "react";
 
 export const DashboardButton = () => {
 	const { data: session } = useSession();
-	const [orders, setOrders] = useState<Order[]>([]);
+	const [orders, setOrders] = useState<unknown[]>([]);
 
 	useEffect(() => {
 		if (!session?.user?.email) return;
-		void getOrdersByEmail(session.user.email).then(setOrders);
+		void getOrdersByEmail(session.user.email).then((data) => {
+			setOrders(data);
+		});
 	}, [session]);
 
 	if (!session) {

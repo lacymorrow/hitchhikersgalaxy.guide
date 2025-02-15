@@ -4,17 +4,8 @@ import crypto from "crypto";
 // src/config/lemonsqueezy.ts
 import { db, isDatabaseInitialized } from "@/server/db";
 import type { User } from "@/server/db/schema";
-import {
-	type NewPlan,
-	payments,
-	plans,
-	users,
-	webhookEvents,
-} from "@/server/db/schema";
-import {
-	type LemonSqueezyOrderAttributes,
-	webhookHasMeta,
-} from "@/types/lemonsqueezy";
+import { type NewPlan, payments, plans, users, webhookEvents } from "@/server/db/schema";
+import { type LemonSqueezyOrderAttributes, webhookHasMeta } from "@/types/lemonsqueezy";
 import {
 	type Variant,
 	getProduct,
@@ -56,15 +47,15 @@ export const getOrdersByEmail = async (email: string) => {
 	try {
 		const response = await listOrders({
 			filter: {
-				userEmail: email,
+				userEmail: email.trim(),
 			},
 		});
 
-		if (!response || !Array.isArray(response.data)) {
+		if (!response) {
 			return [];
 		}
 
-		return response.data;
+		return response.data?.data ?? [];
 	} catch (error) {
 		console.error("Error fetching orders by email:", error);
 		return [];
@@ -89,8 +80,7 @@ export const getAllOrders = async () => {
 			userName: order.attributes.user_name,
 			amount: order.attributes.total / 100,
 			status: order.attributes.status as "paid" | "refunded" | "pending",
-			productName:
-				order.attributes.first_order_item.variant_name ?? "Unknown Product",
+			productName: order.attributes.first_order_item.variant_name ?? "Unknown Product",
 			purchaseDate: new Date(order.attributes.created_at),
 			attributes: order.attributes,
 		}));
@@ -100,9 +90,7 @@ export const getAllOrders = async () => {
 	}
 };
 
-export const getPaymentStatusByEmail = async (
-	email: string,
-): Promise<boolean> => {
+export const getPaymentStatusByEmail = async (email: string): Promise<boolean> => {
 	try {
 		const orders = await listOrders({
 			filter: {
@@ -112,10 +100,7 @@ export const getPaymentStatusByEmail = async (
 
 		console.log("getPaymentStatusByEmail", orders.data);
 
-		return (
-			orders.data?.data?.some((order) => order.attributes.status === "paid") ??
-			false
-		);
+		return orders.data?.data?.some((order) => order.attributes.status === "paid") ?? false;
 	} catch (error) {
 		console.error("Error checking payment status:", error);
 		return false;
@@ -128,17 +113,20 @@ export const getPaymentStatusByEmail = async (
  */
 export const getPaymentStatus = async (userId: string): Promise<boolean> => {
 	try {
+		console.log("getPaymentStatus", userId);
 		// Check the payment status in your database first
-		const payment = await db.query.payments.findFirst({
+		const payment = await db?.query.payments.findFirst({
 			where: eq(payments.userId, userId),
 		});
 
 		if (payment) return true;
 
 		// If not found in the database, get the user
-		const user = await db.query.users.findFirst({
+		const user = await db?.query.users.findFirst({
 			where: eq(users.id, userId),
 		});
+
+		console.log("user", user);
 
 		if (!user?.email) return false;
 
@@ -159,15 +147,13 @@ export const getPaymentStatus = async (userId: string): Promise<boolean> => {
 			}) ?? [];
 
 		const hasPaid = userOrders.some(
-			(order) =>
-				(order.attributes as LemonSqueezyOrderAttributes).status === "paid",
+			(order) => (order.attributes as LemonSqueezyOrderAttributes).status === "paid"
 		);
 
 		// If we found a paid order, store it in our database
 		if (hasPaid) {
 			const paidOrder = userOrders.find(
-				(order) =>
-					(order.attributes as LemonSqueezyOrderAttributes).status === "paid",
+				(order) => (order.attributes as LemonSqueezyOrderAttributes).status === "paid"
 			);
 			if (paidOrder) {
 				const attributes = paidOrder.attributes as LemonSqueezyOrderAttributes;
@@ -243,8 +229,7 @@ export const syncPlans = async () => {
 			}
 
 			// Fetch the Product name.
-			const productName =
-				(await getProduct(variant.product_id)).data?.data.attributes.name ?? "";
+			const productName = (await getProduct(variant.product_id)).data?.data.attributes.name ?? "";
 
 			const priceString = variant.price?.toString() ?? "";
 
@@ -297,9 +282,7 @@ export async function processWebhookEvent(webhookEvent: any) {
 		.where(eq(webhookEvents.id, webhookEvent.id));
 
 	if (dbwebhookEvent.length < 1) {
-		throw new Error(
-			`Webhook event #${webhookEvent.id} not found in the database.`,
-		);
+		throw new Error(`Webhook event #${webhookEvent.id} not found in the database.`);
 	}
 
 	const eventBody = webhookEvent.body;
@@ -368,18 +351,15 @@ export const getUsersWithPayments = async () => {
 
 				// Check if user has any orders in Lemon Squeezy
 				const userOrders = lemonSqueezyOrders.filter(
-					(order) =>
-						order.attributes.user_email?.toLowerCase() ===
-						user.email.toLowerCase(),
+					(order) => order.attributes.user_email?.toLowerCase() === user.email.toLowerCase()
 				);
 
 				const hasPaid =
-					dbPayment !== undefined ||
-					userOrders.some((order) => order.attributes.status === "paid");
+					dbPayment !== undefined || userOrders.some((order) => order.attributes.status === "paid");
 
 				// Get the last purchase date
 				const sortedOrders = [...userOrders].sort(
-					(a, b) => b.purchaseDate.getTime() - a.purchaseDate.getTime(),
+					(a, b) => b.purchaseDate.getTime() - a.purchaseDate.getTime()
 				);
 				const lastPurchaseDate = sortedOrders[0]?.purchaseDate ?? null;
 
@@ -403,7 +383,7 @@ export const getUsersWithPayments = async () => {
 					totalPurchases: userOrders.length,
 					purchases,
 				};
-			}),
+			})
 		);
 
 		// Filter out null values and return
@@ -441,9 +421,7 @@ export const getPaymentsWithUsers = async () => {
 		}));
 
 		// Sort by purchase date, most recent first
-		return payments.sort(
-			(a, b) => b.purchaseDate.getTime() - a.purchaseDate.getTime(),
-		);
+		return payments.sort((a, b) => b.purchaseDate.getTime() - a.purchaseDate.getTime());
 	} catch (error) {
 		logger.error("Error fetching payments with users:", error);
 		return [];

@@ -1,4 +1,5 @@
-
+import { VercelDeployButton } from "@/components/buttons/vercel-deploy-button";
+import { Link } from "@/components/primitives/link-with-transition";
 import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/primitives/page-header";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -10,13 +11,17 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { CodeWindow } from "@/components/ui/code-window";
 import { GitHubConnectButton } from "@/components/ui/github-connect-button";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { downloadRepo } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
+import { checkGitHubConnection } from "@/server/services/github/github-service";
+import { PaymentService } from "@/server/services/payment-service";
 import {
 	ActivityIcon,
 	AlertCircle,
@@ -35,6 +40,9 @@ import {
 	Star,
 	Users
 } from "lucide-react";
+import { redirect } from "next/navigation";
+import { apiKeyService } from "@/server/services/api-key-service";
+import { BASE_URL } from "@/config/base-url";
 
 // Recent activity type
 interface Activity {
@@ -92,59 +100,86 @@ const activityIcons = {
 	release: Box,
 };
 
+const installationCode = `# Clone the repository
+git clone ${siteConfig.repo.url}
+
+# Change directory
+cd shipkit
+
+# Install dependencies
+pnpm install
+
+# Start the development server
+pnpm dev`;
+
+const dockerCode = `# Clone the repository
+git clone ${siteConfig.repo.url}
+
+# Change directory
+cd shipkit
+
+# Build the Docker image
+docker build -t shipkit .
+
+# Run the container
+docker run -p 3000:3000 shipkit`;
+
 export default async function DashboardPage() {
 	const session = await auth();
 
-	if (!session?.user) {
-		return null;
+	const hasGitHubConnection = await checkGitHubConnection(session?.user?.id ?? "");
+
+	// Get the user's API key
+	let apiKey: string | undefined;
+	if (session?.user?.id) {
+		const userApiKeys = await apiKeyService.getUserApiKeys(session.user.id);
+		if (userApiKeys.length > 0) {
+			apiKey = userApiKeys[0].apiKey.key;
+		}
+		console.log(apiKey);
 	}
+
+	// Redirect after deploy to /vercel/deploy/${apiKey}
+	const deployUrl = new URL(routes.external.vercelImportShipkit);
+	const redirectUrl = deployUrl.searchParams.get("redirect-url");
+	if (apiKey) {
+		deployUrl.searchParams.set("redirect-url", encodeURIComponent(`${redirectUrl ?? BASE_URL}${routes.vercelDeploy}/${apiKey}`));
+	}
+	const vercelDeployHref = deployUrl.toString();
+
 
 	return (
 		<div className="container mx-auto py-10 space-y-4">
 			<PageHeader>
 				<div className="w-full flex flex-wrap items-center justify-between gap-2">
 					<div>
-
-						<PageHeaderHeading>Welcome, {session.user.name}</PageHeaderHeading>
+						<PageHeaderHeading>Welcome, {session?.user?.name}</PageHeaderHeading>
 						<PageHeaderDescription>
 							Here's what's happening with your projects
 						</PageHeaderDescription>
 					</div>
-					<div className="flex flex-wrap items-stretch justify-stretch gap-3">
+					<div className="flex flex-wrap items-stretch justify-stretch max-w-md gap-3">
+						<div className="flex flex-wrap items-stretch justify-stretch w-full gap-3">
+							{/* Download button */}
+							<form action={downloadRepo}>
+								<Button
+									type="submit"
+									size="lg"
+									variant="outline"
+									className="w-full"
+								>
+									<DownloadIcon className="mr-2 h-4 w-4" />
+									Download {siteConfig.name}
+								</Button>
+							</form>
 
+							<VercelDeployButton className="grow" href={vercelDeployHref} />
+						</div>
 						{/* GitHub connection section */}
 						<GitHubConnectButton className="w-full" />
-
-						{/* Download button */}
-						<form action={downloadRepo} className="w-full">
-							<Button
-								type="submit"
-								size="lg"
-								variant="outline"
-								className="w-full"
-							>
-								<DownloadIcon className="mr-2 h-4 w-4" />
-								Download {siteConfig.name}
-							</Button>
-						</form>
 					</div>
 				</div>
-			</PageHeader >
-
-			{/* Search */}
-			<div className="flex items-center space-x-2" >
-				<div className="relative flex-1">
-					<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-					<Input
-						type="search"
-						placeholder="Search across projects..."
-						className="pl-8"
-					/>
-				</div>
-				<Button variant="outline" size="icon">
-					<Settings className="h-4 w-4" />
-				</Button>
-			</div>
+			</PageHeader>
 
 			{/* Main Grid */}
 			< div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4" >
@@ -207,6 +242,7 @@ export default async function DashboardPage() {
 			<Tabs defaultValue="overview" className="space-y-4">
 				<TabsList>
 					<TabsTrigger value="overview">Overview</TabsTrigger>
+					<TabsTrigger value="downloads">Downloads</TabsTrigger>
 					<TabsTrigger value="analytics">Analytics</TabsTrigger>
 					<TabsTrigger value="reports">Reports</TabsTrigger>
 					<TabsTrigger value="notifications">Notifications</TabsTrigger>
@@ -294,10 +330,10 @@ export default async function DashboardPage() {
 							<CardContent>
 								<div className="text-2xl font-bold text-green-500">Secure</div>
 								<div className="mt-2 flex space-x-2">
-									<Badge variant="outline" className="bg-green-50">
+									<Badge variant="outline" className="">
 										SSL Active
 									</Badge>
-									<Badge variant="outline" className="bg-green-50">
+									<Badge variant="outline" className="">
 										2FA Enabled
 									</Badge>
 								</div>
@@ -349,6 +385,98 @@ export default async function DashboardPage() {
 							</CardContent>
 						</Card>
 					</div>
+				</TabsContent>
+
+				<TabsContent value="downloads" className="space-y-4">
+					<Card>
+						<CardHeader>
+							<CardTitle>Download {siteConfig.name}</CardTitle>
+							<CardDescription>
+								Download the latest version of {siteConfig.name} directly, or
+								connect your GitHub account to get automatic updates, features,
+								and support!
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<div className="flex flex-col gap-4">
+								{hasGitHubConnection && (
+									<>
+										{/* Installation instructions */}
+										<div className="space-y-4">
+											<div className="prose dark:prose-invert">
+												<h3>Quick Install</h3>
+												<span className="block">
+													Clone the repository with{" "}
+													<CodeWindow
+														code={`git clone ${siteConfig.repo.url}`}
+														language="bash"
+														variant="single"
+														showLineNumbers={false}
+													/>
+													then install dependencies with{" "}
+													<CodeWindow
+														code="pnpm install"
+														language="bash"
+														variant="single"
+														showLineNumbers={false}
+													/>
+												</span>
+											</div>
+
+											<div className="rounded-lg border bg-card p-4">
+												<h3 className="mb-3 text-lg font-semibold">
+													Full Installation Steps
+												</h3>
+												<CodeWindow
+													title="Terminal"
+													code={installationCode}
+													language="bash"
+													showLineNumbers={false}
+													theme="dark"
+													variant="minimal"
+												/>
+											</div>
+
+											<div className="rounded-lg border bg-card p-4">
+												<h3 className="mb-3 text-lg font-semibold">Using Docker</h3>
+												<CodeWindow
+													title="Terminal"
+													code={dockerCode}
+													language="bash"
+													showLineNumbers={false}
+													theme="dark"
+													variant="minimal"
+												/>
+											</div>
+										</div>
+									</>
+								)}
+
+								{!hasGitHubConnection && (
+									<div className="text-sm text-muted-foreground">
+										<p>Connect GitHub to:</p>
+										<ul className="mt-2 list-inside list-disc">
+											<li>Access the repository directly</li>
+											<li>Get automatic updates</li>
+											<li>Access GitHub support</li>
+										</ul>
+									</div>
+								)}
+
+								<p className="mt-4 text-sm text-muted-foreground">
+									Need help? Check out our{" "}
+									<Link href={routes.docs} className="underline">
+										documentation
+									</Link>{" "}
+									or{" "}
+									<Link href={routes.external.email} className="underline">
+										contact support
+									</Link>
+									.
+								</p>
+							</div>
+						</CardContent>
+					</Card>
 				</TabsContent>
 
 				<TabsContent value="analytics" className="space-y-4">
@@ -435,6 +563,6 @@ export default async function DashboardPage() {
 					</Card>
 				</TabsContent>
 			</Tabs>
-		</div >
+		</div>
 	);
 }

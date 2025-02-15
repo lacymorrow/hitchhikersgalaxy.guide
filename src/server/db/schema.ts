@@ -45,8 +45,8 @@ export type Plan = typeof plans.$inferSelect;
 
 export const payments = createTable("payment", {
 	id: serial("id").primaryKey(),
-	userId: varchar("userId", { length: 255 }).notNull(),
-	orderId: varchar("orderId", { length: 255 }),
+	userId: varchar("user_id", { length: 255 }).notNull(),
+	orderId: varchar("order_id", { length: 255 }),
 	amount: integer("amount"),
 	status: varchar("status", { length: 255 }).notNull(),
 	metadata: text("metadata").default("{}"),

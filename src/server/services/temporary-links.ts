@@ -21,7 +21,7 @@ export async function createTemporaryLink({
 	metadata?: string;
 }) {
 	return await db
-		.insert(temporaryLinks)
+		?.insert(temporaryLinks)
 		.values({
 			userId,
 			type,
@@ -35,18 +35,18 @@ export async function createTemporaryLink({
 // TODO: First use should record the IP address, and any subsequent uses from a different IP should be blocked
 // TODO: Add a check to see if the link has been used already (limit uses)
 export async function getTemporaryLinkData(linkId: string, userId: string) {
-	const link = await db.query.temporaryLinks.findFirst({
+	const link = await db?.query.temporaryLinks.findFirst({
 		where: and(
 			eq(temporaryLinks.id, linkId),
 			eq(temporaryLinks.userId, userId),
-			gt(temporaryLinks.expiresAt, new Date())
+			gt(temporaryLinks.expiresAt, new Date()),
 		),
 	});
 
 	// Reset the expiresAt if the link is used, so it can be used again
 	if (link) {
 		await db
-			.update(temporaryLinks)
+			?.update(temporaryLinks)
 			.set({ expiresAt: addMinutes(new Date(), EXPIRES_IN_MINUTES) })
 			.where(eq(temporaryLinks.id, linkId));
 		return link.data;

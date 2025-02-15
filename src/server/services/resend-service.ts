@@ -14,7 +14,8 @@ export const sendFeedbackEmail = async (content: string): Promise<void> => {
 			subject: "New Feedback Received",
 			html: `<p>${content}</p>`,
 		});
-		console.log("Feedback sent successfully", result);
+
+		console.debug("Feedback sent successfully", result);
 	} catch (error) {
 		console.error("Error sending feedback:", error);
 		throw new Error("Failed to send feedback email");

@@ -1,86 +1,177 @@
 import crypto from "crypto";
 // @see https://docs.lemonsqueezy.com/api/webhooks
 // @see https://raw.githubusercontent.com/lmsqueezy/nextjs-billing/refs/heads/main/src/app/api/webhook/route.ts
-import { storeWebhookEvent } from "@/lib/lemonsqueezy";
+import { env } from "@/env";
 import { logger } from "@/lib/logger";
-import { db } from "@/server/db";
-import { payments, users } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { PaymentService } from "@/server/services/payment-service";
+import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 
+/**
+ * Verify that the webhook request is coming from Lemon Squeezy
+ */
+function verifyWebhookSignature(payload: string, signature: string): boolean {
+	if (!env.LEMONSQUEEZY_WEBHOOK_SECRET) {
+		logger.error("Missing LEMONSQUEEZY_WEBHOOK_SECRET environment variable");
+		return false;
+	}
+
+	const hmac = crypto.createHmac("sha256", env.LEMONSQUEEZY_WEBHOOK_SECRET);
+	const digest = hmac.update(payload).digest("hex");
+	const isValid = crypto.timingSafeEqual(
+		Buffer.from(signature),
+		Buffer.from(digest),
+	);
+
+	if (!isValid) {
+		logger.warn("Invalid webhook signature", {
+			expectedSignature: digest,
+			receivedSignature: signature,
+		});
+	}
+
+	return isValid;
+}
+
 export async function POST(request: Request) {
+	const startTime = Date.now();
+	console.log("Webhook request received");
+
 	try {
-		const body = await request.json();
-		const signature = request.headers.get("x-signature");
-		logger.info("Lemonsqueezy webhook received: ", {
-			event: body.meta.event_name,
-			custom_data: body.data.attributes.custom_data,
+		// Get the signature from the headers
+		const headersList = await headers();
+		// const signature = headersList.get("x-signature");
+		// if (!signature) {
+		// 	logger.warn("Missing signature in webhook request", {
+		// 		headers: Object.fromEntries(headersList.entries()),
+		// 	});
+		// 	return new NextResponse("Missing signature", { status: 401 });
+		// }
+
+		// Get the raw body
+		const body = await request.text();
+		console.log("Raw webhook body:", body);
+
+		// Parse the webhook data
+		const webhookData = JSON.parse(body);
+		const { data, meta } = webhookData;
+
+		console.log("Processing webhook event", {
+			eventName: meta.event_name,
+			orderId: data.id,
+			customData: meta.custom_data,
+			testMode: meta.test_mode,
+			productName: data.attributes?.first_order_item?.product_name,
+			orderStatus: data.attributes?.status,
+			orderTotal: data.attributes?.total_usd || data.attributes?.total,
 		});
 
-		if (!process.env.LEMONSQUEEZY_WEBHOOK_SECRET || !signature) {
-			logger.warn("Unauthorized webhook request", { signature });
-			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-		}
+		// Handle different webhook events
+		switch (meta.event_name) {
+			case "order_created": {
+				const { attributes } = data;
+				// For now, use the user's email if no user_id is provided
+				const userId = meta.custom_data?.user_id || attributes.user_email;
 
-		const hmac = crypto.createHmac(
-			"sha256",
-			process.env.LEMONSQUEEZY_WEBHOOK_SECRET,
-		);
-		const digest = hmac.update(JSON.stringify(body)).digest("hex");
+				if (!userId) {
+					console.error("No user ID or email found in order data", {
+						orderId: data.id,
+						customData: meta.custom_data,
+					});
+					return new NextResponse("No user identifier found", { status: 400 });
+				}
 
-		if (signature !== digest) {
-			logger.warn("Invalid signature for webhook", { signature, digest });
-			return NextResponse.json({ error: "Invalid signature" }, { status: 401 });
-		}
+				console.log("Creating payment record", {
+					userId,
+					orderId: data.id,
+					status: attributes.status,
+					amount: attributes.total_usd || attributes.total,
+					productName: attributes.first_order_item?.product_name,
+					variantName: attributes.first_order_item?.variant_name,
+				});
 
-		const event = await storeWebhookEvent(body.meta.event_name, body);
+				// Store the payment in our database
+				const payment = await PaymentService.createPayment({
+					userId,
+					orderId: data.id,
+					status: attributes.status,
+					amount: attributes.total_usd || attributes.total,
+					metadata: {
+						custom_data: meta.custom_data,
+						order_data: attributes,
+						test_mode: meta.test_mode,
+					},
+				});
 
-		logger.info("Webhook event stored", {
-			eventName: body.meta.event_name,
-			eventId: event?.id,
-		});
+				console.log("Payment record created successfully", {
+					paymentId: payment.id,
+					userId,
+					orderId: data.id,
+					amount: attributes.total_usd || attributes.total,
+					processingTime: Date.now() - startTime,
+				});
 
-		// Handle the event
-		if (body.meta.event_name === "order_created") {
-			const customData = body.data.attributes.custom_data || {};
-			const userEmail = body.data.attributes.user_email;
-			const userId = customData.user_id;
-
-			// Try to find user by ID first, then fall back to email
-			const user = await db.query.users.findFirst({
-				where: userId ? eq(users.id, userId) : eq(users.email, userEmail),
-			});
-
-			if (!user) {
-				logger.warn("User not found for order", { userEmail, userId });
-				return NextResponse.json({ error: "User not found" }, { status: 404 });
+				break;
 			}
 
-			// Create payment record
-			await db.insert(payments).values({
-				userId: user.id,
-				orderId: body.data.id,
-				status: "completed",
-				amount: body.data.attributes.total,
-				metadata: JSON.stringify({
-					custom_data: customData,
-					order_data: body.data.attributes,
-				}),
-			});
+			case "order_refunded": {
+				const orderId = data.id;
+				const { attributes } = data;
 
-			logger.info("Payment record created", {
-				userId: user.id,
-				orderId: body.data.id,
-				amount: body.data.attributes.total,
-			});
+				console.log("Processing refund", {
+					orderId,
+					refundAmount: attributes.refunded_amount,
+					refundedAt: attributes.refunded_at,
+				});
+
+				// Update payment status in our database
+				const payment = await PaymentService.updatePaymentStatus(
+					orderId,
+					"refunded",
+				);
+
+				console.log("Payment refunded successfully", {
+					paymentId: payment.id,
+					orderId,
+					processingTime: Date.now() - startTime,
+				});
+				break;
+			}
+
+			default: {
+				console.info("Unhandled webhook event", {
+					eventName: meta.event_name,
+					orderId: data.id,
+				});
+			}
 		}
 
-		return NextResponse.json({ success: true });
+		console.log("Webhook processed successfully", {
+			eventName: meta.event_name,
+			orderId: data.id,
+			processingTime: Date.now() - startTime,
+		});
+
+		return new NextResponse("Webhook processed", { status: 200 });
 	} catch (error) {
-		logger.error("Webhook error", { error });
-		return NextResponse.json(
-			{ error: "Internal server error" },
-			{ status: 500 },
-		);
+		console.error("Webhook processing error", {
+			error,
+			processingTime: Date.now() - startTime,
+			...(error instanceof Error && {
+				errorName: error.name,
+				errorMessage: error.message,
+				errorStack: error.stack,
+			}),
+		});
+		return new NextResponse("Webhook error", { status: 500 });
 	}
+}
+
+export async function GET(request: Request) {
+	console.log("GET request received:", {
+		url: request.url,
+		method: request.method,
+		headers: Object.fromEntries(request.headers.entries()),
+	});
+	return new NextResponse("Method not allowed", { status: 405 });
 }

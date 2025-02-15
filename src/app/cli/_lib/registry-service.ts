@@ -10,8 +10,7 @@ const BUILT_IN_REGISTRIES = [
 	{
 		name: "shadcn/ui",
 		url: "https://ui.shadcn.com/r",
-		description:
-			"Official shadcn/ui component registry with customizable components and blocks",
+		description: "Official shadcn/ui component registry with customizable components and blocks",
 		baseComponentUrl: "https://ui.shadcn.com/registry/styles",
 		baseBlockUrl: "https://ui.shadcn.com/registry/blocks",
 		baseDocsUrl: "https://ui.shadcn.com/docs/components",
@@ -19,8 +18,7 @@ const BUILT_IN_REGISTRIES = [
 	{
 		name: "Magic UI",
 		url: "https://magicui.design/r/index.json",
-		description:
-			"Beautiful animated components and effects for modern web applications",
+		description: "Beautiful animated components and effects for modern web applications",
 		baseComponentUrl: "https://magicui.design/registry/styles",
 		baseBlockUrl: "https://magicui.design/registry/blocks",
 		baseDocsUrl: "https://magicui.design/docs/components",
@@ -114,7 +112,7 @@ export async function validateRegistry(registry: Registry): Promise<void> {
 				item !== null &&
 				typeof item.name === "string" &&
 				typeof item.type === "string" &&
-				(item.type === "registry:ui" || item.type === "registry:block"),
+				(item.type === "registry:ui" || item.type === "registry:block")
 		);
 
 		if (!validItem) {
@@ -151,25 +149,32 @@ export function removeCustomRegistry(name: string): void {
  * Get a specific registry by name
  */
 export async function getRegistry(name: RegistryName): Promise<Registry> {
-	const registry = [...BUILT_IN_REGISTRIES, ...getCustomRegistries()].find(
-		(r) => r.name === name,
-	);
+	const registry = [...BUILT_IN_REGISTRIES, ...getCustomRegistries()].find((r) => r.name === name);
 	if (!registry) {
 		throw new Error(`Registry ${name} not found`);
 	}
 	return registry;
 }
 
+export class RegistryError extends Error {
+	constructor(
+		message: string,
+		public readonly statusCode?: number,
+		public readonly url?: string
+	) {
+		super(message);
+		this.name = "RegistryError";
+	}
+}
+
 /**
  * Fetch registry index with error handling and caching
  */
-export async function fetchRegistryIndex(
-	registryUrl: string,
-): Promise<RegistryItem[]> {
+export async function fetchRegistryIndex(registryUrl: string): Promise<RegistryItem[]> {
 	const url = new URL(
 		registryUrl.endsWith("index.json")
 			? registryUrl
-			: `${registryUrl.replace(/\/$/, "")}/index.json`,
+			: `${registryUrl.replace(/\/$/, "")}/index.json`
 	);
 
 	try {
@@ -177,7 +182,7 @@ export async function fetchRegistryIndex(
 			next: { revalidate: 3600 }, // Cache for 1 hour
 		}).catch((error) => {
 			console.error(`Failed to fetch registry index from ${url}:`, error);
-			return
+			return;
 		});
 
 		if (!response) {
@@ -197,12 +202,10 @@ export async function fetchRegistryIndex(
 export async function fetchItemDetails(
 	baseUrl: string,
 	itemName: string,
-	style = "default",
+	style = "default"
 ): Promise<RegistryItem> {
 	const baseUrlWithoutIndex = baseUrl.replace(/\/index\.json$/, "");
-	const detailsUrl = new URL(
-		`${baseUrlWithoutIndex}/styles/${style}/${itemName}.json`,
-	);
+	const detailsUrl = new URL(`${baseUrlWithoutIndex}/styles/${style}/${itemName}.json`);
 
 	try {
 		const response = await fetch(detailsUrl, {
@@ -227,9 +230,7 @@ export async function fetchItemDetails(
 /**
  * Categorize items by type (Components/Blocks)
  */
-export function categorizeItems(
-	items: RegistryItem[],
-): Record<string, RegistryItem[]> {
+export function categorizeItems(items: RegistryItem[]): Record<string, RegistryItem[]> {
 	return items.reduce(
 		(acc, item) => {
 			const category = item.type === "registry:block" ? "Blocks" : "Components";
@@ -239,16 +240,14 @@ export function categorizeItems(
 			acc[category].push(item);
 			return acc;
 		},
-		{} as Record<string, RegistryItem[]>,
+		{} as Record<string, RegistryItem[]>
 	);
 }
 
 /**
  * Group items by their categories
  */
-export function groupItemsByType(
-	items: RegistryItem[],
-): Record<string, RegistryItem[]> {
+export function groupItemsByType(items: RegistryItem[]): Record<string, RegistryItem[]> {
 	return items.reduce(
 		(acc, item) => {
 			const categories = item.categories || ["Uncategorized"];
@@ -260,7 +259,7 @@ export function groupItemsByType(
 			}
 			return acc;
 		},
-		{} as Record<string, RegistryItem[]>,
+		{} as Record<string, RegistryItem[]>
 	);
 }
 
@@ -270,7 +269,7 @@ export function groupItemsByType(
 export function searchItems(
 	items: RegistryItem[] | { [key: string]: RegistryItem[] },
 	query = "",
-	filters: RegistryFilters = {},
+	filters: RegistryFilters = {}
 ): RegistryItem[] {
 	// Convert items object to array if needed
 	const itemsArray = Array.isArray(items) ? items : Object.values(items).flat();
@@ -307,13 +306,9 @@ export function searchItems(
  * Get the install command for a component
  * @see https://ui.shadcn.com/docs/cli
  */
-export function getInstallCommand(
-	component: RegistryItem,
-	registry?: Registry,
-) {
+export function getInstallCommand(component: RegistryItem, registry?: Registry) {
 	const componentUrl =
-		component.componentUrl ||
-		`${registry?.baseComponentUrl}/default/${component.name}.json`;
+		component.componentUrl || `${registry?.baseComponentUrl}/default/${component.name}.json`;
 	return `npx shadcn@latest add "${componentUrl}"`;
 }
 
@@ -322,7 +317,7 @@ export function getInstallCommand(
  */
 export function getDocumentationUrl(
 	component: RegistryItem,
-	registry?: Registry,
+	registry?: Registry
 ): string | undefined {
 	if (!registry?.baseDocsUrl) return undefined;
 	return `${registry.baseDocsUrl}/${component.name}`;

@@ -88,9 +88,7 @@ export const AIMoonshineWeb = () => {
 
 				const getAverageFrequency = () => {
 					analyser.getByteFrequencyData(dataArray);
-					return (
-						dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length
-					);
+					return dataArray.reduce((sum, value) => sum + value, 0) / dataArray.length;
 				};
 
 				const updateFrequency = () => {
@@ -100,9 +98,7 @@ export const AIMoonshineWeb = () => {
 				};
 				updateFrequency();
 
-				await audioContext.audioWorklet.addModule(
-					new URL("./processor.js", import.meta.url),
-				);
+				await audioContext.audioWorklet.addModule(new URL("./processor.js", import.meta.url));
 
 				worklet = new AudioWorkletNode(audioContext, "vad-processor", {
 					numberOfInputs: 1,
@@ -128,9 +124,7 @@ export const AIMoonshineWeb = () => {
 
 		return () => {
 			ignore = true; // Mark the effect as cleaned up
-			audioStream.then((stream) =>
-				stream.getTracks().forEach((track) => track.stop()),
-			);
+			audioStream.then((stream) => stream.getTracks().forEach((track) => track.stop()));
 			source?.disconnect();
 			worklet?.disconnect();
 			audioContext?.close();
@@ -141,8 +135,7 @@ export const AIMoonshineWeb = () => {
 		const content = messages
 			.filter((output) => output.type === "output")
 			.map(
-				(output) =>
-					`${formatDate(output.start)} - ${formatDate(output.end)} | ${output.message}`,
+				(output) => `${formatDate(output.start)} - ${formatDate(output.end)} | ${output.message}`
 			)
 			.join("\n");
 
@@ -163,9 +156,7 @@ export const AIMoonshineWeb = () => {
 				transition={{ delay: 1.5, duration: 2 }}
 				className="p-2 fixed inset-0 flex flex-col items-center justify-center bg-black/90 backdrop-blur-md z-20 text-center w-full h-full"
 			>
-				<h1 className="text-6xl sm:text-7xl lg:text-8xl text-white font-bold">
-					Moonshine Web
-				</h1>
+				<h1 className="text-6xl sm:text-7xl lg:text-8xl text-white font-bold">Moonshine Web</h1>
 				<h2 className="text-2xl text-white">
 					Real-time in-browser speech recognition, powered by Transformers.js
 				</h2>
@@ -199,8 +190,7 @@ export const AIMoonshineWeb = () => {
 												}
 									}
 									transition={{
-										delay:
-											duration === "until_next" ? 0 : 1 + message.length / 20,
+										delay: duration === "until_next" ? 0 : 1 + message.length / 20,
 										duration: 1,
 									}}
 								>
@@ -248,7 +238,7 @@ export const AIMoonshineWeb = () => {
 							onClick={() =>
 								window.open(
 									"https://github.com/huggingface/transformers.js-examples/tree/main/moonshine-web",
-									"_blank",
+									"_blank"
 								)
 							}
 							className="w-10 h-10 cursor-pointer bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-100"

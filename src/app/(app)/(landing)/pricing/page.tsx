@@ -1,9 +1,16 @@
 import { constructMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site";
+import { oneTimePlans, singlePlan, subscriptionPlans } from "@/content/pricing/pricing-content";
 import type { Metadata } from "next";
 import { FAQ } from "../_components/faq";
 import { PricingSectionSubtle } from "../_components/pricing-section-subtle";
-
+import { PricingSectionSingle } from "@/components/blocks/pricing-section-single";
+import { PricingSectionBold } from "@/app/(app)/(landing)/_components/pricing-section-bold";
+import { PricingSection } from "@/app/(app)/(landing)/_components/pricing-section";
+import { PricingSectionSubscription } from "@/app/(app)/(landing)/_components/pricing-section-subscription";
+import advancedGradient from "@/app/(app)/(landing)/_components/advanced-gradient.jpg";
+import { routes } from "@/config/routes";
+import { Link } from "@/components/primitives/link-with-transition";
 export const metadata: Metadata = constructMetadata({
 	title: "Pricing & Plans - Start Building Today | Shipkit",
 	description: "Transparent, flexible pricing for teams of all sizes. Launch your app with confidence using Shipkit's powerful features. Free tier available, no credit card required.",
@@ -27,12 +34,25 @@ export default function PricingPage() {
 			</div>
 
 			{/* Pricing Section */}
-			<section>
-				<h2 className="mb-12 text-center text-2xl font-semibold">
-					One-time Purchase
-				</h2>
-				<PricingSectionSubtle />
-			</section>
+			<main className="flex-1">
+				<div className="container mx-auto px-4">
+					{/* <div className="py-24 lg:pb-32">
+						<PricingSection plans={oneTimePlans} backgroundImage={advancedGradient.src} />
+					</div>
+					<div className="py-24 lg:pb-32">
+						<PricingSectionSubscription plans={subscriptionPlans} />
+					</div>
+					<div className="py-24 lg:pb-32">
+						<PricingSectionSubtle plans={oneTimePlans} />
+					</div>
+					<div className="py-24 lg:pb-32">
+						<PricingSectionBold plans={oneTimePlans} />
+					</div> */}
+					<div className="py-24 lg:pb-32">
+						<PricingSectionSingle plan={singlePlan} />
+					</div>
+				</div>
+			</main>
 
 			{/* FAQ Section */}
 			<section className="mx-auto mt-24 max-w-3xl">
@@ -47,12 +67,7 @@ export default function PricingPage() {
 				<h2 className="mb-4 text-2xl font-semibold">Need Help Deciding?</h2>
 				<p className="text-muted-foreground">
 					Our team is here to help you choose the right plan for your needs.{" "}
-					<a
-						href={`mailto:${siteConfig.email.support}`}
-						className="font-medium text-primary hover:underline"
-					>
-						Contact us
-					</a>
+					<Link href={routes.contact}>Contact us</Link>
 				</p>
 			</section>
 		</div>

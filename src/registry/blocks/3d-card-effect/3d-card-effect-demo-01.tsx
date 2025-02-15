@@ -1,10 +1,10 @@
 "use client";
- 
+
 import Image from "next/image";
 import React from "react";
 import { CardBody, CardContainer, CardItem } from "../ui/3d-card";
-import Link from "next/link";
- 
+import { Link } from "@/components/primitives/link-with-transition";
+
 export function ThreeDCardDemo() {
   return (
     <CardContainer className="inter-var">

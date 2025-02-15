@@ -2,8 +2,8 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
- 
+import { Link } from "@/components/primitives/link-with-transition";
+
 export const PinContainer = ({
   children,
   title,
@@ -20,14 +20,14 @@ export const PinContainer = ({
   const [transform, setTransform] = useState(
     "translate(-50%,-50%) rotateX(0deg)"
   );
- 
+
   const onMouseEnter = () => {
     setTransform("translate(-50%,-50%) rotateX(40deg) scale(0.8)");
   };
   const onMouseLeave = () => {
     setTransform("translate(-50%,-50%) rotateX(0deg) scale(1)");
   };
- 
+
   return (
     <Link
       className={cn(
@@ -58,7 +58,7 @@ export const PinContainer = ({
     </Link>
   );
 };
- 
+
 export const PinPerspective = ({
   title,
   href,
@@ -78,11 +78,11 @@ export const PinPerspective = ({
             <span className="relative z-20 text-white text-xs font-bold inline-block py-0.5">
               {title}
             </span>
- 
+
             <span className="absolute -bottom-0 left-[1.125rem] h-px w-[calc(100%-2.25rem)] bg-gradient-to-r from-emerald-400/0 via-emerald-400/90 to-emerald-400/0 transition-opacity duration-500 group-hover/btn:opacity-40"></span>
           </a>
         </div>
- 
+
         <div
           style={{
             perspective: "1000px",
@@ -101,7 +101,7 @@ export const PinPerspective = ({
               animate={{
                 opacity: [0, 1, 0.5, 0],
                 scale: 1,
- 
+
                 z: 0,
               }}
               transition={{
@@ -121,7 +121,7 @@ export const PinPerspective = ({
               animate={{
                 opacity: [0, 1, 0.5, 0],
                 scale: 1,
- 
+
                 z: 0,
               }}
               transition={{
@@ -141,7 +141,7 @@ export const PinPerspective = ({
               animate={{
                 opacity: [0, 1, 0.5, 0],
                 scale: 1,
- 
+
                 z: 0,
               }}
               transition={{
@@ -153,7 +153,7 @@ export const PinPerspective = ({
             ></motion.div>
           </>
         </div>
- 
+
         <>
           <motion.div className="absolute right-1/2 bottom-1/2 bg-gradient-to-b from-transparent to-cyan-500 translate-y-[14px] w-px h-20 group-hover/pin:h-40 blur-[2px]" />
           <motion.div className="absolute right-1/2 bottom-1/2 bg-gradient-to-b from-transparent to-cyan-500 translate-y-[14px] w-px h-20 group-hover/pin:h-40  " />

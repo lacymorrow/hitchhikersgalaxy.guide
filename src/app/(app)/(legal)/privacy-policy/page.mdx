@@ -1,3 +1,10 @@
+---
+title: Privacy Policy
+description: Our commitment to protecting your privacy
+---
+
+import { siteConfig } from "@/config/site";
+
 # Privacy Policy
 
 Last Updated: 2024-03-19
@@ -29,21 +36,24 @@ Handled by third parties because financial responsibility is best delegated to t
 
 ## 3. How We Use Your Information
 
-We use your information in ways that seem reasonable to us at the time, which may include:
-
-- Service provision
-- Feature development
-- Analytics
-- Whatever else we think of later
+We use your information to:
+- Create and manage your account
+- Provide and maintain our Services
+- Send important updates about our Services
+- Improve and optimize our Services
+- Provide customer support
+- Ensure security of our Services
+- Comply with legal obligations
 
 ## 4. Information Sharing
 
-Your information may be shared with:
+We share information with:
+- Authentication providers (GitHub, Discord, Google) to enable sign-in
+- LemonSqueezy for payment processing
+- Service providers who help us operate our Services
+- Law enforcement when required by law
 
-- Service providers
-- Analytics platforms
-- Anyone we're legally compelled to share it with
-- Whoever our current or future business partners might be
+We do not sell your personal information to third parties.
 
 ## 5. Data Security
 
@@ -100,11 +110,11 @@ We may update this Privacy Policy periodically. We will notify you of any materi
 ## 11. Contact Us
 
 If you have questions about this Privacy Policy or need to exercise your data protection rights, please contact us at:
-- Email: privacy@shipkit.io
+- Email: {siteConfig.email.format("support")}
 
 ## 12. Data Protection Officer
 
-For GDPR-related inquiries, you can contact our Data Protection Officer at privacy@shipkit.io.
+For GDPR-related inquiries, you can contact our Data Protection Officer at {siteConfig.email.format("support")}.
 
 ---
 

@@ -31,9 +31,9 @@
     ],
     "baseUrl": ".",
     "paths": {
+      "@payload-config": ["./src/payload.config.ts"],
       "@/public/*": ["./public/*"],
-      "@/*": ["./src/*"],
-      "@payload-config": ["./src/payload.config.ts"]
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -60,7 +60,7 @@
     "src/components/blocks/**/*.tsx",
     "src/components/ui/**/*.ts",
     "src/components/ui/**/*.tsx",
-    "src/app/(app)/(ai)/**/*",
+    "src/app/(app)/ai/**/*",
     "src/app/(app)/(demo)/examples/**/*",
     "src/workers/**/*.ts"
   ]

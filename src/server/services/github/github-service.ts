@@ -55,7 +55,7 @@ export async function grantGitHubAccess({ githubUsername }: GitHubAccessParams) 
 	});
 
 	if (!env?.GITHUB_ACCESS_TOKEN) {
-		logger.error("GitHub access token missing");
+		logger.warn("GitHub access token missing");
 		return;
 	}
 
@@ -268,7 +268,7 @@ export async function revokeGitHubAccess(userId: string) {
  */
 async function checkActiveDeployments(githubUsername: string): Promise<boolean> {
 	if (!env?.GITHUB_ACCESS_TOKEN) {
-		logger.error("GITHUB_ACCESS_TOKEN is not set in the environment.");
+		logger.warn("GITHUB_ACCESS_TOKEN is not set in the environment.");
 		return false;
 	}
 

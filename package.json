@@ -4,10 +4,10 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "npm run workers:build && next build",
+    "build": "next build",
     "clean": "rm -rf .next && rm -rf node_modules && rm -rf .turbo && rm next-env.d.ts && rm package-lock.json && rm pnpm-lock.yaml && rm bun.lockb",
-    "dev:all": "concurrently \"npm run workers:dev\" \"npm run dev\"",
-    "dev": "npm run workers:build && next dev --turbo",
+    "dev:all": "npm run dev",
+    "dev": "next dev --turbo",
     "dev:legacy": "next dev",
     "dev:https": "next dev --experimental-https",
     "db:generate": "drizzle-kit generate",
@@ -30,7 +30,6 @@
     "lint:fix:eslint": "next lint --fix",
     "start": "next start",
     "pull": "node --experimental-strip-types ./scripts/sync-upstream.ts",
-    "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload",
     "workers:build": "tsc -p ./tsconfig.workers.json",
     "workers:dev": "concurrently \"npm run workers:build\" \"tsc -p ./tsconfig.workers.json --watch\"",
     "test": "vitest run",
@@ -41,7 +40,8 @@
     "typecheck": "tsc --noEmit",
     "build:registry": "tsx src/registry/generate-registry.ts",
     "build:blocks": "tsx scripts/generate-registry.ts -i src/registry/blocks -o public/registry -t",
-    "sync-upstream": "tsx scripts/sync-upstream.ts"
+    "sync-upstream": "tsx scripts/sync-upstream.ts",
+    "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "1.7.4",

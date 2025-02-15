@@ -20,7 +20,7 @@ export const streamApiLogs = async function* (apiKeyId: string) {
 
 	while (true) {
 		const newLogs = await db
-			.select()
+			?.select()
 			.from(logs)
 			.where(
 				and(
@@ -31,7 +31,7 @@ export const streamApiLogs = async function* (apiKeyId: string) {
 			.orderBy(desc(logs.timestamp))
 			.limit(10);
 
-		for (const log of newLogs.reverse()) {
+		for (const log of newLogs?.reverse() ?? []) {
 			yield {
 				id: log.id,
 				level: log.level,

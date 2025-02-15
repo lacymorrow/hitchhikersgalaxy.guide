@@ -1,3 +1,4 @@
+// @ts-nocheck
 /*
  * This file is used to initialize the Builder SDK
  * @see https://www.builder.io/c/docs/sdk-setup

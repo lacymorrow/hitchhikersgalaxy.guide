@@ -1,5 +1,5 @@
 import type { Page } from "@/payload-types";
-import type { CollectionConfig } from "payload/types";
+import { type CollectionConfig } from "payload";
 import { blocks } from "../../../app/(payload)/blocks/index";
 
 /*
@@ -12,7 +12,8 @@ export const Pages: CollectionConfig = {
 	admin: {
 		useAsTitle: "title",
 		defaultColumns: ["title", "slug", "publishedAt"],
-		preview: (doc: Page) => {
+		preview: (doc) => {
+			if (!doc.slug) return "";
 			return `${process.env.NEXT_PUBLIC_APP_URL}/preview/pages/${doc.slug}`;
 		},
 	},

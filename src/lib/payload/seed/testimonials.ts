@@ -12,10 +12,19 @@ export const seedTestimonials = async () => {
 			},
 		});
 
-		const testimonials = content.map((testimonial) => ({
-			...testimonial,
-			name: testimonial.name!,
-		}));
+		const testimonials = content.map((testimonial) => {
+			const { image, ...rest } = testimonial;
+			if (!testimonial.testimonial) {
+				throw new Error(`Testimonial text is required for ${testimonial.name}`);
+			}
+			return {
+				...rest,
+				name: testimonial.name!,
+				testimonial: testimonial.testimonial,
+				// If image is a string, set it to null for now since we need a Media relation
+				image: null,
+			};
+		});
 
 		const createdTestimonials = await Promise.all(
 			testimonials.map(async (testimonial) => {

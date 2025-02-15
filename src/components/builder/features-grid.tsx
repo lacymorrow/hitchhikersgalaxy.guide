@@ -83,7 +83,11 @@ Builder.registerComponent(FeaturesGrid, {
             name: 'columns',
             type: 'number',
             defaultValue: 3,
-            enum: [2, 3, 4],
+            enum: [
+                { label: '2 Columns', value: 2 },
+                { label: '3 Columns', value: 3 },
+                { label: '4 Columns', value: 4 }
+            ],
         },
         {
             name: 'features',

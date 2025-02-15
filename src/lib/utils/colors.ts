@@ -1,3 +1,10 @@
+export interface WaveConfig {
+	frequency: number;
+	amplitude: number;
+	saturation: number;
+	brightness: number;
+}
+
 export const generateRainbowColor = (offset: number): string => {
 	const r = Math.sin(0.3 * offset) * 127 + 128;
 	const g = Math.sin(0.3 * offset + 2) * 127 + 128;

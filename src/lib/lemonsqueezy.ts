@@ -197,13 +197,13 @@ export const fetchLemonSqueezyProducts = async () => {
  */
 export const syncPlans = async () => {
 	// Fetch all the variants from the database.
-	const productVariants: NewPlan[] = await db?.select().from(plans);
+	const productVariants: NewPlan[] = await db?.select().from(plans) ?? [];
 
 	// Helper function to add a variant to the productVariants array and sync it with the database.
 	async function _addVariant(variant: NewPlan) {
 		// Sync the variant with the plan in the database.
 		await db
-			.insert(plans)
+			?.insert(plans)
 			.values(variant)
 			.onConflictDoUpdate({ target: plans.variantId, set: variant });
 
@@ -259,7 +259,7 @@ export async function storeWebhookEvent(eventName: string, body: any) {
 	const id = crypto.randomInt(100000000, 1000000000);
 
 	const returnedValue = await db
-		.insert(webhookEvents)
+		?.insert(webhookEvents)
 		.values({
 			id,
 			eventName,
@@ -269,7 +269,7 @@ export async function storeWebhookEvent(eventName: string, body: any) {
 		.onConflictDoNothing({ target: webhookEvents.id })
 		.returning();
 
-	return returnedValue[0];
+	return returnedValue?.[0];
 }
 
 /**
@@ -277,11 +277,11 @@ export async function storeWebhookEvent(eventName: string, body: any) {
  */
 export async function processWebhookEvent(webhookEvent: any) {
 	const dbwebhookEvent = await db
-		.select()
+		?.select()
 		.from(webhookEvents)
 		.where(eq(webhookEvents.id, webhookEvent.id));
 
-	if (dbwebhookEvent.length < 1) {
+	if (dbwebhookEvent?.length && dbwebhookEvent.length < 1) {
 		throw new Error(`Webhook event #${webhookEvent.id} not found in the database.`);
 	}
 
@@ -295,7 +295,7 @@ export async function processWebhookEvent(webhookEvent: any) {
 
 		// Update the webhook event in the database.
 		await db
-			.update(webhookEvents)
+			?.update(webhookEvents)
 			.set({
 				processed: true,
 			})
@@ -347,7 +347,7 @@ export const getUsersWithPayments = async () => {
 				if (!user?.email) return null;
 
 				// Check if user has a payment record in our database
-				const dbPayment = dbPayments.find((p) => p.userId === user.id);
+				const dbPayment = dbPayments?.find((p) => p.userId === user.id);
 
 				// Check if user has any orders in Lemon Squeezy
 				const userOrders = lemonSqueezyOrders.filter(

@@ -14,29 +14,29 @@ export async function getUserLogs(userId: string, limit = 100) {
 	logger.info(`Fetching logs for user: ${userId}`);
 
 	const userProjectIds = await db
-		.select({ projectId: projectMembers.projectId })
+		?.select({ projectId: projectMembers.projectId })
 		.from(projectMembers)
 		.where(eq(projectMembers.userId, userId))
 		.execute();
 
-	logger.info(`Found ${userProjectIds.length} projects for user`);
-	const projectIds = userProjectIds.map((up) => up.projectId);
+	logger.info(`Found ${userProjectIds?.length} projects for user`);
+	const projectIds = userProjectIds?.map((up) => up.projectId);
 
-	if (projectIds.length === 0) {
+	if (projectIds?.length === 0 || !projectIds) {
 		logger.warn("No projects found for user");
 		return [];
 	}
 
 	const apiKeyIds = await db
-		.select({ id: apiKeys.id })
+		?.select({ id: apiKeys.id })
 		.from(apiKeys)
 		.where(inArray(apiKeys.projectId, projectIds))
 		.execute();
 
-	logger.info(`Found ${apiKeyIds.length} API keys for user's projects`);
-	const keyIds = apiKeyIds.map((ak) => ak.id);
+	logger.info(`Found ${apiKeyIds?.length} API keys for user's projects`);
+	const keyIds = apiKeyIds?.map((ak) => ak.id);
 
-	if (keyIds.length === 0) {
+	if (keyIds?.length === 0 || !keyIds) {
 		logger.warn("No API keys found for user's projects");
 		return [];
 	}
@@ -54,7 +54,7 @@ export async function getUserLogs(userId: string, limit = 100) {
 		},
 	});
 
-	logger.info(`Found ${userLogs.length} logs for user`);
+	logger.info(`Found ${userLogs?.length} logs for user`);
 	return userLogs;
 }
 
@@ -65,7 +65,7 @@ export async function getUserLogs(userId: string, limit = 100) {
  * @returns A list of logs.
  */
 export async function getApiKeyLogs(apiKeyId: string, limit = 100) {
-	return db.query.logs.findMany({
+	return db?.query.logs.findMany({
 		where: eq(logs.apiKeyId, apiKeyId),
 		orderBy: [desc(logs.timestamp)],
 		limit: limit,
@@ -100,7 +100,7 @@ export async function createLog(logData: {
 			: logData.timestamp;
 
 	const [createdLog] = await db
-		.insert(logs)
+		?.insert(logs)
 		.values({
 			timestamp: Number.isNaN(timestamp.getTime()) ? new Date() : timestamp,
 			level: logData.level,
@@ -148,7 +148,7 @@ export async function userHasAccessToApiKey(
 
 // New function to get user's projects
 export async function getUserProjects(userId: string) {
-	return db.query.projectMembers.findMany({
+	return db?.query.projectMembers.findMany({
 		where: eq(projectMembers.userId, userId),
 		with: {
 			project: true,
@@ -158,7 +158,7 @@ export async function getUserProjects(userId: string) {
 
 // New function to get project's API keys
 export async function getProjectApiKeys(projectId: string) {
-	return db.query.apiKeys.findMany({
+	return db?.query.apiKeys.findMany({
 		where: eq(apiKeys.projectId, projectId),
 	});
 }

@@ -9,7 +9,7 @@ interface VercelDeployButtonProps {
 	className?: string;
 }
 
-export const VercelDeployButton: FC<VercelDeployButtonProps> = ({ href = routes.external.vercelDeployBones, className }) => {
+export const VercelDeployButton: FC<VercelDeployButtonProps> = ({ href = routes.external.vercelDeployShipkit, className }) => {
 	return (
 		<Link
 			target="_blank"

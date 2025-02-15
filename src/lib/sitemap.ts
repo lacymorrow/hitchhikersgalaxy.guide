@@ -38,7 +38,6 @@ export async function generateSitemapEntries(): Promise<SitemapEntry[]> {
 		routes.faq,
 		routes.tasks,
 		routes.download,
-		routes.getStarted,
 		routes.components,
 	].map((route) => ({
 		url: `${siteConfig.url}${route}`,

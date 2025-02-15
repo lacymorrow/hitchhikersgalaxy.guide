@@ -32,8 +32,12 @@ async function makeGitHubRequest(url: string): Promise<{
 	data: any;
 }> {
 	if (!env?.GITHUB_ACCESS_TOKEN) {
-		logger.error("GITHUB_ACCESS_TOKEN is not set in the environment.");
-		return;
+		logger.warn("GITHUB_ACCESS_TOKEN is not set in the environment.");
+		return {
+			statusCode: 401,
+			headers: {},
+			data: null,
+		};
 	}
 
 	return new Promise((resolve, reject) => {
@@ -177,7 +181,7 @@ async function writeMetadata(metadata: DownloadMetadata) {
  */
 async function downloadFile(url: string, filePath: string): Promise<void> {
 	if (!env?.GITHUB_ACCESS_TOKEN) {
-		logger.error("GITHUB_ACCESS_TOKEN is not set in the environment.");
+		logger.warn("GITHUB_ACCESS_TOKEN is not set in the environment.");
 		return;
 	}
 

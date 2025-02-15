@@ -27,7 +27,7 @@ export async function ensureUserExists(authUser: {
         await rateLimitService.checkLimit(
             authUser.id,
             "ensureUserExists",
-            rateLimits.auth,
+            rateLimits.web.default,
         );
 
         // Validation
@@ -159,14 +159,14 @@ export async function updateProfile(
         await metricsService.recordTiming(metrics.api.latency, startTime);
         await metricsService.incrementCounter(metrics.api.requests);
 
-        // Invalidate cache
-        await cacheService.delete(`user:${user.id}`);
-        await cacheService.delete(`user:${user.email}`);
-        await cacheService.delete(`user:${user.id}:associations`);
+			// Invalidate cache
+        await cacheService.delete(`user:${user?.id}`);
+        await cacheService.delete(`user:${user?.email}`);
+        await cacheService.delete(`user:${user?.id}:associations`);
 
-        revalidatePath("/");
-        return user;
-    } catch (error) {
+		revalidatePath("/");
+		return user;
+	} catch (error) {
         await metricsService.incrementCounter(metrics.api.errors);
         throw ErrorService.handleError(error);
     }
@@ -179,7 +179,7 @@ export async function updateProfile(
 export async function verifyEmail(userId: string) {
     try {
         // Rate limiting
-        await rateLimitService.checkLimit(userId, "verifyEmail", rateLimits.auth);
+        await rateLimitService.checkLimit(userId, "verifyEmail", rateLimits.api.auth);
 
         // Validation
         await ValidationService.validateOrThrow(userSchema, { id: userId });
@@ -195,8 +195,8 @@ export async function verifyEmail(userId: string) {
         await metricsService.incrementCounter(metrics.api.requests);
 
         // Invalidate cache
-        await cacheService.delete(`user:${user.id}`);
-        await cacheService.delete(`user:${user.email}`);
+        await cacheService.delete(`user:${user?.id}`);
+        await cacheService.delete(`user:${user?.email}`);
 
         revalidatePath("/");
         return user;

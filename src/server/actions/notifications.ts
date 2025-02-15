@@ -11,9 +11,20 @@ import {
 	type notificationChannelType,
 	type notificationType,
 } from "@/server/db/schema";
-import { desc, eq, like, or } from "drizzle-orm";
+import { desc, eq, like, or, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
+import { BaseService } from "@/server/services/base-service";
+
+const notificationHistoryService = new BaseService({
+	table: notificationHistory,
+	idField: "id",
+});
+
+const notificationTemplateService = new BaseService({
+	table: notificationTemplates,
+	idField: "id",
+});
 
 // Validation schemas
 const channelConfigSchema = z.object({
@@ -238,7 +249,7 @@ export async function getNotificationPreferences() {
 }
 
 /**
- * Get user's notification history
+ * Get notification history
  */
 export async function getNotificationHistory(params?: {
 	type?: (typeof notificationType.enumValues)[number];
@@ -257,42 +268,23 @@ export async function getNotificationHistory(params?: {
 			};
 		}
 
-		// Build query
-		let query = db
-			?.select()
-			.from(notificationHistory)
-			.where(eq(notificationHistory.userId, session.user.id))
-			.orderBy(desc(notificationHistory.sentAt));
+		// Build conditions
+		const conditions: Record<string, any> = {
+			userId: session.user.id,
+		};
 
-		// Apply filters
 		if (params?.type) {
-			query = query?.where(eq(notificationHistory.type, params.type));
+			conditions.type = params.type;
 		}
 		if (params?.channel) {
-			query = query?.where(eq(notificationHistory.channel, params.channel));
+			conditions.channel = params.channel;
 		}
 		if (params?.status) {
-			query = query?.where(eq(notificationHistory.status, params.status));
-		}
-		if (params?.search) {
-			query = query?.where(
-				or(
-					like(notificationHistory.title, `%${params.search}%`),
-					like(notificationHistory.content, `%${params.search}%`),
-				),
-			);
-		}
-
-		// Apply pagination
-		if (params?.limit) {
-			query = query?.limit(params.limit);
-		}
-		if (params?.offset) {
-			query = query?.offset(params.offset);
+			conditions.status = params.status;
 		}
 
 		// Execute query
-		const history = await query;
+		const history = await notificationHistoryService.find(conditions);
 
 		return { success: true, data: history };
 	} catch (error) {
@@ -321,30 +313,18 @@ export async function getNotificationTemplates(params?: {
 			};
 		}
 
-		// Build query
-		let query = db
-			?.select()
-			.from(notificationTemplates)
-			.orderBy(desc(notificationTemplates.createdAt));
+		// Build conditions
+		const conditions: Record<string, any> = {};
 
-		// Apply filters
 		if (params?.type) {
-			query = query?.where(eq(notificationTemplates.type, params.type));
+			conditions.type = params.type;
 		}
 		if (params?.channel) {
-			query = query?.where(eq(notificationTemplates.channel, params.channel));
-		}
-		if (params?.search) {
-			query = query?.where(
-				or(
-					like(notificationTemplates.name, `%${params.search}%`),
-					like(notificationTemplates.description, `%${params.search}%`),
-				),
-			);
+			conditions.channel = params.channel;
 		}
 
 		// Execute query
-		const templates = await query;
+		const templates = await notificationTemplateService.find(conditions);
 
 		return { success: true, data: templates };
 	} catch (error) {
@@ -393,15 +373,16 @@ export async function createNotificationTemplate(data: {
 			};
 		}
 
+		if (!db) {
+			throw new Error("Database connection not initialized");
+		}
+
 		// Create template
-		const [template] = await db
-			?.insert(notificationTemplates)
-			.values({
-				...data,
-				variables: JSON.stringify(data.variables),
-				metadata: JSON.stringify({}),
-			})
-			.returning();
+		const template = await notificationTemplateService.create({
+			...data,
+			variables: JSON.stringify(data.variables),
+			metadata: JSON.stringify({}),
+		});
 
 		return { success: true, data: template };
 	} catch (error) {

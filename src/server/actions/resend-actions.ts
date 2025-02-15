@@ -24,6 +24,10 @@ export const addAudienceUser = async (email: string) => {
       throw new Error("Missing Resend API key or audience ID");
     }
 
+    if (!resend) {
+      throw new Error("Resend client not initialized");
+    }
+
     const result = await resend.contacts.create({
       email,
       audienceId: env.RESEND_AUDIENCE_ID,

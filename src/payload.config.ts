@@ -3,7 +3,6 @@ import { fileURLToPath } from "url";
 
 // storage-adapter-import-placeholder
 import { postgresAdapter } from "@payloadcms/db-postgres";
-import type { PostgresAdapter } from "@payloadcms/db-postgres/dist/types";
 import { payloadCloudPlugin } from "@payloadcms/payload-cloud";
 import { lexicalEditor } from "@payloadcms/richtext-lexical";
 import { buildConfig } from "payload";
@@ -44,7 +43,7 @@ export default buildConfig({
 			connectionString: process.env.DATABASE_URL ?? "",
 		},
 		beforeSchemaInit: [
-			({ schema, adapter }: { schema: any; adapter: PostgresAdapter }) => {
+			({ schema, adapter }: { schema: any; adapter: any }) => {
 				/*
 				 * Define relationships between Payload and application tables
 				 * Only add relationships that are actually needed

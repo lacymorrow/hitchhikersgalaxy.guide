@@ -1,8 +1,0 @@
-{
-  "components": [
-    {
-      "name": "team-switcher",
-      "path": "./team-switcher.json"
-    }
-  ]
-}

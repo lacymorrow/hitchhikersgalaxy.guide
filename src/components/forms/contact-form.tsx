@@ -61,7 +61,7 @@ export function ContactForm({
 					description: "We'll get back to you as soon as possible.",
 				});
 				form.reset();
-				onSuccess?.(result.data!);
+				onSuccess?.(data);
 			} else {
 				toast({
 					title: "Error",

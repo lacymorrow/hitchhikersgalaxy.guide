@@ -1,8 +1,0 @@
-{
-  "components": [
-    {
-      "name": "test-button",
-      "path": "./test-button.json"
-    }
-  ]
-}

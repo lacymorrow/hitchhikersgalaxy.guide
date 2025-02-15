@@ -11,7 +11,7 @@ import { getPaymentStatus } from "./lemonsqueezy";
  */
 async function createTestUser() {
 	const testUser = await db
-		.insert(users)
+		?.insert(users)
 		.values({
 			id: crypto.randomUUID(),
 			email: "lacymorrow0@gmail.com",
@@ -19,7 +19,7 @@ async function createTestUser() {
 		})
 		.returning();
 
-	if (!testUser[0]) {
+	if (!testUser?.[0]) {
 		throw new Error("Failed to create test user");
 	}
 

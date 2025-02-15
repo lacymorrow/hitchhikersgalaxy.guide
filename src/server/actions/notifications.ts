@@ -61,7 +61,7 @@ export async function updateNotificationChannels(
 		// Update or create channel preferences
 		for (const [channel, enabled] of Object.entries(validatedChannels)) {
 			await db
-				.insert(notificationChannels)
+				?.insert(notificationChannels)
 				.values({
 					userId: session.user.id,
 					type: channel as (typeof notificationChannelType.enumValues)[number],
@@ -106,7 +106,7 @@ export async function updateNotificationTypes(
 		for (const [type, enabled] of Object.entries(validatedTypes)) {
 			const channels = enabled ? ["email"] : []; // Default to email if enabled
 			await db
-				.insert(notificationPreferences)
+				?.insert(notificationPreferences)
 				.values({
 					userId: session.user.id,
 					type: type as (typeof notificationType.enumValues)[number],
@@ -155,7 +155,7 @@ export async function updateNotificationSchedule(schedule: {
 
 		// Update all notification preferences with new schedule
 		await db
-			.update(notificationPreferences)
+			?.update(notificationPreferences)
 			.set({
 				timezone: validatedSchedule.timezone,
 				quietHoursStart: validatedSchedule.quietHoursStart,
@@ -191,28 +191,28 @@ export async function getNotificationPreferences() {
 
 		// Get channel preferences
 		const channels = await db
-			.select()
+			?.select()
 			.from(notificationChannels)
 			.where(eq(notificationChannels.userId, session.user.id));
 
 		// Get type preferences
 		const types = await db
-			.select()
+			?.select()
 			.from(notificationPreferences)
 			.where(eq(notificationPreferences.userId, session.user.id));
 
 		// Format preferences
 		const preferences = {
 			channels: Object.fromEntries(
-				channels.map((c) => [c.type, c.enabled]),
+				channels?.map((c) => [c.type, c.enabled]) || [],
 			) as Record<(typeof notificationChannelType.enumValues)[number], boolean>,
 			types: Object.fromEntries(
-				types.map((t) => [
+				types?.map((t) => [
 					t.type,
 					(JSON.parse(t.channels || "[]") as string[]).length > 0,
-				]),
+				]) || [],
 			) as Record<(typeof notificationType.enumValues)[number], boolean>,
-			schedule: types[0]
+			schedule: types?.[0]
 				? {
 					timezone: types[0].timezone || "UTC",
 					quietHoursStart: types[0].quietHoursStart || "22:00",
@@ -259,23 +259,23 @@ export async function getNotificationHistory(params?: {
 
 		// Build query
 		let query = db
-			.select()
+			?.select()
 			.from(notificationHistory)
 			.where(eq(notificationHistory.userId, session.user.id))
 			.orderBy(desc(notificationHistory.sentAt));
 
 		// Apply filters
 		if (params?.type) {
-			query = query.where(eq(notificationHistory.type, params.type));
+			query = query?.where(eq(notificationHistory.type, params.type));
 		}
 		if (params?.channel) {
-			query = query.where(eq(notificationHistory.channel, params.channel));
+			query = query?.where(eq(notificationHistory.channel, params.channel));
 		}
 		if (params?.status) {
-			query = query.where(eq(notificationHistory.status, params.status));
+			query = query?.where(eq(notificationHistory.status, params.status));
 		}
 		if (params?.search) {
-			query = query.where(
+			query = query?.where(
 				or(
 					like(notificationHistory.title, `%${params.search}%`),
 					like(notificationHistory.content, `%${params.search}%`),
@@ -285,10 +285,10 @@ export async function getNotificationHistory(params?: {
 
 		// Apply pagination
 		if (params?.limit) {
-			query = query.limit(params.limit);
+			query = query?.limit(params.limit);
 		}
 		if (params?.offset) {
-			query = query.offset(params.offset);
+			query = query?.offset(params.offset);
 		}
 
 		// Execute query
@@ -323,19 +323,19 @@ export async function getNotificationTemplates(params?: {
 
 		// Build query
 		let query = db
-			.select()
+			?.select()
 			.from(notificationTemplates)
 			.orderBy(desc(notificationTemplates.createdAt));
 
 		// Apply filters
 		if (params?.type) {
-			query = query.where(eq(notificationTemplates.type, params.type));
+			query = query?.where(eq(notificationTemplates.type, params.type));
 		}
 		if (params?.channel) {
-			query = query.where(eq(notificationTemplates.channel, params.channel));
+			query = query?.where(eq(notificationTemplates.channel, params.channel));
 		}
 		if (params?.search) {
-			query = query.where(
+			query = query?.where(
 				or(
 					like(notificationTemplates.name, `%${params.search}%`),
 					like(notificationTemplates.description, `%${params.search}%`),
@@ -395,7 +395,7 @@ export async function createNotificationTemplate(data: {
 
 		// Create template
 		const [template] = await db
-			.insert(notificationTemplates)
+			?.insert(notificationTemplates)
 			.values({
 				...data,
 				variables: JSON.stringify(data.variables),
@@ -428,7 +428,7 @@ export async function deleteNotificationTemplate(templateId: string) {
 
 		// Delete template
 		await db
-			.delete(notificationTemplates)
+			?.delete(notificationTemplates)
 			.where(eq(notificationTemplates.id, templateId));
 
 		return { success: true };

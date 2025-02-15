@@ -1,4 +1,4 @@
-import type { TeamData } from "@/components/providers/team-data";
+import type { TeamData } from "@/components/providers/team-provider";
 import { TeamProvider } from "@/components/providers/team-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 

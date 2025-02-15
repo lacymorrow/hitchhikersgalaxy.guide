@@ -6,13 +6,12 @@ import { createContext, useContext, useState } from "react";
 export interface TeamData {
 	id: string;
 	name: string;
-	slug: string;
 }
 
 interface TeamContextValue {
-	teams: TeamData[];
+	teams: (TeamData & { slug: string })[];
 	selectedTeamId: string | null;
-	selectedTeam: TeamData | null;
+	selectedTeam: (TeamData & { slug: string }) | null;
 	setSelectedTeamId: (teamId: string | null) => void;
 }
 
@@ -24,7 +23,12 @@ interface TeamProviderProps {
 }
 
 export const TeamProvider = ({ children, initialTeams }: TeamProviderProps) => {
-	const [teams] = useState<TeamData[]>(initialTeams || []);
+	const [teams] = useState<(TeamData & { slug: string })[]>(() =>
+		(initialTeams || []).map(team => ({
+			...team,
+			slug: team.name.toLowerCase().replace(/\s+/g, '-'),
+		}))
+	);
 	const [selectedTeamId, setSelectedTeamId] = useState<string | null>(() => {
 		return initialTeams?.[0]?.id ?? null;
 	});

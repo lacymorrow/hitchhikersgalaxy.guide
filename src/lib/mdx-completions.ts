@@ -1,6 +1,8 @@
 import { languages } from 'monaco-editor';
 
-export const MDX_COMPLETIONS: languages.CompletionItem[] = [
+type MDXCompletionItem = Omit<languages.CompletionItem, 'range'> & { range?: languages.CompletionItem['range'] };
+
+export const MDX_COMPLETIONS: MDXCompletionItem[] = [
   // Markdown Completions
   {
     label: 'frontmatter',
@@ -51,10 +53,10 @@ export const MDX_COMPLETIONS: languages.CompletionItem[] = [
       '<${1:Component}',
       '  ${2:prop}={${3:value}}',
       '>',
-      '  ${4:children}',
+      '  ${0}',
       '</${1:Component}>'
     ].join('\n'),
-    documentation: 'Insert component with props',
+    documentation: 'React component',
     insertTextRules: languages.CompletionItemInsertTextRule.InsertAsSnippet,
   },
 

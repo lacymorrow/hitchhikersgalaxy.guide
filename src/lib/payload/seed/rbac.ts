@@ -12,6 +12,9 @@ const resources = [
 
 const actions = ["create", "read", "update", "delete", "manage"] as const;
 
+type Resource = (typeof resources)[number];
+type Action = (typeof actions)[number];
+
 // Define default roles with their permissions
 const defaultRoles = [
 	{
@@ -19,7 +22,7 @@ const defaultRoles = [
 		description: "Full access to all resources",
 		permissions: resources.map((resource) => ({
 			resource,
-			actions: ["manage"],
+			actions: ["manage"] as Action[],
 		})),
 	},
 	{
@@ -27,7 +30,7 @@ const defaultRoles = [
 		description: "Administrative access with some restrictions",
 		permissions: resources.map((resource) => ({
 			resource,
-			actions: ["create", "read", "update", "delete"],
+			actions: ["create", "read", "update", "delete"] as Action[],
 		})),
 	},
 	{
@@ -35,24 +38,24 @@ const defaultRoles = [
 		description: "Standard team member access",
 		permissions: [
 			{
-				resource: "team",
-				actions: ["read"],
+				resource: "team" as Resource,
+				actions: ["read"] as Action[],
 			},
 			{
-				resource: "project",
-				actions: ["read", "update"],
+				resource: "project" as Resource,
+				actions: ["read", "update"] as Action[],
 			},
 			{
-				resource: "user",
-				actions: ["read"],
+				resource: "user" as Resource,
+				actions: ["read"] as Action[],
 			},
 			{
-				resource: "api_key",
-				actions: ["read", "create"],
+				resource: "api_key" as Resource,
+				actions: ["read", "create"] as Action[],
 			},
 			{
-				resource: "settings",
-				actions: ["read"],
+				resource: "settings" as Resource,
+				actions: ["read"] as Action[],
 			},
 		],
 	},
@@ -61,7 +64,7 @@ const defaultRoles = [
 		description: "Read-only access",
 		permissions: resources.map((resource) => ({
 			resource,
-			actions: ["read"],
+			actions: ["read"] as Action[],
 		})),
 	},
 ] as const;
@@ -109,8 +112,8 @@ export const seedRBAC = async () => {
 					);
 					return (
 						rolePerms &&
-						(rolePerms.actions.includes(permission?.action as any) ||
-							(rolePerms.actions.includes("manage") &&
+						(rolePerms.actions.includes(permission?.action as Action) ||
+							(rolePerms.actions.includes("manage" as Action) &&
 								permission?.action === "manage"))
 					);
 				});

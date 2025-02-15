@@ -1,4 +1,5 @@
 @import "./shadcn-theme.css";
+/* @import "./shadcn-ui.css"; */
 
 body {
 	text-rendering: optimizeLegibility;

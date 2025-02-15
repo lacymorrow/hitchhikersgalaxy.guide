@@ -34,6 +34,7 @@ export default function AuthErrorPage() {
 				<div className="font-normal text-gray-700 dark:text-gray-400">
 					{errorMap[error] || "Please contact us if this error persists."}
 				</div>
+
 			</a>
 
 			<Link href={routes.home} className={buttonVariants({ size: "lg" })}>

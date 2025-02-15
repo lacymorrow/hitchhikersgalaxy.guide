@@ -4,12 +4,8 @@
  */
 
 import { RootLayout } from "@/components/layouts/root-layout";
-import {
-	PageHeader,
-	PageHeaderDescription,
-	PageHeaderHeading,
-} from "@/components/primitives/page-header";
-import { WavesBackground } from "@/components/ui/background-waves";
+import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/primitives/page-header";
+import { WavesBackground } from "@/components/ui/backgrounds/waves/background-waves";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { RocketIcon } from "lucide-react";
@@ -23,8 +19,8 @@ const config = {
 	frequency: 1,
 	layers: 3,
 	fadeOpacity: 0.05,
-	transparent: true,
-};
+	transparent: true
+}
 
 export default function NotFound() {
 	return (
@@ -47,7 +43,7 @@ export default function NotFound() {
 						className={cn(
 							buttonVariants({
 								variant: "default",
-								size: "lg",
+								size: "lg"
 							}),
 							"relative overflow-hidden"
 						)}

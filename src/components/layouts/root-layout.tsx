@@ -40,7 +40,7 @@ export function RootLayout({ children }: { children: ReactNode }) {
 				<body
 					className={cn(
 						"min-h-screen antialiased",
-						"font-sans font-normal leading-relaxed",
+						"font-normal leading-relaxed",
 						fontSans.variable,
 						fontSerif.variable
 					)}

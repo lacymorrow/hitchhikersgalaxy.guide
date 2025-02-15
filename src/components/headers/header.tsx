@@ -41,19 +41,21 @@ const defaultNavLinks = [
 	{ href: routes.pricing, label: "Pricing", isCurrent: false },
 ];
 
-const headerVariants = cva("translate-z-0 z-50 p-md", {
-	variants: {
-		variant: {
-			default: "relative",
-			floating: "sticky top-0 h-24",
-			sticky:
-				"sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+const headerVariants = cva(
+	"translate-z-0 z-50 p-md",
+	{
+		variants: {
+			variant: {
+				default: "relative",
+				floating: "sticky top-0 h-24",
+				sticky: "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+			},
 		},
-	},
-	defaultVariants: {
-		variant: "default",
-	},
-});
+		defaultVariants: {
+			variant: "default",
+		},
+	}
+);
 
 export const Header: React.FC<HeaderProps> = ({
 	logoHref = routes.home,
@@ -74,8 +76,8 @@ export const Header: React.FC<HeaderProps> = ({
 					variant === "floating" && styles.header,
 					variant === "floating" && isOpaque && styles.opaque,
 					variant === "floating" &&
-						isOpaque &&
-						"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]"
+					isOpaque &&
+					"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]"
 				)}
 			>
 				{variant === "floating" && <div className="h-[12px] w-full" />}
@@ -187,7 +189,9 @@ export const Header: React.FC<HeaderProps> = ({
 
 							<UserMenu size="sm" />
 
-							{!session && <BuyButton />}
+							{!session && (
+								<BuyButton />
+							)}
 						</div>
 					</div>
 				</nav>

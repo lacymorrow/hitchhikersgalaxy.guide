@@ -1,0 +1,96 @@
+---
+description: Deployment Best Practices and Guidelines
+globs: Dockerfile, docker-compose.yml, .env.*, .github/workflows/*, vercel.json
+---
+
+# Deployment Best Practices
+
+## Environment Setup
+- Use `.env.local` for local development
+- Use `.env.production` for production
+- Use `.env.test` for testing
+- Never commit environment files
+- Document all required variables
+- Use strong naming conventions
+- Validate environment variables at startup
+
+## Docker Configuration
+- Use multi-stage builds
+- Optimize layer caching
+- Include only necessary files
+- Use appropriate base images
+- Set proper environment variables
+- Configure health checks
+- Document all configurations
+
+## CI/CD Pipeline
+- Automate build process
+- Run tests before deployment
+- Check code quality
+- Scan for vulnerabilities
+- Use proper caching
+- Implement proper rollbacks
+- Monitor deployment status
+
+## Production Deployment
+- Use proper build optimization
+- Enable proper caching
+- Configure proper headers
+- Set up monitoring
+- Configure logging
+- Set up alerts
+- Plan for scaling
+
+## Infrastructure
+- Use infrastructure as code
+- Implement proper monitoring
+- Set up logging
+- Configure backups
+- Plan for disaster recovery
+- Document architecture
+- Monitor costs
+
+## Security
+- Use HTTPS everywhere
+- Configure proper headers
+- Implement rate limiting
+- Set up WAF
+- Monitor for threats
+- Regular security audits
+- Document security measures
+
+## Monitoring
+- Set up error tracking
+- Monitor performance
+- Track user metrics
+- Set up alerting
+- Log important events
+- Monitor resources
+- Track costs
+
+## Scaling
+- Plan for horizontal scaling
+- Configure auto-scaling
+- Optimize resource usage
+- Monitor bottlenecks
+- Plan capacity
+- Document scaling strategy
+- Test scaling scenarios
+
+## Backup and Recovery
+- Regular backups
+- Test recovery procedures
+- Document recovery plans
+- Monitor backup status
+- Plan for disasters
+- Regular recovery tests
+- Document procedures
+
+## Documentation
+- Document deployment process
+- Document configuration
+- Document dependencies
+- Document troubleshooting
+- Keep runbooks updated
+- Document incidents
+- Maintain change log 

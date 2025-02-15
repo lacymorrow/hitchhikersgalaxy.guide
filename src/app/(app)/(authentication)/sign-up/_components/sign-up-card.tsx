@@ -2,7 +2,7 @@ import { OAuthButtons } from "@/app/(app)/(authentication)/_components/oauth-but
 import { SignUpForm } from "@/app/(app)/(authentication)/sign-up/_components/sign-up-form";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { routes } from "@/config/routes";
-import Link from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { AuthenticationCard } from "../../_components/authentication-card";
 
 export function SignUpCard() {

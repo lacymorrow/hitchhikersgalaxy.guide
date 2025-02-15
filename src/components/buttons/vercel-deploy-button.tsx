@@ -12,6 +12,7 @@ interface VercelDeployButtonProps {
 export const VercelDeployButton: FC<VercelDeployButtonProps> = ({ href = routes.external.vercelDeployBones, className }) => {
 	return (
 		<Link
+			target="_blank"
 			href={href}
 			className={cn(
 				buttonVariants({ variant: "default", size: "lg" }),

@@ -1,0 +1,77 @@
+{
+  "name": "cli",
+  "type": "registry:block",
+  "description": "A complete interface for managing your Shadcn UI components.",
+  "registryDependencies": [
+    "button",
+    "card",
+    "command",
+    "input",
+    "popover",
+    "scroll-area",
+    "switch",
+    "tooltip"
+  ],
+  "dependencies": [
+    "lucide-react"
+  ],
+  "categories": ["tools", "development"],
+  "style": "default",
+  "files": [
+    {
+      "source": "page.tsx",
+      "type": "registry:page",
+      "target": "app/cli/page.tsx"
+    },
+    {
+      "source": "_components/registry-browser.tsx",
+      "type": "registry:component",
+      "target": "app/cli/_components/registry-browser.tsx"
+    },
+    {
+      "source": "_components/add-registry-dialog.tsx",
+      "type": "registry:component",
+      "target": "app/cli/_components/add-registry-dialog.tsx"
+    },
+    {
+      "source": "_components/block-preview.tsx",
+      "type": "registry:component",
+      "target": "app/cli/_components/block-preview.tsx"
+    },
+    {
+      "source": "_components/component-stats.tsx",
+      "type": "registry:component",
+      "target": "app/cli/_components/component-stats.tsx"
+    },
+    {
+      "source": "_components/copy-button.tsx",
+      "type": "registry:component",
+      "target": "app/cli/_components/copy-button.tsx"
+    },
+    {
+      "source": "_components/file-tree.tsx",
+      "type": "registry:component",
+      "target": "app/cli/_components/file-tree.tsx"
+    },
+    {
+      "source": "_components/preview.tsx",
+      "type": "registry:component",
+      "target": "app/cli/_components/preview.tsx"
+    },
+    {
+      "source": "_components/terminal.tsx",
+      "type": "registry:component",
+      "target": "app/cli/_components/terminal.tsx"
+    },
+    {
+      "source": "lib/registry-service.ts",
+      "type": "registry:lib",
+      "target": "app/cli/lib/registry-service.ts"
+    },
+    {
+      "source": "actions.ts",
+      "type": "registry:lib",
+      "target": "app/cli/actions.ts"
+    }
+  ]
+}

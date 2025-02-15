@@ -6,6 +6,8 @@ import { Slider } from "@/components/ui/slider";
 import { motion } from "framer-motion";
 import { Calculator, Clock, DollarSign, Users } from "lucide-react";
 import { useState } from "react";
+import { oneTimePlans } from "@/content/pricing/pricing-content";
+import { siteConfig } from "@/config/site";
 
 const formatCurrency = (value: number) => {
 	return new Intl.NumberFormat('en-US', {
@@ -20,12 +22,14 @@ export const ROICalculator = () => {
 	const [monthsToLaunch, setMonthsToLaunch] = useState(6);
 	const [monthlyBurn, setMonthlyBurn] = useState(20000);
 
+	// Get the highest priced plan
+	const shipkitCost = Math.max(...oneTimePlans.map(plan => plan.price.oneTime || 0));
+
 	// Calculate savings
 	const avgDevSalary = 150000; // Average developer salary in 2024
 	const devCostPerMonth = (avgDevSalary / 12) * teamSize;
 	const infrastructureCost = 2000 * monthsToLaunch; // Monthly infrastructure and tooling costs
 	const traditionalCost = (devCostPerMonth * monthsToLaunch) + infrastructureCost;
-	const shipkitCost = 999; // ShipKit cost
 	const totalSavings = traditionalCost - shipkitCost;
 	const timeToMarket = monthsToLaunch - 1; // Months saved with ShipKit
 	const burnSavings = monthlyBurn * timeToMarket;
@@ -131,8 +135,8 @@ export const ROICalculator = () => {
 						<ul className="list-disc pl-4 space-y-2">
 							<li>Average developer salary of {formatCurrency(avgDevSalary)}/year in 2024</li>
 							<li>Infrastructure and tooling costs of {formatCurrency(2000)}/month</li>
-							<li>Typical time savings of 75% with ShipKit</li>
-							<li>One-time ShipKit cost of {formatCurrency(shipkitCost)}</li>
+							<li>Typical time savings of 75% with {siteConfig.name}</li>
+							<li>One-time {siteConfig.name} cost of {formatCurrency(shipkitCost)}</li>
 						</ul>
 					</div>
 				</div>

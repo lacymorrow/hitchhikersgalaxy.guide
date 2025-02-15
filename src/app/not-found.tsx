@@ -5,11 +5,11 @@
 
 import { RootLayout } from "@/components/layouts/root-layout";
 import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/primitives/page-header";
-import { WavesBackground } from "@/components/ui/backgrounds/waves/background-waves";
+import { WavesBackground } from "@/components/ui/background-waves";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { RocketIcon } from "lucide-react";
-import Link from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 
 const config = {
 	speed: 0.002,
@@ -36,7 +36,7 @@ export default function NotFound() {
 						<PageHeaderDescription className="mb-8">
 							The page you&apos;re looking for has drifted into deep space. Let&apos;s get you back
 							to familiar territory.
-						</PageHeaderDescription>
+							PageHeaderDescription						</PageHeaderDescription>
 					</PageHeader>
 					<Link
 						href="/"

@@ -5,7 +5,7 @@ import { type BlogPost, getBlogPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils/format-date";
 import { FolderIcon } from "lucide-react";
 import type { Metadata } from "next";
-import Link from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { Fragment } from "react";
 
 export const metadata: Metadata = constructMetadata({

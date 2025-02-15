@@ -12,17 +12,10 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { submitContactForm } from "@/server/actions/contact";
-import { type ContactFormData, contactFormSchema, contactReasonOptions } from "@/types/contact";
+import { type ContactFormData, contactFormSchema } from "@/types/contact";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
@@ -31,8 +24,6 @@ interface ContactFormProps {
 	defaultValues?: Partial<ContactFormData>;
 	/** Optional callback when form is submitted successfully */
 	onSuccess?: (data: ContactFormData) => void;
-	/** Show/hide optional fields */
-	showOptionalFields?: boolean;
 	/** Custom class name for the form container */
 	className?: string;
 }
@@ -40,7 +31,6 @@ interface ContactFormProps {
 export function ContactForm({
 	defaultValues,
 	onSuccess,
-	showOptionalFields = false,
 	className,
 }: ContactFormProps) {
 	const { toast } = useToast();
@@ -49,12 +39,8 @@ export function ContactForm({
 		resolver: zodResolver(contactFormSchema),
 		defaultValues: {
 			name: "",
-			email: "",
-			reason: "general",
-			subject: "",
+			contactInfo: "",
 			message: "",
-			company: "",
-			phone: "",
 			newsletter: false,
 			...defaultValues,
 		},
@@ -63,9 +49,9 @@ export function ContactForm({
 	async function onSubmit(data: ContactFormData) {
 		try {
 			const formData = new FormData();
-			Object.entries(data).forEach(([key, value]) => {
-				formData.append(key, value.toString());
-			});
+			for (const [key, value] of Object.entries(data)) {
+				formData.append(key, value?.toString() ?? "");
+			}
 
 			const result = await submitContactForm(formData);
 
@@ -111,96 +97,23 @@ export function ContactForm({
 						)}
 					/>
 
-					{/* Email Field */}
+					{/* Contact Info Field */}
 					<FormField
 						control={form.control}
-						name="email"
+						name="contactInfo"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Email</FormLabel>
+								<FormLabel>
+									Contact Info{" "}
+									<span className="text-xs text-muted-foreground">(email or phone number, optional)</span>
+								</FormLabel>
 								<FormControl>
-									<Input type="email" placeholder="your@email.com" {...field} />
+									<Input placeholder="your@email.com or phone number" {...field} />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
-
-					{/* Reason Field */}
-					<FormField
-						control={form.control}
-						name="reason"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Reason for Contact</FormLabel>
-								<Select onValueChange={field.onChange} defaultValue={field.value}>
-									<FormControl>
-										<SelectTrigger>
-											<SelectValue placeholder="Select a reason" />
-										</SelectTrigger>
-									</FormControl>
-									<SelectContent>
-										{contactReasonOptions.map((option) => (
-											<SelectItem key={option.value} value={option.value}>
-												{option.label}
-											</SelectItem>
-										))}
-									</SelectContent>
-								</Select>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					{/* Subject Field */}
-					<FormField
-						control={form.control}
-						name="subject"
-						render={({ field }) => (
-							<FormItem>
-								<FormLabel>Subject</FormLabel>
-								<FormControl>
-									<Input placeholder="What's this about?" {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-
-					{/* Optional Fields */}
-					{showOptionalFields && (
-						<>
-							{/* Company Field */}
-							<FormField
-								control={form.control}
-								name="company"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Company (Optional)</FormLabel>
-										<FormControl>
-											<Input placeholder="Your company name" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-
-							{/* Phone Field */}
-							<FormField
-								control={form.control}
-								name="phone"
-								render={({ field }) => (
-									<FormItem>
-										<FormLabel>Phone (Optional)</FormLabel>
-										<FormControl>
-											<Input type="tel" placeholder="Your phone number" {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								)}
-							/>
-						</>
-					)}
 
 					{/* Message Field */}
 					<FormField

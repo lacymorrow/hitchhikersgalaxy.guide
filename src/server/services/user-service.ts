@@ -1,8 +1,11 @@
-import { db } from "@/server/db";
+import { logger } from "@/lib/logger";
+import { db, isDatabaseInitialized } from "@/server/db";
 import { projectMembers, teamMembers, users } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { BaseService } from "./base-service";
+import { PaymentService } from "./payment-service";
 import { teamService } from "./team-service";
+import { apiKeyService } from "./api-key-service";
 
 export class UserService extends BaseService<typeof users> {
 	constructor() {
@@ -24,6 +27,7 @@ export class UserService extends BaseService<typeof users> {
 
 	/**
 	 * Ensures a user exists in the database, creating them if necessary.
+	 * Also checks and links any existing payments.
 	 * @param authUser - The authenticated user object.
 	 * @returns The database user object.
 	 */
@@ -33,6 +37,14 @@ export class UserService extends BaseService<typeof users> {
 		name?: string | null;
 		image?: string | null;
 	}) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
 		let dbUser = await db.query.users.findFirst({
 			where: eq(users.id, authUser.id),
 		});
@@ -57,9 +69,53 @@ export class UserService extends BaseService<typeof users> {
 			if (newUser) {
 				// Create personal team for new user
 				await this.createPersonalTeam(newUser.id);
+
+				// Create an API key for the user
+				const apiKey = await apiKeyService.createApiKey({
+					userId: newUser.id,
+					name: "Default API Key",
+					description: "Created automatically on user registration",
+				});
+
+				logger.info("Created default API key for new user", {
+					userId: newUser.id,
+					apiKeyId: apiKey.id,
+				});
+
+				// Check for existing payments
+				const hasPaid = await PaymentService.getUserPaymentStatus(newUser.id);
+				if (hasPaid) {
+					logger.info("Found existing payment for new user", {
+						userId: newUser.id,
+					});
+				}
+
 				dbUser = newUser;
 			} else {
 				throw new Error(`Failed to create user: ${authUser.id}`);
+			}
+		} else {
+			// Check if user has an API key, create one if they don't
+			const userApiKeys = await apiKeyService.getUserApiKeys(dbUser.id);
+			if (userApiKeys.length === 0) {
+				const apiKey = await apiKeyService.createApiKey({
+					userId: dbUser.id,
+					name: "Default API Key",
+					description: "Created automatically on first login",
+				});
+
+				logger.info("Created default API key for existing user", {
+					userId: dbUser.id,
+					apiKeyId: apiKey.id,
+				});
+			}
+
+			// Check for existing payments for existing users too
+			const hasPaid = await PaymentService.getUserPaymentStatus(dbUser.id);
+			if (hasPaid) {
+				logger.info("Found existing payment for existing user", {
+					userId: dbUser.id,
+				});
 			}
 		}
 
@@ -72,6 +128,14 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns A list of projects with their details.
 	 */
 	async getUserProjects(userId: string) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
 		return db.query.projectMembers.findMany({
 			where: eq(projectMembers.userId, userId),
 			with: {
@@ -95,6 +159,14 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns A list of teams with their details.
 	 */
 	async getUserTeams(userId: string) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
 		return db.query.teamMembers.findMany({
 			where: eq(teamMembers.userId, userId),
 			with: {
@@ -117,6 +189,14 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns The user if found, null otherwise.
 	 */
 	async getUserByEmail(email: string) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
 		return db.query.users.findFirst({
 			where: eq(users.email, email),
 		});
@@ -128,7 +208,15 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns The user with their teams and projects.
 	 */
 	async getUserWithAssociations(userId: string) {
-		const user = await db.query.users.findFirst({
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
+		return db.query.users.findFirst({
 			where: eq(users.id, userId),
 			with: {
 				teamMembers: {
@@ -147,8 +235,6 @@ export class UserService extends BaseService<typeof users> {
 				},
 			},
 		});
-
-		return user;
 	}
 
 	/**
@@ -162,8 +248,16 @@ export class UserService extends BaseService<typeof users> {
 		data: {
 			name?: string | null;
 			image?: string | null;
-		},
+		}
 	) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
 		const user = await this.update(userId, {
 			...data,
 			updatedAt: new Date(),
@@ -178,6 +272,14 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns The updated user.
 	 */
 	async verifyEmail(userId: string) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
 		const user = await this.update(userId, {
 			emailVerified: new Date(),
 			updatedAt: new Date(),
@@ -192,6 +294,14 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns A list of users with their roles.
 	 */
 	async getTeamUsers(teamId: string) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
 		return db.query.teamMembers.findMany({
 			where: eq(teamMembers.teamId, teamId),
 			with: {
@@ -206,6 +316,14 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns A list of users with their roles.
 	 */
 	async getProjectUsers(projectId: string) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
 		return db.query.projectMembers.findMany({
 			where: eq(projectMembers.projectId, projectId),
 			with: {
@@ -221,11 +339,16 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns True if the user has access.
 	 */
 	async hasTeamAccess(userId: string, teamId: string) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
 		const member = await db.query.teamMembers.findFirst({
-			where: and(
-				eq(teamMembers.userId, userId),
-				eq(teamMembers.teamId, teamId),
-			),
+			where: and(eq(teamMembers.userId, userId), eq(teamMembers.teamId, teamId)),
 		});
 
 		return !!member;
@@ -238,11 +361,16 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns True if the user has access.
 	 */
 	async hasProjectAccess(userId: string, projectId: string) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
 		const member = await db.query.projectMembers.findFirst({
-			where: and(
-				eq(projectMembers.userId, userId),
-				eq(projectMembers.projectId, projectId),
-			),
+			where: and(eq(projectMembers.userId, userId), eq(projectMembers.projectId, projectId)),
 		});
 
 		return !!member;

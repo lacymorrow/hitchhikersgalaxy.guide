@@ -11,7 +11,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useWindowScroll } from "@uidotdev/usehooks";
 import { cva } from "class-variance-authority";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import type React from "react";
 import { useMemo } from "react";
 

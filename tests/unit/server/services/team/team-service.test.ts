@@ -1,8 +1,8 @@
 import { db } from "@/server/db";
-import { teamMembers, teams } from "@/server/db/schema";
+import { teamMembers, teams, users } from "@/server/db/schema";
 import { TeamService } from "@/server/services/team-service";
 import { eq } from "drizzle-orm";
-import { afterEach, beforeAll, describe, expect, test } from "vitest";
+import { afterEach, beforeAll, afterAll, describe, expect, test } from "vitest";
 
 const TEST_USER = {
 	id: "test-user-id",
@@ -12,14 +12,26 @@ const TEST_USER = {
 describe("TeamService", () => {
 	let teamService: TeamService;
 
-	beforeAll(() => {
+	beforeAll(async () => {
 		teamService = new TeamService();
+		// Create test user
+		if (!db) throw new Error("Database connection not initialized");
+		await db.insert(users).values({
+			id: TEST_USER.id,
+			email: TEST_USER.email,
+		});
+	});
+
+	afterAll(async () => {
+		if (!db) throw new Error("Database connection not initialized");
+		await db.delete(users).where(eq(users.id, TEST_USER.id));
 	});
 
 	afterEach(async () => {
 		// Clean up test data
-		await db?.delete(teamMembers);
-		await db?.delete(teams);
+		if (!db) throw new Error("Database connection not initialized");
+		await db.delete(teamMembers);
+		await db.delete(teams);
 	});
 
 	describe("createTeam", () => {

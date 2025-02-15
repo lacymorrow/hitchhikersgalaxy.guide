@@ -13,13 +13,14 @@ import { CodeWindow } from "@/components/ui/code-window";
 import { GitHubConnectButton } from "@/components/ui/github-connect-button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
-import { getPaymentStatusByEmail } from "@/lib/lemonsqueezy";
 import { cn } from "@/lib/utils";
 import { downloadRepo } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
 import { checkGitHubConnection } from "@/server/services/github/github-service";
+import { PaymentService } from "@/server/services/payment-service";
 import { CreditCardIcon, DownloadIcon, UserIcon } from "lucide-react";
 import type { Session } from "next-auth";
+import { redirect } from "next/navigation";
 
 const installationCode = `# Clone the repository
 git clone ${siteConfig.repo.url}
@@ -47,6 +48,15 @@ docker run -p 3000:3000 shipkit`;
 
 export default async function DownloadPage() {
 	const session = await auth();
+	if (!session?.user?.email) {
+		redirect("/auth/signin");
+	}
+
+	const hasPurchased = await PaymentService.getUserPaymentStatus(session.user.id);
+	if (!hasPurchased) {
+		redirect("/pricing");
+	}
+
 	return (
 		<main>
 			<div className="container flex min-h-[50vh] flex-col items-center justify-center space-y-4">
@@ -86,7 +96,7 @@ async function DownloadPageContent({ session }: { session: Session | null }) {
 		);
 	}
 
-	const hasPurchased = await getPaymentStatusByEmail(session.user.email);
+	const hasPurchased = await PaymentService.getUserPaymentStatus(session.user.id);
 	if (!hasPurchased) {
 		return (
 			<div className="container flex min-h-[50vh] flex-col items-center justify-center space-y-4">

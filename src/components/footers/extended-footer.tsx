@@ -52,7 +52,7 @@ const defaultGroups: FooterElement[] = [
 			items: [
 				{ href: routes.docs, label: "Documentation" },
 				{ href: routes.blog, label: "Blog" },
-				{ href: routes.support, label: "Support" },
+				{ href: routes.contact, label: "Support" },
 				{ href: routes.auth.signIn, label: "Sign in" },
 			],
 		},

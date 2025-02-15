@@ -469,7 +469,7 @@ export const FeaturesTable = () => {
 							<Fragment key={category.category}>
 								<TableRow>
 									<TableCell
-										colSpan={isMobile ? 2 : comparePlans.length + 1}
+										colSpan={isMobile ? 2 : comparePlans?.length + 1}
 										className="bg-muted/50 font-semibold"
 									>
 										{category.category}

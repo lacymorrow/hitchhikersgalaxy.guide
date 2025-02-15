@@ -2,9 +2,40 @@
 
 import { db } from "@/server/db";
 import { permissions, rolePermissions, roles, users } from "@/server/db/schema";
-import { hash } from "bcrypt";
+import { sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
 import { z } from "zod";
+import crypto from "crypto";
+import { promisify } from "util";
+
+// Constants for password hashing
+const SALT_LENGTH = 32;
+const KEY_LENGTH = 64;
+const SCRYPT_OPTIONS = {
+	N: 16384, // CPU/memory cost parameter
+	r: 8, // Block size parameter
+	p: 1, // Parallelization parameter
+} as const;
+
+// Promisify scrypt
+const scrypt = promisify<
+	string | Buffer,
+	Buffer,
+	number,
+	crypto.ScryptOptions,
+	Buffer
+>(crypto.scrypt);
+
+/**
+ * Hash a password using scrypt
+ * @param password The plain text password to hash
+ * @returns A string containing the salt and hash, separated by a colon
+ */
+async function hashPassword(password: string): Promise<string> {
+	const salt = crypto.randomBytes(SALT_LENGTH);
+	const derivedKey = await scrypt(password, salt, KEY_LENGTH, SCRYPT_OPTIONS);
+	return `${salt.toString("hex")}:${derivedKey.toString("hex")}`;
+}
 
 const setupSchema = z.object({
 	databaseUrl: z.string().url(),
@@ -44,13 +75,13 @@ export async function configureSetup(input: SetupInput) {
 
 		// Test database connection
 		try {
-			await db.execute(sql`SELECT 1`);
+			await db?.execute(sql`SELECT 1`);
 		} catch (error) {
 			throw new Error("Failed to connect to database");
 		}
 
 		// Create admin role and permissions
-		await db.transaction(async (tx) => {
+		await db?.transaction(async (tx) => {
 			// Create admin role if it doesn't exist
 			const existingRole = await tx.query.roles.findFirst({
 				where: (roles, { eq }) => eq(roles.name, "admin"),
@@ -94,7 +125,7 @@ export async function configureSetup(input: SetupInput) {
 			});
 
 			if (!existingAdmin) {
-				const hashedPassword = await hash(validatedInput.adminPassword, 10);
+				const hashedPassword = await hashPassword(validatedInput.adminPassword);
 				await tx.insert(users).values({
 					email: validatedInput.adminEmail,
 					password: hashedPassword,

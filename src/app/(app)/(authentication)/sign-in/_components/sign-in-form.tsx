@@ -20,7 +20,7 @@ import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { useToast } from "@/hooks/use-toast";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
 import { signInWithCredentialsAction } from "@/server/actions/auth";
-import Link from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { useSearchParams } from "next/navigation";
 
 export const SignInForm = () => {

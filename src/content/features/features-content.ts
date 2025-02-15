@@ -3,63 +3,37 @@ import type { Feature } from "@/types/feature";
 type FeatureContent = Omit<Feature, "id" | "order">;
 
 export const content: FeatureContent[] = [
-	// Performance & Core Technology
+	// Core Technology & Performance
 	{
 		name: "10x Faster Development",
 		description:
-			"Ship in days, not months. Our pre-built stack with Next.js 15 and React Server Components eliminates weeks of setup and configuration.",
+			"Ship in days, not months with our pre-built Next.js 15 stack. Zero runtime errors with end-to-end type safety and instant hot reload.",
 		category: "core",
 		plans: ["bones", "muscles", "brains"],
 		icon: "Zap",
 	},
 	{
-		name: "Bank-Grade Security",
-		description:
-			"Enterprise security out of the box with Auth.js v5, rate limiting, and SOC2-ready infrastructure. Used by Fortune 500 companies.",
-		category: "security",
-		plans: ["brains"],
-		icon: "Lock",
-	},
-	{
 		name: "Future-Proof Architecture",
 		description:
-			"Never worry about tech debt again. Built with Next.js 15, Tailwind CSS, and Shadcn/UI - the same stack used by industry leaders.",
+			"Built with Next.js 15, TypeScript, Tailwind CSS, and Shadcn/UI - the same stack used by industry leaders. Never worry about tech debt again.",
 		category: "core",
 		plans: ["bones", "muscles", "brains"],
 		icon: "Layers",
 	},
 	{
-		name: "AI-First Development",
+		name: "Enterprise Security",
 		description:
-			"Built-in OpenAI integration lets you automate tedious tasks and add AI features your users will love. Stay ahead of competitors.",
-		category: "advanced",
+			"Bank-grade security with Auth.js v5, rate limiting, and SOC2-ready infrastructure. Multi-provider authentication and GDPR compliance included.",
+		category: "security",
 		plans: ["brains"],
-		icon: "Brain",
-	},
-
-	// Developer Experience
-	{
-		name: "Developer Happiness",
-		description:
-			"A development environment your team will love. Instant hot reload, VS Code integration, and tools that make coding feel magical.",
-		category: "dx",
-		plans: ["bones", "muscles", "brains"],
-		icon: "Code",
-	},
-	{
-		name: "Zero Runtime Errors",
-		description:
-			"End-to-end type safety with TypeScript and Drizzle ORM catches bugs before they reach production. Ship with absolute confidence.",
-		category: "dx",
-		plans: ["bones", "muscles", "brains"],
-		icon: "Shield",
+		icon: "Lock",
 	},
 
 	// Design & UI
 	{
-		name: "Stunning UI in Minutes",
+		name: "Beautiful UI Components",
 		description:
-			"Launch with a beautiful, professional design using our pre-built Shadcn/UI components. No designer needed to look world-class.",
+			"Launch with stunning, professional designs using our pre-built Shadcn/UI components and marketing tools. Built-in SEO optimization included.",
 		category: "core",
 		plans: ["bones", "muscles", "brains"],
 		icon: "Paintbrush",
@@ -67,71 +41,59 @@ export const content: FeatureContent[] = [
 
 	// Backend & Infrastructure
 	{
-		name: "Enterprise-Ready Backend",
+		name: "Production-Ready Backend",
 		description:
-			"Scale confidently with our battle-tested PostgreSQL + Drizzle ORM setup. Automatic backups and type-safe queries included.",
+			"Scale confidently with PostgreSQL + Drizzle ORM. Includes automatic backups, type-safe queries, and zero-downtime deployment pipeline.",
 		category: "backend",
 		plans: ["muscles", "brains"],
 		icon: "Database",
 	},
 	{
-		name: "One-Click Auth",
-		description:
-			"Get users signed up in seconds with multi-provider authentication. Supports Google, Apple, GitHub and more out of the box.",
-		category: "security",
-		plans: ["bones", "muscles", "brains"],
-		icon: "Lock",
-	},
-
-	// Marketing & SEO
-	{
-		name: "SEO & Marketing Tools",
-		description:
-			"Rank higher on Google with automatic SEO optimization, social cards, and structured data. Built-in marketing tools that work.",
-		category: "core",
-		plans: ["bones", "muscles", "brains"],
-		icon: "Search",
-	},
-	{
 		name: "Content Management",
 		description:
-			"Give your team the power to update content without developers. Payload CMS and Builder.io make content management effortless.",
+			"Empower your team with Payload CMS and Builder.io integration. Beautiful transactional emails with Resend for reliable delivery.",
 		category: "core",
 		plans: ["muscles", "brains"],
 		icon: "FileText",
 	},
 
-	// Communication
+	// Developer Experience
 	{
-		name: "Professional Email System",
+		name: "Developer Happiness",
 		description:
-			"Beautiful transactional emails that actually reach inboxes. Built-in templates and Resend integration for reliable delivery.",
-		category: "core",
-		plans: ["muscles", "brains"],
-		icon: "Mail",
+			"A development environment your team will love with VS Code integration, instant hot reload, and tools that make coding feel magical.",
+		category: "dx",
+		plans: ["bones", "muscles", "brains"],
+		icon: "Code",
+	},
+	{
+		name: "AI-First Development",
+		description:
+			"Built-in OpenAI integration for task automation and AI features. Stay ahead of competitors with cutting-edge AI capabilities.",
+		category: "advanced",
+		plans: ["brains"],
+		icon: "Brain",
 	},
 
 	// Monitoring & Analytics
 	{
 		name: "Complete Observability",
 		description:
-			"Sleep better at night with built-in error tracking, performance monitoring, and analytics. Know exactly how your app is performing.",
+			"Built-in error tracking, performance monitoring, and analytics. Know exactly how your app is performing with real-time insights.",
 		category: "core",
 		plans: ["brains"],
 		icon: "LineChart",
 	},
-
-	// Deployment & DevOps
 	{
-		name: "Production-Ready DevOps",
+		name: "DevOps & Deployment",
 		description:
-			"Deploy to production in minutes with our zero-downtime deployment pipeline. Includes Docker support and CI/CD workflows.",
+			"Production-ready DevOps with Docker support and CI/CD workflows. Includes automatic backups and zero-downtime deployments.",
 		category: "devops",
 		plans: ["muscles", "brains"],
 		icon: "Rocket",
 	},
 
-	// Support
+	// Support & Compliance
 	{
 		name: "Enterprise Support",
 		description:
@@ -139,5 +101,13 @@ export const content: FeatureContent[] = [
 		category: "support",
 		plans: ["brains"],
 		icon: "CheckCircle",
+	},
+	{
+		name: "Professional Email System",
+		description:
+			"Beautiful transactional emails that actually reach inboxes. Built-in templates and Resend integration for reliable delivery.",
+		category: "core",
+		plans: ["muscles", "brains"],
+		icon: "Mail",
 	},
 ];

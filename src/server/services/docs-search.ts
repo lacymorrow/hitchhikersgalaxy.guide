@@ -49,8 +49,9 @@ export class DocsSearchService {
 				const { data, content: mdContent } = matter(content);
 				const relativePath = fullPath
 					.replace(process.cwd(), "")
-					.replace("/docs/", "")
-					.replace(".mdx", "");
+					.replace("/src/content/docs/", "")
+					.replace(".mdx", "")
+					.replace(/^\/+/, "");
 
 				this.docsCache.set(relativePath, {
 					content: mdContent,
@@ -94,14 +95,14 @@ export class DocsSearchService {
 						acc +
 						(a.title.toLowerCase().includes(term) ? 2 : 0) +
 						(a.content.toLowerCase().includes(term) ? 1 : 0),
-					0,
+					0
 				);
 				const scoreB = searchTerms.reduce(
 					(acc, term) =>
 						acc +
 						(b.title.toLowerCase().includes(term) ? 2 : 0) +
 						(b.content.toLowerCase().includes(term) ? 1 : 0),
-					0,
+					0
 				);
 				return scoreB - scoreA;
 			})
@@ -123,7 +124,7 @@ export class DocsSearchService {
 		}
 
 		if (startIndex === -1) {
-			return content.slice(0, 150) + "...";
+			return `${content.slice(0, 150)}...`;
 		}
 
 		// Extract a snippet around the match
@@ -131,10 +132,6 @@ export class DocsSearchService {
 		const snippetEnd = Math.min(content.length, startIndex + 150);
 		const snippet = content.slice(snippetStart, snippetEnd);
 
-		return (
-			(snippetStart > 0 ? "..." : "") +
-			snippet +
-			(snippetEnd < content.length ? "..." : "")
-		);
+		return `${snippetStart > 0 ? "..." : ""}${snippet}${snippetEnd < content.length ? "..." : ""}`;
 	}
 }

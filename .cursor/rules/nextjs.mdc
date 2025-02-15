@@ -5,6 +5,10 @@ globs: *.ts, *.tsx, app/*, pages/*, src/app/*, src/pages/*
 
 # Next.js Best Practices
 
+`params` should be awaited before using its properties.
+`searchParams` should be awaited before using its properties.
+`headers` should be awaited before using its properties.
+
 ## Server Components
 - Use Server Components by default
 - Keep client components minimal

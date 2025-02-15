@@ -1,20 +1,18 @@
 import React, { useRef, useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 
 export default function App() {
 	// Create a reference to the worker object.
 	const worker = useRef(null);
 
 	const [inputText, setInputText] = useState(
-		"Speech synthesis is the artificial production of human speech.",
+		"Speech synthesis is the artificial production of human speech."
 	);
 	const [selectedSpeaker, setSelectedSpeaker] = useState("male_1");
 
 	const [status, setStatus] = useState(null);
 	const [error, setError] = useState(null);
-	const [loadingMessage, setLoadingMessage] = useState(
-		"Detecting WebGPU support...",
-	);
+	const [loadingMessage, setLoadingMessage] = useState("Detecting WebGPU support...");
 
 	const [results, setResults] = useState([]);
 
@@ -87,9 +85,7 @@ export default function App() {
 				<div className="w-[250px] h-[250px] border-4 border-white shadow-[0_0_0_5px_#4973ff] rounded-full overflow-hidden">
 					<div className="loading-wave"></div>
 				</div>
-				<p
-					className={`text-3xl my-5 text-center ${error ? "text-red-500" : "text-white"}`}
-				>
+				<p className={`text-3xl my-5 text-center ${error ? "text-red-500" : "text-white"}`}>
 					{error ?? loadingMessage}
 				</p>
 			</motion.div>
@@ -116,11 +112,7 @@ export default function App() {
 							rel="noreferrer"
 							className="underline"
 						>
-							<img
-								width="40"
-								src="hf-logo.svg"
-								className="inline translate-y-[-2px] me-1"
-							></img>
+							<img width="40" src="hf-logo.svg" className="inline translate-y-[-2px] me-1"></img>
 							Transformers.js
 						</a>
 					</p>
@@ -169,9 +161,7 @@ export default function App() {
 						{results.map((result, i) => (
 							<div key={i}>
 								<div className="text-white bg-gray-800/70 backdrop-blur-sm border border-gray-700 rounded-lg p-4 z-10">
-									<span className="absolute right-5 font-bold">
-										#{results.length - i}
-									</span>
+									<span className="absolute right-5 font-bold">#{results.length - i}</span>
 									<p className="mb-3 max-w-[95%]">{result.text}</p>
 									<audio controls src={result.src} className="w-full">
 										Your browser does not support the audio element.

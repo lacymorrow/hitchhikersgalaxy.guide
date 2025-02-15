@@ -3,7 +3,7 @@ import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
-import Link from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import type { FC, HTMLAttributes, ReactNode } from "react";
 import { v4 as uuid } from "uuid";
 
@@ -44,7 +44,7 @@ const defaultGroups: FooterElement[] = [
 			items: [
 				{ href: routes.docs, label: "Documentation" },
 				{ href: routes.blog, label: "Blog" },
-				{ href: routes.support, label: "Support" },
+				{ href: routes.contact, label: "Support" },
 				{ href: routes.auth.signIn, label: "Sign in" },
 			],
 		},
@@ -128,8 +128,8 @@ export const Footer: FC<FooterProps> = ({
 						<Link href={routes.home}><h1 className="text-4xl font-bold">{siteConfig.name}</h1></Link>
 					</div>
 					<div className="flex flex-col flex-wrap md:flex-row lg:gap-20">{groupElements}</div>
-				</div >
-			</div >
+				</div>
+			</div>
 		</footer >
 	);
 };

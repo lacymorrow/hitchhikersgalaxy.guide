@@ -83,9 +83,14 @@ const authWithOptions = async (props?: AuthProps) => {
 	return session;
 };
 
+const authenticated = cache(async (props?: AuthProps) => {
+	const session = await authWithOptions({ protect: true, ...props });
+	return session;
+});
+
 const cachedAuth = cache(authWithOptions);
 
-export { cachedAuth as auth, handlers, signIn, signOut, update };
+export { cachedAuth as auth, authenticated, handlers, signIn, signOut, update };
 
 // TODO: Dedupe like this from create-t3-turbo:
 // import { cache } from "react";

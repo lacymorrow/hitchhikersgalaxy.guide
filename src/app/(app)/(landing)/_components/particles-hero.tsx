@@ -9,16 +9,22 @@ import { cn } from "@/lib/utils";
 export function ParticlesHero({
 	children,
 	className,
+	quantity = 100,
+	speed = 80,
+	color,
 }: {
 	children: React.ReactNode;
 	className?: string;
+	quantity?: number;
+	speed?: number;
+	color?: string;
 }) {
 	const { theme } = useTheme();
-	const [color, setColor] = useState("#ffffff");
+	const [currentColor, setCurrentColor] = useState("#ffffff");
 
 	useEffect(() => {
-		setColor(theme === "dark" ? "#ffffff" : "#000000");
-	}, [theme]);
+		setCurrentColor(color ?? (theme === "dark" ? "#ffffff" : "#000000"));
+	}, [color, theme]);
 
 	return (
 		<div
@@ -27,9 +33,9 @@ export function ParticlesHero({
 			{children}
 			<Particles
 				className="absolute inset-0 [mask-image:linear-gradient(to_bottom_right,white,transparent)]"
-				quantity={100}
-				ease={80}
-				color={color}
+				quantity={quantity}
+				ease={speed}
+				color={currentColor}
 				refresh
 			/>
 		</div>

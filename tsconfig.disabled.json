@@ -40,6 +40,6 @@
 			"@/*": ["./src/*"]
 		}
 	},
-	"include": ["src/app/(app)/(demo)/examples/**/*", "src/app/(app)/(ai)/**/*"],
+	"include": ["src/app/(app)/(demo)/examples/**/*", "src/app/(app)/ai/**/*"],
 	"exclude": ["node_modules"]
 }

@@ -17,11 +17,8 @@ import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
 import {
-	ArrowUpRight, BoxSelectIcon, FileIcon, Hash,
+	ArrowUpRight, BoxSelectIcon, DollarSign, FileIcon, Hash,
 	ImageIcon,
-
-
-
 	KeyRound,
 	LayoutTemplate,
 	LineChart, Palette, Ruler,
@@ -51,6 +48,36 @@ interface Tool {
 }
 
 const tools: Tool[] = [
+	// https://www.openstatus.dev/play/curl
+	{
+		title: "cURL Builder",
+		description: "An online curl command line builder. Generate curl commands to test your API endpoints.",
+		icon: TerminalIcon,
+		href: "https://www.openstatus.dev/play/curl",
+		isExternal: true,
+		category: "Testing",
+		keywords: ["curl", "api", "testing", "performance", "speed"],
+	},
+	// https://www.openstatus.dev/play/checker
+	{
+		title: "Global Speed Checker",
+		description: "Is your endpoint globally fast? Test your website and API performance across all continents.",
+		icon: TerminalIcon,
+		href: "https://www.openstatus.dev/play/checker",
+		isExternal: true,
+		category: "Testing",
+		keywords: ["api", "testing", "performance", "speed"],
+	},
+	// https://shipixen.com/shadcn-pricing-page
+	{
+		title: "Shadcn Pricing Page",
+		description: "A pricing page for Shadcn UI",
+		icon: DollarSign,
+		href: "https://shipixen.com/shadcn-pricing-page",
+		isExternal: true,
+		category: "Generators",
+		keywords: ["pricing", "page", "shadcn", "ui", "generator"],
+	},
 	// https://ui.aceternity.com/tools/box-shadows
 	{
 		title: "Box Shadows",

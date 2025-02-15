@@ -38,7 +38,7 @@ export const HoverInfo = ({
 			<HoverCardTrigger asChild>
 				<span
 					className={cn(
-						"cursor-help border-b border-dotted border-muted-foreground hover:border-foreground",
+						"inline-block cursor-help border-b border-dotted border-muted-foreground hover:border-foreground",
 						className,
 					)}
 				>

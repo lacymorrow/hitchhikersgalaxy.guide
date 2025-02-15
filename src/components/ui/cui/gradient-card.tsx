@@ -1,8 +1,8 @@
 "use client";
 import { cn } from "@/lib/utils";
-import { useMouse } from "@uidotdev/usehooks";
 import { ArrowUpRightIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 
 export const GradientCard = ({
 	title,
@@ -19,12 +19,27 @@ export const GradientCard = ({
 	children?: ReactNode;
 	className?: string;
 }) => {
-	const [mouse, parentRef] = useMouse<HTMLDivElement>();
+	const [ref, setRef] = useState<HTMLDivElement | null>(null);
+	const [mousePosition, setMousePosition] = useState<{ x: number | null; y: number | null }>({ x: null, y: null });
+
+	useEffect(() => {
+		if (!ref) return;
+
+		const handleMouseMove = (e: MouseEvent) => {
+			const rect = ref?.getBoundingClientRect();
+			const x = e.clientX - rect?.left;
+			const y = e.clientY - rect?.top;
+			setMousePosition({ x, y });
+		};
+
+		ref.addEventListener('mousemove', handleMouseMove);
+		return () => ref.removeEventListener('mousemove', handleMouseMove);
+	}, [ref]);
 
 	return (
 		<div
 			className="group relative transform-gpu overflow-hidden rounded-[20px] bg-white/10 p-2 transition-transform hover:scale-[1.01] active:scale-90"
-			ref={parentRef}
+			ref={setRef}
 		>
 			{withArrow && (
 				<ArrowUpRightIcon className="absolute right-2 top-2 z-10 size-5 translate-y-4 text-neutral-700 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100 dark:text-neutral-300" />
@@ -32,17 +47,16 @@ export const GradientCard = ({
 			<div
 				className={cn(
 					"absolute -translate-x-1/2 -translate-y-1/2 transform-gpu rounded-full transition-transform duration-500 group-hover:scale-[3]",
-					mouse.elementX === null || mouse.elementY === null
+					mousePosition.x === null || mousePosition.y === null
 						? "opacity-0"
 						: "opacity-100",
 				)}
 				style={{
-					maskImage: `radial-gradient(${circleSize / 2
-						}px circle at center, white, transparent)`,
+					maskImage: `radial-gradient(${circleSize / 2}px circle at center, white, transparent)`,
 					width: `${circleSize}px`,
 					height: `${circleSize}px`,
-					left: `${mouse.elementX}px`,
-					top: `${mouse.elementY}px`,
+					left: `${mousePosition.x}px`,
+					top: `${mousePosition.y}px`,
 					background:
 						"linear-gradient(135deg, #3BC4F2, #7A69F9,#F26378,#F5833F)",
 				}}

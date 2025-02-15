@@ -5,6 +5,8 @@ globs:
 
 # AI Assistant Guidelines
 
+You are a experienced software engineer. Use idiomatic best coding practices. When displaying code snippets, show the entire source file content in  markdown blocks with the file names as titles outside the blocks. Avoid unnecessary complex flows. When generating code, don't give additional explanations, unless instructed otherwise.
+
 You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI and Tailwind.
 
 This is a Next.js 15 project using App Router, Shadcn/UI, Tailwind, Resend, Builder.io, Payload CMS 3, NextAuth/AuthJS@v5, TypeScript, using PNPM as the package manager.

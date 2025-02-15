@@ -11,37 +11,14 @@ export function useCopyToClipboard({
 } = {}) {
 	const [isCopied, setIsCopied] = React.useState(false);
 
-	const copyToClipboard = async (value: string) => {
-		if (typeof window === "undefined" || !value) {
+	const copyToClipboard = (value: string) => {
+		if (typeof window === "undefined" || !navigator?.clipboard?.writeText) {
 			return;
 		}
 
-		try {
-			if (navigator?.clipboard) {
-				await navigator.clipboard.writeText(value);
-			} else {
-				// Fallback for browsers that don't support clipboard API
-				const textArea = document.createElement("textarea");
-				textArea.value = value;
-				// Avoid scrolling to bottom
-				textArea.style.top = "0";
-				textArea.style.left = "0";
-				textArea.style.position = "fixed";
+		if (!value) return;
 
-				document.body.appendChild(textArea);
-				textArea.focus();
-				textArea.select();
-
-				try {
-					document.execCommand("copy");
-				} catch (err) {
-					console.error("Failed to copy text:", err);
-					return;
-				} finally {
-					document.body.removeChild(textArea);
-				}
-			}
-
+		navigator.clipboard.writeText(value).then(() => {
 			setIsCopied(true);
 
 			if (onCopy) {
@@ -51,9 +28,7 @@ export function useCopyToClipboard({
 			setTimeout(() => {
 				setIsCopied(false);
 			}, timeout);
-		} catch (error) {
-			console.error("Failed to copy text:", error);
-		}
+		}, console.error);
 	};
 
 	return { isCopied, copyToClipboard };

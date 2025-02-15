@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import type React from "react";
 import type { ReactNode } from "react";
 
@@ -17,5 +17,5 @@ type ButtonProps = CommonProps &
 type LinkOrButtonProps = LinkProps | ButtonProps;
 
 export const LinkOrButton = (props: LinkOrButtonProps) => {
-	return "href" in props ? <Link {...props} /> : <Button {...props} />;
+	return "href" in props && typeof props.href === "string" ? <Link {...props} /> : <Button {...props} />;
 };

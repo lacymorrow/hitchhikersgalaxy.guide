@@ -32,7 +32,8 @@
     "baseUrl": ".",
     "paths": {
       "@/public/*": ["./public/*"],
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@payload-config": ["./src/payload.config.ts"]
     }
   },
   "include": [

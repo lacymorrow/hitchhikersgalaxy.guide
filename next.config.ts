@@ -111,25 +111,32 @@ let nextConfig: NextConfig = {
 	// removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false
 	// },
 
-	// 	webpack: (config, { isServer }) => {
-	// 		// Add custom webpack configuration for handling binary files
-	// 		config.module.rules.push({
-	// 			test: /\.(node|bin|html)$/,
-	// 			use: "raw-loader",
-	// 		});
+	webpack: (config, { isServer }) => {
+		// Enable top-level await
+		config.experiments = { ...config.experiments, topLevelAwait: true };
 
-	// 		if (!isServer) {
-	// 			// Don't attempt to bundle native modules on client-side
-	// 			config.resolve.fallback = {
-	// 				...config.resolve.fallback,
-	// 			};
-	// 		} else {
-	// 			// Externalize native modules on server-side
-	// 			config.externals = [...(config.externals || []), "bcrypt"];
-	// 		}
+		// Add custom webpack configuration for handling binary files
+		config.module.rules.push({
+			test: /\.(node|bin|html)$/,
+			use: "raw-loader",
+		});
 
-	// 		return config;
-	// 	},
+		if (!isServer) {
+			// Don't attempt to bundle native modules on client-side
+			config.resolve.fallback = {
+				...config.resolve.fallback,
+				"node-gyp": false,
+				npm: false,
+				fs: false,
+				net: false,
+				ts: false,
+				child_process: false,
+				"@mapbox/node-pre-gyp": false,
+			};
+		}
+
+		return config;
+	},
 };
 
 /*

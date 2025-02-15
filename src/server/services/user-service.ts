@@ -45,7 +45,7 @@ export class UserService extends BaseService<typeof users> {
 			throw new Error("Database is not initialized");
 		}
 
-		let dbUser = await db.query.users.findFirst({
+		let dbUser = await db?.query.users.findFirst({
 			where: eq(users.id, authUser.id),
 		});
 
@@ -347,7 +347,7 @@ export class UserService extends BaseService<typeof users> {
 			throw new Error("Database is not initialized");
 		}
 
-		const member = await db.query.teamMembers.findFirst({
+		const member = await db?.query.teamMembers.findFirst({
 			where: and(eq(teamMembers.userId, userId), eq(teamMembers.teamId, teamId)),
 		});
 
@@ -369,7 +369,7 @@ export class UserService extends BaseService<typeof users> {
 			throw new Error("Database is not initialized");
 		}
 
-		const member = await db.query.projectMembers.findFirst({
+		const member = await db?.query.projectMembers.findFirst({
 			where: and(eq(projectMembers.userId, userId), eq(projectMembers.projectId, projectId)),
 		});
 

@@ -52,7 +52,7 @@ export const createFeedback = async (
 
 export const getFeedback = async () => {
 	try {
-		return await db.select().from(feedback).orderBy(feedback.createdAt);
+		return await db?.select().from(feedback).orderBy(feedback.createdAt);
 	} catch (error) {
 		console.error("Error getting feedback:", error);
 		throw new Error("Failed to get feedback");

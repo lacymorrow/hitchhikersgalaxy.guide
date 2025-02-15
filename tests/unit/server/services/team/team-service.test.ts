@@ -16,7 +16,7 @@ describe("TeamService", () => {
 		teamService = new TeamService();
 		// Create test user
 		if (!db) throw new Error("Database connection not initialized");
-		await db.insert(users).values({
+		await db?.insert(users).values({
 			id: TEST_USER.id,
 			email: TEST_USER.email,
 		});
@@ -24,14 +24,14 @@ describe("TeamService", () => {
 
 	afterAll(async () => {
 		if (!db) throw new Error("Database connection not initialized");
-		await db.delete(users).where(eq(users.id, TEST_USER.id));
+		await db?.delete(users).where(eq(users.id, TEST_USER.id));
 	});
 
 	afterEach(async () => {
 		// Clean up test data
 		if (!db) throw new Error("Database connection not initialized");
-		await db.delete(teamMembers);
-		await db.delete(teams);
+		await db?.delete(teamMembers);
+		await db?.delete(teams);
 	});
 
 	describe("createTeam", () => {

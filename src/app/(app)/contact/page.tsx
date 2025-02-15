@@ -93,7 +93,6 @@ export default function ContactPage() {
 							</p>
 						</div>
 						<ContactForm
-							showOptionalFields={true}
 							className="max-w-none"
 						/>
 					</Card>

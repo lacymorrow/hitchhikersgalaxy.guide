@@ -48,7 +48,7 @@ export class RBACService extends BaseService<typeof roles> {
         description?: string,
         permissionIds: string[] = [],
     ) {
-        return await db.transaction(async (tx) => {
+        return await db?.transaction(async (tx) => {
             const role = await tx
                 .insert(roles)
                 .values({
@@ -133,7 +133,7 @@ export class RBACService extends BaseService<typeof roles> {
     ) {
         if (context?.teamId) {
             // Get team roles
-            return await db.query.teamMembers.findMany({
+            return await db?.query.teamMembers.findMany({
                 where: and(
                     eq(teamMembers.userId, userId),
                     eq(teamMembers.teamId, context.teamId),
@@ -146,7 +146,7 @@ export class RBACService extends BaseService<typeof roles> {
 
         if (context?.projectId) {
             // Get project roles
-            return await db.query.projectMembers.findMany({
+            return await db?.query.projectMembers.findMany({
                 where: and(
                     eq(projectMembers.userId, userId),
                     eq(projectMembers.projectId, context.projectId),
@@ -165,7 +165,7 @@ export class RBACService extends BaseService<typeof roles> {
      * Assign permissions to a role
      */
     async assignPermissionsToRole(roleId: string, permissionIds: string[]) {
-        return await db.insert(rolePermissions).values(
+        return await db?.insert(rolePermissions).values(
             permissionIds.map((permissionId) => ({
                 id: crypto.randomUUID(),
                 roleId,
@@ -194,7 +194,7 @@ export class RBACService extends BaseService<typeof roles> {
      * Get all permissions for a role
      */
     async getRolePermissions(roleId: string) {
-        return await db.query.rolePermissions.findMany({
+        return await db?.query.rolePermissions.findMany({
             where: eq(rolePermissions.roleId, roleId),
             with: {
                 permission: true,
@@ -206,7 +206,7 @@ export class RBACService extends BaseService<typeof roles> {
      * Get all roles with their permissions
      */
     async getAllRolesWithPermissions() {
-        return await db.query.roles.findMany({
+        return await db?.query.roles.findMany({
             with: {
                 permissions: {
                     with: {
@@ -221,7 +221,7 @@ export class RBACService extends BaseService<typeof roles> {
      * Delete a role and all its permission assignments
      */
     async deleteRole(roleId: string) {
-        await db.transaction(async (tx) => {
+        await db?.transaction(async (tx) => {
             // Delete role permissions first
             await tx
                 .delete(rolePermissions)
@@ -237,7 +237,7 @@ export class RBACService extends BaseService<typeof roles> {
      */
     async getAllUserRoles(userId: string) {
         // Get team roles
-        const teamRoles = await db.query.teamMembers.findMany({
+        const teamRoles = await db?.query.teamMembers.findMany({
             where: eq(teamMembers.userId, userId),
             columns: {
                 role: true,
@@ -245,7 +245,7 @@ export class RBACService extends BaseService<typeof roles> {
         });
 
         // Get project roles
-        const projectRoles = await db.query.projectMembers.findMany({
+        const projectRoles = await db?.query.projectMembers.findMany({
             where: eq(projectMembers.userId, userId),
             columns: {
                 role: true,

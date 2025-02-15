@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
 		const stream = createReadStream(filePath);
 		const readableStream = new ReadableStream({
 			start(controller) {
-				stream.on("data", (chunk: Buffer) => {
+				stream.on("data", (chunk: string | Buffer) => {
 					controller.enqueue(chunk);
 				});
 				stream.on("end", () => controller.close());

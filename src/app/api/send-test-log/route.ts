@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const { apiKey } = await req.json();
 
     // Validate the API key
-    const apiKeyRecord = await db.query.apiKeys.findFirst({
+    const apiKeyRecord = await db?.query.apiKeys.findFirst({
       where: eq(apiKeys.key, apiKey),
     });
 
@@ -28,7 +28,7 @@ export async function POST(req: Request) {
       apiKeyId: apiKeyRecord.id,
     };
 
-    await db.insert(logs).values(testLog);
+    await db?.insert(logs).values(testLog);
 
     return NextResponse.json({ success: true });
   } catch (error) {

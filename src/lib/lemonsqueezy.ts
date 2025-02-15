@@ -157,7 +157,7 @@ export const getPaymentStatus = async (userId: string): Promise<boolean> => {
 			);
 			if (paidOrder) {
 				const attributes = paidOrder.attributes as LemonSqueezyOrderAttributes;
-				await db.insert(payments).values({
+				await db?.insert(payments).values({
 					userId,
 					orderId: paidOrder.id,
 					status: "completed",
@@ -197,7 +197,7 @@ export const fetchLemonSqueezyProducts = async () => {
  */
 export const syncPlans = async () => {
 	// Fetch all the variants from the database.
-	const productVariants: NewPlan[] = await db.select().from(plans);
+	const productVariants: NewPlan[] = await db?.select().from(plans);
 
 	// Helper function to add a variant to the productVariants array and sync it with the database.
 	async function _addVariant(variant: NewPlan) {
@@ -327,11 +327,11 @@ export const getUsersWithPayments = async () => {
 		}
 
 		// Get all users from the database
-		const allUsers = await db.query.users.findMany();
+		const allUsers = await db?.query.users.findMany();
 		if (!allUsers?.length) return [];
 
 		// Get all payments from the database
-		const dbPayments = await db.query.payments.findMany();
+		const dbPayments = await db?.query.payments.findMany();
 
 		// Get all orders from Lemon Squeezy (with error handling)
 		let lemonSqueezyOrders: LemonSqueezyOrder[] = [];

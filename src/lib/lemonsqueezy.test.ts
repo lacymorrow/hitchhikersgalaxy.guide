@@ -82,7 +82,7 @@ export async function testPaymentLinking() {
 		console.log("Has paid with different email (linked by ID):", hasPaidWithId);
 
 		// Clean up
-		await db.delete(users).where(eq(users.id, testUser.id));
+		await db?.delete(users).where(eq(users.id, testUser.id));
 		console.log("\nTest user cleaned up");
 	} catch (error) {
 		console.error("Test failed:", error);

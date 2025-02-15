@@ -39,7 +39,7 @@ describe("GitHub Service", () => {
 	afterAll(async () => {
 		// Clean up test user
 		if (userId) {
-			await db.delete(users).where(eq(users.id, userId));
+			await db?.delete(users).where(eq(users.id, userId));
 		}
 	});
 

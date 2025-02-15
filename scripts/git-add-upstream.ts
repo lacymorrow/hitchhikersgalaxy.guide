@@ -3,7 +3,7 @@ import { copyFile, mkdir, readdir, rm } from "node:fs/promises";
 import { join, relative } from "node:path";
 
 const EXCLUDED_DIRS = ["node_modules", ".next", ".git", "dist", "build", "temp"];
-const upstreamUrl = "https://github.com/shipkit-io/bones.git";
+const upstreamUrl = "https://github.com/lacymorrow/shipkit.git";
 
 /*
  * Executes a git command and returns the output

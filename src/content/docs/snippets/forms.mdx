@@ -30,7 +30,7 @@ async function createPost(formData: FormData) {
       return { error: result.error };
     }
 
-    const post = await db.post.create({
+    const post = await db?.post.create({
       data: result.data,
     });
 

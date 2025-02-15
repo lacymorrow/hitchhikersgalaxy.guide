@@ -27,7 +27,7 @@ export const GET = async (req: Request): Promise<NextResponse> => {
 	}
 
 	// Find the API key record
-	const apiKeyRecord = await db.query.apiKeys.findFirst({
+	const apiKeyRecord = await db?.query.apiKeys.findFirst({
 		where: apiKeyId
 			? eq(apiKeys.id, apiKeyId)
 			: eq(apiKeys.key, apiKey as string),

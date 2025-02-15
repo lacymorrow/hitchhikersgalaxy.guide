@@ -17,7 +17,7 @@ export async function GET(request: Request) {
 		}
 
 		// Get Vercel access token
-		const vercelAccount = await db.query.accounts.findFirst({
+		const vercelAccount = await db?.query.accounts.findFirst({
 			where: (accounts, { and, eq }) =>
 				and(
 					eq(accounts.userId, session.user.id),

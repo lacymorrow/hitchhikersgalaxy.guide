@@ -22,7 +22,7 @@ export class TeamService extends BaseService<typeof teams> {
 	async createPersonalTeam(userId: string) {
 		const teamId = randomUUID();
 
-		await db.transaction(async (tx) => {
+		await db?.transaction(async (tx) => {
 			await tx.insert(teams).values({
 				id: teamId,
 				name: "Personal",
@@ -46,7 +46,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 * @returns Array of personal teams.
 	 */
 	private async getAllPersonalTeams(userId: string) {
-		const personalTeams = await db.query.teamMembers.findMany({
+		const personalTeams = await db?.query.teamMembers.findMany({
 			where: eq(teamMembers.userId, userId),
 			with: {
 				team: true,
@@ -129,7 +129,7 @@ export class TeamService extends BaseService<typeof teams> {
 	async createTeam(userId: string, teamName: string) {
 		const teamId = randomUUID();
 
-		await db.transaction(async (tx) => {
+		await db?.transaction(async (tx) => {
 			await tx.insert(teams).values({
 				id: teamId,
 				name: teamName,
@@ -144,7 +144,7 @@ export class TeamService extends BaseService<typeof teams> {
 			});
 		});
 
-		const team = await db.query.teams.findFirst({
+		const team = await db?.query.teams.findFirst({
 			where: eq(teams.id, teamId),
 			with: {
 				members: {
@@ -171,7 +171,7 @@ export class TeamService extends BaseService<typeof teams> {
 		// First ensure the user has exactly one personal team
 		await this.ensureOnePersonalTeam(userId);
 
-		const userTeams = await db.query.teamMembers.findMany({
+		const userTeams = await db?.query.teamMembers.findMany({
 			where: eq(teamMembers.userId, userId),
 			with: {
 				team: true,
@@ -299,7 +299,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 * @returns True if deleted successfully.
 	 */
 	async deleteTeam(teamId: string) {
-		const team = await db.query.teams.findFirst({
+		const team = await db?.query.teams.findFirst({
 			where: eq(teams.id, teamId),
 		});
 

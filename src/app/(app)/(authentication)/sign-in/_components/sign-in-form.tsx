@@ -60,10 +60,7 @@ export const SignInForm = () => {
 		} catch (error) {
 			if (error instanceof Error) {
 				const errorMessage = error.message.toLowerCase();
-				if (
-					errorMessage.includes("invalid credentials") ||
-					errorMessage.includes("user not found")
-				) {
+				if (errorMessage.includes("invalid credentials") || errorMessage.includes("user not found")) {
 					toast({
 						title: "Error",
 						description: "Invalid email or password. Please try again.",
@@ -123,14 +120,10 @@ export const SignInForm = () => {
 						</FormItem>
 					)}
 				/>
-				<Button
-					type="submit"
-					className="w-full"
-					disabled={form.formState.isSubmitting || !form.formState.isValid}
-				>
+				<Button type="submit" className="w-full" disabled={form.formState.isSubmitting || !form.formState.isValid}>
 					{form.formState.isSubmitting ? "Signing in..." : "Sign in"}
 				</Button>
 			</form>
-		</Form>
+		</Form >
 	);
 };

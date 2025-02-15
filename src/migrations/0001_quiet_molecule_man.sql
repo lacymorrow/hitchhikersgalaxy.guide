@@ -1,0 +1,1 @@
+DROP TABLE "shipkit_activity_log" CASCADE;

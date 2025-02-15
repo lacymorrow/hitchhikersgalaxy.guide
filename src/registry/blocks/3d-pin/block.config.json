@@ -1,0 +1,36 @@
+{
+  "name": "3d-pin",
+  "type": "registry:block",
+  "description": "A gradient pin that animates on hover, perfect for product links.",
+  "dependencies": [
+    "framer-motion",
+    "clsx",
+    "tailwind-merge",
+    "react",
+    "@types/react",
+    "@types/node"
+  ],
+  "categories": [
+    "components",
+    "ui"
+  ],
+  "style": "default",
+  "tags": [
+    "3d",
+    "animated",
+    "pin"
+  ],
+  "version": "1.0.0",
+  "author": "mannupaaji",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/steven-tey/aceternity-ui"
+  },
+  "files": [
+    {
+      "source": "3d-pin.tsx",
+      "type": "registry:component"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "components": [
+    {
+      "name": "use-mobile",
+      "path": "./use-mobile.json"
+    },
+    {
+      "name": "use-toast",
+      "path": "./use-toast.json"
+    }
+  ]
+}

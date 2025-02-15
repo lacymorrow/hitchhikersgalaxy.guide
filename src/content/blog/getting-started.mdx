@@ -1,0 +1,89 @@
+---
+title: "Getting Real with Shipkit: A Developer's Journey"
+publishedAt: 2024-12-27
+description: "An honest look at how Shipkit helps small teams ship faster - warts and all"
+author: "Lacy Morrow"
+categories: ["Guides", "Development"]
+---
+
+# The Real Story Behind Shipkit
+
+After 18 months of nights and weekends, our small team of developers built Shipkit to solve our own frustrations. Here's the unvarnished truth about what it does well and where we're still growing.
+
+## Where Shipkit Shines
+
+### Start now, immediately, and add features as you need.
+
+- Deploy immediately, with no setup required. No environment variables, no database, no configuration or code changes.
+- Once you are ready, you can add these features as needed.
+
+### Shipkit is built with the latest tech:
+- **Next.js 15 App Router** - battle-tested with 10k+ pageviews/month
+- **Authentication with AuthJS v5** - Supports 92(!) authentication providers
+- **Content Management** (Payload & Builder) - Manage your content without code
+- **Email Infrastructure** (Resend) - handling 500+ monthly transactional emails with pre-built templates
+- **AI-Powered Component generation** - Generate components with AI
+- **MDX Documentation + Blogging** - Write documentation in Markdown
+- **Checkout and Billing** - Built-in checkout and billing with Lemon Squeezy
+- **Role-Based Access Control** - Full user management with roles
+
+## Where We're Still Growing
+
+### Features Under Active Development:
+- Mobile responsiveness (currently at 85% Lighthouse score)
+- Documentation (contributions welcome!)
+- Analytics uses PostHog, Vercel Analytics, and Google Analytics
+- Comprehensive internationalization and localization support
+
+## Hard-Earned Lessons
+
+### 3 Things We Wish We Knew Sooner:
+1. Start with TypeScript strict mode (our migration took 3 painful weeks!)
+2. Use Drizzle ORM instead of raw SQL queries for optimization and type safety
+3. Implement error tracking early (we're building our own logging platform, Ship Log)
+
+## Your First Hour with Shipkit
+
+### Three ways to get started with Shipkit:
+
+1. Deploy the site directly to Vercel without ever touching a line of code. This will create a copy of Shipkit and a brand new GitHub repository with all of the code.
+
+2. If you are a developer, you can clone the repository yourself and deploy it anywhere you like. We also include a Docker setup for standardizing deployments across hardware.
+
+```bash
+git clone https://github.com/lacymorrow/shipkit.git
+pnpm install
+```
+
+3. Download the Shipkit source code and deploy it anywhere you like.
+
+### Explore pre-built flows:
+
+- Authentication: `app/auth/`
+- Content Management: `app/admin/`
+- Billing: `app/billing/`
+
+## Join Our Journey
+
+We're building in public and would love your input:
+- Weekly progress updates
+- Open roadmap
+- Developer Q&A sessions
+
+[Follow our GitHub](https://github.com/lacymorrow/shipkit) | [Join Discord](https://discord.gg/XxKrKNvEje) | [Read our docs](https://shipkit.io/docs)
+
+## Real-World Implementation
+
+Here's our actual auth configuration (src/server/auth.config.ts):
+
+```typescript
+export const authOptions: NextAuthConfig = {
+	debug: process.env.NODE_ENV !== "production",
+	providers,
+	pages: {
+		error: routes.auth.error,
+		signIn: routes.auth.signIn,
+		signOut: routes.auth.signOut,
+	},
+}
+```

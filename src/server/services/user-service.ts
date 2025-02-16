@@ -1,11 +1,12 @@
 import { logger } from "@/lib/logger";
 import { db, isDatabaseInitialized } from "@/server/db";
-import { projectMembers, teamMembers, users } from "@/server/db/schema";
+import { projectMembers, teamMembers, userFiles, users } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import { BaseService } from "./base-service";
 import { PaymentService } from "./payment-service";
 import { teamService } from "./team-service";
 import { apiKeyService } from "./api-key-service";
+import { deleteFromS3 } from "./s3";
 
 export class UserService extends BaseService<typeof users> {
 	constructor() {
@@ -374,6 +375,96 @@ export class UserService extends BaseService<typeof users> {
 		});
 
 		return !!member;
+	}
+
+	/**
+	 * Adds a file to a user's profile
+	 * @param userId - The ID of the user
+	 * @param file - The file information
+	 * @returns The created file record
+	 */
+	async addUserFile(userId: string, file: { title: string; location: string }) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
+		const [newFile] = await db
+			.insert(userFiles)
+			.values({
+				userId,
+				title: file.title,
+				location: file.location,
+				createdAt: new Date(),
+				updatedAt: new Date(),
+			})
+			.returning();
+
+		logger.info("Added file to user profile", {
+			userId,
+			fileId: newFile.id,
+			title: file.title,
+		});
+
+		return newFile;
+	}
+
+	/**
+	 * Deletes a file from a user's profile
+	 * @param userId - The ID of the user
+	 * @param fileId - The ID of the file to delete
+	 */
+	async deleteUserFile(userId: string, fileId: number) {
+		if (!isDatabaseInitialized()) {
+			throw new Error("Database is not initialized");
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
+		// First, get the file to check ownership and get the location
+		const file = await db.query.userFiles.findFirst({
+			where: and(
+				eq(userFiles.id, fileId),
+				eq(userFiles.userId, userId)
+			),
+		});
+
+		if (!file) {
+			throw new Error("File not found or access denied");
+		}
+
+		// Delete from S3 first
+		try {
+			const fileName = file.location.split("/").pop();
+			if (fileName) {
+				await deleteFromS3(fileName);
+			}
+		} catch (error) {
+			logger.error("Failed to delete file from S3", {
+				error,
+				fileId,
+				location: file.location,
+			});
+			// Continue with database deletion even if S3 deletion fails
+		}
+
+		// Delete from database
+		await db
+			.delete(userFiles)
+			.where(and(
+				eq(userFiles.id, fileId),
+				eq(userFiles.userId, userId)
+			));
+
+		logger.info("Deleted file from user profile", {
+			userId,
+			fileId,
+		});
 	}
 }
 

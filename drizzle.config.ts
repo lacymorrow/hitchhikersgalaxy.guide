@@ -7,7 +7,7 @@ export default {
 	schema: "./src/server/db/schema.ts",
 	dialect: "postgresql",
 	dbCredentials: {
-		url: env?.DATABASE_URL ?? "",
+		url: env?.DATABASE_URL ?? "NO_DATABASE_URL",
 	},
 	tablesFilter: [`${prefix}_*`],
 	out: "./src/migrations",

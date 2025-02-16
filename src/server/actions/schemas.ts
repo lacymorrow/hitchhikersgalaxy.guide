@@ -1,4 +1,18 @@
 import { z } from "zod";
+import { ALLOWED_FILE_TYPES, BYTES_IN_A_MEGABYTE, FILE_UPLOAD_MAX_SIZE } from "@/config/file";
+
+// File Schemas
+
+export const fileSchema = z
+  .instanceof(File)
+  .refine((file) => file.size <= FILE_UPLOAD_MAX_SIZE, {
+    message: `File size too large. Maximum allowed size is ${FILE_UPLOAD_MAX_SIZE / BYTES_IN_A_MEGABYTE}MB.`,
+  })
+  .refine((file) => ALLOWED_FILE_TYPES.includes(file.type), {
+    message: "Invalid file type.",
+  });
+
+export type FileSchemaType = z.infer<typeof fileSchema>;
 
 // Project Schemas
 export const createProjectSchema = z.object({

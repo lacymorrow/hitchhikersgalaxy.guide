@@ -49,6 +49,12 @@ export const env = createEnv({
 		AUTH_RESEND_KEY: z.string().optional(),
 		RESEND_AUDIENCE_ID: z.string().optional(),
 
+		// AWS S3
+		AWS_REGION: z.string(),
+		AWS_ACCESS_KEY_ID: z.string(),
+		AWS_SECRET_ACCESS_KEY: z.string(),
+		AWS_BUCKET_NAME: z.string(),
+
 		// Payload
 		DISABLE_BUILDER: z.string().optional(),
 		DISABLE_PAYLOAD: z.string().optional(),
@@ -108,6 +114,10 @@ export const env = createEnv({
 		VERCEL_ACCESS_TOKEN: process.env.VERCEL_ACCESS_TOKEN,
 		VERCEL_CLIENT_ID: process.env.VERCEL_CLIENT_ID,
 		VERCEL_CLIENT_SECRET: process.env.VERCEL_CLIENT_SECRET,
+		AWS_REGION: process.env.AWS_REGION,
+		AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID,
+		AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY,
+		AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
 	},
 	/**
 	 * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially

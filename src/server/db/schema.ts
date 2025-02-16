@@ -108,8 +108,35 @@ export const users = createTable("user", {
 export type NewUser = typeof users.$inferInsert;
 export type User = typeof users.$inferSelect;
 
+export const userFiles = createTable(
+	"user_file",
+	{
+		id: serial("id").primaryKey(),
+		userId: varchar("user_id", { length: 255 })
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		title: varchar("title", { length: 255 }).notNull(),
+		location: text("location").notNull(),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.default(sql`CURRENT_TIMESTAMP`)
+			.notNull(),
+		updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(() => new Date()),
+	},
+	(userFile) => ({
+		userIdIdx: index("user_file_user_id_idx").on(userFile.userId),
+	})
+);
+
+export type UserFile = typeof userFiles.$inferSelect;
+export type NewUserFile = typeof userFiles.$inferInsert;
+
+export const userFilesRelations = relations(userFiles, ({ one }) => ({
+	user: one(users, { fields: [userFiles.userId], references: [users.id] }),
+}));
+
 export const usersRelations = relations(users, ({ many }) => ({
 	accounts: many(accounts),
+	files: many(userFiles),
 }));
 
 export const accounts = createTable(

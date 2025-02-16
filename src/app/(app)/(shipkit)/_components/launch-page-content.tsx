@@ -43,7 +43,7 @@ export async function LaunchPageContent() {
 
 	// Otherwise, render our default content
 	return (
-		<ParticlesHero className="flex flex-col items-center justify-center px-4">
+		<div className="flex flex-col items-center justify-center px-4" >
 			<div className="flex w-full flex-col">
 				{/* Hero Section */}
 				<div className="flex w-full flex-col gap-24 py-24">
@@ -119,6 +119,6 @@ export async function LaunchPageContent() {
 					</Section>
 				</div>
 			</div>
-		</ParticlesHero>
+		</div>
 	);
 }

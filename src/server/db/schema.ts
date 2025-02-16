@@ -589,16 +589,16 @@ export const entriesRelations = relations(guideEntries, ({ one, many }) => ({
 		references: [users.id],
 	}),
 	revisions: many(guideEntryRevisions),
-	sourceCrossReferences: many(guideCrossReferences, {
-		relationName: "sourceCrossReferences",
-		fields: [guideEntries.id],
-		references: [guideCrossReferences.sourceEntryId],
-	}),
-	targetCrossReferences: many(guideCrossReferences, {
-		relationName: "targetCrossReferences",
-		fields: [guideEntries.id],
-		references: [guideCrossReferences.targetEntryId],
-	}),
+	// sourceCrossReferences: many(guideCrossReferences, {
+	// 	relationName: "sourceCrossReferences",
+	// 	fields: [guideEntries.id],
+	// 	references: [guideCrossReferences.sourceEntryId],
+	// }),
+	// targetCrossReferences: many(guideCrossReferences, {
+	// 	relationName: "targetCrossReferences",
+	// 	fields: [guideEntries.id],
+	// 	references: [guideCrossReferences.targetEntryId],
+	// }),
 }));
 
 // Export types

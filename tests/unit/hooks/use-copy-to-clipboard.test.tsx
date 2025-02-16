@@ -5,7 +5,9 @@ import { useCopyToClipboard } from "../../../src/hooks/use-copy-to-clipboard";
 describe("useCopyToClipboard", () => {
     // Mock clipboard API
     const mockWriteText = vi.fn(() => Promise.resolve());
+    const mockExecCommand = vi.fn(() => true);
     const originalNavigator = global.navigator;
+    const originalDocument = global.document;
 
     beforeEach(() => {
         vi.useFakeTimers();
@@ -17,6 +19,25 @@ describe("useCopyToClipboard", () => {
             },
             writable: true,
         });
+
+        // Mock document methods for fallback
+        Object.defineProperty(global, "document", {
+            value: {
+                ...originalDocument,
+                execCommand: mockExecCommand,
+                createElement: vi.fn().mockReturnValue({
+                    value: "",
+                    style: {},
+                    select: vi.fn(),
+                    focus: vi.fn(),
+                }),
+                body: {
+                    appendChild: vi.fn(),
+                    removeChild: vi.fn(),
+                },
+            },
+            writable: true,
+        });
     });
 
     afterEach(() => {
@@ -24,6 +45,10 @@ describe("useCopyToClipboard", () => {
         vi.clearAllMocks();
         Object.defineProperty(global, "navigator", {
             value: originalNavigator,
+            writable: true,
+        });
+        Object.defineProperty(global, "document", {
+            value: originalDocument,
             writable: true,
         });
     });
@@ -78,6 +103,7 @@ describe("useCopyToClipboard", () => {
     });
 
     test("should handle missing clipboard API gracefully", async () => {
+        // Remove clipboard API but keep document.execCommand for fallback
         Object.defineProperty(global, "navigator", {
             value: {},
             writable: true,
@@ -89,6 +115,7 @@ describe("useCopyToClipboard", () => {
             result.current.copyToClipboard("test text");
         });
 
-        expect(result.current.isCopied).toBe(false);
+        expect(mockExecCommand).toHaveBeenCalledWith("copy");
+        expect(result.current.isCopied).toBe(true);
     });
 });

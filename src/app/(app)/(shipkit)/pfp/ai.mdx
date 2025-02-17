@@ -1,0 +1,70 @@
+# AI Profile Picture Generator Plan
+
+## Overview
+Create a profile picture generator that uses AI to:
+1. Allow users to upload their photo
+2. Remove background automatically
+3. Segment and focus on the head
+4. Add customizable colored backgrounds
+5. Generate a circular profile picture
+
+## Technical Stack
+- Next.js App Router
+- Shadcn/UI for components
+- Removal.ai for background removal
+- AWS S3 for image storage
+- Server actions for processing
+
+## Components Structure
+```
+/pfp
+  /components
+    - upload-form.tsx
+    - image-preview.tsx
+    - color-picker.tsx
+    - file-upload.tsx
+  /actions
+    - process-image.ts
+    - upload-image.ts
+  /services
+    - background-removal.ts
+    - image-processing.ts
+  /types
+    - index.ts
+  page.tsx
+  layout.tsx
+```
+
+## Implementation Steps
+- [x] Create basic page layout and components
+- [x] Implement file upload with preview
+- [x] Set up background removal service
+- [x] Add color picker for background
+- [x] Implement image processing and cropping
+- [x] Add download functionality
+- [x] Add loading states and error handling
+
+## API Integration
+- Use Removal.ai API for background removal
+- Use AWS S3 for temporary image storage
+- Implement server-side image processing
+
+## UI/UX Flow
+1. User lands on page
+2. Uploads image through drag-drop or file picker
+3. Image is processed to remove background
+4. User selects background color
+5. Preview updates in real-time
+6. User can download final image
+
+## Security Considerations
+- [x] Validate file types and sizes
+- [x] Implement rate limiting
+- [x] Secure API endpoints
+- [x] Clean up temporary files
+
+## Performance Optimization
+- [x] Client-side image preview
+- [x] Optimized image processing
+- [x] Proper error handling
+- [x] Loading states for better UX

@@ -171,6 +171,7 @@
     "remark-frontmatter": "^5.0.0",
     "remark-mdx-frontmatter": "^5.0.0",
     "remotion": "^4.0.265",
+    "replicate": "^1.0.1",
     "resend": "^4.1.2",
     "server-only": "0.0.1",
     "simplex-noise": "^4.0.3",

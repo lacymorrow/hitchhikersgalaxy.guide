@@ -32,6 +32,10 @@ let nextConfig: NextConfig = {
 				protocol: "https",
 				hostname: "**.vercel.app",
 			},
+			{
+				protocol: "https",
+				hostname: "shipkit.s3.**.amazonaws.com",
+			},
 		],
 	},
 

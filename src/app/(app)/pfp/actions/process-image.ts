@@ -5,6 +5,8 @@ import type { ProcessImageResponse } from "../types";
 import { removeBackground } from "../services/background-removal";
 import { uploadToS3 } from "../services/image-processing";
 import { logger } from "@/lib/logger";
+import sharp from "sharp";
+import path from "path";
 
 export async function processImage(
 	imageBuffer: Buffer,
@@ -77,11 +79,44 @@ export async function applyBackgroundColor(
 
 		const imageBuffer = Buffer.from(await response.arrayBuffer());
 
-		// TODO: Implement background color application
-		// For now, we'll just return the original image
+		// Create a new image with the specified background color
+		const processedImageBuffer = await sharp(imageBuffer)
+			// Ensure the image has transparency (convert to PNG if not already)
+			.toFormat("png")
+			// Composite the image over the background color
+			.composite([
+				{
+					input: {
+						create: {
+							width: 1024, // We'll use a fixed size for the background
+							height: 1024,
+							channels: 4,
+							background: { r: 0, g: 0, b: 0, alpha: 0 }, // Transparent background
+						},
+					},
+					blend: "dest-over", // Place the background behind the image
+				},
+			])
+			// Apply the background color
+			.flatten({ background: backgroundColor })
+			.toBuffer();
+
+		// Upload the processed image to S3
+		const processedFileName = `bg-${Date.now()}-${path.basename(imageUrl)}`;
+		logger.info("Uploading processed image with background", { fileName: processedFileName });
+		const uploadResult = await uploadToS3(processedImageBuffer, processedFileName, "image/png");
+
+		if (!uploadResult.success) {
+			logger.error("Upload failed", { error: uploadResult.error });
+			throw new Error(uploadResult.error || "Failed to upload processed image");
+		}
+
+		logger.info("Background color applied successfully", { url: uploadResult.url });
+		revalidatePath("/pfp");
+
 		return {
 			success: true,
-			url: imageUrl,
+			url: uploadResult.url,
 		};
 	} catch (error) {
 		const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";

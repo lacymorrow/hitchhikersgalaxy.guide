@@ -8,6 +8,8 @@ import { logger } from "@/lib/logger";
 import sharp from "sharp";
 import path from "path";
 
+const TARGET_SIZE = 1024; // Target size for the square profile picture
+
 export async function processImage(
 	imageBuffer: Buffer,
 	fileName: string,
@@ -36,10 +38,31 @@ export async function processImage(
 
 		const processedImageBuffer = Buffer.from(await response.arrayBuffer());
 
+		// Process the image with sharp to ensure consistent sizing and centering
+		const processedBuffer = await sharp(processedImageBuffer)
+			// Trim any excess transparent pixels
+			.trim()
+			// Resize maintaining aspect ratio, but ensuring the smallest dimension is TARGET_SIZE
+			.resize(TARGET_SIZE, TARGET_SIZE, {
+				fit: "contain",
+				background: { r: 0, g: 0, b: 0, alpha: 0 },
+			})
+			// Ensure the image is centered by embedding it in a TARGET_SIZE square with padding
+			.extend({
+				top: 0,
+				bottom: 0,
+				left: 0,
+				right: 0,
+				background: { r: 0, g: 0, b: 0, alpha: 0 },
+			})
+			// Convert to PNG to ensure transparency support
+			.toFormat("png")
+			.toBuffer();
+
 		// Upload processed image to S3
 		const processedFileName = `processed-${fileName}`;
 		logger.info("Uploading processed image", { fileName: processedFileName });
-		const uploadResult = await uploadToS3(processedImageBuffer, processedFileName, "image/png");
+		const uploadResult = await uploadToS3(processedBuffer, processedFileName, "image/png");
 
 		if (!uploadResult.success) {
 			logger.error("Upload failed", { error: uploadResult.error });
@@ -88,13 +111,13 @@ export async function applyBackgroundColor(
 				{
 					input: {
 						create: {
-							width: 1024, // We'll use a fixed size for the background
-							height: 1024,
+							width: TARGET_SIZE,
+							height: TARGET_SIZE,
 							channels: 4,
-							background: { r: 0, g: 0, b: 0, alpha: 0 }, // Transparent background
+							background: { r: 0, g: 0, b: 0, alpha: 0 },
 						},
 					},
-					blend: "dest-over", // Place the background behind the image
+					blend: "dest-over",
 				},
 			])
 			// Apply the background color

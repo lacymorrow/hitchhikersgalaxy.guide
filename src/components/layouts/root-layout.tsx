@@ -18,6 +18,7 @@ import { WebVitals } from "../primitives/web-vitals";
 import { JsonLd } from "@/components/primitives/json-ld";
 import { Analytics } from "@vercel/analytics/react";
 import { ErrorToast } from "@/components/primitives/error-toast";
+import { PostHogProvider } from "@/lib/posthog/posthog-provider";
 
 const fontSerif = FontSerif({
 	weight: ["400", "500", "600", "700"],
@@ -59,20 +60,24 @@ export function RootLayout({ children }: { children: ReactNode }) {
 						<TRPCReactProvider>
 							<ThemeProvider attribute="class" defaultTheme="dark">
 								<TooltipProvider delayDuration={100}>
-																		{/* Web Vitals - Above children to avoid blocking */}
-									<WebVitals />
-									{/* Content */}
-									{children}
+									<PostHogProvider>
+										{/* Web Vitals - Above children to track page metrics */}
+										<WebVitals />
 
-									{/* Metrics - Below children to avoid blocking */}
-									<Analytics />
+										{/* Content */}
+										{children}
 
-									{/* Toast - Display messages to the user */}
-									<SonnerToaster />
+										{/* Metrics - Below children to avoid blocking */}
+										<Analytics />
 
-									<Suspense>
-										<ErrorToast />
-									</Suspense>
+										{/* Toast - Display messages to the user */}
+										<SonnerToaster />
+
+										{/* Error Toast - Display error messages to the user based on search params */}
+										<Suspense>
+											<ErrorToast />
+										</Suspense>
+									</PostHogProvider>
 								</TooltipProvider>
 							</ThemeProvider>
 						</TRPCReactProvider>

@@ -66,6 +66,12 @@ importers:
       '@mdx-js/react':
         specifier: 3.1.0
         version: 3.1.0(@types/react@19.0.8)(react@19.0.0)
+      '@mediapipe/face_detection':
+        specifier: ^0.4.1646425229
+        version: 0.4.1646425229
+      '@mediapipe/tasks-vision':
+        specifier: ^0.10.21
+        version: 0.10.21
       '@monaco-editor/react':
         specifier: ^4.7.0
         version: 4.7.0(monaco-editor@0.52.2)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
@@ -351,6 +357,9 @@ importers:
       postgres:
         specifier: 3.4.5
         version: 3.4.5
+      posthog-js:
+        specifier: ^1.218.2
+        version: 1.218.2
       react:
         specifier: 19.0.0
         version: 19.0.0
@@ -402,6 +411,9 @@ importers:
       server-only:
         specifier: 0.0.1
         version: 0.0.1
+      sharp:
+        specifier: ^0.33.5
+        version: 0.33.5
       simplex-noise:
         specifier: ^4.0.3
         version: 4.0.3
@@ -2080,8 +2092,14 @@ packages:
       '@types/react': '>=16'
       react: 19.0.0
 
+  '@mediapipe/face_detection@0.4.1646425229':
+    resolution: {integrity: sha512-aeCN+fRAojv9ch3NXorP6r5tcGVLR3/gC1HmtqB0WEZBRXrdP6/3W/sGR0dHr1iT6ueiK95G9PVjbzFosf/hrg==}
+
   '@mediapipe/tasks-vision@0.10.17':
     resolution: {integrity: sha512-CZWV/q6TTe8ta61cZXjfnnHsfWIdFhms03M9T7Cnd5y2mdpylJM0rF1qRq+wsQVRMLz1OYPVEBU9ph2Bx8cxrg==}
+
+  '@mediapipe/tasks-vision@0.10.21':
+    resolution: {integrity: sha512-TuhKH+credq4zLksGbYrnvJ1aLIWMc5r0UHwzxzql4BHECJwIAoBR61ZrqwGOW6ZmSBIzU1t4VtKj8hbxFaKeA==}
 
   '@monaco-editor/loader@1.5.0':
     resolution: {integrity: sha512-hKoGSM+7aAc7eRTRjpqAZucPmoNOC4UUbknb/VNoTkEIkCPhqV8LfbsgM1webRM7S/z21eHEx9Fkwx8Z/C/+Xw==}
@@ -5810,6 +5828,9 @@ packages:
       picomatch:
         optional: true
 
+  fflate@0.4.8:
+    resolution: {integrity: sha512-FJqqoDBR00Mdj9ppamLa/Y7vxm+PRmNWA67N846RvsoYVMKB4q3y/de5PA7gUmRMYK/8CMz2GDZQmCRN1wBcWA==}
+
   fflate@0.6.10:
     resolution: {integrity: sha512-IQrh3lEPM93wVCEczc9SaAOvkmcoQn/G8Bo1e8ZPlY3X3bnAxWaBdvTdvM1hP62iZp0BXWDy4vTAy4fF0+Dlpg==}
 
@@ -7621,6 +7642,9 @@ packages:
     resolution: {integrity: sha512-cDWgoah1Gez9rN3H4165peY9qfpEo+SA61oQv65O3cRUE1pOEoJWwddwcqKE8XZYjbblOJlYDlLV4h67HrEVDg==}
     engines: {node: '>=12'}
 
+  posthog-js@1.218.2:
+    resolution: {integrity: sha512-C3IRqrdeYdFPiUmj2wI+k+Skr56Co9vhXufv3LirNQC6kAc5FVq//VQVK1i4Xf8PlZYsaqREl0QI5M/CihU3wA==}
+
   postprocessing@6.36.7:
     resolution: {integrity: sha512-X6B3xt9dy4Osv19kqnVGqV01I2Tm7VwV6rLegRIZkZJPH3ozKLypHSBK1xKx7P/Ols++OkXe6L8dBGTaDUL5aw==}
     peerDependencies:
@@ -9063,6 +9087,9 @@ packages:
   web-streams-polyfill@4.0.0-beta.3:
     resolution: {integrity: sha512-QW95TCTaHmsYfHDybGMwO5IJIM93I/6vTRk+daHTWFPhwh+C8Cg7j7XyKrwrj8Ib6vYXe0ocYNrmzY4xAAN6ug==}
     engines: {node: '>= 14'}
+
+  web-vitals@4.2.4:
+    resolution: {integrity: sha512-r4DIlprAGwJ7YM11VZp4R884m0Vmgr6EAKe3P+kO0PPj3Unqyvv59rczf6UiGcb9Z8QxZVcqKNwv/g0WNdWwsw==}
 
   webgl-constants@1.1.1:
     resolution: {integrity: sha512-LkBXKjU5r9vAW7Gcu3T5u+5cvSvh5WwINdr0C+9jpzVB41cjQAP5ePArDtk/WHYdVj0GefCgM73BA7FlIiNtdg==}
@@ -11120,7 +11147,11 @@ snapshots:
       '@types/react': 19.0.8
       react: 19.0.0
 
+  '@mediapipe/face_detection@0.4.1646425229': {}
+
   '@mediapipe/tasks-vision@0.10.17': {}
+
+  '@mediapipe/tasks-vision@0.10.21': {}
 
   '@monaco-editor/loader@1.5.0':
     dependencies:
@@ -14364,8 +14395,7 @@ snapshots:
     dependencies:
       browserslist: 4.24.4
 
-  core-js@3.40.0:
-    optional: true
+  core-js@3.40.0: {}
 
   core-util-is@1.0.3: {}
 
@@ -15282,6 +15312,8 @@ snapshots:
   fdir@6.4.3(picomatch@4.0.2):
     optionalDependencies:
       picomatch: 4.0.2
+
+  fflate@0.4.8: {}
 
   fflate@0.6.10: {}
 
@@ -17535,6 +17567,13 @@ snapshots:
 
   postgres@3.4.5: {}
 
+  posthog-js@1.218.2:
+    dependencies:
+      core-js: 3.40.0
+      fflate: 0.4.8
+      preact: 10.25.4
+      web-vitals: 4.2.4
+
   postprocessing@6.36.7(three@0.173.0):
     dependencies:
       three: 0.173.0
@@ -19188,6 +19227,8 @@ snapshots:
       graceful-fs: 4.2.11
 
   web-streams-polyfill@4.0.0-beta.3: {}
+
+  web-vitals@4.2.4: {}
 
   webgl-constants@1.1.1: {}
 

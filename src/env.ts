@@ -50,10 +50,10 @@ export const env = createEnv({
 		RESEND_AUDIENCE_ID: z.string().optional(),
 
 		// AWS S3
-		AWS_REGION: z.string(),
-		AWS_ACCESS_KEY_ID: z.string(),
-		AWS_SECRET_ACCESS_KEY: z.string(),
-		AWS_BUCKET_NAME: z.string(),
+		AWS_REGION: z.string().optional(),
+		AWS_ACCESS_KEY_ID: z.string().optional(),
+		AWS_SECRET_ACCESS_KEY: z.string().optional(),
+		AWS_BUCKET_NAME: z.string().optional(),
 
 		// Payload
 		DISABLE_BUILDER: z.string().optional(),

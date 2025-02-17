@@ -53,25 +53,25 @@ export default function manifest(): MetadataRoute.Manifest {
 		/* App Icons
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/icons
 		 */
-		icons: [
-			{
-				src: "/favicon.ico", // Standard favicon
-				sizes: "48x48",
-				type: "image/x-icon",
-			},
-			{
-				src: "/favicon/web-app-manifest-192x192.png", // Home screen icon
-				sizes: "192x192",
-				type: "image/png",
-				purpose: "maskable", // Allows icon to be masked into different shapes on Android
-			},
-			{
-				src: "/favicon/web-app-manifest-512x512.png", // Large icon for splash screens
-				sizes: "512x512",
-				type: "image/png",
-				purpose: "maskable",
-			},
-		],
+		// icons: [
+		// 	{
+		// 		src: "/favicon.ico", // Standard favicon
+		// 		sizes: "48x48",
+		// 		type: "image/x-icon",
+		// 	},
+		// 	{
+		// 		src: "/favicon/web-app-manifest-192x192.png", // Home screen icon
+		// 		sizes: "192x192",
+		// 		type: "image/png",
+		// 		purpose: "maskable", // Allows icon to be masked into different shapes on Android
+		// 	},
+		// 	{
+		// 		src: "/favicon/web-app-manifest-512x512.png", // Large icon for splash screens
+		// 		sizes: "512x512",
+		// 		type: "image/png",
+		// 		purpose: "maskable",
+		// 	},
+		// ],
 
 		/* App Screenshots (currently commented out)
 		 * Used in app stores and install prompts to showcase the app

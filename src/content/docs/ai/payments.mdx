@@ -1,0 +1,57 @@
+---
+title: 'Payments'
+description: 'Payment processing configuration using Lemon Squeezy in ShipKit'
+---
+
+# Payments
+
+ShipKit uses [Lemon Squeezy](https://lemonsqueezy.com) for payment processing and subscription management.
+
+## Features
+
+- One-time payments
+- Subscriptions
+- Usage-based billing
+- Checkout pages
+- Webhooks
+- Analytics
+
+## Configuration
+
+Add these environment variables to enable payments:
+
+```env
+# Required
+LEMONSQUEEZY_API_KEY=your_api_key
+LEMONSQUEEZY_STORE_ID=your_store_id
+LEMONSQUEEZY_WEBHOOK_SECRET=your_webhook_secret
+```
+
+Get your credentials from the [Lemon Squeezy Dashboard](https://app.lemonsqueezy.com/settings/api).
+
+## Setup Steps
+
+1. Create a Lemon Squeezy account
+2. Set up your store
+3. Create products/variants
+4. Configure webhooks
+5. Set up API keys
+
+## Products
+
+Configure your products in `config/site.ts`:
+```typescript
+store: {
+  products: {
+    basic: "product-variant-id",
+    pro: "product-variant-id",
+    enterprise: "product-variant-id"
+  }
+}
+```
+
+## Resources
+
+- [Lemon Squeezy Documentation](https://docs.lemonsqueezy.com)
+- [API Reference](https://docs.lemonsqueezy.com/api)
+- [Webhooks Guide](https://docs.lemonsqueezy.com/guides/webhooks)

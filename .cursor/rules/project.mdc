@@ -1,0 +1,97 @@
+---
+description: Project structure, tech stack, and rules for interacting with the project
+globs: "*"
+---
+
+# Project Overview
+
+This is a Next.js project using:
+- App Router
+- Shadcn/UI
+- Tailwind CSS
+- Resend
+- Builder.io
+- Payload CMS 3
+- NextAuth/AuthJS@v5
+- TypeScript
+- PNPM
+
+## Directory Structure
+```
+src/
+├── app/                    # Next.js app router pages
+├── components/            # Reusable UI components
+│   ├── ui/               # Shadcn/UI components
+│   └── shared/           # Shared components
+├── lib/                  # Utility functions and shared code
+├── server/               # Server-side code
+│   ├── actions/          # Server actions
+│   ├── services/         # Business logic and data access
+│   └── api/              # API routes
+├── styles/               # Global styles and Tailwind config
+└── types/                # TypeScript type definitions
+```
+
+## File Naming
+- Use `kebab-case` for file names
+- Use `.tsx` for React components
+- Use `.ts` for TypeScript files
+- Use `.test.tsx` for test files
+- Use `.css` for style files
+- Use `.mdx` for documentation
+
+## Component Structure
+- One component per file
+- Export as named export
+- Use TypeScript interfaces for props
+- Keep components focused and small
+- Follow atomic design principles
+
+## Code Organization
+- Group related code together
+- Keep files small and focused
+- Use index files for exports
+- Separate concerns appropriately
+- Follow DRY principles
+
+## State Management
+- Use React hooks for local state
+- Use context for shared state
+- Use server components when possible
+- Avoid prop drilling
+- Keep state close to where it's used
+
+## API Structure
+- RESTful endpoints in `app/api`
+- Server actions in `server/actions`
+- Services in `server/services`
+- Type definitions in `types`
+- Environment variables in `.env`
+
+## Testing
+- Jest for unit tests
+- React Testing Library for components
+- Cypress for E2E tests
+- MSW for API mocking
+- Storybook for component development
+
+## Documentation
+- README.md in root
+- Component documentation in stories
+- API documentation with OpenAPI
+- Type documentation with TSDoc
+- Inline comments for complex logic
+
+## Dependencies
+- Use exact versions
+- Keep dependencies up to date
+- Minimize bundle size
+- Use peer dependencies appropriately
+- Document breaking changes
+
+## Development Workflow
+- Use feature branches
+- Write meaningful commit messages
+- Review code before merging
+- Run tests before pushing
+- Keep main branch stable

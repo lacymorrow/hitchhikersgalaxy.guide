@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { SidebarNav } from "@/components/ui/sidebar-nav";
-import { redirect, usePathname } from "next/navigation";
+import { redirect } from "next/navigation";
 import type { ReactNode } from "react";
 import { Header } from "../../../components/headers/header";
 import { auth } from "@/server/auth";

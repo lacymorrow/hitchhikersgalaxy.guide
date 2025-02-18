@@ -25,7 +25,7 @@ import { useSearchParams } from "next/navigation";
 
 export const SignInForm = () => {
 	const searchParams = useSearchParams();
-	const nextUrl = searchParams.get(SEARCH_PARAM_KEYS.nextUrl);
+	const nextUrl = searchParams?.get(SEARCH_PARAM_KEYS.nextUrl);
 	const { toast } = useToast();
 	const form = useForm<z.infer<typeof signInSchema>>({
 		resolver: zodResolver(signInSchema),

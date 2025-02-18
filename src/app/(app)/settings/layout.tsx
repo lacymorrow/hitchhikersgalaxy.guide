@@ -1,9 +1,10 @@
+"use client";
+
 import { Separator } from "@/components/ui/separator";
 import { SidebarNav } from "@/components/ui/sidebar-nav";
-import { redirect } from "next/navigation";
+import { usePathname } from "next/navigation";
 import type { ReactNode } from "react";
 import { Header } from "../../../components/headers/header";
-import { auth } from "@/server/auth";
 
 const sidebarNavItems = [
 	{
@@ -33,12 +34,8 @@ interface SettingsLayoutProps {
 	children: ReactNode;
 }
 
-export default async function SettingsLayout({ children }: SettingsLayoutProps) {
-	const session = await auth();
-
-	if (!session) {
-		redirect("/sign-in");
-	}
+export default function SettingsLayout({ children }: SettingsLayoutProps) {
+	const pathname = usePathname();
 
 	// Convert readonly array to mutable array for SidebarNav
 	const navItems = sidebarNavItems.map((item) => ({
@@ -61,7 +58,7 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
 					<Separator className="my-6" />
 					<div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
 						<aside className="lg:w-1/5">
-							<SidebarNav items={navItems} />
+							<SidebarNav items={navItems} pathname={pathname} />
 						</aside>
 						<div className="flex-1 lg:max-w-2xl">{children}</div>
 					</div>

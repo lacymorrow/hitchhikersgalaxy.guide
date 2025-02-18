@@ -242,10 +242,6 @@ export const teams = createTable("team", {
 	deletedAt: timestamp("deleted_at", { withTimezone: true }),
 });
 
-export const teamsRelations = relations(teams, ({ many }) => ({
-	members: many(teamMembers),
-}));
-
 export const teamMembers = createTable("team_member", {
 	id: varchar("id", { length: 255 })
 		.notNull()
@@ -334,8 +330,7 @@ export const apiKeys = createTable("api_key", {
 	deletedAt: timestamp("deleted_at"),
 });
 
-// Define relations
-
+// Then define relations
 export const teamRelations = relations(teams, ({ many }) => ({
 	members: many(teamMembers),
 	projects: many(projects),
@@ -539,34 +534,6 @@ export const guideCategories = createTable("guide_category", {
 	updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
-// Cross-references between entries
-export const guideCrossReferences = createTable("guide_cross_reference", {
-	id: serial("id").primaryKey(),
-	sourceEntryId: integer("source_entry_id")
-		.references(() => guideEntries.id)
-		.notNull(),
-	targetEntryId: integer("target_entry_id")
-		.references(() => guideEntries.id)
-		.notNull(),
-	context: text("context").notNull(), // Why these entries are related
-	createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
-// Entry revisions for tracking changes
-export const guideEntryRevisions = createTable("guide_entry_revision", {
-	id: serial("id").primaryKey(),
-	entryId: integer("entry_id")
-		.references(() => guideEntries.id, { onDelete: "cascade" })
-		.notNull(),
-	content: text("content").notNull(),
-	reason: text("reason").notNull(),
-	contributorId: varchar("contributor_id", { length: 255 }).references(
-		() => users.id,
-		{ onDelete: "set null" },
-	),
-	createdAt: timestamp("created_at").defaultNow().notNull(),
-});
-
 // Enhance the main guide entries table
 export const guideEntries = createTable(
 	"guide_entry",
@@ -605,6 +572,34 @@ export const guideEntries = createTable(
 	},
 );
 
+// Cross-references between entries
+export const guideCrossReferences = createTable("guide_cross_reference", {
+	id: serial("id").primaryKey(),
+	sourceEntryId: integer("source_entry_id")
+		.references(() => guideEntries.id)
+		.notNull(),
+	targetEntryId: integer("target_entry_id")
+		.references(() => guideEntries.id)
+		.notNull(),
+	context: text("context").notNull(), // Why these entries are related
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+// Entry revisions for tracking changes
+export const guideEntryRevisions = createTable("guide_entry_revision", {
+	id: serial("id").primaryKey(),
+	entryId: integer("entry_id")
+		.references(() => guideEntries.id, { onDelete: "cascade" })
+		.notNull(),
+	content: text("content").notNull(),
+	reason: text("reason").notNull(),
+	contributorId: varchar("contributor_id", { length: 255 }).references(
+		() => users.id,
+		{ onDelete: "set null" },
+	),
+	createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 // Then define relations
 export const entriesRelations = relations(guideEntries, ({ one, many }) => ({
 	category: one(guideCategories, {
@@ -616,16 +611,22 @@ export const entriesRelations = relations(guideEntries, ({ one, many }) => ({
 		references: [users.id],
 	}),
 	revisions: many(guideEntryRevisions),
-	// sourceCrossReferences: many(guideCrossReferences, {
-	// 	relationName: "sourceCrossReferences",
-	// 	fields: [guideEntries.id],
-	// 	references: [guideCrossReferences.sourceEntryId],
-	// }),
-	// targetCrossReferences: many(guideCrossReferences, {
-	// 	relationName: "targetCrossReferences",
-	// 	fields: [guideEntries.id],
-	// 	references: [guideCrossReferences.targetEntryId],
-	// }),
+	sourceCrossReferences: many(guideCrossReferences, { relationName: "sourceCrossReferences" }),
+	targetCrossReferences: many(guideCrossReferences, { relationName: "targetCrossReferences" })
+}));
+
+// Add cross-reference relations
+export const guideCrossReferencesRelations = relations(guideCrossReferences, ({ one }) => ({
+	sourceEntry: one(guideEntries, {
+		fields: [guideCrossReferences.sourceEntryId],
+		references: [guideEntries.id],
+		relationName: "sourceCrossReferences"
+	}),
+	targetEntry: one(guideEntries, {
+		fields: [guideCrossReferences.targetEntryId],
+		references: [guideEntries.id],
+		relationName: "targetCrossReferences"
+	})
 }));
 
 // Export types

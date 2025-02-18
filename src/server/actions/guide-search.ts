@@ -12,14 +12,19 @@ const generateGuideEntry = async (searchTerm: string) => {
 		throw new Error("OpenAI API key is not set.");
 	}
 
-	const prompt = `You are the Hitchhiker's Guide to the Galaxy. Write an entry about "${searchTerm}" in the style of Douglas Adams. Include:
+	const prompt = `You are the Hitchhiker's Guide to the Galaxy. Write an entry about "${searchTerm}" in the style of Douglas Adams.
 
-1. A main description (witty, slightly absurd, with British humor)
-2. A travel advisory (if applicable)
-3. Where to find it (can be completely made up)
-4. What to avoid (warnings and cautions)
-5. A fun fact (preferably something ridiculous but plausible-sounding)
-6. A subtle advertisement for a related product or service
+Format your response as a JSON object with the following structure:
+{
+  "content": "Main description (witty, slightly absurd, with British humor)",
+  "travelAdvice": "Travel advisory (if applicable)",
+  "whereToFind": "Where to find it (can be completely made up)",
+  "whatToAvoid": "Warnings and cautions",
+  "funFact": "A fun fact (preferably something ridiculous but plausible-sounding)",
+  "advertisement": "A subtle advertisement for a related product or service",
+  "reliability": number between 0-100,
+  "dangerLevel": number between 0-100
+}
 
 Keep the total length under 400 words. Make it entertaining and informative, with that distinctive Douglas Adams style of mixing profound observations with complete nonsense.`;
 
@@ -29,7 +34,7 @@ Keep the total length under 400 words. Make it entertaining and informative, wit
 			{
 				role: "system",
 				content:
-					"You are the Hitchhiker's Guide to the Galaxy, known for its witty, irreverent, and slightly absurd explanations of everything in the universe. Your entries should be both informative and entertaining, with a perfect mix of useful information and complete nonsense. Remember to maintain that distinctively British humor throughout.",
+					"You are the Hitchhiker's Guide to the Galaxy, known for its witty, irreverent, and slightly absurd explanations of everything in the universe. Your entries should be both informative and entertaining, with a perfect mix of useful information and complete nonsense. Remember to maintain that distinctively British humor throughout. Always respond with valid JSON.",
 			},
 			{
 				role: "user",

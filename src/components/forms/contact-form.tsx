@@ -18,6 +18,8 @@ import { submitContactForm } from "@/server/actions/contact";
 import { type ContactFormData, contactFormSchema } from "@/types/contact";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ContactFormProps {
 	/** Optional default values for the form */
@@ -81,7 +83,7 @@ export function ContactForm({
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className={className}>
-				<div className="grid gap-6">
+				<div className={cn("grid gap-6", form.formState.isSubmitting && "opacity-60 pointer-events-none")}>
 					{/* Name Field */}
 					<FormField
 						control={form.control}
@@ -90,7 +92,11 @@ export function ContactForm({
 							<FormItem>
 								<FormLabel>Name</FormLabel>
 								<FormControl>
-									<Input placeholder="Your name" {...field} />
+									<Input
+										placeholder="Your name"
+										{...field}
+										disabled={form.formState.isSubmitting}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -108,7 +114,11 @@ export function ContactForm({
 									<span className="text-xs text-muted-foreground">(email or phone number, optional)</span>
 								</FormLabel>
 								<FormControl>
-									<Input placeholder="your@email.com or phone number" {...field} />
+									<Input
+										placeholder="your@email.com or phone number"
+										{...field}
+										disabled={form.formState.isSubmitting}
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -127,6 +137,7 @@ export function ContactForm({
 										placeholder="Tell us how we can help..."
 										className="min-h-[150px]"
 										{...field}
+										disabled={form.formState.isSubmitting}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -144,6 +155,7 @@ export function ContactForm({
 									<Checkbox
 										checked={field.value}
 										onCheckedChange={field.onChange}
+										disabled={form.formState.isSubmitting}
 									/>
 								</FormControl>
 								<div className="space-y-1 leading-none">
@@ -162,7 +174,14 @@ export function ContactForm({
 					className="mt-8 w-full"
 					disabled={form.formState.isSubmitting}
 				>
-					{form.formState.isSubmitting ? "Sending..." : "Send Message"}
+					{form.formState.isSubmitting ? (
+						<>
+							<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+							Sending...
+						</>
+					) : (
+						"Send Message"
+					)}
 				</Button>
 			</form>
 		</Form>

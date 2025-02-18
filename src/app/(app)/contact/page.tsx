@@ -1,12 +1,11 @@
 import { ContactForm } from "@/components/forms/contact-form";
-import { SparklesCore } from "@/components/ui/sparkles";
-import { siteConfig } from "@/config/site";
-import { Boxes } from "@/components/ui/background-boxes";
-import { cn } from "@/lib/utils";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { MailIcon, MessageCircleIcon, PhoneIcon } from "lucide-react";
 import { Link } from "@/components/primitives/link-with-transition";
+import { Boxes } from "@/components/ui/background-boxes";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { routes } from "@/config/routes";
+import { siteConfig } from "@/config/site";
+import { MailIcon } from "lucide-react";
 
 export default function ContactPage() {
 	return (
@@ -43,7 +42,7 @@ export default function ContactPage() {
 								Drop us a line anytime
 							</p>
 							<Button variant="link" asChild>
-								<Link href={`mailto:${siteConfig.email.support}`}>
+								<Link href={routes.contact}>
 									{siteConfig.email.support}
 								</Link>
 							</Button>

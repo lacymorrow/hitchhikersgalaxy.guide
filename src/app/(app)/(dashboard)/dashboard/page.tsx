@@ -469,7 +469,7 @@ export default async function DashboardPage() {
 										documentation
 									</Link>{" "}
 									or{" "}
-									<Link href={routes.external.email} className="underline">
+									<Link href={routes.contact} className="underline">
 										contact support
 									</Link>
 									.

@@ -53,7 +53,7 @@ export function RootLayout({ children }: { children: ReactNode }) {
 					<JsonLd organization website />
 					<HolyLoader
 						showSpinner
-						height={"3px"}
+						height={"4px"}
 						color={"linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8)"}
 					/>
 					<PageTracker />

@@ -2,6 +2,7 @@
 
 import { Link } from "@/components/primitives/link-with-transition";
 import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 
 interface NavItem {
 	href: string;
@@ -10,15 +11,14 @@ interface NavItem {
 
 interface SidebarNavProps extends React.HTMLAttributes<HTMLElement> {
 	items: NavItem[];
-	pathname: string;
 }
 
 export function SidebarNav({
 	className,
 	items,
-	pathname,
 	...props
 }: SidebarNavProps) {
+	const pathname = usePathname();
 	return (
 		<nav
 			className={cn(

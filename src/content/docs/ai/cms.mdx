@@ -1,0 +1,57 @@
+---
+title: 'Content Management'
+description: 'CMS configuration using Payload CMS and Builder.io in ShipKit'
+---
+
+# Content Management
+
+ShipKit integrates two powerful CMS solutions:
+1. [Payload CMS](https://payloadcms.com) for headless content management
+2. [Builder.io](https://builder.io) for visual page building
+
+## Payload CMS
+
+A self-hosted headless CMS with a powerful admin interface and API.
+
+### Configuration
+
+Add these environment variables to enable Payload CMS:
+
+```env
+# Required
+PAYLOAD_SECRET=your_payload_secret_key
+DATABASE_URL=your_postgres_database_url
+
+# Optional - Disable Payload in development
+DISABLE_PAYLOAD=true
+```
+
+Get started at [Payload Cloud](https://payloadcms.com/cloud) or self-host using your own infrastructure.
+
+### Resources
+
+- [Payload Documentation](https://payloadcms.com/docs/getting-started/what-is-payload)
+- [Database Setup Guide](https://payloadcms.com/docs/database/overview)
+
+## Builder.io
+
+A visual CMS for building and optimizing digital experiences.
+
+### Configuration
+
+Add this environment variable to enable Builder.io:
+
+```env
+NEXT_PUBLIC_BUILDER_API_KEY=your_builder_api_key
+
+# Optional - Disable Builder in development
+DISABLE_BUILDER=true
+```
+
+Get your API key from the [Builder.io Dashboard](https://builder.io/account/space).
+
+### Resources
+
+- [Builder.io Documentation](https://www.builder.io/c/docs/developers)
+- [Next.js Integration Guide](https://www.builder.io/c/docs/quickstart-nextjs)
+- [Visual Editing Guide](https://www.builder.io/c/docs/guides/visual-editing)

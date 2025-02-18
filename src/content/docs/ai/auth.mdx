@@ -1,0 +1,55 @@
+---
+title: 'Authentication'
+description: 'Authentication configuration using Auth.js (NextAuth) in ShipKit'
+---
+
+# Authentication
+
+ShipKit uses [Auth.js](https://authjs.dev) (formerly NextAuth.js) for authentication, supporting multiple providers out of the box.
+
+## Supported Providers
+
+- Discord
+- GitHub
+- Google
+- Email (Passwordless)
+
+## Configuration
+
+Add these environment variables to enable authentication:
+
+```env
+# Required - Generate with `openssl rand -base64 32`
+AUTH_SECRET=your_auth_secret
+
+# Optional - Only needed in production
+AUTH_URL=https://your-production-url.com
+
+# Discord OAuth
+AUTH_DISCORD_ID=your_discord_client_id
+AUTH_DISCORD_SECRET=your_discord_client_secret
+
+# GitHub OAuth
+AUTH_GITHUB_ID=your_github_client_id
+AUTH_GITHUB_SECRET=your_github_client_secret
+
+# Google OAuth
+AUTH_GOOGLE_ID=your_google_client_id
+AUTH_GOOGLE_SECRET=your_google_client_secret
+
+# Email (Resend)
+AUTH_RESEND_KEY=your_resend_api_key
+```
+
+## Provider Setup
+
+1. **Discord**: Create an application at [Discord Developer Portal](https://discord.com/developers/applications)
+2. **GitHub**: Create an OAuth app at [GitHub Developer Settings](https://github.com/settings/developers)
+3. **Google**: Create credentials at [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+4. **Email**: Get API key from [Resend Dashboard](https://resend.com/dashboard)
+
+## Resources
+
+- [Auth.js Documentation](https://authjs.dev/getting-started/introduction)
+- [OAuth Provider Setup Guide](https://authjs.dev/getting-started/providers)
+- [Email Provider Guide](https://authjs.dev/getting-started/providers/email)

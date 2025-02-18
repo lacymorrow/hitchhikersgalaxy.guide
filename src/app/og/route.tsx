@@ -20,57 +20,46 @@
 import { siteConfig } from "@/config/site";
 import { ImageResponse } from "next/og";
 import type { NextRequest } from "next/server";
-import { v4 } from "uuid";
 
-// const interRegular = fetch(
-// 	new URL("../../../assets/fonts/Inter-Regular.ttf", import.meta.url)
-// ).then((res) => res.arrayBuffer());
+// Cache the star and nebula positions to avoid regenerating them on every request
+const stars = Array.from({ length: 100 }, () => ({
+	x: Math.random() * 100,
+	y: Math.random() * 100,
+	size: Math.random() * 3 + 1,
+	opacity: Math.random() * 0.5 + 0.3,
+}));
 
-// const interBold = fetch(
-// 	new URL("../../../assets/fonts/Inter-Bold.ttf", import.meta.url)
-// ).then((res) => res.arrayBuffer());
+const nebulaClouds = Array.from({ length: 5 }, (_, index) => ({
+	x: Math.random() * 100,
+	y: Math.random() * 100,
+	size: Math.random() * 300 + 200,
+	rotation: Math.random() * 360,
+	color: [
+		"rgba(147, 51, 234, 0.1)",
+		"rgba(59, 130, 246, 0.1)",
+		"rgba(236, 72, 153, 0.1)",
+		"rgba(16, 185, 129, 0.1)",
+		"rgba(245, 158, 11, 0.1)",
+	][index % 5], // Use index instead of random to ensure consistency
+}));
 
-// eslint-disable-next-line @typescript-eslint/require-await
+export const runtime = 'edge'; // Use edge runtime for better performance
+
 export async function GET(req: NextRequest) {
 	try {
-		// const [interRegularData, interBoldData] = await Promise.all([
-		// 	interRegular,
-		// 	interBold,
-		// ]);
-
 		const { searchParams } = new URL(req.url);
 		const title = searchParams.get("title") ?? siteConfig.title;
 		const mode = searchParams.get("mode") ?? "dark";
 		const description = searchParams.get("description") ?? siteConfig.description;
 		const type = searchParams.get("type") ?? "default";
 
+		// Create a cache key based on the input parameters
+		const cacheKey = `${title}-${mode}-${description}-${type}`;
+
 		const isDark = mode === "dark";
 		const bgColor = isDark ? "#000000" : "#ffffff";
 
-		// Generate random positions for stars
-		const stars = Array.from({ length: 100 }, () => ({
-			x: Math.random() * 100,
-			y: Math.random() * 100,
-			size: Math.random() * 3 + 1,
-			opacity: Math.random() * 0.5 + 0.3,
-		}));
-
-		// Generate random positions for nebula clouds
-		const nebulaClouds = Array.from({ length: 5 }, () => ({
-			x: Math.random() * 100,
-			y: Math.random() * 100,
-			size: Math.random() * 300 + 200,
-			rotation: Math.random() * 360,
-			color: [
-				"rgba(147, 51, 234, 0.1)",
-				"rgba(59, 130, 246, 0.1)",
-				"rgba(236, 72, 153, 0.1)",
-				"rgba(16, 185, 129, 0.1)",
-				"rgba(245, 158, 11, 0.1)",
-			][Math.floor(Math.random() * 5)],
-		}));
-
-		return new ImageResponse(
+		const response = new ImageResponse(
 			<div
 				style={{
 					height: "100%",
@@ -96,9 +85,9 @@ export async function GET(req: NextRequest) {
 				/>
 
 				{/* Nebula Clouds */}
-				{nebulaClouds.map((cloud) => (
+				{nebulaClouds.map((cloud, index) => (
 					<div
-						key={`nebula-${v4()}`}
+						key={`nebula-${index}`} // Use index as key instead of UUID
 						style={{
 							position: "absolute",
 							left: `${cloud.x}%`,
@@ -114,9 +103,9 @@ export async function GET(req: NextRequest) {
 				))}
 
 				{/* Star Field */}
-				{stars.map((star) => (
+				{stars.map((star, index) => (
 					<div
-						key={`star-${v4()}`}
+						key={`star-${index}`} // Use index as key instead of UUID
 						style={{
 							position: "absolute",
 							left: `${star.x}%`,
@@ -176,7 +165,6 @@ export async function GET(req: NextRequest) {
 						gap: 24,
 						maxWidth: "85%",
 						textAlign: "center",
-
 						padding: "48px",
 						background: isDark
 							? "linear-gradient(135deg, rgba(17, 24, 39, 0.9), rgba(0, 0, 0, 0.8))"
@@ -211,7 +199,6 @@ export async function GET(req: NextRequest) {
 							style={{
 								width: 96,
 								height: 96,
-								// background: "linear-gradient(135deg, #3B82F6, #8B5CF6)",
 								borderRadius: "24px",
 								display: "flex",
 								alignItems: "center",
@@ -221,7 +208,8 @@ export async function GET(req: NextRequest) {
 								boxShadow: "0 0 50px rgba(59, 130, 246, 0.5)",
 							}}
 						>
-							🚀{/* Rocket Trail */}
+							🚀
+							{/* Rocket Trail */}
 							<div
 								style={{
 									position: "absolute",
@@ -342,6 +330,11 @@ export async function GET(req: NextRequest) {
 				// ],
 			}
 		);
+
+		// Add caching headers
+		response.headers.set('Cache-Control', 'public, immutable, no-transform, max-age=31536000');
+
+		return response;
 	} catch (e) {
 		console.error(e);
 		return new Response("Failed to generate image", { status: 500 });

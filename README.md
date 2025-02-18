@@ -2,6 +2,8 @@
 
 Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.
 
+Made with ❤️ by [Lacy](https://lacy.sh)
+
 ## Deploy in 30 Seconds
 
 Get started with ShipKit in three easy steps:

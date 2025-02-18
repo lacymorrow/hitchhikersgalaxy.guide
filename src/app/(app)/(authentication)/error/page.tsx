@@ -20,7 +20,7 @@ const errorMap = {
 
 export default function AuthErrorPage() {
 	const searchParams = useSearchParams();
-	const error = searchParams.get("error") as Error;
+	const error = searchParams?.get("error") as Error;
 
 	return (
 		<div className="flex w-full flex-col items-center justify-center gap-8">

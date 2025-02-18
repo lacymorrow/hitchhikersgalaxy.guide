@@ -155,7 +155,6 @@ export const guideService = {
 				advertisement: entry.advertisement,
 				reliability: entry.reliability,
 				dangerLevel: entry.dangerLevel,
-				contributorId: "ai-researcher",
 				searchVector,
 				popularity: 1,
 				createdAt: new Date(),

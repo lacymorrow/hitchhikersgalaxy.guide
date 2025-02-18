@@ -95,24 +95,41 @@ export const searchGuide = async (searchTerm: string) => {
 			rateLimits.api.search,
 		);
 	} catch (error) {
+		console.error("[Guide Search] Rate limit error:", error);
 		throw new Error("Too many searches. Please try again in a minute.");
 	}
 
 	// First, try to find an existing entry
-	const existingEntry = await guideService.findExistingEntry(searchTerm);
-	if (existingEntry) {
-		return existingEntry;
+	try {
+		const existingEntry = await guideService.findExistingEntry(searchTerm);
+		if (existingEntry) {
+			return existingEntry;
+		}
+	} catch (error) {
+		console.error("[Guide Search] Database search error:", error);
+		throw new Error("Failed to search the Guide database. Please try again later.");
 	}
 
 	// If no entry exists, generate one using AI
 	try {
+		if (!openai) {
+			console.error("[Guide Search] OpenAI API key is not configured");
+			throw new Error("Our researchers are currently indisposed. Please try again later.");
+		}
+
 		const entry = await generateGuideEntry(searchTerm);
 		return await guideService.createEntry({
 			searchTerm,
 			...entry,
 		});
 	} catch (error) {
-		console.error("Error generating entry:", error);
+		console.error("[Guide Search] AI generation error:", error);
+		if (error instanceof Error) {
+			// If it's an OpenAI API error, provide a more specific message
+			if (error.message.includes("OpenAI")) {
+				throw new Error("Our AI researchers are taking a tea break. Please try again in a moment.");
+			}
+		}
 		throw new Error(
 			"Our researchers are currently indisposed in the Restaurant at the End of the Universe. Please try again later.",
 		);

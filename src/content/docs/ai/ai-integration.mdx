@@ -1,0 +1,54 @@
+---
+title: 'AI Integration'
+description: 'AI integration configuration using OpenAI and Anthropic in ShipKit'
+---
+
+# AI Integration
+
+Shipkit supports multiple AI providers for adding intelligence to your application.
+
+## Supported Providers
+
+1. [OpenAI](https://openai.com) - GPT models and embeddings
+2. [Anthropic](https://anthropic.com) - Claude models
+3. [Hugging Face](https://huggingface.co) - Open source models
+
+## Configuration
+
+Add these environment variables to enable AI functionality:
+
+```env
+# OpenAI
+OPENAI_API_KEY=your_openai_api_key
+
+# Anthropic
+ANTHROPIC_API_KEY=your_anthropic_api_key
+
+# Optional - Google AI (for future use)
+GOOGLE_CLIENT_EMAIL=your_google_client_email
+GOOGLE_PRIVATE_KEY=your_google_private_key
+```
+
+## Features
+
+- Text generation
+- Code completion
+- Image generation
+- Embeddings
+- Fine-tuning
+- Moderation
+
+## Best Practices
+
+- Use environment variables
+- Implement rate limiting
+- Handle errors gracefully
+- Cache responses
+- Monitor usage
+- Validate inputs
+
+## Resources
+
+- [OpenAI Documentation](https://platform.openai.com/docs)
+- [Anthropic Documentation](https://docs.anthropic.com)
+- [Hugging Face Documentation](https://huggingface.co/docs)

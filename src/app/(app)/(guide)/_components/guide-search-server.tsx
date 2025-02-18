@@ -6,6 +6,6 @@ interface GuideSearchServerProps {
 }
 
 export async function GuideSearchServer({ searchTerm }: GuideSearchServerProps) {
-	const results = await guideService.getSimilarSearches(searchTerm);
+	const results = await guideService?.getSimilarSearches(searchTerm);
 	return <GuideSearch results={results} />;
 }

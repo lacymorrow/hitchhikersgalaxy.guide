@@ -12,14 +12,19 @@ const generateGuideEntry = async (searchTerm: string) => {
 		throw new Error("OpenAI API key is not set.");
 	}
 
-	const prompt = `You are the Hitchhiker's Guide to the Galaxy. Write an entry about "${searchTerm}" in the style of Douglas Adams. Include:
+	const prompt = `You are the Hitchhiker's Guide to the Galaxy. Write an entry about "${searchTerm}" in the style of Douglas Adams.
 
-1. A main description (witty, slightly absurd, with British humor)
-2. A travel advisory (if applicable)
-3. Where to find it (can be completely made up)
-4. What to avoid (warnings and cautions)
-5. A fun fact (preferably something ridiculous but plausible-sounding)
-6. A subtle advertisement for a related product or service
+Format your response as a JSON object with the following structure:
+{
+  "content": "Main description (witty, slightly absurd, with British humor)",
+  "travelAdvice": "Travel advisory (if applicable)",
+  "whereToFind": "Where to find it (can be completely made up)",
+  "whatToAvoid": "Warnings and cautions",
+  "funFact": "A fun fact (preferably something ridiculous but plausible-sounding)",
+  "advertisement": "A subtle advertisement for a related product or service",
+  "reliability": number between 0-100,
+  "dangerLevel": number between 0-100
+}
 
 Keep the total length under 400 words. Make it entertaining and informative, with that distinctive Douglas Adams style of mixing profound observations with complete nonsense.`;
 
@@ -29,7 +34,7 @@ Keep the total length under 400 words. Make it entertaining and informative, wit
 			{
 				role: "system",
 				content:
-					"You are the Hitchhiker's Guide to the Galaxy, known for its witty, irreverent, and slightly absurd explanations of everything in the universe. Your entries should be both informative and entertaining, with a perfect mix of useful information and complete nonsense. Remember to maintain that distinctively British humor throughout.",
+					"You are the Hitchhiker's Guide to the Galaxy, known for its witty, irreverent, and slightly absurd explanations of everything in the universe. Your entries should be both informative and entertaining, with a perfect mix of useful information and complete nonsense. Remember to maintain that distinctively British humor throughout. Always respond with valid JSON.",
 			},
 			{
 				role: "user",
@@ -90,24 +95,41 @@ export const searchGuide = async (searchTerm: string) => {
 			rateLimits.api.search,
 		);
 	} catch (error) {
+		console.error("[Guide Search] Rate limit error:", error);
 		throw new Error("Too many searches. Please try again in a minute.");
 	}
 
 	// First, try to find an existing entry
-	const existingEntry = await guideService.findExistingEntry(searchTerm);
-	if (existingEntry) {
-		return existingEntry;
+	try {
+		const existingEntry = await guideService.findExistingEntry(searchTerm);
+		if (existingEntry) {
+			return existingEntry;
+		}
+	} catch (error) {
+		console.error("[Guide Search] Database search error:", error);
+		throw new Error("Failed to search the Guide database. Please try again later.");
 	}
 
 	// If no entry exists, generate one using AI
 	try {
+		if (!openai) {
+			console.error("[Guide Search] OpenAI API key is not configured");
+			throw new Error("Our researchers are currently indisposed. Please try again later.");
+		}
+
 		const entry = await generateGuideEntry(searchTerm);
 		return await guideService.createEntry({
 			searchTerm,
 			...entry,
 		});
 	} catch (error) {
-		console.error("Error generating entry:", error);
+		console.error("[Guide Search] AI generation error:", error);
+		if (error instanceof Error) {
+			// If it's an OpenAI API error, provide a more specific message
+			if (error.message.includes("OpenAI")) {
+				throw new Error("Our AI researchers are taking a tea break. Please try again in a moment.");
+			}
+		}
 		throw new Error(
 			"Our researchers are currently indisposed in the Restaurant at the End of the Universe. Please try again later.",
 		);

@@ -141,7 +141,7 @@ export default async function CheckoutSuccessPage({ searchParams: searchParamsPr
 				{/* Content */}
 				<div className="relative z-10 mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-center px-4 py-20">
 					<h1 className="mb-8 text-center text-xl font-bold">
-						Success
+						Checkout Success
 					</h1>
 					<div className="mb-8 text-center">
 						<h2 className="mb-2 text-4xl font-semibold">

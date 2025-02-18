@@ -93,10 +93,6 @@ export const BuyButton = () => {
 			// Setup event handlers
 			window.LemonSqueezy?.Setup({
 				eventHandler: async (event: LemonSqueezyEvent) => {
-					if (!event.event.startsWith("Checkout")) {
-						return;
-					}
-
 					// Handle checkout events
 					if (event.event === "Checkout.Success") {
 						console.log("Purchase successful!", event);
@@ -129,7 +125,6 @@ export const BuyButton = () => {
 					if (event.event === "Checkout.Closed") {
 						console.log("Checkout closed", event);
 					}
-					console.log("body scroll logic");
 					toggleBodyScroll(false); // Re-enable scrolling
 				},
 			});

@@ -4,7 +4,21 @@ import postgres from "postgres";
 import * as schema from "./schema";
 import { sql } from "drizzle-orm";
 
-const client = env.DATABASE_URL ? postgres(env.DATABASE_URL) : undefined;
+// Configure postgres with proper options to avoid stream transformation issues
+const client = env.DATABASE_URL
+	? postgres(env.DATABASE_URL, {
+			prepare: false, // Disable prepared statements which can cause transform issues
+			types: {
+				// Ensure proper handling of date types
+				date: {
+					to: 1184,
+					from: [1082, 1083, 1114, 1184],
+					serialize: (date: Date) => date.toISOString(),
+					parse: (isoString: string) => new Date(isoString),
+				},
+			},
+	  })
+	: undefined;
 
 export const db = client ? drizzle(client, { schema }) : undefined;
 

@@ -111,7 +111,7 @@ export function NavActions() {
         Edit Oct 08
       </div>
       <Button variant="ghost" size="icon" className="h-7 w-7">
-        <Star />
+        <StarFilledIcon />
       </Button>
       <Popover open={isOpen} onOpenChange={setIsOpen}>
         <PopoverTrigger asChild>

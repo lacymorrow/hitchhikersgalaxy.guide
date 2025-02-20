@@ -17,17 +17,20 @@ import type { GuideEntry } from "@/server/db/schema";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Loader2, Search, XCircle } from "lucide-react";
 import * as React from "react";
+import { useRouter } from "next/navigation";
 
 interface GuideSearchProps {
 	results: GuideEntry[];
 }
 
-export const GuideSearch = ({ results }: GuideSearchProps) => {
+export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 	const { toast } = useToast();
+	const router = useRouter();
 	const [open, setOpen] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
 	const [search, setSearch] = React.useState("");
 	const [error, setError] = React.useState<string | null>(null);
+	const [results, setResults] = React.useState<GuideEntry[]>(initialResults);
 	const debouncedSearch = useDebounce(search, 300);
 	const [selectedEntry, setSelectedEntry] = React.useState<GuideEntry | null>(null);
 	const searchInputRef = React.useRef<HTMLInputElement>(null);
@@ -44,6 +47,34 @@ export const GuideSearch = ({ results }: GuideSearchProps) => {
 		return () => document.removeEventListener("keydown", down);
 	}, []);
 
+	// Fetch similar searches when the debounced search term changes
+	React.useEffect(() => {
+		const fetchSimilarSearches = async () => {
+			if (!debouncedSearch) {
+				setResults([]);
+				return;
+			}
+
+			try {
+				setLoading(true);
+				const response = await fetch(`/api/guide/search/similar?term=${encodeURIComponent(debouncedSearch)}`);
+				if (!response.ok) {
+					throw new Error("Failed to fetch similar searches");
+				}
+				const data = await response.json();
+				setResults(data);
+				setError(null);
+			} catch (error) {
+				console.error("Error fetching similar searches:", error);
+				setResults([]);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		void fetchSimilarSearches();
+	}, [debouncedSearch]);
+
 	const onSearch = async (searchTerm: string) => {
 		setError(null);
 		try {
@@ -52,6 +83,9 @@ export const GuideSearch = ({ results }: GuideSearchProps) => {
 			if (entry) {
 				setSelectedEntry(entry);
 				setError(null);
+				// Navigate to the entry page
+				router.push(`/${entry.searchTerm}`);
+				setOpen(false);
 			}
 		} catch (error) {
 			const message =
@@ -109,30 +143,18 @@ export const GuideSearch = ({ results }: GuideSearchProps) => {
 								<XCircle className="h-6 w-6 text-destructive" />
 								<p className="text-sm text-destructive">{error}</p>
 							</div>
+						) : loading ? (
+							<div className="flex items-center justify-center gap-2 py-6">
+								<Loader2 className="h-6 w-6 animate-spin" />
+								<p className="text-sm text-muted-foreground">
+									Consulting the Guide...
+								</p>
+							</div>
 						) : (
 							"No results found."
 						)}
 					</CommandEmpty>
-					{loading ? (
-						<div className="flex items-center justify-center gap-2 py-6">
-							<Loader2 className="h-6 w-6 animate-spin" />
-							<p className="text-sm text-muted-foreground">
-								Consulting the Guide...
-							</p>
-						</div>
-					) : selectedEntry ? (
-						<div className="p-4">
-							<h3 className="mb-2 text-lg font-semibold capitalize">
-								{selectedEntry.searchTerm}
-							</h3>
-							<p className="whitespace-pre-wrap text-sm text-muted-foreground">
-								{selectedEntry.content}
-							</p>
-							<Button className="mt-4" variant="outline" onClick={handleReset}>
-								Search Again
-							</Button>
-						</div>
-					) : (
+					{!loading && !error && !selectedEntry && (
 						<CommandGroup heading="Suggestions">
 							{results.map((result) => (
 								<CommandItem
@@ -154,6 +176,19 @@ export const GuideSearch = ({ results }: GuideSearchProps) => {
 								</CommandItem>
 							)}
 						</CommandGroup>
+					)}
+					{selectedEntry && (
+						<div className="p-4">
+							<h3 className="mb-2 text-lg font-semibold capitalize">
+								{selectedEntry.searchTerm}
+							</h3>
+							<p className="whitespace-pre-wrap text-sm text-muted-foreground">
+								{selectedEntry.content}
+							</p>
+							<Button className="mt-4" variant="outline" onClick={handleReset}>
+								Search Again
+							</Button>
+						</div>
 					)}
 				</CommandList>
 			</CommandDialog>

@@ -6,43 +6,44 @@
  */
 
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
-import Link, { type LinkProps } from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useMemo } from "react";
 
-export type LinkWithRedirectProps = LinkProps & {
-  redirectTo?: string;
-  children?: ReactNode;
-  className?: string;
+export type LinkWithRedirectProps = React.ComponentProps<typeof Link> & {
+	redirectTo?: string;
+	children?: ReactNode;
+	className?: string;
 };
 
 export const LinkWithRedirect = ({
-  children,
-  href,
-  redirectTo,
-  ...props
+	children,
+	href,
+	redirectTo,
+	...props
 }: LinkWithRedirectProps) => {
-  const pathname = usePathname();
-  if (!redirectTo) {
-    redirectTo = pathname;
-  }
+	const pathname = usePathname();
 
-  const nextUrl = useMemo(() => {
-    if (redirectTo && typeof window !== "undefined") {
-      return new URL(redirectTo, window.location.origin);
-    }
-    return undefined;
-  }, [redirectTo]);
+	if (!redirectTo && pathname) {
+		redirectTo = pathname;
+	}
 
-  const params = new URLSearchParams();
-  params.set(SEARCH_PARAM_KEYS.nextUrl, String(nextUrl));
+	const nextUrl = useMemo(() => {
+		if (redirectTo && typeof window !== "undefined") {
+			return new URL(redirectTo, window.location.origin);
+		}
+		return undefined;
+	}, [redirectTo]);
 
-  return (
-    <Link
-      {...props}
-      href={`${typeof href === "string" ? href : href.href}?${String(params)}`}
-    >
-      {children}
-    </Link>
-  );
+	const params = new URLSearchParams();
+	params.set(SEARCH_PARAM_KEYS.nextUrl, String(nextUrl));
+
+	return (
+		<Link
+			{...props}
+			href={`${typeof href === "string" ? href : href.href}?${String(params)}`}
+		>
+			{children}
+		</Link>
+	);
 };

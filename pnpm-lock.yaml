@@ -282,6 +282,9 @@ importers:
       drizzle-orm:
         specifier: 0.39.3
         version: 0.39.3(@opentelemetry/api@1.9.0)(@types/pg@8.10.2)(pg@8.11.3)(postgres@3.4.5)
+      drizzle-orm-pg:
+        specifier: ^0.16.3
+        version: 0.16.3(@types/pg@8.10.2)(drizzle-orm@0.39.3(@opentelemetry/api@1.9.0)(@types/pg@8.10.2)(pg@8.11.3)(postgres@3.4.5))(pg@8.11.3)(postgres@3.4.5)
       embla-carousel-react:
         specifier: ^8.5.2
         version: 8.5.2(react@19.0.0)
@@ -289,8 +292,8 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5
       framer-motion:
-        specifier: 12.4.3
-        version: 12.4.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+        specifier: ^12.4.4
+        version: 12.4.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
       fumadocs-mdx:
         specifier: 11.2.0
         version: 11.2.0(acorn@8.14.0)(fumadocs-core@14.6.3(@types/react@19.0.8)(next@15.1.7(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(next@15.1.7(@babel/core@7.26.9)(@opentelemetry/api@1.9.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)(sass@1.77.4))
@@ -348,6 +351,9 @@ importers:
       openai:
         specifier: ^4.85.1
         version: 4.85.1(ws@8.18.0)(zod@3.24.2)
+      pluralize:
+        specifier: ^8.0.0
+        version: 8.0.0
       postgres:
         specifier: 3.4.5
         version: 3.4.5
@@ -420,9 +426,6 @@ importers:
       three:
         specifier: ^0.173.0
         version: 0.173.0
-      tsx:
-        specifier: 4.19.2
-        version: 4.19.2
       usehooks-ts:
         specifier: ^3.1.1
         version: 3.1.1(react@19.0.0)
@@ -487,6 +490,9 @@ importers:
       '@types/node':
         specifier: 22.13.4
         version: 22.13.4
+      '@types/pluralize':
+        specifier: ^0.0.33
+        version: 0.0.33
       '@types/react':
         specifier: 19.0.8
         version: 19.0.8
@@ -547,6 +553,9 @@ importers:
       tailwindcss:
         specifier: 3.4.17
         version: 3.4.17
+      tsx:
+        specifier: 4.19.2
+        version: 4.19.2
       typescript:
         specifier: ^5
         version: 5.7.3
@@ -4079,6 +4088,9 @@ packages:
   '@types/pg@8.10.2':
     resolution: {integrity: sha512-MKFs9P6nJ+LAeHLU3V0cODEOgyThJ3OAnmOlsZsxux6sfQs3HRXR5bBn7xG5DjckEFhTAxsXi7k7cd0pCMxpJw==}
 
+  '@types/pluralize@0.0.33':
+    resolution: {integrity: sha512-JOqsl+ZoCpP4e8TDke9W79FDcSgPAR0l6pixx2JHkhnRjvShyYiAYw2LVsnA7K08Y6DeOnaU6ujmENO4os/cYg==}
+
   '@types/raf@3.4.3':
     resolution: {integrity: sha512-c4YAvMedbPZ5tEyxzQdMoOhhJ4RD3rngZIdwC2/qDN3d7JpEhB6fiBRKVY1lg5B7Wk+uPBjn5f39j1/2MY1oOw==}
 
@@ -5229,6 +5241,25 @@ packages:
     resolution: {integrity: sha512-B2oJN5UkvwwNHscPWXDG5KqAixu7AUzZ3qbe++KU9SsQ+cZWR4DXEPYcvWplyFAno0dhRJECNEhNxiDmFaPGyQ==}
     hasBin: true
 
+  drizzle-orm-pg@0.16.3:
+    resolution: {integrity: sha512-KohmZ3AbDP6waq3AG6+fMK7dkCmLJo2lWThioLDluveY/6E4Y44YLaWiZKg3dtq/SaawnyMa9jOy6FqLw29xyQ==}
+    deprecated: This package is merged into drizzle-orm starting from 0.17.0. See https://www.npmjs.com/package/drizzle-orm
+    peerDependencies:
+      '@neondatabase/serverless': '>=0.1 <0.2'
+      '@types/pg': '>=8 <9'
+      drizzle-orm: '>=0.16 <0.17'
+      pg: '>=8 <9'
+      postgres: '>=3 <4'
+    peerDependenciesMeta:
+      '@neondatabase/serverless':
+        optional: true
+      '@types/pg':
+        optional: true
+      pg:
+        optional: true
+      postgres:
+        optional: true
+
   drizzle-orm@0.36.1:
     resolution: {integrity: sha512-F4hbimnMEhyWzDowQB4xEuVJJWXLHZYD7FYwvo8RImY+N7pStGqsbfmT95jDbec1s4qKmQbiuxEDZY90LRrfIw==}
     peerDependencies:
@@ -5888,8 +5919,8 @@ packages:
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
 
-  framer-motion@12.4.3:
-    resolution: {integrity: sha512-rsMeO7w3dKyNG09o3cGwSH49iHU+VgDmfSSfsX+wfkO3zDA6WWkh4sUsMXd155YROjZP+7FTIhDrBYfgZeHjKQ==}
+  framer-motion@12.4.4:
+    resolution: {integrity: sha512-JWkVwbJBgVkeZHNcnk8ififgwTF+5de9wbJnTLI+g9YqaGo75Xd5uRVDm9FR8chqRDOKcXv/71f40CGescYVmg==}
     peerDependencies:
       '@emotion/is-prop-valid': '*'
       react: 19.0.0
@@ -7078,8 +7109,8 @@ packages:
   monaco-editor@0.52.2:
     resolution: {integrity: sha512-GEQWEZmfkOGLdd3XK8ryrfWz3AIP8YymVXiPHEdewrUq7mh0qrKrfHLNCXcbB6sTnMLnOZ3ztSiKcciFUkIJwQ==}
 
-  motion-dom@12.0.0:
-    resolution: {integrity: sha512-CvYd15OeIR6kHgMdonCc1ihsaUG4MYh/wrkz8gZ3hBX/uamyZCXN9S9qJoYF03GqfTt7thTV/dxnHYX4+55vDg==}
+  motion-dom@12.4.4:
+    resolution: {integrity: sha512-D8Kjp8oqUNqxoAVmIlOH+YCMov/4koBAmG4OJs0VWfh18xkQEIsx9+S7yrXyx0XaMBEPtre6e9LiSW2Zs7vIhA==}
 
   motion-utils@12.0.0:
     resolution: {integrity: sha512-MNFiBKbbqnmvOjkPyOKgHUp3Q6oiokLkI1bEwm5QA28cxMZrv0CbbBGDNmhF6DIXsi1pCQBSs0dX8xjeER1tmA==}
@@ -13463,6 +13494,8 @@ snapshots:
       pg-protocol: 1.7.1
       pg-types: 4.0.2
 
+  '@types/pluralize@0.0.33': {}
+
   '@types/raf@3.4.3':
     optional: true
 
@@ -14639,6 +14672,14 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
+  drizzle-orm-pg@0.16.3(@types/pg@8.10.2)(drizzle-orm@0.39.3(@opentelemetry/api@1.9.0)(@types/pg@8.10.2)(pg@8.11.3)(postgres@3.4.5))(pg@8.11.3)(postgres@3.4.5):
+    dependencies:
+      drizzle-orm: 0.39.3(@opentelemetry/api@1.9.0)(@types/pg@8.10.2)(pg@8.11.3)(postgres@3.4.5)
+    optionalDependencies:
+      '@types/pg': 8.10.2
+      pg: 8.11.3
+      postgres: 3.4.5
+
   drizzle-orm@0.36.1(@opentelemetry/api@1.9.0)(@types/pg@8.10.2)(@types/react@19.0.8)(pg@8.11.3)(postgres@3.4.5)(react@19.0.0):
     optionalDependencies:
       '@opentelemetry/api': 1.9.0
@@ -15360,9 +15401,9 @@ snapshots:
 
   fraction.js@4.3.7: {}
 
-  framer-motion@12.4.3(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+  framer-motion@12.4.4(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:
-      motion-dom: 12.0.0
+      motion-dom: 12.4.4
       motion-utils: 12.0.0
       tslib: 2.8.1
     optionalDependencies:
@@ -16955,7 +16996,7 @@ snapshots:
 
   monaco-editor@0.52.2: {}
 
-  motion-dom@12.0.0:
+  motion-dom@12.4.4:
     dependencies:
       motion-utils: 12.0.0
 

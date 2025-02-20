@@ -123,7 +123,7 @@ export function DailyEventsUpdated() {
       <div className="mb-6 rounded-lg border border-blue-200 bg-blue-50 p-4">
         <div className="mb-2 flex items-center justify-between">
           <h2 className="flex items-center text-lg font-semibold text-blue-800">
-            <Star className="mr-2 h-5 w-5 text-blue-500" />
+            <StarFilledIcon className="mr-2 h-5 w-5 text-blue-500" />
             Suggested Task
           </h2>
           <span className="text-sm text-blue-600">
@@ -158,9 +158,8 @@ export function DailyEventsUpdated() {
         {todayEvents.map((event) => (
           <div
             key={event.id}
-            className={`overflow-hidden rounded-lg bg-white shadow-sm transition-all duration-300 ease-in-out ${
-              expandedEvent === event.id ? "h-32" : "h-16"
-            } ${completedEvents.includes(event.id) ? "opacity-50" : ""}`}
+            className={`overflow-hidden rounded-lg bg-white shadow-sm transition-all duration-300 ease-in-out ${expandedEvent === event.id ? "h-32" : "h-16"
+              } ${completedEvents.includes(event.id) ? "opacity-50" : ""}`}
           >
             <div
               className="flex h-16 cursor-pointer items-center justify-between px-4"
@@ -168,13 +167,12 @@ export function DailyEventsUpdated() {
             >
               <div className="flex items-center space-x-3">
                 <div
-                  className={`h-2 w-2 rounded-full ${
-                    event.type === "reminder"
+                  className={`h-2 w-2 rounded-full ${event.type === "reminder"
                       ? "bg-blue-400"
                       : event.type === "todo"
                         ? "bg-green-400"
                         : "bg-purple-400"
-                  }`}
+                    }`}
                 />
                 <span className="text-sm font-medium text-gray-700">
                   {event.date.toLocaleTimeString([], {
@@ -185,9 +183,8 @@ export function DailyEventsUpdated() {
                 <span className="text-base text-gray-900">{event.title}</span>
               </div>
               <ChevronRight
-                className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${
-                  expandedEvent === event.id ? "rotate-90 transform" : ""
-                }`}
+                className={`h-5 w-5 text-gray-400 transition-transform duration-300 ${expandedEvent === event.id ? "rotate-90 transform" : ""
+                  }`}
               />
             </div>
             {expandedEvent === event.id && (
@@ -241,9 +238,8 @@ export function DailyEventsUpdated() {
               {overdueEvents.map((event, index) => (
                 <div
                   key={event.id}
-                  className={`${getOverdueStatus(event.date)} rounded-lg p-4 ${
-                    index === 0 ? "" : "mt-2"
-                  }`}
+                  className={`${getOverdueStatus(event.date)} rounded-lg p-4 ${index === 0 ? "" : "mt-2"
+                    }`}
                 >
                   <div className="mb-2 flex items-center justify-between">
                     <span className="font-medium">{event.title}</span>

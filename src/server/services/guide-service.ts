@@ -3,20 +3,31 @@ import { guideEntries } from "@/server/db/schema";
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
 import { cache } from "react";
 import { isSSR } from "@/lib/utils/runtime";
+import pluralize from "pluralize";
 
-if (!isDatabaseInitialized()) {
-	throw new Error("Database connection not initialized");
-}
-
-// Since we've checked db is initialized, we can safely assert it's not undefined
+// Since we're in a service, we can assume the database is initialized
+// The connection is handled at the app level
 const database = db!;
+
+function normalizeSearchTerm(searchTerm: string): string {
+	// Convert to lowercase and trim
+	let normalized = searchTerm.toLowerCase().trim();
+
+	// Remove special characters and extra spaces
+	normalized = normalized.replace(/[^\w\s-]/g, "").replace(/\s+/g, " ");
+
+	// Get the singular form of the word
+	normalized = pluralize.singular(normalized);
+
+	return normalized;
+}
 
 export const guideService = {
 	getSimilarSearches: cache(async (searchTerm: string, limit = 5) => {
 		if (!searchTerm?.trim()) return [];
 
 		try {
-			const normalizedTerm = searchTerm.toLowerCase().trim();
+			const normalizedTerm = normalizeSearchTerm(searchTerm);
 
 			// Use simpler search during SSR to avoid similarity function
 			if (isSSR()) {
@@ -24,6 +35,7 @@ export const guideService = {
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
 						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
+						ilike(guideEntries.searchVector, `%${normalizedTerm}%`),
 					),
 					orderBy: [desc(guideEntries.popularity)],
 					limit,
@@ -40,9 +52,13 @@ export const guideService = {
 						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
 						ilike(guideEntries.searchVector, `%${normalizedTerm}%`),
 					),
-					sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.1`,
+					sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.3`,
 				),
-				orderBy: [desc(guideEntries.popularity)],
+				orderBy: [
+					// Order by similarity score first, then by popularity
+					sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) DESC`,
+					desc(guideEntries.popularity),
+				],
 				limit,
 				with: {
 					category: true,
@@ -76,7 +92,7 @@ export const guideService = {
 
 	findExistingEntry: async (searchTerm: string) => {
 		try {
-			const normalizedTerm = searchTerm.toLowerCase().trim();
+			const normalizedTerm = normalizeSearchTerm(searchTerm);
 
 			// Use simpler search during SSR to avoid similarity function
 			if (isSSR()) {
@@ -96,11 +112,14 @@ export const guideService = {
 				});
 			}
 
+			// Find the most similar existing entry
 			const existingEntry = await database.query.guideEntries.findFirst({
-				where: or(
-					eq(guideEntries.searchTerm, normalizedTerm),
-					ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
-				),
+				where: sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.3`,
+				orderBy: [
+					// Order by similarity score
+					sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) DESC`,
+					desc(guideEntries.popularity),
+				],
 				with: {
 					category: true,
 					sourceCrossReferences: {
@@ -146,11 +165,12 @@ export const guideService = {
 		dangerLevel: number;
 	}) => {
 		try {
-			const normalizedTerm = entry.searchTerm.toLowerCase().trim();
+			const normalizedTerm = normalizeSearchTerm(entry.searchTerm);
 
-			// Generate search vector
+			// Generate search vector with more comprehensive terms
 			const searchVector = [
 				normalizedTerm,
+				pluralize.plural(normalizedTerm), // Add plural form
 				...normalizedTerm.split(" "),
 				...entry.content.toLowerCase().split(/\W+/),
 				...entry.whereToFind.toLowerCase().split(/\W+/),

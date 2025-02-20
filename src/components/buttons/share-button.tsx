@@ -184,21 +184,6 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 
 	return (
 		<div className="relative">
-			{/* Towel reminder - positioned in a fixed height container */}
-			<div className="pointer-events-none absolute inset-x-0 -top-14 h-12 overflow-hidden">
-				<AnimatePresence>
-					{showTowel && (
-						<motion.div
-							initial={{ opacity: 0, y: 20 }}
-							animate={{ opacity: 1, y: 0 }}
-							exit={{ opacity: 0, y: -20 }}
-							className="absolute left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border border-green-500/20 bg-black px-4 py-2 text-sm text-green-500"
-						>
-							Don't forget your towel! 🧦
-						</motion.div>
-					)}
-				</AnimatePresence>
-			</div>
 
 			<Dialog open={open} onOpenChange={setOpen}>
 				<DialogTrigger asChild>

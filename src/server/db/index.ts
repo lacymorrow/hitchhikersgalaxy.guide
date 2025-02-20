@@ -7,17 +7,14 @@ import { sql } from "drizzle-orm";
 // Configure postgres with proper options to avoid stream transformation issues
 const client = env.DATABASE_URL
 	? postgres(env.DATABASE_URL, {
-			prepare: false, // Disable prepared statements which can cause transform issues
-			types: {
-				// Ensure proper handling of date types
-				date: {
-					to: 1184,
-					from: [1082, 1083, 1114, 1184],
-					serialize: (date: Date) => date.toISOString(),
-					parse: (isoString: string) => new Date(isoString),
-				},
+			max: 1, // Use a single connection to avoid transform issues
+			idle_timeout: 20, // Lower idle timeout
+			max_lifetime: 60 * 30, // 30 minutes max lifetime
+			transform: {
+				undefined: null, // Transform undefined values to null
+				...({} as Record<string, never>), // Empty transform object
 			},
-	  })
+		})
 	: undefined;
 
 export const db = client ? drizzle(client, { schema }) : undefined;

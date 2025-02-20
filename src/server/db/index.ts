@@ -23,7 +23,29 @@ export const db = client ? drizzle(client, { schema }) : undefined;
 export const isDatabaseInitialized = async () => {
 	if (!db) return false;
 	try {
+		// First check basic connectivity
 		await db.execute(sql`SELECT 1`);
+
+		// Check if pg_trgm extension exists
+		const hasExtension = await db.execute(sql`
+			SELECT EXISTS (
+				SELECT 1 FROM pg_extension WHERE extname = 'pg_trgm'
+			);
+		`);
+
+		// If extension doesn't exist, try to create it
+		if (!hasExtension[0]?.exists) {
+			try {
+				await db.execute(sql`CREATE EXTENSION IF NOT EXISTS pg_trgm`);
+				console.log("Successfully created pg_trgm extension");
+			} catch (extensionError) {
+				console.warn(
+					"Could not create pg_trgm extension. Similarity search will be disabled:",
+					extensionError
+				);
+			}
+		}
+
 		return true;
 	} catch (error) {
 		console.error("Database connection failed:", error);

@@ -9,7 +9,12 @@ import pluralize from "pluralize";
 // The connection is handled at the app level
 const database = db!;
 
-function normalizeSearchTerm(searchTerm: string): string {
+function normalizeSearchTerm(searchTerm: string | null | undefined): string {
+	// Return empty string for null/undefined/empty values
+	if (!searchTerm?.trim()) {
+		return "";
+	}
+
 	// Convert to lowercase and trim
 	let normalized = searchTerm.toLowerCase().trim();
 
@@ -28,6 +33,7 @@ export const guideService = {
 
 		try {
 			const normalizedTerm = normalizeSearchTerm(searchTerm);
+			if (!normalizedTerm) return [];
 
 			// Use simpler search during SSR to avoid similarity function
 			if (isSSR()) {
@@ -66,33 +72,50 @@ export const guideService = {
 			});
 		} catch (error) {
 			console.error("[Guide Service] Error in getSimilarSearches:", error);
-			throw error;
+			return [];
 		}
 	}),
 
 	getRecentEntries: cache(async (limit = 10) => {
-		return database.query.guideEntries.findMany({
-			orderBy: [desc(guideEntries.createdAt)],
-			limit,
-			with: {
-				category: true,
-			},
-		});
+		try {
+			return database.query.guideEntries.findMany({
+				orderBy: [desc(guideEntries.createdAt)],
+				limit,
+				with: {
+					category: true,
+				},
+			});
+		} catch (error) {
+			console.error("[Guide Service] Error in getRecentEntries:", error);
+			return [];
+		}
 	}),
 
 	getPopularEntries: cache(async (limit = 10) => {
-		return database.query.guideEntries.findMany({
-			orderBy: [desc(guideEntries.popularity)],
-			limit,
-			with: {
-				category: true,
-			},
-		});
+		try {
+			return database.query.guideEntries.findMany({
+				orderBy: [desc(guideEntries.popularity)],
+				limit,
+				with: {
+					category: true,
+				},
+			});
+		} catch (error) {
+			console.error("[Guide Service] Error in getPopularEntries:", error);
+			return [];
+		}
 	}),
 
-	findExistingEntry: async (searchTerm: string) => {
+	findExistingEntry: async (searchTerm: string | null | undefined) => {
 		try {
+			if (!searchTerm?.trim()) {
+				return null;
+			}
+
 			const normalizedTerm = normalizeSearchTerm(searchTerm);
+			if (!normalizedTerm) {
+				return null;
+			}
 
 			// Use simpler search during SSR to avoid similarity function
 			if (isSSR()) {
@@ -149,7 +172,7 @@ export const guideService = {
 			return existingEntry;
 		} catch (error) {
 			console.error("[Guide Service] Error in findExistingEntry:", error);
-			throw error;
+			return null;
 		}
 	},
 
@@ -165,7 +188,14 @@ export const guideService = {
 		dangerLevel: number;
 	}) => {
 		try {
+			if (!entry.searchTerm?.trim()) {
+				throw new Error("Search term is required");
+			}
+
 			const normalizedTerm = normalizeSearchTerm(entry.searchTerm);
+			if (!normalizedTerm) {
+				throw new Error("Invalid search term");
+			}
 
 			// Generate search vector with more comprehensive terms
 			const searchVector = [

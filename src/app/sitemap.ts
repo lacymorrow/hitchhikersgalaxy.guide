@@ -16,8 +16,8 @@ async function getContentFiles(contentDir: string): Promise<ContentFile[]> {
 		const fullPath = join(process.cwd(), "src/content", contentDir);
 		const files = await readdir(fullPath, { recursive: true });
 		return files
-			.filter((file: string | Buffer): file is string =>
-				typeof file === "string" && file.endsWith(".mdx")
+			.filter(
+				(file: string | Buffer): file is string => typeof file === "string" && file.endsWith(".mdx")
 			)
 			.map((file: string) => ({
 				slug: file.replace(/\.mdx$/, ""),
@@ -44,9 +44,7 @@ export async function generateSitemaps() {
 	];
 }
 
-export default async function sitemap({
-	id,
-}: { id: number }): Promise<MetadataRoute.Sitemap> {
+export default async function sitemap({ id }: { id: number }): Promise<MetadataRoute.Sitemap> {
 	// Marketing pages (highest priority)
 	const marketingRoutes = [
 		{
@@ -81,10 +79,7 @@ export default async function sitemap({
 
 	// Example pages (medium priority)
 	const exampleRoutes = Object.values(routes.examples)
-		.filter(
-			(route): route is string =>
-				typeof route === "string" && route !== routes.examples.root,
-		)
+		.filter((route): route is string => typeof route === "string" && route !== routes.examples.root)
 		.map((route) => ({
 			url: `${siteConfig.url}${route}`,
 			lastModified: new Date(),
@@ -119,12 +114,7 @@ export default async function sitemap({
 	switch (id) {
 		case 0:
 			// Main sitemap with static routes
-			return [
-				...marketingRoutes,
-				...docRoutes,
-				...exampleRoutes,
-				...supportRoutes,
-			];
+			return [...marketingRoutes, ...docRoutes, ...exampleRoutes, ...supportRoutes];
 		case 1: {
 			// Blog posts sitemap
 			const blogFiles = await getContentFiles("blog");
@@ -137,7 +127,7 @@ export default async function sitemap({
 						changeFrequency: "monthly" as const,
 						priority: 0.6,
 					};
-				}),
+				})
 			);
 			return blogRoutes;
 		}
@@ -153,7 +143,7 @@ export default async function sitemap({
 						changeFrequency: "weekly" as const,
 						priority: 0.7,
 					};
-				}),
+				})
 			);
 			return docsRoutes;
 		}

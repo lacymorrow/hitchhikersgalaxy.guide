@@ -1,4 +1,4 @@
-import { LoaderAtoms } from "@/components/ui/loaders/loader-atoms";
+import { LoaderAtoms } from "@/components/loaders/loader-atoms";
 import { cn } from "@/lib/utils";
 import * as React from "react";
 

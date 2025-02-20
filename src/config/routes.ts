@@ -154,7 +154,7 @@ export const routes = {
 
 	// External links
 	external: {
-		shipkit: siteConfig.url,
+		shipkit: "https://shipkit.io",
 		bones: "https://bones.sh",
 		log: "https://log.bones.sh",
 		ui: "https://ui.bones.sh",

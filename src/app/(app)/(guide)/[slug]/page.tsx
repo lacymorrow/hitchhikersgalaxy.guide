@@ -1,10 +1,8 @@
 import { guideService } from "@/server/services/guide-service";
 import { notFound } from "next/navigation";
-import { BookOpen, MapIcon, Shield, ChevronLeft } from "lucide-react";
+import { BookOpen, MapIcon, Shield } from "lucide-react";
 import { ShareButton } from "@/components/buttons/share-button";
 import { StarFilledIcon } from "@radix-ui/react-icons";
-import { Link } from "@/components/primitives/link-with-transition";
-import { motion } from "framer-motion";
 
 export default async function GuidePage({
     params,
@@ -20,30 +18,6 @@ export default async function GuidePage({
 
     return (
         <div className="container relative min-h-screen max-w-4xl py-6 lg:py-10">
-            {/* Back button that peeks out */}
-            <div className="absolute -left-4 top-8 z-10 lg:-left-8">
-                <Link
-                    href="/"
-                    className="group flex items-center gap-2 rounded-r-lg border border-l-0 border-green-500/20 bg-black px-3 py-2 font-mono text-sm text-green-500/60 transition-all hover:border-green-500/40 hover:text-green-500 hover:shadow-[0_0_20px_rgba(34,197,94,0.2)]"
-                >
-                    <motion.div
-                        animate={{
-                            x: [0, -4, 0],
-                        }}
-                        transition={{
-                            duration: 1.5,
-                            repeat: Infinity,
-                            ease: "easeInOut",
-                        }}
-                    >
-                        <ChevronLeft className="h-4 w-4" />
-                    </motion.div>
-                    <span className="opacity-0 transition-opacity group-hover:opacity-100">
-                        Back to Guide
-                    </span>
-                </Link>
-            </div>
-
             {/* Electronic book frame */}
             <div className="relative rounded-lg border-4 border-green-500 bg-black p-6 shadow-[0_0_50px_rgba(34,197,94,0.2)]">
                 {/* Screen interface */}

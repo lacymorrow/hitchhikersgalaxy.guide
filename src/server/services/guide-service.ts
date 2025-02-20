@@ -9,6 +9,23 @@ import pluralize from "pluralize";
 // The connection is handled at the app level
 const database = db!;
 
+// Track if similarity search is available
+let hasSimilaritySearch: boolean | null = null;
+
+async function checkSimilaritySearch() {
+	if (hasSimilaritySearch !== null) return hasSimilaritySearch;
+
+	try {
+		// Try a simple similarity query
+		await database.execute(sql`SELECT similarity('test', 'test')`);
+		hasSimilaritySearch = true;
+	} catch (error) {
+		console.warn("Similarity search not available, falling back to basic search");
+		hasSimilaritySearch = false;
+	}
+	return hasSimilaritySearch;
+}
+
 function normalizeSearchTerm(searchTerm: string | null | undefined): string {
 	// Return empty string for null/undefined/empty values
 	if (!searchTerm?.trim()) {
@@ -35,13 +52,13 @@ export const guideService = {
 			const normalizedTerm = normalizeSearchTerm(searchTerm);
 			if (!normalizedTerm) return [];
 
-			// Use simpler search during SSR to avoid similarity function
-			if (isSSR()) {
+			// Always use basic search during SSR or if similarity search isn't available
+			if (isSSR() || !(await checkSimilaritySearch())) {
 				return database.query.guideEntries.findMany({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
 						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
-						ilike(guideEntries.searchVector, `%${normalizedTerm}%`),
+						ilike(guideEntries.searchVector, `%${normalizedTerm}%`)
 					),
 					orderBy: [desc(guideEntries.popularity)],
 					limit,
@@ -56,9 +73,9 @@ export const guideService = {
 				where: and(
 					or(
 						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
-						ilike(guideEntries.searchVector, `%${normalizedTerm}%`),
+						ilike(guideEntries.searchVector, `%${normalizedTerm}%`)
 					),
-					sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.3`,
+					sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.3`
 				),
 				orderBy: [
 					// Order by similarity score first, then by popularity
@@ -117,12 +134,12 @@ export const guideService = {
 				return null;
 			}
 
-			// Use simpler search during SSR to avoid similarity function
-			if (isSSR()) {
+			// Always use basic search during SSR or if similarity search isn't available
+			if (isSSR() || !(await checkSimilaritySearch())) {
 				return database.query.guideEntries.findFirst({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
-						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
+						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`)
 					),
 					with: {
 						category: true,

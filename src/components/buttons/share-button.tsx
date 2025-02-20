@@ -11,10 +11,65 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Share2, Copy, Twitter, Facebook, Rocket, Share } from "lucide-react";
+import { Share2, Copy, Facebook, Rocket, Share } from "lucide-react";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { guideQuotes } from "@/lib/constants/quotes";
+
+// Custom X (formerly Twitter) icon
+function XIcon({ className }: { className?: string }) {
+	return (
+		<svg
+			viewBox="0 0 24 24"
+			className={className}
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		>
+			<path d="M4 4l11.733 16h4.267l-11.733-16z" />
+			<path d="M4 20l6.768-8.309" />
+			<path d="M13.267 11.691L20 4" />
+		</svg>
+	);
+}
+
+// Custom TikTok icon
+function TikTokIcon({ className }: { className?: string }) {
+	return (
+		<svg
+			viewBox="0 0 24 24"
+			className={className}
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		>
+			<path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+		</svg>
+	);
+}
+
+// Custom Bluesky icon
+function BlueskyIcon({ className }: { className?: string }) {
+	return (
+		<svg
+			viewBox="0 0 24 24"
+			className={className}
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		>
+			<path d="M12 4L4 8l8 4 8-4-8-4z" />
+			<path d="M4 12l8 4 8-4" />
+			<path d="M4 16l8 4 8-4" />
+		</svg>
+	);
+}
 
 interface ShareButtonProps {
 	title?: string;
@@ -105,11 +160,19 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 
 		let shareLink = "";
 		switch (platform) {
-			case "twitter":
-				shareLink = `https://twitter.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
+			case "x":
+				shareLink = `https://x.com/intent/tweet?text=${encodedText}&url=${encodedUrl}`;
 				break;
 			case "facebook":
 				shareLink = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
+				break;
+			case "tiktok":
+				// TikTok doesn't have a direct share URL, but we can open the app/website
+				shareLink = `https://www.tiktok.com/upload?url=${encodedUrl}`;
+				break;
+			case "bluesky":
+				// Bluesky doesn't have a web share URL yet, but we can open the app
+				shareLink = `https://bsky.app/intent/post?text=${encodedText}%20${encodedUrl}`;
 				break;
 			default:
 				return;
@@ -256,7 +319,7 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 							<Button
 								variant="outline"
 								className="group flex-1 border-green-500 text-green-500 hover:bg-green-500/10"
-								onClick={() => handleShare("twitter")}
+								onClick={() => handleShare("x")}
 							>
 								<motion.div
 									animate={{
@@ -268,9 +331,9 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 										repeatDelay: 2,
 									}}
 								>
-									<Twitter className="mr-2 h-4 w-4" />
+									<XIcon className="mr-2 h-4 w-4" />
 								</motion.div>
-								Twitter
+								X
 							</Button>
 							<Button
 								variant="outline"
@@ -290,6 +353,44 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 									<Facebook className="mr-2 h-4 w-4" />
 								</motion.div>
 								Facebook
+							</Button>
+							<Button
+								variant="outline"
+								className="group flex-1 border-green-500 text-green-500 hover:bg-green-500/10"
+								onClick={() => handleShare("tiktok")}
+							>
+								<motion.div
+									animate={{
+										rotate: [0, -10, 10, 0],
+									}}
+									transition={{
+										duration: 1,
+										repeat: Infinity,
+										repeatDelay: 2,
+									}}
+								>
+									<TikTokIcon className="mr-2 h-4 w-4" />
+								</motion.div>
+								TikTok
+							</Button>
+							<Button
+								variant="outline"
+								className="group flex-1 border-green-500 text-green-500 hover:bg-green-500/10"
+								onClick={() => handleShare("bluesky")}
+							>
+								<motion.div
+									animate={{
+										rotate: [0, -10, 10, 0],
+									}}
+									transition={{
+										duration: 1,
+										repeat: Infinity,
+										repeatDelay: 2,
+									}}
+								>
+									<BlueskyIcon className="mr-2 h-4 w-4" />
+								</motion.div>
+								Bluesky
 							</Button>
 						</motion.div>
 					</div>

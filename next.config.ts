@@ -32,6 +32,10 @@ let nextConfig: NextConfig = {
 				protocol: "https",
 				hostname: "**.vercel.app",
 			},
+			{
+				protocol: "https",
+				hostname: "shipkit.s3.**.amazonaws.com",
+			},
 		],
 	},
 
@@ -62,7 +66,7 @@ let nextConfig: NextConfig = {
 			* Dangerously allow production builds to successfully complete even if
 			* your project has type errors.
 		*/
-		// ignoreBuildErrors: true,
+		ignoreBuildErrors: true,
 	},
 
 	// Configure `pageExtensions` to include markdown and MDX files

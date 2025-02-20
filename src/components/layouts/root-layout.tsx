@@ -12,9 +12,14 @@ import HolyLoader from "holy-loader";
 import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "next-themes";
 import { ViewTransitions } from "next-view-transitions";
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { PageTracker } from "react-page-tracker";
 import { WebVitals } from "../primitives/web-vitals";
+import { JsonLd } from "@/components/primitives/json-ld";
+import { Analytics } from "@vercel/analytics/react";
+import { ErrorToast } from "@/components/primitives/error-toast";
+import { PostHogProvider } from "@/lib/posthog/posthog-provider";
+import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 
 const fontSerif = FontSerif({
 	weight: ["400", "500", "600", "700"],
@@ -45,15 +50,30 @@ export function RootLayout({ children }: { children: ReactNode }) {
 						fontSerif.variable
 					)}
 				>
+					<JsonLd organization website />
+					<HolyLoader
+						showSpinner
+						height={"4px"}
+						color={"linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8)"}
+					/>
+					<PageTracker />
 					<SessionProvider>
 						<TRPCReactProvider>
 							<ThemeProvider attribute="class" defaultTheme="dark">
 								<TooltipProvider delayDuration={100}>
-									{/* Content */}
-									{children}
+									<AnalyticsProvider>
+										{/* Content */}
+										{children}
 
-									{/* Toast - Display messages to the user */}
-									<SonnerToaster />
+
+										{/* Toast - Display messages to the user */}
+										<SonnerToaster />
+
+										{/* Error Toast - Display error messages to the user based on search params */}
+										<Suspense>
+											<ErrorToast />
+										</Suspense>
+									</AnalyticsProvider>
 								</TooltipProvider>
 							</ThemeProvider>
 						</TRPCReactProvider>

@@ -2,7 +2,7 @@
 
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
-import Link from "next/link";
+import { Link } from "@/components/primitives/link-with-transition";
 import { useSearchParams } from "next/navigation";
 
 enum Error {
@@ -20,7 +20,7 @@ const errorMap = {
 
 export default function AuthErrorPage() {
 	const searchParams = useSearchParams();
-	const error = searchParams.get("error") as Error;
+	const error = searchParams?.get("error") as Error;
 
 	return (
 		<div className="flex w-full flex-col items-center justify-center gap-8">
@@ -34,6 +34,7 @@ export default function AuthErrorPage() {
 				<div className="font-normal text-gray-700 dark:text-gray-400">
 					{errorMap[error] || "Please contact us if this error persists."}
 				</div>
+
 			</a>
 
 			<Link href={routes.home} className={buttonVariants({ size: "lg" })}>

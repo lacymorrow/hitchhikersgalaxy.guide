@@ -1,11 +1,11 @@
 {
-  "id": "fac5abe5-84d2-4abc-ad8c-dc937d3b29d5",
+  "id": "94918457-6f03-4840-862d-2636be0ffefe",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
-    "public.shipkit_account": {
-      "name": "shipkit_account",
+    "public.guide_account": {
+      "name": "guide_account",
       "schema": "",
       "columns": {
         "userId": {
@@ -93,10 +93,10 @@
         }
       },
       "foreignKeys": {
-        "shipkit_account_userId_shipkit_user_id_fk": {
-          "name": "shipkit_account_userId_shipkit_user_id_fk",
-          "tableFrom": "shipkit_account",
-          "tableTo": "shipkit_user",
+        "guide_account_userId_guide_user_id_fk": {
+          "name": "guide_account_userId_guide_user_id_fk",
+          "tableFrom": "guide_account",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "userId"
           ],
@@ -108,8 +108,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "shipkit_account_provider_providerAccountId_pk": {
-          "name": "shipkit_account_provider_providerAccountId_pk",
+        "guide_account_provider_providerAccountId_pk": {
+          "name": "guide_account_provider_providerAccountId_pk",
           "columns": [
             "provider",
             "providerAccountId"
@@ -121,8 +121,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_api_key": {
-      "name": "shipkit_api_key",
+    "public.guide_api_key": {
+      "name": "guide_api_key",
       "schema": "",
       "columns": {
         "id": {
@@ -194,10 +194,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_api_key_user_id_shipkit_user_id_fk": {
-          "name": "shipkit_api_key_user_id_shipkit_user_id_fk",
-          "tableFrom": "shipkit_api_key",
-          "tableTo": "shipkit_user",
+        "guide_api_key_user_id_guide_user_id_fk": {
+          "name": "guide_api_key_user_id_guide_user_id_fk",
+          "tableFrom": "guide_api_key",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "user_id"
           ],
@@ -207,10 +207,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "shipkit_api_key_project_id_shipkit_project_id_fk": {
-          "name": "shipkit_api_key_project_id_shipkit_project_id_fk",
-          "tableFrom": "shipkit_api_key",
-          "tableTo": "shipkit_project",
+        "guide_api_key_project_id_guide_project_id_fk": {
+          "name": "guide_api_key_project_id_guide_project_id_fk",
+          "tableFrom": "guide_api_key",
+          "tableTo": "guide_project",
           "columnsFrom": [
             "project_id"
           ],
@@ -227,8 +227,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_authenticator": {
-      "name": "shipkit_authenticator",
+    "public.guide_authenticator": {
+      "name": "guide_authenticator",
       "schema": "",
       "columns": {
         "credentialID": {
@@ -282,10 +282,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_authenticator_userId_shipkit_user_id_fk": {
-          "name": "shipkit_authenticator_userId_shipkit_user_id_fk",
-          "tableFrom": "shipkit_authenticator",
-          "tableTo": "shipkit_user",
+        "guide_authenticator_userId_guide_user_id_fk": {
+          "name": "guide_authenticator_userId_guide_user_id_fk",
+          "tableFrom": "guide_authenticator",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "userId"
           ],
@@ -297,8 +297,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "shipkit_authenticator_userId_credentialID_pk": {
-          "name": "shipkit_authenticator_userId_credentialID_pk",
+        "guide_authenticator_userId_credentialID_pk": {
+          "name": "guide_authenticator_userId_credentialID_pk",
           "columns": [
             "userId",
             "credentialID"
@@ -306,8 +306,8 @@
         }
       },
       "uniqueConstraints": {
-        "shipkit_authenticator_credentialID_unique": {
-          "name": "shipkit_authenticator_credentialID_unique",
+        "guide_authenticator_credentialID_unique": {
+          "name": "guide_authenticator_credentialID_unique",
           "nullsNotDistinct": false,
           "columns": [
             "credentialID"
@@ -318,8 +318,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_feedback": {
-      "name": "shipkit_feedback",
+    "public.guide_feedback": {
+      "name": "guide_feedback",
       "schema": "",
       "columns": {
         "id": {
@@ -376,8 +376,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_guide_category": {
-      "name": "shipkit_guide_category",
+    "public.guide_guide_category": {
+      "name": "guide_guide_category",
       "schema": "",
       "columns": {
         "id": {
@@ -427,8 +427,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_guide_cross_reference": {
-      "name": "shipkit_guide_cross_reference",
+    "public.guide_guide_cross_reference": {
+      "name": "guide_guide_cross_reference",
       "schema": "",
       "columns": {
         "id": {
@@ -465,10 +465,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_guide_cross_reference_source_entry_id_shipkit_guide_entry_id_fk": {
-          "name": "shipkit_guide_cross_reference_source_entry_id_shipkit_guide_entry_id_fk",
-          "tableFrom": "shipkit_guide_cross_reference",
-          "tableTo": "shipkit_guide_entry",
+        "guide_guide_cross_reference_source_entry_id_guide_guide_entry_id_fk": {
+          "name": "guide_guide_cross_reference_source_entry_id_guide_guide_entry_id_fk",
+          "tableFrom": "guide_guide_cross_reference",
+          "tableTo": "guide_guide_entry",
           "columnsFrom": [
             "source_entry_id"
           ],
@@ -478,10 +478,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "shipkit_guide_cross_reference_target_entry_id_shipkit_guide_entry_id_fk": {
-          "name": "shipkit_guide_cross_reference_target_entry_id_shipkit_guide_entry_id_fk",
-          "tableFrom": "shipkit_guide_cross_reference",
-          "tableTo": "shipkit_guide_entry",
+        "guide_guide_cross_reference_target_entry_id_guide_guide_entry_id_fk": {
+          "name": "guide_guide_cross_reference_target_entry_id_guide_guide_entry_id_fk",
+          "tableFrom": "guide_guide_cross_reference",
+          "tableTo": "guide_guide_entry",
           "columnsFrom": [
             "target_entry_id"
           ],
@@ -498,8 +498,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_guide_entry": {
-      "name": "shipkit_guide_entry",
+    "public.guide_guide_entry": {
+      "name": "guide_guide_entry",
       "schema": "",
       "columns": {
         "id": {
@@ -668,10 +668,10 @@
         }
       },
       "foreignKeys": {
-        "shipkit_guide_entry_category_id_shipkit_guide_category_id_fk": {
-          "name": "shipkit_guide_entry_category_id_shipkit_guide_category_id_fk",
-          "tableFrom": "shipkit_guide_entry",
-          "tableTo": "shipkit_guide_category",
+        "guide_guide_entry_category_id_guide_guide_category_id_fk": {
+          "name": "guide_guide_entry_category_id_guide_guide_category_id_fk",
+          "tableFrom": "guide_guide_entry",
+          "tableTo": "guide_guide_category",
           "columnsFrom": [
             "category_id"
           ],
@@ -681,10 +681,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "shipkit_guide_entry_contributor_id_shipkit_user_id_fk": {
-          "name": "shipkit_guide_entry_contributor_id_shipkit_user_id_fk",
-          "tableFrom": "shipkit_guide_entry",
-          "tableTo": "shipkit_user",
+        "guide_guide_entry_contributor_id_guide_user_id_fk": {
+          "name": "guide_guide_entry_contributor_id_guide_user_id_fk",
+          "tableFrom": "guide_guide_entry",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "contributor_id"
           ],
@@ -701,8 +701,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_guide_entry_revision": {
-      "name": "shipkit_guide_entry_revision",
+    "public.guide_guide_entry_revision": {
+      "name": "guide_guide_entry_revision",
       "schema": "",
       "columns": {
         "id": {
@@ -745,10 +745,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_guide_entry_revision_entry_id_shipkit_guide_entry_id_fk": {
-          "name": "shipkit_guide_entry_revision_entry_id_shipkit_guide_entry_id_fk",
-          "tableFrom": "shipkit_guide_entry_revision",
-          "tableTo": "shipkit_guide_entry",
+        "guide_guide_entry_revision_entry_id_guide_guide_entry_id_fk": {
+          "name": "guide_guide_entry_revision_entry_id_guide_guide_entry_id_fk",
+          "tableFrom": "guide_guide_entry_revision",
+          "tableTo": "guide_guide_entry",
           "columnsFrom": [
             "entry_id"
           ],
@@ -758,10 +758,10 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "shipkit_guide_entry_revision_contributor_id_shipkit_user_id_fk": {
-          "name": "shipkit_guide_entry_revision_contributor_id_shipkit_user_id_fk",
-          "tableFrom": "shipkit_guide_entry_revision",
-          "tableTo": "shipkit_user",
+        "guide_guide_entry_revision_contributor_id_guide_user_id_fk": {
+          "name": "guide_guide_entry_revision_contributor_id_guide_user_id_fk",
+          "tableFrom": "guide_guide_entry_revision",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "contributor_id"
           ],
@@ -778,8 +778,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_log": {
-      "name": "shipkit_log",
+    "public.guide_log": {
+      "name": "guide_log",
       "schema": "",
       "columns": {
         "id": {
@@ -834,10 +834,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_log_api_key_id_shipkit_api_key_id_fk": {
-          "name": "shipkit_log_api_key_id_shipkit_api_key_id_fk",
-          "tableFrom": "shipkit_log",
-          "tableTo": "shipkit_api_key",
+        "guide_log_api_key_id_guide_api_key_id_fk": {
+          "name": "guide_log_api_key_id_guide_api_key_id_fk",
+          "tableFrom": "guide_log",
+          "tableTo": "guide_api_key",
           "columnsFrom": [
             "api_key_id"
           ],
@@ -854,8 +854,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_notification_channel": {
-      "name": "shipkit_notification_channel",
+    "public.guide_notification_channel": {
+      "name": "guide_notification_channel",
       "schema": "",
       "columns": {
         "id": {
@@ -907,10 +907,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_notification_channel_user_id_shipkit_user_id_fk": {
-          "name": "shipkit_notification_channel_user_id_shipkit_user_id_fk",
-          "tableFrom": "shipkit_notification_channel",
-          "tableTo": "shipkit_user",
+        "guide_notification_channel_user_id_guide_user_id_fk": {
+          "name": "guide_notification_channel_user_id_guide_user_id_fk",
+          "tableFrom": "guide_notification_channel",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "user_id"
           ],
@@ -927,8 +927,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_notification_history": {
-      "name": "shipkit_notification_history",
+    "public.guide_notification_history": {
+      "name": "guide_notification_history",
       "schema": "",
       "columns": {
         "id": {
@@ -1005,10 +1005,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_notification_history_user_id_shipkit_user_id_fk": {
-          "name": "shipkit_notification_history_user_id_shipkit_user_id_fk",
-          "tableFrom": "shipkit_notification_history",
-          "tableTo": "shipkit_user",
+        "guide_notification_history_user_id_guide_user_id_fk": {
+          "name": "guide_notification_history_user_id_guide_user_id_fk",
+          "tableFrom": "guide_notification_history",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "user_id"
           ],
@@ -1025,8 +1025,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_notification_preference": {
-      "name": "shipkit_notification_preference",
+    "public.guide_notification_preference": {
+      "name": "guide_notification_preference",
       "schema": "",
       "columns": {
         "id": {
@@ -1097,10 +1097,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_notification_preference_user_id_shipkit_user_id_fk": {
-          "name": "shipkit_notification_preference_user_id_shipkit_user_id_fk",
-          "tableFrom": "shipkit_notification_preference",
-          "tableTo": "shipkit_user",
+        "guide_notification_preference_user_id_guide_user_id_fk": {
+          "name": "guide_notification_preference_user_id_guide_user_id_fk",
+          "tableFrom": "guide_notification_preference",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "user_id"
           ],
@@ -1117,8 +1117,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_notification_template": {
-      "name": "shipkit_notification_template",
+    "public.guide_notification_template": {
+      "name": "guide_notification_template",
       "schema": "",
       "columns": {
         "id": {
@@ -1201,8 +1201,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_payment": {
-      "name": "shipkit_payment",
+    "public.guide_payment": {
+      "name": "guide_payment",
       "schema": "",
       "columns": {
         "id": {
@@ -1264,8 +1264,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_permission": {
-      "name": "shipkit_permission",
+    "public.guide_permission": {
+      "name": "guide_permission",
       "schema": "",
       "columns": {
         "id": {
@@ -1320,8 +1320,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_plan": {
-      "name": "shipkit_plan",
+    "public.guide_plan": {
+      "name": "guide_plan",
       "schema": "",
       "columns": {
         "id": {
@@ -1408,8 +1408,8 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "shipkit_plan_variantId_unique": {
-          "name": "shipkit_plan_variantId_unique",
+        "guide_plan_variantId_unique": {
+          "name": "guide_plan_variantId_unique",
           "nullsNotDistinct": false,
           "columns": [
             "variantId"
@@ -1420,8 +1420,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_post": {
-      "name": "shipkit_post",
+    "public.guide_post": {
+      "name": "guide_post",
       "schema": "",
       "columns": {
         "id": {
@@ -1489,10 +1489,10 @@
         }
       },
       "foreignKeys": {
-        "shipkit_post_createdById_shipkit_user_id_fk": {
-          "name": "shipkit_post_createdById_shipkit_user_id_fk",
-          "tableFrom": "shipkit_post",
-          "tableTo": "shipkit_user",
+        "guide_post_createdById_guide_user_id_fk": {
+          "name": "guide_post_createdById_guide_user_id_fk",
+          "tableFrom": "guide_post",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "createdById"
           ],
@@ -1509,8 +1509,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_project_member": {
-      "name": "shipkit_project_member",
+    "public.guide_project_member": {
+      "name": "guide_project_member",
       "schema": "",
       "columns": {
         "id": {
@@ -1553,10 +1553,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_project_member_project_id_shipkit_project_id_fk": {
-          "name": "shipkit_project_member_project_id_shipkit_project_id_fk",
-          "tableFrom": "shipkit_project_member",
-          "tableTo": "shipkit_project",
+        "guide_project_member_project_id_guide_project_id_fk": {
+          "name": "guide_project_member_project_id_guide_project_id_fk",
+          "tableFrom": "guide_project_member",
+          "tableTo": "guide_project",
           "columnsFrom": [
             "project_id"
           ],
@@ -1566,10 +1566,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "shipkit_project_member_user_id_shipkit_user_id_fk": {
-          "name": "shipkit_project_member_user_id_shipkit_user_id_fk",
-          "tableFrom": "shipkit_project_member",
-          "tableTo": "shipkit_user",
+        "guide_project_member_user_id_guide_user_id_fk": {
+          "name": "guide_project_member_user_id_guide_user_id_fk",
+          "tableFrom": "guide_project_member",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "user_id"
           ],
@@ -1586,8 +1586,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_project": {
-      "name": "shipkit_project",
+    "public.guide_project": {
+      "name": "guide_project",
       "schema": "",
       "columns": {
         "id": {
@@ -1630,10 +1630,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_project_team_id_shipkit_team_id_fk": {
-          "name": "shipkit_project_team_id_shipkit_team_id_fk",
-          "tableFrom": "shipkit_project",
-          "tableTo": "shipkit_team",
+        "guide_project_team_id_guide_team_id_fk": {
+          "name": "guide_project_team_id_guide_team_id_fk",
+          "tableFrom": "guide_project",
+          "tableTo": "guide_team",
           "columnsFrom": [
             "team_id"
           ],
@@ -1650,8 +1650,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_role_permission": {
-      "name": "shipkit_role_permission",
+    "public.guide_role_permission": {
+      "name": "guide_role_permission",
       "schema": "",
       "columns": {
         "role_id": {
@@ -1676,10 +1676,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_role_permission_role_id_shipkit_role_id_fk": {
-          "name": "shipkit_role_permission_role_id_shipkit_role_id_fk",
-          "tableFrom": "shipkit_role_permission",
-          "tableTo": "shipkit_role",
+        "guide_role_permission_role_id_guide_role_id_fk": {
+          "name": "guide_role_permission_role_id_guide_role_id_fk",
+          "tableFrom": "guide_role_permission",
+          "tableTo": "guide_role",
           "columnsFrom": [
             "role_id"
           ],
@@ -1689,10 +1689,10 @@
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
-        "shipkit_role_permission_permission_id_shipkit_permission_id_fk": {
-          "name": "shipkit_role_permission_permission_id_shipkit_permission_id_fk",
-          "tableFrom": "shipkit_role_permission",
-          "tableTo": "shipkit_permission",
+        "guide_role_permission_permission_id_guide_permission_id_fk": {
+          "name": "guide_role_permission_permission_id_guide_permission_id_fk",
+          "tableFrom": "guide_role_permission",
+          "tableTo": "guide_permission",
           "columnsFrom": [
             "permission_id"
           ],
@@ -1704,8 +1704,8 @@
         }
       },
       "compositePrimaryKeys": {
-        "shipkit_role_permission_role_id_permission_id_pk": {
-          "name": "shipkit_role_permission_role_id_permission_id_pk",
+        "guide_role_permission_role_id_permission_id_pk": {
+          "name": "guide_role_permission_role_id_permission_id_pk",
           "columns": [
             "role_id",
             "permission_id"
@@ -1717,8 +1717,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_role": {
-      "name": "shipkit_role",
+    "public.guide_role": {
+      "name": "guide_role",
       "schema": "",
       "columns": {
         "id": {
@@ -1768,8 +1768,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_session": {
-      "name": "shipkit_session",
+    "public.guide_session": {
+      "name": "guide_session",
       "schema": "",
       "columns": {
         "sessionToken": {
@@ -1793,10 +1793,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_session_userId_shipkit_user_id_fk": {
-          "name": "shipkit_session_userId_shipkit_user_id_fk",
-          "tableFrom": "shipkit_session",
-          "tableTo": "shipkit_user",
+        "guide_session_userId_guide_user_id_fk": {
+          "name": "guide_session_userId_guide_user_id_fk",
+          "tableFrom": "guide_session",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "userId"
           ],
@@ -1813,8 +1813,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_team_member": {
-      "name": "shipkit_team_member",
+    "public.guide_team_member": {
+      "name": "guide_team_member",
       "schema": "",
       "columns": {
         "id": {
@@ -1857,10 +1857,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_team_member_user_id_shipkit_user_id_fk": {
-          "name": "shipkit_team_member_user_id_shipkit_user_id_fk",
-          "tableFrom": "shipkit_team_member",
-          "tableTo": "shipkit_user",
+        "guide_team_member_user_id_guide_user_id_fk": {
+          "name": "guide_team_member_user_id_guide_user_id_fk",
+          "tableFrom": "guide_team_member",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "user_id"
           ],
@@ -1870,10 +1870,10 @@
           "onDelete": "no action",
           "onUpdate": "no action"
         },
-        "shipkit_team_member_team_id_shipkit_team_id_fk": {
-          "name": "shipkit_team_member_team_id_shipkit_team_id_fk",
-          "tableFrom": "shipkit_team_member",
-          "tableTo": "shipkit_team",
+        "guide_team_member_team_id_guide_team_id_fk": {
+          "name": "guide_team_member_team_id_guide_team_id_fk",
+          "tableFrom": "guide_team_member",
+          "tableTo": "guide_team",
           "columnsFrom": [
             "team_id"
           ],
@@ -1890,8 +1890,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_team": {
-      "name": "shipkit_team",
+    "public.guide_team": {
+      "name": "guide_team",
       "schema": "",
       "columns": {
         "id": {
@@ -1942,8 +1942,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_temporary_link": {
-      "name": "shipkit_temporary_link",
+    "public.guide_temporary_link": {
+      "name": "guide_temporary_link",
       "schema": "",
       "columns": {
         "id": {
@@ -1992,10 +1992,10 @@
       },
       "indexes": {},
       "foreignKeys": {
-        "shipkit_temporary_link_user_id_shipkit_user_id_fk": {
-          "name": "shipkit_temporary_link_user_id_shipkit_user_id_fk",
-          "tableFrom": "shipkit_temporary_link",
-          "tableTo": "shipkit_user",
+        "guide_temporary_link_user_id_guide_user_id_fk": {
+          "name": "guide_temporary_link_user_id_guide_user_id_fk",
+          "tableFrom": "guide_temporary_link",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "user_id"
           ],
@@ -2012,8 +2012,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_user_file": {
-      "name": "shipkit_user_file",
+    "public.guide_user_file": {
+      "name": "guide_user_file",
       "schema": "",
       "columns": {
         "id": {
@@ -2072,10 +2072,10 @@
         }
       },
       "foreignKeys": {
-        "shipkit_user_file_user_id_shipkit_user_id_fk": {
-          "name": "shipkit_user_file_user_id_shipkit_user_id_fk",
-          "tableFrom": "shipkit_user_file",
-          "tableTo": "shipkit_user",
+        "guide_user_file_user_id_guide_user_id_fk": {
+          "name": "guide_user_file_user_id_guide_user_id_fk",
+          "tableFrom": "guide_user_file",
+          "tableTo": "guide_user",
           "columnsFrom": [
             "user_id"
           ],
@@ -2092,8 +2092,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_user": {
-      "name": "shipkit_user",
+    "public.guide_user": {
+      "name": "guide_user",
       "schema": "",
       "columns": {
         "id": {
@@ -2194,8 +2194,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_verificationToken": {
-      "name": "shipkit_verificationToken",
+    "public.guide_verificationToken": {
+      "name": "guide_verificationToken",
       "schema": "",
       "columns": {
         "identifier": {
@@ -2220,8 +2220,8 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {
-        "shipkit_verificationToken_identifier_token_pk": {
-          "name": "shipkit_verificationToken_identifier_token_pk",
+        "guide_verificationToken_identifier_token_pk": {
+          "name": "guide_verificationToken_identifier_token_pk",
           "columns": [
             "identifier",
             "token"
@@ -2233,8 +2233,8 @@
       "checkConstraints": {},
       "isRLSEnabled": false
     },
-    "public.shipkit_webhook_event": {
-      "name": "shipkit_webhook_event",
+    "public.guide_webhook_event": {
+      "name": "guide_webhook_event",
       "schema": "",
       "columns": {
         "id": {

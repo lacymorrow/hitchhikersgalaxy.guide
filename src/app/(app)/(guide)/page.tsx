@@ -1,15 +1,16 @@
-
 import { GuideSearchServer } from "./_components/guide-search-server";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Info, MapIcon, Star } from "lucide-react";
+import { BookOpen, Info, MapIcon } from "lucide-react";
 import { Suspense } from "react";
 import { RecentEntries } from "./_components/recent-entries";
+import { ShareButton } from "@/components/buttons/share-button";
+import { Link } from "@/components/primitives/link-with-transition";
+import { StarFilledIcon } from "@radix-ui/react-icons";
 
 export default function GuidePage() {
 	return (
-
-		<div className="container relative min-h-screen max-w-6xl py-6 lg:py-10">
+		<div className="container relative max-w-6xl py-6 lg:py-10">
 			{/* Electronic book frame */}
 			<div className="relative rounded-lg border-4 border-green-500 bg-black p-6 shadow-[0_0_50px_rgba(34,197,94,0.2)]">
 				{/* Screen interface */}
@@ -35,41 +36,52 @@ export default function GuidePage() {
 
 					{/* Navigation buttons */}
 					<div className="mx-auto flex flex-wrap justify-center gap-4">
-						<Button
-							variant="outline"
-							className="border-green-500 text-green-500 hover:bg-green-500/10"
-						>
-							<MapIcon className="mr-2 h-4 w-4" />
-							Travel Guide
-						</Button>
-						<Button
-							variant="outline"
-							className="border-green-500 text-green-500 hover:bg-green-500/10"
-						>
-							<Star className="mr-2 h-4 w-4" />
-							Popular Entries
-						</Button>
-						<Button
-							variant="outline"
-							className="border-green-500 text-green-500 hover:bg-green-500/10"
-						>
-							<BookOpen className="mr-2 h-4 w-4" />
-							Submit Entry
-						</Button>
-						<Button
-							variant="outline"
-							className="border-green-500 text-green-500 hover:bg-green-500/10"
-						>
-							<Info className="mr-2 h-4 w-4" />
-							About the Guide
-						</Button>
+						<Link href="/travel-guide">
+							<Button
+								variant="outline"
+								className="border-green-500 text-green-500 hover:bg-green-500/10"
+							>
+								<MapIcon className="mr-2 h-4 w-4" />
+								Travel Guide
+							</Button>
+						</Link>
+						<Link href="/popular">
+							<Button
+								variant="outline"
+								className="border-green-500 text-green-500 hover:bg-green-500/10"
+							>
+								<StarFilledIcon className="mr-2 h-4 w-4" />
+								Popular Entries
+							</Button>
+						</Link>
+						<Link href="/submit">
+							<Button
+								variant="outline"
+								className="border-green-500 text-green-500 hover:bg-green-500/10"
+							>
+								<BookOpen className="mr-2 h-4 w-4" />
+								Submit Entry
+							</Button>
+						</Link>
+						<Link href="/about">
+							<Button
+								variant="outline"
+								className="border-green-500 text-green-500 hover:bg-green-500/10"
+							>
+								<Info className="mr-2 h-4 w-4" />
+								About the Guide
+							</Button>
+						</Link>
 					</div>
 
 					{/* Recent entries section */}
 					<div className="mt-12">
-						<h2 className="mb-8 font-mono text-2xl font-bold text-green-500">
-							Recent Entries
-						</h2>
+						<div className="mb-8 flex items-center justify-between">
+							<h2 className="font-mono text-2xl font-bold text-green-500">
+								Recent Entries
+							</h2>
+							<ShareButton title="The Hitchhiker's Guide to the Galaxy" />
+						</div>
 						<Suspense
 							fallback={
 								<div className="text-center text-green-500/60">
@@ -81,11 +93,6 @@ export default function GuidePage() {
 						</Suspense>
 					</div>
 				</div>
-			</div>
-
-			{/* Easter egg: A subtle "Share & Enjoy" footer */}
-			<div className="mt-8 text-center font-mono text-sm text-green-500/40">
-				Share & Enjoy - Sirius Cybernetics Corporation
 			</div>
 		</div>
 	);

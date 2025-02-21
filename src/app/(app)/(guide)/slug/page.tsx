@@ -24,7 +24,7 @@ export default async function GuidePage({
 				<div className="flex flex-col space-y-8">
 					{/* Header */}
 					<div className="flex flex-col space-y-4">
-						<div className="flex items-center justify-between">
+						<div className="flex flex-wrap gap-2 items-center justify-between">
 							<h1 className="font-mono text-3xl font-bold text-green-500 capitalize sm:text-4xl">
 								{entry.searchTerm}
 							</h1>

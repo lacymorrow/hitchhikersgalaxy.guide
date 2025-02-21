@@ -1,4 +1,3 @@
-import { GuideSearchServer } from "./_components/guide-search-server";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { Button } from "@/components/ui/button";
 import { BookOpen, Info, MapIcon } from "lucide-react";
@@ -7,6 +6,8 @@ import { RecentEntries } from "./_components/recent-entries";
 import { ShareButton } from "@/components/buttons/share-button";
 import { Link } from "@/components/primitives/link-with-transition";
 import { StarFilledIcon } from "@radix-ui/react-icons";
+import { GuideSearchInlineServer } from "./_components/guide-search-inline-server";
+import { Card } from "@/components/ui/card";
 
 export default function GuidePage() {
 	return (
@@ -27,11 +28,23 @@ export default function GuidePage() {
 						</p>
 					</div>
 
-					{/* Main interface */}
-					<div className="mx-auto mt-6 w-full max-w-2xl">
-						<Suspense fallback={<SuspenseFallback />}>
-							<GuideSearchServer searchTerm="hello" />
-						</Suspense>
+					{/* Main search interface */}
+					<div className="mx-auto w-full max-w-2xl">
+						<Card className="border-green-500/20 bg-black p-4">
+							<div className="flex flex-col items-center gap-4">
+								<p className="text-center font-mono text-sm text-green-400/60">
+									Type your query below to search the Guide
+								</p>
+								<div className="w-full">
+									<Suspense fallback={<SuspenseFallback />}>
+										<GuideSearchInlineServer />
+									</Suspense>
+								</div>
+								<p className="text-center font-mono text-sm text-green-400/60">
+									Search for anything in the known (and several unknown) universes
+								</p>
+							</div>
+						</Card>
 					</div>
 
 					{/* Navigation buttons */}

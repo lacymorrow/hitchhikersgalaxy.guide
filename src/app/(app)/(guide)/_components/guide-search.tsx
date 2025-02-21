@@ -114,12 +114,13 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 		<div className="relative">
 			<Button
 				variant="outline"
-				className="relative h-12 w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-96 lg:w-full"
+				className="relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-52"
 				onClick={() => setOpen(true)}
+				size="sm"
 			>
 				<span className="hidden lg:inline-flex">Search the Guide...</span>
 				<span className="inline-flex lg:hidden">Search...</span>
-				<kbd className="pointer-events-none absolute right-1.5 top-2.5 hidden h-7 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+				<kbd className="pointer-events-none absolute right-1 hidden select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
 					<span className="text-xs">⌘</span>K
 				</kbd>
 			</Button>

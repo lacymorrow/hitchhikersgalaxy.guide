@@ -161,6 +161,9 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 			<PopoverTrigger asChild>
 				<div className="relative w-full">
 					<div className="relative w-full">
+						<div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
+							<Search className="h-4 w-4 text-green-500/60" />
+						</div>
 						<Input
 							ref={inputRef}
 							placeholder="Type anything in the universe..."
@@ -171,7 +174,10 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 							}}
 							onKeyDown={handleKeyDown}
 							className={cn(
-								"w-full border-green-500/20 bg-transparent text-green-400 placeholder:text-green-400/60 focus-visible:ring-green-500/20 disabled:opacity-50",
+								"w-full pl-9 border-green-500/60 bg-black/80 text-green-400 placeholder:text-green-400/60 focus-visible:ring-green-500/60 disabled:opacity-50",
+								"shadow-[0_0_20px_rgba(34,197,94,0.15)] focus-visible:shadow-[0_0_30px_rgba(34,197,94,0.3)]",
+								"transition-all duration-300",
+								"hover:border-green-500/80 hover:shadow-[0_0_25px_rgba(34,197,94,0.2)]",
 								search && "pr-12" // Add padding when search has content
 							)}
 							aria-expanded={open}
@@ -206,7 +212,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 										<Button
 											size="icon"
 											variant="outline"
-											className="h-7 w-7 shrink-0 border-green-500/20 text-green-500 hover:bg-green-500/10 disabled:opacity-50"
+											className="h-7 w-7 shrink-0 border-green-500/60 text-green-500 hover:bg-green-500/10 disabled:opacity-50"
 											onClick={() => void onSearch(search)}
 											disabled={searchLoading || !search.trim()}
 										>

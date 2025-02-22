@@ -6,6 +6,8 @@ import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import { authProvidersArray } from "@/server/auth.providers";
 import { Link } from "@/components/primitives/link-with-transition";
+import { Suspense } from "react";
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 
 interface AuthFormProps extends ComponentPropsWithoutRef<"div"> {
 	mode: "sign-in" | "sign-up";
@@ -49,8 +51,9 @@ export function AuthForm({
 										Or continue with email
 									</span>
 								</div>
-								{children}
-							</>
+								<Suspense fallback={<SuspenseFallback />}>
+									{children}
+								</Suspense>							</>
 						)}
 						<div className="text-center text-sm">
 							{alternateLink.text}{" "}

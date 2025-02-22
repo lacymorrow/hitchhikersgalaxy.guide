@@ -88,8 +88,7 @@ export const Header: React.FC<HeaderProps> = ({
 							className="flex grow items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
 						>
 							{logoIcon}
-							<span className="block">{logoText}</span>
-							<span className="sr-only">{logoText}</span>
+							<span className="block whitespace-nowrap">{logoText}</span>
 						</Link>
 						<Search />
 					</div>

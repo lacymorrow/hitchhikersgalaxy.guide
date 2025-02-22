@@ -93,6 +93,10 @@ export const BuyButton = () => {
 			// Setup event handlers
 			window.LemonSqueezy?.Setup({
 				eventHandler: async (event: LemonSqueezyEvent) => {
+					if (!event?.event?.startsWith("Checkout")) {
+						return;
+					}
+
 					// Handle checkout events
 					if (event.event === "Checkout.Success") {
 						console.log("Purchase successful!", event);

@@ -114,6 +114,8 @@ function SubmitEntryForm({ form }: SubmitEntryFormProps) {
 						</div>
 						<p className="max-w-[42rem] font-mono leading-normal text-green-400/80 sm:text-xl sm:leading-8">
 							Share your knowledge with fellow hitchhikers across the galaxy.
+						</p>
+						<p className="max-w-[42rem] text-xs opacity-70">
 							Remember: all entries are automatically rated for reliability and
 							danger level by our sophisticated algorithms.
 						</p>
@@ -316,11 +318,6 @@ function SubmitEntryForm({ form }: SubmitEntryFormProps) {
 						</CardContent>
 					</Card>
 				</div>
-			</div>
-
-			{/* Easter egg: A subtle "Share & Enjoy" footer */}
-			<div className="mt-8 text-center font-mono text-sm text-green-500/40">
-				Share & Enjoy - Sirius Cybernetics Corporation
 			</div>
 		</div>
 	);

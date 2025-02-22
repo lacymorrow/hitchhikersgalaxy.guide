@@ -4,7 +4,6 @@ export const guideQuotes = [
 	"Time is an illusion. Sharing time is doubly so.",
 	"A common mistake that people make when trying to share knowledge is to assume the order of information matters... it doesn't.",
 	"The Guide is definitive. Reality is frequently inaccurate.",
-	"Share and Enjoy! - Sirius Cybernetics Corporation",
 
 	// Technology and Space
 	"Space is big. Really big. You just won't believe how vastly, hugely, mind-bogglingly big it is.",

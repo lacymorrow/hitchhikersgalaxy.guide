@@ -79,6 +79,9 @@ export const env = createEnv({
 		NEXT_PUBLIC_BUILDER_API_KEY: z.string().optional(),
 		NEXT_PUBLIC_POSTHOG_KEY: z.string().optional(),
 		NEXT_PUBLIC_POSTHOG_HOST: z.string().optional(),
+
+		// Umami
+		NEXT_PUBLIC_UMAMI_WEBSITE_ID: z.string().optional(),
 	},
 
 	/**

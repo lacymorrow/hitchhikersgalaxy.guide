@@ -175,11 +175,6 @@ export default function TravelGuidePage() {
 					</div>
 				</div>
 			</div>
-
-			{/* Easter egg: A subtle "Share & Enjoy" footer */}
-			<div className="mt-8 text-center font-mono text-sm text-green-500/40">
-				Share & Enjoy - Sirius Cybernetics Corporation
-			</div>
 		</div>
 	);
 }

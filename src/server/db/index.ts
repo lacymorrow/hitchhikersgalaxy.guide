@@ -1,8 +1,8 @@
 import { env } from "@/env";
+import { sql } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
-import { sql } from "drizzle-orm";
 
 // Configure postgres with proper options to avoid stream transformation issues
 const client = env.DATABASE_URL

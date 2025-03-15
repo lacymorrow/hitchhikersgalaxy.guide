@@ -24,18 +24,48 @@ interface GuideSearchInlineProps {
 	results: GuideEntry[];
 }
 
+// Function to validate if a search term is reasonable
+const isReasonableSearchTerm = (term: string): boolean => {
+	// Trim and normalize the term
+	const normalizedTerm = term.trim().toLowerCase();
+
+	// Empty searches are not valid
+	if (!normalizedTerm) return false;
+
+	// Check for obvious gibberish patterns
+	const hasExcessiveSpecialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{3,}/.test(normalizedTerm);
+	const hasExcessiveNumbers = /\d{4,}/.test(normalizedTerm); // 4+ consecutive numbers
+	const hasRandomCharacters = /([a-z])\1{3,}/.test(normalizedTerm); // 4+ of the same character
+	const isTooRandom = /[qwxzj]{3,}/.test(normalizedTerm); // 3+ uncommon letters together
+
+	// If it looks like gibberish, reject it
+	if (hasExcessiveSpecialChars || hasExcessiveNumbers || hasRandomCharacters || isTooRandom) {
+		return false;
+	}
+
+	// Check if it's too short (but allow short words like "AI", "UI", etc.)
+	if (normalizedTerm.length < 2) {
+		return false;
+	}
+
+	// Allow reasonable-looking terms
+	return true;
+};
+
 export function GuideSearchInline({ results: initialResults }: GuideSearchInlineProps) {
 	const { toast } = useToast();
 	const router = useRouter();
 	const [open, setOpen] = React.useState(false);
 	const [searchLoading, setSearchLoading] = React.useState(false);
 	const [suggestionsLoading, setSuggestionsLoading] = React.useState(false);
+	const [validationLoading, setValidationLoading] = React.useState(false);
 	const [search, setSearch] = React.useState("");
 	const [error, setError] = React.useState<string | null>(null);
 	const [results, setResults] = React.useState<GuideEntry[]>(initialResults);
 	const debouncedSearch = useDebounce(search, 300);
 	const inputRef = React.useRef<HTMLInputElement>(null);
 	const [selectedIndex, setSelectedIndex] = React.useState(-1);
+	const [aiSuggestions, setAiSuggestions] = React.useState<string[]>([]);
 
 	// Reset selected index when results change
 	React.useEffect(() => {
@@ -47,6 +77,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 		const fetchSimilarSearches = async () => {
 			if (!debouncedSearch) {
 				setResults([]);
+				setAiSuggestions([]);
 				return;
 			}
 
@@ -59,6 +90,12 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 				}
 				const data = await response.json();
 				setResults(data);
+
+				// If we have at least 3 characters, try to get AI suggestions
+				if (debouncedSearch.length >= 3) {
+					void fetchAiSuggestions(debouncedSearch);
+				}
+
 				setError(null);
 			} catch (error) {
 				console.error("Error fetching similar searches:", error);
@@ -72,10 +109,72 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 		void fetchSimilarSearches();
 	}, [debouncedSearch]);
 
+	// Fetch AI-powered suggestions
+	const fetchAiSuggestions = async (searchTerm: string) => {
+		try {
+			const response = await fetch(`/api/guide/search/suggestions?term=${encodeURIComponent(searchTerm)}`);
+			if (!response.ok) {
+				console.error(`API error: ${response.status} ${response.statusText}`);
+				return;
+			}
+			const data = await response.json();
+			setAiSuggestions(data.suggestions || []);
+		} catch (error) {
+			console.error("Error fetching AI suggestions:", error);
+		}
+	};
+
+	// Validate search term using AI
+	const validateSearchTerm = async (searchTerm: string): Promise<{ valid: boolean; reason: string }> => {
+		try {
+			setValidationLoading(true);
+
+			// First do a quick client-side check
+			if (!isReasonableSearchTerm(searchTerm)) {
+				return { valid: false, reason: "Please enter a valid search term" };
+			}
+
+			// Then do a more thorough AI-based check
+			const response = await fetch(`/api/guide/search/validate?term=${encodeURIComponent(searchTerm)}`);
+			if (!response.ok) {
+				console.error(`API error: ${response.status} ${response.statusText}`);
+				// Fall back to client-side validation if API fails
+				return { valid: true, reason: "Validation service unavailable, proceeding with search" };
+			}
+
+			const data = await response.json();
+			return {
+				valid: data.valid,
+				reason: data.valid ? "" : (data.reason || "Invalid search term")
+			};
+		} catch (error) {
+			console.error("Error validating search term:", error);
+			// Fall back to allowing the search if validation fails
+			return { valid: true, reason: "Validation service unavailable, proceeding with search" };
+		} finally {
+			setValidationLoading(false);
+		}
+	};
+
 	const onSearch = async (searchTerm: string) => {
 		setError(null);
+
 		try {
 			setSearchLoading(true);
+
+			// Validate the search term with AI
+			const validation = await validateSearchTerm(searchTerm);
+
+			if (!validation.valid) {
+				setError(validation.reason);
+				toast({
+					title: "Invalid search",
+					description: validation.reason,
+					variant: "destructive",
+				});
+				return;
+			}
+
 			const entry = await searchGuide(searchTerm);
 			if (!entry) {
 				throw new Error("No results found");
@@ -110,15 +209,15 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 	// Only show suggestions if we have results or an error
 	// Don't show during initial loading with no results
 	const shouldShowSuggestions = Boolean(
-		(suggestionsLoading && results.length > 0) || // Only show loader if we already had results
-		(!suggestionsLoading && results.length > 0) || // Show when we have results
+		(suggestionsLoading && (results.length > 0 || aiSuggestions.length > 0)) || // Only show loader if we already had results
+		(!suggestionsLoading && (results.length > 0 || aiSuggestions.length > 0)) || // Show when we have results
 		error // Show when we have an error
 	);
 
 	// Handle keyboard navigation
 	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
 		// Always allow Enter to submit if there's a search term, regardless of loading state
-		if (e.key === "Enter" && search && !searchLoading) {
+		if (e.key === "Enter" && search && !searchLoading && !validationLoading) {
 			e.preventDefault();
 			void onSearch(search);
 			return;
@@ -129,7 +228,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 			return;
 		}
 
-		const totalItems = results.length + (search ? 1 : 0);
+		const totalItems = results.length + aiSuggestions.length + (search ? 1 : 0);
 
 		switch (e.key) {
 			case "ArrowDown":
@@ -142,9 +241,11 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 				break;
 			case "Enter":
 				e.preventDefault();
-				if (selectedIndex >= 0 && !searchLoading) {
+				if (selectedIndex >= 0 && !searchLoading && !validationLoading) {
 					if (selectedIndex < results.length) {
 						void onSearch(results[selectedIndex].searchTerm);
+					} else if (selectedIndex < results.length + aiSuggestions.length) {
+						void onSearch(aiSuggestions[selectedIndex - results.length]);
 					} else {
 						void onSearch(search);
 					}
@@ -196,7 +297,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 							aria-activedescendant={selectedIndex >= 0 ? `search-item-${selectedIndex}` : undefined}
 							role="combobox"
 							aria-autocomplete="list"
-							disabled={searchLoading}
+							disabled={searchLoading || validationLoading}
 						/>
 						{/* Search icon and loader container with transitions between them */}
 						<div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
@@ -245,10 +346,10 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 											variant="outline"
 											className="h-7 w-7 shrink-0 border-green-500/60 text-green-500 hover:bg-green-500/10 disabled:opacity-50"
 											onClick={() => void onSearch(search)}
-											disabled={searchLoading || !search.trim()}
+											disabled={searchLoading || validationLoading || !search.trim()}
 										>
 											<AnimatePresence mode="wait">
-												{searchLoading ? (
+												{(searchLoading || validationLoading) ? (
 													<motion.div
 														key="loading"
 														initial={{ opacity: 0, rotate: -180 }}
@@ -283,7 +384,6 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 				className="w-[var(--radix-popover-trigger-width)] border-green-500/20 bg-black p-0"
 				align="start"
 				id="search-suggestions"
-				role="listbox"
 				onOpenAutoFocus={(e) => {
 					// Prevent the popover from stealing focus
 					e.preventDefault();
@@ -314,38 +414,69 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 						) : null}
 					</CommandEmpty>
 					{!suggestionsLoading && !error && (
-						<CommandGroup heading="Suggestions">
-							{results.map((result, index) => (
-								<SearchResultItem
-									key={result.id}
-									result={result}
-									index={index}
-									isSelected={selectedIndex === index}
-									onSelect={() => !searchLoading && void onSearch(result.searchTerm)}
-								/>
-							))}
+						<>
+							{results.length > 0 && (
+								<CommandGroup heading="Suggestions">
+									{results.map((result, index) => (
+										<SearchResultItem
+											key={result.id}
+											result={result}
+											index={index}
+											isSelected={selectedIndex === index}
+											onSelect={() => !searchLoading && !validationLoading && void onSearch(result.searchTerm)}
+										/>
+									))}
+								</CommandGroup>
+							)}
+
+							{aiSuggestions.length > 0 && (
+								<CommandGroup heading="Did you mean...">
+									{aiSuggestions.map((suggestion, index) => (
+										<CommandItem
+											key={`ai-suggestion-${suggestion}`}
+											value={suggestion}
+											onSelect={() => !searchLoading && !validationLoading && void onSearch(suggestion)}
+											className={cn(
+												"flex cursor-pointer items-center justify-between gap-1 rounded border border-transparent p-3 text-green-400 aria-selected:border-green-500/40 aria-selected:bg-green-500/10",
+												selectedIndex === results.length + index && "border-green-500/40 bg-green-500/10"
+											)}
+											id={`search-item-${results.length + index}`}
+										>
+											<div className="flex items-center">
+												<span>{suggestion}</span>
+											</div>
+											{selectedIndex === results.length + index && (
+												<kbd className="ml-auto inline-flex h-5 select-none items-center gap-1 rounded border border-green-500/30 bg-green-500/10 px-1.5 font-mono text-[10px] font-medium text-green-400 opacity-70">
+													Enter
+												</kbd>
+											)}
+										</CommandItem>
+									))}
+								</CommandGroup>
+							)}
+
 							{search && (
 								<CommandItem
 									value={search}
-									onSelect={() => !searchLoading && void onSearch(search)}
+									onSelect={() => !searchLoading && !validationLoading && void onSearch(search)}
 									className={cn(
 										"flex cursor-pointer items-center justify-between gap-1 rounded border border-transparent p-3 text-green-400 aria-selected:border-green-500/40 aria-selected:bg-green-500/10",
-										selectedIndex === results.length && "border-green-500/40 bg-green-500/10"
+										selectedIndex === results.length + aiSuggestions.length && "border-green-500/40 bg-green-500/10"
 									)}
-									id={`search-item-${results.length}`}
+									id={`search-item-${results.length + aiSuggestions.length}`}
 								>
 									<div className="flex items-center">
 										<Search className="mr-2 h-4 w-4" />
 										<span>Search for "{search}"</span>
 									</div>
-									{selectedIndex === results.length && (
+									{selectedIndex === results.length + aiSuggestions.length && (
 										<kbd className="ml-auto inline-flex h-5 select-none items-center gap-1 rounded border border-green-500/30 bg-green-500/10 px-1.5 font-mono text-[10px] font-medium text-green-400 opacity-70">
 											Enter
 										</kbd>
 									)}
 								</CommandItem>
 							)}
-						</CommandGroup>
+						</>
 					)}
 				</Command>
 			</PopoverContent>

@@ -1,13 +1,13 @@
-import { guideService } from "@/server/services/guide-service";
-import { notFound } from "next/navigation";
-import { BookOpen, MapIcon, Shield, Rocket } from "lucide-react";
 import { ShareButton } from "@/components/buttons/share-button";
-import { StarFilledIcon } from "@radix-ui/react-icons";
-import { Suspense } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { guideService } from "@/server/services/guide-service";
+import { StarFilledIcon } from "@radix-ui/react-icons";
 import { formatDistanceToNow } from "date-fns";
+import { BookOpen, Rocket, Shield } from "lucide-react";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 // Loading skeleton component
 function GuideEntrySkeleton() {
@@ -92,6 +92,9 @@ async function GuideEntry({ slug }: { slug: string }) {
 		arr.findIndex(a => a?.id === e.id) === i // remove duplicates
 	).slice(0, 2); // limit to 2 entries
 
+	// Format the search term for display (convert hyphens to spaces)
+	const displaySearchTerm = entry.searchTerm.replace(/-/g, " ");
+
 	return (
 		<div className="space-y-8">
 			<div className="relative rounded-lg border-4 border-green-500 bg-black p-6 shadow-[0_0_50px_rgba(34,197,94,0.2)]">
@@ -99,9 +102,9 @@ async function GuideEntry({ slug }: { slug: string }) {
 					<div className="flex flex-col space-y-4">
 						<div className="flex flex-wrap gap-2 items-center justify-between">
 							<h1 className="font-mono text-3xl font-bold text-green-500 capitalize sm:text-4xl">
-								{entry.searchTerm}
+								{displaySearchTerm}
 							</h1>
-							<ShareButton title={entry.searchTerm} />
+							<ShareButton title={displaySearchTerm} />
 						</div>
 						<div className="flex flex-wrap gap-4 text-sm text-green-400/80">
 							<div className="flex items-center gap-1">
@@ -177,29 +180,34 @@ async function GuideEntry({ slug }: { slug: string }) {
 					</h2>
 				</div>
 				<div className="grid gap-4 sm:grid-cols-2">
-					{relatedEntries.map((relatedEntry) => (
-						<Link
-							key={relatedEntry.id}
-							href={`/${relatedEntry.searchTerm}`}
-							className="transition-transform hover:scale-[1.02]"
-						>
-							<Card className="h-full border-green-500/20 bg-black hover:border-green-500/40">
-								<CardHeader>
-									<CardTitle className="line-clamp-1 text-lg capitalize text-green-500">
-										{relatedEntry.searchTerm}
-									</CardTitle>
-									<p className="text-sm text-green-400/60">
-										{formatDistanceToNow(relatedEntry.createdAt, { addSuffix: true })}
-									</p>
-								</CardHeader>
-								<CardContent>
-									<p className="line-clamp-2 text-sm text-green-400/80">
-										{relatedEntry.content}
-									</p>
-								</CardContent>
-							</Card>
-						</Link>
-					))}
+					{relatedEntries.map((relatedEntry) => {
+						// Format the related entry search term for display
+						const relatedDisplayTerm = relatedEntry.searchTerm.replace(/-/g, " ");
+
+						return (
+							<Link
+								key={relatedEntry.id}
+								href={`/${relatedEntry.searchTerm}`}
+								className="transition-transform hover:scale-[1.02]"
+							>
+								<Card className="h-full border-green-500/20 bg-black hover:border-green-500/40">
+									<CardHeader>
+										<CardTitle className="line-clamp-1 text-lg capitalize text-green-500">
+											{relatedDisplayTerm}
+										</CardTitle>
+										<p className="text-sm text-green-400/60">
+											{formatDistanceToNow(relatedEntry.createdAt, { addSuffix: true })}
+										</p>
+									</CardHeader>
+									<CardContent>
+										<p className="line-clamp-2 text-sm text-green-400/80">
+											{relatedEntry.content}
+										</p>
+									</CardContent>
+								</Card>
+							</Link>
+						);
+					})}
 				</div>
 			</div>
 		</div>

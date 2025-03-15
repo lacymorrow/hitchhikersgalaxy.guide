@@ -17,11 +17,13 @@ export async function RecentEntries() {
 		}
 
 		return (
-			<Marquee className="py-4 h-[200px]" pauseOnHover>
-				{entries.map((entry: GuideEntry, index: number) => (
-					<EntryCard key={entry.id} entry={entry} index={index} />
-				))}
-			</Marquee>
+			<div className="[mask-image:linear-gradient(to_right,transparent,#000_10%,#000_90%,transparent_100%)]">
+				<Marquee className="py-4 h-[200px]" pauseOnHover>
+					{entries.map((entry: GuideEntry, index: number) => (
+						<EntryCard key={entry.id} entry={entry} index={index} />
+					))}
+				</Marquee>
+			</div>
 		);
 	} catch (error) {
 		console.error("[Recent Entries] Error fetching entries:", error);

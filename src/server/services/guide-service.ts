@@ -38,8 +38,11 @@ function normalizeSearchTerm(searchTerm: string | null | undefined): string {
 	// Remove special characters and extra spaces
 	normalized = normalized.replace(/[^\w\s-]/g, "").replace(/\s+/g, " ");
 
-	// Get the singular form of the word
-	normalized = pluralize.singular(normalized);
+	// Keep the full phrase instead of just getting the singular form of the first word
+	// Only apply singularization for single words, not phrases
+	if (!normalized.includes(" ")) {
+		normalized = pluralize.singular(normalized);
+	}
 
 	// Convert spaces to hyphens for URL-friendly slugs
 	normalized = normalized.replace(/\s/g, "-");

@@ -22,6 +22,9 @@ export const SearchResultItem = ({
     // Calculate a staggered delay based on the index
     const delay = 50 + index * 30; // 50ms base delay + 30ms per item
 
+    // Format the search term for display (convert hyphens to spaces)
+    const displaySearchTerm = result.searchTerm.replace(/-/g, " ");
+
     return (
         <FadeIn delay={delay} duration={300}>
             <CommandItem
@@ -35,7 +38,7 @@ export const SearchResultItem = ({
                 )}
             >
                 <div className="font-mono text-base capitalize text-green-500">
-                    {result.searchTerm}
+                    {displaySearchTerm}
                 </div>
                 <div className="line-clamp-1 text-xs text-green-400/60">
                     {formatDistanceToNow(result.createdAt, { addSuffix: true })}

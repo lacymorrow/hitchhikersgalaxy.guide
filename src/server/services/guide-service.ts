@@ -41,6 +41,9 @@ function normalizeSearchTerm(searchTerm: string | null | undefined): string {
 	// Get the singular form of the word
 	normalized = pluralize.singular(normalized);
 
+	// Convert spaces to hyphens for URL-friendly slugs
+	normalized = normalized.replace(/\s/g, "-");
+
 	return normalized;
 }
 
@@ -52,13 +55,19 @@ export const guideService = {
 			const normalizedTerm = normalizeSearchTerm(searchTerm);
 			if (!normalizedTerm) return [];
 
+			// Create an alternative version of the term (with spaces instead of hyphens)
+			const alternativeTerm = normalizedTerm.replace(/-/g, " ");
+
 			// Always use basic search during SSR or if similarity search isn't available
 			if (isSSR() || !(await checkSimilaritySearch())) {
 				return db?.query.guideEntries.findMany({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
+						eq(guideEntries.searchTerm, alternativeTerm),
 						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
-						ilike(guideEntries.searchVector, `%${normalizedTerm}%`)
+						ilike(guideEntries.searchTerm, `%${alternativeTerm}%`),
+						ilike(guideEntries.searchVector, `%${normalizedTerm}%`),
+						ilike(guideEntries.searchVector, `%${alternativeTerm}%`)
 					),
 					orderBy: [desc(guideEntries.popularity)],
 					limit,
@@ -73,13 +82,21 @@ export const guideService = {
 				where: and(
 					or(
 						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
-						ilike(guideEntries.searchVector, `%${normalizedTerm}%`)
+						ilike(guideEntries.searchTerm, `%${alternativeTerm}%`),
+						ilike(guideEntries.searchVector, `%${normalizedTerm}%`),
+						ilike(guideEntries.searchVector, `%${alternativeTerm}%`)
 					),
-					sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.3`
+					or(
+						sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.3`,
+						sql`similarity(${guideEntries.searchTerm}, ${alternativeTerm}) > 0.3`
+					)
 				),
 				orderBy: [
 					// Order by similarity score first, then by popularity
-					sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) DESC`,
+					sql`GREATEST(
+						similarity(${guideEntries.searchTerm}, ${normalizedTerm}),
+						similarity(${guideEntries.searchTerm}, ${alternativeTerm})
+					) DESC`,
 					desc(guideEntries.popularity),
 				],
 				limit,
@@ -134,12 +151,17 @@ export const guideService = {
 				return null;
 			}
 
+			// Create an alternative version of the term (with spaces instead of hyphens)
+			const alternativeTerm = normalizedTerm.replace(/-/g, " ");
+
 			// Always use basic search during SSR or if similarity search isn't available
 			if (isSSR() || !(await checkSimilaritySearch())) {
 				return db?.query.guideEntries.findFirst({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
-						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`)
+						eq(guideEntries.searchTerm, alternativeTerm),
+						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
+						ilike(guideEntries.searchTerm, `%${alternativeTerm}%`)
 					),
 					with: {
 						category: true,
@@ -154,10 +176,16 @@ export const guideService = {
 
 			// Find the most similar existing entry
 			const existingEntry = await db?.query.guideEntries.findFirst({
-				where: sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.3`,
+				where: or(
+					sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.3`,
+					sql`similarity(${guideEntries.searchTerm}, ${alternativeTerm}) > 0.3`
+				),
 				orderBy: [
 					// Order by similarity score
-					sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) DESC`,
+					sql`GREATEST(
+						similarity(${guideEntries.searchTerm}, ${normalizedTerm}),
+						similarity(${guideEntries.searchTerm}, ${alternativeTerm})
+					) DESC`,
 					desc(guideEntries.popularity),
 				],
 				with: {

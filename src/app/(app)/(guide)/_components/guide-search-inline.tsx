@@ -1,24 +1,24 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
 import {
 	Command,
 	CommandEmpty,
 	CommandGroup,
-	CommandInput,
-	CommandItem,
+	CommandItem
 } from "@/components/ui/command";
+import { Input } from "@/components/ui/input";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { useDebounce } from "@/hooks/use-debounce";
 import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
 import { searchGuide } from "@/server/actions/guide-search";
 import type { GuideEntry } from "@/server/db/schema";
-import { Loader2, Search, XCircle, ArrowRight } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowRight, Loader2, Search, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
-import { useDebounce } from "@/hooks/use-debounce";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "framer-motion";
+import { SearchResultItem } from "./search-result-item";
 
 interface GuideSearchInlineProps {
 	results: GuideEntry[];
@@ -54,7 +54,8 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 				setSuggestionsLoading(true);
 				const response = await fetch(`/api/guide/search/similar?term=${encodeURIComponent(debouncedSearch)}`);
 				if (!response.ok) {
-					throw new Error("Failed to fetch similar searches");
+					console.error(`API error: ${response.status} ${response.statusText}`);
+					throw new Error(`Failed to fetch similar searches: ${response.status} ${response.statusText}`);
 				}
 				const data = await response.json();
 				setResults(data);
@@ -62,6 +63,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 			} catch (error) {
 				console.error("Error fetching similar searches:", error);
 				setResults([]);
+				setError(error instanceof Error ? error.message : "Failed to fetch similar searches");
 			} finally {
 				setSuggestionsLoading(false);
 			}
@@ -81,8 +83,19 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 			router.push(`/${entry.searchTerm}`);
 			setOpen(false);
 		} catch (error) {
-			const message =
-				error instanceof Error ? error.message : "Failed to search";
+			let message = "Failed to search";
+
+			if (error instanceof Error) {
+				// Check for connection timeout errors
+				if (error.message.includes("CONNECT_TIMEOUT") ||
+					error.message.includes("database") ||
+					error.message.includes("connection")) {
+					message = "The Guide's database is currently unavailable. Don't panic and try again later!";
+				} else {
+					message = error.message;
+				}
+			}
+
 			setError(message);
 			toast({
 				title: "Error",
@@ -161,9 +174,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 			<PopoverTrigger asChild>
 				<div className="relative w-full">
 					<div className="relative w-full">
-						<div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
-							<Search className="h-4 w-4 text-green-500/60" />
-						</div>
+
 						<Input
 							ref={inputRef}
 							placeholder="Type anything in the universe..."
@@ -187,19 +198,39 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 							aria-autocomplete="list"
 							disabled={searchLoading}
 						/>
-						{/* Show loading indicator inline when loading suggestions with no results */}
-						{(suggestionsLoading && !shouldShowSuggestions) && (
-							<div className="absolute right-3 top-1/2 -translate-y-1/2">
-								<Loader2 className="h-4 w-4 animate-spin text-green-500" />
-							</div>
-						)}
+						{/* Search icon and loader container with transitions between them */}
+						<div className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2">
+							<AnimatePresence mode="wait">
+								{(suggestionsLoading && !shouldShowSuggestions) ? (
+									<motion.div
+										key="loader"
+										initial={{ opacity: 0 }}
+										animate={{ opacity: 1 }}
+										exit={{ opacity: 0 }}
+										transition={{ duration: 0.2 }}
+									>
+										<Loader2 className="h-4 w-4 animate-spin text-green-500" />
+									</motion.div>
+								) : (
+									<motion.div
+										key="search-icon"
+										initial={{ opacity: 0 }}
+										animate={{ opacity: 1 }}
+										exit={{ opacity: 0 }}
+										transition={{ duration: 0.2 }}
+									>
+										<Search className="h-4 w-4 text-green-500/60" />
+									</motion.div>
+								)}
+							</AnimatePresence>
+						</div>
 						{/* Show submit button when there's text */}
 						<AnimatePresence mode="wait">
 							{search && (
 								<motion.div
-									initial={{ opacity: 0, x: -20 }}
-									animate={{ opacity: 1, x: 0 }}
-									exit={{ opacity: 0, x: -10 }}
+									initial={{ opacity: 0, x: -20, y: "-50%" }}
+									animate={{ opacity: 1, x: 0, y: "-50%" }}
+									exit={{ opacity: 0, x: -10, y: "-50%" }}
 									transition={{ duration: 0.15, ease: "easeOut" }}
 									className="absolute right-1.5 top-1/2 -translate-y-1/2"
 								>
@@ -283,38 +314,35 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 						) : null}
 					</CommandEmpty>
 					{!suggestionsLoading && !error && (
-						<CommandGroup heading="Suggestions" className="text-green-400/60">
+						<CommandGroup heading="Suggestions">
 							{results.map((result, index) => (
-								<CommandItem
+								<SearchResultItem
 									key={result.id}
-									value={result.searchTerm}
+									result={result}
+									index={index}
+									isSelected={selectedIndex === index}
 									onSelect={() => !searchLoading && void onSearch(result.searchTerm)}
-									className={cn(
-										"text-green-400 aria-selected:bg-green-500/10",
-										selectedIndex === index && "bg-green-500/10"
-									)}
-									id={`search-item-${index}`}
-									role="option"
-									aria-selected={selectedIndex === index}
-								>
-									<Search className="mr-2 h-4 w-4" />
-									<span className="capitalize">{result.searchTerm}</span>
-								</CommandItem>
+								/>
 							))}
 							{search && (
 								<CommandItem
 									value={search}
 									onSelect={() => !searchLoading && void onSearch(search)}
 									className={cn(
-										"text-green-400 aria-selected:bg-green-500/10",
-										selectedIndex === results.length && "bg-green-500/10"
+										"flex cursor-pointer items-center justify-between gap-1 rounded border border-transparent p-3 text-green-400 aria-selected:border-green-500/40 aria-selected:bg-green-500/10",
+										selectedIndex === results.length && "border-green-500/40 bg-green-500/10"
 									)}
 									id={`search-item-${results.length}`}
-									role="option"
-									aria-selected={selectedIndex === results.length}
 								>
-									<Search className="mr-2 h-4 w-4" />
-									Search for "{search}"
+									<div className="flex items-center">
+										<Search className="mr-2 h-4 w-4" />
+										<span>Search for "{search}"</span>
+									</div>
+									{selectedIndex === results.length && (
+										<kbd className="ml-auto inline-flex h-5 select-none items-center gap-1 rounded border border-green-500/30 bg-green-500/10 px-1.5 font-mono text-[10px] font-medium text-green-400 opacity-70">
+											Enter
+										</kbd>
+									)}
 								</CommandItem>
 							)}
 						</CommandGroup>

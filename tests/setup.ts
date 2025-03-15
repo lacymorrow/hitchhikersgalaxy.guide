@@ -1,4 +1,4 @@
-import { db, isDatabaseInitialized } from "@/server/db";
+import { db } from "@/server/db";
 import "@testing-library/jest-dom";
 import * as matchers from "@testing-library/jest-dom/matchers";
 import { cleanup } from "@testing-library/react";
@@ -16,7 +16,7 @@ afterEach(() => {
 
 // Check database availability before any tests run
 beforeAll(async () => {
-	if (!isDatabaseInitialized()) {
+	if (!db) {
 		console.log("Database is not available - skipping database tests");
 	}
 
@@ -26,7 +26,7 @@ beforeAll(async () => {
 		if (
 			typeof args[0] === "string" &&
 			(args[0].includes("Warning: ReactDOM.render is no longer supported") ||
-			args[0].includes("Invariant: AsyncLocalStorage accessed in runtime"))
+				args[0].includes("Invariant: AsyncLocalStorage accessed in runtime"))
 		) {
 			return;
 		}
@@ -36,7 +36,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
 	// Only check database if it's initialized
-	if (isDatabaseInitialized()) {
+	if (db) {
 		try {
 			await db?.execute(sql`SELECT 1`);
 			console.log("✓ Database cleanup successful");
@@ -78,7 +78,11 @@ vi.mock("next/image", () => ({
 vi.mock("next/dist/server/app-render/async-local-storage", () => ({
 	AsyncLocalStorage: class {
 		disable() {}
-		getStore() { return null; }
-		run() { return null; }
+		getStore() {
+			return null;
+		}
+		run() {
+			return null;
+		}
 	},
 }));

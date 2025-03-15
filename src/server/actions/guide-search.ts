@@ -1,11 +1,8 @@
 "use server";
 
 import { openai } from "@/lib/open-ai";
-import {
-	rateLimitService,
-	rateLimits,
-} from "@/server/services/rate-limit-service";
 import { guideService } from "@/server/services/guide-service";
+import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
 
 const generateGuideEntry = async (searchTerm: string) => {
 	if (!openai) {
@@ -89,11 +86,7 @@ export const searchGuide = async (searchTerm: string) => {
 
 	// Rate limiting
 	try {
-		await rateLimitService.checkLimit(
-			"guide-search",
-			searchTerm,
-			rateLimits.api.search,
-		);
+		await rateLimitService.checkLimit("guide-search", searchTerm, rateLimits.api.search);
 	} catch (error) {
 		console.error("[Guide Search] Rate limit error:", error);
 		throw new Error("Too many searches. Please try again in a minute.");
@@ -107,7 +100,8 @@ export const searchGuide = async (searchTerm: string) => {
 		}
 	} catch (error) {
 		console.error("[Guide Search] Database search error:", error);
-		throw new Error("Failed to search the Guide database. Please try again later.");
+		// Don't throw here, try to create a new entry instead
+		// This prevents 403 errors when database search fails but creation might work
 	}
 
 	// If no entry exists, generate one using AI
@@ -118,10 +112,15 @@ export const searchGuide = async (searchTerm: string) => {
 		}
 
 		const entry = await generateGuideEntry(searchTerm);
-		return await guideService.createEntry({
-			searchTerm,
-			...entry,
-		});
+		try {
+			return await guideService.createEntry({
+				searchTerm,
+				...entry,
+			});
+		} catch (dbError) {
+			console.error("[Guide Search] Database creation error:", dbError);
+			throw new Error("Failed to save your search to the Guide. Please try again later.");
+		}
 	} catch (error) {
 		console.error("[Guide Search] AI generation error:", error);
 		if (error instanceof Error) {
@@ -131,7 +130,7 @@ export const searchGuide = async (searchTerm: string) => {
 			}
 		}
 		throw new Error(
-			"Our researchers are currently indisposed in the Restaurant at the End of the Universe. Please try again later.",
+			"Our researchers are currently indisposed in the Restaurant at the End of the Universe. Please try again later."
 		);
 	}
 };

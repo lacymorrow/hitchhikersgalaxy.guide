@@ -1,46 +1,36 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { guideService } from "@/server/services/guide-service";
-import type { GuideEntry } from "@/server/db/schema";
-import { formatDistanceToNow } from "date-fns";
-import { Link } from "@/components/primitives/link-with-transition";
 import Marquee from "@/components/ui/marquee";
+import type { GuideEntry } from "@/server/db/schema";
+import { guideService } from "@/server/services/guide-service";
+import { DatabaseIcon } from "lucide-react";
+import { EntryCard } from "./entry-card";
 
 export async function RecentEntries() {
-	const entries = await guideService.getRecentEntries(20); // Get top 20 entries
+	try {
+		const entries = await guideService.getRecentEntries(20) || []; // Get top 20 entries, default to empty array
 
-	if (entries.length === 0) {
+		if (entries.length === 0) {
+			return (
+				<div className="flex items-center justify-center h-[200px] text-center text-muted-foreground">
+					No entries yet. Start searching to create some!
+				</div>
+			);
+		}
+
 		return (
-			<div className="text-center text-muted-foreground">
-				No entries yet. Start searching to create some!
+			<Marquee className="py-4 h-[200px]" pauseOnHover>
+				{entries.map((entry: GuideEntry, index: number) => (
+					<EntryCard key={entry.id} entry={entry} index={index} />
+				))}
+			</Marquee>
+		);
+	} catch (error) {
+		console.error("[Recent Entries] Error fetching entries:", error);
+		return (
+			<div className="flex flex-col items-center justify-center gap-3 py-6 h-[200px] text-center text-green-400/60">
+				<DatabaseIcon className="h-8 w-8 text-green-500/40" />
+				<p>The Guide's database is currently experiencing technical difficulties.</p>
+				<p className="text-sm">Don't panic! Try searching for something new instead.</p>
 			</div>
 		);
 	}
-
-	return (
-		<Marquee className="py-4" pauseOnHover>
-			{entries.map((entry: GuideEntry) => (
-				<Link
-					key={entry.id}
-					href={`/${entry.searchTerm}`}
-					className="mx-4 transition-transform hover:scale-[1.02]"
-				>
-					<Card className="w-[300px] border-green-500/20 bg-black hover:border-green-500/40">
-						<CardHeader>
-							<CardTitle className="line-clamp-1 text-lg capitalize text-green-500">
-								{entry.searchTerm}
-							</CardTitle>
-							<p className="text-sm text-green-400/60">
-								{formatDistanceToNow(entry.createdAt, { addSuffix: true })}
-							</p>
-						</CardHeader>
-						<CardContent>
-							<p className="line-clamp-2 text-sm text-green-400/80">
-								{entry.content}
-							</p>
-						</CardContent>
-					</Card>
-				</Link>
-			))}
-		</Marquee>
-	);
 }

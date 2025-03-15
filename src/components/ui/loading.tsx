@@ -65,7 +65,7 @@ export const Loading = React.forwardRef<HTMLDivElement, LoadingProps>(
 			<div
 				ref={ref}
 				className={cn(
-					"flex items-center justify-center",
+					"flex items-center justify-center w-full h-full",
 					fullPage && "fixed inset-0 z-50",
 					backdrop && "bg-background/80 backdrop-blur-sm",
 					fade && "duration-300 animate-in fade-in",

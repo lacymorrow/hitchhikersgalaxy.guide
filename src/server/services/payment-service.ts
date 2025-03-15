@@ -1,7 +1,7 @@
 import { getPaymentStatus } from "@/lib/lemonsqueezy";
 import { logger } from "@/lib/logger";
-import { db, isDatabaseInitialized } from "@/server/db";
-import { Payment, payments } from "@/server/db/schema";
+import { db } from "@/server/db";
+import { type Payment, payments } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 
 // Convert class to object with functions to satisfy linter
@@ -26,14 +26,10 @@ const PaymentService = {
 	async getUserPayments(userId: string): Promise<Payment[]> {
 		logger.debug("Fetching user payments", { userId });
 
-		if (!isDatabaseInitialized()) {
+		if (!db) {
 			logger.error("Database not initialized when fetching user payments", {
 				userId,
 			});
-			throw new Error("Database is not initialized");
-		}
-
-		if (!db) {
 			throw new Error("Database is not initialized");
 		}
 
@@ -45,10 +41,7 @@ const PaymentService = {
 		logger.debug("User payments fetched", {
 			userId,
 			count: userPayments.length,
-			totalAmount: userPayments.reduce(
-				(sum: number, p: Payment) => sum + (p.amount || 0),
-				0,
-			),
+			totalAmount: userPayments.reduce((sum: number, p: Payment) => sum + (p.amount || 0), 0),
 		});
 
 		return userPayments;
@@ -73,15 +66,11 @@ const PaymentService = {
 			status: data.status,
 		});
 
-		if (!isDatabaseInitialized()) {
+		if (!db) {
 			logger.error("Database not initialized when creating payment", {
 				userId: data.userId,
 				orderId: data.orderId,
 			});
-			throw new Error("Database is not initialized");
-		}
-
-		if (!db) {
 			throw new Error("Database is not initialized");
 		}
 
@@ -121,14 +110,10 @@ const PaymentService = {
 	async updatePaymentStatus(orderId: string, status: string): Promise<Payment> {
 		logger.debug("Updating payment status", { orderId, status });
 
-		if (!isDatabaseInitialized()) {
+		if (!db) {
 			logger.error("Database not initialized when updating payment status", {
 				orderId,
 			});
-			throw new Error("Database is not initialized");
-		}
-
-		if (!db) {
 			throw new Error("Database is not initialized");
 		}
 
@@ -161,14 +146,10 @@ const PaymentService = {
 	async getPaymentByOrderId(orderId: string): Promise<Payment | null> {
 		logger.debug("Fetching payment by order ID", { orderId });
 
-		if (!isDatabaseInitialized()) {
+		if (!db) {
 			logger.error("Database not initialized when fetching payment", {
 				orderId,
 			});
-			throw new Error("Database is not initialized");
-		}
-
-		if (!db) {
 			throw new Error("Database is not initialized");
 		}
 

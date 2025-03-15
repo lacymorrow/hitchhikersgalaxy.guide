@@ -1,8 +1,6 @@
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
-import crypto from "crypto";
-// src/config/lemonsqueezy.ts
-import { db, isDatabaseInitialized } from "@/server/db";
+import { db } from "@/server/db";
 import type { User } from "@/server/db/schema";
 import { type NewPlan, payments, plans, users, webhookEvents } from "@/server/db/schema";
 import { type LemonSqueezyOrderAttributes, webhookHasMeta } from "@/types/lemonsqueezy";
@@ -14,6 +12,7 @@ import {
 	listProducts,
 	listVariants,
 } from "@lemonsqueezy/lemonsqueezy.js";
+import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 
@@ -197,7 +196,7 @@ export const fetchLemonSqueezyProducts = async () => {
  */
 export const syncPlans = async () => {
 	// Fetch all the variants from the database.
-	const productVariants: NewPlan[] = await db?.select().from(plans) ?? [];
+	const productVariants: NewPlan[] = (await db?.select().from(plans)) ?? [];
 
 	// Helper function to add a variant to the productVariants array and sync it with the database.
 	async function _addVariant(variant: NewPlan) {
@@ -322,7 +321,7 @@ interface LemonSqueezyOrder {
  */
 export const getUsersWithPayments = async () => {
 	try {
-		if (!isDatabaseInitialized()) {
+		if (!db) {
 			throw new Error("Database is not initialized");
 		}
 

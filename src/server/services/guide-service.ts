@@ -1,23 +1,23 @@
-import { db, isDatabaseInitialized } from "@/server/db";
+import { isSSR } from "@/lib/utils/runtime";
+import { db } from "@/server/db";
 import { guideEntries } from "@/server/db/schema";
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
-import { cache } from "react";
-import { isSSR } from "@/lib/utils/runtime";
 import pluralize from "pluralize";
+import { cache } from "react";
 
 // Since we're in a service, we can assume the database is initialized
 // The connection is handled at the app level
-const database = db!;
 
 // Track if similarity search is available
 let hasSimilaritySearch: boolean | null = null;
 
 async function checkSimilaritySearch() {
 	if (hasSimilaritySearch !== null) return hasSimilaritySearch;
+	if (!db) return false;
 
 	try {
 		// Try a simple similarity query
-		await database.execute(sql`SELECT similarity('test', 'test')`);
+		await db?.execute(sql`SELECT similarity('test', 'test')`);
 		hasSimilaritySearch = true;
 	} catch (error) {
 		console.warn("Similarity search not available, falling back to basic search");
@@ -54,7 +54,7 @@ export const guideService = {
 
 			// Always use basic search during SSR or if similarity search isn't available
 			if (isSSR() || !(await checkSimilaritySearch())) {
-				return database.query.guideEntries.findMany({
+				return db?.query.guideEntries.findMany({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
 						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
@@ -69,7 +69,7 @@ export const guideService = {
 			}
 
 			// Use full similarity search at runtime
-			return database.query.guideEntries.findMany({
+			return db?.query.guideEntries.findMany({
 				where: and(
 					or(
 						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
@@ -95,7 +95,7 @@ export const guideService = {
 
 	getRecentEntries: cache(async (limit = 10) => {
 		try {
-			return database.query.guideEntries.findMany({
+			return db?.query.guideEntries.findMany({
 				orderBy: [desc(guideEntries.createdAt)],
 				limit,
 				with: {
@@ -110,7 +110,7 @@ export const guideService = {
 
 	getPopularEntries: cache(async (limit = 10) => {
 		try {
-			return database.query.guideEntries.findMany({
+			return db?.query.guideEntries.findMany({
 				orderBy: [desc(guideEntries.popularity)],
 				limit,
 				with: {
@@ -136,7 +136,7 @@ export const guideService = {
 
 			// Always use basic search during SSR or if similarity search isn't available
 			if (isSSR() || !(await checkSimilaritySearch())) {
-				return database.query.guideEntries.findFirst({
+				return db?.query.guideEntries.findFirst({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
 						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`)
@@ -153,7 +153,7 @@ export const guideService = {
 			}
 
 			// Find the most similar existing entry
-			const existingEntry = await database.query.guideEntries.findFirst({
+			const existingEntry = await db?.query.guideEntries.findFirst({
 				where: sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.3`,
 				orderBy: [
 					// Order by similarity score
@@ -173,8 +173,8 @@ export const guideService = {
 			if (existingEntry) {
 				try {
 					// Increment popularity only at runtime
-					await database
-						.update(guideEntries)
+					await db
+						?.update(guideEntries)
 						.set({
 							popularity: sql`${guideEntries.popularity} + 1`,
 							updatedAt: new Date(),
@@ -226,8 +226,8 @@ export const guideService = {
 				.filter(Boolean)
 				.join(" ");
 
-			const [newEntry] = await database
-				.insert(guideEntries)
+			const result = await db
+				?.insert(guideEntries)
 				.values({
 					searchTerm: normalizedTerm,
 					content: entry.content,
@@ -244,6 +244,12 @@ export const guideService = {
 					updatedAt: new Date(),
 				})
 				.returning();
+
+			if (!result) {
+				throw new Error("Failed to create entry");
+			}
+
+			const newEntry = result[0];
 
 			return newEntry;
 		} catch (error) {

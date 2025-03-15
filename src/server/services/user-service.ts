@@ -1,12 +1,12 @@
 import { logger } from "@/lib/logger";
-import { db, isDatabaseInitialized } from "@/server/db";
+import { db } from "@/server/db";
 import { projectMembers, teamMembers, userFiles, users } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
+import { apiKeyService } from "./api-key-service";
 import { BaseService } from "./base-service";
 import { PaymentService } from "./payment-service";
-import { teamService } from "./team-service";
-import { apiKeyService } from "./api-key-service";
 import { deleteFromS3 } from "./s3";
+import { teamService } from "./team-service";
 
 export class UserService extends BaseService<typeof users> {
 	constructor() {
@@ -38,10 +38,6 @@ export class UserService extends BaseService<typeof users> {
 		name?: string | null;
 		image?: string | null;
 	}) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -129,10 +125,6 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns A list of projects with their details.
 	 */
 	async getUserProjects(userId: string) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -160,10 +152,6 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns A list of teams with their details.
 	 */
 	async getUserTeams(userId: string) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -190,10 +178,6 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns The user if found, null otherwise.
 	 */
 	async getUserByEmail(email: string) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -209,10 +193,6 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns The user with their teams and projects.
 	 */
 	async getUserWithAssociations(userId: string) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -251,10 +231,6 @@ export class UserService extends BaseService<typeof users> {
 			image?: string | null;
 		}
 	) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -273,10 +249,6 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns The updated user.
 	 */
 	async verifyEmail(userId: string) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -295,10 +267,6 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns A list of users with their roles.
 	 */
 	async getTeamUsers(teamId: string) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -317,10 +285,6 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns A list of users with their roles.
 	 */
 	async getProjectUsers(projectId: string) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -340,10 +304,6 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns True if the user has access.
 	 */
 	async hasTeamAccess(userId: string, teamId: string) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -362,10 +322,6 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns True if the user has access.
 	 */
 	async hasProjectAccess(userId: string, projectId: string) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -384,10 +340,6 @@ export class UserService extends BaseService<typeof users> {
 	 * @returns The created file record
 	 */
 	async addUserFile(userId: string, file: { title: string; location: string }) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
@@ -418,20 +370,13 @@ export class UserService extends BaseService<typeof users> {
 	 * @param fileId - The ID of the file to delete
 	 */
 	async deleteUserFile(userId: string, fileId: number) {
-		if (!isDatabaseInitialized()) {
-			throw new Error("Database is not initialized");
-		}
-
 		if (!db) {
 			throw new Error("Database is not initialized");
 		}
 
 		// First, get the file to check ownership and get the location
 		const file = await db.query.userFiles.findFirst({
-			where: and(
-				eq(userFiles.id, fileId),
-				eq(userFiles.userId, userId)
-			),
+			where: and(eq(userFiles.id, fileId), eq(userFiles.userId, userId)),
 		});
 
 		if (!file) {
@@ -454,12 +399,7 @@ export class UserService extends BaseService<typeof users> {
 		}
 
 		// Delete from database
-		await db
-			.delete(userFiles)
-			.where(and(
-				eq(userFiles.id, fileId),
-				eq(userFiles.userId, userId)
-			));
+		await db.delete(userFiles).where(and(eq(userFiles.id, fileId), eq(userFiles.userId, userId)));
 
 		logger.info("Deleted file from user profile", {
 			userId,

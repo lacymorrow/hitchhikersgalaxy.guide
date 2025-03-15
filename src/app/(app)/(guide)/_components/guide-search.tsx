@@ -16,8 +16,8 @@ import { searchGuide } from "@/server/actions/guide-search";
 import type { GuideEntry } from "@/server/db/schema";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { Loader2, Search, XCircle } from "lucide-react";
-import * as React from "react";
 import { useRouter } from "next/navigation";
+import * as React from "react";
 
 interface GuideSearchProps {
 	results: GuideEntry[];
@@ -34,6 +34,7 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 	const debouncedSearch = useDebounce(search, 300);
 	const [selectedEntry, setSelectedEntry] = React.useState<GuideEntry | null>(null);
 	const searchInputRef = React.useRef<HTMLInputElement>(null);
+	const [activeItem, setActiveItem] = React.useState<string | null>(null);
 
 	React.useEffect(() => {
 		const down = (e: KeyboardEvent) => {
@@ -110,6 +111,11 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 		}
 	};
 
+	const handleItemSelect = (value: string) => {
+		setActiveItem(value);
+		void onSearch(value);
+	};
+
 	return (
 		<div className="relative">
 			<Button
@@ -156,27 +162,33 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 						)}
 					</CommandEmpty>
 					{!loading && !error && !selectedEntry && (
-						<CommandGroup heading="Suggestions">
-							{results.map((result) => (
-								<CommandItem
-									key={result.id}
-									value={result.searchTerm}
-									onSelect={() => void onSearch(result.searchTerm)}
-								>
-									<Search className="mr-2 h-4 w-4" />
-									<span className="capitalize">{result.searchTerm}</span>
-								</CommandItem>
-							))}
+						<>
+							<CommandGroup heading="Suggestions">
+								{results.map((result) => (
+									<CommandItem
+										key={result.id}
+										value={result.searchTerm}
+										onSelect={() => handleItemSelect(result.searchTerm)}
+										className={activeItem === result.searchTerm ? "bg-accent" : ""}
+									>
+										<Search className="mr-2 h-4 w-4" />
+										<span className="capitalize">{result.searchTerm}</span>
+									</CommandItem>
+								))}
+							</CommandGroup>
 							{search && (
-								<CommandItem
-									value={search}
-									onSelect={() => void onSearch(search)}
-								>
-									<Search className="mr-2 h-4 w-4" />
-									Search for "{search}"
-								</CommandItem>
+								<CommandGroup heading="Search">
+									<CommandItem
+										value={`search-${search}`}
+										onSelect={() => handleItemSelect(search)}
+										className={activeItem === search ? "bg-accent" : ""}
+									>
+										<Search className="mr-2 h-4 w-4" />
+										Search for "{search}"
+									</CommandItem>
+								</CommandGroup>
 							)}
-						</CommandGroup>
+						</>
 					)}
 					{selectedEntry && (
 						<div className="p-4">

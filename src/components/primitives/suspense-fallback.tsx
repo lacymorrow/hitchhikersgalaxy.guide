@@ -1,5 +1,14 @@
 import { Loading } from "@/components/ui/loading";
 
-export const SuspenseFallback = () => {
-  return <Loading />;
+interface SuspenseFallbackProps {
+  className?: string;
+  height?: string;
+}
+
+export const SuspenseFallback = ({ className, height }: SuspenseFallbackProps) => {
+  return (
+    <div className={className} style={{ height: height }}>
+      <Loading fade={true} />
+    </div>
+  );
 };

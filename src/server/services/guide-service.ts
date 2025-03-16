@@ -38,11 +38,8 @@ function normalizeSearchTerm(searchTerm: string | null | undefined): string {
 	// Remove special characters and extra spaces
 	normalized = normalized.replace(/[^\w\s-]/g, "").replace(/\s+/g, " ");
 
-	// Keep the full phrase instead of just getting the singular form of the first word
-	// Only apply singularization for single words, not phrases
-	if (!normalized.includes(" ")) {
-		normalized = pluralize.singular(normalized);
-	}
+	// Get the singular form of the word
+	normalized = pluralize.singular(normalized);
 
 	// Convert spaces to hyphens for URL-friendly slugs
 	normalized = normalized.replace(/\s/g, "-");
@@ -143,7 +140,7 @@ export const guideService = {
 		}
 	}),
 
-	findExistingEntry: async (searchTerm: string | null | undefined) => {
+	findExistingEntry: async (searchTerm: string | null | undefined, exactMatch = false) => {
 		try {
 			if (!searchTerm?.trim()) {
 				return null;
@@ -156,6 +153,24 @@ export const guideService = {
 
 			// Create an alternative version of the term (with spaces instead of hyphens)
 			const alternativeTerm = normalizedTerm.replace(/-/g, " ");
+
+			// If exactMatch is true, only look for exact matches
+			if (exactMatch) {
+				return db?.query.guideEntries.findFirst({
+					where: or(
+						eq(guideEntries.searchTerm, normalizedTerm),
+						eq(guideEntries.searchTerm, alternativeTerm)
+					),
+					with: {
+						category: true,
+						sourceCrossReferences: {
+							with: {
+								targetEntry: true,
+							},
+						},
+					},
+				});
+			}
 
 			// Always use basic search during SSR or if similarity search isn't available
 			if (isSSR() || !(await checkSimilaritySearch())) {

@@ -125,82 +125,76 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 	};
 
 	// Validate search term using AI
-	const validateSearchTerm = async (searchTerm: string): Promise<{ valid: boolean; reason: string }> => {
+	const validateSearchTerm = async (term: string): Promise<{ valid: boolean; message: string }> => {
+		// Basic validation
+		if (!term.trim()) {
+			return { valid: false, message: "Search term cannot be empty" };
+		}
+
+		if (term.length < 2) {
+			return { valid: false, message: "Search term must be at least 2 characters" };
+		}
+
+		// AI validation
 		try {
-			setValidationLoading(true);
+			const response = await fetch(`/api/guide/search/validate?term=${encodeURIComponent(term)}`);
 
-			// First do a quick client-side check
-			if (!isReasonableSearchTerm(searchTerm)) {
-				return { valid: false, reason: "Please enter a valid search term" };
-			}
-
-			// Then do a more thorough AI-based check
-			const response = await fetch(`/api/guide/search/validate?term=${encodeURIComponent(searchTerm)}`);
 			if (!response.ok) {
-				console.error(`API error: ${response.status} ${response.statusText}`);
-				// Fall back to client-side validation if API fails
-				return { valid: true, reason: "Validation service unavailable, proceeding with search" };
+				console.warn("Validation API error:", response.status);
+				// If the validation API fails, we'll still allow the search to proceed
+				return { valid: true, message: "" };
 			}
 
 			const data = await response.json();
 			return {
 				valid: data.valid,
-				reason: data.valid ? "" : (data.reason || "Invalid search term")
+				message: data.reason || "Invalid search term"
 			};
-		} catch (error) {
-			console.error("Error validating search term:", error);
-			// Fall back to allowing the search if validation fails
-			return { valid: true, reason: "Validation service unavailable, proceeding with search" };
-		} finally {
-			setValidationLoading(false);
+		} catch (err) {
+			console.error("Validation error:", err);
+			// If there's an error with the validation, we'll still allow the search
+			return { valid: true, message: "" };
 		}
 	};
 
-	const onSearch = async (searchTerm: string) => {
+	const onSearch = async (term: string, isAiSuggestion = false) => {
+		if (!term.trim()) {
+			return;
+		}
+
+		// Validate the search term
+		setValidationLoading(true);
+		const validationResult = await validateSearchTerm(term);
+		setValidationLoading(false);
+
+		if (!validationResult.valid) {
+			toast({
+				title: "Invalid search",
+				description: validationResult.message,
+				variant: "destructive"
+			});
+			return;
+		}
+
+		setSearchLoading(true);
 		setError(null);
 
 		try {
-			setSearchLoading(true);
+			// When a user selects an AI suggestion or submits a search,
+			// we want to create a new entry for that exact phrase rather than
+			// redirecting to a partial match
+			const exactMatch = true;
 
-			// Validate the search term with AI
-			const validation = await validateSearchTerm(searchTerm);
+			const result = await searchGuide(term, exactMatch);
 
-			if (!validation.valid) {
-				setError(validation.reason);
-				toast({
-					title: "Invalid search",
-					description: validation.reason,
-					variant: "destructive",
-				});
-				return;
+			if (result.success && result.data) {
+				router.push(`/${result.data.searchTerm}`);
+			} else {
+				setError(result.error || "An error occurred while searching");
 			}
-
-			const entry = await searchGuide(searchTerm);
-			if (!entry) {
-				throw new Error("No results found");
-			}
-			router.push(`/${entry.searchTerm}`);
-			setOpen(false);
-		} catch (error) {
-			let message = "Failed to search";
-
-			if (error instanceof Error) {
-				// Check for connection timeout errors
-				if (error.message.includes("CONNECT_TIMEOUT") ||
-					error.message.includes("database") ||
-					error.message.includes("connection")) {
-					message = "The Guide's database is currently unavailable. Don't panic and try again later!";
-				} else {
-					message = error.message;
-				}
-			}
-
-			setError(message);
-			toast({
-				title: "Error",
-				description: message,
-				variant: "destructive",
-			});
+		} catch (err) {
+			console.error("Search error:", err);
+			setError("An unexpected error occurred. Please try again.");
 		} finally {
 			setSearchLoading(false);
 		}

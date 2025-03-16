@@ -79,9 +79,12 @@ Keep the total length under 400 words. Make it entertaining and informative, wit
 	return JSON.parse(response);
 };
 
-export const searchGuide = async (searchTerm: string) => {
+export const searchGuide = async (searchTerm: string, exactMatch = false) => {
 	if (!searchTerm?.trim()) {
-		throw new Error("Search term is required");
+		return {
+			success: false,
+			error: "Search term is required",
+		};
 	}
 
 	// Rate limiting
@@ -89,18 +92,24 @@ export const searchGuide = async (searchTerm: string) => {
 		await rateLimitService.checkLimit("guide-search", searchTerm, rateLimits.api.search);
 	} catch (error) {
 		console.error("[Guide Search] Rate limit error:", error);
-		throw new Error("Too many searches. Please try again in a minute.");
+		return {
+			success: false,
+			error: "Too many searches. Please try again in a minute.",
+		};
 	}
 
 	// First, try to find an existing entry
 	try {
-		const existingEntry = await guideService.findExistingEntry(searchTerm);
+		const existingEntry = await guideService.findExistingEntry(searchTerm, exactMatch);
 		if (existingEntry) {
-			return existingEntry;
+			return {
+				success: true,
+				data: existingEntry,
+			};
 		}
 	} catch (error) {
 		console.error("[Guide Search] Database search error:", error);
-		// Don't throw here, try to create a new entry instead
+		// Don't return error here, try to create a new entry instead
 		// This prevents 403 errors when database search fails but creation might work
 	}
 
@@ -108,29 +117,45 @@ export const searchGuide = async (searchTerm: string) => {
 	try {
 		if (!openai) {
 			console.error("[Guide Search] OpenAI API key is not configured");
-			throw new Error("Our researchers are currently indisposed. Please try again later.");
+			return {
+				success: false,
+				error: "Our researchers are currently indisposed. Please try again later.",
+			};
 		}
 
 		const entry = await generateGuideEntry(searchTerm);
 		try {
-			return await guideService.createEntry({
+			const newEntry = await guideService.createEntry({
 				searchTerm,
 				...entry,
 			});
+
+			return {
+				success: true,
+				data: newEntry,
+			};
 		} catch (dbError) {
 			console.error("[Guide Search] Database creation error:", dbError);
-			throw new Error("Failed to save your search to the Guide. Please try again later.");
+			return {
+				success: false,
+				error: "Failed to save your search to the Guide. Please try again later.",
+			};
 		}
 	} catch (error) {
 		console.error("[Guide Search] AI generation error:", error);
+		let errorMessage =
+			"Our researchers are currently indisposed in the Restaurant at the End of the Universe. Please try again later.";
+
 		if (error instanceof Error) {
 			// If it's an OpenAI API error, provide a more specific message
 			if (error.message.includes("OpenAI")) {
-				throw new Error("Our AI researchers are taking a tea break. Please try again in a moment.");
+				errorMessage = "Our AI researchers are taking a tea break. Please try again in a moment.";
 			}
 		}
-		throw new Error(
-			"Our researchers are currently indisposed in the Restaurant at the End of the Universe. Please try again later."
-		);
+
+		return {
+			success: false,
+			error: errorMessage,
+		};
 	}
 };

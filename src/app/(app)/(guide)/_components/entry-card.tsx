@@ -18,7 +18,7 @@ export const EntryCard = ({ entry, index }: EntryCardProps) => {
     return (
         <FadeIn delay={delay} duration={400}>
             <Link
-                href={`/${entry.searchTerm}`}
+                href={`/${encodeURIComponent(entry.searchTerm)}`}
                 className="mx-4 transition-transform hover:scale-[1.02]"
             >
                 <Card className="w-[300px] h-[150px] border-green-500/20 bg-black hover:border-green-500/40">

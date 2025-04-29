@@ -187,7 +187,7 @@ async function GuideEntry({ slug }: { slug: string }) {
 						return (
 							<Link
 								key={relatedEntry.id}
-								href={`/${relatedEntry.searchTerm}`}
+								href={`/${encodeURIComponent(relatedEntry.searchTerm)}`}
 								className="transition-transform hover:scale-[1.02]"
 							>
 								<Card className="h-full border-green-500/20 bg-black hover:border-green-500/40">

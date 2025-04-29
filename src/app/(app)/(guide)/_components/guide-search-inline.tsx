@@ -188,7 +188,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 			const result = await searchGuide(term, exactMatch);
 
 			if (result.success && result.data) {
-				router.push(`/${result.data.searchTerm}`);
+				router.push(`/${encodeURIComponent(result.data.searchTerm)}`);
 			} else {
 				setError(result.error || "An error occurred while searching");
 			}

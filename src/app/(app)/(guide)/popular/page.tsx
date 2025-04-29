@@ -34,7 +34,7 @@ export default async function PopularEntriesPage() {
 						{entries.map((entry) => (
 							<Link
 								key={entry.id}
-								href={`/${entry.searchTerm}`}
+								href={`/${encodeURIComponent(entry.searchTerm)}`}
 								className="transition-transform hover:scale-[1.02]"
 							>
 								<Card className="flex h-full flex-col border-green-500/20 bg-black hover:border-green-500/40">

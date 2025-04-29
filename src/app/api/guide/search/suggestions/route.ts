@@ -44,10 +44,23 @@ export async function GET(request: Request) {
 		let suggestions: string[] = [];
 
 		try {
-			const parsedContent = JSON.parse(content || "{}");
-			suggestions = Array.isArray(parsedContent.suggestions) ? parsedContent.suggestions : [];
-		} catch (parseError) {
-			console.error("[Suggestions API] Parse error:", parseError);
+			// Make sure content is not empty or malformed before parsing
+			if (!content || typeof content !== "string" || content.trim() === "") {
+				console.log("[Suggestions API] Empty or invalid content received:", content);
+				suggestions = [];
+			} else {
+				try {
+					const parsedContent = JSON.parse(content);
+					suggestions = Array.isArray(parsedContent.suggestions) ? parsedContent.suggestions : [];
+				} catch (parseError) {
+					console.error("[Suggestions API] Parse error:", parseError);
+					console.log("[Suggestions API] Failed to parse content:", content);
+					suggestions = [];
+				}
+			}
+		} catch (error) {
+			console.error("[Suggestions API] Error processing content:", error);
+			suggestions = [];
 		}
 
 		// Return the suggestions

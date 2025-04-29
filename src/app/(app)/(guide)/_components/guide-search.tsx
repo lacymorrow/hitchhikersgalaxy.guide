@@ -85,7 +85,7 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 				setSelectedEntry(entry);
 				setError(null);
 				// Navigate to the entry page
-				router.push(`/${entry.searchTerm}`);
+				router.push(`/${encodeURIComponent(entry.searchTerm)}`);
 				setOpen(false);
 			}
 		} catch (error) {

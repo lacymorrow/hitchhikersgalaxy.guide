@@ -36,6 +36,10 @@ Remove Hitchhiker's Guide specific theme and functionality, and implement a core
 -   [x] **Refactor Routing/Page Logic:** Implement logic in the new `/[...slug]/page.tsx` and remove old theme-specific routes/pages (e.g., `(guide)` group, `guide.mdx`). (Done)
 -   [x] **Review Configuration:** Check environment variables and config files for theme-specific settings. (Done - Updated site.ts with generic settings)
 -   [x] **Verify Build and Functionality:** Ensure the core programmatic SEO features work after refactoring. (Done - Created test-seo-platform.ts script)
+-   [x] **Implement AI-Driven Content Generation:** Create a server action for generating SEO content with OpenAI. (Done - Created content-generator.ts)
+-   [x] **Improve Content Quality:** Configure different generation tiers based on client settings. (Done - Added basic/standard/premium tiers)
+-   [x] **Update Dynamic Page:** Modify the dynamic page to use the new content generator. (Done - Updated page.tsx)
+-   [x] **Client-Specific Content:** Add ability to generate content tailored to specific client IDs. (Done)
 
 ## Persistence Implementation
 
@@ -57,6 +61,17 @@ The platform now supports client-specific customization through:
 2. **Dynamic Styling:** Header and footer components dynamically apply client colors and branding.
 3. **Flexible Branding:** Support for custom footer text, powered-by attribution, and other white-label elements.
 4. **Generic Assets:** Replaced theme-specific assets with generic, customizable alternatives.
+5. **Content Generation Tiers:** Different AI models and generation approaches based on client tier.
+
+## AI Content Generation
+
+The platform now generates content using OpenAI with the following features:
+
+1. **Tiered Content Quality:** Different content quality tiers (basic, standard, premium) with corresponding AI models.
+2. **SEO Optimization:** Content is structured for optimal SEO with appropriate headings, keywords, and formatting.
+3. **Rate Limiting:** Prevents abuse with configurable rate limits.
+4. **Error Handling:** Graceful error handling and user-friendly error messages.
+5. **Client-Specific Content:** Content can be tailored to specific client requirements.
 
 ## Testing
 
@@ -73,9 +88,10 @@ The white-label programmatic SEO platform is now complete with all planned funct
 1. **Database Integration:** Replace the in-memory store with a real database
 2. **Admin Dashboard:** Create an interface for managing keywords and client configurations
 3. **Analytics:** Add tracking for page views and search engine visibility
-4. **Enhanced Content Generation:** Improve the AI content generation with more sophisticated prompts
+4. **Enhanced Content Generation:** Add more sophisticated content models and styles
 5. **Multi-language Support:** Add support for generating content in multiple languages
+6. **Schema Markup:** Generate structured data for rich search results
 
 ---
 
-*White-label programmatic SEO platform implementation complete.*
+*White-label programmatic SEO platform implementation complete with AI-driven content generation.*

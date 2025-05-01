@@ -1,6 +1,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
+import { getConfig } from "@/config/seo-platform";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
 import { Link } from "@/components/primitives/link-with-transition";
@@ -24,43 +25,6 @@ interface FooterGroup {
 
 type FooterElement = { type: "group"; content: FooterGroup } | { type: "node"; content: ReactNode };
 
-const defaultGroups: FooterElement[] = [
-	{
-		type: "group",
-		content: {
-			header: { label: "Product" },
-			items: [
-				{ href: routes.home, label: "Home" },
-				{ href: routes.features, label: "Features" },
-				{ href: routes.pricing, label: "Pricing" },
-				{ href: routes.external.bones, label: "Bones" },
-			],
-		},
-	},
-	{
-		type: "group",
-		content: {
-			header: { label: "Resources" },
-			items: [
-				{ href: routes.docs, label: "Documentation" },
-				{ href: routes.blog, label: "Blog" },
-				{ href: routes.contact, label: "Support" },
-				{ href: routes.auth.signIn, label: "Sign in" },
-			],
-		},
-	},
-	{
-		type: "group",
-		content: {
-			header: { label: "Legal" },
-			items: [
-				{ href: routes.terms, label: "Terms of Service" },
-				{ href: routes.privacy, label: "Privacy Policy" },
-			],
-		},
-	},
-];
-
 const footerStyles = cva("flex flex-col gap-lg relative", {
 	variants: {
 		variant: {
@@ -75,14 +39,24 @@ const footerStyles = cva("flex flex-col gap-lg relative", {
 interface FooterProps extends HTMLAttributes<HTMLDivElement> {
 	variant?: VariantProps<typeof footerStyles>["variant"];
 	groups?: FooterElement[];
+	clientId?: string;
+	showLogo?: boolean;
 }
 
 export const Footer: FC<FooterProps> = ({
 	variant = "default",
-	groups = defaultGroups,
+	groups = [],
+	clientId,
+	showLogo = true,
 	...props
 }) => {
 	const { className, ...rest } = props;
+
+	// Get client-specific configuration
+	const config = getConfig(clientId);
+
+	// Apply client-specific styling
+	const clientStyling = config?.styling || {};
 
 	const groupElements = groups.map((element) => {
 		if (element.type === "group") {
@@ -121,16 +95,45 @@ export const Footer: FC<FooterProps> = ({
 	});
 
 	return (
-		<footer className={cn(footerStyles({ variant }), className)} {...rest}>
+		<footer
+			className={cn(footerStyles({ variant }), className)}
+			{...rest}
+			style={{
+				// Apply client-specific secondary color if available
+				...(clientStyling.secondaryColor && {
+					'--brand-secondary': clientStyling.secondaryColor
+				} as React.CSSProperties)
+			}}
+		>
 			<div className="container relative flex md:min-h-80 w-full flex-col items-stretch gap-2xl py-2xl">
 				<div className="flex flex-col lg:flex-row justify-between gap-2xl">
 					<div className="flex flex-col gap-2xl">
-						<Link href={routes.home}><h1 className="text-4xl font-bold">{siteConfig.name}</h1></Link>
+						{showLogo && (
+							<Link href={routes.home}>
+								<div className="flex items-center gap-2">
+									<img src="/placeholder-logo.svg" alt={siteConfig.name} className="h-10 w-auto" />
+									<h1 className="text-2xl font-bold">{siteConfig.name}</h1>
+								</div>
+							</Link>
+						)}
 					</div>
 					<div className="flex flex-col flex-wrap md:flex-row lg:gap-20">{groupElements}</div>
 				</div>
+
+				{/* Branding based on white-label config */}
+				{config.branding.showPoweredBy && (
+					<div className="mt-8 text-sm text-gray-500 text-center border-t pt-4">
+						{config.branding.brandingText}
+					</div>
+				)}
+
+				{config.branding.customFooterText && (
+					<div className="mt-2 text-xs text-gray-400 text-center">
+						{config.branding.customFooterText}
+					</div>
+				)}
 			</div>
-		</footer >
+		</footer>
 	);
 };
 

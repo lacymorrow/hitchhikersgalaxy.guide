@@ -136,41 +136,17 @@ export const constructMetadata = ({
 }: ConstructMetadataProps = {}): Metadata => ({
 	...defaultMetadata,
 	...metadata,
-	openGraph: {
-		...defaultOpenGraph,
-		title: metadata.title ?? defaultOpenGraph.title,
-		description: metadata.description ?? defaultOpenGraph.description,
-		images: images.length > 0 ? images : defaultOpenGraph.images,
-	},
-	twitter: {
-		...defaultTwitter,
-		title: metadata.title ?? defaultTwitter.title,
-		description: metadata.description ?? defaultTwitter.description,
-		images: images.length > 0 ? images : defaultTwitter.images,
-	},
+	// openGraph: {
+	// 	...defaultOpenGraph,
+	// 	title: metadata.title ?? defaultOpenGraph.title,
+	// 	description: metadata.description ?? defaultOpenGraph.description,
+	// 	images: images.length > 0 ? images : defaultOpenGraph.images,
+	// },
+	// twitter: {
+	// 	...defaultTwitter,
+	// 	title: metadata.title ?? defaultTwitter.title,
+	// 	description: metadata.description ?? defaultTwitter.description,
+	// 	images: images.length > 0 ? images : defaultTwitter.images,
+	// },
 	robots: noIndex ? { index: false, follow: true } : defaultMetadata.robots,
 });
-
-// Route-specific metadata for better CTR
-export const routeMetadata = {
-	home: {
-		title: "Shipkit - Launch Your App at Light Speed",
-		description:
-			"Transform your app idea into reality with Shipkit's all-in-one development platform. Built with Next.js, TypeScript, and modern tools for rapid, production-ready deployment.",
-	},
-	features: {
-		title: "Features - Modern App Development Made Simple | Shipkit",
-		description:
-			"Discover how Shipkit accelerates app development with Builder.io, Payload CMS, Auth.js, and more. Get enterprise-grade features without the complexity.",
-	},
-	pricing: {
-		title: "Simple, Transparent Pricing | Shipkit",
-		description:
-			"Choose the perfect plan for your app. Start free, scale as you grow. All plans include core features, world-class support, and automatic updates.",
-	},
-	docs: {
-		title: "Documentation - Build Better Apps Faster | Shipkit",
-		description:
-			"Comprehensive guides, API references, and examples to help you build production-ready apps with Shipkit. From quick starts to advanced topics.",
-	},
-};

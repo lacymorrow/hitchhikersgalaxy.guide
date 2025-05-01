@@ -1,9 +1,11 @@
 import { headers } from "next/headers";
 import { notFound } from "next/navigation";
-import { getCachedContent, generateAndCacheContent } from "@/server/services/content-generation";
+import { getCachedContent } from "@/server/services/content-generation";
 import { SafeHtml } from "@/components/primitives/safe-html";
 import type { Metadata, ResolvingMetadata } from "next";
 import { getConfig } from "@/config/seo-platform";
+import { getOrGenerateContent } from "@/server/actions/content-generator";
+import { cookies } from "next/headers";
 
 // Placeholder type for generated content
 interface GeneratedContent {
@@ -53,9 +55,10 @@ export async function generateMetadata(
 
 	try {
 		// Check if we have cached content with a title
-		const content = await getCachedContent(slug);
+		const contentResult = await getOrGenerateContent(slug);
 
-		if (content) {
+		if (contentResult.success && contentResult.data) {
+			const content = contentResult.data;
 			const title = content.title;
 			const formattedTitle = config.content.titleTemplate.replace('%s', title);
 
@@ -103,27 +106,34 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
 	const slug = resolvedParams.slug.join("/");
 
 	// Get the white-label configuration
-	const config = getConfig();
+	// Try to determine client ID from cookies or other means
+	let clientId: string | undefined;
+	try {
+		const cookieStore = cookies();
+		clientId = cookieStore.get("clientId")?.value;
+	} catch (error) {
+		console.log("No client ID found in cookies");
+	}
+
+	const config = getConfig(clientId);
 
 	// This section is important for ISR to work properly
-	// We first attempt to get the content - if it exists, it will be returned
-	// If it doesn't exist, it will be generated and stored permanently
+	// We use our new server action to get or generate content
 	let content: GeneratedContent | null = null;
+	let errorMessage: string | null = null;
 
 	try {
-		// Try to get existing content from persistent storage
-		content = await getCachedContent(slug);
+		const result = await getOrGenerateContent(slug, clientId);
 
-		// If no content exists, generate and store it permanently
-		if (!content) {
-			console.log(`First-time generation for slug: ${slug}`);
-			content = await generateAndCacheContent(slug);
+		if (result.success && result.data) {
+			content = result.data;
+		} else {
+			errorMessage = result.error || "Failed to generate content";
+			console.error(`Error for slug "${slug}":`, errorMessage);
 		}
 
-		// This should now only trigger in case of errors, as content should either
-		// be retrieved or generated above
+		// If we couldn't get content, show 404
 		if (!content) {
-			console.log(`Unable to generate content for slug: ${slug}`);
 			notFound();
 		}
 
@@ -141,7 +151,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
 	// We can also collect user-agent information, but this doesn't affect the static generation
 	let isCrawler = false;
 	try {
-		const headersList = await headers();
+		const headersList = headers();
 		const userAgent = headersList.get("user-agent");
 		isCrawler = isSearchEngine(userAgent);
 

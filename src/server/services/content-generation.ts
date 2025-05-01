@@ -34,9 +34,13 @@ export async function getCachedContent(slug: string): Promise<GeneratedContent |
  * This ensures content is only generated once per slug.
  *
  * @param slug The keyword slug to generate content for.
+ * @param content Optional content to use instead of generating new content.
  * @returns The generated or existing content.
  */
-export async function generateAndCacheContent(slug: string): Promise<GeneratedContent | null> {
+export async function generateAndCacheContent(
+	slug: string,
+	content?: GeneratedContent
+): Promise<GeneratedContent | null> {
 	// First check if we already have this content
 	const existingContent = await getCachedContent(slug);
 
@@ -48,11 +52,8 @@ export async function generateAndCacheContent(slug: string): Promise<GeneratedCo
 
 	console.log(`Generating NEW content for slug: ${slug}`);
 
-	// This would be your actual AI content generation logic
-	// Simulate AI generation with a delay
-	await new Promise((resolve) => setTimeout(resolve, 500));
-
-	const generatedData: GeneratedContent = {
+	// If content is provided, use it; otherwise generate placeholder content
+	const generatedData: GeneratedContent = content || {
 		title: `Generated Title for: ${slug}`,
 		body: `<p>This is <strong>persistent</strong> content generated for the keyword: <strong>${slug}</strong>.</p>
 		<p>This content was generated once and stored permanently.</p>

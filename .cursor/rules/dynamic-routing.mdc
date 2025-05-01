@@ -3,3 +3,112 @@ description:
 globs:
 alwaysApply: false
 ---
+# Dynamic Routing System
+
+This rule documents the dynamic routing system for the programmatic SEO platform.
+
+## Overview
+
+The platform uses Next.js App Router's dynamic routing capabilities to handle keyword-based URLs. The dynamic routing system extracts keywords from the URL, generates or retrieves content, and renders it with appropriate metadata.
+
+## Key Files
+
+- [src/app/(app)/[...slug]/page.tsx](mdc:src/app/(app)/[...slug]/page.tsx) - Main dynamic page component
+- [src/app/(app)/[...slug]/layout.tsx](mdc:src/app/(app)/[...slug]/layout.tsx) - Layout for dynamic pages
+
+## URL Structure
+
+The platform handles URLs in the following format:
+```
+/keyword-phrase
+/keyword/with/multiple/segments
+```
+
+These are processed by the catch-all route parameter `[...slug]`.
+
+## Core Components
+
+### Dynamic Page
+
+The dynamic page component:
+1. Extracts the slug from the URL
+2. Checks for existing content
+3. Generates content if it doesn't exist
+4. Renders content with client-specific branding
+
+### Dynamic Metadata Generation
+
+The page implements dynamic metadata generation using `generateMetadata`:
+
+```typescript
+export async function generateMetadata(
+    { params }: DynamicPageProps,
+    parent: ResolvingMetadata
+): Promise<Metadata> {
+    const resolvedParams = await params;
+    const slug = resolvedParams.slug.join("/");
+    const config = getConfig();
+
+    // Attempt to get cached content with title, or use fallback
+    const content = await getCachedContent(slug);
+
+    // Generate metadata based on content or fallback
+    // ...
+}
+```
+
+## Search Engine Detection
+
+The platform detects search engines to optimize caching and tracking:
+
+```typescript
+function isSearchEngine(userAgent: string | null): boolean {
+    if (!userAgent) return false;
+    const crawlers = [
+        "googlebot",
+        "bingbot",
+        "slurp",
+        // other search engines...
+    ];
+    const lowerCaseUserAgent = userAgent.toLowerCase();
+    return crawlers.some((crawler) => lowerCaseUserAgent.includes(crawler));
+}
+```
+
+## Incremental Static Regeneration (ISR)
+
+The dynamic page uses ISR to ensure content persists between deployments:
+
+```typescript
+// Configure ISR (Incremental Static Regeneration)
+export const revalidate = 86400; // 24 hours in seconds
+```
+
+## Integration with Content Generation
+
+The dynamic page integrates with the content generation system:
+
+```typescript
+let content: GeneratedContent | null = null;
+
+// Try to get existing content
+content = await getCachedContent(slug);
+
+// Generate if it doesn't exist
+if (!content) {
+    content = await generateAndCacheContent(slug);
+}
+```
+
+## Safe Content Rendering
+
+Content is rendered using the SafeHtml component to prevent XSS:
+
+```typescript
+<article className="prose dark:prose-invert lg:prose-xl max-w-none">
+    <h1>{content.title}</h1>
+    <SafeHtml html={content.body} />
+
+    {/* Display generation timestamp */}
+</article>
+```

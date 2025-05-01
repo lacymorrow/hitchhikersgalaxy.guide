@@ -3,7 +3,7 @@
 import { openai } from "@/lib/open-ai";
 import { generateAndCacheContent, getCachedContent } from "@/server/services/content-generation";
 import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
-import { getConfig } from "@/config/seo-platform";
+import { getConfig } from "@/app/(app)/[...slug]/config";
 
 interface GeneratedContent {
 	title: string;

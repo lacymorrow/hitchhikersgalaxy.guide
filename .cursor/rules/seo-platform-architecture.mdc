@@ -3,3 +3,45 @@ description:
 globs:
 alwaysApply: false
 ---
+# SEO Platform Architecture
+
+This rule documents the architecture of the white-label programmatic SEO platform.
+
+## Core Components
+
+The platform is structured around these main components:
+
+1. **Dynamic Routing**: Handles keyword-based URLs through the catch-all route pattern.
+   - [src/app/(app)/[...slug]/page.tsx](mdc:src/app/(app)/[...slug]/page.tsx) - Main entry point for dynamic pages
+   - [src/app/(app)/[...slug]/layout.tsx](mdc:src/app/(app)/[...slug]/layout.tsx) - Layout for dynamic pages
+
+2. **Content Generation**: Generates and persists SEO content.
+   - [src/server/services/content-generation.ts](mdc:src/server/services/content-generation.ts) - Core service for content generation
+
+3. **White-Label Configuration**: Manages client-specific customization.
+   - [src/config/seo-platform.ts](mdc:src/config/seo-platform.ts) - Configuration system for white-labeling
+
+4. **Core UI Components**: White-label friendly components.
+   - [src/components/headers/header.tsx](mdc:src/components/headers/header.tsx) - Header with client branding
+   - [src/components/footers/footer.tsx](mdc:src/components/footers/footer.tsx) - Footer with client branding
+   - [src/components/primitives/safe-html.tsx](mdc:src/components/primitives/safe-html.tsx) - Safe HTML rendering
+
+5. **Testing**: Verification of the platform functionality.
+   - [scripts/test-seo-platform.ts](mdc:scripts/test-seo-platform.ts) - Test script for platform verification
+
+## Data Flow
+
+1. User requests a URL with keywords (e.g., `/keyword-phrase`)
+2. Dynamic route in `[...slug]/page.tsx` extracts the slug
+3. System checks for existing content in the persistent storage
+4. If content exists, it's served; if not, new content is generated and stored
+5. Content is rendered with client-specific branding based on white-label configuration
+
+## Persistence Strategy
+
+The platform implements a robust persistence strategy:
+
+1. Content is generated once and stored (currently in memory, prepared for database integration)
+2. Incremental Static Regeneration (ISR) ensures pages persist across deployments
+3. Pre-generation scripts allow for build-time content creation for high-value keywords
+4. Client-specific caching settings provide control over content freshness

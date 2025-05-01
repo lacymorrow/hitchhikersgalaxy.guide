@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import { getCachedContent } from "@/server/services/content-generation";
 import { SafeHtml } from "@/components/primitives/safe-html";
 import type { Metadata, ResolvingMetadata } from "next";
-import { getConfig } from "@/config/seo-platform";
-import { getOrGenerateContent } from "@/server/actions/content-generator";
+import { getConfig } from "@/app/(app)/[...slug]/config";
+import { getOrGenerateContent } from "@/app/(app)/[...slug]/_actions/content-generator";
 import { cookies } from "next/headers";
 
 // Placeholder type for generated content
@@ -109,7 +109,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
 	// Try to determine client ID from cookies or other means
 	let clientId: string | undefined;
 	try {
-		const cookieStore = cookies();
+		const cookieStore = await cookies();
 		clientId = cookieStore.get("clientId")?.value;
 	} catch (error) {
 		console.log("No client ID found in cookies");
@@ -151,7 +151,7 @@ export default async function DynamicPage({ params }: DynamicPageProps) {
 	// We can also collect user-agent information, but this doesn't affect the static generation
 	let isCrawler = false;
 	try {
-		const headersList = headers();
+		const headersList = await headers();
 		const userAgent = headersList.get("user-agent");
 		isCrawler = isSearchEngine(userAgent);
 

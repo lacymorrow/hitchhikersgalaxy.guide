@@ -5,7 +5,7 @@
  */
 
 import { preGenerateContent, _exportDatabase } from "../src/server/services/content-generation";
-import { getConfig } from "../src/config/seo-platform";
+import { getConfig } from "../src/app/(app)/[...slug]/config";
 import fs from "fs";
 import path from "path";
 

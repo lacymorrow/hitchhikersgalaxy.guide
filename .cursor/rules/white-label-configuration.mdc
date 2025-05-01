@@ -3,3 +3,146 @@ description:
 globs:
 alwaysApply: false
 ---
+# White-Label Configuration System
+
+This rule documents the white-label configuration system for the programmatic SEO platform.
+
+## Overview
+
+The platform supports client-specific customization through a flexible configuration system. This allows different clients to have their own branding, styles, and content settings while using the same core platform.
+
+## Key Files
+
+- [src/config/seo-platform.ts](mdc:src/config/seo-platform.ts) - Core white-label configuration
+- [src/components/headers/header.tsx](mdc:src/components/headers/header.tsx) - Header with client branding
+- [src/components/footers/footer.tsx](mdc:src/components/footers/footer.tsx) - Footer with client branding
+- [src/config/site.ts](mdc:src/config/site.ts) - Site-wide configuration
+
+## Configuration Structure
+
+The `WhiteLabelConfig` interface defines the customizable options:
+
+```typescript
+interface WhiteLabelConfig {
+    styling: {
+        primaryColor: string;    // Brand primary color
+        secondaryColor: string;  // Brand secondary color
+        accentColor: string;     // Brand accent color
+        fontFamily: string;      // Brand font family
+    };
+    branding: {
+        showPoweredBy: boolean;         // Show "Powered by" text
+        customFooterText?: string;      // Custom footer text
+        brandingText: string;           // Branding text content
+    };
+    content: {
+        defaultTitle: string;            // Default page title
+        titleTemplate: string;           // Title template with %s placeholder
+        defaultDescription: string;      // Default meta description
+        generationModel: "basic" | "standard" | "premium";  // AI model tier
+        maxRelatedKeywords: number;      // Number of related keywords
+    };
+    seo: {
+        defaultMetaTags: Record<string, string>;  // Default meta tags
+        customHeadScripts?: string[];             // Custom head scripts
+        structuredData: boolean;                  // Enable structured data
+    };
+    caching: {
+        ttlSeconds: number;            // Time-to-live in seconds
+        revalidateOnCrawler: boolean;  // Revalidate on search engine visits
+    };
+}
+```
+
+## Usage
+
+### Get Client Configuration
+
+```typescript
+import { getConfig } from "@/config/seo-platform";
+
+// Get default configuration
+const defaultConfig = getConfig();
+
+// Get client-specific configuration
+const clientConfig = getConfig("client1");
+```
+
+### Apply Client Styling
+
+Components should apply client styling dynamically:
+
+```typescript
+// In header.tsx or footer.tsx
+const config = getConfig(clientId);
+const clientStyling = config?.styling || {};
+
+return (
+    <header
+        style={{
+            ...(clientStyling.primaryColor && {
+                '--brand-primary': clientStyling.primaryColor
+            } as React.CSSProperties)
+        }}
+    >
+        {/* Component content */}
+    </header>
+);
+```
+
+### Conditional Branding
+
+Components should use conditional branding elements:
+
+```typescript
+// In footer.tsx
+{config.branding.showPoweredBy && (
+    <div className="mt-8 text-sm text-gray-500 text-center">
+        {config.branding.brandingText}
+    </div>
+)}
+
+{config.branding.customFooterText && (
+    <div className="mt-2 text-xs text-gray-400 text-center">
+        {config.branding.customFooterText}
+    </div>
+)}
+```
+
+## Adding New Clients
+
+To add a new client configuration, extend the `getConfig` function:
+
+```typescript
+export function getConfig(clientId?: string): WhiteLabelConfig {
+    if (clientId === "client1") {
+        return {
+            ...defaultConfig,
+            styling: {
+                ...defaultConfig.styling,
+                primaryColor: "#EF4444", // Red
+            },
+            branding: {
+                ...defaultConfig.branding,
+                showPoweredBy: false,
+                customFooterText: "© 2023 Client 1, Inc. All rights reserved.",
+            },
+        };
+    }
+
+    // Add new client configurations here
+    if (clientId === "client2") {
+        return {
+            ...defaultConfig,
+            styling: {
+                ...defaultConfig.styling,
+                primaryColor: "#8B5CF6", // Purple
+            },
+            // Other customizations
+        };
+    }
+
+    // Return default config if no specific client config is found
+    return defaultConfig;
+}
+```

@@ -3,3 +3,77 @@ description:
 globs:
 alwaysApply: false
 ---
+# Content Generation System
+
+This rule documents the content generation system for the programmatic SEO platform.
+
+## Overview
+
+The platform generates and persists SEO content for each keyword-based URL. Content is created only once and then reused for subsequent requests, optimizing performance and reducing costs.
+
+## Key Files
+
+- [src/server/services/content-generation.ts](mdc:src/server/services/content-generation.ts) - Core content generation service
+- [scripts/test-seo-platform.ts](mdc:scripts/test-seo-platform.ts) - Test script for content generation
+
+## Core Functions
+
+### Content Retrieval
+
+```typescript
+export async function getCachedContent(slug: string): Promise<GeneratedContent | null>
+```
+
+- Retrieves content from persistent storage based on the slug (keyword)
+- Returns `null` if content doesn't exist
+- In production, should be replaced with a database query
+
+### Content Generation
+
+```typescript
+export async function generateAndCacheContent(slug: string): Promise<GeneratedContent | null>
+```
+
+- Checks if content already exists using `getCachedContent`
+- If it exists, returns the existing content
+- If not, generates new content and stores it
+- Only generates content once per slug
+
+### Pre-Generation
+
+```typescript
+export async function preGenerateContent(slugs: string[]): Promise<void>
+```
+
+- Batch generates content for a list of slugs
+- Used for build-time content generation
+- Can be called from CI/CD pipelines or scripts
+
+## Content Structure
+
+The `GeneratedContent` interface defines the structure of generated content:
+
+```typescript
+interface GeneratedContent {
+    title: string;          // Page title
+    body: string;           // HTML content
+    generatedAt: Date;      // Timestamp
+}
+```
+
+## Database Simulation
+
+The system currently uses an in-memory store to simulate a database. In production, this should be replaced with:
+
+1. A database like MongoDB, PostgreSQL, or Firestore
+2. Proper database queries for storage and retrieval
+3. Error handling for database operations
+
+## Integration with ISR
+
+The content generation system is designed to work with Next.js Incremental Static Regeneration (ISR):
+
+1. Pages are statically generated when first accessed
+2. Content is stored permanently and reused
+3. ISR revalidation controls when pages are regenerated
+4. Default TTL is 24 hours, configurable per client

@@ -1,7 +1,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
-import { getConfig } from "@/config/seo-platform";
+import { getConfig } from "@/app/(app)/[...slug]/config";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
 import { Link } from "@/components/primitives/link-with-transition";

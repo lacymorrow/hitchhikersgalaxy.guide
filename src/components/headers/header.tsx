@@ -6,6 +6,7 @@ import { ThemeToggle } from "@/components/ui/theme";
 import { UserMenu } from "@/components/ui/user-menu";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
+import { getConfig } from "@/config/seo-platform";
 import { cn } from "@/lib/utils";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useWindowScroll } from "@uidotdev/usehooks";
@@ -15,10 +16,8 @@ import { Link } from "@/components/primitives/link-with-transition";
 import type React from "react";
 import { useMemo } from "react";
 
-import { Logo } from "@/components/images/logo";
 import { Search } from "@/components/search/search";
 import styles from "@/styles/header.module.css";
-import { BuyButton } from "../buttons/buy-button";
 
 interface NavLink {
 	href: string;
@@ -33,13 +32,8 @@ interface HeaderProps {
 	logoText?: string;
 	searchPlaceholder?: string;
 	variant?: "default" | "sticky" | "floating";
+	clientId?: string;
 }
-
-const defaultNavLinks = [
-	{ href: routes.faq, label: "Faqs", isCurrent: false },
-	{ href: routes.features, label: "Features", isCurrent: false },
-	{ href: routes.pricing, label: "Pricing", isCurrent: false },
-];
 
 const headerVariants = cva(
 	"translate-z-0 z-50 p-md",
@@ -59,14 +53,22 @@ const headerVariants = cva(
 
 export const Header: React.FC<HeaderProps> = ({
 	logoHref = routes.home,
-	logoIcon = <Logo />,
-	logoText = siteConfig.name,
-	navLinks = defaultNavLinks,
+	logoIcon,
+	logoText,
+	navLinks = [],
 	variant = "default",
+	clientId,
 }) => {
 	const [{ y }] = useWindowScroll();
 	const isOpaque = useMemo(() => variant === "floating" && y && y > 100, [y, variant]);
 	const { data: session } = useSession();
+
+	// Get client-specific configuration
+	const config = getConfig(clientId);
+	const displayText = logoText || siteConfig.name;
+
+	// Apply client-specific styling
+	const clientStyling = config?.styling || {};
 
 	return (
 		<>
@@ -79,6 +81,12 @@ export const Header: React.FC<HeaderProps> = ({
 					isOpaque &&
 					"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]"
 				)}
+				style={{
+					// Apply client-specific primary color if available
+					...(clientStyling.primaryColor && {
+						'--brand-primary': clientStyling.primaryColor
+					} as React.CSSProperties)
+				}}
 			>
 				{variant === "floating" && <div className="h-[12px] w-full" />}
 				<nav className="container flex items-center justify-between gap-md">
@@ -87,8 +95,14 @@ export const Header: React.FC<HeaderProps> = ({
 							href={logoHref}
 							className="flex grow items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
 						>
-							{logoIcon}
-							<span className="block whitespace-nowrap">{logoText}</span>
+							{logoIcon || (
+								<img
+									src="/placeholder-logo.svg"
+									alt={displayText}
+									className="h-8 w-auto"
+								/>
+							)}
+							<span className="block whitespace-nowrap">{displayText}</span>
 						</Link>
 						<Search />
 					</div>
@@ -103,8 +117,14 @@ export const Header: React.FC<HeaderProps> = ({
 						<SheetContent side="left">
 							<nav className="grid gap-6 font-medium">
 								<Link href={logoHref} className="flex items-center gap-2 text-lg font-semibold">
-									{logoIcon}
-									<span className="sr-only">{logoText}</span>
+									{logoIcon || (
+										<img
+											src="/placeholder-logo.svg"
+											alt={displayText}
+											className="h-8 w-auto"
+										/>
+									)}
+									<span className="sr-only">{displayText}</span>
 								</Link>
 								{navLinks.map((link) => (
 									<Link
@@ -118,58 +138,11 @@ export const Header: React.FC<HeaderProps> = ({
 										{link.label}
 									</Link>
 								))}
-								{!session && (
-									<>
-										<Link
-											href={routes.auth.signIn}
-											className={cn(
-												buttonVariants({ variant: "default" }),
-												"w-full justify-center"
-											)}
-										>
-											Get Shipkit
-										</Link>
-										<Link
-											href={routes.auth.signIn}
-											className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-center")}
-										>
-											Login
-										</Link>
-									</>
-								)}
-								{session && (
-									<>
-										<Link
-											href={routes.docs}
-											className={cn("text-muted-foreground hover:text-foreground")}
-										>
-											Documentation
-										</Link>
-										<Link
-											href={routes.app.dashboard}
-											className={cn(
-												buttonVariants({ variant: "default" }),
-												"w-full justify-center"
-											)}
-										>
-											Dashboard
-										</Link>
-									</>
-								)}
 							</nav>
 						</SheetContent>
 					</Sheet>
 					<div className="flex items-center gap-2 md:ml-auto lg:gap-4">
 						<div className="hidden items-center justify-between gap-md text-sm md:flex">
-							{session && (
-								<Link
-									key={routes.docs}
-									href={routes.docs}
-									className={cn("text-muted-foreground transition-colors hover:text-foreground")}
-								>
-									Documentation
-								</Link>
-							)}
 							{navLinks.map((link) => (
 								<Link
 									key={`${link.href}-${link.label}`}
@@ -185,12 +158,7 @@ export const Header: React.FC<HeaderProps> = ({
 						</div>
 						<div className="flex items-center gap-2">
 							{!session && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
-
 							<UserMenu size="sm" />
-
-							{!session && (
-								<BuyButton />
-							)}
 						</div>
 					</div>
 				</nav>

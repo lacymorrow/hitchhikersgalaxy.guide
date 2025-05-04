@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Share2, Copy, Facebook, Rocket, Share } from "lucide-react";
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { guideQuotes } from "@/lib/constants/quotes";
+import { motion } from "framer-motion";
+import { Copy, Facebook, Share, Share2 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 // Custom X (formerly Twitter) icon
 function XIcon({ className }: { className?: string }) {
@@ -117,7 +117,7 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 			toast({
 				title: "Sub-Etha Network Transmission Complete!",
 				description: "The coordinates have been copied to your local data matrix.",
-				className: "bg-green-500/10 text-green-500 border-green-500/20",
+				className: "bg-[#70c8cd]/10 text-[#70c8cd] border-[#70c8cd]/20",
 			});
 		} catch (error) {
 			toast({
@@ -138,7 +138,7 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 			toast({
 				title: "Sub-Etha Network Transmission Complete!",
 				description: "The coordinates have been shared across the galaxy.",
-				className: "bg-green-500/10 text-green-500 border-green-500/20",
+				className: "bg-[#70c8cd]/10 text-[#70c8cd] border-[#70c8cd]/20",
 			});
 			setOpen(false);
 		} catch (error) {
@@ -189,7 +189,7 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 				<DialogTrigger asChild>
 					{variant === "subtle" ? (
 						<button
-							className="text-inherit hover:text-green-500 transition-colors"
+							className="text-inherit hover:text-[#70c8cd] transition-colors"
 							onClick={() => setOpen(true)}
 						>
 							Share & Enjoy
@@ -197,7 +197,7 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 					) : (
 						<Button
 							variant="outline"
-							className="relative border-green-500 text-green-500 hover:bg-green-500/10"
+							className="relative border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10"
 						>
 							<motion.div
 								className="absolute inset-0 pointer-events-none"
@@ -211,14 +211,14 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 									ease: "linear",
 								}}
 							>
-								<div className="h-full w-full rounded-lg border-2 border-dashed border-green-500" />
+								<div className="h-full w-full rounded-lg border-2 border-dashed border-[#70c8cd]/50" />
 							</motion.div>
 							<Share2 className="mr-2 h-4 w-4" />
 							Share Across the Galaxy
 						</Button>
 					)}
 				</DialogTrigger>
-				<DialogContent className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 border-green-500 bg-black sm:max-w-md">
+				<DialogContent className="fixed left-1/2 top-1/2 z-50 -translate-x-1/2 -translate-y-1/2 border-[#70c8cd]/50 bg-black sm:max-w-md">
 					<motion.div
 						className="absolute -top-6 -right-6 z-50 text-4xl"
 						animate={{
@@ -234,10 +234,10 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 						🚀
 					</motion.div>
 					<DialogHeader>
-						<DialogTitle className="text-green-500">
+						<DialogTitle className="text-[#70c8cd]">
 							Sub-Etha Network Transmission
 						</DialogTitle>
-						<DialogDescription className="text-green-400/60">
+						<DialogDescription className="text-[#70c8cd]/60">
 							Share this knowledge with other hitchhikers across the galaxy.
 							Don't forget your towel!
 						</DialogDescription>
@@ -252,168 +252,90 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 							<Input
 								readOnly
 								value={shareUrl}
-								className="border-green-500/20 bg-black text-green-400 focus-visible:ring-green-500"
+								className="bg-black border-[#70c8cd]/30 text-[#70c8cd]"
 							/>
 							<Button
 								variant="outline"
 								size="icon"
-								className="relative border-green-500 text-green-500 hover:bg-green-500/10"
+								className="border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10 hover:text-[#70c8cd]"
 								onClick={handleCopy}
 							>
-								<motion.div
-									animate={{
-										scale: [1, 1.2, 1],
-									}}
-									transition={{
-										duration: 2,
-										repeat: Infinity,
-										ease: "easeInOut",
-									}}
-								>
-									<Copy className="h-4 w-4" />
-								</motion.div>
+								<Copy className="h-4 w-4" />
 							</Button>
 						</motion.div>
+
 						<motion.div
-							className="flex flex-wrap justify-center gap-2"
+							className="flex justify-around gap-4 mt-4"
 							initial={{ opacity: 0, y: 20 }}
 							animate={{ opacity: 1, y: 0 }}
-							transition={{ delay: 0.4 }}
+							transition={{ delay: 0.3 }}
 						>
 							{canNativeShare && (
 								<Button
-									variant="outline"
-									className="group flex-1 border-green-500 text-green-500 hover:bg-green-500/10"
+									variant="ghost"
+									className="flex flex-col h-auto p-2 text-[#70c8cd]/70 hover:bg-[#70c8cd]/10 hover:text-[#70c8cd]"
 									onClick={handleNativeShare}
 								>
-									<motion.div
-										animate={{
-											rotate: [0, 10, -10, 0],
-										}}
-										transition={{
-											duration: 1,
-											repeat: Infinity,
-											repeatDelay: 2,
-										}}
-									>
-										<Share className="mr-2 h-4 w-4" />
-									</motion.div>
-									Share
+									<Share className="mb-1 h-5 w-5" />
+									<span className="text-xs">Native Share</span>
 								</Button>
 							)}
 							<Button
-								variant="outline"
-								className="group flex-1 border-green-500 text-green-500 hover:bg-green-500/10"
+								variant="ghost"
+								className="flex flex-col h-auto p-2 text-[#70c8cd]/70 hover:bg-[#70c8cd]/10 hover:text-[#70c8cd]"
 								onClick={() => handleShare("x")}
 							>
-								<motion.div
-									animate={{
-										rotate: [0, 10, -10, 0],
-									}}
-									transition={{
-										duration: 1,
-										repeat: Infinity,
-										repeatDelay: 2,
-									}}
-								>
-									<XIcon className="mr-2 h-4 w-4" />
-								</motion.div>
-								X
+								<XIcon className="mb-1 h-5 w-5" />
+								<span className="text-xs">X / Twitter</span>
 							</Button>
 							<Button
-								variant="outline"
-								className="group flex-1 border-green-500 text-green-500 hover:bg-green-500/10"
+								variant="ghost"
+								className="flex flex-col h-auto p-2 text-[#70c8cd]/70 hover:bg-[#70c8cd]/10 hover:text-[#70c8cd]"
 								onClick={() => handleShare("facebook")}
 							>
-								<motion.div
-									animate={{
-										rotate: [0, -10, 10, 0],
-									}}
-									transition={{
-										duration: 1,
-										repeat: Infinity,
-										repeatDelay: 2,
-									}}
-								>
-									<Facebook className="mr-2 h-4 w-4" />
-								</motion.div>
-								Facebook
+								<Facebook className="mb-1 h-5 w-5" />
+								<span className="text-xs">Facebook</span>
 							</Button>
 							<Button
-								variant="outline"
-								className="group flex-1 border-green-500 text-green-500 hover:bg-green-500/10"
+								variant="ghost"
+								className="flex flex-col h-auto p-2 text-[#70c8cd]/70 hover:bg-[#70c8cd]/10 hover:text-[#70c8cd]"
 								onClick={() => handleShare("tiktok")}
 							>
-								<motion.div
-									animate={{
-										rotate: [0, -10, 10, 0],
-									}}
-									transition={{
-										duration: 1,
-										repeat: Infinity,
-										repeatDelay: 2,
-									}}
-								>
-									<TikTokIcon className="mr-2 h-4 w-4" />
-								</motion.div>
-								TikTok
+								<TikTokIcon className="mb-1 h-5 w-5" />
+								<span className="text-xs">TikTok</span>
 							</Button>
 							<Button
-								variant="outline"
-								className="group flex-1 border-green-500 text-green-500 hover:bg-green-500/10"
+								variant="ghost"
+								className="flex flex-col h-auto p-2 text-[#70c8cd]/70 hover:bg-[#70c8cd]/10 hover:text-[#70c8cd]"
 								onClick={() => handleShare("bluesky")}
 							>
-								<motion.div
-									animate={{
-										rotate: [0, -10, 10, 0],
-									}}
-									transition={{
-										duration: 1,
-										repeat: Infinity,
-										repeatDelay: 2,
-									}}
-								>
-									<BlueskyIcon className="mr-2 h-4 w-4" />
-								</motion.div>
-								Bluesky
+								<BlueskyIcon className="mb-1 h-5 w-5" />
+								<span className="text-xs">Bluesky</span>
 							</Button>
 						</motion.div>
-					</div>
-					<motion.div
-						className="text-center text-sm text-green-400/60"
-						initial={{ opacity: 0 }}
-						animate={{ opacity: 1 }}
-						transition={{ delay: 0.6 }}
-					>
-						<motion.div
-							className="relative overflow-hidden"
-							animate={{ opacity: [0.6, 1, 0.6] }}
-							transition={{
-								duration: 4,
-								repeat: Infinity,
-								ease: "easeInOut",
-							}}
-						>
+						{showTowel && (
 							<motion.div
-								className="absolute inset-0 -z-10"
-								animate={{
-									backgroundPosition: ["0% 0%", "100% 100%"],
-								}}
-								transition={{
-									duration: 8,
-									repeat: Infinity,
-									ease: "linear",
-								}}
-								style={{
-									background: "radial-gradient(circle, rgba(34,197,94,0.1) 0%, rgba(0,0,0,0) 70%)",
-								}}
-							/>
+								className="mt-4 text-center text-sm text-[#70c8cd]"
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								exit={{ opacity: 0 }}
+							>
+								Hey you sass that hoopy Ford Prefect? There's a frood who really knows where his towel is.
+							</motion.div>
+						)}
+						<motion.p
+							className="mt-4 text-center text-xs text-[#70c8cd]/50"
+							initial={{ opacity: 0 }}
+							animate={{ opacity: 1 }}
+							transition={{ delay: 0.5 }}
+						>
 							{quote}
-							<div className="mt-1 text-xs">- The Guide</div>
-						</motion.div>
-					</motion.div>
+						</motion.p>
+					</div>
 				</DialogContent>
 			</Dialog>
+
+
 		</div>
 	);
 }

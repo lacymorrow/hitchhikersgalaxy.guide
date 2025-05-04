@@ -1,9 +1,9 @@
+import { Link } from "@/components/primitives/link-with-transition";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { cn } from "@/lib/utils";
 import { type VariantProps, cva } from "class-variance-authority";
-import { Link } from "@/components/primitives/link-with-transition";
 import type { FC, HTMLAttributes, ReactNode } from "react";
 import { v4 as uuid } from "uuid";
 

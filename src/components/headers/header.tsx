@@ -1,5 +1,6 @@
 "use client";
 
+import { Link } from "@/components/primitives/link-with-transition";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme";
@@ -11,7 +12,6 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useWindowScroll } from "@uidotdev/usehooks";
 import { cva } from "class-variance-authority";
 import { useSession } from "next-auth/react";
-import { Link } from "@/components/primitives/link-with-transition";
 import type React from "react";
 import { useMemo } from "react";
 

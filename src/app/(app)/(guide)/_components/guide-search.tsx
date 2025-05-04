@@ -120,18 +120,18 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 		<div className="relative">
 			<Button
 				variant="outline"
-				className="relative w-full justify-start text-sm text-muted-foreground sm:pr-12 md:w-52"
+				className="relative w-full justify-start text-sm text-[#70c8cd] border-[#70c8cd]/50 hover:bg-[#70c8cd]/10 hover:text-[#70c8cd] hover:border-[#70c8cd] sm:pr-12 md:w-52"
 				onClick={() => setOpen(true)}
 				size="sm"
 			>
 				<span className="hidden lg:inline-flex">Search the Guide...</span>
 				<span className="inline-flex lg:hidden">Search...</span>
-				<kbd className="pointer-events-none absolute right-1 hidden select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+				<kbd className="pointer-events-none absolute right-1 hidden select-none items-center gap-1 rounded border border-[#70c8cd]/30 bg-[#70c8cd]/5 px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
 					<span className="text-xs">⌘</span>K
 				</kbd>
 			</Button>
 
-			<CommandDialog open={open} onOpenChange={setOpen}>
+			<CommandDialog open={open} onOpenChange={setOpen} className="bg-black border-[#70c8cd]/30">
 				<DialogHeader>
 					<VisuallyHidden asChild>
 						<DialogTitle>Search Guide</DialogTitle>
@@ -142,8 +142,9 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 					placeholder="Type anything in the universe..."
 					value={search}
 					onValueChange={setSearch}
+					className="border-b border-[#70c8cd]/30 text-[#70c8cd]"
 				/>
-				<CommandList>
+				<CommandList className="bg-black text-[#70c8cd]">
 					<CommandEmpty>
 						{error ? (
 							<div className="flex flex-col items-center gap-2 p-4">
@@ -152,8 +153,8 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 							</div>
 						) : loading ? (
 							<div className="flex items-center justify-center gap-2 py-6">
-								<Loader2 className="h-6 w-6 animate-spin" />
-								<p className="text-sm text-muted-foreground">
+								<Loader2 className="h-6 w-6 animate-spin text-[#70c8cd]" />
+								<p className="text-sm text-[#70c8cd]/70">
 									Consulting the Guide...
 								</p>
 							</div>
@@ -163,13 +164,13 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 					</CommandEmpty>
 					{!loading && !error && !selectedEntry && (
 						<>
-							<CommandGroup heading="Suggestions">
+							<CommandGroup heading="Suggestions" className="text-[#70c8cd]/70">
 								{results.map((result) => (
 									<CommandItem
 										key={result.id}
 										value={result.searchTerm}
 										onSelect={() => handleItemSelect(result.searchTerm)}
-										className={activeItem === result.searchTerm ? "bg-accent" : ""}
+										className={activeItem === result.searchTerm ? "bg-[#70c8cd]/10 text-[#70c8cd]" : "text-[#70c8cd]"}
 									>
 										<Search className="mr-2 h-4 w-4" />
 										<span className="capitalize">{result.searchTerm}</span>
@@ -177,11 +178,11 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 								))}
 							</CommandGroup>
 							{search && (
-								<CommandGroup heading="Search">
+								<CommandGroup heading="Search" className="text-[#70c8cd]/70">
 									<CommandItem
 										value={`search-${search}`}
 										onSelect={() => handleItemSelect(search)}
-										className={activeItem === search ? "bg-accent" : ""}
+										className={activeItem === search ? "bg-[#70c8cd]/10 text-[#70c8cd]" : "text-[#70c8cd]"}
 									>
 										<Search className="mr-2 h-4 w-4" />
 										Search for "{search}"
@@ -192,13 +193,17 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 					)}
 					{selectedEntry && (
 						<div className="p-4">
-							<h3 className="mb-2 text-lg font-semibold capitalize">
+							<h3 className="mb-2 text-lg font-semibold capitalize text-[#70c8cd]">
 								{selectedEntry.searchTerm}
 							</h3>
-							<p className="whitespace-pre-wrap text-sm text-muted-foreground">
+							<p className="whitespace-pre-wrap text-sm text-[#70c8cd]/70">
 								{selectedEntry.content}
 							</p>
-							<Button className="mt-4" variant="outline" onClick={handleReset}>
+							<Button
+								className="mt-4 border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10 hover:text-[#70c8cd]"
+								variant="outline"
+								onClick={handleReset}
+							>
 								Search Again
 							</Button>
 						</div>

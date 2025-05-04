@@ -7,7 +7,20 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import { formatDistanceToNow } from "date-fns";
 import { BookOpen, Rocket, Shield } from "lucide-react";
 import { notFound } from "next/navigation";
+import pluralize from "pluralize";
 import { Suspense } from "react";
+
+// Helper function mirroring the service's normalization logic
+function normalizeSlugForLookup(slug: string): string {
+	if (!slug?.trim()) {
+		return "";
+	}
+	let normalized = slug.toLowerCase().trim();
+	normalized = normalized.replace(/[^\\w\\s-]/g, "").replace(/\\s+/g, " ");
+	normalized = pluralize.singular(normalized);
+	normalized = normalized.replace(/\\s/g, "-");
+	return normalized;
+}
 
 // Loading skeleton component
 function GuideEntrySkeleton() {
@@ -219,7 +232,11 @@ export default async function GuidePage({
 }: {
 	params: Promise<{ slug: string }>;
 }) {
-	const { slug } = await params;
+	// Decode the slug from params (Next.js does this automatically)
+	const { slug: rawSlug } = await params;
+
+	// Normalize the raw slug using the same logic as the service
+	const normalizedSlug = normalizeSlugForLookup(rawSlug);
 
 	return (
 		<div className="container relative min-h-screen max-w-4xl py-6 lg:py-10">
@@ -229,7 +246,7 @@ export default async function GuidePage({
 					<ContinueExploringSkeleton />
 				</div>
 			}>
-				<GuideEntry slug={slug} />
+				<GuideEntry slug={normalizedSlug} />
 			</Suspense>
 		</div>
 	);

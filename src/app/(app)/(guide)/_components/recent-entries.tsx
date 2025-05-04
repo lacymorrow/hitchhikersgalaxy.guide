@@ -10,7 +10,7 @@ export async function RecentEntries() {
 
 		if (entries.length === 0) {
 			return (
-				<div className="flex items-center justify-center h-[200px] text-center text-muted-foreground">
+				<div className="flex items-center justify-center h-[200px] text-center text-[#70c8cd]/60">
 					No entries yet. Start searching to create some!
 				</div>
 			);
@@ -28,8 +28,8 @@ export async function RecentEntries() {
 	} catch (error) {
 		console.error("[Recent Entries] Error fetching entries:", error);
 		return (
-			<div className="flex flex-col items-center justify-center gap-3 py-6 h-[200px] text-center text-green-400/60">
-				<DatabaseIcon className="h-8 w-8 text-green-500/40" />
+			<div className="flex flex-col items-center justify-center gap-3 py-6 h-[200px] text-center text-[#70c8cd]/60">
+				<DatabaseIcon className="h-8 w-8 text-[#70c8cd]/40" />
 				<p>The Guide's database is currently experiencing technical difficulties.</p>
 				<p className="text-sm">Don't panic! Try searching for something new instead.</p>
 			</div>

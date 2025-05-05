@@ -16,6 +16,32 @@ let nextConfig: NextConfig = {
 	 */
 	redirects,
 	/*
+	 * Configure CORS Headers
+	 */
+	async headers() {
+		return [
+			{
+				// Apply these headers to all routes in your application.
+				source: "/:path*",
+				headers: [
+					// IMPORTANT: Replace '*' with your specific frontend origins in production for security.
+					// Or use an environment variable: process.env.ALLOWED_ORIGIN || '*'
+					{ key: "Access-Control-Allow-Origin", value: "*" },
+					{
+						key: "Access-Control-Allow-Methods",
+						value: "GET,OPTIONS,PATCH,DELETE,POST,PUT",
+					},
+					{
+						key: "Access-Control-Allow-Headers",
+						value:
+							"X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization", // Add any other headers your API expects
+					},
+					{ key: "Access-Control-Allow-Credentials", value: "true" },
+				],
+			},
+		];
+	},
+	/*
 	 * Next.js configuration
 	 */
 	images: {

@@ -3,3 +3,27 @@ description:
 globs:
 alwaysApply: false
 ---
+# Guide Section Styling
+
+This document outlines the styling guidelines for the main guide section of the application, primarily located within the `src/app/(app)/(guide)/` directory.
+
+## Key Files
+
+- Main Page: [`src/app/(app)/(guide)/page.tsx`](mdc:src/app/(app)/(guide)/page.tsx) - Contains the primary hero section and overall structure for the guide landing page.
+- Layout: [`src/app/(app)/(guide)/layout.tsx`](mdc:src/app/(app)/(guide)/layout.tsx) - Defines the header and footer wrapping the guide pages.
+- Search Components:
+    - [`src/app/(app)/(guide)/_components/guide-search.tsx`](mdc:src/app/(app)/(guide)/_components/guide-search.tsx) - The main command palette search component.
+    - [`src/app/(app)/(guide)/_components/guide-search-inline.tsx`](mdc:src/app/(app)/(guide)/_components/guide-search-inline.tsx) - The inline search component used on the main page.
+- Entry Display:
+    - [`src/app/(app)/(guide)/_components/recent-entries.tsx`](mdc:src/app/(app)/(guide)/_components/recent-entries.tsx) - Displays recent entries in a marquee.
+    - [`src/app/(app)/(guide)/_components/entry-card.tsx`](mdc:src/app/(app/(guide)/_components/entry-card.tsx) - The card component used to display individual guide entries.
+
+## Styling Conventions
+
+- **Primary Color:** Teal/Light Blue (`#70c8cd`) is used for primary text, borders, icons, and interactive element highlights. Opacity variants (`/80`, `/60`, `/50`, `/40`, `/30`, `/10`, `/5`) are used for different states and emphasis.
+- **Background:** A dark theme is maintained, typically using `bg-black` or shades of dark gray (`bg-gray-900`).
+- **Font:** `font-mono` is used extensively for headings, buttons, and descriptive text to maintain the "guide" aesthetic.
+- **Borders:** Subtle borders using the primary color with opacity (`border-[#70c8cd]/<opacity>`) are used to define sections and interactive elements.
+- **Hover States:** Hover states typically involve a slight background change (`hover:bg-[#70c8cd]/10`) or increased border/text opacity.
+
+Refer to the specific files linked above for implementation examples. Maintain consistency with this color scheme and font usage when modifying or adding components within this section.

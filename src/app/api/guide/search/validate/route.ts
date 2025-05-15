@@ -62,7 +62,7 @@ export async function GET(request: Request) {
 				},
 				{
 					role: "user",
-					content: `Validate this search term: "${term}"`,
+					content: `Validate this search term: "${term.trim()}"`,
 				},
 			],
 			temperature: 0.3,

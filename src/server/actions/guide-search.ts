@@ -1,6 +1,7 @@
 "use server";
 
 import { openai } from "@/lib/open-ai";
+import { normalizeSlug } from "@/lib/utils";
 import { guideService } from "@/server/services/guide-service";
 import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
 
@@ -80,10 +81,15 @@ Keep the total length under 400 words. Make it entertaining and informative, wit
 };
 
 export const searchGuide = async (searchTerm: string, exactMatch = false) => {
-	if (!searchTerm?.trim()) {
+	console.log("[searchGuide] Original searchTerm:", searchTerm, "exactMatch:", exactMatch);
+	const normalizedSearchTerm = normalizeSlug(searchTerm);
+	console.log("[searchGuide] Normalized searchTerm for processing:", normalizedSearchTerm);
+
+	if (!normalizedSearchTerm) {
+		console.log("[searchGuide] Normalized searchTerm is empty, returning error.");
 		return {
 			success: false,
-			error: "Search term is required",
+			error: "Search term is required after normalization",
 		};
 	}
 
@@ -98,15 +104,21 @@ export const searchGuide = async (searchTerm: string, exactMatch = false) => {
 		};
 	}
 
-	// First, try to find an existing entry
+	// First, try to find an existing entry using the normalized term
 	try {
-		const existingEntry = await guideService.findExistingEntry(searchTerm, exactMatch);
+		console.log(
+			"[searchGuide] Attempting to find existing entry with normalized term:",
+			normalizedSearchTerm
+		);
+		const existingEntry = await guideService.findExistingEntry(normalizedSearchTerm, exactMatch);
 		if (existingEntry) {
+			console.log("[searchGuide] Found existing entry:", existingEntry);
 			return {
 				success: true,
-				data: existingEntry,
+				data: { ...existingEntry, searchTerm: normalizedSearchTerm },
 			};
 		}
+		console.log("[searchGuide] No existing entry found for normalized term:", normalizedSearchTerm);
 	} catch (error) {
 		console.error("[Guide Search] Database search error:", error);
 		// Don't return error here, try to create a new entry instead
@@ -123,16 +135,26 @@ export const searchGuide = async (searchTerm: string, exactMatch = false) => {
 			};
 		}
 
-		const entry = await generateGuideEntry(searchTerm);
+		console.log(
+			"[searchGuide] Generating new entry with original term for AI context:",
+			searchTerm
+		);
+		const entryContent = await generateGuideEntry(searchTerm);
 		try {
+			console.log(
+				"[searchGuide] Creating new entry in DB with normalized term:",
+				normalizedSearchTerm,
+				"and content:",
+				entryContent
+			);
 			const newEntry = await guideService.createEntry({
-				searchTerm,
-				...entry,
+				searchTerm: normalizedSearchTerm,
+				...entryContent,
 			});
-
+			console.log("[searchGuide] Successfully created new entry:", newEntry);
 			return {
 				success: true,
-				data: newEntry,
+				data: { ...newEntry, searchTerm: normalizedSearchTerm },
 			};
 		} catch (dbError) {
 			console.error("[Guide Search] Database creation error:", dbError);

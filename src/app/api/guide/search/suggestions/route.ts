@@ -31,7 +31,7 @@ export async function GET(request: Request) {
 				},
 				{
 					role: "user",
-					content: `Suggest completions for: "${term}"`,
+					content: `Suggest completions for: "${term.trim()}"`,
 				},
 			],
 			temperature: 0.7,

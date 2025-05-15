@@ -1,8 +1,8 @@
+import { normalizeSlug } from "@/lib/utils";
 import { isSSR } from "@/lib/utils/runtime";
 import { db } from "@/server/db";
 import { guideEntries } from "@/server/db/schema";
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
-import pluralize from "pluralize";
 import { cache } from "react";
 
 // Since we're in a service, we can assume the database is initialized
@@ -26,33 +26,12 @@ async function checkSimilaritySearch() {
 	return hasSimilaritySearch;
 }
 
-function normalizeSearchTerm(searchTerm: string | null | undefined): string {
-	// Return empty string for null/undefined/empty values
-	if (!searchTerm?.trim()) {
-		return "";
-	}
-
-	// Convert to lowercase and trim
-	let normalized = searchTerm.toLowerCase().trim();
-
-	// Remove special characters and extra spaces
-	normalized = normalized.replace(/[^\w\s-]/g, "").replace(/\s+/g, " ");
-
-	// Get the singular form of the word
-	normalized = pluralize.singular(normalized);
-
-	// Convert spaces to hyphens for URL-friendly slugs
-	normalized = normalized.replace(/\s/g, "-");
-
-	return normalized;
-}
-
 export const guideService = {
 	getSimilarSearches: cache(async (searchTerm: string, limit = 5) => {
 		if (!searchTerm?.trim()) return [];
 
 		try {
-			const normalizedTerm = normalizeSearchTerm(searchTerm);
+			const normalizedTerm = normalizeSlug(searchTerm);
 			if (!normalizedTerm) return [];
 
 			// Create an alternative version of the term (with spaces instead of hyphens)
@@ -146,7 +125,7 @@ export const guideService = {
 				return null;
 			}
 
-			const normalizedTerm = normalizeSearchTerm(searchTerm);
+			const normalizedTerm = normalizeSlug(searchTerm);
 			if (!normalizedTerm) {
 				return null;
 			}
@@ -251,56 +230,36 @@ export const guideService = {
 		dangerLevel: number;
 	}) => {
 		try {
-			if (!entry.searchTerm?.trim()) {
-				throw new Error("Search term is required");
+			// The entry.searchTerm received here IS ALREADY NORMALIZED by searchGuide
+			// We trust it and use it directly for storage.
+			const termToStore = entry.searchTerm;
+			console.log(
+				"[Guide Service] createEntry - termToStore (should be pre-normalized):",
+				termToStore
+			);
+
+			if (!termToStore) {
+				console.error(
+					"[Guide Service] Attempted to create entry with empty normalized search term."
+				);
+				throw new Error("Normalized search term cannot be empty for creating an entry.");
 			}
 
-			const normalizedTerm = normalizeSearchTerm(entry.searchTerm);
-			if (!normalizedTerm) {
-				throw new Error("Invalid search term");
-			}
-
-			// Generate search vector with more comprehensive terms
-			const searchVector = [
-				normalizedTerm,
-				pluralize.plural(normalizedTerm), // Add plural form
-				...normalizedTerm.split(" "),
-				...entry.content.toLowerCase().split(/\W+/),
-				...entry.whereToFind.toLowerCase().split(/\W+/),
-				...entry.whatToAvoid.toLowerCase().split(/\W+/),
-			]
-				.filter(Boolean)
-				.join(" ");
-
-			const result = await db
-				?.insert(guideEntries)
+			const [newEntry] = await db
+				.insert(guideEntries)
 				.values({
-					searchTerm: normalizedTerm,
-					content: entry.content,
-					travelAdvice: entry.travelAdvice,
-					whereToFind: entry.whereToFind,
-					whatToAvoid: entry.whatToAvoid,
-					funFact: entry.funFact,
-					advertisement: entry.advertisement,
-					reliability: entry.reliability,
-					dangerLevel: entry.dangerLevel,
-					searchVector,
-					popularity: 1,
+					...entry,
+					searchTerm: termToStore, // This is the pre-normalized slug
+					searchVector: termToStore, // Use the same for simple search vector initially
 					createdAt: new Date(),
 					updatedAt: new Date(),
 				})
 				.returning();
 
-			if (!result) {
-				throw new Error("Failed to create entry");
-			}
-
-			const newEntry = result[0];
-
 			return newEntry;
 		} catch (error) {
 			console.error("[Guide Service] Error in createEntry:", error);
-			throw error;
+			throw error; // Re-throw to be caught by the action
 		}
 	},
 };

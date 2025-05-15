@@ -132,9 +132,9 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 		// Local regex checks for obvious gibberish
 		const hasExcessiveSpecialChars = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]{3,}/.test(normalizedTerm);
 		const hasExcessiveNumbers = /\d{12,}/.test(normalizedTerm); // 4+ consecutive numbers
-		const isTooRandom = /[a-z]{5,}/.test(normalizedTerm); // 3+ uncommon letters together
+		// const isTooRandom = /[a-z]{5,}/.test(normalizedTerm); // 3+ uncommon letters together - This was too aggressive
 
-		if (hasExcessiveSpecialChars || hasExcessiveNumbers || isTooRandom) {
+		if (hasExcessiveSpecialChars || hasExcessiveNumbers /* || isTooRandom */) {
 			return { valid: false, message: "Search term appears to be gibberish" };
 		}
 
@@ -164,9 +164,11 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 		if (!term.trim()) {
 			return;
 		}
+		console.log("[GuideSearchInline] onSearch started. Term:", term, "isAiSuggestion:", isAiSuggestion);
 
 		// Validate the search term
 		const validationResult = await validateSearchTerm(term);
+		console.log("[GuideSearchInline] Validation result:", validationResult);
 
 		if (!validationResult.valid) {
 			toast({
@@ -174,6 +176,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 				description: validationResult.message,
 				variant: "destructive"
 			});
+			console.log("[GuideSearchInline] Search term invalid, returning.");
 			return;
 		}
 
@@ -186,15 +189,26 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 			// redirecting to a partial match
 			const exactMatch = true;
 
+			console.log("[GuideSearchInline] Calling searchGuide with term:", term, "exactMatch:", exactMatch);
 			const result = await searchGuide(term, exactMatch);
+			console.log("[GuideSearchInline] searchGuide result:", result);
 
 			if (result.success && result.data) {
-				router.push(`/${encodeURIComponent(result.data.searchTerm)}`);
+				const path = `/${encodeURIComponent(result.data.searchTerm)}`;
+				console.log("[GuideSearchInline] Navigating to path:", path);
+				router.push(path);
 			} else {
-				setError(result.error || "An error occurred while searching");
+				const errorMessage = result.error || "An error occurred while searching the Guide.";
+				console.error("[GuideSearchInline] searchGuide was not successful or data is missing. Error:", errorMessage);
+				setError(errorMessage);
+				toast({
+					title: "Search Failed",
+					description: errorMessage,
+					variant: "destructive",
+				});
 			}
 		} catch (err) {
-			console.error("Search error:", err);
+			console.error("[GuideSearchInline] Error in onSearch try block:", err);
 			setError("An unexpected error occurred. Please try again.");
 		} finally {
 			setSearchLoading(false);
@@ -291,7 +305,29 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 							disabled={searchLoading}
 						/>
 						{/* Search icon or loader */}
-						<div className="pointer-events-none pr-2">
+						<button
+							type="button"
+							className={cn(
+								"pr-2 flex items-center justify-center",
+								"bg-transparent border-none p-0",
+								search && !searchLoading ? "cursor-pointer hover:opacity-80" : "opacity-50 cursor-not-allowed"
+							)}
+							onClick={() => {
+								if (search && !searchLoading) {
+									void onSearch(search);
+								}
+							}}
+							onKeyDown={(e) => {
+								if (e.key === "Enter" || e.key === " ") {
+									if (search && !searchLoading) {
+										e.preventDefault();
+										void onSearch(search);
+									}
+								}
+							}}
+							disabled={!search || searchLoading}
+							aria-label="Search"
+						>
 							<AnimatePresence mode="wait">
 								{(suggestionsLoading || searchLoading) ? (
 									<motion.div
@@ -315,7 +351,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 									</motion.div>
 								)}
 							</AnimatePresence>
-						</div>
+						</button>
 					</div>
 				</div>
 			</PopoverTrigger>

@@ -80,13 +80,20 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 		setError(null);
 		try {
 			setLoading(true);
-			const entry = await searchGuide(searchTerm);
-			if (entry) {
-				setSelectedEntry(entry);
+			const result = await searchGuide(searchTerm);
+			if (result.success && result.data) {
+				setSelectedEntry(result.data);
 				setError(null);
-				// Navigate to the entry page
-				router.push(`/${encodeURIComponent(entry.searchTerm)}`);
+				router.push(`/${encodeURIComponent(result.data.searchTerm)}`);
 				setOpen(false);
+			} else {
+				const message = result.error || "Failed to find or create guide entry.";
+				setError(message);
+				toast({
+					title: "Error",
+					description: message,
+					variant: "destructive",
+				});
 			}
 		} catch (error) {
 			const message =
@@ -131,7 +138,7 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 				</kbd>
 			</Button>
 
-			<CommandDialog open={open} onOpenChange={setOpen} className="bg-black border-[#70c8cd]/30">
+			<CommandDialog open={open} onOpenChange={setOpen}>
 				<DialogHeader>
 					<VisuallyHidden asChild>
 						<DialogTitle>Search Guide</DialogTitle>

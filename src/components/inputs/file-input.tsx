@@ -139,7 +139,7 @@ export default function FileInput() {
 				{fileList.map((file, index) => (
 					<li
 						key={index}
-						className={`flex items-center justify-between rounded-md px-4 py-2 ${isUploaded ? "bg-green-100" : "bg-muted"
+						className={`flex items-center justify-between rounded-md px-4 py-2 ${isUploaded ? "bg-blue-100" : "bg-muted"
 							}`}
 					>
 						<div className="truncate">{typeof file === "string" ? file : file.name}</div>
@@ -158,7 +158,7 @@ export default function FileInput() {
 								</button>
 							</div>
 						)}
-						{isUploaded && <div className="text-sm text-green-600">Uploaded</div>}
+						{isUploaded && <div className="text-sm text-blue-600">Uploaded</div>}
 					</li>
 				))}
 			</ul>

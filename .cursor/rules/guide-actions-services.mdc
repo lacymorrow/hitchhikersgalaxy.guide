@@ -3,3 +3,55 @@ description:
 globs:
 alwaysApply: false
 ---
+# Guide: Server Actions vs. Services
+
+This document clarifies the distinction and roles of Server Actions and Services specifically for the guide and search functionalities in this Next.js application, reinforcing the general project principle of separating concerns.
+
+## General Principle
+
+-   **Server Actions (`src/server/actions/`)**: Intended for user-facing operations, typically mutations or operations that might involve multiple steps (like find-or-generate). They are the direct target of client-side calls (e.g., from forms or component event handlers). They orchestrate calls to services for business logic and data access.
+-   **Services (`src/server/services/`)**: Contain the core business logic, data transformation, and direct database interactions. They are called by Server Actions or by Server Components for data fetching. Services should not directly handle API request/response lifecycle or user session details beyond what's necessary for their logic.
+
+## Guide & Search Specific Roles
+
+### 1. Server Actions
+
+-   **`searchGuide`**
+    -   **Location**: [`src/server/actions/guide-search.ts`](mdc:src/server/actions/guide-search.ts)
+    -   **Primary Use**: This is the main entry point for any operation that intends to get a guide entry for a term, whether it exists or needs to be created.
+    -   **Responsibilities**:
+        -   Handles incoming search terms from client components (e.g., `GuideSearch`, `GuideSearchInline`) or direct calls (e.g., from `[slug]/page.tsx`).
+        -   Normalizes the search term using `normalizeSlug` from [`src/lib/utils.ts`](mdc:src/lib/utils.ts).
+        -   Implements rate limiting for search/generation requests.
+        -   **Orchestration**: Calls `guideService.findExistingEntry` to check if an entry already exists.
+        -   If the entry does not exist, it invokes the AI content generation logic.
+        -   Calls `guideService.createEntry` to persist a newly generated entry.
+        -   Constructs and returns a standardized response object: `{ success: boolean, data?: GuideEntry, error?: string }`.
+
+### 2. Services
+
+-   **`guideService`**
+    -   **Location**: [`src/server/services/guide-service.ts`](mdc:src/server/services/guide-service.ts)
+    -   **Primary Use**: Encapsulates all direct interactions with the `guideEntries` database table and related business logic that doesn't involve AI generation orchestration or user-facing action structure.
+    -   **Key Methods & Responsibilities**:
+        -   `findExistingEntry(normalizedSlug: string, exactMatch: boolean)`: Retrieves a guide entry from the database based on a pre-normalized slug. It does *not* trigger AI generation if an entry is not found. It can perform exact or broader (e.g., `LIKE`) searches.
+        -   `createEntry(entryData)`: Inserts a new guide entry into the database. Expects `entryData.searchTerm` to be already normalized.
+        -   `getRecentEntries(limit: number)`: Fetches the most recently created guide entries.
+        -   `getSimilarSearches(searchTerm: string, limit: number)`: Finds entries with search terms similar to the input. May use database-specific similarity functions (e.g., `pg_trgm`) or basic `LIKE` queries. Normalizes the input `searchTerm` internally.
+        -   `incrementPopularity(entryId: string)`: Increments the `popularity` counter for a specific guide entry.
+        -   `getValidationStatus(searchTerm: string)`: (Hypothetical, if direct validation logic beyond simple checks were in the service) Could perform complex validation rules against a term. (Currently, AI validation is an API endpoint, and basic checks are in client components or actions).
+
+## Interaction Flow Example (User Search)
+
+1.  User types in `GuideSearchInline` component.
+2.  `GuideSearchInline` (client) calls `searchGuide` (server action) with the raw search term.
+3.  `searchGuide` (action) normalizes the term.
+4.  `searchGuide` (action) calls `guideService.findExistingEntry` with the normalized term.
+5.  If `guideService` returns an entry, `searchGuide` (action) returns it to the client.
+6.  If `guideService` does not find an entry, `searchGuide` (action) initiates AI generation.
+7.  `searchGuide` (action) then calls `guideService.createEntry` with the AI-generated data and normalized term.
+8.  `guideService` saves to DB.
+9.  `searchGuide` (action) returns the new entry to the client.
+10. `GuideSearchInline` (client) navigates to the page for the returned entry's (normalized) search term.
+
+This separation ensures that client components interact with a well-defined action layer, while the core data logic remains encapsulated within services.

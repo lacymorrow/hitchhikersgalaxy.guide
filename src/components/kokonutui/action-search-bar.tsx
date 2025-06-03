@@ -1,19 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
-import { motion, AnimatePresence } from "motion/react";
-import {
-    BarChart2,
-    Globe,
-    Video,
-    PlaneTakeoff,
-    AudioLines,
-    Layout,
-    LayoutGrid,
-} from "lucide-react";
 import useDebounce from "@/hooks/use-debounce";
 import { MagnifyingGlassIcon, PaperPlaneIcon } from "@radix-ui/react-icons";
+import {
+    AudioLines,
+    BarChart2,
+    LayoutGrid,
+    PlaneTakeoff,
+    Video
+} from "lucide-react";
+import { AnimatePresence, motion } from "motion/react";
+import { useEffect, useState } from "react";
 
 interface Action {
     id: string;
@@ -56,7 +54,7 @@ const allActionsSample = [
     {
         id: "4",
         label: "Talk to Jarvis",
-        icon: <AudioLines className="h-4 w-4 text-green-500" />,
+        icon: <AudioLines className="h-4 w-4 text-blue-500" />,
         description: "gpt-4o voice",
         short: "",
         end: "Active",

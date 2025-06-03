@@ -33,14 +33,14 @@ export const SearchResultItem = ({
 				value={result.searchTerm}
 				onSelect={onSelect}
 				className={cn(
-					"flex cursor-pointer flex-col items-start gap-1 rounded border border-transparent p-3 text-green-400 aria-selected:border-green-500/40 aria-selected:bg-green-500/10",
-					isSelected && "border-green-500/40 bg-green-500/10"
+					"flex cursor-pointer flex-col items-start gap-1 rounded border border-transparent p-3 text-blue-400 aria-selected:border-blue-500/40 aria-selected:bg-blue-500/10",
+					isSelected && "border-blue-500/40 bg-blue-500/10"
 				)}
 			>
-				<div className="font-mono text-base capitalize text-green-500">
+				<div className="font-mono text-base capitalize text-blue-500">
 					{displaySearchTerm}
 				</div>
-				<div className="line-clamp-1 text-xs text-green-400/60">
+				<div className="line-clamp-1 text-xs text-blue-400/60">
 					{formatDistanceToNow(result.createdAt, { addSuffix: true })}
 				</div>
 			</CommandItem>

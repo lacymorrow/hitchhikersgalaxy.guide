@@ -1,10 +1,10 @@
 "use client";
 
-import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
+import { useState } from "react";
 
 const fadingBorderStyle = `
   relative before:absolute before:inset-0 before:border before:border-gray-700 before:rounded-lg
@@ -123,7 +123,7 @@ function Feature({ children, included = false }) {
   return (
     <div className="flex items-center space-x-2">
       {included ? (
-        <Check className="h-5 w-5 text-green-500" />
+        <Check className="h-5 w-5 text-blue-500" />
       ) : (
         <X className="h-5 w-5 text-gray-500" />
       )}

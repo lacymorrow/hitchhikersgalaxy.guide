@@ -100,7 +100,7 @@ export const FeedbackDialog = ({ trigger, className }: FeedbackDialogProps) => {
 						/>
 						{error && <p className="text-sm text-red-500">{error}</p>}
 						{success && (
-							<p className="text-sm text-green-500">
+							<p className="text-sm text-blue-500">
 								Thank you for your feedback! 🚀
 							</p>
 						)}

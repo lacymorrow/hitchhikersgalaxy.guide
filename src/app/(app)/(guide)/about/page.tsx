@@ -1,31 +1,30 @@
-import { Info, Heart, Rocket } from "lucide-react";
 import { HeartFilledIcon, StarFilledIcon } from "@radix-ui/react-icons";
-import { ShareButton } from "@/components/buttons/share-button";
+import { Info, Rocket } from "lucide-react";
 
 export default function AboutPage() {
 	return (
 		<div className="container relative min-h-screen max-w-6xl py-6 lg:py-10">
 			{/* Electronic book frame */}
-			<div className="relative rounded-lg border-4 border-green-500 bg-black p-6 shadow-[0_0_50px_rgba(34,197,94,0.2)]">
+			<div className="relative rounded-lg border-4 border-blue-500 bg-black p-6 shadow-[0_0_50px_rgba(59,130,246,0.2)]">
 				{/* Screen interface */}
 				<div className="flex flex-col space-y-8">
 					{/* Header */}
 					<div className="flex flex-col items-center space-y-4 text-center">
 						<div className="flex items-center space-x-2">
-							<Info className="h-8 w-8 text-green-500" />
-							<h1 className="font-mono text-4xl font-bold text-green-500">
+							<Info className="h-8 w-8 text-blue-500" />
+							<h1 className="font-mono text-4xl font-bold text-blue-500">
 								About the Guide
 							</h1>
 						</div>
-						<p className="max-w-[42rem] font-mono leading-normal text-green-400/80 sm:text-xl sm:leading-8">
+						<p className="max-w-[42rem] font-mono leading-normal text-blue-400/80 sm:text-xl sm:leading-8">
 							The Hitchhiker's Guide to the Galaxy has this to say about itself...
 						</p>
 					</div>
 
 					{/* Main content */}
-					<div className="space-y-8 font-mono text-green-400/80">
+					<div className="space-y-8 font-mono text-blue-400/80">
 						<section className="space-y-4">
-							<h2 className="flex items-center gap-2 text-2xl font-bold text-green-500">
+							<h2 className="flex items-center gap-2 text-2xl font-bold text-blue-500">
 								<StarFilledIcon className="h-6 w-6" />
 								What is the Guide?
 							</h2>
@@ -40,7 +39,7 @@ export default function AboutPage() {
 						</section>
 
 						<section className="space-y-4">
-							<h2 className="flex items-center gap-2 text-2xl font-bold text-green-500">
+							<h2 className="flex items-center gap-2 text-2xl font-bold text-blue-500">
 								<Rocket className="h-6 w-6" />
 								How Does it Work?
 							</h2>
@@ -62,7 +61,7 @@ export default function AboutPage() {
 						</section>
 
 						<section className="space-y-4">
-							<h2 className="flex items-center gap-2 text-2xl font-bold text-green-500">
+							<h2 className="flex items-center gap-2 text-2xl font-bold text-blue-500">
 								<HeartFilledIcon className="h-6 w-6" />
 								Contributing to the Guide
 							</h2>
@@ -82,7 +81,7 @@ export default function AboutPage() {
 							</p>
 						</section>
 
-						<div className="rounded-lg border border-green-500/20 bg-green-500/5 p-6">
+						<div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-6">
 							<p className="text-center text-sm italic">
 								"In many of the more relaxed civilizations on the Outer Eastern
 								Rim of the Galaxy, the Hitchhiker's Guide has already supplanted
@@ -92,7 +91,7 @@ export default function AboutPage() {
 								it scores over the older, more pedestrian work in two important
 								respects..."
 							</p>
-							<p className="mt-4 text-center text-sm font-bold text-green-500">
+							<p className="mt-4 text-center text-sm font-bold text-blue-500">
 								First, it's slightly cheaper; and second, it has the words "DON'T
 								PANIC" inscribed in large friendly letters on its cover.
 							</p>

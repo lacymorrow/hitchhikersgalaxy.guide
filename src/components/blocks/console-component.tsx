@@ -75,7 +75,7 @@ export function ConsoleComponent({
 					<div className="flex space-x-2">
 						<div className="h-3 w-3 rounded-full bg-red-500" />
 						<div className="h-3 w-3 rounded-full bg-yellow-500" />
-						<div className="h-3 w-3 rounded-full bg-green-500" />
+						<div className="h-3 w-3 rounded-full bg-blue-500" />
 					</div>
 					<div className="text-sm text-gray-400">Console</div>
 				</div>
@@ -93,7 +93,7 @@ export function ConsoleComponent({
 											animate={{ opacity: 1, y: 0 }}
 											exit={{ opacity: 0 }}
 											transition={{ duration: 0.5 }}
-											className="mb-2 text-green-400"
+											className="mb-2 text-blue-400"
 										>
 											{log}
 										</motion.div>
@@ -134,7 +134,7 @@ export function ConsoleComponent({
 					)}
 					{isRunning && (
 						<motion.div
-							className="absolute bottom-4 right-4 h-4 w-4 rounded-full bg-green-500"
+							className="absolute bottom-4 right-4 h-4 w-4 rounded-full bg-blue-500"
 							animate={{
 								scale: [1, 1.5, 1],
 								opacity: [0.7, 0.3, 0.7],

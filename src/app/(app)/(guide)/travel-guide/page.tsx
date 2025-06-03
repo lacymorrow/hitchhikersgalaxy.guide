@@ -1,23 +1,23 @@
-import { MapIcon, AlertTriangle, Rocket, Heart } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HeartFilledIcon } from "@radix-ui/react-icons";
+import { AlertTriangle, MapIcon, Rocket } from "lucide-react";
 
 export default function TravelGuidePage() {
 	return (
 		<div className="container relative min-h-screen max-w-6xl py-6 lg:py-10">
 			{/* Electronic book frame */}
-			<div className="relative rounded-lg border-4 border-green-500 bg-black p-6 shadow-[0_0_50px_rgba(34,197,94,0.2)]">
+			<div className="relative rounded-lg border-4 border-blue-500 bg-black p-6 shadow-[0_0_50px_rgba(59,130,246,0.2)]">
 				{/* Screen interface */}
 				<div className="flex flex-col space-y-8">
 					{/* Header */}
 					<div className="flex flex-col items-center space-y-4 text-center">
 						<div className="flex items-center space-x-2">
-							<MapIcon className="h-8 w-8 text-green-500" />
-							<h1 className="font-mono text-4xl font-bold text-green-500">
+							<MapIcon className="h-8 w-8 text-blue-500" />
+							<h1 className="font-mono text-4xl font-bold text-blue-500">
 								Travel Guide
 							</h1>
 						</div>
-						<p className="max-w-[42rem] font-mono leading-normal text-green-400/80 sm:text-xl sm:leading-8">
+						<p className="max-w-[42rem] font-mono leading-normal text-blue-400/80 sm:text-xl sm:leading-8">
 							Essential information for any hitchhiker traversing the galaxy.
 							Remember: DON'T PANIC, and always know where your towel is.
 						</p>
@@ -25,16 +25,16 @@ export default function TravelGuidePage() {
 
 					{/* Main content */}
 					<div className="grid gap-6 md:grid-cols-2">
-						<Card className="border-green-500/20 bg-black">
+						<Card className="border-blue-500/20 bg-black">
 							<CardHeader>
-								<CardTitle className="flex items-center gap-2 text-green-500">
+								<CardTitle className="flex items-center gap-2 text-blue-500">
 									<AlertTriangle className="h-5 w-5" />
 									Essential Items
 								</CardTitle>
 							</CardHeader>
-							<CardContent className="space-y-4 font-mono text-green-400/80">
+							<CardContent className="space-y-4 font-mono text-blue-400/80">
 								<div>
-									<h3 className="mb-2 font-bold text-green-500">
+									<h3 className="mb-2 font-bold text-blue-500">
 										1. Your Towel
 									</h3>
 									<p>
@@ -46,7 +46,7 @@ export default function TravelGuidePage() {
 									</p>
 								</div>
 								<div>
-									<h3 className="mb-2 font-bold text-green-500">
+									<h3 className="mb-2 font-bold text-blue-500">
 										2. Electronic Thumb
 									</h3>
 									<p>
@@ -55,7 +55,7 @@ export default function TravelGuidePage() {
 									</p>
 								</div>
 								<div>
-									<h3 className="mb-2 font-bold text-green-500">
+									<h3 className="mb-2 font-bold text-blue-500">
 										3. Babel Fish
 									</h3>
 									<p>
@@ -65,7 +65,7 @@ export default function TravelGuidePage() {
 									</p>
 								</div>
 								<div>
-									<h3 className="mb-2 font-bold text-green-500">
+									<h3 className="mb-2 font-bold text-blue-500">
 										4. Nutrimatic Drink Dispenser
 									</h3>
 									<p>
@@ -76,16 +76,16 @@ export default function TravelGuidePage() {
 							</CardContent>
 						</Card>
 
-						<Card className="border-green-500/20 bg-black">
+						<Card className="border-blue-500/20 bg-black">
 							<CardHeader>
-								<CardTitle className="flex items-center gap-2 text-green-500">
+								<CardTitle className="flex items-center gap-2 text-blue-500">
 									<Rocket className="h-5 w-5" />
 									Travel Tips
 								</CardTitle>
 							</CardHeader>
-							<CardContent className="space-y-4 font-mono text-green-400/80">
+							<CardContent className="space-y-4 font-mono text-blue-400/80">
 								<div>
-									<h3 className="mb-2 font-bold text-green-500">
+									<h3 className="mb-2 font-bold text-blue-500">
 										1. Hitching Etiquette
 									</h3>
 									<p>
@@ -96,7 +96,7 @@ export default function TravelGuidePage() {
 									</p>
 								</div>
 								<div>
-									<h3 className="mb-2 font-bold text-green-500">
+									<h3 className="mb-2 font-bold text-blue-500">
 										2. Space Travel
 									</h3>
 									<p>
@@ -106,7 +106,7 @@ export default function TravelGuidePage() {
 									</p>
 								</div>
 								<div>
-									<h3 className="mb-2 font-bold text-green-500">
+									<h3 className="mb-2 font-bold text-blue-500">
 										3. Local Customs
 									</h3>
 									<p>
@@ -116,7 +116,7 @@ export default function TravelGuidePage() {
 									</p>
 								</div>
 								<div>
-									<h3 className="mb-2 font-bold text-green-500">
+									<h3 className="mb-2 font-bold text-blue-500">
 										4. Time Travel
 									</h3>
 									<p>
@@ -128,15 +128,15 @@ export default function TravelGuidePage() {
 							</CardContent>
 						</Card>
 
-						<Card className="border-green-500/20 bg-black md:col-span-2">
+						<Card className="border-blue-500/20 bg-black md:col-span-2">
 							<CardHeader>
-								<CardTitle className="flex items-center gap-2 text-green-500">
+								<CardTitle className="flex items-center gap-2 text-blue-500">
 									<HeartFilledIcon className="h-5 w-5" />
 									Important Notes
 								</CardTitle>
 							</CardHeader>
-							<CardContent className="space-y-4 font-mono text-green-400/80">
-								<div className="rounded-lg border border-green-500/20 bg-green-500/5 p-4">
+							<CardContent className="space-y-4 font-mono text-blue-400/80">
+								<div className="rounded-lg border border-blue-500/20 bg-blue-500/5 p-4">
 									<p className="text-center text-sm">
 										"Space," says the Guide, "is big. Really big. You just
 										won't believe how vastly, hugely, mind-bogglingly big it
@@ -146,7 +146,7 @@ export default function TravelGuidePage() {
 								</div>
 								<div className="grid gap-4 md:grid-cols-2">
 									<div>
-										<h3 className="mb-2 font-bold text-green-500">
+										<h3 className="mb-2 font-bold text-blue-500">
 											Emergency Procedures
 										</h3>
 										<p>
@@ -159,7 +159,7 @@ export default function TravelGuidePage() {
 										</p>
 									</div>
 									<div>
-										<h3 className="mb-2 font-bold text-green-500">
+										<h3 className="mb-2 font-bold text-blue-500">
 											Final Advice
 										</h3>
 										<p>

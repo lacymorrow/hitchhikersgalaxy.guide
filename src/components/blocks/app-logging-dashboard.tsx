@@ -19,7 +19,6 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import { AlertCircle, CheckCircle, Info } from "lucide-react";
 import { useEffect, useState } from "react";
-import { routes } from "@/config/routes";
 
 type LogLevel = "info" | "warning" | "error" | "success";
 
@@ -72,7 +71,7 @@ const LogIcon = ({ level }: { level: LogLevel }) => {
 		case "error":
 			return <AlertCircle className="h-5 w-5 text-red-300" />;
 		case "success":
-			return <CheckCircle className="h-5 w-5 text-green-300" />;
+			return <CheckCircle className="h-5 w-5 text-blue-300" />;
 	}
 };
 

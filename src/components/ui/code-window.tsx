@@ -123,7 +123,7 @@ export const CodeWindow = ({
 						<div className="flex gap-2">
 							<div className="size-3 rounded-full bg-red-500" />
 							<div className="size-3 rounded-full bg-yellow-500" />
-							<div className="size-3 rounded-full bg-green-500" />
+							<div className="size-3 rounded-full bg-blue-500" />
 						</div>
 					)}
 					{title && (

@@ -331,18 +331,16 @@ export const FileInput = forwardRef<
     <div
       ref={ref}
       {...props}
-      className={`relative w-full ${
-        isLOF ? "cursor-not-allowed opacity-50" : "cursor-pointer"
-      }`}
+      className={`relative w-full ${isLOF ? "cursor-not-allowed opacity-50" : "cursor-pointer"
+        }`}
     >
       <div
         className={cn(
-          `w-full rounded-lg duration-300 ease-in-out ${
-            dropzoneState.isDragAccept
-              ? "border-green-500"
-              : dropzoneState.isDragReject || isFileTooBig
-                ? "border-red-500"
-                : "border-gray-300"
+          `w-full rounded-lg duration-300 ease-in-out ${dropzoneState.isDragAccept
+            ? "border-blue-500"
+            : dropzoneState.isDragReject || isFileTooBig
+              ? "border-red-500"
+              : "border-gray-300"
           }`,
           className,
         )}

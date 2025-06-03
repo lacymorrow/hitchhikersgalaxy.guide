@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { Check, Clock, ChevronRight, Star, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { Check, ChevronRight, Clock, X } from "lucide-react";
+import { useState } from "react";
 
 interface Event {
   id: string;
@@ -168,10 +168,10 @@ export function DailyEventsUpdated() {
               <div className="flex items-center space-x-3">
                 <div
                   className={`h-2 w-2 rounded-full ${event.type === "reminder"
+                    ? "bg-blue-400"
+                    : event.type === "todo"
                       ? "bg-blue-400"
-                      : event.type === "todo"
-                        ? "bg-green-400"
-                        : "bg-purple-400"
+                      : "bg-purple-400"
                     }`}
                 />
                 <span className="text-sm font-medium text-gray-700">
@@ -195,7 +195,7 @@ export function DailyEventsUpdated() {
                 <div className="flex space-x-2">
                   <button
                     onClick={() => completeEvent(event.id)}
-                    className="flex items-center justify-center rounded-md bg-green-50 px-3 py-1 text-sm text-green-700 transition-colors duration-300 hover:bg-green-100"
+                    className="flex items-center justify-center rounded-md bg-blue-50 px-3 py-1 text-sm text-blue-700 transition-colors duration-300 hover:bg-blue-100"
                   >
                     <Check className="mr-1 h-4 w-4" />
                     Complete

@@ -3,3 +3,51 @@ description:
 globs:
 alwaysApply: false
 ---
+# Guide Content Flow
+
+This document outlines how a URL slug is processed to display or generate content for the Hitchhiker's Guide.
+
+## 1. Entry Point and Slug Retrieval
+
+The process begins when a user navigates to a dynamic guide page.
+
+-   **Page Component**: [`src/app/(app/(guide)/[slug]/page.tsx`](mdc:src/app/(app)/(guide)/[slug]/page.tsx)
+    -   This Next.js App Router page component receives the `slug` from the URL path.
+
+## 2. Slug Processing
+
+The raw slug from the URL undergoes several transformations:
+
+-   **URI Decoding**: The `slug` is first URI-decoded (e.g., `%20` becomes a space).
+-   **Normalization**: The decoded slug is then passed to the `normalizeSlug` function.
+    -   **Function Location**: [`src/lib/utils.ts`](mdc:src/lib/utils.ts)
+    -   **Normalization Steps**:
+        -   Converts to lowercase and trims whitespace.
+        -   Removes most special characters (keeps word characters, spaces, hyphens).
+        -   Collapses multiple spaces into a single space.
+        -   Collapses multiple hyphens into a single hyphen.
+        -   Removes leading/trailing hyphens.
+        -   Trims whitespace again.
+        -   *Note: As per recent changes, this function no longer converts slugs to their singular form or replaces spaces with hyphens. Spaces are preserved.*
+
+## 3. Content Fetching and Generation
+
+The normalized slug is used by the `GuideEntry` async component within `[slug]/page.tsx` to fetch or generate content.
+
+-   **Server Action**: The `GuideEntry` component calls the `searchGuide` server action.
+    -   **Action Location**: [`src/server/actions/guide-search.ts`](mdc:src/server/actions/guide-search.ts)
+    -   The `exactMatch` parameter is typically set to `true` when called from the guide page, as the slug is considered canonical at this point.
+-   **Action Logic (`searchGuide`)**:
+    1.  **Rate Limiting**: Checks if the request is within rate limits.
+    2.  **Find Existing**: Calls `guideService.findExistingEntry` (from [`src/server/services/guide-service.ts`](mdc:src/server/services/guide-service.ts)) to look up the normalized slug in the database.
+    3.  **Generate if Not Found**: If no existing entry is found, `searchGuide` proceeds to:
+        -   Invoke an AI service (e.g., OpenAI) to generate content in the style of Douglas Adams, structured as JSON.
+        -   Call `guideService.createEntry` to save this newly generated entry to the database. The `searchTerm` stored is the normalized slug.
+    4.  **Return Result**: `searchGuide` returns an object indicating success or failure, and includes the `GuideEntry` data (either found or newly created) or an error message.
+
+## 4. Display
+
+-   If `searchGuide` is successful and returns entry data, the `GuideEntry` component in `[slug]/page.tsx` renders the content.
+-   If `searchGuide` fails (e.g., entry not found and generation fails, or a service error occurs), the page typically calls `notFound()` to display a 404 page, or may show a specific error message.
+
+This flow ensures that any valid (or normalizable) slug either retrieves existing content or triggers dynamic content generation for the Guide.

@@ -60,7 +60,7 @@ export const FeedbackPopover = () => {
 				</PopoverContent>
 			</PopoverRoot>
 			<div className="mt-2">
-				{success && <span className="text-green-500">Sent 🚀</span>}
+				{success && <span className="text-blue-500">Sent 🚀</span>}
 				{error && <span className="text-red-500">{error}</span>}
 			</div>
 		</div>

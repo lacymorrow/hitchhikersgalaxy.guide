@@ -64,7 +64,7 @@ export function FileDropzone() {
 			}, 300);
 
 			// Perform the actual upload
-			const { fileName, documentId } = await uploadFileAction(formData);
+			const { fileName, fileId } = await uploadFileAction(formData);
 
 			// Clear the interval
 			clearInterval(progressInterval);
@@ -79,7 +79,7 @@ export function FileDropzone() {
 								status: "completed",
 								progress: 100,
 								uploadedName: fileName,
-								documentId,
+								documentId: fileId,
 							};
 						}
 						return f;
@@ -142,12 +142,12 @@ export function FileDropzone() {
 				}
 			}
 
-			failed.forEach((result) => {
+			for (const result of failed) {
 				if (result.error) {
 					toast.error(result.error);
 					logger.error(result.error);
 				}
-			});
+			}
 		})();
 	}, [files.length]);
 
@@ -157,11 +157,11 @@ export function FileDropzone() {
 			// Clear all intervals
 			Object.values(progressIntervalRef.current).forEach(clearInterval);
 			// Clear all previews
-			files.forEach((file) => {
+			for (const file of files) {
 				if (file.preview) {
 					URL.revokeObjectURL(file.preview);
 				}
-			});
+			}
 		};
 	}, [files]);
 
@@ -214,7 +214,7 @@ export function FileDropzone() {
 		}
 
 		try {
-			await deleteFileAction({ documentId: file.documentId, fileName: file.uploadedName });
+			await deleteFileAction({ fileId: file.documentId, fileName: file.uploadedName });
 			toast.success(`Successfully deleted ${file.file.name}`);
 			handleDeleteFile(file);
 		} catch (error) {
@@ -227,7 +227,7 @@ export function FileDropzone() {
 	const getStatusColor = (status: FileWithPreview["status"]) => {
 		switch (status) {
 			case "completed":
-				return "bg-green-500";
+				return "bg-blue-500";
 			case "error":
 				return "bg-red-500";
 			case "uploading":

@@ -3,3 +3,54 @@ description:
 globs:
 alwaysApply: false
 ---
+# Search Components
+
+This document describes the primary search components used in the Hitchhiker's Guide application and their interactions.
+
+## Core Search Logic
+
+Both main search experiences ultimately rely on the `searchGuide` server action to fetch or generate guide entries.
+
+-   **Server Action**: `searchGuide`
+    -   **Location**: [`src/server/actions/guide-search.ts`](mdc:src/server/actions/guide-search.ts)
+    -   **Functionality**: Takes a search term, normalizes it, attempts to find an existing entry, and if not found, generates a new one using AI. Handles rate limiting and database interactions via `guideService`.
+
+## 1. Main Search (Modal Dialog)
+
+This is the primary site-wide search, typically activated by a search button or a keyboard shortcut (e.g., ⌘K).
+
+-   **Client Component**: `GuideSearch`
+    -   **Location**: [`src/app/(app/(guide)/_components/guide-search.tsx`](mdc:src/app/(app)/(guide)/_components/guide-search.tsx)
+    -   **UI**: Uses Shadcn UI's `CommandDialog` to present a modal search interface.
+    -   **State Management**: Handles user input, loading states, error display, and debouncing for suggestions.
+    -   **Suggestion Fetching**: As the user types (debounced), it calls the API endpoint `/api/guide/search/similar?term=<searchTerm>` to fetch existing similar search terms.
+    -   **Submission**: When a user selects a suggestion or submits their typed query, it calls the `searchGuide` server action.
+    -   **Navigation**: Upon successful search/generation from `searchGuide`, it navigates the user to the relevant guide entry page (e.g., `/<normalizedSearchTerm>`).
+-   **Server Data Wrapper**: `GuideSearchServer`
+    -   **Location**: [`src/app/(app/(guide)/_components/guide-search-server.tsx`](mdc:src/app/(app)/(guide)/_components/guide-search-server.tsx)
+    -   **Purpose**: A server component that pre-fetches initial similar search results (if a `searchTerm` prop is provided, though often it might be empty initially) using `guideService.getSimilarSearches` from [`src/server/services/guide-service.ts`](mdc:src/server/services/guide-service.ts).
+    -   It then passes these initial results to the `GuideSearch` client component.
+
+## 2. Inline Search (Homepage / Embedded)
+
+This search component is designed for direct embedding on pages, like the homepage, offering a more integrated search experience.
+
+-   **Client Component**: `GuideSearchInline`
+    -   **Location**: [`src/app/(app/(guide)/_components/guide-search-inline.tsx`](mdc:src/app/(app)/(guide)/_components/guide-search-inline.tsx)
+    -   **UI**: Uses an `Input` field with a `Popover` to display suggestions and results dynamically below the input.
+    -   **State Management**: Similar to `GuideSearch`, it handles input, loading, errors, and debouncing.
+    -   **Suggestion Fetching (Parallel)**:
+        -   **Similar Searches**: Calls `/api/guide/search/similar?term=<debouncedSearchTerm>`.
+        -   **AI Suggestions**: If the term is long enough, calls `/api/guide/search/suggestions?term=<debouncedSearchTerm>` for AI-generated query suggestions.
+    -   **Validation**: Before full submission, it can call `/api/guide/search/validate?term=<term>` to check if the search term is permissible.
+    -   **Submission**: Calls the `searchGuide` server action. The `exactMatch` parameter is set to `true` to ensure that the exact term searched by the user (or selected from AI suggestions) is used for fetching/generation, rather than a potentially similar but different existing entry.
+    -   **Navigation**: On success, navigates to the guide entry page.
+-   **Server Data Wrapper**: `GuideSearchInlineServer`
+    -   **Location**: [`src/app/(app/(guide)/_components/guide-search-inline-server.tsx`](mdc:src/app/(app)/(guide)/_components/guide-search-inline-server.tsx)
+    -   **Purpose**: Similar to `GuideSearchServer`, it can pre-fetch initial data (e.g., similar searches if `searchTerm` is provided) for the `GuideSearchInline` client component. The current implementation in `GuideSearchInline` fetches suggestions client-side based on user input.
+
+## API Endpoints Supporting Search Components
+
+-   `/api/guide/search/similar`: Fetches existing guide entries with similar search terms. Used by both search components for suggestions.
+-   `/api/guide/search/suggestions`: Fetches AI-generated search query suggestions. Used by `GuideSearchInline`.
+-   `/api/guide/search/validate`: Validates a given search term using AI, checking for gibberish or disallowed patterns. Used by `GuideSearchInline`.

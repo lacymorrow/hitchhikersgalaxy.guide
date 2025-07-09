@@ -19,17 +19,12 @@ interface BreadcrumbNavProps {
 	items?: { title: string; href: string }[];
 }
 
-export const BreadcrumbNav = ({
-	homeLabel = "Home",
-	items = [],
-}: BreadcrumbNavProps) => {
+export const BreadcrumbNav = ({ homeLabel = "Home", items = [] }: BreadcrumbNavProps) => {
 	return (
 		<Breadcrumb>
 			<BreadcrumbList>
 				<BreadcrumbItem>
-					<BreadcrumbLink href={routes.app.dashboard}>
-						{homeLabel}
-					</BreadcrumbLink>
+					<BreadcrumbLink href={routes.app.dashboard}>{homeLabel}</BreadcrumbLink>
 				</BreadcrumbItem>
 				{items.map((item, index) => {
 					const isLastItem = index === items.length - 1;
@@ -37,9 +32,7 @@ export const BreadcrumbNav = ({
 						<BreadcrumbItem key={item.title}>
 							<BreadcrumbSeparator />
 							{isLastItem ? (
-								<span className="font-medium text-foreground">
-									{item.title}
-								</span>
+								<span className="font-medium text-foreground">{item.title}</span>
 							) : (
 								<BreadcrumbLink href={item.href}>{item.title}</BreadcrumbLink>
 							)}

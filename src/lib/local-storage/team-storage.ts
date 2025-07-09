@@ -92,7 +92,7 @@ export class LocalTeamStorage {
 			role: "owner",
 			createdAt: now,
 			updatedAt: now,
-			user: this.getUserFromStorage(userId),
+			user: LocalTeamStorage.getUserFromStorage(userId),
 		};
 
 		// Save to storage
@@ -132,7 +132,7 @@ export class LocalTeamStorage {
 			role: "owner",
 			createdAt: now,
 			updatedAt: now,
-			user: this.getUserFromStorage(userId),
+			user: LocalTeamStorage.getUserFromStorage(userId),
 		};
 
 		// Save to storage
@@ -155,7 +155,7 @@ export class LocalTeamStorage {
 		const teamMembers = getFromStorage<LocalTeamMember>(STORAGE_KEYS.teamMembers);
 
 		// Ensure user has a personal team
-		this.ensurePersonalTeam(userId);
+		LocalTeamStorage.ensurePersonalTeam(userId);
 
 		const userTeamMembers = teamMembers.filter((tm) => tm.userId === userId);
 
@@ -211,7 +211,7 @@ export class LocalTeamStorage {
 
 		if (personalTeams.length === 0) {
 			// Create personal team
-			return this.createPersonalTeam(userId);
+			return LocalTeamStorage.createPersonalTeam(userId);
 		}
 
 		if (personalTeams.length === 1) {
@@ -291,7 +291,7 @@ export class LocalTeamStorage {
 			role,
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			user: this.getUserFromStorage(userId),
+			user: LocalTeamStorage.getUserFromStorage(userId),
 		};
 
 		teamMembers.push(member);
@@ -399,10 +399,10 @@ export class LocalTeamStorage {
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		};
-		this.storeUser(user);
+		LocalTeamStorage.storeUser(user);
 
 		// Ensure personal team exists
-		return this.ensurePersonalTeam(userId);
+		return LocalTeamStorage.ensurePersonalTeam(userId);
 	}
 
 	/**

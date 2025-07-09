@@ -1,7 +1,7 @@
 "use server";
 
-import { routes } from "@/config/routes";
 import { redirect } from "next/navigation";
+import { routes } from "@/config/routes";
 
 /**
  * Server action to handle the repository download request.

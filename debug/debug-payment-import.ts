@@ -9,7 +9,9 @@ async function debugPaymentImport() {
 
 	// Show environment status
 	console.log("\n🔧 Environment Status:");
-	console.log(`  LEMONSQUEEZY_API_KEY: ${process.env.LEMONSQUEEZY_API_KEY ? "✅ Set" : "❌ Not set"}`);
+	console.log(
+		`  LEMONSQUEEZY_API_KEY: ${process.env.LEMONSQUEEZY_API_KEY ? "✅ Set" : "❌ Not set"}`
+	);
 	console.log(`  DATABASE_URL: ${process.env.DATABASE_URL ? "✅ Set" : "❌ Not set"}`);
 
 	try {
@@ -51,7 +53,7 @@ async function debugPaymentImport() {
 
 		// Test 4: Check if there are any payments showing "Unknown Product"
 		console.log("\n🔎 Test 4: Checking for 'Unknown Product' payments");
-		const unknownProducts = paymentsAfterImport.filter(p => p.productName === "Unknown Product");
+		const unknownProducts = paymentsAfterImport.filter((p) => p.productName === "Unknown Product");
 		console.log(`Found ${unknownProducts.length} payments with "Unknown Product"`);
 
 		if (unknownProducts.length > 0) {
@@ -62,7 +64,6 @@ async function debugPaymentImport() {
 			console.log(`  Is in Database: ${unknown.isInDatabase}`);
 			console.log(`  User Email: ${unknown.userEmail}`);
 		}
-
 	} catch (error) {
 		console.error("❌ Error in payment import debug:", error);
 	}

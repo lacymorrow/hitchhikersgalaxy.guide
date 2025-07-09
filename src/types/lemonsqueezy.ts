@@ -162,7 +162,7 @@ export interface PaymentVerificationResult {
 /**
  * Product key type - these are the keys defined in site config
  */
-export type ProductKey = 'shipkit' | 'bones' | 'muscles' | 'brains';
+export type ProductKey = "shipkit" | "bones" | "muscles" | "brains";
 
 /**
  * Variant ID type - UUID strings from Lemon Squeezy
@@ -240,10 +240,5 @@ export function webhookHasData(obj: unknown): obj is {
 		id: string;
 	};
 } {
-	return (
-		isObject(obj) &&
-		"data" in obj &&
-		isObject(obj.data) &&
-		"attributes" in obj.data
-	);
+	return isObject(obj) && "data" in obj && isObject(obj.data) && "attributes" in obj.data;
 }

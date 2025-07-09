@@ -1,10 +1,10 @@
 "use client";
 
+import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { createApiKey } from "@/server/actions/api-key-actions";
-import type { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
 import { CreateApiKeyDialog } from "./create-api-key-dialog";
 import { DeleteApiKeyDialog } from "./delete-api-key-dialog";
 
@@ -49,9 +49,7 @@ const columns: ColumnDef<ApiKey>[] = [
 			return (
 				<div className="space-y-1">
 					<div className="font-medium">{row.getValue("name")}</div>
-					{description && (
-						<div className="text-sm text-muted-foreground">{description}</div>
-					)}
+					{description && <div className="text-sm text-muted-foreground">{description}</div>}
 				</div>
 			);
 		},
@@ -73,9 +71,7 @@ const columns: ColumnDef<ApiKey>[] = [
 		cell: ({ row }) => {
 			const date = row.getValue("lastUsedAt") as Date | null;
 			return (
-				<div className="text-muted-foreground">
-					{date ? format(date, "MMM d, yyyy") : "Never"}
-				</div>
+				<div className="text-muted-foreground">{date ? format(date, "MMM d, yyyy") : "Never"}</div>
 			);
 		},
 	},
@@ -85,9 +81,7 @@ const columns: ColumnDef<ApiKey>[] = [
 		cell: ({ row }) => {
 			const date = row.getValue("expiresAt") as Date | null;
 			return (
-				<div className="text-muted-foreground">
-					{date ? format(date, "MMM d, yyyy") : "Never"}
-				</div>
+				<div className="text-muted-foreground">{date ? format(date, "MMM d, yyyy") : "Never"}</div>
 			);
 		},
 	},
@@ -98,10 +92,7 @@ const columns: ColumnDef<ApiKey>[] = [
 			const expiresAt = row.original.expiresAt;
 			const isExpired = expiresAt ? new Date(expiresAt) < new Date() : false;
 			return (
-				<Badge
-					variant={isExpired ? "destructive" : "default"}
-					className="capitalize"
-				>
+				<Badge variant={isExpired ? "destructive" : "default"} className="capitalize">
 					{isExpired ? "Expired" : "Active"}
 				</Badge>
 			);
@@ -119,11 +110,7 @@ const columns: ColumnDef<ApiKey>[] = [
 export function ApiKeysTable({ apiKeys, userId }: ApiKeysTableProps) {
 	return (
 		<div className="relative">
-			<DataTable
-				columns={columns}
-				data={apiKeys}
-				searchPlaceholder="Search API keys..."
-			/>
+			<DataTable columns={columns} data={apiKeys} searchPlaceholder="Search API keys..." />
 
 			{/* Create dialog with its own trigger button */}
 			<div className="absolute right-0 top-[-60px]">
@@ -133,10 +120,7 @@ export function ApiKeysTable({ apiKeys, userId }: ApiKeysTableProps) {
 			{/* Hidden delete dialogs */}
 			<div className="hidden">
 				{apiKeys.map((apiKey) => (
-					<DeleteApiKeyDialog
-						key={apiKey.id}
-						apiKeyId={apiKey.id}
-					/>
+					<DeleteApiKeyDialog key={apiKey.id} apiKeyId={apiKey.id} />
 				))}
 			</div>
 		</div>

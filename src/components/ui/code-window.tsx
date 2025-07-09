@@ -1,47 +1,41 @@
 "use client";
 
-import { CopyButton } from "@/components/ui/copy-button";
-import { cn } from "@/lib/utils";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import { ExpandIcon, MinimizeIcon } from "lucide-react";
 import { useState } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import {
-	oneDark,
-	oneLight,
-} from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { oneDark, oneLight } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { CopyButton } from "@/components/ui/copy-button";
+import { cn } from "@/lib/utils";
 
-const codeWindowVariants = cva(
-	"overflow-hidden rounded-lg border transition-all duration-200",
-	{
-		variants: {
-			variant: {
-				default: "bg-neutral-900",
-				minimal: "bg-muted/50",
-				ghost: "border-none bg-transparent",
-				single:
-					"relative inline-flex items-center border-none bg-muted/30 rounded-md hover:bg-muted/50",
-			},
-			size: {
-				default: "w-full",
-				sm: "max-w-sm",
-				lg: "max-w-screen-lg",
-				inline: "w-auto",
-			},
+const codeWindowVariants = cva("overflow-hidden rounded-lg border transition-all duration-200", {
+	variants: {
+		variant: {
+			default: "bg-neutral-900",
+			minimal: "bg-muted/50",
+			ghost: "border-none bg-transparent",
+			single:
+				"relative inline-flex items-center border-none bg-muted/30 rounded-md hover:bg-muted/50",
 		},
-		defaultVariants: {
-			variant: "default",
-			size: "default",
+		size: {
+			default: "w-full",
+			sm: "max-w-sm",
+			lg: "max-w-screen-lg",
+			inline: "w-auto",
 		},
-		compoundVariants: [
-			{
-				variant: "single",
-				size: "default",
-				class: "size: inline",
-			},
-		],
 	},
-);
+	defaultVariants: {
+		variant: "default",
+		size: "default",
+	},
+	compoundVariants: [
+		{
+			variant: "single",
+			size: "default",
+			class: "size: inline",
+		},
+	],
+});
 
 const titleBarVariants = cva("flex items-center justify-between px-4 py-2", {
 	variants: {
@@ -63,7 +57,8 @@ const codeContentVariants = cva("overflow-auto", {
 			default: "p-4",
 			minimal: "p-4 bg-transparent",
 			ghost: "px-0",
-			single: "flex items-center justify-between border-none bg-muted/30 rounded-md hover:bg-muted/50 py-1 px-2",
+			single:
+				"flex items-center justify-between border-none bg-muted/30 rounded-md hover:bg-muted/50 py-1 px-2",
 		},
 	},
 	defaultVariants: {
@@ -113,7 +108,7 @@ export const CodeWindow = ({
 			className={cn(
 				codeWindowVariants({ variant, size }),
 				isExpanded && !isSingle && "fixed inset-0 z-40 bg-background",
-				className,
+				className
 			)}
 		>
 			{/* Title Bar */}
@@ -130,9 +125,7 @@ export const CodeWindow = ({
 						<span
 							className={cn(
 								"ml-2 text-sm",
-								variant === "default"
-									? "text-neutral-400"
-									: "text-muted-foreground",
+								variant === "default" ? "text-neutral-400" : "text-muted-foreground"
 							)}
 						>
 							{title}
@@ -149,14 +142,10 @@ export const CodeWindow = ({
 								"flex items-center gap-1 rounded px-2 py-1 text-xs",
 								variant === "default"
 									? "text-neutral-400 hover:bg-neutral-700"
-									: "text-muted-foreground hover:bg-muted",
+									: "text-muted-foreground hover:bg-muted"
 							)}
 						>
-							{isExpanded ? (
-								<MinimizeIcon className="size-3" />
-							) : (
-								<ExpandIcon className="size-3" />
-							)}
+							{isExpanded ? <MinimizeIcon className="size-3" /> : <ExpandIcon className="size-3" />}
 						</button>
 					)}
 				</div>
@@ -167,7 +156,7 @@ export const CodeWindow = ({
 				className={cn(
 					codeContentVariants({ variant }),
 					!isExpanded && !isSingle && `max-h-[${maxHeight}]`,
-					"group relative",
+					"group relative"
 				)}
 			>
 				<SyntaxHighlighter

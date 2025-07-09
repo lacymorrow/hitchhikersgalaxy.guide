@@ -12,10 +12,10 @@ import { env } from "@/env";
 import { getPayloadClient } from "@/lib/payload/payload";
 import type { Media, Page as PayloadPage } from "@/payload-types";
 import "@/styles/builder-io.css";
-import type { PageBlock } from "@/types/blocks";
-import { builder, type BuilderContent } from "@builder.io/sdk";
+import { type BuilderContent, builder } from "@builder.io/sdk";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import type { PageBlock } from "@/types/blocks";
 import { BlockRenderer } from "../payload-blocks";
 
 if (env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED && env.NEXT_PUBLIC_BUILDER_API_KEY) {
@@ -62,8 +62,11 @@ const shouldSkip = (slugString: string) => {
 
 async function getPageData(
 	slug: string[],
-	depth = 2,
-): Promise<{ source: "payload"; data: PayloadPage } | { source: "builder"; data: BuilderContent } | null> {
+	depth = 2
+): Promise<
+	{ source: "payload"; data: PayloadPage } | { source: "builder"; data: BuilderContent } | null
+> {
+	console.log(`Getting page data for ${slug.join("/")}`);
 	if (env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED) {
 		try {
 			const payload = await getPayloadClient();
@@ -125,7 +128,10 @@ async function getPageData(
 	return null;
 }
 
-export async function generateMetadata({ params: paramsPromise, searchParams: searchParamsPromise }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+	params: paramsPromise,
+	searchParams: searchParamsPromise,
+}: PageProps): Promise<Metadata> {
 	const params = await paramsPromise;
 	// const searchParams = await searchParamsPromise;
 	// const isPreview = searchParams.preview === "true";
@@ -140,7 +146,6 @@ export async function generateMetadata({ params: paramsPromise, searchParams: se
 		return notFound();
 	}
 
-
 	if (pageData.source === "builder") {
 		return {
 			title: pageData.data.data?.title ?? "Page",
@@ -150,7 +155,8 @@ export async function generateMetadata({ params: paramsPromise, searchParams: se
 
 	if (pageData.source === "payload") {
 		const { meta } = pageData.data;
-		const isMedia = (image: any): image is Media => image && typeof image === "object" && "url" in image;
+		const isMedia = (image: any): image is Media =>
+			image && typeof image === "object" && "url" in image;
 
 		return {
 			title: meta?.title,
@@ -170,7 +176,8 @@ export async function generateMetadata({ params: paramsPromise, searchParams: se
 		};
 	}
 
-	return notFound();
+
+	notFound();
 }
 
 export default async function Page({ params: paramsPromise }: PageProps) {
@@ -191,9 +198,13 @@ export default async function Page({ params: paramsPromise }: PageProps) {
 	if (pageData.source === "payload" || pageData.source === "builder") {
 		return (
 			<AppRouterLayout>
-				{pageData.source === "payload" && <BlockRenderer blocks={(pageData.data.layout as PageBlock[]) ?? []} />}
+				{pageData.source === "payload" && (
+					<BlockRenderer blocks={(pageData.data.layout as PageBlock[]) ?? []} />
+				)}
 
-				{pageData.source === "builder" && <RenderBuilderContent content={pageData.data} model="page" />}
+				{pageData.source === "builder" && (
+					<RenderBuilderContent content={pageData.data} model="page" />
+				)}
 			</AppRouterLayout>
 		);
 	}

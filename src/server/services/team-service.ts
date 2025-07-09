@@ -1,15 +1,15 @@
+import { randomUUID } from "node:crypto";
+import { and, eq } from "drizzle-orm";
+import type { TeamData } from "@/components/providers/team-provider";
 import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { LocalTeamStorage } from "@/lib/local-storage/team-storage";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import { teamMembers, teams, users } from "@/server/db/schema";
-import { and, eq } from "drizzle-orm";
-import { randomUUID } from "node:crypto";
+import type { TeamType } from "@/types/team";
 import { BaseService } from "./base-service";
 import { ErrorService } from "./error-service";
-import type { TeamData } from "@/components/providers/team-provider";
-import { type TeamType } from "@/types/team";
 
 export class TeamService extends BaseService<typeof teams> {
 	constructor() {
@@ -280,7 +280,9 @@ export class TeamService extends BaseService<typeof teams> {
 	 * @param userId - The ID of the user.
 	 * @returns The user's teams with their details.
 	 */
-	async getUserTeams(userId: string): Promise<{ team: TeamData & { type: TeamType }; role: string }[]> {
+	async getUserTeams(
+		userId: string
+	): Promise<{ team: TeamData & { type: TeamType }; role: string }[]> {
 		if (!db) {
 			return LocalTeamStorage.getUserTeams(userId);
 		}

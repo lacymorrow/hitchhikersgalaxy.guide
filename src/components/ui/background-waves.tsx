@@ -136,10 +136,11 @@ export const WavesBackground: FC<WavesBackgroundProps> = ({
 			style={{
 				background: config.transparent
 					? "transparent"
-					: `linear-gradient(to bottom, ${config.backgroundColor || "#000000"}, ${config.backgroundColor === "#000000"
-						? "#1a0f1f"
-						: adjustColor(config.backgroundColor || "#000000", -20)
-					})`,
+					: `linear-gradient(to bottom, ${config.backgroundColor || "#000000"}, ${
+							config.backgroundColor === "#000000"
+								? "#1a0f1f"
+								: adjustColor(config.backgroundColor || "#000000", -20)
+						})`,
 			}}
 		/>
 	);

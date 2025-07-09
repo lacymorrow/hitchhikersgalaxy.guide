@@ -1,8 +1,8 @@
 "use client";
 
-import { checkUserSubscription } from "@/server/actions/payments";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { checkUserSubscription } from "@/server/actions/payments";
 
 type SubscriptionProvider = "lemonsqueezy" | "polar";
 

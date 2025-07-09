@@ -1,8 +1,8 @@
-import { PagesRouterLayout } from '@/components/layouts/pages-router-layout'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { PagesRouterLayout } from "@/components/layouts/pages-router-layout";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface StaticPageProps {
-	buildTime: string
+	buildTime: string;
 }
 
 export default function StaticPage({ buildTime }: StaticPageProps) {
@@ -18,12 +18,11 @@ export default function StaticPage({ buildTime }: StaticPageProps) {
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
-						<p className="text-muted-foreground">
-							This page was built at: {buildTime}
-						</p>
+						<p className="text-muted-foreground">This page was built at: {buildTime}</p>
 						<div className="mt-4 p-4 bg-muted rounded-lg">
 							<pre className="whitespace-pre-wrap">
-								<code>{`
+								<code>
+									{`
 // This function runs at build time
 export async function getStaticProps() {
   return {
@@ -39,13 +38,13 @@ export async function getStaticProps() {
 				</Card>
 			</div>
 		</PagesRouterLayout>
-	)
+	);
 }
 
 export async function getStaticProps() {
 	return {
 		props: {
-			buildTime: new Date().toISOString()
-		}
-	}
+			buildTime: new Date().toISOString(),
+		},
+	};
 }

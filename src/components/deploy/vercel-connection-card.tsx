@@ -1,9 +1,9 @@
 "use client";
 
+import { AlertCircle, CheckCircle, Zap } from "lucide-react";
 import { VercelConnectButton } from "@/components/shipkit/vercel-connect-button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, AlertCircle, Zap } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { User } from "@/types/user";
 
 interface VercelConnectionCardProps {
@@ -26,7 +26,9 @@ export const VercelConnectionCard = ({ hasVercelConnection, user }: VercelConnec
 						<div className="flex items-center gap-2">
 							<CheckCircle className="h-4 w-4 text-green-500" />
 							<span className="text-sm">Connected and ready</span>
-							<Badge variant="default" className="text-xs">Connected</Badge>
+							<Badge variant="default" className="text-xs">
+								Connected
+							</Badge>
 						</div>
 						<p className="text-xs text-muted-foreground">
 							Your Vercel account is connected. Projects will be created automatically.
@@ -37,7 +39,9 @@ export const VercelConnectionCard = ({ hasVercelConnection, user }: VercelConnec
 						<div className="flex items-center gap-2">
 							<AlertCircle className="h-4 w-4 text-orange-500" />
 							<span className="text-sm">Connection required</span>
-							<Badge variant="outline" className="text-xs">Not Connected</Badge>
+							<Badge variant="outline" className="text-xs">
+								Not Connected
+							</Badge>
 						</div>
 						<p className="text-xs text-muted-foreground">
 							Connect your Vercel account to enable automatic project creation.

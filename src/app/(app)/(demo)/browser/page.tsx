@@ -1,12 +1,12 @@
-import { SuspenseFallback } from '@/components/primitives/suspense-fallback'
-import type { Metadata } from 'next'
-import { Suspense } from 'react'
-import { FileBrowser } from './_components/file-browser'
+import type { Metadata } from "next";
+import { Suspense } from "react";
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
+import { FileBrowser } from "./_components/file-browser";
 
 export const metadata: Metadata = {
-	title: 'File Browser | Project Explorer',
-	description: 'Browse through project files and directories',
-}
+	title: "File Browser | Project Explorer",
+	description: "Browse through project files and directories",
+};
 
 export default function BrowserPage() {
 	return (
@@ -16,5 +16,5 @@ export default function BrowserPage() {
 				<FileBrowser />
 			</Suspense>
 		</div>
-	)
+	);
 }

@@ -1,20 +1,26 @@
-import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/primitives/page-header";
+import { ArrowRight, Box, Code2, GitBranch, Layers, Palette, Shield, Zap } from "lucide-react";
+import {
+	PageHeader,
+	PageHeaderDescription,
+	PageHeaderHeading,
+} from "@/components/primitives/page-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { ArrowRight, Box, Code2, GitBranch, Layers, Palette, Shield, Zap } from "lucide-react";
 
 const features = [
 	{
 		id: "lightning-fast",
 		title: "Lightning Fast",
-		description: "Built on Next.js 13 with React Server Components for optimal performance and instant page loads.",
+		description:
+			"Built on Next.js 13 with React Server Components for optimal performance and instant page loads.",
 		icon: Zap,
 		color: "text-yellow-500",
 	},
 	{
 		id: "type-safe",
 		title: "Type-Safe",
-		description: "Full TypeScript support with strict type checking for robust, error-free development.",
+		description:
+			"Full TypeScript support with strict type checking for robust, error-free development.",
 		icon: Shield,
 		color: "text-blue-500",
 	},
@@ -59,7 +65,8 @@ export default function FeaturesPage() {
 							Supercharge Your Next.js Development
 						</PageHeaderHeading>
 						<PageHeaderDescription>
-							Everything you need to build modern web applications, carefully crafted for the perfect development experience.
+							Everything you need to build modern web applications, carefully crafted for the
+							perfect development experience.
 						</PageHeaderDescription>
 					</PageHeader>
 
@@ -82,9 +89,7 @@ export default function FeaturesPage() {
 							<GitBranch className="w-5 h-5 mr-2" />
 							<span className="text-sm font-medium px-2 py-1">Open Source</span>
 						</div>
-						<h2 className="text-3xl font-bold mt-4 mb-8">
-							Ready to Start Building?
-						</h2>
+						<h2 className="text-3xl font-bold mt-4 mb-8">Ready to Start Building?</h2>
 						<div className="flex flex-col sm:flex-row gap-4 justify-center">
 							<Button size="lg" className="gap-2">
 								Get Started

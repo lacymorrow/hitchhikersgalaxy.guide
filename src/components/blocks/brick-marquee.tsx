@@ -1,6 +1,6 @@
-"use client"
+"use client";
 
-import { useEffect, useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react";
 
 // Define the list of links
 const links = [
@@ -13,77 +13,81 @@ const links = [
 	{ name: "lacy.sh", href: "https://lacy.sh" },
 	{ name: "lacy.is", href: "https://lacy.is" },
 	{ name: "lacymorrow.com", href: "https://lacymorrow.com" },
-]
+];
 
 export function BrickMarquee() {
-	const [isNearby, setIsNearby] = useState(false)
-	const [isExpanded, setIsExpanded] = useState(false)
-	const barRef = useRef<HTMLLabelElement>(null)
-	const checkboxRef = useRef<HTMLInputElement>(null)
-	const containerRef = useRef<HTMLDivElement>(null)
+	const [isNearby, setIsNearby] = useState(false);
+	const [isExpanded, setIsExpanded] = useState(false);
+	const barRef = useRef<HTMLLabelElement>(null);
+	const checkboxRef = useRef<HTMLInputElement>(null);
+	const containerRef = useRef<HTMLDivElement>(null);
 
 	// Handle mouse movement for magnetic effect
 	useEffect(() => {
 		const handleMouseMove = (e: MouseEvent) => {
-			if (checkboxRef.current?.checked) return
+			if (checkboxRef.current?.checked) return;
 
-			const threshold = 80 // Distance threshold to detect mouse
+			const threshold = 80; // Distance threshold to detect mouse
 
 			if (barRef.current) {
-				const rect = barRef.current.getBoundingClientRect()
-				const cornerX = rect.right - 10
-				const cornerY = window.innerHeight
+				const rect = barRef.current.getBoundingClientRect();
+				const cornerX = rect.right - 10;
+				const cornerY = window.innerHeight;
 
 				// Calculate distance from mouse to detection point
-				const distance = Math.sqrt((e.clientX - cornerX) ** 2 + (e.clientY - cornerY) ** 2)
+				const distance = Math.sqrt((e.clientX - cornerX) ** 2 + (e.clientY - cornerY) ** 2);
 
 				// Set nearby state based on distance threshold
-				setIsNearby(distance < threshold)
+				setIsNearby(distance < threshold);
 			}
-		}
+		};
 
 		// Add mousemove event listener
-		window.addEventListener("mousemove", handleMouseMove)
+		window.addEventListener("mousemove", handleMouseMove);
 
 		return () => {
-			window.removeEventListener("mousemove", handleMouseMove)
-		}
-	}, [])
+			window.removeEventListener("mousemove", handleMouseMove);
+		};
+	}, []);
 
 	// Handle checkbox state change
 	useEffect(() => {
 		const handleChange = () => {
 			if (checkboxRef.current) {
-				setIsExpanded(checkboxRef.current.checked)
+				setIsExpanded(checkboxRef.current.checked);
 			}
-		}
+		};
 
 		if (checkboxRef.current) {
-			checkboxRef.current.addEventListener("change", handleChange)
+			checkboxRef.current.addEventListener("change", handleChange);
 		}
 
 		return () => {
 			if (checkboxRef.current) {
-				checkboxRef.current.removeEventListener("change", handleChange)
+				checkboxRef.current.removeEventListener("change", handleChange);
 			}
-		}
-	}, [])
+		};
+	}, []);
 
 	// Handle click outside to close
 	useEffect(() => {
 		const handleClickOutside = (e: MouseEvent) => {
-			if (checkboxRef.current?.checked && containerRef.current && !containerRef.current.contains(e.target as Node)) {
-				checkboxRef.current.checked = false
-				setIsExpanded(false)
+			if (
+				checkboxRef.current?.checked &&
+				containerRef.current &&
+				!containerRef.current.contains(e.target as Node)
+			) {
+				checkboxRef.current.checked = false;
+				setIsExpanded(false);
 			}
-		}
+		};
 
-		document.addEventListener("mousedown", handleClickOutside)
+		document.addEventListener("mousedown", handleClickOutside);
 
 		return () => {
-			document.removeEventListener("mousedown", handleClickOutside)
-		}
-	}, [])
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
 
 	return (
 		<>
@@ -216,5 +220,5 @@ export function BrickMarquee() {
 				</label>
 			</div>
 		</>
-	)
+	);
 }

@@ -14,22 +14,38 @@ type LexicalNode = {
 
 function renderLexicalNode(node: LexicalNode, index: string) {
 	switch (node.type) {
-		case 'paragraph':
+		case "paragraph":
 			return (
 				<p key={`p-${index}`} className="mb-4">
-					{node.children?.[0]?.text || ''}
+					{node.children?.[0]?.text || ""}
 				</p>
 			);
-		case 'heading':
+		case "heading":
 			switch (node.tag) {
-				case 'h1':
-					return <h1 key={`h1-${index}`} className="mb-4 text-4xl font-bold">{node.children?.[0]?.text || ''}</h1>;
-				case 'h2':
-					return <h2 key={`h2-${index}`} className="mb-4 text-3xl font-bold">{node.children?.[0]?.text || ''}</h2>;
-				case 'h3':
-					return <h3 key={`h3-${index}`} className="mb-4 text-2xl font-bold">{node.children?.[0]?.text || ''}</h3>;
+				case "h1":
+					return (
+						<h1 key={`h1-${index}`} className="mb-4 text-4xl font-bold">
+							{node.children?.[0]?.text || ""}
+						</h1>
+					);
+				case "h2":
+					return (
+						<h2 key={`h2-${index}`} className="mb-4 text-3xl font-bold">
+							{node.children?.[0]?.text || ""}
+						</h2>
+					);
+				case "h3":
+					return (
+						<h3 key={`h3-${index}`} className="mb-4 text-2xl font-bold">
+							{node.children?.[0]?.text || ""}
+						</h3>
+					);
 				default:
-					return <h4 key={`h4-${index}`} className="mb-4 text-xl font-bold">{node.children?.[0]?.text || ''}</h4>;
+					return (
+						<h4 key={`h4-${index}`} className="mb-4 text-xl font-bold">
+							{node.children?.[0]?.text || ""}
+						</h4>
+					);
 			}
 		default:
 			return null;

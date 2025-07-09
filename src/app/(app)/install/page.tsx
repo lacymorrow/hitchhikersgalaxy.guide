@@ -1,8 +1,8 @@
 "use client";
 
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertTriangleIcon, ExternalLinkIcon, TerminalIcon } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { ShadcnCommand } from "./components/shadcn-command";
 
 export default function InstallPage() {
@@ -26,9 +26,7 @@ export default function InstallPage() {
 
 					// Basic check for features needed by WebContainers
 					const isSupported =
-						"serviceWorker" in navigator &&
-						"SharedWorker" in window &&
-						"Atomics" in window;
+						"serviceWorker" in navigator && "SharedWorker" in window && "Atomics" in window;
 
 					// Only mark as supported if cross-origin isolated
 					const isFullySupported = isSupported && window.crossOriginIsolated;
@@ -129,8 +127,8 @@ export default function InstallPage() {
 							<AlertDescription>
 								{isCrossOriginIsolated
 									? "Your browser doesn't support the features needed for WebContainers."
-									: "Cross-Origin Isolation is not enabled. WebContainers require a cross-origin isolated environment."
-								} Please use the manual installation method instead.
+									: "Cross-Origin Isolation is not enabled. WebContainers require a cross-origin isolated environment."}{" "}
+								Please use the manual installation method instead.
 							</AlertDescription>
 						</Alert>
 					)}
@@ -148,7 +146,9 @@ export default function InstallPage() {
 									{containerStatus === "loading-container" && "Loading WebContainer..."}
 									{containerStatus === "initializing-container" && "Initializing container..."}
 									{containerStatus === "loading-shadcn-files" && "Loading essential files..."}
-									<span className="ml-2 text-xs text-muted-foreground">(You can enter your command while this loads)</span>
+									<span className="ml-2 text-xs text-muted-foreground">
+										(You can enter your command while this loads)
+									</span>
 								</p>
 								<div className="h-2 w-full bg-muted rounded-full overflow-hidden">
 									<div

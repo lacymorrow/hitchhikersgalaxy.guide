@@ -34,7 +34,7 @@ export async function initializePaymentProviders(): Promise<void> {
 	if (env.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED) {
 		logger.debug("LemonSqueezy feature enabled, initializing provider", {
 			apiKeyExists: !!env.LEMONSQUEEZY_API_KEY,
-			storeIdExists: !!env.LEMONSQUEEZY_STORE_ID
+			storeIdExists: !!env.LEMONSQUEEZY_STORE_ID,
 		});
 
 		initializers.push(
@@ -55,7 +55,7 @@ export async function initializePaymentProviders(): Promise<void> {
 
 					logger.info("✅ LemonSqueezy Provider Initialized", {
 						isConfigured: lemonSqueezyProvider.isConfigured,
-						isEnabled: lemonSqueezyProvider.isEnabled
+						isEnabled: lemonSqueezyProvider.isEnabled,
 					});
 				} catch (error) {
 					logger.error("❌ Failed to initialize LemonSqueezy Provider", { error });

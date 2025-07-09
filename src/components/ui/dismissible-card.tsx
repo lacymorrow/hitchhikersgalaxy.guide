@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
 import { X } from "lucide-react";
 import type { ReactNode } from "react";
 import { useLocalStorage } from "usehooks-ts";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export interface DismissibleCardProps {
 	children: ReactNode;

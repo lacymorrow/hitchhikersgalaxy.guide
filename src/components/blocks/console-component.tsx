@@ -1,20 +1,17 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { routes } from "@/config/routes";
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useState } from "react";
 
 interface ConsoleComponentProps {
 	onCreateTestKey: () => Promise<string>;
 	apiKey: string | null;
 }
 
-export function ConsoleComponent({
-	onCreateTestKey,
-	apiKey,
-}: ConsoleComponentProps) {
+export function ConsoleComponent({ onCreateTestKey, apiKey }: ConsoleComponentProps) {
 	const [isRunning, setIsRunning] = useState(true);
 	const [logs, setLogs] = useState<string[]>([]);
 

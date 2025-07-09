@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
-import React, { useEffect, useRef } from 'react';
+import type React from "react";
+import { useEffect, useRef } from "react";
 
 interface SubtleBackgroundProps {
 	intensity: number;
@@ -13,7 +14,7 @@ const BackgroundColors: React.FC<SubtleBackgroundProps> = ({ intensity }) => {
 		const canvas = canvasRef.current;
 		if (!canvas) return;
 
-		const ctx = canvas.getContext('2d');
+		const ctx = canvas.getContext("2d");
 		if (!ctx) return;
 
 		let animationFrameId: number;
@@ -25,9 +26,9 @@ const BackgroundColors: React.FC<SubtleBackgroundProps> = ({ intensity }) => {
 
 		const createGradient = (x: number, y: number, r: number, opacity: number) => {
 			const gradient = ctx.createRadialGradient(x, y, 0, x, y, r);
-			gradient.addColorStop(0, `rgba(99, 102, 241, ${opacity * 0.25 * intensity})`);   // Indigo
+			gradient.addColorStop(0, `rgba(99, 102, 241, ${opacity * 0.25 * intensity})`); // Indigo
 			gradient.addColorStop(0.5, `rgba(167, 139, 250, ${opacity * 0.2 * intensity})`); // Purple
-			gradient.addColorStop(1, `rgba(59, 130, 246, ${opacity * 0.15 * intensity})`);   // Blue
+			gradient.addColorStop(1, `rgba(59, 130, 246, ${opacity * 0.15 * intensity})`); // Blue
 			return gradient;
 		};
 
@@ -46,13 +47,14 @@ const BackgroundColors: React.FC<SubtleBackgroundProps> = ({ intensity }) => {
 			// Animated subtle gradients
 			const numGradients = 5;
 			for (let i = 0; i < numGradients; i++) {
-				const angle = (time * 0.0001 * intensity + i * (Math.PI * 2 / numGradients)) % (Math.PI * 2);
+				const angle =
+					(time * 0.0001 * intensity + i * ((Math.PI * 2) / numGradients)) % (Math.PI * 2);
 				const x = centerX + Math.cos(angle) * maxRadius * 0.4 * intensity;
 				const y = centerY + Math.sin(angle) * maxRadius * 0.4 * intensity;
 				const opacity = (Math.sin(time * 0.001 * intensity + i) + 1) / 2;
 				const gradient = createGradient(x, y, maxRadius * 0.6, opacity);
 				ctx.fillStyle = gradient;
-				ctx.globalCompositeOperation = 'screen';
+				ctx.globalCompositeOperation = "screen";
 				ctx.fillRect(0, 0, canvas.width, canvas.height);
 			}
 		};
@@ -63,11 +65,11 @@ const BackgroundColors: React.FC<SubtleBackgroundProps> = ({ intensity }) => {
 		};
 
 		resizeCanvas();
-		window.addEventListener('resize', resizeCanvas);
+		window.addEventListener("resize", resizeCanvas);
 		animate(0);
 
 		return () => {
-			window.removeEventListener('resize', resizeCanvas);
+			window.removeEventListener("resize", resizeCanvas);
 			cancelAnimationFrame(animationFrameId);
 		};
 	}, [intensity]);
@@ -76,4 +78,3 @@ const BackgroundColors: React.FC<SubtleBackgroundProps> = ({ intensity }) => {
 };
 
 export default BackgroundColors;
-

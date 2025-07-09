@@ -24,7 +24,7 @@ export async function getSession(request: Request) {
  * Check if Better Auth is properly configured
  */
 export function isConfigured() {
-	return env.NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED
+	return env.NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED;
 }
 
 /**

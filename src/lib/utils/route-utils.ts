@@ -1,5 +1,5 @@
-import { type RouteObject, type RouteParams, routes } from "@/config/routes";
 import type { Route } from "next";
+import { type RouteObject, type RouteParams, routes } from "@/config/routes";
 
 export const getRoutePath = (route: Route | RouteObject, params: RouteParams = {}): Route => {
 	if (typeof route === "string") {
@@ -8,7 +8,7 @@ export const getRoutePath = (route: Route | RouteObject, params: RouteParams = {
 
 	let path = route.path;
 	for (const [key, defaultValue] of Object.entries(route.params ?? {})) {
-		const value = Object.prototype.hasOwnProperty.call(params, key) ? params[key] : defaultValue;
+		const value = Object.hasOwn(params, key) ? params[key] : defaultValue;
 		if (value !== null) {
 			path = path.replace(`:${key}`, String(value));
 		}

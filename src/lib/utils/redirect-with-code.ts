@@ -1,8 +1,8 @@
+import { redirect } from "next/navigation";
+import { NextResponse } from "next/server";
 import { BASE_URL } from "@/config/base-url";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { logger } from "@/lib/logger";
-import { redirect } from "next/navigation";
-import { NextResponse } from "next/server";
 
 interface RedirectWithCodeOptions {
 	code?: string;
@@ -35,10 +35,12 @@ export const routeRedirectWithCode = (
 	let url: URL;
 
 	if (typeof options === "string") {
-		url = new URL(destination);
+		url = new URL(destination, BASE_URL);
 		url.searchParams.set(SEARCH_PARAM_KEYS.statusCode, options);
 	} else {
-		url = new URL(destination, options.request?.url);
+		// Use BASE_URL as fallback if request.url is not available
+		const baseUrl = options.request?.url || BASE_URL;
+		url = new URL(destination, baseUrl);
 
 		if (options?.nextUrl) {
 			url.searchParams.set(SEARCH_PARAM_KEYS.nextUrl, options.nextUrl);

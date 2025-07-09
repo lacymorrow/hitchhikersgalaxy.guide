@@ -1,17 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormMessage
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { routes } from "@/config/routes";
-import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
-import { signInWithOAuthAction } from "@/server/actions/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { EnvelopeClosedIcon } from "@radix-ui/react-icons";
 import { useSearchParams } from "next/navigation";
@@ -19,6 +7,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Form, FormControl, FormField, FormItem, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { routes } from "@/config/routes";
+import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
+import { signInWithOAuthAction } from "@/server/actions/auth";
 
 const magicLinkSchema = z.object({
 	email: z.string().email("Please enter a valid email address"),
@@ -51,7 +45,7 @@ export function MagicLinkForm({ className }: MagicLinkFormProps) {
 				options: {
 					redirectTo: nextUrl || routes.home,
 					email: values.email,
-				}
+				},
 			});
 
 			toast.success("Magic link sent", {

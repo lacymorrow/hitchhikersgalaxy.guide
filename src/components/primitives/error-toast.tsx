@@ -1,9 +1,9 @@
 "use client";
 
-import { STATUS_CODES } from "@/config/status-codes";
 import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { toast } from "sonner";
+import { STATUS_CODES } from "@/config/status-codes";
 
 export const ErrorToast = () => {
 	const searchParams = useSearchParams();

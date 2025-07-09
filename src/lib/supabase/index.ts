@@ -12,14 +12,12 @@
  * @see https://supabase.com/docs/guides/auth/auth-helpers/nextjs
  */
 
-// Client exports
-export { createSupabaseClient, getSupabaseClient } from "./client";
-
-// Server exports
-export { createAnonServerClient, createServerClient } from "./server";
-
 // Auth helpers
 export { authUtils, supabaseAuth, supabaseServerAuth } from "./auth-helpers";
+// Client exports
+export { createSupabaseClient, getSupabaseClient } from "./client";
+// Server exports
+export { createAnonServerClient, createServerClient } from "./server";
 
 // Types and utilities
 export type {

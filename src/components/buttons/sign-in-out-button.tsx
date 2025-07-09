@@ -1,11 +1,11 @@
 "use client";
 
+import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import { signOutAction } from "@/server/actions/auth";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
 
 const className = "text-inherit";
 

@@ -1,6 +1,6 @@
 import { getSupabaseClient } from "./client";
 import { createServerClient } from "./server";
-import type { AuthUser, AuthSession, AuthResponse } from "./types";
+import type { AuthResponse, AuthSession, AuthUser } from "./types";
 
 /**
  * Supabase Authentication Helpers

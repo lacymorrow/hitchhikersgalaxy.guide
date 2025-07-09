@@ -1,6 +1,6 @@
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import type { ComponentPropsWithoutRef, ReactNode } from "react";
 
 interface AuthenticationCardProps extends ComponentPropsWithoutRef<typeof Card> {
 	children: ReactNode;

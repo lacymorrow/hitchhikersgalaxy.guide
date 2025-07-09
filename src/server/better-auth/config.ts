@@ -1,8 +1,8 @@
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { BASE_URL } from "@/config/base-url";
 import { env } from "@/env";
 import { db } from "@/server/db";
-import { betterAuth } from "better-auth";
-import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { betterAuthSchema } from "./schema";
 
 /**

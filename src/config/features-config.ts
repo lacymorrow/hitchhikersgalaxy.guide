@@ -70,7 +70,8 @@ const isLemonSqueezyEnabled =
 
 const isPolarEnabled = !!process.env.POLAR_ACCESS_TOKEN;
 
-const isStripeEnabled = !!process.env.STRIPE_SECRET_KEY && !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+const isStripeEnabled =
+	!!process.env.STRIPE_SECRET_KEY && !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 
 const isS3Enabled =
 	!!process.env.AWS_REGION &&
@@ -92,7 +93,8 @@ const isPostHogEnabled =
 const isUmamiEnabled = !!process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
 
 // Consent Manager
-const isConsentManagerEnabled = !!process.env.NEXT_PUBLIC_C15T_URL || process.env.ENABLE_CONSENT_MANAGER === "true";
+const isConsentManagerEnabled =
+	!!process.env.NEXT_PUBLIC_C15T_URL || process.env.ENABLE_CONSENT_MANAGER === "true";
 
 // File Upload (combine S3 and Vercel Blob)
 const isFileUploadEnabled = isS3Enabled || isVercelBlobEnabled;

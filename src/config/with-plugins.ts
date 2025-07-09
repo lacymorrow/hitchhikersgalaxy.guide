@@ -1,6 +1,6 @@
+import fs from "fs";
 import type { NextConfig } from "next";
-import fs from 'fs';
-import path from 'path';
+import path from "path";
 import { NEXTJS_PLUGINS_DIR_RELATIVE } from "./constants";
 
 /**
@@ -19,8 +19,9 @@ export function withPlugins(
 
 	try {
 		if (fs.existsSync(pluginsDir)) {
-			const pluginFiles = fs.readdirSync(pluginsDir)
-				.filter(file => /\.(t|j|mj|mt)s$/.test(file))
+			const pluginFiles = fs
+				.readdirSync(pluginsDir)
+				.filter((file) => /\.(t|j|mj|mt)s$/.test(file))
 				.sort(); // Apply plugins in alphabetical order
 
 			// Logging moved to instrumentation.ts
@@ -32,13 +33,13 @@ export function withPlugins(
 					const pluginModule = require(pluginPath);
 					// Find the exported function (prefer default export, fallback to the first named export function)
 					let pluginFunction = pluginModule.default;
-					if (typeof pluginFunction !== 'function') {
+					if (typeof pluginFunction !== "function") {
 						pluginFunction = Object.values(pluginModule).find(
-							(exp): exp is (config: NextConfig) => NextConfig => typeof exp === 'function'
+							(exp): exp is (config: NextConfig) => NextConfig => typeof exp === "function"
 						);
 					}
 
-					if (typeof pluginFunction === 'function') {
+					if (typeof pluginFunction === "function") {
 						// console.debug(`[Next.js Config] Applying plugin: ${file}`); // Keep apply log here
 						config = pluginFunction(config);
 					} else {
@@ -55,7 +56,7 @@ export function withPlugins(
 			// console.log(`[Next.js Config] Plugin directory not found, skipping dynamic plugins: ${relativePluginsDirLog}`);
 		}
 	} catch (error) {
-		console.error('[Next.js Config] Error reading plugin directory:', error);
+		console.error("[Next.js Config] Error reading plugin directory:", error);
 	}
 
 	return config;

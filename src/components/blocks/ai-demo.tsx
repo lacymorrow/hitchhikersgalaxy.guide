@@ -1,26 +1,28 @@
 "use client";
 
+import { Bot, Loader2, Send, Sparkles, Terminal, Wand2 } from "lucide-react";
+import dynamic from "next/dynamic";
+import Script from "next/script";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Bot, Loader2, Send, Sparkles, Terminal, Wand2 } from "lucide-react";
-import dynamic from 'next/dynamic';
-import Script from "next/script";
-import * as React from "react";
 
 // Fix the dynamic import to specifically import the default export
-const AISmollmWebGPU = dynamic(async () => {
-	const module = await import('@/app/(app)/ai/smollm-web/ai-smollm-webgpu');
-	return module.AISmollmWebGPU;
-}, {
-	ssr: false,
-	loading: () => (
-		<div className="flex items-center justify-center h-[200px]">
-			<Loader2 className="h-6 w-6 animate-spin text-primary" />
-		</div>
-	)
-});
-
+const AISmollmWebGPU = dynamic(
+	async () => {
+		const module = await import("@/app/(app)/ai/smollm-web/ai-smollm-webgpu");
+		return module.AISmollmWebGPU;
+	},
+	{
+		ssr: false,
+		loading: () => (
+			<div className="flex items-center justify-center h-[200px]">
+				<Loader2 className="h-6 w-6 animate-spin text-primary" />
+			</div>
+		),
+	}
+);
 
 const demoPrompts = [
 	"What is the meaning of life?",
@@ -40,11 +42,14 @@ export const AIDemo: React.FC = () => {
 	React.useEffect(() => {
 		window.MathJax = {
 			tex: {
-				inlineMath: [['$', '$'], ['\\(', '\\)']],
+				inlineMath: [
+					["$", "$"],
+					["\\(", "\\)"],
+				],
 			},
 			svg: {
-				fontCache: 'global'
-			}
+				fontCache: "global",
+			},
 		};
 	}, []);
 
@@ -100,11 +105,7 @@ export const AIDemo: React.FC = () => {
 								className="min-h-[100px]"
 							/>
 						</div>
-						<Button
-							type="submit"
-							disabled={loading || !prompt || !isAIReady}
-							className="w-full"
-						>
+						<Button type="submit" disabled={loading || !prompt || !isAIReady} className="w-full">
 							{loading ? (
 								<Loader2 className="h-4 w-4 animate-spin mr-2" />
 							) : (
@@ -121,10 +122,11 @@ export const AIDemo: React.FC = () => {
 									key={demoPrompt}
 									type="button"
 									onClick={() => handleDemoClick(demoPrompt)}
-									className={`text-xs px-3 py-1.5 rounded-full transition-colors ${selectedDemo === demoPrompt
-										? "bg-primary text-primary-foreground"
-										: "bg-secondary hover:bg-secondary/80"
-										}`}
+									className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
+										selectedDemo === demoPrompt
+											? "bg-primary text-primary-foreground"
+											: "bg-secondary hover:bg-secondary/80"
+									}`}
 								>
 									{demoPrompt}
 								</button>
@@ -166,8 +168,8 @@ export const AIDemo: React.FC = () => {
 
 			<div className="text-center">
 				<p className="text-sm text-gray-500">
-					This demo uses a lightweight AI model running directly in your browser.
-					No data is sent to external servers.
+					This demo uses a lightweight AI model running directly in your browser. No data is sent to
+					external servers.
 				</p>
 			</div>
 		</div>

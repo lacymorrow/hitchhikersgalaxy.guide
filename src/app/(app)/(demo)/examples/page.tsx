@@ -1,28 +1,27 @@
-import Image from "next/image"
-import Link from "next/link"
+import Image from "next/image";
+import Link from "next/link";
 
 import {
 	PageActions,
 	PageHeader,
 	PageHeaderDescription,
 	PageHeaderHeading,
-} from "@/components/primitives/page-header"
-import { Announcement } from "@/components/ui/announcement"
-import { Button } from "@/components/ui/button"
-import { CardsDemo } from "./_components/cards"
+} from "@/components/primitives/page-header";
+import { Announcement } from "@/components/ui/announcement";
+import { Button } from "@/components/ui/button";
+import { CardsDemo } from "./_components/cards";
 
 export default function IndexPage() {
 	return (
 		<>
 			<div className="container-wrapper">
 				<div className="container">
-
 					<PageHeader>
 						<Announcement />
 						<PageHeaderHeading>Examples</PageHeaderHeading>
 						<PageHeaderDescription>
-							Beautifully designed components that you can copy and paste into your
-							apps. Made with Tailwind CSS. Open source.
+							Beautifully designed components that you can copy and paste into your apps. Made with
+							Tailwind CSS. Open source.
 						</PageHeaderDescription>
 						<PageActions>
 							<Button asChild size="sm">
@@ -55,5 +54,5 @@ export default function IndexPage() {
 				</div>
 			</div>
 		</>
-	)
+	);
 }

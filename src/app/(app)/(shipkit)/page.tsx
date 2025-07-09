@@ -1,15 +1,16 @@
-import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
-import { Suspense } from "react";
-import { HeroSection } from "./_components/hero-section";
-import { LaunchPageContent } from "./_components/launch-page-content";
+import { OnboardingHeader } from "./_components/onboarding-header";
+import { NextStepsSection } from "./_components/next-steps-section";
 
-export default function LaunchPage() {
+export default function ShipkitOnboardingPage() {
 	return (
-		<>
-			<HeroSection />
-			<Suspense fallback={<SuspenseFallback />}>
-				<LaunchPageContent />
-			</Suspense>
-		</>
+		<div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
+			<OnboardingHeader />
+			<div className="container mx-auto px-4 py-8 space-y-12">
+				{/* <Suspense fallback={<SuspenseFallback />}>
+					<FeatureGrid />
+				</Suspense> */}
+				<NextStepsSection />
+			</div>
+		</div>
 	);
 }

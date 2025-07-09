@@ -1,11 +1,8 @@
-export const dynamic = 'force-dynamic';
+export const dynamic = "force-dynamic";
 
+import { Settings, XCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getIntegrationStatuses } from "@/server/services/integration-service";
-import {
-	Settings,
-	XCircle
-} from "lucide-react";
 import { IntegrationsClientContent } from "./integrations-client-content";
 
 // Define the structure for each integration's status (matching the action)
@@ -45,7 +42,8 @@ export default async function IntegrationsPage() {
 			<div className="flex flex-col gap-2 items-start justify-start">
 				<h1 className="text-3xl font-bold tracking-tight">Integrations</h1>
 				<p className="text-sm text-muted-foreground max-w-xl">
-					See your integrations with external services. You can connect services by adding environment variables.
+					See your integrations with external services. You can connect services by adding
+					environment variables.
 				</p>
 			</div>
 

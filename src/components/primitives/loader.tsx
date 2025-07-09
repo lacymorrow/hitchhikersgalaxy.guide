@@ -1,6 +1,6 @@
+import * as React from "react";
 import { LoaderAtoms } from "@/components/loaders/loader-atoms";
 import { cn } from "@/lib/utils";
-import * as React from "react";
 
 export interface LoaderProps extends React.HTMLAttributes<HTMLDivElement> {
 	/**

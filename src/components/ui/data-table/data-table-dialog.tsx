@@ -46,10 +46,7 @@ export function DataTableDialog({
 				</DialogHeader>
 				<div className="grid gap-4 py-4">
 					{fields.map((field) => (
-						<div
-							key={field.label}
-							className="grid grid-cols-4 items-center gap-4"
-						>
+						<div key={field.label} className="grid grid-cols-4 items-center gap-4">
 							<Label htmlFor={field.label} className="text-right">
 								{field.label}
 							</Label>

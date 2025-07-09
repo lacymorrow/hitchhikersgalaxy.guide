@@ -1,5 +1,5 @@
-import type { NextRequest } from "next/server";
 import { headers } from "next/headers";
+import type { NextRequest } from "next/server";
 
 /*
  * Vercel Webhook Handler

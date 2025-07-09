@@ -1,6 +1,9 @@
-'use client'
+"use client";
 
-import { Button } from "@/components/ui/button"
+import { useRouter } from "next/navigation";
+import * as React from "react";
+import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
+import { Button } from "@/components/ui/button";
 import {
 	CommandDialog,
 	CommandEmpty,
@@ -8,27 +11,24 @@ import {
 	CommandInput,
 	CommandItem,
 	CommandList,
-} from "@/components/ui/command"
-import { ShortcutDisplay } from "@/components/primitives/shortcut-display"
-import { ShortcutAction } from "@/config/keyboard-shortcuts"
-import { useKeyboardShortcut } from "@/contexts/keyboard-shortcut-context"
-import { cn } from "@/lib/utils"
-import { useRouter } from "next/navigation"
-import * as React from "react"
+} from "@/components/ui/command";
+import { ShortcutAction } from "@/config/keyboard-shortcuts";
+import { useKeyboardShortcut } from "@/contexts/keyboard-shortcut-context";
+import { cn } from "@/lib/utils";
 
 export function CommandMenu() {
-	const router = useRouter()
-	const [open, setOpen] = React.useState(false)
+	const router = useRouter();
+	const [open, setOpen] = React.useState(false);
 
 	useKeyboardShortcut(
 		ShortcutAction.OPEN_COMMAND_MENU,
 		(event) => {
-			event.preventDefault()
-			setOpen((prevOpen) => !prevOpen)
+			event.preventDefault();
+			setOpen((prevOpen) => !prevOpen);
 		},
 		undefined,
 		[setOpen]
-	)
+	);
 
 	return (
 		<>
@@ -53,32 +53,32 @@ export function CommandMenu() {
 					<CommandGroup heading="Links">
 						<CommandItem
 							onSelect={() => {
-								router.push("/docs")
-								setOpen(false)
+								router.push("/docs");
+								setOpen(false);
 							}}
 						>
 							Documentation
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {
-								router.push("/docs/components/accordion")
-								setOpen(false)
+								router.push("/docs/components/accordion");
+								setOpen(false);
 							}}
 						>
 							Components
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {
-								router.push("/docs/themes")
-								setOpen(false)
+								router.push("/docs/themes");
+								setOpen(false);
 							}}
 						>
 							Themes
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {
-								router.push("/docs/examples")
-								setOpen(false)
+								router.push("/docs/examples");
+								setOpen(false);
 							}}
 						>
 							Examples
@@ -87,5 +87,5 @@ export function CommandMenu() {
 				</CommandList>
 			</CommandDialog>
 		</>
-	)
+	);
 }

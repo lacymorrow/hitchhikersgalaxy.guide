@@ -1,13 +1,12 @@
 "use server";
 
+import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
 import { cacheConfigs, cacheService } from "@/server/services/cache-service";
 import { ErrorService } from "@/server/services/error-service";
 import { metrics, metricsService } from "@/server/services/metrics-service";
 import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
 import { teamService } from "@/server/services/team-service";
 import { ValidationService } from "@/server/services/validation-service";
-import { revalidatePath, revalidateTag } from "next/cache";
-import { unstable_cache } from "next/cache";
 import {
 	createTeamSchema,
 	teamIdSchema,
@@ -44,7 +43,7 @@ export async function createTeam(userId: string, name: string) {
 
 		// Revalidate Next.js cache using tags
 		revalidateTag(`user-teams-${userId}`);
-		revalidateTag('teams');
+		revalidateTag("teams");
 		revalidatePath("/");
 
 		return team;
@@ -77,7 +76,7 @@ export async function getUserTeams(userId: string) {
 			},
 			[`user-teams-${userId}`],
 			{
-				tags: [`user-teams-${userId}`, 'teams'],
+				tags: [`user-teams-${userId}`, "teams"],
 				revalidate: 3600, // Cache for 1 hour, but can be invalidated on-demand
 			}
 		)();
@@ -143,7 +142,7 @@ export async function updateTeam(teamId: string, data: { name?: string }) {
 		await cacheService.delete(`team:${teamId}`);
 
 		// Revalidate Next.js cache using tags
-		revalidateTag('teams');
+		revalidateTag("teams");
 		// Revalidate for all users who are members of this team
 		const teamMembers = await teamService.getTeamMembers(teamId);
 		for (const member of teamMembers || []) {
@@ -187,7 +186,7 @@ export async function deleteTeam(teamId: string) {
 		await cacheService.delete(`team:${teamId}`);
 
 		// Revalidate Next.js cache using tags
-		revalidateTag('teams');
+		revalidateTag("teams");
 		// Revalidate for all users who were members of this team
 		for (const member of teamMembers || []) {
 			revalidateTag(`user-teams-${member.userId}`);
@@ -271,7 +270,7 @@ export async function removeTeamMember(teamId: string, userId: string) {
 
 		// Revalidate Next.js cache using tags
 		revalidateTag(`user-teams-${userId}`);
-		revalidateTag('teams');
+		revalidateTag("teams");
 		revalidatePath("/");
 
 		return success;

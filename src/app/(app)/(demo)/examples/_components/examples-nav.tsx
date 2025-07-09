@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
-import { routes } from "@/config/routes"
-import { cn } from "@/lib/utils"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { routes } from "@/config/routes";
+import { cn } from "@/lib/utils";
 
 const examples = [
 	{
@@ -50,25 +50,27 @@ const examples = [
 		code: "https://github.com/shadcn/ui/tree/main/apps/www/app/(app)/examples/authentication",
 		hidden: false,
 	},
-]
+];
 
 interface ExamplesNavProps extends React.HTMLAttributes<HTMLDivElement> {
-	current?: string
+	current?: string;
 }
 
 export function ExamplesNav({ current, className, ...props }: ExamplesNavProps) {
-	const pathname = usePathname()
-	const isHome = pathname === routes.home
+	const pathname = usePathname();
+	const isHome = pathname === routes.home;
 
 	return (
 		<div className="relative w-full">
 			<ScrollArea className="max-w-[600px] lg:max-w-none mx-auto px-md [mask-image:linear-gradient(to_right,transparent,white_7%,white_93%,transparent)]">
 				<div className={cn("flex items-center justify-center", className)} {...props}>
-					{!isHome && <ExampleLink
-						href={routes.examples.index}
-						example={{ name: "Examples", href: routes.examples.index, code: "", hidden: false }}
-						isActive={pathname === routes.examples.index}
-					/>}
+					{!isHome && (
+						<ExampleLink
+							href={routes.examples.index}
+							example={{ name: "Examples", href: routes.examples.index, code: "", hidden: false }}
+							isActive={pathname === routes.examples.index}
+						/>
+					)}
 					{examples.map((example) => (
 						<ExampleLink
 							href={isHome ? `?example=${example.name}` : example?.href}
@@ -81,7 +83,7 @@ export function ExamplesNav({ current, className, ...props }: ExamplesNavProps) 
 				<ScrollBar orientation="horizontal" className="invisible" />
 			</ScrollArea>
 		</div>
-	)
+	);
 }
 
 function ExampleLink({
@@ -89,12 +91,12 @@ function ExampleLink({
 	isActive,
 	href,
 }: {
-	example: (typeof examples)[number]
-	isActive: boolean
-	href: string
+	example: (typeof examples)[number];
+	isActive: boolean;
+	href: string;
 }) {
 	if (example.hidden) {
-		return null
+		return null;
 	}
 
 	return (
@@ -109,5 +111,5 @@ function ExampleLink({
 		>
 			{example.name}
 		</Link>
-	)
+	);
 }

@@ -1,7 +1,14 @@
 "use client";
 
 import { cva, type VariantProps } from "class-variance-authority";
-import { motion, useMotionValue, useSpring, useTransform, type HTMLMotionProps, type MotionValue } from "framer-motion";
+import {
+	type HTMLMotionProps,
+	type MotionValue,
+	motion,
+	useMotionValue,
+	useSpring,
+	useTransform,
+} from "framer-motion";
 import React, { useRef } from "react";
 
 import { cn } from "@/lib/utils";
@@ -18,7 +25,7 @@ const DEFAULT_MAGNIFICATION = 60;
 const DEFAULT_DISTANCE = 140;
 
 const dockVariants = cva(
-	"supports-backdrop-blur:bg-white/10 supports-backdrop-blur:dark:bg-black/10 mx-auto mt-8 flex h-[58px] w-max gap-2 rounded-2xl border p-2 backdrop-blur-md",
+	"supports-backdrop-blur:bg-white/10 supports-backdrop-blur:dark:bg-black/10 mx-auto mt-8 flex h-[58px] w-max gap-2 rounded-2xl border p-2 backdrop-blur-md"
 );
 
 // Create context with null as default - we'll provide actual values in the Dock component
@@ -42,7 +49,7 @@ const Dock = React.forwardRef<HTMLDivElement, DockProps>(
 			direction = "bottom",
 			...props
 		},
-		ref,
+		ref
 	) => {
 		// Use hooks inside the component
 		const mouseX = useMotionValue(Infinity);
@@ -64,7 +71,7 @@ const Dock = React.forwardRef<HTMLDivElement, DockProps>(
 				</motion.div>
 			</DockContext.Provider>
 		);
-	},
+	}
 );
 
 Dock.displayName = "Dock";
@@ -74,12 +81,7 @@ export interface DockIconProps extends Omit<HTMLMotionProps<"div">, "children"> 
 	children?: React.ReactNode;
 }
 
-const DockIcon = ({
-	size,
-	className,
-	children,
-	...props
-}: DockIconProps) => {
+const DockIcon = ({ size, className, children, ...props }: DockIconProps) => {
 	const ref = useRef<HTMLDivElement>(null);
 	const { mouseX, magnification, distance } = React.useContext(DockContext);
 
@@ -91,11 +93,7 @@ const DockIcon = ({
 		return val - bounds.x - bounds.width / 2;
 	});
 
-	const widthSync = useTransform(
-		distanceCalc,
-		[-distance, 0, distance],
-		[40, magnification, 40],
-	);
+	const widthSync = useTransform(distanceCalc, [-distance, 0, distance], [40, magnification, 40]);
 
 	const width = useSpring(widthSync, {
 		mass: 0.1,
@@ -109,7 +107,7 @@ const DockIcon = ({
 			style={{ width }}
 			className={cn(
 				"flex aspect-square cursor-pointer items-center justify-center rounded-full",
-				className,
+				className
 			)}
 			{...props}
 		>

@@ -1,27 +1,14 @@
 "use client";
 
+import { CheckCircle, Database, ExternalLink, Loader2, Terminal, XCircle } from "lucide-react";
+import { useEffect, useState } from "react";
 import { getCMSStatusAction, seedCMSAction } from "@/app/(app)/(admin)/admin/integrations/actions";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
-import {
-	CheckCircle,
-	Database,
-	ExternalLink,
-	Loader2,
-	Terminal,
-	XCircle,
-} from "lucide-react";
-import { useState, useEffect } from "react";
 
 interface CMSStatus {
 	configured: boolean;
@@ -47,10 +34,7 @@ export default function CMSPage() {
 				console.error("Error fetching CMS status:", error);
 				setCmsStatus({
 					configured: false,
-					message:
-						error instanceof Error
-							? error.message
-							: "Error checking status",
+					message: error instanceof Error ? error.message : "Error checking status",
 				});
 			} finally {
 				setStatusLoading(false);
@@ -134,9 +118,7 @@ export default function CMSPage() {
 			<Card>
 				<CardHeader>
 					<CardTitle>Actions</CardTitle>
-					<CardDescription>
-						Manage your Payload CMS instance.
-					</CardDescription>
+					<CardDescription>Manage your Payload CMS instance.</CardDescription>
 				</CardHeader>
 				<CardContent className="grid gap-6 sm:grid-cols-2">
 					<div className="flex flex-col space-y-2">
@@ -147,10 +129,7 @@ export default function CMSPage() {
 						<Link
 							target="_blank"
 							rel="noopener noreferrer"
-							className={cn(
-								buttonVariants({ variant: "outline" }),
-								"mt-auto"
-							)}
+							className={cn(buttonVariants({ variant: "outline" }), "mt-auto")}
 							href="/cms"
 						>
 							Open Payload Admin
@@ -161,8 +140,8 @@ export default function CMSPage() {
 					<div className="flex flex-col space-y-2">
 						<h3 className="font-semibold">Seed CMS Data</h3>
 						<p className="text-sm text-muted-foreground">
-							Populate the CMS with initial data. Clears existing data first.
-							(Requires admin privileges)
+							Populate the CMS with initial data. Clears existing data first. (Requires admin
+							privileges)
 						</p>
 						<form onSubmit={handleSeed} className="mt-auto space-y-2">
 							<Button
@@ -187,9 +166,7 @@ export default function CMSPage() {
 									) : (
 										<XCircle className="h-4 w-4" />
 									)}
-									<AlertTitle>
-										{seedMessage.type === "success" ? "Success" : "Error"}
-									</AlertTitle>
+									<AlertTitle>{seedMessage.type === "success" ? "Success" : "Error"}</AlertTitle>
 									<AlertDescription>{seedMessage.text}</AlertDescription>
 								</Alert>
 							)}

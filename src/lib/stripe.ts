@@ -1,9 +1,9 @@
+import { eq } from "drizzle-orm";
+import Stripe from "stripe";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import { payments, users } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
-import Stripe from "stripe";
 import type {
 	StripeCheckoutOptions,
 	StripeCustomer,
@@ -66,7 +66,9 @@ export const getStripeClient = (): Stripe | null => {
  * @param options Checkout session configuration
  * @returns Promise resolving to checkout session URL or null
  */
-export const createStripeCheckoutSession = async (options: StripeCheckoutOptions): Promise<string | null> => {
+export const createStripeCheckoutSession = async (
+	options: StripeCheckoutOptions
+): Promise<string | null> => {
 	if (!env.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED) {
 		logger.debug("Stripe feature is disabled. Skipping checkout session creation.");
 		return null;
@@ -111,7 +113,7 @@ export const createStripeCheckoutSession = async (options: StripeCheckoutOptions
 
 		logger.debug("Stripe checkout session created successfully", {
 			sessionId: session.id,
-			url: session.url
+			url: session.url,
 		});
 
 		return session.url;
@@ -127,7 +129,9 @@ export const createStripeCheckoutSession = async (options: StripeCheckoutOptions
  * @param sessionId Stripe checkout session ID
  * @returns Promise resolving to checkout session or null
  */
-export const getStripeCheckoutSession = async (sessionId: string): Promise<Stripe.Checkout.Session | null> => {
+export const getStripeCheckoutSession = async (
+	sessionId: string
+): Promise<Stripe.Checkout.Session | null> => {
 	if (!env.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED) {
 		logger.debug("Stripe feature is disabled. Skipping session retrieval.");
 		return null;
@@ -216,7 +220,7 @@ export const getStripePaymentStatus = async (userId: string): Promise<boolean> =
 		});
 
 		const hasSuccessfulPayment = paymentIntents.data.some(
-			payment => payment.status === "succeeded"
+			(payment) => payment.status === "succeeded"
 		);
 
 		// Check for active subscriptions
@@ -317,7 +321,7 @@ export const hasUserPurchasedStripeProduct = async (
 		});
 
 		for (const subscription of subscriptions.data) {
-			const hasPriceId = subscription.items.data.some(item => item.price.id === priceId);
+			const hasPriceId = subscription.items.data.some((item) => item.price.id === priceId);
 			if (hasPriceId && subscription.status === "active") return true;
 		}
 
@@ -383,7 +387,7 @@ export const getAllStripeOrders = async (): Promise<StripeOrder[]> => {
 						// Fallback to existing logic if charge retrieval fails
 						logger.debug("Could not retrieve charge information for payment intent", {
 							paymentIntentId: paymentIntent.id,
-							error: error instanceof Error ? error.message : String(error)
+							error: error instanceof Error ? error.message : String(error),
 						});
 					}
 
@@ -433,7 +437,7 @@ export const getAllStripeOrders = async (): Promise<StripeOrder[]> => {
 						logger.warn("Error retrieving product name for subscription", {
 							subscriptionId: subscription.id,
 							priceId,
-							error: error instanceof Error ? error.message : String(error)
+							error: error instanceof Error ? error.message : String(error),
 						});
 
 						// Fallback to subscription metadata or description
@@ -452,8 +456,9 @@ export const getAllStripeOrders = async (): Promise<StripeOrder[]> => {
 					orderId: subscription.id,
 					userEmail: customer.email ?? "Unknown",
 					userName: customer.name ?? null,
-					amount: subscription.items.data[0]?.price.unit_amount ?
-						subscription.items.data[0].price.unit_amount / 100 : 0,
+					amount: subscription.items.data[0]?.price.unit_amount
+						? subscription.items.data[0].price.unit_amount / 100
+						: 0,
 					status: subscription.status === "active" ? "paid" : "pending",
 					productName,
 					purchaseDate: new Date(subscription.created * 1000),

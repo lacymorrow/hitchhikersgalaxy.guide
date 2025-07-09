@@ -2,14 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-const TYPES = [
-	"circle",
-	"semi-circle",
-	"square",
-	"triangle",
-	"triangle-2",
-	"rectangle",
-];
+const TYPES = ["circle", "semi-circle", "square", "triangle", "triangle-2", "rectangle"];
 const COLORS = [
 	"#836ee5",
 	"#fe94b4",

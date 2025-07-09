@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { createRichText } from "@/lib/payload/seed-utils"; // Adjust import path if necessary
 
 describe("seed-utils", () => {

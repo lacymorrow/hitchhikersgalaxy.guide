@@ -1,5 +1,10 @@
 "use client";
 
+import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
+import { PlusIcon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import * as React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,12 +32,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { type AvatarType, getAvatarUrl } from "@/lib/utils/avatar";
 import { createTeam, getUserTeams } from "@/server/actions/teams";
-import { type Team } from "@/types/team";
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
-import { PlusIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import * as React from "react";
+import type { Team } from "@/types/team";
 
 interface TeamSwitcherProps {
 	userId?: string;
@@ -40,7 +40,11 @@ interface TeamSwitcherProps {
 	onTeamChange?: (teamId: string) => void;
 }
 
-export function TeamSwitcher({ userId: propUserId, activeTeamId, onTeamChange }: TeamSwitcherProps = {}) {
+export function TeamSwitcher({
+	userId: propUserId,
+	activeTeamId,
+	onTeamChange,
+}: TeamSwitcherProps = {}) {
 	const { open: sidebarOpen } = useSidebar();
 	const { data: session } = useSession();
 	const router = useRouter();
@@ -281,10 +285,7 @@ export function TeamSwitcher({ userId: propUserId, activeTeamId, onTeamChange }:
 						>
 							Cancel
 						</Button>
-						<Button
-							onClick={handleCreateTeam}
-							disabled={!newTeamName.trim() || isLoading}
-						>
+						<Button onClick={handleCreateTeam} disabled={!newTeamName.trim() || isLoading}>
 							{isLoading ? "Creating..." : "Continue"}
 						</Button>
 					</DialogFooter>

@@ -1,17 +1,13 @@
+import { SidebarCloseIcon } from "lucide-react";
+import type { ReactNode } from "react";
 import { AppSidebar } from "@/components/blocks/app-sidebar";
 import { SidebarLayout } from "@/components/layouts/sidebar-layout";
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { routes } from "@/config/routes";
-import { SidebarCloseIcon } from "lucide-react";
-import type { ReactNode } from "react";
 
-export const DashboardLayout = async ({
-	children,
-}: {
-	children: ReactNode;
-}) => {
+export const DashboardLayout = async ({ children }: { children: ReactNode }) => {
 	return (
 		<SidebarLayout>
 			<AppSidebar />

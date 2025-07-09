@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Icons } from "@/components/assets/icons"
-import { Button } from "@/components/ui/button"
+import { Icons } from "@/components/assets/icons";
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -9,18 +9,16 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export function CardsCreateAccount() {
 	return (
 		<Card>
 			<CardHeader className="space-y-1">
 				<CardTitle className="text-2xl">Create an account</CardTitle>
-				<CardDescription>
-					Enter your email below to create your account
-				</CardDescription>
+				<CardDescription>Enter your email below to create your account</CardDescription>
 			</CardHeader>
 			<CardContent className="grid gap-4">
 				<div className="grid grid-cols-2 gap-6">
@@ -38,9 +36,7 @@ export function CardsCreateAccount() {
 						<span className="w-full border-t" />
 					</div>
 					<div className="relative flex justify-center text-xs uppercase">
-						<span className="bg-card px-2 text-muted-foreground">
-							Or continue with
-						</span>
+						<span className="bg-card px-2 text-muted-foreground">Or continue with</span>
 					</div>
 				</div>
 				<div className="grid gap-2">
@@ -56,5 +52,5 @@ export function CardsCreateAccount() {
 				<Button className="w-full">Create account</Button>
 			</CardFooter>
 		</Card>
-	)
+	);
 }

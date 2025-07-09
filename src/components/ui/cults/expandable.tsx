@@ -1,25 +1,18 @@
 "use client";
 
+import { useMeasure } from "@uidotdev/usehooks";
 import {
 	AnimatePresence,
-	HTMLMotionProps,
+	type Easing,
+	type HTMLMotionProps,
 	motion,
+	type TargetAndTransition,
 	useMotionValue,
 	useSpring,
-	type Easing,
-	type TargetAndTransition,
 	type VariantLabels,
 } from "framer-motion";
-import React, {
-	ReactNode,
-	createContext,
-	useContext,
-	useEffect,
-	useState,
-} from "react";
-
+import React, { createContext, type ReactNode, useContext, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
-import { useMeasure } from "@uidotdev/usehooks";
 
 const springConfig = { stiffness: 200, damping: 20, bounce: 0.2 };
 
@@ -38,7 +31,7 @@ interface ExpandableContextType {
 // Create a context with default values
 const ExpandableContext = createContext<ExpandableContextType>({
 	isExpanded: false,
-	toggleExpand: () => { },
+	toggleExpand: () => {},
 	expandDirection: "vertical", // 'vertical' | 'horizontal' | 'both' // Direction of expansion
 	expandBehavior: "replace", // How the expansion affects surrounding content
 	transitionDuration: 0.3, // Duration of the expansion/collapse animation
@@ -83,7 +76,7 @@ const Expandable = React.forwardRef<HTMLDivElement, ExpandableProps>(
 			onCollapseEnd,
 			...props
 		},
-		ref,
+		ref
 	) => {
 		// Internal state for expansion when the component is uncontrolled
 		const [isExpandedInternal, setIsExpandedInternal] = useState(false);
@@ -92,8 +85,7 @@ const Expandable = React.forwardRef<HTMLDivElement, ExpandableProps>(
 		const isExpanded = expanded !== undefined ? expanded : isExpandedInternal;
 
 		// Use the provided onToggle function if available, otherwise use internal toggle function
-		const toggleExpand =
-			onToggle || (() => setIsExpandedInternal((prev) => !prev));
+		const toggleExpand = onToggle || (() => setIsExpandedInternal((prev) => !prev));
 
 		// Effect to call onExpandStart or onCollapseStart when isExpanded changes
 		useEffect(() => {
@@ -136,7 +128,7 @@ const Expandable = React.forwardRef<HTMLDivElement, ExpandableProps>(
 				</motion.div>
 			</ExpandableContext.Provider>
 		);
-	},
+	}
 );
 
 // Predefined animation presets
@@ -234,7 +226,7 @@ const ExpandableContent = React.forwardRef<
 			keepMounted = false,
 			...props
 		},
-		ref,
+		ref
 	) => {
 		const { isExpanded, transitionDuration, easeType } = useExpandable();
 		// useMeasure is used to measure the height of the content
@@ -296,20 +288,17 @@ const ExpandableContent = React.forwardRef<
 									initial="hidden"
 									animate="visible"
 								>
-									{React.Children.map(
-										children as React.ReactNode,
-										(child, index) => (
-											<motion.div
-												key={index}
-												variants={{
-													hidden: { opacity: 0, y: 20 },
-													visible: { opacity: 1, y: 0 },
-												}}
-											>
-												{child}
-											</motion.div>
-										),
-									)}
+									{React.Children.map(children as React.ReactNode, (child, index) => (
+										<motion.div
+											key={index}
+											variants={{
+												hidden: { opacity: 0, y: 20 },
+												visible: { opacity: 1, y: 0 },
+											}}
+										>
+											{child}
+										</motion.div>
+									))}
 								</motion.div>
 							) : (
 								children
@@ -319,7 +308,7 @@ const ExpandableContent = React.forwardRef<
 				</AnimatePresence>
 			</motion.div>
 		);
-	},
+	}
 );
 
 interface ExpandableCardProps {
@@ -344,7 +333,7 @@ const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
 			collapseDelay = 0,
 			...props
 		},
-		ref,
+		ref
 	) => {
 		// Get the expansion state and toggle function from the ExpandableContext
 		const { isExpanded, toggleExpand, expandDirection } = useExpandable();
@@ -369,15 +358,7 @@ const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
 				animatedWidth.set(collapsedSize.width || width || 0);
 				animatedHeight.set(collapsedSize.height || height || 0);
 			}
-		}, [
-			isExpanded,
-			collapsedSize,
-			expandedSize,
-			width,
-			height,
-			animatedWidth,
-			animatedHeight,
-		]);
+		}, [isExpanded, collapsedSize, expandedSize, width, height, animatedWidth, animatedHeight]);
 
 		// Handler for hover start event
 		const handleHover = () => {
@@ -399,12 +380,8 @@ const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
 				className={cn("cursor-pointer", className)}
 				style={{
 					// Set width and height based on expansion direction
-					width:
-						expandDirection === "vertical" ? collapsedSize.width : smoothWidth,
-					height:
-						expandDirection === "horizontal"
-							? collapsedSize.height
-							: smoothHeight,
+					width: expandDirection === "vertical" ? collapsedSize.width : smoothWidth,
+					height: expandDirection === "horizontal" ? collapsedSize.height : smoothHeight,
 				}}
 				transition={springConfig}
 				onHoverStart={handleHover}
@@ -418,7 +395,7 @@ const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
 						"ring-1 ring-black/5",
 						"max-w-[calc(100%-1rem)] sm:max-w-[calc(100%-2rem)] md:max-w-[calc(100%-4rem)]",
 						"mx-auto w-full",
-						"transition-all duration-300 ease-in-out",
+						"transition-all duration-300 ease-in-out"
 					)}
 				>
 					{/* Nested divs purely for styling and layout (the shadow ring around the card) */}
@@ -435,40 +412,34 @@ const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
 				</div>
 			</motion.div>
 		);
-	},
+	}
 );
 
 ExpandableCard.displayName = "ExpandableCard";
 
 // I'm telling you we just have to expand 🤌💵
-const ExpandableTrigger = React.forwardRef<
-	HTMLDivElement,
-	React.HTMLAttributes<HTMLDivElement>
->(({ children, ...props }, ref) => {
-	const { toggleExpand } = useExpandable();
-	return (
-		<div ref={ref} onClick={toggleExpand} className="cursor-pointer" {...props}>
-			{children}
-		</div>
-	);
-});
+const ExpandableTrigger = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+	({ children, ...props }, ref) => {
+		const { toggleExpand } = useExpandable();
+		return (
+			<div ref={ref} onClick={toggleExpand} className="cursor-pointer" {...props}>
+				{children}
+			</div>
+		);
+	}
+);
 
 ExpandableTrigger.displayName = "ExpandableTrigger";
 
-const ExpandableCardHeader = React.forwardRef<
-	HTMLDivElement,
-	React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => (
-	<div
-		ref={ref}
-		className={cn("flex flex-col space-y-1.5 p-6", className)}
-		{...props}
-	>
-		<motion.div layout className="flex items-start justify-between">
-			{children}
-		</motion.div>
-	</div>
-));
+const ExpandableCardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+	({ className, children, ...props }, ref) => (
+		<div ref={ref} className={cn("flex flex-col space-y-1.5 p-6", className)} {...props}>
+			<motion.div layout className="flex items-start justify-between">
+				{children}
+			</motion.div>
+		</div>
+	)
+);
 
 ExpandableCardHeader.displayName = "ExpandableCardHeader";
 
@@ -476,26 +447,17 @@ const ExpandableCardContent = React.forwardRef<
 	HTMLDivElement,
 	React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => (
-	<div
-		ref={ref}
-		className={cn("flex-grow overflow-hidden p-6 px-4 pt-0", className)}
-		{...props}
-	>
+	<div ref={ref} className={cn("flex-grow overflow-hidden p-6 px-4 pt-0", className)} {...props}>
 		<motion.div layout>{children}</motion.div>
 	</div>
 ));
 ExpandableCardContent.displayName = "ExpandableCardContent";
 
-const ExpandableCardFooter = React.forwardRef<
-	HTMLDivElement,
-	React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-	<div
-		ref={ref}
-		className={cn("flex items-center p-4 pt-0", className)}
-		{...props}
-	/>
-));
+const ExpandableCardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+	({ className, ...props }, ref) => (
+		<div ref={ref} className={cn("flex items-center p-4 pt-0", className)} {...props} />
+	)
+);
 ExpandableCardFooter.displayName = "ExpandableCardFooter";
 
 export {
@@ -507,6 +469,5 @@ export {
 	ExpandableContent,
 	ExpandableContext,
 	ExpandableTrigger,
-	useExpandable
+	useExpandable,
 };
-

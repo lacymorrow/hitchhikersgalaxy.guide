@@ -1,13 +1,13 @@
-import { buttonVariants } from '@/components/ui/button';
+import { ArrowLeft } from "lucide-react";
+import type { Metadata } from "next";
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { MDXRemote } from "next-mdx-remote/rsc";
+import { buttonVariants } from "@/components/ui/button";
 import { constructMetadata } from "@/config/metadata";
-import { getBlogPosts } from '@/lib/blog';
-import { cn } from '@/lib/utils';
-import { formatDate } from '@/lib/utils/format-date';
-import { ArrowLeft } from 'lucide-react';
-import type { Metadata } from 'next';
-import { MDXRemote } from 'next-mdx-remote/rsc';
-import Link from 'next/link';
-import { notFound } from 'next/navigation';
+import { getBlogPosts } from "@/lib/blog";
+import { cn } from "@/lib/utils";
+import { formatDate } from "@/lib/utils/format-date";
 
 interface Props {
 	params: Promise<{
@@ -19,30 +19,33 @@ export async function generateStaticParams() {
 	const posts = await getBlogPosts();
 
 	return posts.map((post) => ({
-		slug: post.slug.split('/'),
+		slug: post.slug.split("/"),
 	}));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
 	const resolvedParams = await params;
-	const slug = resolvedParams.slug.join('/');
+	const slug = resolvedParams.slug.join("/");
 	const posts = await getBlogPosts();
 	const post = posts.find((post) => post.slug === slug);
 
 	if (!post) {
 		return constructMetadata({
 			title: "Post Not Found | Shipkit Blog",
-			description: "The blog post you're looking for could not be found. Browse our other articles for app development insights and guides.",
+			description:
+				"The blog post you're looking for could not be found. Browse our other articles for app development insights and guides.",
 		});
 	}
 
 	return constructMetadata({
 		title: `${post.title} | Shipkit Blog`,
-		description: post.description || "Read this comprehensive guide on app development best practices, tips, and insights from the Shipkit team.",
+		description:
+			post.description ||
+			"Read this comprehensive guide on app development best practices, tips, and insights from the Shipkit team.",
 		openGraph: {
 			title: post.title,
 			description: post.description,
-			type: 'article',
+			type: "article",
 			publishedTime: post.publishedAt,
 			authors: post.author ? [post.author] : undefined,
 		},
@@ -51,7 +54,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 const BlogPostPage = async ({ params }: Props) => {
 	const resolvedParams = await params;
-	const slug = resolvedParams.slug.join('/');
+	const slug = resolvedParams.slug.join("/");
 	const posts = await getBlogPosts();
 	const post = posts.find((post) => post.slug === slug);
 
@@ -80,24 +83,16 @@ const BlogPostPage = async ({ params }: Props) => {
 						{post.title}
 					</h1>
 					{post.description && (
-						<p className="text-xl text-muted-foreground leading-7">
-							{post.description}
-						</p>
+						<p className="text-xl text-muted-foreground leading-7">{post.description}</p>
 					)}
 
 					<div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
 						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							{post.author && (
-								<span className="font-medium text-foreground">
-									{post.author}
-								</span>
-							)}
+							{post.author && <span className="font-medium text-foreground">{post.author}</span>}
 							{post.publishedAt && (
 								<>
 									<span>•</span>
-									<time dateTime={post.publishedAt}>
-										{formatDate(post.publishedAt)}
-									</time>
+									<time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
 								</>
 							)}
 						</div>

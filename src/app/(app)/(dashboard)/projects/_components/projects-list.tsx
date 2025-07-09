@@ -1,3 +1,4 @@
+import { FileIcon, PlusIcon } from "@radix-ui/react-icons";
 import { ProjectDialog } from "@/app/(app)/(dashboard)/projects/_components/project-dialog";
 import { ProjectMenu } from "@/app/(app)/(dashboard)/projects/_components/project-menu";
 import { Button } from "@/components/ui/button";
@@ -9,16 +10,11 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { deleteProject } from "@/server/actions/projects";
 import { auth } from "@/server/auth";
 import { projectService } from "@/server/services/project-service";
 import { teamService } from "@/server/services/team-service";
-import { FileIcon, PlusIcon } from "@radix-ui/react-icons";
 
 export async function ProjectsList() {
 	const session = await auth();
@@ -64,22 +60,13 @@ export async function ProjectsList() {
 				{visibleProjects.map((project) => (
 					<SidebarMenuItem key={project.id}>
 						<div className="flex items-center justify-between rounded-md hover:bg-accent gap-2">
-							<SidebarMenuButton
-								asChild
-								className="w-full"
-							>
-								<div
-									className="flex items-center gap-2"
-								>
+							<SidebarMenuButton asChild className="w-full">
+								<div className="flex items-center gap-2">
 									<FileIcon className="h-4 w-4" />
 									<span className="truncate text-sm">{project.name}</span>
 								</div>
 							</SidebarMenuButton>
-							<ProjectMenu
-								project={project}
-								teamId={defaultTeam.id}
-								deleteAction={deleteProject}
-							/>
+							<ProjectMenu project={project} teamId={defaultTeam.id} deleteAction={deleteProject} />
 						</div>
 					</SidebarMenuItem>
 				))}
@@ -91,13 +78,8 @@ export async function ProjectsList() {
 							{collapsedProjects.map((project) => (
 								<SidebarMenuItem key={project.id}>
 									<div className="flex items-center justify-between rounded-md hover:bg-accent gap-2">
-										<SidebarMenuButton
-											asChild
-											className="w-full"
-										>
-											<div
-												className="flex items-center gap-2"
-											>
+										<SidebarMenuButton asChild className="w-full">
+											<div className="flex items-center gap-2">
 												<FileIcon className="h-4 w-4" />
 												<span className="truncate text-sm">{project.name}</span>
 											</div>
@@ -114,12 +96,9 @@ export async function ProjectsList() {
 						<CollapsibleTrigger asChild>
 							<SidebarMenuItem>
 								<div className="text-center px-2 text-sm text-muted-foreground/50 hover:text-foreground cursor-pointer transition-colors duration-200">
-									See
-									{" "}
-									<span className="group-data-[state=open]/collapsible:hidden">more</span>
-									<span className="hidden group-data-[state=open]/collapsible:inline">less</span>
-									{" "}
-									{collapsedProjects.length === 1 ? 'project' : 'projects'}
+									See <span className="group-data-[state=open]/collapsible:hidden">more</span>
+									<span className="hidden group-data-[state=open]/collapsible:inline">less</span>{" "}
+									{collapsedProjects.length === 1 ? "project" : "projects"}
 								</div>
 							</SidebarMenuItem>
 						</CollapsibleTrigger>

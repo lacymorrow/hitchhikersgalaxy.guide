@@ -1,7 +1,7 @@
+import { cva, type VariantProps } from "class-variance-authority";
+import type React from "react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { type VariantProps, cva } from "class-variance-authority";
-import type React from "react";
 
 const sectionStyles = cva(
 	// Base styles that apply to all variants
@@ -29,7 +29,7 @@ const sectionStyles = cva(
 
 export interface SectionProps
 	extends React.HTMLAttributes<HTMLElement>,
-	VariantProps<typeof sectionStyles> {
+		VariantProps<typeof sectionStyles> {
 	children: React.ReactNode;
 }
 

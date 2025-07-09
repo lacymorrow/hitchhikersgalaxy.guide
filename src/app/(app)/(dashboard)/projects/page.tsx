@@ -1,5 +1,9 @@
 "use client";
 
+import type { ColumnDef } from "@tanstack/react-table";
+import { redirect } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -26,10 +30,6 @@ import {
 	updateProject,
 } from "@/server/actions/projects";
 import { db } from "@/server/db";
-import type { ColumnDef } from "@tanstack/react-table";
-import { useSession } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
 
 interface Project {
 	id: string;
@@ -74,14 +74,19 @@ export default function ProjectsPage() {
 	}, [selectedTeamId, session?.user?.id]);
 
 	const loadProjects = async () => {
-		if (!selectedTeamId || !session?.user?.id || !session?.user?.name || !session?.user?.email) return;
+		if (!selectedTeamId || !session?.user?.id || !session?.user?.name || !session?.user?.email)
+			return;
 
 		try {
 			const fetchedProjects = await getTeamProjects(selectedTeamId);
 			if (!fetchedProjects || fetchedProjects.length === 0) {
 				// If no projects and no db, initialize demo data
 				if (!env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED) {
-					LocalTeamStorage.initializeDemoData(session.user.id, session.user.name, session.user.email);
+					LocalTeamStorage.initializeDemoData(
+						session.user.id,
+						session.user.name,
+						session.user.email
+					);
 					LocalProjectStorage.initializeDemoData(session.user.id, selectedTeamId);
 					// Reload projects after seeding demo data
 					const demoProjects = await getTeamProjects(selectedTeamId);
@@ -106,7 +111,7 @@ export default function ProjectsPage() {
 			teamId: project.teamId ?? selectedTeamId,
 			team: project.team ?? { id: selectedTeamId, name: "Default Team" },
 		}));
-	}
+	};
 
 	const handleCreateProject = async () => {
 		if (!session?.user?.id || !selectedTeamId) return;
@@ -211,8 +216,8 @@ export default function ProjectsPage() {
 							<AlertDialogHeader>
 								<AlertDialogTitle>Delete Project</AlertDialogTitle>
 								<AlertDialogDescription>
-									Are you sure you want to delete this project? This action will
-									also delete all associated API keys and cannot be undone.
+									Are you sure you want to delete this project? This action will also delete all
+									associated API keys and cannot be undone.
 								</AlertDialogDescription>
 							</AlertDialogHeader>
 							<AlertDialogFooter>

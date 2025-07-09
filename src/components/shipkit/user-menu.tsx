@@ -1,5 +1,10 @@
 "use client";
 
+import { UserIcon } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
+import * as React from "react";
 import { Link } from "@/components/primitives/link-with-transition";
 import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { UserMenuDropdown } from "@/components/shipkit/user-menu-dropdown";
@@ -14,12 +19,8 @@ import { useSubscription } from "@/hooks/use-subscription";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { updateTheme } from "@/server/actions/settings";
-import { UserIcon } from "lucide-react";
 import type { User } from "@/types/user";
-import { signOut, useSession } from "next-auth/react";
-import { useTheme } from "next-themes";
-import { usePathname, useRouter } from "next/navigation";
-import * as React from "react";
+
 type Theme = "light" | "dark" | "system";
 
 interface UserMenuProps {

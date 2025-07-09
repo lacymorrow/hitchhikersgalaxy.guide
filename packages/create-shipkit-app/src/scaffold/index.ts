@@ -1,7 +1,7 @@
 import fs from "fs-extra";
+import Handlebars from "handlebars";
 import path from "path";
 import { fileURLToPath } from "url";
-import Handlebars from "handlebars";
 import type { ProjectConfig } from "../types.js";
 
 const __filename = fileURLToPath(import.meta.url);

@@ -1,6 +1,6 @@
+import type { MetadataRoute } from "next";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
-import type { MetadataRoute } from "next";
 
 interface SitemapEntry {
 	url: string;

@@ -34,10 +34,7 @@ export default async function CategoriesPage({ searchParams }: Props) {
 
 			<div className="mb-8 flex flex-wrap gap-2">
 				{categories.map((category) => (
-					<Link
-						key={category.name}
-						href={`/blog/categories/${encodeURIComponent(category.name)}`}
-					>
+					<Link key={category.name} href={`/blog/categories/${encodeURIComponent(category.name)}`}>
 						<Badge
 							variant={category.name === selectedCategory ? "default" : "secondary"}
 							className="hover:bg-secondary/80"
@@ -57,15 +54,11 @@ export default async function CategoriesPage({ searchParams }: Props) {
 								<Link
 									key={post.slug}
 									href={`/blog/${post.slug}`}
-									className={cn(
-										"block rounded-lg border p-4 transition-colors hover:bg-muted"
-									)}
+									className={cn("block rounded-lg border p-4 transition-colors hover:bg-muted")}
 								>
 									<h3 className="mb-2 font-medium">{post.title}</h3>
 									{post.description && (
-										<p className="text-sm text-muted-foreground">
-											{post.description}
-										</p>
+										<p className="text-sm text-muted-foreground">{post.description}</p>
 									)}
 								</Link>
 							))}

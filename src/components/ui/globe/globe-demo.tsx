@@ -1,13 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-	type Arc,
-	recordVisitorLocation,
-} from "@/server/actions/visitor-location";
 import { motion } from "framer-motion";
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { type Arc, recordVisitorLocation } from "@/server/actions/visitor-location";
 
 const World = dynamic(() => import("./globe").then((m) => m.World), {
 	ssr: false,
@@ -46,30 +43,24 @@ function getFallbackDestination(currentLat: number, currentLng: number) {
 		() => {
 			return destinations.reduce((nearest, current) => {
 				const currentDist = Math.sqrt(
-					Math.pow(current.lat - currentLat, 2) +
-					Math.pow(current.lng - currentLng, 2),
+					(current.lat - currentLat) ** 2 + (current.lng - currentLng) ** 2
 				);
 				const nearestDist = Math.sqrt(
-					Math.pow(nearest.lat - currentLat, 2) +
-					Math.pow(nearest.lng - currentLng, 2),
+					(nearest.lat - currentLat) ** 2 + (nearest.lng - currentLng) ** 2
 				);
 				return currentDist < nearestDist ? current : nearest;
 			}, destinations[0]);
 		},
 		// Random tech hub
-		() =>
-			destinations[Math.floor(Math.random() * destinations.length)] ||
-			destinations[0],
+		() => destinations[Math.floor(Math.random() * destinations.length)] || destinations[0],
 		// Most distant tech hub
 		() => {
 			return destinations.reduce((farthest, current) => {
 				const currentDist = Math.sqrt(
-					Math.pow(current.lat - currentLat, 2) +
-					Math.pow(current.lng - currentLng, 2),
+					(current.lat - currentLat) ** 2 + (current.lng - currentLng) ** 2
 				);
 				const farthestDist = Math.sqrt(
-					Math.pow(farthest.lat - currentLat, 2) +
-					Math.pow(farthest.lng - currentLng, 2),
+					(farthest.lat - currentLat) ** 2 + (farthest.lng - currentLng) ** 2
 				);
 				return currentDist > farthestDist ? current : farthest;
 			}, destinations[0]);
@@ -161,7 +152,7 @@ export function GlobeDemo() {
 				(err) => {
 					console.error("Error getting location:", err);
 					setError("Unable to get your location");
-				},
+				}
 			);
 		} else {
 			setError("Geolocation is not supported by your browser");
@@ -224,8 +215,7 @@ export function GlobeDemo() {
 
 			// Use last visitor location if available, otherwise get a fallback destination
 			const destination =
-				lastVisitorLocation ||
-				getFallbackDestination(currentLocation.lat, currentLocation.lng);
+				lastVisitorLocation || getFallbackDestination(currentLocation.lat, currentLocation.lng);
 
 			// Record the ping
 			const result = await recordVisitorLocation({

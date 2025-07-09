@@ -52,7 +52,7 @@ const enabledProviders = allProviderDetails.filter((provider) => {
 });
 
 // Check if any authentication methods are enabled (excluding vercel which is for account linking only)
-const hasAuthMethods = enabledProviders.some((p) => p.id !== "vercel");
+export const hasAuthMethods = enabledProviders.some((p) => p.id !== "vercel");
 
 // Add guest provider if no authentication methods are enabled
 export const availableProviderDetails = hasAuthMethods
@@ -86,15 +86,3 @@ export const enabledAuthProviders = availableProviderDetails.map((provider) => {
 // Helper to check if only guest authentication is available
 // Guest-only mode means no actual authentication methods are available (vercel is for account linking only)
 export const isGuestOnlyMode = !hasAuthMethods;
-
-// --- Deprecated ---
-// The logic for generating the list of UI-displayable providers
-// (including ordering and exclusion) is now handled above.
-// UI components should import `enabledAuthProviders` from here.
-
-// Example Usage in UI:
-// import { enabledAuthProviders } from '@/config/auth-provider-details';
-//
-// enabledAuthProviders.map(provider => (
-//   !provider.isExcluded && <button key={provider.id}>Sign in with {provider.name}</button>
-// ))

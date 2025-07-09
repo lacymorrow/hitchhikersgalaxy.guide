@@ -1,10 +1,10 @@
 "use client";
 
+import { AlertCircle } from "lucide-react";
+import * as React from "react";
 import { Loader, type LoaderProps } from "@/components/primitives/loader";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { AlertCircle } from "lucide-react";
-import * as React from "react";
 
 export interface SuspenseBoundaryProps extends React.PropsWithChildren {
 	/**
@@ -48,11 +48,7 @@ export const SuspenseBoundary = ({
 	return (
 		<React.Suspense fallback={<Loader {...loadingProps} />}>
 			<ErrorBoundary
-				fallback={
-					errorComponent ?? (
-						<DefaultError onRetry={onRetry} showRetry={showRetry} />
-					)
-				}
+				fallback={errorComponent ?? <DefaultError onRetry={onRetry} showRetry={showRetry} />}
 			>
 				{children}
 			</ErrorBoundary>

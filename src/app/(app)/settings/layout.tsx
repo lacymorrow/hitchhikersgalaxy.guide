@@ -1,10 +1,10 @@
+import { redirect } from "next/navigation";
+import { type ReactNode, Suspense } from "react";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { Separator } from "@/components/ui/separator";
 import { SidebarNav } from "@/components/ui/sidebar-nav";
 import { routes } from "@/config/routes";
 import { auth } from "@/server/auth";
-import { redirect } from "next/navigation";
-import { type ReactNode, Suspense } from "react";
 import { Header } from "../../../components/headers/header";
 
 const sidebarNavItems = [
@@ -48,7 +48,6 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
 		href: item.href,
 	}));
 
-
 	return (
 		<div className="flex min-h-screen w-full flex-col">
 			<Header />
@@ -56,9 +55,7 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
 				<div className="container space-y-6">
 					<div className="space-y-0.5">
 						<h2 className="text-2xl font-bold tracking-tight">Settings</h2>
-						<p className="text-muted-foreground">
-							Manage your account settings and preferences.
-						</p>
+						<p className="text-muted-foreground">Manage your account settings and preferences.</p>
 					</div>
 					<Separator className="my-6" />
 					<div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">

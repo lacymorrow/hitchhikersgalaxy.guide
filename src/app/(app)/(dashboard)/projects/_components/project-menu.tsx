@@ -1,5 +1,8 @@
 "use client";
 
+import { DotsHorizontalIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -9,13 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuAction } from "@/components/ui/sidebar";
 import { useToast } from "@/hooks/use-toast";
-import {
-	DotsHorizontalIcon,
-	Pencil2Icon,
-	TrashIcon
-} from "@radix-ui/react-icons";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { ProjectDialog } from "./project-dialog";
 
 interface Project {
@@ -29,11 +25,7 @@ interface ProjectMenuProps {
 	deleteAction: (projectId: string) => Promise<boolean>;
 }
 
-export const ProjectMenu = ({
-	project,
-	teamId,
-	deleteAction,
-}: ProjectMenuProps) => {
+export const ProjectMenu = ({ project, teamId, deleteAction }: ProjectMenuProps) => {
 	const { toast } = useToast();
 	const router = useRouter();
 	const { data: session } = useSession();

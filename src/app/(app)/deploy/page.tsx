@@ -1,17 +1,17 @@
-import { Metadata } from "next";
-import { auth } from "@/server/auth";
+import { AlertCircle, ArrowRight, CheckCircle, ExternalLink, Github, Zap } from "lucide-react";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
-import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
 import { PrivateRepoDeployButton } from "@/components/deploy/private-repo-deploy-button";
 import { VercelConnectionCard } from "@/components/deploy/vercel-connection-card";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { VercelConnectButton } from "@/components/shipkit/vercel-connect-button";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
-import { CheckCircle, AlertCircle, Github, Zap, ArrowRight, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { VercelConnectButton } from "@/components/shipkit/vercel-connect-button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { auth } from "@/server/auth";
+import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
 
 export const metadata: Metadata = {
 	title: "Deploy Private Repository",
@@ -20,8 +20,6 @@ export const metadata: Metadata = {
 
 export default async function DeployPage() {
 	const session = await auth();
-
-
 
 	if (!session?.user) {
 		redirect("/login");
@@ -61,7 +59,8 @@ export default async function DeployPage() {
 							<span className="text-sm">Ready for private repository access</span>
 						</div>
 						<p className="text-xs text-muted-foreground">
-							You'll provide a GitHub personal access token to access private templates during deployment.
+							You'll provide a GitHub personal access token to access private templates during
+							deployment.
 						</p>
 						<Button variant="ghost" size="sm" asChild>
 							<a
@@ -79,10 +78,7 @@ export default async function DeployPage() {
 
 				{/* Vercel Status */}
 				<Suspense fallback={<div className="animate-pulse bg-muted h-32 rounded-lg"></div>}>
-					<VercelConnectionCard
-						hasVercelConnection={hasVercelConnection}
-						user={session.user}
-					/>
+					<VercelConnectionCard hasVercelConnection={hasVercelConnection} user={session.user} />
 				</Suspense>
 			</div>
 
@@ -92,8 +88,9 @@ export default async function DeployPage() {
 					<Alert>
 						<AlertCircle className="h-4 w-4" />
 						<AlertDescription>
-							<strong>Vercel account required:</strong> Please connect your Vercel account above before deploying repositories.
-							This allows the system to automatically create projects and deployments on your behalf.
+							<strong>Vercel account required:</strong> Please connect your Vercel account above
+							before deploying repositories. This allows the system to automatically create projects
+							and deployments on your behalf.
 						</AlertDescription>
 					</Alert>
 				)}
@@ -103,7 +100,8 @@ export default async function DeployPage() {
 					<CardHeader>
 						<CardTitle>How It Works</CardTitle>
 						<CardDescription>
-							This system bypasses Vercel's private repository limitation by creating a public copy and setting up deployment automatically.
+							This system bypasses Vercel's private repository limitation by creating a public copy
+							and setting up deployment automatically.
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
@@ -151,7 +149,11 @@ export default async function DeployPage() {
 				<Separator />
 
 				{/* Deploy Component */}
-				<Suspense fallback={<div className="flex items-center justify-center py-8">Loading deployment form...</div>}>
+				<Suspense
+					fallback={
+						<div className="flex items-center justify-center py-8">Loading deployment form...</div>
+					}
+				>
 					<PrivateRepoDeployButton />
 				</Suspense>
 
@@ -191,9 +193,7 @@ export default async function DeployPage() {
 				<Card>
 					<CardHeader>
 						<CardTitle>Requirements</CardTitle>
-						<CardDescription>
-							What you need to deploy private repositories
-						</CardDescription>
+						<CardDescription>What you need to deploy private repositories</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<div className="space-y-4">
@@ -202,7 +202,8 @@ export default async function DeployPage() {
 								<div>
 									<h4 className="font-medium">GitHub Personal Access Token</h4>
 									<p className="text-sm text-muted-foreground">
-										A token with <code>repo</code> permissions to access private template repositories.
+										A token with <code>repo</code> permissions to access private template
+										repositories.
 										<a
 											href="https://github.com/settings/tokens"
 											target="_blank"
@@ -219,7 +220,8 @@ export default async function DeployPage() {
 								<div>
 									<h4 className="font-medium">Connected Vercel Account</h4>
 									<p className="text-sm text-muted-foreground">
-										Your Vercel account must be connected in Settings to enable automatic project creation and deployment.
+										Your Vercel account must be connected in Settings to enable automatic project
+										creation and deployment.
 									</p>
 								</div>
 							</div>

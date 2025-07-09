@@ -1,8 +1,8 @@
 "use server";
 
+import { count, desc, eq } from "drizzle-orm";
 import { safeDbExecute } from "@/server/db";
 import { type NewWaitlistEntry, type WaitlistEntry, waitlistEntries } from "@/server/db/schema";
-import { count, desc, eq } from "drizzle-orm";
 
 /**
  * Add a new entry to the waitlist
@@ -61,11 +61,7 @@ export async function getWaitlistEntryByEmail(email: string): Promise<WaitlistEn
  * Get all waitlist entries with pagination
  */
 export async function getWaitlistEntries(
-	options: {
-		limit?: number;
-		offset?: number;
-		orderBy?: "asc" | "desc";
-	} = {}
+	options: { limit?: number; offset?: number; orderBy?: "asc" | "desc" } = {}
 ): Promise<WaitlistEntry[]> {
 	return safeDbExecute(async (db) => {
 		const { limit = 50, offset = 0, orderBy = "desc" } = options;

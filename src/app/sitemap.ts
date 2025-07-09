@@ -1,9 +1,9 @@
-import { routes } from "@/config/routes";
-import { siteConfig } from "@/config/site-config";
 import type { Buffer } from "buffer";
 import { readdir, stat } from "fs/promises";
 import type { MetadataRoute } from "next";
 import { join } from "path";
+import { routes } from "@/config/routes";
+import { siteConfig } from "@/config/site-config";
 
 interface ContentFile {
 	slug: string;
@@ -25,7 +25,8 @@ async function getContentFiles(contentDir: string): Promise<ContentFile[]> {
 		const files = await readdir(fullPath, { recursive: true });
 		return files
 			.filter(
-				(file: string | Buffer): file is string => typeof file === "string" && (file.endsWith(".mdx") || file.endsWith(".md"))
+				(file: string | Buffer): file is string =>
+					typeof file === "string" && (file.endsWith(".mdx") || file.endsWith(".md"))
 			)
 			.map((file: string) => ({
 				slug: file.replace(/\.(mdx|md)$/, ""),

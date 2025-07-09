@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import * as React from "react";
+import { cn } from "@/lib/utils";
 
 interface LoaderTetrisProps extends React.HTMLAttributes<HTMLDivElement> {
 	size?: "sm" | "md" | "lg";
@@ -50,22 +50,10 @@ export const LoaderTetris = ({
 					} as React.CSSProperties
 				}
 			>
-				<div
-					className="tetromino box1"
-					style={{ backgroundImage: `url('${svgUrl}')` }}
-				/>
-				<div
-					className="tetromino box2"
-					style={{ backgroundImage: `url('${svgUrl}')` }}
-				/>
-				<div
-					className="tetromino box3"
-					style={{ backgroundImage: `url('${svgUrl}')` }}
-				/>
-				<div
-					className="tetromino box4"
-					style={{ backgroundImage: `url('${svgUrl}')` }}
-				/>
+				<div className="tetromino box1" style={{ backgroundImage: `url('${svgUrl}')` }} />
+				<div className="tetromino box2" style={{ backgroundImage: `url('${svgUrl}')` }} />
+				<div className="tetromino box3" style={{ backgroundImage: `url('${svgUrl}')` }} />
+				<div className="tetromino box4" style={{ backgroundImage: `url('${svgUrl}')` }} />
 			</div>
 
 			<style jsx>{`

@@ -34,7 +34,5 @@ export function ConfettiSideCannons() {
 		frame();
 	}, []);
 
-	return (
-		<></>
-	);
+	return <></>;
 }

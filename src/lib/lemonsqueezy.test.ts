@@ -1,9 +1,9 @@
+import { listOrders } from "@lemonsqueezy/lemonsqueezy.js";
+import { eq } from "drizzle-orm";
 import { env } from "@/env";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import type { LemonSqueezyOrderAttributes } from "@/types/lemonsqueezy";
-import { listOrders } from "@lemonsqueezy/lemonsqueezy.js";
-import { eq } from "drizzle-orm";
 import { getLemonSqueezyPaymentStatus } from "./lemonsqueezy";
 
 /**

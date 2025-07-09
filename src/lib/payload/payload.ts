@@ -1,11 +1,12 @@
 // Todo: if payload is accessed when there is no database setup, the whole app crashes.
-import { env } from "@/env";
-import { logger } from "@/lib/logger";
+
 import payloadConfig from "@payload-config";
 import { getPayload } from "payload";
+import { env } from "@/env";
+import { logger } from "@/lib/logger";
 
 // Flag to track if the warning has been logged
-let payloadWarningLogged = false;
+const payloadWarningLogged = false;
 
 // Initialize Payload
 export const getPayloadClient = async () => {

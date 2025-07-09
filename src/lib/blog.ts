@@ -35,7 +35,7 @@ export async function getBlogPosts(): Promise<BlogPost[]> {
 				publishedAt: data.publishedAt,
 				categories: data.categories || [],
 			};
-		}),
+		})
 	);
 
 	return posts;
@@ -70,9 +70,7 @@ export function getBlogCategories(posts: BlogPost[]): BlogCategory[] {
 			name,
 			posts: posts.sort((a, b) => {
 				if (!a.publishedAt || !b.publishedAt) return 0;
-				return (
-					new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
-				);
+				return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
 			}),
 		}))
 		.sort((a, b) => {

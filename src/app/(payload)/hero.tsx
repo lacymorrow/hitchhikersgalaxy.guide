@@ -1,8 +1,8 @@
+import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { HeroBlock } from "@/types/blocks";
-import Image from "next/image";
-import Link from "next/link";
 
 interface HeroProps {
 	block: HeroBlock;
@@ -26,13 +26,7 @@ export const Hero = ({ block, className }: HeroProps) => {
 			{/* Background image for default and centered styles */}
 			{image?.url && (style === "default" || style === "centered") && (
 				<div className="absolute inset-0 -z-10">
-					<Image
-						src={image.url}
-						alt={heading}
-						fill
-						className="object-cover opacity-20"
-						priority
-					/>
+					<Image src={image.url} alt={heading} fill className="object-cover opacity-20" priority />
 				</div>
 			)}
 
@@ -42,12 +36,8 @@ export const Hero = ({ block, className }: HeroProps) => {
 				})}
 			>
 				<div className="space-y-6">
-					<h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
-						{heading}
-					</h1>
-					{subheading && (
-						<p className="text-xl text-muted-foreground">{subheading}</p>
-					)}
+					<h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">{heading}</h1>
+					{subheading && <p className="text-xl text-muted-foreground">{subheading}</p>}
 					{ctaText && ctaLink && (
 						<div className="pt-4">
 							<Button asChild size="lg">
@@ -61,13 +51,7 @@ export const Hero = ({ block, className }: HeroProps) => {
 			{/* Side image for split layout */}
 			{image?.url && style === "split" && (
 				<div className="relative aspect-square w-full">
-					<Image
-						src={image.url}
-						alt={heading}
-						fill
-						className="object-cover"
-						priority
-					/>
+					<Image src={image.url} alt={heading} fill className="object-cover" priority />
 				</div>
 			)}
 		</section>

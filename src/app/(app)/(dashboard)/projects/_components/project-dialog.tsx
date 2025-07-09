@@ -1,5 +1,12 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Plus } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { useTeam } from "@/components/providers/team-provider";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,13 +38,6 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { createProject, updateProject } from "@/server/actions/projects";
 import { createTeam, getUserTeams } from "@/server/actions/teams";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { type VariantProps, cva } from "class-variance-authority";
-import { Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
 
 const projectDialogVariants = cva("", {
 	variants: {
@@ -115,9 +115,8 @@ export function ProjectDialog({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			name: isEditMode && project ? project.name : "",
-			teamId: isEditMode && project?.teamId
-				? project.teamId
-				: selectedTeamId || defaultTeamId || "",
+			teamId:
+				isEditMode && project?.teamId ? project.teamId : selectedTeamId || defaultTeamId || "",
 		},
 	});
 
@@ -233,8 +232,12 @@ export function ProjectDialog({
 		? "Update your project details."
 		: "Create a new project to organize your work.";
 	const submitButtonText = isLoading
-		? (isEditMode ? "Updating..." : "Creating...")
-		: (isEditMode ? "Update Project" : "Create Project");
+		? isEditMode
+			? "Updating..."
+			: "Creating..."
+		: isEditMode
+			? "Update Project"
+			: "Create Project";
 
 	return (
 		<Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -251,9 +254,7 @@ export function ProjectDialog({
 			<DialogContent className={cn(projectDialogVariants({ variant }), className)}>
 				<DialogHeader>
 					<DialogTitle>{dialogTitle}</DialogTitle>
-					<DialogDescription>
-						{dialogDescription}
-					</DialogDescription>
+					<DialogDescription>{dialogDescription}</DialogDescription>
 				</DialogHeader>
 				<Form {...form}>
 					<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
@@ -264,11 +265,7 @@ export function ProjectDialog({
 								<FormItem>
 									<FormLabel>Project Name</FormLabel>
 									<FormControl>
-										<Input
-											placeholder="Project name"
-											{...field}
-											autoComplete="off"
-										/>
+										<Input placeholder="Project name" {...field} autoComplete="off" />
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -276,8 +273,8 @@ export function ProjectDialog({
 						/>
 
 						{/* Only show team selection in create mode */}
-						{!isEditMode && (
-							canCreateTeam && showNewTeamInput ? (
+						{!isEditMode &&
+							(canCreateTeam && showNewTeamInput ? (
 								<div className="space-y-2">
 									<FormLabel>New Team Name</FormLabel>
 									<div className="flex gap-2">
@@ -294,11 +291,7 @@ export function ProjectDialog({
 											Create Team
 										</Button>
 									</div>
-									<Button
-										type="button"
-										variant="ghost"
-										onClick={() => setShowNewTeamInput(false)}
-									>
+									<Button type="button" variant="ghost" onClick={() => setShowNewTeamInput(false)}>
 										Cancel
 									</Button>
 								</div>
@@ -310,14 +303,9 @@ export function ProjectDialog({
 										<FormItem>
 											<FormLabel>Team</FormLabel>
 											{teams.length === 1 ? (
-												<div className="text-sm text-muted-foreground">
-													{teams[0].team.name}
-												</div>
+												<div className="text-sm text-muted-foreground">{teams[0].team.name}</div>
 											) : (
-												<Select
-													onValueChange={field.onChange}
-													defaultValue={field.value}
-												>
+												<Select onValueChange={field.onChange} defaultValue={field.value}>
 													<FormControl>
 														<SelectTrigger>
 															<SelectValue placeholder="Select a team" />
@@ -347,8 +335,7 @@ export function ProjectDialog({
 										</FormItem>
 									)}
 								/>
-							)
-						)}
+							))}
 
 						<DialogFooter>
 							<Button type="submit" disabled={isLoading}>

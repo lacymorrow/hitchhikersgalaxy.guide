@@ -1,8 +1,8 @@
+import { sql } from "drizzle-orm";
 import { resend } from "@/lib/resend";
 import { db } from "@/server/db";
 import { feedback } from "@/server/db/schema";
 import { sendFeedbackEmail } from "@/server/services/resend-service";
-import { sql } from "drizzle-orm";
 
 export interface CreateFeedbackInput {
 	content: string;

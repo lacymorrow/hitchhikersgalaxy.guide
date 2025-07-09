@@ -1,5 +1,5 @@
-import { Card } from "@/components/ui/card";
 import type React from "react";
+import { Card } from "@/components/ui/card";
 import { TableOfContents } from "./table-of-contents";
 
 interface DocLayoutProps {

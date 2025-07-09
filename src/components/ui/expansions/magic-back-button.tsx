@@ -1,19 +1,19 @@
-import { Button, ButtonProps } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import { ChevronLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import * as React from 'react';
-import { usePageTrackerStore } from 'react-page-tracker';
+import { ChevronLeft } from "lucide-react";
+import { useRouter } from "next/navigation";
+import * as React from "react";
+import { usePageTrackerStore } from "react-page-tracker";
+import { Button, type ButtonProps } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export const MagicBackButton = React.forwardRef<
 	HTMLButtonElement,
 	ButtonProps & { backLink?: string }
->(({ className, onClick, children, backLink = '/', ...props }, ref) => {
+>(({ className, onClick, children, backLink = "/", ...props }, ref) => {
 	const router = useRouter();
 	const isFirstPage = usePageTrackerStore((state) => state.isFirstPage);
 	return (
 		<Button
-			className={cn('rounded-full', className)}
+			className={cn("rounded-full", className)}
 			variant="outline"
 			size="icon"
 			ref={ref}
@@ -31,4 +31,4 @@ export const MagicBackButton = React.forwardRef<
 		</Button>
 	);
 });
-MagicBackButton.displayName = 'MagicBackButton';
+MagicBackButton.displayName = "MagicBackButton";

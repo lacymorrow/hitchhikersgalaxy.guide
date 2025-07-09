@@ -1,7 +1,7 @@
-import { Link } from "@/components/primitives/link-with-transition";
-import { cn } from "@/lib/utils";
 import NumberFlow from "@number-flow/react";
 import type { ComponentProps } from "react";
+import { Link } from "@/components/primitives/link-with-transition";
+import { cn } from "@/lib/utils";
 export const GithubStarsButton = ({
 	starNumber,
 	href,
@@ -83,7 +83,7 @@ export const GithubStarsButton = ({
 				href={href}
 				className={cn(
 					"group relative dark:bg-neutral-800 bg-neutral-200 rounded-full p-px",
-					className,
+					className
 				)}
 				{...props}
 			>
@@ -133,8 +133,7 @@ export const GithubStarsButton = ({
 							className="rounded-full size-11 absolute opacity-0 dark:opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-lg"
 							style={{
 								animation: "14s ease-in-out infinite alternate star-shine",
-								background:
-									"linear-gradient(135deg, #3BC4F2, #7A69F9, #F26378, #F5833F)",
+								background: "linear-gradient(135deg, #3BC4F2, #7A69F9, #F26378, #F5833F)",
 							}}
 						/>
 					</span>

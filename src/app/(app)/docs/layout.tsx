@@ -1,24 +1,24 @@
-import { Header } from "@/components/headers/header"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import { routes } from "@/config/routes"
-import { getDocsNavigation } from "@/lib/docs"
-import type { ReactNode } from "react"
-import { DocsSearch } from "./_components/docs-search"
-import { DocsSidebar } from "./_components/docs-sidebar"
-import "./styles.css"
+import type { ReactNode } from "react";
+import { Header } from "@/components/headers/header";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { routes } from "@/config/routes";
+import { getDocsNavigation } from "@/lib/docs";
+import { DocsSearch } from "./_components/docs-search";
+import { DocsSidebar } from "./_components/docs-sidebar";
+import "./styles.css";
 
 const navLinks = [
 	{ href: routes.docs, label: "Docs" },
 	{ href: routes.features, label: "Features" },
 	{ href: routes.pricing, label: "Pricing" },
-]
+];
 
 interface DocsLayoutProps {
-	children: ReactNode
+	children: ReactNode;
 }
 
 export default async function DocsLayout({ children }: DocsLayoutProps) {
-	const navigation = await getDocsNavigation()
+	const navigation = await getDocsNavigation();
 
 	return (
 		<>
@@ -45,5 +45,5 @@ export default async function DocsLayout({ children }: DocsLayoutProps) {
 				</aside>
 			</div>
 		</>
-	)
+	);
 }

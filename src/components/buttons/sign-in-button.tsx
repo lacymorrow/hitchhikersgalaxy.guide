@@ -1,12 +1,12 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+import type React from "react";
 import { Link } from "@/components/primitives/link-with-transition";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { cn } from "@/lib/utils";
-import { usePathname } from "next/navigation";
-import type React from "react";
 
 export const SignInButton = ({
 	className,

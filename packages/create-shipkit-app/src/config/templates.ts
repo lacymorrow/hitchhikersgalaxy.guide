@@ -1,4 +1,4 @@
-import type { Template, FeatureConfig } from "../types.js";
+import type { FeatureConfig, Template } from "../types.js";
 
 /**
  * Available templates for ShipKit projects

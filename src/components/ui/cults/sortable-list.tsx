@@ -1,21 +1,14 @@
 "use client";
 
-import * as React from "react";
+import { useMeasure } from "@uidotdev/usehooks";
 // npx shadcn@latest add checkbox
 // npm  i react-use-measure
-import {
-	AnimatePresence,
-	LayoutGroup,
-	Reorder,
-	motion,
-	useDragControls,
-} from "framer-motion";
+import { AnimatePresence, LayoutGroup, motion, Reorder, useDragControls } from "framer-motion";
 import { Trash } from "lucide-react";
-import { Dispatch, ReactNode, SetStateAction, useState } from "react";
-
+import type * as React from "react";
+import { type Dispatch, type ReactNode, type SetStateAction, useState } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { useMeasure } from "@uidotdev/usehooks";
 
 export type Item = {
 	text: string;
@@ -45,7 +38,7 @@ function SortableListItem({
 	isExpanded,
 	className,
 }: SortableListItemProps) {
-	let [ref, bounds] = useMeasure();
+	const [ref, bounds] = useMeasure();
 	const [isDragging, setIsDragging] = useState(false);
 	const [isDraggable, setIsDraggable] = useState(true);
 	const dragControls = useDragControls();
@@ -70,7 +63,7 @@ function SortableListItem({
 						"h-full rounded-xl bg-[#161716]/80",
 						"shadow-[0px_1px_0px_0px_hsla(0,0%,100%,.03)_inset,0px_0px_0px_1px_hsla(0,0%,100%,.03)_inset,0px_0px_0px_1px_rgba(0,0,0,.1),0px_2px_2px_0px_rgba(0,0,0,.1),0px_4px_4px_0px_rgba(0,0,0,.1),0px_8px_8px_0px_rgba(0,0,0,.1)]",
 						item.checked ? "cursor-not-allowed" : "cursor-grab",
-						item.checked && !isDragging ? "w-7/10" : "w-full",
+						item.checked && !isDragging ? "w-7/10" : "w-full"
 					)}
 					key={item.id}
 					initial={{ opacity: 0 }}
@@ -99,24 +92,21 @@ function SortableListItem({
 					style={
 						isExpanded
 							? {
-								zIndex: 9999,
-								marginTop: 10,
-								marginBottom: 10,
-								position: "relative",
-								overflow: "hidden",
-							}
+									zIndex: 9999,
+									marginTop: 10,
+									marginBottom: 10,
+									position: "relative",
+									overflow: "hidden",
+								}
 							: {
-								position: "relative",
-								overflow: "hidden",
-							}
+									position: "relative",
+									overflow: "hidden",
+								}
 					}
 					whileDrag={{ zIndex: 9999 }}
 				>
 					<div ref={ref} className={cn(isExpanded ? "" : "", "z-20")}>
-						<motion.div
-							layout="position"
-							className="flex items-center justify-center"
-						>
+						<motion.div layout="position" className="flex items-center justify-center">
 							<AnimatePresence>
 								{!isExpanded ? (
 									<motion.div
@@ -135,9 +125,7 @@ function SortableListItem({
 											className="ml-3 h-5 w-5 rounded-md border-white/20 bg-black/30 data-[state=checked]:bg-black data-[state=checked]:text-red-200"
 										/>
 										{/* List Order */}
-										<p className="pl-1 font-mono text-xs text-white/50">
-											{order + 1}
-										</p>
+										<p className="pl-1 font-mono text-xs text-white/50">{order + 1}</p>
 
 										{/* List Title */}
 										<motion.div
@@ -157,7 +145,7 @@ function SortableListItem({
 											<h4
 												className={cn(
 													"text-base tracking-tighter md:text-lg",
-													item.checked ? "text-red-400" : "text-white/70",
+													item.checked ? "text-red-400" : "text-white/70"
 												)}
 											>
 												{item.checked ? "Delete" : ` ${item.text}`}
@@ -255,30 +243,20 @@ interface SortableListProps {
 		item: Item,
 		order: number,
 		onCompleteItem: (id: number) => void,
-		onRemoveItem: (id: number) => void,
+		onRemoveItem: (id: number) => void
 	) => ReactNode;
 }
 
-function SortableList({
-	items,
-	setItems,
-	onCompleteItem,
-	renderItem,
-}: SortableListProps) {
+function SortableList({ items, setItems, onCompleteItem, renderItem }: SortableListProps) {
 	if (items) {
 		return (
 			<LayoutGroup>
-				<Reorder.Group
-					axis="y"
-					values={items}
-					onReorder={setItems}
-					className="flex flex-col"
-				>
+				<Reorder.Group axis="y" values={items} onReorder={setItems} className="flex flex-col">
 					<AnimatePresence>
 						{items?.map((item, index) =>
 							renderItem(item, index, onCompleteItem, (id: number) =>
-								setItems((items) => items.filter((item) => item.id !== id)),
-							),
+								setItems((items) => items.filter((item) => item.id !== id))
+							)
 						)}
 					</AnimatePresence>
 				</Reorder.Group>

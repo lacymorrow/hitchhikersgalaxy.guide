@@ -1,11 +1,10 @@
 // components/builder.tsx
 "use client";
 import { BuilderComponent, useIsPreviewing } from "@builder.io/react";
+import { builder } from "@builder.io/sdk";
 import DefaultErrorPage from "next/error";
 import type { ComponentProps } from "react";
-
 import { env } from "@/env";
-import { builder } from "@builder.io/sdk";
 
 builder.init(env.NEXT_PUBLIC_BUILDER_API_KEY!);
 

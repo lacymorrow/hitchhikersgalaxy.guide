@@ -1,8 +1,8 @@
+import { and, eq } from "drizzle-orm";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import type { User } from "@/server/db/schema";
 import { projectMembers, teamMembers, userFiles, users } from "@/server/db/schema";
-import { and, eq } from "drizzle-orm";
 import { apiKeyService } from "./api-key-service";
 import { BaseService } from "./base-service";
 import { PaymentService } from "./payment-service";
@@ -81,6 +81,34 @@ export class UserService extends BaseService<typeof users> {
 				throw new Error(`Failed to create user: ${authUser.id}`);
 			}
 		} else {
+			// Update existing user if profile information has changed
+			const needsUpdate =
+				(authUser.name !== undefined && authUser.name !== dbUser.name) ||
+				(authUser.image !== undefined && authUser.image !== dbUser.image);
+
+			if (needsUpdate) {
+				const updateData: Partial<typeof users.$inferInsert> = {
+					updatedAt: new Date(),
+				};
+
+				if (authUser.name !== undefined && authUser.name !== dbUser.name) {
+					updateData.name = authUser.name;
+				}
+
+				if (authUser.image !== undefined && authUser.image !== dbUser.image) {
+					updateData.image = authUser.image;
+				}
+
+				const [updatedUser] = await db
+					.update(users)
+					.set(updateData)
+					.where(eq(users.id, authUser.id))
+					.returning();
+
+				if (updatedUser) {
+					dbUser = updatedUser;
+				}
+			}
 
 			// Check for existing payments for existing users too
 			const hasPaid = await PaymentService.getUserPaymentStatus(dbUser.id);

@@ -6,9 +6,11 @@ import { Section } from "@/components/primitives/section";
 export default function Layout({ children }: { children: React.ReactNode }) {
 	return (
 		<>
-			<MainLayout className="min-h-screen flex flex-col" footer={false}
-				header={<Header variant="logo-only" />
-				}>
+			<MainLayout
+				className="min-h-screen flex flex-col"
+				footer={false}
+				header={<Header variant="logo-only" />}
+			>
 				<Section className="grow">{children}</Section>
 			</MainLayout>
 			<Footer />

@@ -60,9 +60,6 @@
     "public",
     "packages",
     "debug/**/*.ts",
-    "src/components/blocks/**/*.ts",
-    "src/components/blocks/**/*.tsx",
-    "src/app/(app)/ai/**/*",
     "src/app/(app)/(demo)/examples/**/*",
     "src/workers/**/*.ts"
   ]

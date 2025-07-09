@@ -1,7 +1,7 @@
-import { Button } from "@/components/ui/button";
-import { siteConfig } from "@/config/site-config";
 import { ExternalLink, Link as LinkIcon, Mail, MapPin } from "lucide-react";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { siteConfig } from "@/config/site-config";
 
 interface ProfileCardProps {
 	name?: string;
@@ -46,12 +46,8 @@ export function ProfileCard({
 					<div className="min-w-0 flex-1">
 						<div className="flex items-center justify-between gap-2">
 							<div>
-								<h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">
-									{name}
-								</h2>
-								<p className="text-sm text-zinc-500 dark:text-zinc-400">
-									{role}
-								</p>
+								<h2 className="text-lg font-medium text-zinc-900 dark:text-zinc-100">{name}</h2>
+								<p className="text-sm text-zinc-500 dark:text-zinc-400">{role}</p>
 							</div>
 							<Button variant="outline" size="sm" asChild>
 								<a href={`mailto:${email}`}>
@@ -77,9 +73,7 @@ export function ProfileCard({
 							<div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
 								<LinkIcon className="h-4 w-4" />
 								<a
-									href={
-										website.includes("http") ? website : `https://${website}`
-									}
+									href={website.includes("http") ? website : `https://${website}`}
 									target="_blank"
 									rel="noopener noreferrer"
 									className="flex items-center gap-1 transition-colors hover:text-zinc-900 dark:hover:text-zinc-100"
@@ -93,9 +87,7 @@ export function ProfileCard({
 				</div>
 
 				<div className="mt-6">
-					<p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-						{bio}
-					</p>
+					<p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">{bio}</p>
 				</div>
 			</div>
 		</div>

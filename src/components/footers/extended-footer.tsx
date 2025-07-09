@@ -1,3 +1,6 @@
+import { cva, type VariantProps } from "class-variance-authority";
+import React from "react";
+import { v4 as uuid } from "uuid";
 import { FeedbackPopover } from "@/components/forms/feedback-popover";
 import { SubscribeForm } from "@/components/forms/subscribe-form";
 import { Link } from "@/components/primitives/link-with-transition";
@@ -14,16 +17,12 @@ import { TextHoverEffect } from "@/components/ui/text-hover-effect";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { type VariantProps, cva } from "class-variance-authority";
-import React from "react";
-import { v4 as uuid } from "uuid";
-
 
 type FooterItem =
 	| {
-		label: string;
-		href: string;
-	}
+			label: string;
+			href: string;
+	  }
 	| React.ReactNode;
 
 interface FooterGroup {
@@ -115,12 +114,7 @@ export const Footer: React.FC<FooterProps> = ({
 					)}
 					<ul className="space-y-2">
 						{group.items.map((item, itemIndex) => {
-							if (
-								item &&
-								typeof item === "object" &&
-								"href" in item &&
-								"label" in item
-							) {
+							if (item && typeof item === "object" && "href" in item && "label" in item) {
 								return (
 									<li key={uuid()}>
 										<Link
@@ -167,8 +161,7 @@ export const Footer: React.FC<FooterProps> = ({
 								.filter((el) => el.type === "group")
 								.map((element) => {
 									// We already filtered, so this cast is safe
-									const group = (element as { type: "group"; content: FooterGroup })
-										.content;
+									const group = (element as { type: "group"; content: FooterGroup }).content;
 									return (
 										<AccordionItem value={group.header.label} key={uuid()}>
 											<AccordionTrigger className="font-semibold">
@@ -192,7 +185,7 @@ export const Footer: React.FC<FooterProps> = ({
 																	<Link
 																		className={cn(
 																			buttonVariants({ variant: "link" }),
-																			"p-0 h-auto", // Adjust padding/height for accordion content
+																			"p-0 h-auto" // Adjust padding/height for accordion content
 																		)}
 																		href={item.href}
 																	>
@@ -202,9 +195,9 @@ export const Footer: React.FC<FooterProps> = ({
 															);
 														}
 														// Render custom ReactNode items directly, ensure they have keys
-														return React.isValidElement(item) ?
-															React.cloneElement(item, { key: uuid() }) :
-															null;
+														return React.isValidElement(item)
+															? React.cloneElement(item, { key: uuid() })
+															: null;
 													})}
 												</ul>
 											</AccordionContent>
@@ -221,6 +214,6 @@ export const Footer: React.FC<FooterProps> = ({
 			<RetroGrid
 				className={"hidden md:block [mask-image:linear-gradient(to_top,white,transparent)]"}
 			/>
-		</footer >
+		</footer>
 	);
 };

@@ -1,11 +1,10 @@
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
-
 import { AuthenticationError } from "@/lib/errors/authentication-error";
 import { logger } from "@/lib/logger";
 import { redirectWithCode } from "@/lib/utils/redirect-with-code";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect } from "react";
 
 export const useRedirectAfterSignIn = (error: Error) => {
 	const router = useRouter();

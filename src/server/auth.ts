@@ -1,17 +1,17 @@
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
+import type { Session } from "next-auth";
+import NextAuth from "next-auth";
+import { cache } from "react";
 import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { redirectWithCode, routeRedirectWithCode } from "@/lib/utils/redirect-with-code";
-import { isGuestOnlyMode } from "@/server/auth-providers";
 import { authOptions } from "@/server/auth.config";
+import { isGuestOnlyMode } from "@/server/auth-providers";
 import { db } from "@/server/db";
 import { accounts, sessions, users, verificationTokens } from "@/server/db/schema";
 import type { UserRole } from "@/types/user";
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import NextAuth from "next-auth";
-import { cache } from "react";
-import type { Session } from "next-auth";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -145,11 +145,17 @@ async function authenticated(props?: AuthProps) {
 const cachedAuth = cache(authWithOptions);
 const cachedAuthenticated = cache(authenticated);
 
-export { cachedAuth as auth, cachedAuthenticated as authenticated, handlers, signIn, signOut, update };
+export {
+	cachedAuth as auth,
+	cachedAuthenticated as authenticated,
+	handlers,
+	signIn,
+	signOut,
+	update,
+};
 
 // export {
 //     invalidateSessionToken,
 //     validateToken,
 //     isSecureContext,
 // } from "./auth.config";
-

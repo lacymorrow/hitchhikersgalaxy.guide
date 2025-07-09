@@ -1,7 +1,7 @@
-import { env } from "@/env";
-import { logger } from "@/lib/logger";
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { env } from "@/env";
+import { logger } from "@/lib/logger";
 import { ErrorService } from "./error-service";
 
 // Try to create Redis instance if configured

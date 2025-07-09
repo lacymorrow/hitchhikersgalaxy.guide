@@ -14,15 +14,18 @@ const faqs = [
 	},
 	{
 		question: "How does billing work?",
-		answer: "You'll be billed monthly or annually, depending on your preference. We accept all major credit cards and PayPal.",
+		answer:
+			"You'll be billed monthly or annually, depending on your preference. We accept all major credit cards and PayPal.",
 	},
 	{
 		question: "Can I change plans later?",
-		answer: "Absolutely! You can upgrade or downgrade your plan at any time. Changes take effect immediately.",
+		answer:
+			"Absolutely! You can upgrade or downgrade your plan at any time. Changes take effect immediately.",
 	},
 	{
 		question: "What's included in the free plan?",
-		answer: "The free plan includes all essential features to get you started, with some usage limitations.",
+		answer:
+			"The free plan includes all essential features to get you started, with some usage limitations.",
 	},
 ];
 

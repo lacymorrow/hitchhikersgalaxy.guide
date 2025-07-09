@@ -1,11 +1,10 @@
 "use client";
 
+import * as React from "react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import * as React from "react";
 
-interface TimeInputProps
-	extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
+interface TimeInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
 	value: string;
 	onChange: (value: string) => void;
 }
@@ -45,15 +44,11 @@ export const TimeInput = React.forwardRef<HTMLInputElement, TimeInputProps>(
 				onChange={handleChange}
 				onBlur={handleBlur}
 				disabled={disabled}
-				className={cn(
-					"w-[120px]",
-					disabled && "cursor-not-allowed opacity-50",
-					className,
-				)}
+				className={cn("w-[120px]", disabled && "cursor-not-allowed opacity-50", className)}
 				{...props}
 			/>
 		);
-	},
+	}
 );
 
 TimeInput.displayName = "TimeInput";

@@ -1,12 +1,12 @@
 "use client";
 
+import { AlertTriangleIcon, CheckIcon, CodeIcon } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Progress } from "@/components/ui/progress";
-import { AlertTriangleIcon, CheckIcon, CodeIcon } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 
 interface ContainerProcessorProps {
 	projectStructure: string;
@@ -14,13 +14,19 @@ interface ContainerProcessorProps {
 	onError: (error: string) => void;
 }
 
-export const ContainerProcessor = ({ projectStructure, onComplete, onError }: ContainerProcessorProps) => {
+export const ContainerProcessor = ({
+	projectStructure,
+	onComplete,
+	onError,
+}: ContainerProcessorProps) => {
 	const [status, setStatus] = useState<string>("initializing");
 	const [progress, setProgress] = useState<number>(0);
 	const [files, setFiles] = useState<{ path: string; content: string }[]>([]);
 	const [error, setError] = useState<string | null>(null);
 	const processingRef = useRef(false);
-	const [logs, setLogs] = useState<Array<{ type: string; message: string; data?: any; timestamp: string }>>([]);
+	const [logs, setLogs] = useState<
+		Array<{ type: string; message: string; data?: any; timestamp: string }>
+	>([]);
 	const [showLogs, setShowLogs] = useState(false);
 	const logsRef = useRef<HTMLDivElement>(null);
 
@@ -128,11 +134,7 @@ export const ContainerProcessor = ({ projectStructure, onComplete, onError }: Co
 				<AlertDescription className="space-y-4">
 					<p>{error}</p>
 					{logs.length > 0 && (
-						<Collapsible
-							open={showLogs}
-							onOpenChange={setShowLogs}
-							className="space-y-2"
-						>
+						<Collapsible open={showLogs} onOpenChange={setShowLogs} className="space-y-2">
 							<CollapsibleTrigger asChild>
 								<Button variant="outline" size="sm" className="flex items-center">
 									<CodeIcon className="h-4 w-4 mr-2" />
@@ -146,17 +148,27 @@ export const ContainerProcessor = ({ projectStructure, onComplete, onError }: Co
 								>
 									{logs.map((log, index) => (
 										<div key={`log-${index}-${log.timestamp}`} className="pb-1">
-											<span className="text-slate-400">[{new Date(log.timestamp).toLocaleTimeString()}]</span>{" "}
-											<span className={log.message.includes("prompt") ? "text-yellow-400 font-medium" : ""}>
+											<span className="text-slate-400">
+												[{new Date(log.timestamp).toLocaleTimeString()}]
+											</span>{" "}
+											<span
+												className={
+													log.message.includes("prompt") ? "text-yellow-400 font-medium" : ""
+												}
+											>
 												{log.message}
 											</span>
 											{log.data && typeof log.data === "string" && (
-												<pre className={`whitespace-pre-wrap break-words pl-6 mt-1 ${log.data.includes("Ok to proceed?") || log.data.includes("Need to install")
-													? "text-yellow-300"
-													: log.data.includes("y\n") || log.data.includes("responding")
-														? "text-green-400"
-														: "text-green-400"
-													}`}>
+												<pre
+													className={`whitespace-pre-wrap break-words pl-6 mt-1 ${
+														log.data.includes("Ok to proceed?") ||
+														log.data.includes("Need to install")
+															? "text-yellow-300"
+															: log.data.includes("y\n") || log.data.includes("responding")
+																? "text-green-400"
+																: "text-green-400"
+													}`}
+												>
 													{log.data}
 												</pre>
 											)}
@@ -191,7 +203,8 @@ export const ContainerProcessor = ({ projectStructure, onComplete, onError }: Co
 					{status === "initializing" && "Setting up environment..."}
 					{status === "loading-container" && "Loading WebContainer..."}
 					{status === "initializing-container" && "Initializing container..."}
-					{status === "installing-template" && "Installing shadcn template in a virtual environment..."}
+					{status === "installing-template" &&
+						"Installing shadcn template in a virtual environment..."}
 					{status === "processing-files" && "Processing generated files..."}
 					{status === "completed" && "Template successfully processed!"}
 				</p>
@@ -199,11 +212,7 @@ export const ContainerProcessor = ({ projectStructure, onComplete, onError }: Co
 				{/* Log display */}
 				{logs.length > 0 && (
 					<div className="mt-4">
-						<Collapsible
-							open={showLogs}
-							onOpenChange={setShowLogs}
-							className="space-y-2"
-						>
+						<Collapsible open={showLogs} onOpenChange={setShowLogs} className="space-y-2">
 							<CollapsibleTrigger asChild>
 								<Button variant="outline" size="sm" className="flex items-center">
 									<CodeIcon className="h-4 w-4 mr-2" />
@@ -217,17 +226,27 @@ export const ContainerProcessor = ({ projectStructure, onComplete, onError }: Co
 								>
 									{logs.map((log, index) => (
 										<div key={`log-${index}-${log.timestamp}`} className="pb-1">
-											<span className="text-slate-400">[{new Date(log.timestamp).toLocaleTimeString()}]</span>{" "}
-											<span className={log.message.includes("prompt") ? "text-yellow-400 font-medium" : ""}>
+											<span className="text-slate-400">
+												[{new Date(log.timestamp).toLocaleTimeString()}]
+											</span>{" "}
+											<span
+												className={
+													log.message.includes("prompt") ? "text-yellow-400 font-medium" : ""
+												}
+											>
 												{log.message}
 											</span>
 											{log.data && typeof log.data === "string" && (
-												<pre className={`whitespace-pre-wrap break-words pl-6 mt-1 ${log.data.includes("Ok to proceed?") || log.data.includes("Need to install")
-													? "text-yellow-300"
-													: log.data.includes("y\n") || log.data.includes("responding")
-														? "text-green-400"
-														: "text-green-400"
-													}`}>
+												<pre
+													className={`whitespace-pre-wrap break-words pl-6 mt-1 ${
+														log.data.includes("Ok to proceed?") ||
+														log.data.includes("Need to install")
+															? "text-yellow-300"
+															: log.data.includes("y\n") || log.data.includes("responding")
+																? "text-green-400"
+																: "text-green-400"
+													}`}
+												>
 													{log.data}
 												</pre>
 											)}
@@ -241,9 +260,7 @@ export const ContainerProcessor = ({ projectStructure, onComplete, onError }: Co
 			</CardContent>
 			{status === "completed" && (
 				<CardFooter>
-					<p className="text-sm">
-						{files.length} files were processed and are ready for preview.
-					</p>
+					<p className="text-sm">{files.length} files were processed and are ready for preview.</p>
 				</CardFooter>
 			)}
 		</Card>

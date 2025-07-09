@@ -1,6 +1,6 @@
 (() => {
-	(function () {
-		let y = function () {
+	(() => {
+		const y = () => {
 				let r = () => {};
 
 				function g(e) {
@@ -13,7 +13,7 @@
 					d(),
 						window.addEventListener(
 							"message",
-							function (e) {
+							((e) => {
 								if ((w(e.data), typeof window.gtag != "undefined"))
 									switch (e.data.event) {
 										case "GA.ViewCart":
@@ -33,8 +33,8 @@
 											break;
 									}
 								e.data === "mounted" && p(), e.data === "close" && f();
-							}.bind(this),
-							!1,
+							}).bind(this),
+							!1
 						);
 				}
 
@@ -52,31 +52,28 @@
 							t.addEventListener
 								? t.addEventListener("click", s.bind(this))
 								: t.attachEvent && t.attachEvent("onclick", s.bind(this));
-						}.bind(this),
+						}.bind(this)
 					);
 				}
 
 				function s(e) {
 					e.preventDefault(),
 						!document.body.classList.contains("lemonsqueezy-open") &&
-							(document.body.classList.add("lemonsqueezy-open"),
-							c(e.currentTarget.href));
+							(document.body.classList.add("lemonsqueezy-open"), c(e.currentTarget.href));
 				}
 
 				function c(e) {
 					const url = new URL(e);
-					let t = url.searchParams.get("dark");
+					const t = url.searchParams.get("dark");
 					url.searchParams.delete("dark");
 					m(t), (e = l(e, !0)), L(e);
 				}
 
 				function l(e, t = !1) {
 					if (
-						((e = new URL(e)),
-						t && e.searchParams.set("embed", 1),
-						!e.searchParams.get("aff_ref"))
+						((e = new URL(e)), t && e.searchParams.set("embed", 1), !e.searchParams.get("aff_ref"))
 					) {
-						let a = h();
+						const a = h();
 						a && e.searchParams.set("aff_ref", a);
 					}
 					return e.toString();
@@ -105,29 +102,27 @@
 				}
 
 				function m(e) {
-					let t = document.createElement("style");
+					const t = document.createElement("style");
 					(t.innerHTML =
 						"@keyframes pulse { 0% { opacity: 1; transform: scale(0.1); } 100% { opacity: 0; transform: scale(1); } }"),
 						document.head.appendChild(t);
-					let a = document.createElement("div");
+					const a = document.createElement("div");
 					a.setAttribute(
 						"style",
 						"z-index:99998; display: block; position: fixed; height: 100%; width: 100%; top: 0px; left: 0px; right: 0px; bottom: 0px; margin: 0px; padding: 0px;" +
-							(e
-								? "background: rgba(0,0,0,0.9);"
-								: "background: rgba(255,255,255,0.9);"),
+							(e ? "background: rgba(0,0,0,0.9);" : "background: rgba(255,255,255,0.9);")
 					),
 						a.setAttribute("class", "lemonsqueezy-loader");
-					let i = document.createElement("main");
+					const i = document.createElement("main");
 					i.setAttribute(
 						"style",
-						"display: flex;align-items: center;justify-content: center;flex-direction: column;width: 100%;height: 100%;",
+						"display: flex;align-items: center;justify-content: center;flex-direction: column;width: 100%;height: 100%;"
 					);
-					let o = document.createElement("div");
+					const o = document.createElement("div");
 					o.setAttribute(
 						"style",
 						"width: 40px;height: 40px;border-radius: 40px;animation: pulse 1s ease-out infinite forwards;" +
-							(e ? "background-color: #FFC233;" : "background-color: #7047EB;"),
+							(e ? "background-color: #FFC233;" : "background-color: #7047EB;")
 					),
 						i.appendChild(o),
 						a.appendChild(i),
@@ -136,20 +131,13 @@
 				}
 
 				function p() {
-					document
-						.querySelectorAll(".lemonsqueezy-loader")
-						.forEach((e) => e.remove()),
+					document.querySelectorAll(".lemonsqueezy-loader").forEach((e) => e.remove()),
 						document.body.classList.remove("lemonsqueezy-loading");
 				}
 
 				function k(e) {
-					for (
-						var t = e + "=", a = document.cookie.split(";"), i = 0;
-						i < a.length;
-						i++
-					) {
-						for (var o = a[i]; o.charAt(0) === " "; )
-							o = o.substring(1, o.length);
+					for (var t = e + "=", a = document.cookie.split(";"), i = 0; i < a.length; i++) {
+						for (var o = a[i]; o.charAt(0) === " "; ) o = o.substring(1, o.length);
 						if (o.indexOf(t) === 0) return o.substring(t.length, o.length);
 					}
 					return null;
@@ -177,7 +165,7 @@
 				};
 			},
 			n = window || n;
-		(n.createLemonSqueezy = function () {
+		(n.createLemonSqueezy = () => {
 			n.LemonSqueezy
 				? n.LemonSqueezy.Refresh()
 				: ((n.LemonSqueezy = new y()), n.LemonSqueezy.DumbSetup());

@@ -1,15 +1,15 @@
+import { eq } from "drizzle-orm";
 import { logger } from "@/lib/logger";
 import { db, schema } from "@/server/db";
 import { users } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
 import {
-	type PaymentProvider,
-	type ProviderConfig,
-	PaymentProviderError,
-	type OrderData,
-	type ProductData,
-	type ImportStats,
 	type CheckoutOptions,
+	type ImportStats,
+	type OrderData,
+	type PaymentProvider,
+	PaymentProviderError,
+	type ProductData,
+	type ProviderConfig,
 } from "./types";
 
 /**

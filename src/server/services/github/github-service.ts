@@ -1,11 +1,11 @@
+import { Octokit } from "@octokit/rest";
+import { eq } from "drizzle-orm";
+import { cache } from "react";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
-import { Octokit } from "@octokit/rest";
-import { eq } from "drizzle-orm";
-import { cache } from "react";
 
 /**
  * GitHub profile information with repository permissions
@@ -420,7 +420,10 @@ export const getRepoStars = cache(
 	async ({
 		owner = siteConfig.repo.owner,
 		repo = siteConfig.repo.name,
-	}: { owner?: string; repo?: string } = {}) => {
+	}: {
+		owner?: string;
+		repo?: string;
+	} = {}) => {
 		if (!isGitHubServiceEnabled()) {
 			logger.debug("GitHub Service disabled, skipping getRepoStars.");
 			return 0;
@@ -518,15 +521,15 @@ export async function getCollaboratorDetails(username: string): Promise<GitHubPr
 			avatar_url: profile.avatar_url,
 			html_url: profile.html_url,
 			name: profile.name || profile.login,
-			bio: profile.bio || '',
+			bio: profile.bio || "",
 			company: profile.company,
-			blog: profile.blog || '',
+			blog: profile.blog || "",
 			location: profile.location,
 			email: profile.email,
 			public_repos: profile.public_repos,
 			followers: profile.followers,
 			following: profile.following,
-			permission: collaborator.permission
+			permission: collaborator.permission,
 		};
 	} catch (error) {
 		logger.error("Error fetching collaborator details:", error);

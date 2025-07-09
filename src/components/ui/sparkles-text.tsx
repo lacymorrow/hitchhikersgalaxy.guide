@@ -1,12 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-	type CSSProperties,
-	type ReactElement,
-	useEffect,
-	useState,
-} from "react";
+import { type CSSProperties, type ReactElement, useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -118,7 +113,7 @@ const SparklesText: React.FC<SparklesTextProps> = ({
 					} else {
 						return { ...star, lifespan: star.lifespan - 0.1 };
 					}
-				}),
+				})
 			);
 		};
 
@@ -149,15 +144,7 @@ const SparklesText: React.FC<SparklesTextProps> = ({
 	);
 };
 
-const Sparkle: React.FC<Sparkle> = ({
-	id,
-	x,
-	y,
-	color,
-	delay,
-	scale,
-	duration = 0.8,
-}) => {
+const Sparkle: React.FC<Sparkle> = ({ id, x, y, color, delay, scale, duration = 0.8 }) => {
 	return (
 		<motion.svg
 			key={id}

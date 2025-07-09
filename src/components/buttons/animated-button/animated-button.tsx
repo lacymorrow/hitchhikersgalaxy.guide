@@ -1,7 +1,7 @@
+import type React from "react";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Button, type ButtonProps, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type React from "react";
 import styles from "./animated-button.module.css";
 
 // Extend the ButtonHTMLAttributes to include all possible button props

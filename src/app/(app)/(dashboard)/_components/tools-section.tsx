@@ -1,33 +1,35 @@
 "use client";
 
-import { Link } from "@/components/primitives/link-with-transition";
-import { Button } from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { LOCAL_STORAGE_KEYS } from "@/config/local-storage-keys";
-import { cn } from "@/lib/utils";
 import { useAutoAnimate } from "@formkit/auto-animate/react";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { CursorTextIcon, LinkBreak1Icon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
 import { IconBrandSpeedtest } from "@tabler/icons-react";
 import {
-	ArrowUpRight, BoxSelectIcon, DollarSign, FileIcon, Hash,
+	ArrowUpRight,
+	BoxSelectIcon,
+	DollarSign,
+	FileIcon,
+	Hash,
 	ImageIcon,
 	KeyRound,
 	LayoutTemplate,
-	LineChart, PaintBucket, Palette, Ruler,
-	Search, TerminalIcon,
-	Timer
+	LineChart,
+	PaintBucket,
+	Palette,
+	Ruler,
+	Search,
+	TerminalIcon,
+	Timer,
 } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
+import { Link } from "@/components/primitives/link-with-transition";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { LOCAL_STORAGE_KEYS } from "@/config/local-storage-keys";
+import { cn } from "@/lib/utils";
 
 type ToolCategory =
 	| "Formatters"
@@ -52,7 +54,8 @@ const tools: Tool[] = [
 	// https://www.bgvault.tech/
 	{
 		title: "BG Vault - Backgrounds",
-		description: "Free, beautiful backgrounds for your project.Built with Tailwind CSS.Click to preview, toggle light / dark mode, and copy the code.Works with any project with tailwind css.",
+		description:
+			"Free, beautiful backgrounds for your project.Built with Tailwind CSS.Click to preview, toggle light / dark mode, and copy the code.Works with any project with tailwind css.",
 		icon: FileIcon,
 		href: "https://www.bgvault.tech/",
 		isExternal: true,
@@ -102,7 +105,8 @@ const tools: Tool[] = [
 	// https://www.openstatus.dev/play/curl
 	{
 		title: "cURL Builder",
-		description: "An online curl command line builder. Generate curl commands to test your API endpoints.",
+		description:
+			"An online curl command line builder. Generate curl commands to test your API endpoints.",
 		icon: TerminalIcon,
 		href: "https://www.openstatus.dev/play/curl",
 		isExternal: true,
@@ -112,7 +116,8 @@ const tools: Tool[] = [
 	// https://www.openstatus.dev/play/checker
 	{
 		title: "Global Speed Checker",
-		description: "Is your endpoint globally fast? Test your website and API performance across all continents.",
+		description:
+			"Is your endpoint globally fast? Test your website and API performance across all continents.",
 		icon: IconBrandSpeedtest,
 		href: "https://www.openstatus.dev/play/checker",
 		isExternal: true,
@@ -368,9 +373,7 @@ const STORAGE_KEY = LOCAL_STORAGE_KEYS.starredTools;
 
 export const ToolsSection = () => {
 	const [searchQuery, setSearchQuery] = useState("");
-	const [selectedCategory, setSelectedCategory] = useState<
-		ToolCategory | "all"
-	>("all");
+	const [selectedCategory, setSelectedCategory] = useState<ToolCategory | "all">("all");
 	const [selectedTool, setSelectedTool] = useState<Tool | null>(null);
 	const [starredTools, setStarredTools] = useState<Set<string>>(new Set());
 	const [showStarredOnly, setShowStarredOnly] = useState(false);
@@ -403,10 +406,7 @@ export const ToolsSection = () => {
 	};
 
 	// Get unique categories
-	const categories = [
-		"all",
-		...new Set(tools.map((tool) => tool.category)),
-	] as const;
+	const categories = ["all", ...new Set(tools.map((tool) => tool.category))] as const;
 
 	// Filter tools based on search query, category, and starred status
 	const filteredTools = tools.filter((tool) => {
@@ -414,10 +414,11 @@ export const ToolsSection = () => {
 		if (!tool?.href) return false;
 
 		const searchTerms = searchQuery.toLowerCase().split(" ");
-		const matchesSearch = searchTerms.every(term =>
-			tool.title.toLowerCase().includes(term) ||
-			tool.description.toLowerCase().includes(term) ||
-			tool.keywords.some(keyword => keyword.toLowerCase().includes(term))
+		const matchesSearch = searchTerms.every(
+			(term) =>
+				tool.title.toLowerCase().includes(term) ||
+				tool.description.toLowerCase().includes(term) ||
+				tool.keywords.some((keyword) => keyword.toLowerCase().includes(term))
 		);
 		const matchesCategory = selectedCategory === "all" || tool.category === selectedCategory;
 		const matchesStarred = !showStarredOnly || starredTools.has(tool.title);
@@ -458,8 +459,7 @@ export const ToolsSection = () => {
 						onClick={() => setShowStarredOnly(!showStarredOnly)}
 						className={cn(
 							"gap-2 whitespace-nowrap w-full sm:w-auto",
-							showStarredOnly &&
-							"bg-primary text-primary-foreground hover:bg-primary/90",
+							showStarredOnly && "bg-primary text-primary-foreground hover:bg-primary/90"
 						)}
 					>
 						<StarIcon className="h-4 w-4" />
@@ -489,7 +489,10 @@ export const ToolsSection = () => {
 			</div>
 
 			{/* Tools Grid */}
-			<div ref={parent} className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4">
+			<div
+				ref={parent}
+				className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-4"
+			>
 				{sortedAndFilteredTools.map((tool) => (
 					<div key={tool.title} className="group">
 						<Card
@@ -505,7 +508,6 @@ export const ToolsSection = () => {
 								}}
 							/>
 						</Card>
-
 					</div>
 				))}
 			</div>
@@ -514,15 +516,11 @@ export const ToolsSection = () => {
 			<Dialog open={!!selectedTool} onOpenChange={() => setSelectedTool(null)}>
 				<DialogContent className="max-w-6xl">
 					<DialogHeader>
-						<DialogTitle className="sr-only">
-							{selectedTool?.title ?? "Tool Details"}
-						</DialogTitle>
+						<DialogTitle className="sr-only">{selectedTool?.title ?? "Tool Details"}</DialogTitle>
 					</DialogHeader>
 					<div className="flex items-center justify-between border-b pb-2">
 						<div className="flex items-center gap-2">
-							{selectedTool?.icon && (
-								<selectedTool.icon className="h-5 w-5 text-primary" />
-							)}
+							{selectedTool?.icon && <selectedTool.icon className="h-5 w-5 text-primary" />}
 							<h2 className="text-lg font-semibold">{selectedTool?.title}</h2>
 						</div>
 						<div className="flex items-center gap-2">
@@ -538,9 +536,7 @@ export const ToolsSection = () => {
 									{starredTools.has(selectedTool.title) ? (
 										<StarFilledIcon className="h-4 w-4 fill-primary text-primary" />
 									) : (
-										<StarIcon
-											className="h-4 w-4 text-muted-foreground"
-										/>
+										<StarIcon className="h-4 w-4 text-muted-foreground" />
 									)}
 								</Button>
 							)}
@@ -579,19 +575,16 @@ const ToolCardContent = ({
 						<tool.icon className={cn("h-5 w-5 text-primary")} />
 					</div>
 					<div className="min-w-0 flex-1">
-						<CardTitle className="text-base break-words line-clamp-2 leading-tight">{tool.title}</CardTitle>
+						<CardTitle className="text-base break-words line-clamp-2 leading-tight">
+							{tool.title}
+						</CardTitle>
 						<div className="text-xs text-muted-foreground">
 							<span className="capitalize">{tool.category}</span>
 						</div>
 					</div>
 				</div>
 				<div className="flex items-center gap-2 flex-shrink-0">
-					<Button
-						variant="ghost"
-						size="icon"
-						className="h-8 w-8"
-						onClick={onToggleStar}
-					>
+					<Button variant="ghost" size="icon" className="h-8 w-8" onClick={onToggleStar}>
 						{isStarred ? (
 							<StarFilledIcon className="h-4 w-4 fill-primary text-primary" />
 						) : (
@@ -603,7 +596,9 @@ const ToolCardContent = ({
 						target="_blank"
 						rel="noopener noreferrer"
 						onClick={(e) => e.stopPropagation()}
-						className={"inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"}
+						className={
+							"inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
+						}
 					>
 						<ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
 						<span className="sr-only">Open {tool.title} in new tab</span>

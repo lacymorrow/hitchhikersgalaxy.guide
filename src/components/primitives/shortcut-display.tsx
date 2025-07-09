@@ -1,12 +1,9 @@
 "use client";
 
-import {
-	type ShortcutActionType,
-	shortcutConfig
-} from "@/config/keyboard-shortcuts";
+import * as React from "react";
+import { type ShortcutActionType, shortcutConfig } from "@/config/keyboard-shortcuts";
 import { useIsMac } from "@/hooks/use-is-mac";
 import { cn } from "@/lib/utils";
-import * as React from "react";
 
 interface ShortcutDisplayProps {
 	action: ShortcutActionType;
@@ -18,7 +15,8 @@ interface ShortcutDisplayProps {
 }
 
 // Default styles mimicking Shadcn kbd
-const defaultKbdStyles = "h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium";
+const defaultKbdStyles =
+	"h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium";
 
 /**
  * Finds the primary shortcut string for a given action.
@@ -28,7 +26,12 @@ function findPrimaryShortcut(action: ShortcutActionType): string | null {
 	for (const [shortcut, act] of shortcutConfig) {
 		if (act === action) {
 			// Basic heuristic: prefer shortcuts with modifiers
-			if (shortcut.includes("mod+") || shortcut.includes("shift+") || shortcut.includes("alt+") || shortcut.includes("ctrl+")) {
+			if (
+				shortcut.includes("mod+") ||
+				shortcut.includes("shift+") ||
+				shortcut.includes("alt+") ||
+				shortcut.includes("ctrl+")
+			) {
 				return shortcut;
 			}
 			// If no modified shortcut found yet, keep track of the first simple one
@@ -83,15 +86,16 @@ export const ShortcutDisplay = ({
 	// For single keys like '/', just render the key without special styling
 	if (parts.length === 1 && primaryShortcut.length === 1) {
 		// Use baseClassName only if Component is kbd, otherwise just className
-		const finalClassName = Component === 'kbd' ? cn(baseClassName, className) : className;
+		const finalClassName = Component === "kbd" ? cn(baseClassName, className) : className;
 		return <Component className={finalClassName}>{parts[0]}</Component>;
 	}
 
 	// Render modifiers and key separately
 	// Apply base styles only if Component is kbd
-	const finalClassName = Component === 'kbd'
-		? cn("inline-flex", baseClassName, className) // Combine base styles with specific className
-		: cn("inline-flex items-center gap-1", className); // Use simpler base for non-kbd elements
+	const finalClassName =
+		Component === "kbd"
+			? cn("inline-flex", baseClassName, className) // Combine base styles with specific className
+			: cn("inline-flex items-center gap-1", className); // Use simpler base for non-kbd elements
 
 	return (
 		<Component className={finalClassName}>

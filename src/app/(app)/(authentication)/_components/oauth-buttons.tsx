@@ -1,5 +1,11 @@
 "use client";
 
+import { DiscordLogoIcon, GitHubLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
+import { IconBrandBitbucket, IconBrandGitlab } from "@tabler/icons-react";
+import { cva } from "class-variance-authority";
+import { ChevronsUpDownIcon } from "lucide-react";
+import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 import { Icons } from "@/components/assets/icons";
 import { Divider } from "@/components/primitives/divider";
 import { Button } from "@/components/ui/button";
@@ -9,12 +15,6 @@ import { env } from "@/env";
 import { cn } from "@/lib/utils";
 import { signInWithOAuthAction } from "@/server/actions/auth";
 import { enabledAuthProviders, isGuestOnlyMode } from "@/server/auth-providers";
-import { DiscordLogoIcon, GitHubLogoIcon, TwitterLogoIcon } from "@radix-ui/react-icons";
-import { IconBrandBitbucket, IconBrandGitlab } from "@tabler/icons-react";
-import { cva } from "class-variance-authority";
-import { ChevronsUpDownIcon } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useState } from "react";
 import { MagicLinkForm } from "./magic-link-form";
 
 const oauthButtonVariants = cva("flex items-center justify-center gap-sm", {
@@ -41,7 +41,11 @@ interface Provider {
 	isExcluded?: boolean;
 }
 
-export function OAuthButtons({ variant = "default", className, collapsible = false }: OAuthButtonsProps) {
+export function OAuthButtons({
+	variant = "default",
+	className,
+	collapsible = false,
+}: OAuthButtonsProps) {
 	// Redirect back to the page that the user was on before signing in
 	const searchParams = useSearchParams();
 	const nextUrl = searchParams?.get(SEARCH_PARAM_KEYS.nextUrl);
@@ -57,7 +61,7 @@ export function OAuthButtons({ variant = "default", className, collapsible = fal
 	};
 
 	// Filter out guest provider as it needs special handling
-	const oauthProviders = enabledAuthProviders.filter(provider => provider.id !== "guest");
+	const oauthProviders = enabledAuthProviders.filter((provider) => provider.id !== "guest");
 
 	// Don't render OAuth buttons if in guest-only mode
 	if (isGuestOnlyMode) {
@@ -83,13 +87,13 @@ export function OAuthButtons({ variant = "default", className, collapsible = fal
 				)}
 			>
 				{collapsible && (
-					<div className={cn("flex justify-center items-center", currentVariant === "icons" ? "order-last" : "absolute right-1 top-[2px]")}>
-						<Button
-							variant="ghost"
-							size="sm"
-							onClick={toggleVariant}
-							className="text-xs"
-						>
+					<div
+						className={cn(
+							"flex justify-center items-center",
+							currentVariant === "icons" ? "order-last" : "absolute right-1 top-[2px]"
+						)}
+					>
+						<Button variant="ghost" size="sm" onClick={toggleVariant} className="text-xs">
 							<ChevronsUpDownIcon className="h-4 w-4" />
 						</Button>
 					</div>
@@ -103,7 +107,11 @@ export function OAuthButtons({ variant = "default", className, collapsible = fal
 					}
 
 					const button = (
-						<Button variant={"outline"} type="submit" className={oauthButtonVariants({ variant: currentVariant })}>
+						<Button
+							variant={"outline"}
+							type="submit"
+							className={oauthButtonVariants({ variant: currentVariant })}
+						>
 							{currentVariant === "default" && <span>Sign in with {name}</span>}
 							{id === "google" && <Icons.google className="h-4 w-4" />}
 							{id === "twitter" && <TwitterLogoIcon className="h-4 w-4" />}

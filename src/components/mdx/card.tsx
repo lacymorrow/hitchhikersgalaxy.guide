@@ -1,11 +1,11 @@
 "use client";
 
 import "@/lib/fontawesome";
-import { cn } from "@/lib/utils";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import type { LucideIcon } from "lucide-react";
 import * as React from "react";
+import { cn } from "@/lib/utils";
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 	title: string;

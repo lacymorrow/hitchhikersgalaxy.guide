@@ -84,11 +84,7 @@ const CredenzaContent = ({ className, children, ...props }: CredenzaProps) => {
 	);
 };
 
-const CredenzaDescription = ({
-	className,
-	children,
-	...props
-}: CredenzaProps) => {
+const CredenzaDescription = ({ className, children, ...props }: CredenzaProps) => {
 	const isDesktop = useMediaQuery(desktop);
 	const CredenzaDescription = isDesktop ? DialogDescription : DrawerDescription;
 

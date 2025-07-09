@@ -1,9 +1,10 @@
 /**
-* Debug page for auth issues
-* Only available in development mode
-*/
-import { auth } from "@/server/auth";
+ * Debug page for auth issues
+ * Only available in development mode
+ */
+
 import { notFound } from "next/navigation";
+import { auth } from "@/server/auth";
 
 export default async function AuthDebugPage() {
 	// Only allow in development mode
@@ -28,20 +29,26 @@ export default async function AuthDebugPage() {
 					<h2 className="text-xl font-semibold mb-4">Session Status</h2>
 					<div className="p-4 bg-slate-50 rounded-md">
 						<pre className="whitespace-pre-wrap text-sm">
-							{JSON.stringify({
-								authenticated: !!session?.user,
-								user: session?.user ? {
-									id: session.user.id,
-									name: session.user.name,
-									email: session.user.email,
-									emailVerified: session.user.emailVerified,
-									image: session.user.image,
-									bio: session.user.bio,
-									githubUsername: session.user.githubUsername,
-									hasPayloadToken: !!session.user.payloadToken,
-									accounts: session.user.accounts,
-								} : null,
-							}, null, 2)}
+							{JSON.stringify(
+								{
+									authenticated: !!session?.user,
+									user: session?.user
+										? {
+												id: session.user.id,
+												name: session.user.name,
+												email: session.user.email,
+												emailVerified: session.user.emailVerified,
+												image: session.user.image,
+												bio: session.user.bio,
+												githubUsername: session.user.githubUsername,
+												hasPayloadToken: !!session.user.payloadToken,
+												accounts: session.user.accounts,
+											}
+										: null,
+								},
+								null,
+								2
+							)}
 						</pre>
 					</div>
 				</section>

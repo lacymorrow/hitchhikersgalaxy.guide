@@ -2,6 +2,8 @@
 
 // This happens when the authentication token expires or there is an error refreshing.
 
+import type { NextRequest, NextResponse } from "next/server";
+import { z } from "zod";
 // This is a Route Handler, not a Next.js page, because signOut needs to be called by a server action or Route Handler
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
@@ -9,8 +11,6 @@ import { STATUS_CODES } from "@/config/status-codes";
 import { logger } from "@/lib/logger";
 import { routeRedirectWithCode } from "@/lib/utils/redirect-with-code";
 import { signOut } from "@/server/auth";
-import type { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 
 const querySchema = z.object({
 	[SEARCH_PARAM_KEYS.statusCode]: z

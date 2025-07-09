@@ -1,5 +1,12 @@
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { hasUserActiveSubscription, hasUserPurchasedProduct } from "@/lib/polar";
 import { auth } from "@/server/auth";
 import { SubscriptionButton } from "./subscription-button";
@@ -36,7 +43,7 @@ export default async function SubscriptionsPage() {
 			name: "Basic",
 			description: "Perfect for getting started",
 			price: "$9/month",
-		}
+		},
 	];
 
 	const oneTimeTiers = [
@@ -45,7 +52,7 @@ export default async function SubscriptionsPage() {
 			name: "One-Time",
 			description: "Perfect for getting started",
 			price: "$5",
-		}
+		},
 	];
 
 	const tiers = [...subscriptionTiers, ...oneTimeTiers];
@@ -61,9 +68,13 @@ export default async function SubscriptionsPage() {
 							{userId && purchasedProducts[tier.id] && (
 								<div className="absolute top-4 right-4">
 									{tier.id === process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID ? (
-										<Badge variant="default" className="bg-green-500">Active</Badge>
+										<Badge variant="default" className="bg-green-500">
+											Active
+										</Badge>
 									) : (
-										<Badge variant="default" className="bg-blue-500">Purchased</Badge>
+										<Badge variant="default" className="bg-blue-500">
+											Purchased
+										</Badge>
 									)}
 								</div>
 							)}

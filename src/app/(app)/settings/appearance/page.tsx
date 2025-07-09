@@ -1,19 +1,13 @@
 "use client";
 
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { useTheme } from "next-themes";
+import * as React from "react";
+import { toast } from "sonner";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Separator } from "@/components/ui/separator";
 import { updateSettings } from "@/server/actions/settings";
-import { useTheme } from "next-themes";
-import * as React from "react";
-import { toast } from "sonner";
 
 const themes = [
 	{ value: "system", label: "System" },
@@ -62,9 +56,7 @@ export default function AppearancePage() {
 			<Card>
 				<CardHeader>
 					<CardTitle>Theme</CardTitle>
-					<CardDescription>
-						Choose your preferred theme for the application.
-					</CardDescription>
+					<CardDescription>Choose your preferred theme for the application.</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<RadioGroup

@@ -7,4 +7,4 @@ export default function PayloadIcon() {
 			<ShipkitIcon className="size-[18px]" />
 		</>
 	);
-};
+}

@@ -1,7 +1,7 @@
-import { Link } from "@/components/primitives/link-with-transition";
-import { cn } from "@/lib/utils";
 import type React from "react";
 import type { ReactNode } from "react";
+import { Link } from "@/components/primitives/link-with-transition";
+import { cn } from "@/lib/utils";
 
 // Common styles shared between button and link
 const commonStyles = {
@@ -18,23 +18,18 @@ type RainbowButtonProps = {
 	className?: string;
 	children: ReactNode;
 } & (
-		| ({ href: string } & Omit<React.ComponentProps<typeof Link>, "href"> &
+	| ({ href: string } & Omit<React.ComponentProps<typeof Link>, "href"> &
 			React.AnchorHTMLAttributes<HTMLAnchorElement>)
-		| ({ href?: never } & React.ButtonHTMLAttributes<HTMLButtonElement>)
-	);
+	| ({ href?: never } & React.ButtonHTMLAttributes<HTMLButtonElement>)
+);
 
-export const RainbowButton = ({
-	children,
-	className,
-	href,
-	...props
-}: RainbowButtonProps) => {
+export const RainbowButton = ({ children, className, href, ...props }: RainbowButtonProps) => {
 	const styles = cn(
 		commonStyles.base,
 		commonStyles.before,
 		commonStyles.lightMode,
 		commonStyles.darkMode,
-		className,
+		className
 	);
 
 	if (href) {
@@ -50,10 +45,7 @@ export const RainbowButton = ({
 	}
 
 	return (
-		<button
-			className={styles}
-			{...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}
-		>
+		<button className={styles} {...(props as React.ButtonHTMLAttributes<HTMLButtonElement>)}>
 			{children}
 		</button>
 	);

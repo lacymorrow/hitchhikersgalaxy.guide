@@ -1,8 +1,8 @@
+import { type NextRequest, NextResponse } from "next/server";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { createStripeCheckoutSession } from "@/lib/stripe";
 import { auth } from "@/server/auth";
-import { NextRequest, NextResponse } from "next/server";
 
 /**
  * Stripe checkout route

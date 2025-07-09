@@ -1,7 +1,7 @@
-import { Link } from "@/components/primitives/link-with-transition";
-import { Button } from "@/components/ui/button";
 import type React from "react";
 import type { ReactNode } from "react";
+import { Link } from "@/components/primitives/link-with-transition";
+import { Button } from "@/components/ui/button";
 
 interface CommonProps {
 	className?: string;
@@ -24,9 +24,17 @@ type LinkOrButtonProps = LinkProps | ButtonProps;
 export const LinkOrButton = (props: LinkOrButtonProps) => {
 	if ("href" in props) {
 		const { className, children, href, ...rest } = props;
-		return <Link className={className} href={href} {...rest}>{children}</Link>;
+		return (
+			<Link className={className} href={href} {...rest}>
+				{children}
+			</Link>
+		);
 	}
 
 	const { className, children, type = "button", ...rest } = props;
-	return <Button className={className} type={type} {...rest}>{children}</Button>;
+	return (
+		<Button className={className} type={type} {...rest}>
+			{children}
+		</Button>
+	);
 };

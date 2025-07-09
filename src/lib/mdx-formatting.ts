@@ -20,7 +20,7 @@ function formatMDXContent(content: string): string {
 	const lines = content.split("\n");
 	let inCodeBlock = false;
 	let inFrontmatter = false;
-	let formattedLines: string[] = [];
+	const formattedLines: string[] = [];
 
 	for (let i = 0; i < lines.length; i++) {
 		let line = lines[i];

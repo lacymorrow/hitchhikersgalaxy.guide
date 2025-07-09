@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import * as React from "react";
+import { cn } from "@/lib/utils";
 
 interface LoaderLinesProps extends React.HTMLAttributes<HTMLDivElement> {
 	fullscreen?: boolean;
@@ -55,13 +55,7 @@ const colorSchemes = {
 		`${baseColor}66`,
 		`${baseColor}33`,
 	],
-	brand: [
-		"var(--primary)",
-		"var(--secondary)",
-		"var(--accent)",
-		"var(--muted)",
-		"var(--primary)",
-	],
+	brand: ["var(--primary)", "var(--secondary)", "var(--accent)", "var(--muted)", "var(--primary)"],
 };
 
 export const LoaderLines = ({

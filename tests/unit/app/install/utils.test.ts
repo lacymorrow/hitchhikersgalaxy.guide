@@ -1,4 +1,4 @@
-import { describe, it, expect } from "vitest";
+import { describe, expect, it } from "vitest";
 import { extractComponentId, transformImports } from "@/app/(app)/install/utils";
 
 describe("install utils", () => {

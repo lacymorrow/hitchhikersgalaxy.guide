@@ -16,13 +16,9 @@ interface ProcessedDocument {
 	headings: Heading[];
 }
 
-export const importGoogleDoc = async (
-	documentId: string,
-): Promise<ProcessedDocument> => {
+export const importGoogleDoc = async (documentId: string): Promise<ProcessedDocument> => {
 	if (!env.NEXT_PUBLIC_FEATURE_GOOGLE_SERVICE_ACCOUNT_ENABLED) {
-		logger.warn(
-			"Google Service Account feature is disabled. Skipping Google Doc import.",
-		);
+		logger.warn("Google Service Account feature is disabled. Skipping Google Doc import.");
 		return {
 			content: <p>Google Docs integration is disabled.</p>,
 			headings: [],
@@ -83,8 +79,7 @@ function processListItem(paragraph: any, lists: any, content: string): string {
 	const listProperties = list.listProperties;
 
 	// Get the correct list style
-	const glyphFormat =
-		listProperties?.nestingLevels?.[nestingLevel]?.glyphFormat || "%0.";
+	const glyphFormat = listProperties?.nestingLevels?.[nestingLevel]?.glyphFormat || "%0.";
 	const glyphType = listProperties?.nestingLevels?.[nestingLevel]?.glyphType;
 
 	let listTag = "ul";
@@ -125,7 +120,7 @@ function processDocument(doc: any): ProcessedDocument {
 			// Handle headings
 			if (paragraph.paragraphStyle?.namedStyleType?.includes("HEADING")) {
 				const level = Number.parseInt(
-					paragraph.paragraphStyle.namedStyleType.replace("HEADING_", ""),
+					paragraph.paragraphStyle.namedStyleType.replace("HEADING_", "")
 				);
 				const text = paragraphContent.replace(/<[^>]*>/g, ""); // Strip HTML for heading text
 				const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-");

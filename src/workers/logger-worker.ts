@@ -41,10 +41,7 @@ const flushLogs = async (): Promise<void> => {
 
 		console.log(`Logs sent successfully. Status: ${response.status}`);
 	} catch (error) {
-		console.error(
-			"Error sending logs:",
-			error instanceof Error ? error.message : String(error),
-		);
+		console.error("Error sending logs:", error instanceof Error ? error.message : String(error));
 		// Re-add failed logs to the front of the queue
 		logQueue.unshift(...logsToSend);
 	}
@@ -53,15 +50,12 @@ const flushLogs = async (): Promise<void> => {
 // Set up periodic flush
 setInterval(flushLogs, FLUSH_INTERVAL);
 
-self.addEventListener(
-	"message",
-	(event: MessageEvent<{ logData: LogData }>) => {
-		const { logData } = event.data;
-		logQueue.push(logData);
+self.addEventListener("message", (event: MessageEvent<{ logData: LogData }>) => {
+	const { logData } = event.data;
+	logQueue.push(logData);
 
-		// Flush immediately if we've reached batch size
-		if (logQueue.length >= MAX_BATCH_SIZE) {
-			void flushLogs();
-		}
-	},
-);
+	// Flush immediately if we've reached batch size
+	if (logQueue.length >= MAX_BATCH_SIZE) {
+		void flushLogs();
+	}
+});

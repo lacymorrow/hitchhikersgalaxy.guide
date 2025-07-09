@@ -1,12 +1,12 @@
 "use client";
 
+import { AnimatePresence, motion } from "framer-motion";
+import { Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useCopyToClipboard } from "@/hooks/use-copy-to-clipboard";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
-import { Check, Copy } from "lucide-react";
 
 interface CopyButtonProps {
 	value: string;
@@ -36,7 +36,6 @@ export const CopyButton = ({
 	});
 
 	return (
-
 		<Tooltip>
 			<TooltipTrigger asChild>
 				<Button
@@ -58,7 +57,7 @@ export const CopyButton = ({
 								damping: 30,
 								mass: 0.5,
 							}}
-						// className="absolute inset-0 flex items-center justify-center"
+							// className="absolute inset-0 flex items-center justify-center"
 						>
 							{isCopied ? (
 								<Check className="h-4 w-4 text-green-500" />
@@ -73,6 +72,5 @@ export const CopyButton = ({
 				<p>{isCopied ? successTitle : "Copy to clipboard"}</p>
 			</TooltipContent>
 		</Tooltip>
-
 	);
 };

@@ -1,5 +1,8 @@
 "use client";
 
+import { format } from "date-fns";
+import { Calendar, ChevronDown, ChevronUp, CreditCard, Mail, Package, User } from "lucide-react";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -25,9 +28,6 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import type { Purchase, UserData } from "@/server/services/payment-service";
-import { format } from "date-fns";
-import { Calendar, ChevronDown, ChevronUp, CreditCard, Mail, Package, User } from "lucide-react";
-import { useState } from "react";
 
 interface UserDrawerProps {
 	user: UserData | null;
@@ -40,7 +40,11 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 
 	const [isJsonOpen, setIsJsonOpen] = useState(false);
 
-	const getStatusBadgeVariant = (status: Purchase["status"], isSubscription = false, isActive = false) => {
+	const getStatusBadgeVariant = (
+		status: Purchase["status"],
+		isSubscription = false,
+		isActive = false
+	) => {
 		if (isSubscription) {
 			return isActive ? "default" : "secondary";
 		}
@@ -58,10 +62,12 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 	};
 
 	const isSubscriptionProduct = (productName: string): boolean => {
-		return productName.toLowerCase().includes('subscription') ||
-			productName.toLowerCase().includes('monthly') ||
-			productName.toLowerCase().includes('yearly') ||
-			productName.toLowerCase().includes('annual');
+		return (
+			productName.toLowerCase().includes("subscription") ||
+			productName.toLowerCase().includes("monthly") ||
+			productName.toLowerCase().includes("yearly") ||
+			productName.toLowerCase().includes("annual")
+		);
 	};
 
 	return (
@@ -115,7 +121,10 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 														</div>
 														<div>
 															<p className="text-sm font-medium text-muted-foreground">Status</p>
-															<Badge variant={user.hasPaid ? "default" : "secondary"} className="mt-1">
+															<Badge
+																variant={user.hasPaid ? "default" : "secondary"}
+																className="mt-1"
+															>
 																{user.hasPaid ? "Paid Customer" : "Not Paid"}
 															</Badge>
 														</div>
@@ -132,7 +141,11 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 															</code>
 														</div>
 														<Button variant="ghost" size="sm" className="h-7 gap-1" asChild>
-															<a href={`mailto:${user.email}`} target="_blank" rel="noopener noreferrer">
+															<a
+																href={`mailto:${user.email}`}
+																target="_blank"
+																rel="noopener noreferrer"
+															>
 																<Mail className="h-3.5 w-3.5" />
 																<span className="text-xs">Contact</span>
 															</a>
@@ -187,9 +200,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 													)}
 												</div>
 												<div className="text-right">
-													<p className="text-sm font-medium text-muted-foreground">
-														Last Purchase
-													</p>
+													<p className="text-sm font-medium text-muted-foreground">Last Purchase</p>
 													<p className="text-lg">
 														{user.lastPurchaseDate
 															? format(user.lastPurchaseDate, "PPP")
@@ -220,7 +231,8 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 										<div className="p-4 border-b">
 											<div className="flex flex-wrap gap-3">
 												<Badge variant="outline" className="px-3 py-1">
-													Total: {user.totalPurchases} purchase{user.totalPurchases !== 1 ? 's' : ''}
+													Total: {user.totalPurchases} purchase
+													{user.totalPurchases !== 1 ? "s" : ""}
 												</Badge>
 												{user.providerStatuses?.lemonsqueezy && (
 													<Badge variant="outline" className="px-3 py-1">
@@ -282,12 +294,15 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 															{(() => {
 																const isSubscription = isSubscriptionProduct(purchase.productName);
 																// Check if this specific purchase is an active subscription
-																const isActive = isSubscription &&
+																const isActive =
+																	isSubscription &&
 																	user.hasActiveSubscription &&
-																	(user.purchases?.filter(p =>
-																		isSubscriptionProduct(p.productName) &&
-																		p.status === "paid"
-																	).slice(-1)[0]?.id === purchase.id);
+																	user.purchases
+																		?.filter(
+																			(p) =>
+																				isSubscriptionProduct(p.productName) && p.status === "paid"
+																		)
+																		.slice(-1)[0]?.id === purchase.id;
 
 																if (isSubscription) {
 																	return (
@@ -324,9 +339,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 									<Card>
 										<CardContent className="flex flex-col items-center justify-center py-6 text-center">
 											<Package className="mb-2 h-8 w-8 text-muted-foreground" />
-											<p className="text-sm text-muted-foreground">
-												No purchase history available
-											</p>
+											<p className="text-sm text-muted-foreground">No purchase history available</p>
 										</CardContent>
 									</Card>
 								)}
@@ -338,7 +351,11 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 								<Collapsible open={isJsonOpen} onOpenChange={setIsJsonOpen} className="w-full">
 									<div className="flex items-center justify-end">
 										<CollapsibleTrigger asChild>
-											<Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-muted-foreground">
+											<Button
+												variant="ghost"
+												size="sm"
+												className="h-7 px-2 text-xs text-muted-foreground"
+											>
 												{isJsonOpen ? (
 													<>
 														<ChevronUp className="h-3 w-3 mr-1" />

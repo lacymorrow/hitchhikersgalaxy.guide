@@ -1,10 +1,10 @@
 "use client";
+import { cva, type VariantProps } from "class-variance-authority";
+import { LinkIcon } from "lucide-react";
+import { Slot as SlotPrimitive } from "radix-ui";
+import type React from "react";
 import { Link } from "@/components/primitives/link-with-transition";
 import { cn } from "@/lib/utils";
-import { Slot as SlotPrimitive } from "radix-ui";
-import { type VariantProps, cva } from "class-variance-authority";
-import { LinkIcon } from "lucide-react";
-import React from "react";
 
 type AnchorProps = {
 	anchor?: string;
@@ -31,7 +31,7 @@ const Anchor = ({
 				"ms-2 pt-1",
 				anchorVisibility === "always" && "visible",
 				anchorVisibility === "never" && "hidden",
-				anchorVisibility === "hover" && "invisible group-hover:visible",
+				anchorVisibility === "hover" && "invisible group-hover:visible"
 			)}
 		>
 			{/* modify `Link` to `a` if you are not using Next.js */}
@@ -92,7 +92,7 @@ const BaseHeading = ({
 					anchor && "flex scroll-m-20 items-center gap-1", // modify `scroll-m-20` according to your header height.
 					anchorAlignment === "spaced" && "justify-between",
 					anchorVisibility === "hover" && "group",
-					headingVariants({ variant, className }),
+					headingVariants({ variant, className })
 				)}
 			>
 				{children}

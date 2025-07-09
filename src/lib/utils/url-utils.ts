@@ -1,4 +1,3 @@
-
 /**
  * Validate that a URL is properly formatted
  */

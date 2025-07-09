@@ -2,23 +2,21 @@ import { Suspense } from "react";
 import { WaitlistAdmin } from "./_components/waitlist-admin";
 
 export default function AdminWaitlistPage() {
-    return (
-        <div className="container mx-auto py-8">
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold">Waitlist Management</h1>
-                <p className="text-muted-foreground">
-                    View and manage waitlist entries for ShipKit
-                </p>
-            </div>
+	return (
+		<div className="container mx-auto py-8">
+			<div className="mb-8">
+				<h1 className="text-3xl font-bold">Waitlist Management</h1>
+				<p className="text-muted-foreground">View and manage waitlist entries for ShipKit</p>
+			</div>
 
-            <Suspense fallback={<div>Loading waitlist data...</div>}>
-                <WaitlistAdmin />
-            </Suspense>
-        </div>
-    );
+			<Suspense fallback={<div>Loading waitlist data...</div>}>
+				<WaitlistAdmin />
+			</Suspense>
+		</div>
+	);
 }
 
 export const metadata = {
-    title: "Waitlist Management - ShipKit Admin",
-    description: "Manage waitlist entries and view analytics",
+	title: "Waitlist Management - ShipKit Admin",
+	description: "Manage waitlist entries and view analytics",
 };

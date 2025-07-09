@@ -1,5 +1,5 @@
-import { Body } from '@/components/primitives/body'
-import { Head, Html, Main, NextScript } from 'next/document'
+import { Head, Html, Main, NextScript } from "next/document";
+import { Body } from "@/components/primitives/body";
 
 export default function Document() {
 	return (
@@ -14,5 +14,5 @@ export default function Document() {
 				<NextScript />
 			</Body>
 		</Html>
-	)
+	);
 }

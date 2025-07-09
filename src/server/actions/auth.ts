@@ -1,5 +1,7 @@
 "use server";
 
+import { z } from "zod";
+import { createServerAction } from "zsa";
 import { BASE_URL } from "@/config/base-url";
 import { RESEND_FROM_EMAIL } from "@/config/constants";
 import { STATUS_CODES } from "@/config/status-codes";
@@ -9,8 +11,6 @@ import { forgotPasswordSchema, resetPasswordSchema, signInActionSchema } from "@
 import type { ActionState } from "@/lib/utils/validated-action";
 import { AuthService } from "@/server/services/auth-service";
 import type { UserRole } from "@/types/user";
-import { z } from "zod";
-import { createServerAction } from "zsa";
 
 export interface AuthOptions {
 	redirectTo?: string;

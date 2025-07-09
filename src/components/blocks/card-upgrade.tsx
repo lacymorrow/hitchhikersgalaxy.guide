@@ -1,14 +1,9 @@
-import { Link } from "@/components/primitives/link-with-transition";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import { ArrowRight, type LucideIcon } from "lucide-react";
+import { Link } from "@/components/primitives/link-with-transition";
 
 import { Button } from "@/components/ui/button";
-import {
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DismissibleCard } from "@/components/ui/dismissible-card";
 import { cn } from "@/lib/utils";
 
@@ -82,12 +77,7 @@ export const CardUpgrade = ({
 			<CardContent>
 				{href ? (
 					<Link href={href}>
-						<Button
-							size="sm"
-							variant={buttonVariant}
-							className="w-full"
-							type="button"
-						>
+						<Button size="sm" variant={buttonVariant} className="w-full" type="button">
 							{buttonIconplacement === "left" && ButtonIcon && (
 								<ButtonIcon className="mr-2 h-4 w-4" />
 							)}

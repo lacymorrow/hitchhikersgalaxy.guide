@@ -1,5 +1,17 @@
 "use client";
 
+import {
+	BookOpen,
+	ChevronDown,
+	ChevronUp,
+	Code,
+	CornerRightDown,
+	Frown,
+	HelpCircle,
+	Loader,
+} from "lucide-react";
+import * as React from "react";
+import ReactMarkdown from "react-markdown";
 import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
 import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { Button, type ButtonProps } from "@/components/ui/button";
@@ -15,18 +27,6 @@ import { Textarea } from "@/components/ui/textarea";
 import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 import { cn } from "@/lib/utils";
-import {
-	BookOpen,
-	ChevronDown,
-	ChevronUp,
-	Code,
-	CornerRightDown,
-	Frown,
-	HelpCircle,
-	Loader
-} from "lucide-react";
-import * as React from "react";
-import ReactMarkdown from "react-markdown";
 
 const MIN_HEIGHT = 64;
 const MAX_HEIGHT = 200;
@@ -76,9 +76,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 	const [isLoading, setIsLoading] = React.useState(false);
 	const [isSearchInProgress, setIsSearchInProgress] = React.useState(false);
 	const [error, setError] = React.useState<string | null>(null);
-	const [selectedSuggestion, setSelectedSuggestion] = React.useState<
-		string | null
-	>(null);
+	const [selectedSuggestion, setSelectedSuggestion] = React.useState<string | null>(null);
 	const [isAIResponseExpanded, setIsAIResponseExpanded] = React.useState(false);
 	const [isClient, setIsClient] = React.useState(false);
 
@@ -165,9 +163,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 	};
 
 	const toggleSuggestion = (suggestionText: string) => {
-		setSelectedSuggestion((prev) =>
-			prev === suggestionText ? null : suggestionText,
-		);
+		setSelectedSuggestion((prev) => (prev === suggestionText ? null : suggestionText));
 	};
 
 	const currentSuggestion = selectedSuggestion
@@ -236,16 +232,13 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 						<div className="relative mx-auto w-full max-w-full">
 							<div className="relative rounded-2xl border border-black/10 bg-black/[0.03] focus-within:border-black/20 dark:border-white/10 dark:bg-white/[0.03] dark:focus-within:border-white/20">
 								<div className="flex flex-col">
-									<div
-										className="overflow-y-auto"
-										style={{ maxHeight: `${MAX_HEIGHT - 48}px` }}
-									>
+									<div className="overflow-y-auto" style={{ maxHeight: `${MAX_HEIGHT - 48}px` }}>
 										<Textarea
 											ref={textareaRef}
 											placeholder="What would you like to know?"
 											className={cn(
 												"w-full max-w-full resize-none text-wrap rounded-2xl border-none bg-transparent pb-3 pr-10 pt-3 leading-[1.2] text-black placeholder:text-black/70 focus:ring focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-white dark:placeholder:text-white/70",
-												`min-h-[${MIN_HEIGHT}px]`,
+												`min-h-[${MIN_HEIGHT}px]`
 											)}
 											value={query}
 											onChange={(e) => {
@@ -278,7 +271,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 															? "opacity-50 cursor-not-allowed"
 															: "hover:bg-black/5 dark:hover:bg-white/5",
 														currentSuggestion.colors.bg,
-														currentSuggestion.colors.border,
+														currentSuggestion.colors.border
 													)}
 												>
 													<currentSuggestion.icon
@@ -300,7 +293,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 									size="icon"
 									className={cn(
 										"absolute right-3 top-3 h-4 w-4 transition-all duration-200 dark:text-white",
-										query ? "scale-100 opacity-100" : "scale-95 opacity-30",
+										query ? "scale-100 opacity-100" : "scale-95 opacity-30"
 									)}
 								>
 									<CornerRightDown className="h-4 w-4" />
@@ -308,28 +301,28 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 							</div>
 						</div>
 						<div className="mx-auto mt-2 flex max-w-full flex-wrap justify-start gap-1.5">
-							{SEARCH_SUGGESTIONS.filter(
-								(item) => item.text !== selectedSuggestion,
-							).map(({ text, icon: Icon, colors }) => (
-								<button
-									type="button"
-									key={text}
-									className={cn(
-										"rounded-full px-3 py-1.5 text-xs font-medium",
-										"border transition-all duration-200",
-										"border-black/10 bg-white hover:bg-black/5 dark:border-white/10 dark:bg-gray-900 dark:hover:bg-white/5",
-										"flex-shrink-0",
-									)}
-									onClick={() => toggleSuggestion(text)}
-								>
-									<div className="flex items-center gap-1.5">
-										<Icon className={cn("h-4 w-4", colors.icon)} />
-										<span className="whitespace-nowrap text-black/70 dark:text-white/70">
-											{text}
-										</span>
-									</div>
-								</button>
-							))}
+							{SEARCH_SUGGESTIONS.filter((item) => item.text !== selectedSuggestion).map(
+								({ text, icon: Icon, colors }) => (
+									<button
+										type="button"
+										key={text}
+										className={cn(
+											"rounded-full px-3 py-1.5 text-xs font-medium",
+											"border transition-all duration-200",
+											"border-black/10 bg-white hover:bg-black/5 dark:border-white/10 dark:bg-gray-900 dark:hover:bg-white/5",
+											"flex-shrink-0"
+										)}
+										onClick={() => toggleSuggestion(text)}
+									>
+										<div className="flex items-center gap-1.5">
+											<Icon className={cn("h-4 w-4", colors.icon)} />
+											<span className="whitespace-nowrap text-black/70 dark:text-white/70">
+												{text}
+											</span>
+										</div>
+									</button>
+								)
+							)}
 						</div>
 					</div>
 
@@ -387,9 +380,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 										</h4>
 										<button
 											type="button"
-											onClick={() =>
-												setIsAIResponseExpanded(!isAIResponseExpanded)
-											}
+											onClick={() => setIsAIResponseExpanded(!isAIResponseExpanded)}
 											className="rounded-md p-1 transition-colors hover:bg-slate-100 dark:hover:bg-slate-800"
 										>
 											{isAIResponseExpanded ? (
@@ -402,9 +393,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 									<ScrollArea
 										className={cn(
 											"transition-all duration-200",
-											isAIResponseExpanded
-												? "max-h-[unset]"
-												: `max-h-[${MAX_AI_RESPONSE_HEIGHT}px]`,
+											isAIResponseExpanded ? "max-h-[unset]" : `max-h-[${MAX_AI_RESPONSE_HEIGHT}px]`
 										)}
 									>
 										<div className="prose max-w-none dark:prose-invert">

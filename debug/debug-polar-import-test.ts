@@ -6,11 +6,11 @@
  * Run with: npx tsx debug-polar-import-test.ts
  */
 
-import { PolarProvider } from "@/server/providers/polar-provider";
-import { db } from "@/server/db";
-import { payments } from "@/server/db/schema";
 import { eq } from "drizzle-orm";
 import { env } from "@/env";
+import { db } from "@/server/db";
+import { payments } from "@/server/db/schema";
+import { PolarProvider } from "@/server/providers/polar-provider";
 
 // Test the full import process
 async function testPolarImport() {
@@ -19,7 +19,9 @@ async function testPolarImport() {
 
 	// Check if database is initialized
 	if (!db) {
-		console.error("❌ Database not initialized. Please check your DATABASE_URL environment variable.");
+		console.error(
+			"❌ Database not initialized. Please check your DATABASE_URL environment variable."
+		);
 		return;
 	}
 
@@ -69,12 +71,14 @@ async function testPolarImport() {
 			});
 
 			// Count unknown products in database
-			const unknownInDb = existingPayments.filter(p => p.productName === "Unknown Product");
-			console.log(`\n📊 Unknown products in database: ${unknownInDb.length}/${existingPayments.length}`);
+			const unknownInDb = existingPayments.filter((p) => p.productName === "Unknown Product");
+			console.log(
+				`\n📊 Unknown products in database: ${unknownInDb.length}/${existingPayments.length}`
+			);
 
 			if (unknownInDb.length > 0) {
 				console.log("\n⚠️  Database payments with unknown products:");
-				unknownInDb.forEach(payment => {
+				unknownInDb.forEach((payment) => {
 					console.log(`  - Order ${payment.orderId}: "${payment.productName}"`);
 				});
 			}
@@ -115,15 +119,23 @@ async function testPolarImport() {
 
 		if (postImportPayments.length > 0) {
 			// Check for improvements in product names
-			const unknownPostImport = postImportPayments.filter(p => p.productName === "Unknown Product");
-			console.log(`📊 Unknown products after import: ${unknownPostImport.length}/${postImportPayments.length}`);
+			const unknownPostImport = postImportPayments.filter(
+				(p) => p.productName === "Unknown Product"
+			);
+			console.log(
+				`📊 Unknown products after import: ${unknownPostImport.length}/${postImportPayments.length}`
+			);
 
 			// Compare before and after
-			const beforeUnknown = existingPayments.filter(p => p.productName === "Unknown Product").length;
+			const beforeUnknown = existingPayments.filter(
+				(p) => p.productName === "Unknown Product"
+			).length;
 			const afterUnknown = unknownPostImport.length;
 
 			if (beforeUnknown > afterUnknown) {
-				console.log(`✅ Improvement! Unknown products reduced from ${beforeUnknown} to ${afterUnknown}`);
+				console.log(
+					`✅ Improvement! Unknown products reduced from ${beforeUnknown} to ${afterUnknown}`
+				);
 			} else if (beforeUnknown === afterUnknown && afterUnknown === 0) {
 				console.log(`✅ Perfect! No unknown products detected`);
 			} else if (beforeUnknown === afterUnknown) {
@@ -132,12 +144,12 @@ async function testPolarImport() {
 				console.log(`❌ Product name extraction got worse: ${beforeUnknown} -> ${afterUnknown}`);
 			}
 
-					// Show newly imported payments
-		if (importStats.imported > 0) {
-			console.log(`\n🆕 Newly imported payments (last ${Math.min(3, importStats.imported)}):`);
-			const newestPayments = postImportPayments
-				.sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0))
-				.slice(0, 3);
+			// Show newly imported payments
+			if (importStats.imported > 0) {
+				console.log(`\n🆕 Newly imported payments (last ${Math.min(3, importStats.imported)}):`);
+				const newestPayments = postImportPayments
+					.sort((a, b) => (b.createdAt?.getTime() || 0) - (a.createdAt?.getTime() || 0))
+					.slice(0, 3);
 
 				newestPayments.forEach((payment, index) => {
 					console.log(`  ${index + 1}. Order: ${payment.orderId}`);
@@ -152,7 +164,7 @@ async function testPolarImport() {
 			}
 
 			// Show product name distribution
-			const productNames = postImportPayments.map(p => p.productName || "null");
+			const productNames = postImportPayments.map((p) => p.productName || "null");
 			const productCounts = productNames.reduce((acc: any, name) => {
 				acc[name] = (acc[name] || 0) + 1;
 				return acc;
@@ -160,7 +172,7 @@ async function testPolarImport() {
 
 			console.log(`\n📈 Product name distribution:`);
 			Object.entries(productCounts)
-				.sort(([,a], [,b]) => (b as number) - (a as number))
+				.sort(([, a], [, b]) => (b as number) - (a as number))
 				.slice(0, 10)
 				.forEach(([name, count]) => {
 					const indicator = name === "Unknown Product" ? "❌" : "✅";
@@ -177,8 +189,10 @@ async function testPolarImport() {
 
 		if (apiOrders.length > 0 && postImportPayments.length > 0) {
 			// Check if API data has fewer unknown products than database
-			const apiUnknown = apiOrders.filter(o => o.productName === "Unknown Product").length;
-			const dbUnknown = postImportPayments.filter(p => p.productName === "Unknown Product").length;
+			const apiUnknown = apiOrders.filter((o) => o.productName === "Unknown Product").length;
+			const dbUnknown = postImportPayments.filter(
+				(p) => p.productName === "Unknown Product"
+			).length;
 
 			console.log(`📊 Unknown products comparison:`);
 			console.log(`  API: ${apiUnknown}/${apiOrders.length}`);
@@ -196,13 +210,15 @@ async function testPolarImport() {
 			if (apiOrders.length > 0) {
 				console.log(`\n🔍 Sample API vs Database comparison:`);
 				const sampleOrder = apiOrders[0];
-				const matchingPayment = postImportPayments.find(p =>
-					p.orderId === sampleOrder.orderId || p.orderId === sampleOrder.id
+				const matchingPayment = postImportPayments.find(
+					(p) => p.orderId === sampleOrder.orderId || p.orderId === sampleOrder.id
 				);
 
 				console.log(`  API Order: "${sampleOrder.productName}" (${sampleOrder.orderId})`);
 				if (matchingPayment) {
-					console.log(`  DB Payment: "${matchingPayment.productName}" (${matchingPayment.orderId})`);
+					console.log(
+						`  DB Payment: "${matchingPayment.productName}" (${matchingPayment.orderId})`
+					);
 					if (sampleOrder.productName !== matchingPayment.productName) {
 						console.log(`  ⚠️  Product name mismatch detected!`);
 					}
@@ -222,15 +238,18 @@ async function testPolarImport() {
 		console.log(`  - Skipped payments: ${importStats.skipped}`);
 		console.log(`  - Errors: ${importStats.errors}`);
 
-		const finalUnknownCount = postImportPayments.filter(p => p.productName === "Unknown Product").length;
+		const finalUnknownCount = postImportPayments.filter(
+			(p) => p.productName === "Unknown Product"
+		).length;
 		console.log(`Final unknown products: ${finalUnknownCount}/${postImportPayments.length}`);
 
 		if (finalUnknownCount === 0) {
 			console.log(`✅ SUCCESS: All products have proper names!`);
 		} else {
-			console.log(`⚠️  NEEDS IMPROVEMENT: ${finalUnknownCount} products still show as "Unknown Product"`);
+			console.log(
+				`⚠️  NEEDS IMPROVEMENT: ${finalUnknownCount} products still show as "Unknown Product"`
+			);
 		}
-
 	} catch (error) {
 		console.error("❌ Error testing Polar import:", error);
 		if (error instanceof Error) {
@@ -246,7 +265,7 @@ async function testPolarImport() {
 if (require.main === module) {
 	testPolarImport()
 		.then(() => process.exit(0))
-		.catch(error => {
+		.catch((error) => {
 			console.error("Fatal error:", error);
 			process.exit(1);
 		});

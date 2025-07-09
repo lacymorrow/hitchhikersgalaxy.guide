@@ -1,54 +1,44 @@
 // Todo
 "use client";
 
+import { Builder } from "@builder.io/react";
+import { ArrowRightIcon, RocketIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Section } from "@/components/primitives/section";
 import { buttonVariants } from "@/components/ui/button";
 import { CodeWindow } from "@/components/ui/code-window";
 import { cn } from "@/lib/utils";
-import { Builder } from "@builder.io/react";
-import { ArrowRightIcon, RocketIcon } from "lucide-react";
-import dynamic from "next/dynamic";
 
 // Dynamically import server components
 const ParticlesHero = dynamic(
-	() =>
-		import("@/components/ui/particles-hero").then(
-			(mod) => mod.ParticlesHero,
-		),
-	{ ssr: true },
+	() => import("@/components/ui/particles-hero").then((mod) => mod.ParticlesHero),
+	{ ssr: true }
 );
 
 const PricingSectionSubtle = dynamic(
 	() =>
 		import("@/app/(app)/(landing)/_components/pricing-section-subtle").then(
-			(mod) => mod.PricingSectionSubtle,
+			(mod) => mod.PricingSectionSubtle
 		),
-	{ ssr: true },
+	{ ssr: true }
 );
 
-const FAQ = dynamic(
-	() => import("@/app/(app)/(landing)/_components/faq").then((mod) => mod.FAQ),
-	{ ssr: true },
-);
+const FAQ = dynamic(() => import("@/app/(app)/(landing)/_components/faq").then((mod) => mod.FAQ), {
+	ssr: true,
+});
 
 const LemonSqueezyButton = dynamic(
 	() =>
 		import("@/app/(app)/(landing)/_components/LemonSqueezyButton").then(
-			(mod) => mod.LemonSqueezyButton,
+			(mod) => mod.LemonSqueezyButton
 		),
-	{ ssr: true },
+	{ ssr: true }
 );
 
 // Export components for Builder.io registration
 export const LaunchHero = Builder.registerComponent(
-	function LaunchHero({
-		title,
-		description,
-	}: {
-		title: string;
-		description: string;
-	}) {
+	function LaunchHero({ title, description }: { title: string; description: string }) {
 		return (
 			<ParticlesHero className="flex min-h-[50vh] flex-col items-center justify-center px-4">
 				<div className="container relative z-10 mx-auto flex flex-col items-center justify-center gap-4 text-center">
@@ -76,11 +66,10 @@ export const LaunchHero = Builder.registerComponent(
 			{
 				name: "description",
 				type: "string",
-				defaultValue:
-					"Get instant access to production-ready code and start building right away.",
+				defaultValue: "Get instant access to production-ready code and start building right away.",
 			},
 		],
-	},
+	}
 );
 
 export const QuickStart = Builder.registerComponent(
@@ -91,15 +80,10 @@ export const QuickStart = Builder.registerComponent(
 	}) {
 		return (
 			<Section className="container">
-				<h2 className="mb-12 text-center text-3xl font-bold">
-					Launch in Minutes
-				</h2>
+				<h2 className="mb-12 text-center text-3xl font-bold">Launch in Minutes</h2>
 				<div className="grid gap-8 md:grid-cols-3">
 					{steps.map((step, index) => (
-						<div
-							key={step.title}
-							className="flex flex-col items-center text-center"
-						>
+						<div key={step.title} className="flex flex-col items-center text-center">
 							<div className="mb-4 text-4xl">{step.icon}</div>
 							<h3 className="mb-2 text-xl font-semibold">{step.title}</h3>
 							<p className="text-muted-foreground">{step.description}</p>
@@ -151,7 +135,7 @@ export const QuickStart = Builder.registerComponent(
 				],
 			},
 		],
-	},
+	}
 );
 
 export const CodePreview = Builder.registerComponent(
@@ -200,24 +184,19 @@ npm run dev
 # Your app is now running at http://localhost:3000 🚀`,
 			},
 		],
-	},
+	}
 );
 
 export const PricingSection = Builder.registerComponent(
 	function PricingSection() {
 		return (
 			<Section className="container">
-				<h2 className="mb-12 text-center text-3xl font-bold">
-					Ready to Launch?
-				</h2>
+				<h2 className="mb-12 text-center text-3xl font-bold">Ready to Launch?</h2>
 				<PricingSectionSubtle />
 				<div className="mt-8 text-center">
 					<Link
 						href="/pricing"
-						className={cn(
-							buttonVariants({ variant: "outline", size: "lg" }),
-							"font-semibold",
-						)}
+						className={cn(buttonVariants({ variant: "outline", size: "lg" }), "font-semibold")}
 					>
 						Compare All Features
 					</Link>
@@ -227,7 +206,7 @@ export const PricingSection = Builder.registerComponent(
 	},
 	{
 		name: "PricingSection",
-	},
+	}
 );
 
 export const FAQSection = Builder.registerComponent(
@@ -242,17 +221,11 @@ export const FAQSection = Builder.registerComponent(
 	},
 	{
 		name: "FAQSection",
-	},
+	}
 );
 
 export const CTASection = Builder.registerComponent(
-	function CTASection({
-		title,
-		description,
-	}: {
-		title: string;
-		description: string;
-	}) {
+	function CTASection({ title, description }: { title: string; description: string }) {
 		return (
 			<Section className="container">
 				<div className="mx-auto max-w-2xl text-center">
@@ -279,5 +252,5 @@ export const CTASection = Builder.registerComponent(
 					"Join developers who are building production-ready applications with ShipKit.",
 			},
 		],
-	},
+	}
 );

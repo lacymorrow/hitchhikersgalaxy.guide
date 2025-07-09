@@ -1,7 +1,7 @@
+import { and, eq } from "drizzle-orm";
 import { LocalProjectStorage } from "@/lib/local-storage/project-storage";
 import { db } from "@/server/db";
 import { projectMembers, projects } from "@/server/db/schema";
-import { and, eq } from "drizzle-orm";
 import { BaseService } from "./base-service";
 
 export class ProjectService extends BaseService<typeof projects> {

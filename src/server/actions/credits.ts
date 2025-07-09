@@ -1,8 +1,8 @@
 "use server";
 
 import { auth } from "@/server/auth";
-import { getUserCredits, updateUserCredits } from "@/server/services/credits";
 import type { NewCreditTransaction } from "@/server/db/schema";
+import { getUserCredits, updateUserCredits } from "@/server/services/credits";
 
 /**
  * Gets the current authenticated user's credit balance.

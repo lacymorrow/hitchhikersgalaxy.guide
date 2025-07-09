@@ -1,9 +1,9 @@
-import { currentUser, auth } from "@clerk/nextjs/server";
 import type { User } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 
 /**
  * Clerk Authentication Utilities
- * 
+ *
  * This file provides utility functions for working with Clerk authentication.
  * Only used when Clerk is the active authentication strategy.
  */
@@ -29,7 +29,7 @@ export async function getClerkSession() {
 		const { userId, sessionId, orgId } = await auth();
 		return {
 			userId,
-			sessionId, 
+			sessionId,
 			orgId,
 			isAuthenticated: !!userId,
 		};
@@ -70,7 +70,8 @@ export function formatClerkUser(clerkUser: User) {
 		name: clerkUser.fullName ?? clerkUser.firstName ?? "Unknown",
 		email: clerkUser.primaryEmailAddress?.emailAddress ?? "",
 		image: clerkUser.imageUrl ?? null,
-		emailVerified: clerkUser.primaryEmailAddress?.verification?.status === "verified" ? new Date() : null,
+		emailVerified:
+			clerkUser.primaryEmailAddress?.verification?.status === "verified" ? new Date() : null,
 		// Additional Clerk-specific fields that might be useful
 		clerkId: clerkUser.id,
 		firstName: clerkUser.firstName,
@@ -88,7 +89,7 @@ export function formatClerkUser(clerkUser: User) {
 export async function getCurrentFormattedUser() {
 	const clerkUser = await getClerkUser();
 	if (!clerkUser) return null;
-	
+
 	return formatClerkUser(clerkUser);
 }
 
@@ -139,11 +140,12 @@ export async function getClerkOrganization() {
  * Redirect URLs helper for Clerk
  */
 export function getClerkRedirectUrls() {
-	const baseUrl = process.env.NODE_ENV === "production" 
-		? process.env.VERCEL_URL 
-			? `https://${process.env.VERCEL_URL}`
-			: "https://your-domain.com" // Replace with your production domain
-		: "http://localhost:3000";
+	const baseUrl =
+		process.env.NODE_ENV === "production"
+			? process.env.VERCEL_URL
+				? `https://${process.env.VERCEL_URL}`
+				: "https://your-domain.com" // Replace with your production domain
+			: "http://localhost:3000";
 
 	return {
 		signIn: `${baseUrl}/sign-in`,

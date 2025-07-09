@@ -1,8 +1,8 @@
+import { AlertCircle, Clock, GitCommit, GitMerge, GitPullRequest } from "lucide-react";
+import { Suspense } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { siteConfig } from "@/config/site-config";
 import { octokit } from "@/server/services/github/github-service";
-import { AlertCircle, Clock, GitCommit, GitMerge, GitPullRequest } from "lucide-react";
-import { Suspense } from "react";
 
 interface RepoMetric {
 	id: string;
@@ -55,12 +55,14 @@ export async function RepoMetricsContent() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<p className="text-sm text-muted-foreground">
-								To enable GitHub repository metrics:
-							</p>
+							<p className="text-sm text-muted-foreground">To enable GitHub repository metrics:</p>
 							<ul className="mt-2 text-sm text-muted-foreground list-disc list-inside space-y-1">
-								<li>Set <code>NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED=true</code></li>
-								<li>Configure <code>GITHUB_ACCESS_TOKEN</code> in your environment</li>
+								<li>
+									Set <code>NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED=true</code>
+								</li>
+								<li>
+									Configure <code>GITHUB_ACCESS_TOKEN</code> in your environment
+								</li>
 							</ul>
 						</CardContent>
 					</Card>
@@ -73,7 +75,7 @@ export async function RepoMetricsContent() {
 			owner: repoOwner,
 			repo: repoName,
 			state: "all",
-			per_page: 1
+			per_page: 1,
 		});
 
 		const prCount = pullRequests[0]?.number || 0;
@@ -82,19 +84,20 @@ export async function RepoMetricsContent() {
 		const { data: commits } = await octokit.rest.repos.listCommits({
 			owner: repoOwner,
 			repo: repoName,
-			per_page: 30
+			per_page: 30,
 		});
 
 		// Get branches
 		const { data: branches } = await octokit.rest.repos.listBranches({
 			owner: repoOwner,
 			repo: repoName,
-			per_page: 100
+			per_page: 100,
 		});
 
 		// Calculate last activity (in days)
-		const lastCommitDate = commits[0]?.commit?.author?.date ?
-			new Date(commits[0].commit.author.date) : new Date();
+		const lastCommitDate = commits[0]?.commit?.author?.date
+			? new Date(commits[0].commit.author.date)
+			: new Date();
 		const daysSinceLastCommit = Math.floor(
 			(new Date().getTime() - lastCommitDate.getTime()) / (1000 * 60 * 60 * 24)
 		);
@@ -105,29 +108,29 @@ export async function RepoMetricsContent() {
 				title: "Pull Requests",
 				value: prCount,
 				icon: <GitPullRequest className="h-4 w-4 text-blue-500" />,
-				description: "Total pull requests"
+				description: "Total pull requests",
 			},
 			{
 				id: "recent-commits",
 				title: "Recent Commits",
 				value: commits.length,
 				icon: <GitCommit className="h-4 w-4 text-green-500" />,
-				description: "Last 30 commits"
+				description: "Last 30 commits",
 			},
 			{
 				id: "branches",
 				title: "Branches",
 				value: branches.length,
 				icon: <GitMerge className="h-4 w-4 text-purple-500" />,
-				description: "Active branches"
+				description: "Active branches",
 			},
 			{
 				id: "last-activity",
 				title: "Last Activity",
 				value: daysSinceLastCommit === 0 ? "Today" : `${daysSinceLastCommit} days ago`,
 				icon: <Clock className="h-4 w-4 text-amber-500" />,
-				description: "Since last commit"
-			}
+				description: "Since last commit",
+			},
 		];
 
 		return (
@@ -140,9 +143,7 @@ export async function RepoMetricsContent() {
 						</CardHeader>
 						<CardContent>
 							<div className="text-2xl font-bold">{metric.value}</div>
-							<p className="text-xs text-muted-foreground">
-								{metric.description}
-							</p>
+							<p className="text-xs text-muted-foreground">{metric.description}</p>
 						</CardContent>
 					</Card>
 				))}
@@ -158,13 +159,12 @@ export async function RepoMetricsContent() {
 							<AlertCircle className="h-5 w-5 text-red-500" />
 							Error Loading Repository Metrics
 						</CardTitle>
-						<CardDescription>
-							Failed to fetch repository information from GitHub
-						</CardDescription>
+						<CardDescription>Failed to fetch repository information from GitHub</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<p className="text-sm text-muted-foreground">
-							There was an error connecting to the GitHub API. Please check your configuration and try again.
+							There was an error connecting to the GitHub API. Please check your configuration and
+							try again.
 						</p>
 					</CardContent>
 				</Card>

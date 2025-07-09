@@ -17,6 +17,6 @@ export default function SignInPage() {
 			<AuthenticationCard>
 				<SignIn />
 			</AuthenticationCard>
-		</div >
+		</div>
 	);
 }

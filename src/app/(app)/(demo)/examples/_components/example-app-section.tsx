@@ -61,7 +61,6 @@ export const examples = [
 	},
 ];
 
-
 export const ExampleAppSection = ({
 	current,
 	className,
@@ -83,11 +82,7 @@ export const ExampleAppSection = ({
 			<ExamplesNav current={currentExample?.name} />
 
 			<div className="relative flex max-h-[400px] max-w-full flex-col overflow-hidden rounded-lg border bg-background [mask-image:linear-gradient(to_bottom,white,transparent)] md:shadow-xl">
-				{currentExample?.component ? (
-					<currentExample.component />
-				) : (
-					<MusicPage />
-				)}
+				{currentExample?.component ? <currentExample.component /> : <MusicPage />}
 				<BorderBeam size={250} duration={12} delay={9} />
 			</div>
 		</Section>

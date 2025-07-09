@@ -1,12 +1,12 @@
 "use client";
 
+import { AlertTriangleIcon, FileIcon, InfoIcon, TerminalIcon } from "lucide-react";
+import dynamic from "next/dynamic";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { AlertTriangleIcon, FileIcon, InfoIcon, TerminalIcon } from "lucide-react";
-import dynamic from "next/dynamic";
-import { useCallback, useEffect, useRef, useState } from "react";
 import { type FileChange, FileChangeDisplay } from "../_components/file-change-display";
 import { GitHubIntegration } from "../_components/github-integration";
 import { processTerminalOutput } from "../command-utils";
@@ -27,9 +27,9 @@ function getContainerManager(): ContainerManager {
 const TERMINAL_REFRESH_INTERVAL = 30; // 33 fps for very smooth spinner animation
 
 // Dynamically import XTerm to avoid SSR issues
-const XTermComponent = dynamic(() => import('./xterm-component').then(mod => mod.default), {
+const XTermComponent = dynamic(() => import("./xterm-component").then((mod) => mod.default), {
 	ssr: false,
-	loading: () => <div className="text-sm text-muted-foreground">Loading terminal...</div>
+	loading: () => <div className="text-sm text-muted-foreground">Loading terminal...</div>,
 });
 
 interface ShadcnCommandProps {
@@ -89,14 +89,19 @@ export const ShadcnCommand = ({
 
 	// Update the useEffect for showing logs during web container loading
 	useEffect(() => {
-		if (!containerReady && webContainerSupported && typeof window !== 'undefined' && window.webContainerLogs) {
+		if (
+			!containerReady &&
+			webContainerSupported &&
+			typeof window !== "undefined" &&
+			window.webContainerLogs
+		) {
 			// Set interval to update command output with logs
 			const timer = setInterval(() => {
 				if (window.webContainerLogs && window.webContainerLogs.length > 0) {
 					// Format logs for display
 					const formattedLogs = window.webContainerLogs
-						.map((log) => `${log.data ? ` ${log.data}` : ''}`)
-						.join('');
+						.map((log) => `${log.data ? ` ${log.data}` : ""}`)
+						.join("");
 
 					// Process logs to clean up repetitive content
 					const processedLogs = processTerminalOutput(formattedLogs);
@@ -175,8 +180,8 @@ export const ShadcnCommand = ({
 				if (window.webContainerLogs) {
 					const currentLogs = window.webContainerLogs.slice(logsBefore.length);
 					const formattedLogs = currentLogs
-						.map((log) => `${log.data ? ` ${log.data}` : ''}`)
-						.join('');
+						.map((log) => `${log.data ? ` ${log.data}` : ""}`)
+						.join("");
 
 					// Process logs but preserve animation sequences
 					const processedOutput = processTerminalOutput(formattedLogs);
@@ -224,7 +229,8 @@ export const ShadcnCommand = ({
 				.join("\n");
 
 			// Process terminal output to clean up repetitive messages
-			const processedOutput = processTerminalOutput(formattedLogs) || "Command completed successfully";
+			const processedOutput =
+				processTerminalOutput(formattedLogs) || "Command completed successfully";
 			// setCommandOutput(processedOutput);
 			setProgressMessage("Command completed successfully");
 
@@ -251,7 +257,9 @@ export const ShadcnCommand = ({
 
 			// Show error in terminal
 			if (terminalRef.current?.write) {
-				terminalRef.current.write(`\r\n\x1b[31mError: ${error instanceof Error ? error.message : String(error)}\x1b[0m\r\n`);
+				terminalRef.current.write(
+					`\r\n\x1b[31mError: ${error instanceof Error ? error.message : String(error)}\x1b[0m\r\n`
+				);
 			}
 		} finally {
 			setIsLoading(false);
@@ -299,12 +307,16 @@ export const ShadcnCommand = ({
 		} catch (error) {
 			console.error("Error running command", error);
 			setCommandError(
-				error instanceof Error ? error.message : "An unknown error occurred during command execution"
+				error instanceof Error
+					? error.message
+					: "An unknown error occurred during command execution"
 			);
 
 			// Show error in terminal
 			if (terminalRef.current?.write) {
-				terminalRef.current.write(`\r\n\x1b[31mError: ${error instanceof Error ? error.message : String(error)}\x1b[0m\r\n`);
+				terminalRef.current.write(
+					`\r\n\x1b[31mError: ${error instanceof Error ? error.message : String(error)}\x1b[0m\r\n`
+				);
 			}
 		} finally {
 			setIsLoading(false);
@@ -357,7 +369,10 @@ export const ShadcnCommand = ({
 
 					{!containerReady && webContainerSupported && (
 						<div className="text-xs text-muted-foreground">
-							<span className="animate-pulse">⏳</span> WebContainer initializing... {isCommandQueued ? "(Your command will run automatically when ready)" : "You can type your command now"}
+							<span className="animate-pulse">⏳</span> WebContainer initializing...{" "}
+							{isCommandQueued
+								? "(Your command will run automatically when ready)"
+								: "You can type your command now"}
 						</div>
 					)}
 				</div>
@@ -371,7 +386,9 @@ export const ShadcnCommand = ({
 
 				{(isLoading || isCommandQueued) && progressMessage && (
 					<div className="flex items-center justify-center p-3 bg-muted/30 rounded-md text-sm text-muted-foreground border border-dashed">
-						{isLoading && <div className="animate-spin mr-2 h-3 w-3 border-2 border-primary border-t-transparent rounded-full" />}
+						{isLoading && (
+							<div className="animate-spin mr-2 h-3 w-3 border-2 border-primary border-t-transparent rounded-full" />
+						)}
 						{isCommandQueued && <span className="animate-pulse mr-2">⏱️</span>}
 						<span>{progressMessage}</span>
 					</div>
@@ -407,10 +424,7 @@ export const ShadcnCommand = ({
 							</div>
 						</TabsContent>
 						<TabsContent value="files" className="mt-2 max-h-[300px] overflow-auto">
-							<FileChangeDisplay
-								changedFiles={changedFiles}
-								onDownloadAll={() => { }}
-							/>
+							<FileChangeDisplay changedFiles={changedFiles} onDownloadAll={() => {}} />
 						</TabsContent>
 					</Tabs>
 				)}

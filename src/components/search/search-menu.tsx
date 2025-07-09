@@ -1,11 +1,10 @@
-
 "use client";
 
+import type { DialogProps } from "@radix-ui/react-dialog";
 import { FileIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import * as React from "react";
-
 import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
 import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { docsConfig } from "@/components/search/example";
@@ -23,7 +22,6 @@ import { DialogTitle } from "@/components/ui/dialog";
 import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import type { DialogProps } from "@radix-ui/react-dialog";
 
 export interface SearchMenuProps extends DialogProps {
 	/**

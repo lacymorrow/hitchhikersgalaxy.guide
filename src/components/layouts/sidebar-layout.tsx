@@ -4,14 +4,10 @@ interface SidebarLayoutProps {
 	children: React.ReactNode;
 }
 
-export function SidebarLayout({
-	children,
-}: SidebarLayoutProps) {
+export function SidebarLayout({ children }: SidebarLayoutProps) {
 	return (
 		<>
-			<SidebarProvider>
-				{children}
-			</SidebarProvider>
+			<SidebarProvider>{children}</SidebarProvider>
 		</>
 	);
 }

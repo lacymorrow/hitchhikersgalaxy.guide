@@ -1,3 +1,4 @@
+import { describe, expect, it } from "vitest";
 import {
 	addWaitlistEntry,
 	getWaitlistEntries,
@@ -7,7 +8,6 @@ import {
 	markWaitlistEntryAsNotified,
 	updateWaitlistEntryMetadata,
 } from "@/server/services/waitlist-service";
-import { describe, expect, it } from "vitest";
 
 describe("Waitlist Service Functions", () => {
 	const mockEntry = {

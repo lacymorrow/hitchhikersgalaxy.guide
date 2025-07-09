@@ -1,6 +1,6 @@
+import { NextResponse } from "next/server";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
-import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
 	try {

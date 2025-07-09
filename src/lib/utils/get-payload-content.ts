@@ -104,13 +104,10 @@ export async function getPayloadContent<T extends CollectionKey, F>({
 }): Promise<Collections[T][] | F> {
 	try {
 		// Attempt to fetch from Payload
-		const payloadContent = await getPayloadCollection(
-			collection,
-			options,
-		).catch(async (error) => {
+		const payloadContent = await getPayloadCollection(collection, options).catch(async (error) => {
 			console.warn(
 				`Error fetching ${collection} from payload, falling back to static content: `,
-				error,
+				error
 			);
 			return null;
 		});

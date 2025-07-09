@@ -1,10 +1,17 @@
+import { ArrowUpRight, CheckCircle } from "lucide-react";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { CopyButton } from "@/components/ui/copy-button";
 import { ConfettiSideCannons } from "@/components/ui/magicui/confetti/confetti-side-cannons";
 import { routes } from "@/config/routes";
-import { ArrowUpRight, CheckCircle } from "lucide-react";
-import { CopyButton } from "@/components/ui/copy-button";
 import { saveVercelDeployment } from "@/server/services/vercel";
 
 interface DeploymentInfo {
@@ -19,16 +26,19 @@ interface DeploymentInfo {
 	repositoryUrl: string;
 }
 
-function extractDeploymentInfo(searchParams: Record<string, string | string[] | undefined>): DeploymentInfo {
-	const teamId = typeof searchParams.teamId === 'string' ? searchParams.teamId : undefined;
-	const projectId = typeof searchParams.projectId === 'string' ? searchParams.projectId : undefined;
-	const deploymentId = typeof searchParams.deploymentId === 'string' ? searchParams.deploymentId : undefined;
+function extractDeploymentInfo(
+	searchParams: Record<string, string | string[] | undefined>
+): DeploymentInfo {
+	const teamId = typeof searchParams.teamId === "string" ? searchParams.teamId : undefined;
+	const projectId = typeof searchParams.projectId === "string" ? searchParams.projectId : undefined;
+	const deploymentId =
+		typeof searchParams.deploymentId === "string" ? searchParams.deploymentId : undefined;
 
 	function decodeParam(param: string | string[] | undefined): string {
-		if (typeof param === 'string') {
+		if (typeof param === "string") {
 			return decodeURIComponent(param);
 		}
-		return '';
+		return "";
 	}
 
 	return {
@@ -102,7 +112,6 @@ export default async function VercelDeployPage({
 									/>
 								</div>
 							</div>
-
 						</div>
 					</CardContent>
 					<CardFooter className="flex justify-center gap-4">
@@ -113,9 +122,7 @@ export default async function VercelDeployPage({
 							Visit Site <ArrowUpRight className="w-4 h-4" />
 						</Link>
 						<Button asChild variant="outline">
-							<Link href={routes.app.dashboard}>
-								Shipkit Dashboard
-							</Link>
+							<Link href={routes.app.dashboard}>Shipkit Dashboard</Link>
 						</Button>
 					</CardFooter>
 				</Card>

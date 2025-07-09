@@ -1,12 +1,12 @@
 "use client";
 
 import { logInfo } from "./logging";
-import { ProjectPaths, getAlternativePaths } from "./project-config";
+import { getAlternativePaths, ProjectPaths } from "./project-config";
 import {
 	BINARY_EXTENSIONS,
-	TEMPLATE_BASE_DIR,
 	sanitizePath,
 	shouldIgnoreFile,
+	TEMPLATE_BASE_DIR,
 } from "./shared-utils";
 import type { ContainerFile } from "./types";
 

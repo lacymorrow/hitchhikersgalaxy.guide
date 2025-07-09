@@ -1,7 +1,8 @@
-"use client"
+"use client";
 
-import { generateRainbowColor } from '@/lib/utils/colors';
-import React, { useEffect, useRef } from 'react';
+import type React from "react";
+import { useEffect, useRef } from "react";
+import { generateRainbowColor } from "@/lib/utils/colors";
 
 export const WavesBackground: React.FC = () => {
 	const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -10,10 +11,10 @@ export const WavesBackground: React.FC = () => {
 		const canvas = canvasRef.current;
 		if (!canvas) return;
 
-		const ctx = canvas.getContext('2d')!;
+		const ctx = canvas.getContext("2d")!;
 		let time = 0;
-		const width = canvas.width = window.innerWidth;
-		const height = canvas.height = window.innerHeight;
+		const width = (canvas.width = window.innerWidth);
+		const height = (canvas.height = window.innerHeight);
 
 		// Generate many more layers with extreme parameters
 		const generateLayers = () => {
@@ -24,7 +25,7 @@ export const WavesBackground: React.FC = () => {
 					amplitude: 30 + Math.random() * 100,
 					frequency: 0.005 + Math.random() * 0.015,
 					phase: Math.random() * Math.PI * 2,
-					verticalShift: Math.random() * height
+					verticalShift: Math.random() * height,
 				});
 			}
 			return layers;
@@ -34,7 +35,7 @@ export const WavesBackground: React.FC = () => {
 
 		const draw = () => {
 			// Create trailing effect
-			ctx.fillStyle = 'rgba(0, 0, 0, 0.1)';
+			ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
 			ctx.fillRect(0, 0, width, height);
 
 			// Draw each layer with dynamic colors and effects
@@ -49,11 +50,15 @@ export const WavesBackground: React.FC = () => {
 
 					// Combine multiple sine waves for complexity
 					for (let j = 1; j <= 3; j++) {
-						y += Math.sin(x * layer.frequency * j + time * layer.speed + layer.phase) *
-							(layer.amplitude / j) * Math.sin(time * 0.2);
+						y +=
+							Math.sin(x * layer.frequency * j + time * layer.speed + layer.phase) *
+							(layer.amplitude / j) *
+							Math.sin(time * 0.2);
 
-						y += Math.cos((x + 30) * layer.frequency * j + time * layer.speed) *
-							(layer.amplitude / j) * Math.cos(time * 0.15);
+						y +=
+							Math.cos((x + 30) * layer.frequency * j + time * layer.speed) *
+							(layer.amplitude / j) *
+							Math.cos(time * 0.15);
 					}
 
 					// Add vertical movement
@@ -87,8 +92,8 @@ export const WavesBackground: React.FC = () => {
 			canvas.height = window.innerHeight;
 		};
 
-		window.addEventListener('resize', handleResize);
-		return () => window.removeEventListener('resize', handleResize);
+		window.addEventListener("resize", handleResize);
+		return () => window.removeEventListener("resize", handleResize);
 	}, []);
 
 	return (
@@ -96,8 +101,8 @@ export const WavesBackground: React.FC = () => {
 			ref={canvasRef}
 			className="fixed top-0 left-0 w-full h-full bg-black"
 			style={{
-				filter: 'contrast(1.2) saturate(1.5) brightness(1.2)',
-				mixBlendMode: 'screen'
+				filter: "contrast(1.2) saturate(1.5) brightness(1.2)",
+				mixBlendMode: "screen",
 			}}
 		/>
 	);

@@ -1,26 +1,33 @@
+import React from "react";
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { Body } from "@/components/primitives/body";
-import React from "react";
 
 export const DefaultLayout = async ({
 	children,
 	...slots
-}: { children: React.ReactNode;[key: string]: React.ReactNode }) => {
+}: {
+	children: React.ReactNode;
+	[key: string]: React.ReactNode;
+}) => {
 	// Intercepting routes
-	const resolvedSlots = (await Promise.all(
-		Object.entries(slots).map(async ([key, slot]) => {
-			const resolvedSlot = slot instanceof Promise ? await slot : slot;
-			if (!resolvedSlot || (typeof resolvedSlot === 'object' && Object.keys(resolvedSlot).length === 0)) {
-				return null;
-			}
-			return [key, resolvedSlot] as [string, React.ReactNode];
-		})
-	)).filter((item): item is [string, React.ReactNode] => item !== null);
+	const resolvedSlots = (
+		await Promise.all(
+			Object.entries(slots).map(async ([key, slot]) => {
+				const resolvedSlot = slot instanceof Promise ? await slot : slot;
+				if (
+					!resolvedSlot ||
+					(typeof resolvedSlot === "object" && Object.keys(resolvedSlot).length === 0)
+				) {
+					return null;
+				}
+				return [key, resolvedSlot] as [string, React.ReactNode];
+			})
+		)
+	).filter((item): item is [string, React.ReactNode] => item !== null);
 
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<Body>
-
 				<AppRouterLayout>
 					<main>{children}</main>
 
@@ -36,8 +43,7 @@ export const DefaultLayout = async ({
 
 				{/* Add FontSelector only in development */}
 				{/* {process.env.NODE_ENV === "development" && <FontSelector />} */}
-
 			</Body>
 		</html>
 	);
-}
+};

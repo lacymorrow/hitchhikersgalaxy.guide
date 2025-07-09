@@ -1,13 +1,13 @@
 "use client";
 
+import { ChevronDown, ChevronUp, Github, Loader2 } from "lucide-react";
+import { useState } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ChevronDown, ChevronUp, Github, Loader2 } from "lucide-react";
-import { useState } from "react";
 
 interface GitHubIntegrationProps {
 	changedFiles: Array<{ path: string; content: string }>;
@@ -24,17 +24,15 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
 	};
 
 	const componentName = extractComponentInfo();
-	const timestamp = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
-	const timeComponent = new Date().toISOString().split('T')[1].split('.')[0].replace(/:/g, '-'); // HH-MM-SS
+	const timestamp = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
+	const timeComponent = new Date().toISOString().split("T")[1].split(".")[0].replace(/:/g, "-"); // HH-MM-SS
 
 	// Generate default values once
 	const defaultValues = {
 		branchName: componentName
 			? `shipkit/add-${componentName}-${timestamp}`
 			: `shipkit/add-components-${timestamp}-${timeComponent}`,
-		title: componentName
-			? `Add ${componentName} component`
-			: "Add Shadcn UI components",
+		title: componentName ? `Add ${componentName} component` : "Add Shadcn UI components",
 		description: "",
 	};
 
@@ -54,22 +52,22 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
 
 	// Helper functions
 	const addProgressMessage = (message: string) => {
-		setProgressMessages(prev => [...prev, message]);
+		setProgressMessages((prev) => [...prev, message]);
 	};
 
 	const generatePrBody = () => {
 		const componentsList = changedFiles
-			.filter(file => file.path.includes("component") && file.path.includes(".tsx"))
-			.map(file => file.path.split("/").pop()?.replace(".tsx", ""))
+			.filter((file) => file.path.includes("component") && file.path.includes(".tsx"))
+			.map((file) => file.path.split("/").pop()?.replace(".tsx", ""))
 			.filter(Boolean);
 
 		const sections = [
 			"## Shadcn UI Components Added",
 			command && `Command: \`${command}\``,
 			"\n### Changed Files",
-			changedFiles.map(file => `- \`${file.path}\``).join("\n"),
+			changedFiles.map((file) => `- \`${file.path}\``).join("\n"),
 			componentsList.length > 0 && "\n### Components Added",
-			componentsList.length > 0 && componentsList.map(name => `- ${name}`).join("\n")
+			componentsList.length > 0 && componentsList.map((name) => `- ${name}`).join("\n"),
 		].filter(Boolean);
 
 		return sections.join("\n");
@@ -82,7 +80,7 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
 		const errorTypes = {
 			"authentication failed": ". Please check if your GitHub access token is valid.",
 			"permission denied": ". Please check if you have the necessary permissions.",
-			"rate limit": ". Please try again later."
+			"rate limit": ". Please try again later.",
 		};
 
 		for (const [type, message] of Object.entries(errorTypes)) {
@@ -113,7 +111,9 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
 			throw new Error(responseData.details || responseData.error || `Failed to ${endpoint}`);
 		}
 
-		addProgressMessage(typeof successMessage === 'function' ? successMessage(responseData) : successMessage);
+		addProgressMessage(
+			typeof successMessage === "function" ? successMessage(responseData) : successMessage
+		);
 		return responseData;
 	};
 
@@ -142,7 +142,9 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
 			if (branchCheckData.exists) {
 				const newBranchName = `${branchName}-${timeComponent}`;
 				setBranchName(newBranchName);
-				addProgressMessage(`Branch "${branchName}" already exists, using "${newBranchName}" instead`);
+				addProgressMessage(
+					`Branch "${branchName}" already exists, using "${newBranchName}" instead`
+				);
 			}
 
 			// Create branch
@@ -249,11 +251,7 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
 					</CollapsibleContent>
 				</Collapsible>
 
-				<Button
-					onClick={handleSubmit}
-					disabled={isLoading || disabled}
-					className="w-full"
-				>
+				<Button onClick={handleSubmit} disabled={isLoading || disabled} className="w-full">
 					{isLoading ? (
 						<>
 							<Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -280,10 +278,7 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
 						{progressMessages.length > 0 && (
 							<div className="space-y-2 text-sm">
 								{progressMessages.map((message) => (
-									<div
-										key={message}
-										className="flex items-center gap-2 text-muted-foreground"
-									>
+									<div key={message} className="flex items-center gap-2 text-muted-foreground">
 										<div className="h-1.5 w-1.5 rounded-full bg-green-500" />
 										{message}
 									</div>

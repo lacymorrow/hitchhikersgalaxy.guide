@@ -1,28 +1,27 @@
-import { Metadata } from "next"
-import Image from "next/image"
-import { z } from "zod"
+import type { Metadata } from "next";
+import Image from "next/image";
+import { z } from "zod";
 
-import { columns } from "./components/columns"
-import { DataTable } from "./components/data-table"
-import { UserNav } from "./components/user-nav"
-import { taskSchema } from "./data/schema"
-import data from "./data/tasks.json"
+import { columns } from "./components/columns";
+import { DataTable } from "./components/data-table";
+import { UserNav } from "./components/user-nav";
+import { taskSchema } from "./data/schema";
+import data from "./data/tasks.json";
 
 export const metadata: Metadata = {
 	title: "Tasks",
 	description: "A task and issue tracker build using Tanstack Table.",
-}
+};
 
 // Simulate a database read for tasks.
 async function getTasks() {
+	const tasks = data;
 
-	const tasks = data
-
-	return z.array(taskSchema).parse(tasks)
+	return z.array(taskSchema).parse(tasks);
 }
 
 export default async function TaskPage() {
-	const tasks = await getTasks()
+	const tasks = await getTasks();
 
 	return (
 		<>
@@ -57,5 +56,5 @@ export default async function TaskPage() {
 				<DataTable data={tasks} columns={columns} />
 			</div>
 		</>
-	)
+	);
 }

@@ -1,5 +1,5 @@
-import { env } from "../src/env";
 import { lemonSqueezySetup, listOrders } from "@lemonsqueezy/lemonsqueezy.js";
+import { env } from "../src/env";
 
 // Setup LemonSqueezy
 lemonSqueezySetup({ apiKey: env.LEMONSQUEEZY_API_KEY });
@@ -11,7 +11,7 @@ async function debugLemonSqueezyImport() {
 		// Test 1: Get orders with include parameter
 		console.log("\n📦 Test 1: Getting orders with include parameter");
 		const response = await listOrders({
-			include: ['order-items', 'customer']
+			include: ["order-items", "customer"],
 		});
 
 		if (!response || !Array.isArray(response.data?.data)) {
@@ -86,10 +86,12 @@ async function debugLemonSqueezyImport() {
 			console.log("Without include - first_order_item exists:", !!attrsNoInclude.first_order_item);
 
 			if (attrsNoInclude.first_order_item) {
-				console.log("Without include - product_name:", attrsNoInclude.first_order_item.product_name);
+				console.log(
+					"Without include - product_name:",
+					attrsNoInclude.first_order_item.product_name
+				);
 			}
 		}
-
 	} catch (error) {
 		console.error("❌ Error in debug:", error);
 	}

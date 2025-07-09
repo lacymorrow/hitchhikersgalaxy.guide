@@ -1,14 +1,14 @@
 import crypto from "crypto";
+import { eq } from "drizzle-orm";
+import { headers } from "next/headers";
+import { NextResponse } from "next/server";
 // @see https://docs.lemonsqueezy.com/api/webhooks
 // @see https://raw.githubusercontent.com/lmsqueezy/nextjs-billing/refs/heads/main/src/app/api/webhook/route.ts
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
-import { PaymentService } from "@/server/services/payment-service";
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
 import { db } from "@/server/db";
 import { payments, users } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
+import { PaymentService } from "@/server/services/payment-service";
 
 // Types for webhook payload structure
 interface WebhookMeta {
@@ -186,7 +186,8 @@ async function findOrCreateUser(
 		}
 
 		// Create new user if not found
-		const result = await db?.insert(users)
+		const result = await db
+			?.insert(users)
 			.values({
 				email: userEmail.toLowerCase(),
 				name: userName || null,

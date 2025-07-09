@@ -1,7 +1,7 @@
+import type React from "react";
 import { Footer } from "@/components/footers/footer";
 import { Header } from "@/components/headers/header";
 import { cn } from "@/lib/utils";
-import type React from "react";
 
 export default function MainLayout({
 	children,

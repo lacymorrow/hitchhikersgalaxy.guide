@@ -13,7 +13,7 @@ import { SessionProvider } from "next-auth/react";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
 
-import '@/styles/globals.css';
+import "@/styles/globals.css";
 
 interface ShipkitProviderProps {
 	children: ReactNode;
@@ -31,11 +31,7 @@ interface ShipkitProviderProps {
  * Main provider component that wraps all providers used in the application
  * Can be used in both App Router and Pages Router
  */
-export function ShipkitProvider({
-	children,
-	session,
-	pageProps,
-}: ShipkitProviderProps) {
+export function ShipkitProvider({ children, session, pageProps }: ShipkitProviderProps) {
 	return (
 		<>
 			<JsonLd organization website />
@@ -50,21 +46,20 @@ export function ShipkitProvider({
 						<AnalyticsProvider>
 							{/* <ConsentProvider> */}
 
-								<KeyboardShortcutProvider>
+							<KeyboardShortcutProvider>
+								{/* Content */}
+								{children}
 
-									{/* Content */}
-									{children}
+								{/* Toast - Display messages to the user */}
+								<Toaster />
 
-									{/* Toast - Display messages to the user */}
-									<Toaster />
+								<LegacyToaster />
 
-									<LegacyToaster />
-
-									{/* Error Toast - Display error messages to the user based on search params */}
-									<Suspense>
-										<ErrorToast />
-									</Suspense>
-								</KeyboardShortcutProvider>
+								{/* Error Toast - Display error messages to the user based on search params */}
+								<Suspense>
+									<ErrorToast />
+								</Suspense>
+							</KeyboardShortcutProvider>
 							{/* </ConsentProvider> */}
 						</AnalyticsProvider>
 					</TooltipProvider>

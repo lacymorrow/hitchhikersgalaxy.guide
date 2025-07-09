@@ -1,6 +1,7 @@
 // import "../scripts/env-config.js";
-import { db } from "@/server/db";
+
 import { sql } from "drizzle-orm";
+import { db } from "@/server/db";
 
 async function dropDatabase() {
 	console.info("🗑️  Starting database cleanup...");

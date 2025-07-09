@@ -6,8 +6,8 @@
  * Run with: npx tsx debug-polar-api-test.ts
  */
 
-import { env } from "@/env";
 import { Polar } from "@polar-sh/sdk";
+import { env } from "@/env";
 
 // Initialize Polar client
 const initializePolarClient = (): Polar | null => {
@@ -69,17 +69,17 @@ const testProductNameExtraction = (order: any, orderId: string) => {
 
 	// Log available fields for debugging
 	console.log("📋 Available Fields:");
-	console.log(`   - order.product?.name: ${order.product?.name || 'null'}`);
-	console.log(`   - order.variant?.name: ${order.variant?.name || 'null'}`);
-	console.log(`   - order.productName: ${order.productName || 'null'}`);
-	console.log(`   - order.description: ${order.description || 'null'}`);
-	console.log(`   - order.items: ${order.items ? `Array(${order.items.length})` : 'null'}`);
+	console.log(`   - order.product?.name: ${order.product?.name || "null"}`);
+	console.log(`   - order.variant?.name: ${order.variant?.name || "null"}`);
+	console.log(`   - order.productName: ${order.productName || "null"}`);
+	console.log(`   - order.description: ${order.description || "null"}`);
+	console.log(`   - order.items: ${order.items ? `Array(${order.items.length})` : "null"}`);
 
 	if (order.items && Array.isArray(order.items) && order.items.length > 0) {
 		const firstItem = order.items[0];
-		console.log(`   - order.items[0].product?.name: ${firstItem.product?.name || 'null'}`);
-		console.log(`   - order.items[0].variant?.name: ${firstItem.variant?.name || 'null'}`);
-		console.log(`   - order.items[0].name: ${firstItem.name || 'null'}`);
+		console.log(`   - order.items[0].product?.name: ${firstItem.product?.name || "null"}`);
+		console.log(`   - order.items[0].variant?.name: ${firstItem.variant?.name || "null"}`);
+		console.log(`   - order.items[0].name: ${firstItem.name || "null"}`);
 	}
 
 	return { productName, extractionSource };
@@ -124,11 +124,11 @@ async function testPolarApi() {
 		console.log("\n📡 Test 1: Fetching orders with expanded product information...");
 
 		const response = await polarClient.orders.list({
-			include: ['product', 'product.variants', 'items', 'items.product', 'items.variant']
+			include: ["product", "product.variants", "items", "items.product", "items.variant"],
 		} as any);
 
 		console.log("✅ API Response received");
-		console.log(`📊 Response type: ${Array.isArray(response) ? 'Array' : typeof response}`);
+		console.log(`📊 Response type: ${Array.isArray(response) ? "Array" : typeof response}`);
 		console.log(`📊 Response keys: ${Object.keys(response)}`);
 
 		// Extract orders
@@ -153,7 +153,7 @@ async function testPolarApi() {
 				...result,
 				status: order.status,
 				amount: order.amount,
-				userEmail: order.customer?.email || order.email
+				userEmail: order.customer?.email || order.email,
 			});
 		}
 
@@ -172,12 +172,12 @@ async function testPolarApi() {
 			console.log(`  ${source}: ${count}`);
 		});
 
-		const unknownProducts = results.filter(r => r.productName === "Unknown Product");
+		const unknownProducts = results.filter((r) => r.productName === "Unknown Product");
 		console.log(`Unknown products: ${unknownProducts.length}/${results.length}`);
 
 		if (unknownProducts.length > 0) {
 			console.log("\n⚠️  Orders with unknown products:");
-			unknownProducts.forEach(result => {
+			unknownProducts.forEach((result) => {
 				console.log(`  - Order ${result.orderId}: ${result.productName}`);
 			});
 		}
@@ -189,16 +189,18 @@ async function testPolarApi() {
 
 			try {
 				const singleOrderResponse = await polarClient.orders.get(firstOrderId, {
-					include: ['product', 'product.variants', 'items', 'items.product', 'items.variant']
+					include: ["product", "product.variants", "items", "items.product", "items.variant"],
 				} as any);
 
 				console.log("✅ Single order fetched successfully");
 				testProductNameExtraction(singleOrderResponse, firstOrderId);
 			} catch (error) {
-				console.log("⚠️  Could not fetch single order:", error instanceof Error ? error.message : String(error));
+				console.log(
+					"⚠️  Could not fetch single order:",
+					error instanceof Error ? error.message : String(error)
+				);
 			}
 		}
-
 	} catch (error) {
 		console.error("❌ Error testing Polar API:", error);
 		if (error instanceof Error) {
@@ -214,7 +216,7 @@ async function testPolarApi() {
 if (require.main === module) {
 	testPolarApi()
 		.then(() => process.exit(0))
-		.catch(error => {
+		.catch((error) => {
 			console.error("Fatal error:", error);
 			process.exit(1);
 		});

@@ -1,3 +1,4 @@
+import { MailIcon } from "lucide-react";
 import { ContactForm } from "@/components/forms/contact-form";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Boxes } from "@/components/ui/background-boxes";
@@ -5,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
-import { MailIcon } from "lucide-react";
 
 export default function ContactPage() {
 	return (
@@ -21,9 +21,7 @@ export default function ContactPage() {
 			{/* Content */}
 			<div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-4 py-20">
 				<div className="mb-12 text-center">
-					<h1 className="mb-4 text-4xl font-bold tracking-tight">
-						Get in Touch
-					</h1>
+					<h1 className="mb-4 text-4xl font-bold tracking-tight">Get in Touch</h1>
 					<p className="text-lg text-muted-foreground">
 						Have a question or want to learn more? We'd love to hear from you.
 					</p>
@@ -38,13 +36,9 @@ export default function ContactPage() {
 								<MailIcon className="h-6 w-6 text-primary" />
 							</div>
 							<h3 className="mb-2 font-semibold">Email Us</h3>
-							<p className="mb-4 text-sm text-muted-foreground">
-								Drop us a line anytime
-							</p>
+							<p className="mb-4 text-sm text-muted-foreground">Drop us a line anytime</p>
 							<Button variant="link" asChild>
-								<Link href={routes.contact}>
-									{siteConfig.email.support}
-								</Link>
+								<Link href={routes.contact}>{siteConfig.email.support}</Link>
 							</Button>
 						</Card>
 
@@ -84,16 +78,12 @@ export default function ContactPage() {
 					{/* Contact Form */}
 					<Card className="col-span-2 p-6 lg:p-8">
 						<div className="mb-6">
-							<h2 className="mb-2 text-2xl font-semibold">
-								Send us a Message
-							</h2>
+							<h2 className="mb-2 text-2xl font-semibold">Send us a Message</h2>
 							<p className="text-muted-foreground">
 								Fill out the form below and we'll get back to you as soon as possible.
 							</p>
 						</div>
-						<ContactForm
-							className="max-w-none"
-						/>
+						<ContactForm className="max-w-none" />
 					</Card>
 				</div>
 			</div>

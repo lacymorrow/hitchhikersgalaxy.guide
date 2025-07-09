@@ -1,13 +1,13 @@
 "use client";
 
+import { ArrowRightIcon } from "@radix-ui/react-icons";
+import type React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { addAudienceUser } from "@/server/actions/resend-actions";
-import { ArrowRightIcon } from "@radix-ui/react-icons";
-import type React from "react";
-import { useState } from "react";
 
 export const SubscribeForm: React.FC = () => {
 	const [email, setEmail] = useState("");

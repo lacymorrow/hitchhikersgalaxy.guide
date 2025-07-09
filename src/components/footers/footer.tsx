@@ -1,3 +1,6 @@
+import { cva, type VariantProps } from "class-variance-authority";
+import React, { type FC, type HTMLAttributes, type ReactNode } from "react";
+import { v4 as uuid } from "uuid";
 import { Link } from "@/components/primitives/link-with-transition";
 import {
 	Accordion,
@@ -9,9 +12,6 @@ import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { type VariantProps, cva } from "class-variance-authority";
-import React, { type FC, type HTMLAttributes, type ReactNode } from "react";
-import { v4 as uuid } from "uuid";
 
 interface LinkItem {
 	label: string;
@@ -131,10 +131,14 @@ export const Footer: FC<FooterProps> = ({
 			<div className="container relative flex md:min-h-80 w-full flex-col items-stretch gap-2xl py-2xl">
 				<div className="flex flex-col lg:flex-row justify-between gap-2xl">
 					<div className="flex flex-col gap-2xl">
-						<Link href={routes.home}><h1 className="text-4xl font-bold">{siteConfig.title}</h1></Link>
+						<Link href={routes.home}>
+							<h1 className="text-4xl font-bold">{siteConfig.title}</h1>
+						</Link>
 					</div>
 					{/* Desktop Layout */}
-					<div className="hidden md:flex flex-col flex-wrap md:flex-row lg:gap-20">{groupElements}</div>
+					<div className="hidden md:flex flex-col flex-wrap md:flex-row lg:gap-20">
+						{groupElements}
+					</div>
 					{/* Mobile Layout */}
 					<div className="flex flex-col gap-md md:hidden w-full">
 						<Accordion type="multiple" className="w-full">
@@ -142,8 +146,7 @@ export const Footer: FC<FooterProps> = ({
 								.filter((el) => el.type === "group")
 								.map((element) => {
 									// We already filtered, so this cast is safe
-									const group = (element as { type: "group"; content: FooterGroup })
-										.content;
+									const group = (element as { type: "group"; content: FooterGroup }).content;
 									return (
 										<AccordionItem value={group.header.label} key={uuid()}>
 											<AccordionTrigger className="font-semibold">
@@ -163,7 +166,7 @@ export const Footer: FC<FooterProps> = ({
 																	<Link
 																		className={cn(
 																			buttonVariants({ variant: "link" }),
-																			"p-0 h-auto",
+																			"p-0 h-auto"
 																		)}
 																		href={item.href}
 																	>
@@ -173,9 +176,9 @@ export const Footer: FC<FooterProps> = ({
 															);
 														}
 														// Render custom ReactNode items directly
-														return React.isValidElement(item) ?
-															React.cloneElement(item, { key: key }) :
-															null;
+														return React.isValidElement(item)
+															? React.cloneElement(item, { key: key })
+															: null;
 													})}
 												</ul>
 											</AccordionContent>
@@ -186,7 +189,7 @@ export const Footer: FC<FooterProps> = ({
 					</div>
 				</div>
 			</div>
-		</footer >
+		</footer>
 	);
 };
 

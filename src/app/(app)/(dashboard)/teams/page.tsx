@@ -1,5 +1,8 @@
 "use client";
 
+import type { ColumnDef } from "@tanstack/react-table";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -15,16 +18,8 @@ import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableDialog } from "@/components/ui/data-table/data-table-dialog";
 import { useToast } from "@/hooks/use-toast";
-import {
-	createTeam,
-	deleteTeam,
-	getUserTeams,
-	updateTeam,
-} from "@/server/actions/teams";
-import { type Team } from "@/types/team";
-import type { ColumnDef } from "@tanstack/react-table";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { createTeam, deleteTeam, getUserTeams, updateTeam } from "@/server/actions/teams";
+import type { Team } from "@/types/team";
 
 export default function TeamsPage() {
 	const { data: session } = useSession();
@@ -175,10 +170,7 @@ export default function TeamsPage() {
 						{!isPersonal && (
 							<AlertDialog>
 								<AlertDialogTrigger asChild>
-									<button
-										type="button"
-										className="text-sm text-red-600 hover:text-red-900"
-									>
+									<button type="button" className="text-sm text-red-600 hover:text-red-900">
 										Delete
 									</button>
 								</AlertDialogTrigger>
@@ -186,9 +178,8 @@ export default function TeamsPage() {
 									<AlertDialogHeader>
 										<AlertDialogTitle>Delete Team</AlertDialogTitle>
 										<AlertDialogDescription>
-											Are you sure you want to delete this team? This action
-											will also delete all associated projects, API keys, and
-											cannot be undone.
+											Are you sure you want to delete this team? This action will also delete all
+											associated projects, API keys, and cannot be undone.
 										</AlertDialogDescription>
 									</AlertDialogHeader>
 									<AlertDialogFooter>
@@ -217,8 +208,8 @@ export default function TeamsPage() {
 			<div className="mb-8">
 				<h2 className="text-2xl font-bold tracking-tight">Teams</h2>
 				<p className="text-muted-foreground">
-					Manage your teams and their members. Every user has a personal team
-					that cannot be deleted.
+					Manage your teams and their members. Every user has a personal team that cannot be
+					deleted.
 				</p>
 			</div>
 

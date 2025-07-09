@@ -1,29 +1,29 @@
 import "server-only";
 
-import { env } from "@/env";
 import { sql } from "drizzle-orm";
+import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
+import { env } from "@/env";
 import * as schema from "./schema";
-import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
 
 // Configure postgres with proper options to avoid stream transformation issues
 const client = env.DATABASE_URL
 	? postgres(env.DATABASE_URL, {
-		max: 1, // Use a single connection to avoid transform issues
-		connect_timeout: 10, // Faster connection timeout for serverless
-		idle_timeout: 20, // Lower idle timeout
-		max_lifetime: 60 * 30, // 30 minutes max lifetime
-		...(process.env.NODE_ENV === "development"
-			? {
-				ssl: { rejectUnauthorized: false }, // Needed for some Neon connections
-			}
-			: {}),
-		transform: {
-			undefined: null, // Transform undefined values to null
-			...({} as Record<string, never>), // Empty transform object
-		},
-	})
+			max: 1, // Use a single connection to avoid transform issues
+			connect_timeout: 10, // Faster connection timeout for serverless
+			idle_timeout: 20, // Lower idle timeout
+			max_lifetime: 60 * 30, // 30 minutes max lifetime
+			...(process.env.NODE_ENV === "development"
+				? {
+						ssl: { rejectUnauthorized: false }, // Needed for some Neon connections
+					}
+				: {}),
+			transform: {
+				undefined: null, // Transform undefined values to null
+				...({} as Record<string, never>), // Empty transform object
+			},
+		})
 	: undefined;
 
 export const db = client ? drizzle(client, { schema }) : undefined;

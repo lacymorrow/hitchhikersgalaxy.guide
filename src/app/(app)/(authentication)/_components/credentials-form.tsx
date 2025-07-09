@@ -1,5 +1,14 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { LockClosedIcon } from "@radix-ui/react-icons";
+import Link from "next/link";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -16,15 +25,6 @@ import { STATUS_CODES } from "@/config/status-codes";
 import { signInSchema } from "@/lib/schemas/auth";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
 import { signInWithCredentialsAction } from "@/server/actions/auth";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { LockClosedIcon } from "@radix-ui/react-icons";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import type { z } from "zod";
 
 type CredentialsFormValues = z.infer<typeof signInSchema>;
 
@@ -87,7 +87,9 @@ export function CredentialsForm({ className }: CredentialsFormProps) {
 			// Still try to update the session and redirect
 			await updateSession();
 			toast.success("Signed in successfully");
-			const resultUrl = new URL(typeof result === "string" ? result : result?.url || nextUrl || routes.home);
+			const resultUrl = new URL(
+				typeof result === "string" ? result : result?.url || nextUrl || routes.home
+			);
 			// If we are already on the page, same page, we need to do a full window.reload.
 
 			if (pathname === resultUrl.pathname) {
@@ -96,7 +98,6 @@ export function CredentialsForm({ className }: CredentialsFormProps) {
 				router.push(resultUrl.toString());
 				router.refresh(); // Refresh to update the session
 			}
-
 		} catch (error) {
 			console.error("Error signing in:", error);
 

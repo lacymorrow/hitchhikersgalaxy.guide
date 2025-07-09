@@ -1,8 +1,8 @@
-import { ShipkitProvider } from '@/components/providers/shipkit-provider';
-import { TypographyProvider } from '@/components/providers/typography-provider';
-import { ThemeProvider } from 'next-themes';
-import type { AppProps } from 'next/app';
-import { NuqsAdapter } from 'nuqs/adapters/next/pages';
+import type { AppProps } from "next/app";
+import { ThemeProvider } from "next-themes";
+import { NuqsAdapter } from "nuqs/adapters/next/pages";
+import { ShipkitProvider } from "@/components/providers/shipkit-provider";
+import { TypographyProvider } from "@/components/providers/typography-provider";
 
 export default function PagesApp({ Component, pageProps }: AppProps) {
 	return (
@@ -16,5 +16,5 @@ export default function PagesApp({ Component, pageProps }: AppProps) {
 				</NuqsAdapter>
 			</ShipkitProvider>
 		</ThemeProvider>
-	)
+	);
 }

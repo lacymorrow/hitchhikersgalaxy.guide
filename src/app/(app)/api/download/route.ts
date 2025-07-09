@@ -1,12 +1,12 @@
+import { createReadStream } from "fs";
+import { stat } from "fs/promises";
+import { type NextRequest, NextResponse } from "next/server";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { getOrdersByEmail } from "@/lib/lemonsqueezy";
 import { logger } from "@/lib/logger";
 import { auth } from "@/server/auth";
 import { getLatestReleaseFile } from "@/server/services/github/github-download-service";
-import { createReadStream } from "fs";
-import { stat } from "fs/promises";
-import { type NextRequest, NextResponse } from "next/server";
 
 /**
  * Route handler for file downloads.

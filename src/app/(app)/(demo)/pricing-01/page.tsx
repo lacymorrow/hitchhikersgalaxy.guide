@@ -1,11 +1,12 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import { FAQSection } from "./_components/faq-section";
+import { Check } from "lucide-react";
 import { v4 as uuidv4 } from "uuid";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Check } from "lucide-react";
+import { FAQSection } from "./_components/faq-section";
+
 const plans = [
 	{
 		title: "Hobby",
@@ -68,11 +69,7 @@ function PriceCard({
 	ctaText = "Get Started",
 }: PriceCardProps) {
 	return (
-		<Card
-			className={`relative p-6 ${
-				highlighted ? "border-primary shadow-lg" : ""
-			}`}
-		>
+		<Card className={`relative p-6 ${highlighted ? "border-primary shadow-lg" : ""}`}>
 			{highlighted && (
 				<span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary px-3 py-1 text-sm text-primary-foreground">
 					Most Popular
@@ -82,9 +79,7 @@ function PriceCard({
 				<h3 className="text-xl font-semibold">{title}</h3>
 				<div className="mt-2">
 					<span className="text-3xl font-bold">{price}</span>
-					{price !== "Free" && (
-						<span className="text-muted-foreground">/month</span>
-					)}
+					{price !== "Free" && <span className="text-muted-foreground">/month</span>}
 				</div>
 				<p className="mt-2 text-muted-foreground">{description}</p>
 			</div>
@@ -117,8 +112,7 @@ export default function PricingPage() {
 							Simple, transparent pricing
 						</h1>
 						<p className="mx-auto max-w-2xl text-xl text-muted-foreground">
-							Choose the perfect plan for your needs. All plans include updates
-							and core features.
+							Choose the perfect plan for your needs. All plans include updates and core features.
 						</p>
 					</div>
 

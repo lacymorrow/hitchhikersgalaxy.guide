@@ -1,9 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { generateTemporaryLink } from "@/server/actions/temporary-links";
-import { useState } from "react";
 
 interface DownloadButtonProps {
 	userId: string;
@@ -21,9 +21,7 @@ export const DownloadButton = ({ userId }: DownloadButtonProps) => {
 
 	return (
 		<div className="space-y-4">
-			<Button onClick={() => void handleDownload()}>
-				Generate Download Link
-			</Button>
+			<Button onClick={() => void handleDownload()}>Generate Download Link</Button>
 
 			{downloadUrl && (
 				<p className="text-sm text-muted-foreground">

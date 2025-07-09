@@ -1,9 +1,9 @@
+import type { ReactNode } from "react";
 import { Header } from "@/components/headers/header";
 import { BlogSidebar } from "@/components/layouts/blog-sidebar";
 import MainLayout from "@/components/layouts/main-layout";
 import { routes } from "@/config/routes";
 import { getBlogPosts } from "@/lib/blog";
-import type { ReactNode } from "react";
 
 const blogNavLinks = [
 	{ href: routes.faq, label: "Faqs", isCurrent: false },

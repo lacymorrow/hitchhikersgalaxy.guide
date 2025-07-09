@@ -1,5 +1,8 @@
 "use client";
 
+import { ExternalLink, Loader2, Mail } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -13,8 +16,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { generateFeedbackMailto } from "@/lib/utils/email-utils";
 import { submitFeedback } from "@/server/actions/feedback-actions";
-import { ExternalLink, Loader2, Mail } from "lucide-react";
-import React, { useEffect, useState } from "react";
 
 interface FeedbackDialogProps {
 	trigger?: React.ReactNode;
@@ -107,8 +108,7 @@ export const FeedbackDialog = ({ trigger, className }: FeedbackDialogProps) => {
 					<DialogHeader>
 						<DialogTitle>Send Feedback</DialogTitle>
 						<DialogDescription>
-							Help us improve by sharing your thoughts, suggestions, or
-							reporting issues.
+							Help us improve by sharing your thoughts, suggestions, or reporting issues.
 						</DialogDescription>
 					</DialogHeader>
 					<div className="mt-4 space-y-4">
@@ -120,11 +120,7 @@ export const FeedbackDialog = ({ trigger, className }: FeedbackDialogProps) => {
 							disabled={loading}
 						/>
 						{error && <p className="text-sm text-red-500">{error}</p>}
-						{success && (
-							<p className="text-sm text-green-500">
-								Thank you for your feedback! 🚀
-							</p>
-						)}
+						{success && <p className="text-sm text-green-500">Thank you for your feedback! 🚀</p>}
 						{showEmailFallback && (
 							<div className="p-4 bg-blue-50 dark:bg-blue-950/20 border border-blue-200 dark:border-blue-800 rounded-lg">
 								<div className="flex items-start gap-3">

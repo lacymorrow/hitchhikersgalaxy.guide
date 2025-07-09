@@ -1,10 +1,6 @@
-import {
-	HoverCard,
-	HoverCardContent,
-	HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import type { ReactNode } from "react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
 
 interface HoverInfoProps {
 	children: ReactNode;
@@ -39,18 +35,13 @@ export const HoverInfo = ({
 				<span
 					className={cn(
 						"font-medium inline-block cursor-help transition-colors duration-200",
-						className,
+						className
 					)}
 				>
 					{children}
 				</span>
 			</HoverCardTrigger>
-			<HoverCardContent
-				className="z-50 w-80"
-				side={side}
-				align={align}
-				{...rest}
-			>
+			<HoverCardContent className="z-50 w-80" side={side} align={align} {...rest}>
 				<div className="space-y-2">{content}</div>
 			</HoverCardContent>
 		</HoverCard>

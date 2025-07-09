@@ -1,7 +1,7 @@
+import { NextResponse } from "next/server";
 import { BASE_URL } from "@/config/base-url";
 import { env } from "@/env";
 import { auth } from "@/server/auth";
-import { NextResponse } from "next/server";
 
 // Explicitly mark as dynamic to prevent caching of sensitive auth URLs
 export const dynamic = "force-dynamic";

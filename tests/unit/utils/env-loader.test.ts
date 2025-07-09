@@ -1,5 +1,5 @@
-import { describe, expect, it, vi, beforeEach, afterEach } from "vitest";
 import { loadEnvConfig } from "@next/env";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Mock loadEnvConfig
 vi.mock("@next/env", () => ({

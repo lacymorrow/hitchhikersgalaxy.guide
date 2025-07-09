@@ -1,7 +1,7 @@
-import { openai } from "@/lib/open-ai";
-import { DocsSearchService } from "@/server/services/docs-search";
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { openai } from "@/lib/open-ai";
+import { DocsSearchService } from "@/server/services/docs-search";
 
 const searchRequestSchema = z.object({
 	query: z.string().min(1, "Search query is required"),
@@ -10,10 +10,7 @@ const searchRequestSchema = z.object({
 
 export async function POST(req: Request) {
 	if (!openai) {
-		return NextResponse.json(
-			{ error: "OpenAI API key is not set." },
-			{ status: 500 },
-		);
+		return NextResponse.json({ error: "OpenAI API key is not set." }, { status: 500 });
 	}
 
 	try {
@@ -27,7 +24,7 @@ export async function POST(req: Request) {
 					error: "Invalid request",
 					details: validationResult.error.issues,
 				},
-				{ status: 400 },
+				{ status: 400 }
 			);
 		}
 
@@ -58,9 +55,7 @@ export async function POST(req: Request) {
           Format your responses in markdown.
 
           Here are some relevant documentation snippets to help you answer:
-          ${searchResults
-						.map((result) => `### ${result.title}\n${result.content}`)
-						.join("\n\n")}`,
+          ${searchResults.map((result) => `### ${result.title}\n${result.content}`).join("\n\n")}`,
 				},
 				{
 					role: "user",
@@ -108,7 +103,7 @@ export async function POST(req: Request) {
 				error: "Failed to process search request",
 				details: error instanceof Error ? error.message : "Unknown error",
 			},
-			{ status: 500 },
+			{ status: 500 }
 		);
 	}
 }

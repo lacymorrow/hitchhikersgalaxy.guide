@@ -9,12 +9,14 @@ async function testImportWithInit() {
 	try {
 		// Step 1: Initialize providers
 		console.log("\n🔄 Step 1: Initialize providers");
-		const { initializePaymentProviders, getEnabledProviders } = await import("../src/server/providers/index.js");
+		const { initializePaymentProviders, getEnabledProviders } = await import(
+			"../src/server/providers/index.js"
+		);
 		await initializePaymentProviders();
 
 		const providers = getEnabledProviders();
 		console.log(`✅ Initialized ${providers.length} providers`);
-		providers.forEach(p => {
+		providers.forEach((p) => {
 			console.log(`  - ${p.id}: ${p.name} (enabled: ${p.isEnabled})`);
 		});
 
@@ -41,7 +43,7 @@ async function testImportWithInit() {
 		}
 
 		console.log("\n🔎 Step 5: Check for 'Unknown Product' entries");
-		const unknownProducts = payments.filter(p => p.productName === "Unknown Product");
+		const unknownProducts = payments.filter((p) => p.productName === "Unknown Product");
 		console.log(`Found ${unknownProducts.length} payments with "Unknown Product"`);
 
 		if (unknownProducts.length > 0) {
@@ -53,7 +55,6 @@ async function testImportWithInit() {
 		}
 
 		console.log("\n✅ Import and check complete!");
-
 	} catch (error) {
 		console.error("❌ Error in test:", error);
 	}

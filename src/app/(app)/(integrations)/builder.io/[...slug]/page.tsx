@@ -1,9 +1,8 @@
 // Example file structure, app/[...page]/page.tsx
 // You could alternatively use src/app/[...page]/page.tsx
 import { builder } from "@builder.io/sdk";
-import { RenderBuilderContent } from "./builder-io";
-
 import { env } from "@/env";
+import { RenderBuilderContent } from "./builder-io";
 import "@/styles/builder-io.css";
 
 // Revalidate this page every 60 seconds

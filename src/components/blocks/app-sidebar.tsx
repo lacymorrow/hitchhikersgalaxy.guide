@@ -1,3 +1,5 @@
+import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 import { ProjectsList } from "@/app/(app)/(dashboard)/projects/_components/projects-list";
 import { NavUser } from "@/components/blocks/nav-user";
 import { TeamSwitcher } from "@/components/blocks/team-switcher";
@@ -10,8 +12,6 @@ import {
 	SidebarRail,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
-import { type VariantProps, cva } from "class-variance-authority";
-import * as React from "react";
 import { NavMain } from "./nav-main";
 import { NavSecondary } from "./nav-secondary";
 
@@ -36,7 +36,7 @@ const appSidebarVariants = cva("", {
 
 interface AppSidebarProps
 	extends Omit<React.ComponentProps<typeof Sidebar>, "variant">,
-	VariantProps<typeof appSidebarVariants> {
+		VariantProps<typeof appSidebarVariants> {
 	variant?: "inset" | "floating" | "sidebar";
 	size?: "default" | "sm" | "lg";
 }
@@ -58,15 +58,12 @@ export const AppSidebar = React.forwardRef<HTMLDivElement, AppSidebarProps>(
 					</SidebarHeader>
 					<SidebarContent>
 						<ScrollArea className="[&>div>div]:!block">
-
 							<NavMain />
 							<ProjectsList />
-
 						</ScrollArea>
 					</SidebarContent>
 					<SidebarFooter className="p-2">
 						<NavSecondary />
-
 
 						{/*
 						<div className="overflow-hidden group-data-[collapsible=icon]:hidden flex flex-col gap-2">
@@ -79,6 +76,6 @@ export const AppSidebar = React.forwardRef<HTMLDivElement, AppSidebarProps>(
 				</Sidebar>
 			</>
 		);
-	},
+	}
 );
 AppSidebar.displayName = "AppSidebar";

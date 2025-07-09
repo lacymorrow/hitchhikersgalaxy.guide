@@ -3,8 +3,8 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { type ControllerRenderProps, useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
-
 import { Button } from "@/components/ui/button";
 import {
 	Form,
@@ -19,7 +19,6 @@ import { routes } from "@/config/routes";
 import { resetPasswordSchema } from "@/lib/schemas/auth";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
 import { resetPasswordAction } from "@/server/actions/auth";
-import { toast } from "sonner";
 
 type ResetPasswordFormValues = z.infer<typeof resetPasswordSchema>;
 
@@ -53,13 +52,13 @@ export function ResetPasswordForm({ token }: { token?: string }) {
 					toast.error("Error resetting password", {
 						description: error.message || "The password reset link is invalid or has expired.",
 					});
-				} else if (data && typeof data === 'object' && 'success' in data && data.success) {
+				} else if (data && typeof data === "object" && "success" in data && data.success) {
 					toast.success("Password reset successful", {
 						description: "You can now sign in with your new password.",
 					});
 					router.push(routes.auth.signIn);
 				}
-			} else if (result && typeof result === 'object' && 'success' in result) {
+			} else if (result && typeof result === "object" && "success" in result) {
 				// If result is a direct object with success property
 				const typedResult = result as { success: boolean; error?: string };
 				if (typedResult.success) {
@@ -98,7 +97,11 @@ export function ResetPasswordForm({ token }: { token?: string }) {
 				<FormField
 					control={form.control}
 					name="password"
-					render={({ field }: { field: ControllerRenderProps<ResetPasswordFormValues, "password"> }) => (
+					render={({
+						field,
+					}: {
+						field: ControllerRenderProps<ResetPasswordFormValues, "password">;
+					}) => (
 						<FormItem>
 							<FormLabel>New Password</FormLabel>
 							<FormControl>
@@ -111,7 +114,11 @@ export function ResetPasswordForm({ token }: { token?: string }) {
 				<FormField
 					control={form.control}
 					name="passwordConfirm"
-					render={({ field }: { field: ControllerRenderProps<ResetPasswordFormValues, "passwordConfirm"> }) => (
+					render={({
+						field,
+					}: {
+						field: ControllerRenderProps<ResetPasswordFormValues, "passwordConfirm">;
+					}) => (
 						<FormItem>
 							<FormLabel>Confirm Password</FormLabel>
 							<FormControl>

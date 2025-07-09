@@ -1,31 +1,24 @@
 "use client";
 
-import { Link } from "@/components/primitives/link-with-transition";
-import { Button, buttonVariants } from "@/components/ui/button";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger
-} from "@/components/ui/tooltip";
-import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
-import { disconnectAccount, markVercelConnectionAttempt } from "@/server/actions/settings";
-import type { User } from "@/types/user";
 import { IconBrandVercelFilled } from "@tabler/icons-react";
 import crypto from "crypto";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
+import { Link } from "@/components/primitives/link-with-transition";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useToast } from "@/hooks/use-toast";
+import { cn } from "@/lib/utils";
+import { disconnectAccount, markVercelConnectionAttempt } from "@/server/actions/settings";
+import type { User } from "@/types/user";
 
 interface VercelConnectButtonProps {
 	className?: string;
 	user?: User;
 }
 
-export const VercelConnectButton = ({
-	className,
-	user
-}: VercelConnectButtonProps) => {
+export const VercelConnectButton = ({ className, user }: VercelConnectButtonProps) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [isConnected, setIsConnected] = useState(false);
 	const { update: updateSession } = useSession();
@@ -33,7 +26,7 @@ export const VercelConnectButton = ({
 
 	useEffect(() => {
 		// Check if the user has a Vercel account
-		const hasVercelAccount = user?.accounts?.some(account => account.provider === "vercel");
+		const hasVercelAccount = user?.accounts?.some((account) => account.provider === "vercel");
 		setIsConnected(!!hasVercelAccount);
 	}, [user]);
 
@@ -130,11 +123,7 @@ export const VercelConnectButton = ({
 					</Tooltip>
 				</div>
 			) : (
-				<Button
-					onClick={handleConnect}
-					disabled={isLoading}
-					className={cn("", className)}
-				>
+				<Button onClick={handleConnect} disabled={isLoading} className={cn("", className)}>
 					<IconBrandVercelFilled className="mr-2 h-4 w-4" />
 					{isLoading ? "Connecting..." : "Connect Vercel"}
 				</Button>

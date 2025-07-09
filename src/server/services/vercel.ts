@@ -20,9 +20,7 @@ interface DeploymentInfo {
  * @param deploymentInfo - The deployment details extracted from Vercel redirect.
  * @returns Promise<VercelDeployment | null> - The created deployment record or null if failed/skipped.
  */
-export async function saveVercelDeployment(
-	deploymentInfo: DeploymentInfo
-) {
+export async function saveVercelDeployment(deploymentInfo: DeploymentInfo) {
 	if (!isPayloadEnabled) {
 		console.warn("Payload not enabled, skipping Vercel deployment save.");
 		return null;

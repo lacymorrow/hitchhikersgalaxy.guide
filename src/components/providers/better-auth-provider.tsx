@@ -1,7 +1,7 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { env } from "@/env";
-import { ReactNode } from "react";
 
 interface BetterAuthProviderProps {
 	children: ReactNode;

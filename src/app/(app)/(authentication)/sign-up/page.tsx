@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { AuthForm } from "@/app/(app)/(authentication)/_components/auth-form";
 import { Icon } from "@/components/assets/icon";
 import { Divider } from "@/components/primitives/divider";
@@ -6,7 +7,6 @@ import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
 import { isGuestOnlyMode } from "@/server/auth-providers";
-import { redirect } from "next/navigation";
 import { AuthenticationCard } from "../_components/authentication-card";
 import { SignUpForm } from "./_components/sign-up-form";
 

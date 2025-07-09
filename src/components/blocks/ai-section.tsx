@@ -1,29 +1,29 @@
-'use client'
+"use client";
 
-import { BuyButton } from "@/components/buttons/buy-button"
-import { Link } from "@/components/primitives/link-with-transition"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { HeartFilledIcon } from "@radix-ui/react-icons"
-import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowUpRight } from 'lucide-react'
-import type { KeyboardEvent } from 'react'
-import { useEffect, useRef, useState } from 'react'
+import { HeartFilledIcon } from "@radix-ui/react-icons";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowUpRight } from "lucide-react";
+import type { KeyboardEvent } from "react";
+import { useEffect, useRef, useState } from "react";
+import { BuyButton } from "@/components/buttons/buy-button";
+import { Link } from "@/components/primitives/link-with-transition";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export function AISection() {
-	const [prompt, setPrompt] = useState('')
-	const [response, setResponse] = useState('')
-	const [isGenerating, setIsGenerating] = useState(false)
-	const [showCTA, setShowCTA] = useState(false)
-	const responseRef = useRef<HTMLPreElement>(null)
+	const [prompt, setPrompt] = useState("");
+	const [response, setResponse] = useState("");
+	const [isGenerating, setIsGenerating] = useState(false);
+	const [showCTA, setShowCTA] = useState(false);
+	const responseRef = useRef<HTMLPreElement>(null);
 
 	const handleGenerate = () => {
-		if (!prompt || isGenerating) return
-		setIsGenerating(true)
-		setResponse('')
-		setShowCTA(false)
-		streamResponse()
-	}
+		if (!prompt || isGenerating) return;
+		setIsGenerating(true);
+		setResponse("");
+		setShowCTA(false);
+		streamResponse();
+	};
 
 	const streamResponse = () => {
 		const fullResponse = ` // Generated @ shipkit.io \n
@@ -31,7 +31,10 @@ import React from 'react'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'\n
 
-export function ${prompt.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join('')}() {
+export function ${prompt
+			.split(" ")
+			.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+			.join("")}() {
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-2">${prompt}</h2>
@@ -41,35 +44,35 @@ export function ${prompt.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice
       </button>
     </div>
   )
-}`
+}`;
 
-		let index = 0
+		let index = 0;
 		const interval = setInterval(() => {
 			if (index > 100) {
-				setTimeout(() => setShowCTA(true), 500)
+				setTimeout(() => setShowCTA(true), 500);
 			}
 			if (index < fullResponse.length) {
-				setResponse(prev => prev + fullResponse[index])
-				index++
+				setResponse((prev) => prev + fullResponse[index]);
+				index++;
 			} else {
-				clearInterval(interval)
-				setIsGenerating(false)
+				clearInterval(interval);
+				setIsGenerating(false);
 			}
-		}, 20)
-	}
+		}, 20);
+	};
 
 	useEffect(() => {
 		if (responseRef.current) {
-			responseRef.current.scrollTop = responseRef.current.scrollHeight
+			responseRef.current.scrollTop = responseRef.current.scrollHeight;
 		}
-	}, [])
+	}, []);
 
 	const handleKeyDown = (e: KeyboardEvent) => {
-		if (e.key === 'Enter' && !e.shiftKey) {
-			e.preventDefault()
-			handleGenerate()
+		if (e.key === "Enter" && !e.shiftKey) {
+			e.preventDefault();
+			handleGenerate();
 		}
-	}
+	};
 
 	return (
 		<section className="flex flex-col items-center justify-center px-4 py-20">
@@ -147,7 +150,13 @@ export function ${prompt.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice
 											</p>
 											<BuyButton />
 											<p className="text-white/70 text-xs">
-												See more at <Link href={'https://v0.dev'} className="text-purple-400 hover:text-purple-300">v0.dev</Link>
+												See more at{" "}
+												<Link
+													href={"https://v0.dev"}
+													className="text-purple-400 hover:text-purple-300"
+												>
+													v0.dev
+												</Link>
 											</p>
 										</motion.div>
 									</motion.div>
@@ -158,6 +167,5 @@ export function ${prompt.split(' ').map(w => w.charAt(0).toUpperCase() + w.slice
 				)}
 			</AnimatePresence>
 		</section>
-	)
+	);
 }
-

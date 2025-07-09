@@ -1,3 +1,4 @@
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 
 export interface PricingPlan {

@@ -1,5 +1,8 @@
 "use client";
 
+import { CheckCircle, Database, ExternalLink, Loader2, XCircle } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -11,9 +14,6 @@ import type {
 	CategorizedIntegrationStatuses, // Assuming these are exported from service
 	IntegrationStatus,
 } from "@/server/services/integration-service";
-import { CheckCircle, Database, ExternalLink, Loader2, XCircle } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
 import { seedCMSAction } from "./actions"; // Import the seed action
 
 interface IntegrationsClientContentProps {

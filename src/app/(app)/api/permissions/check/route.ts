@@ -1,8 +1,8 @@
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { auth } from "@/server/auth";
 import { isAdmin } from "@/server/services/admin-service";
 import { rbacService } from "@/server/services/rbac";
-import type { NextRequest } from "next/server";
-import { NextResponse } from "next/server";
 
 /**
  * API endpoint for checking permissions

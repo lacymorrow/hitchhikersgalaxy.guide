@@ -8,7 +8,12 @@ import { getAlternativePaths, getEssentialConfigFiles } from "./project-config";
 import type { ContainerFile } from "./types";
 
 // Common constants
-export const TEMPLATE_BASE_DIR = path.join("packages", "create-shipkit-app", "templates", "minimal");
+export const TEMPLATE_BASE_DIR = path.join(
+	"packages",
+	"create-shipkit-app",
+	"templates",
+	"minimal"
+);
 export const BINARY_EXTENSIONS = [
 	".ico",
 	".png",

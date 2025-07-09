@@ -1,9 +1,9 @@
-import { auth } from "@/server/auth";
-import { db } from "@/server/db";
-import { accounts } from "@/server/db/schema";
 import { and, eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { auth } from "@/server/auth";
+import { db } from "@/server/db";
+import { accounts } from "@/server/db/schema";
 
 interface RouteContext {
 	params: Promise<{

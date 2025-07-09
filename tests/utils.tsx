@@ -5,9 +5,9 @@ import { AppRouterLayout } from "../src/components/layouts/app-router-layout";
 
 // Mock ResizeObserver which is not available in test environment
 class ResizeObserverMock {
-	observe() { }
-	unobserve() { }
-	disconnect() { }
+	observe() {}
+	unobserve() {}
+	disconnect() {}
 }
 
 global.ResizeObserver = ResizeObserverMock;
@@ -25,4 +25,3 @@ function customRender(ui: ReactElement, options?: Omit<RenderOptions, "wrapper">
 // Re-export everything
 export * from "@testing-library/react";
 export { customRender as render };
-

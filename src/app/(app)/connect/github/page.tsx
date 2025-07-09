@@ -1,16 +1,23 @@
 "use client";
 
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { Icons } from "@/components/assets/icons";
 import { GitHubConnectDialog } from "@/components/buttons/github-connect-dialog";
 import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { cn } from "@/lib/utils";
-import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useState } from "react";
 
 // Simple client-only wrapper component
 const ClientOnly = ({ children }: { children: React.ReactNode }) => {
@@ -112,12 +119,24 @@ export default function GitHubConnectPage() {
 						) : isSuccess ? (
 							<div className="flex flex-col items-center justify-center space-y-4">
 								<div className="h-16 w-16 rounded-full bg-green-100 flex items-center justify-center text-green-500">
-									<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="h-10 w-10">
-										<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+									<svg
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										viewBox="0 0 24 24"
+										stroke="currentColor"
+										className="h-10 w-10"
+									>
+										<path
+											strokeLinecap="round"
+											strokeLinejoin="round"
+											strokeWidth={2}
+											d="M5 13l4 4L19 7"
+										/>
 									</svg>
 								</div>
 								<p className="text-center">
-									Successfully connected to GitHub as <strong>{session?.user?.githubUsername}</strong>
+									Successfully connected to GitHub as{" "}
+									<strong>{session?.user?.githubUsername}</strong>
 								</p>
 								<p className="text-center text-sm text-muted-foreground">
 									Redirecting to your profile settings...
@@ -127,7 +146,8 @@ export default function GitHubConnectPage() {
 							<div className="flex flex-col items-center justify-center space-y-4">
 								<Icons.github className="h-16 w-16" />
 								<p className="text-center">
-									Your account is connected to GitHub as <strong>{session?.user?.githubUsername}</strong>
+									Your account is connected to GitHub as{" "}
+									<strong>{session?.user?.githubUsername}</strong>
 								</p>
 							</div>
 						) : (

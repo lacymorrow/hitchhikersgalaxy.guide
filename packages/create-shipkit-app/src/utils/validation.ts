@@ -1,6 +1,6 @@
-import validatePackageName from "validate-npm-package-name";
-import path from "path";
 import fs from "fs-extra";
+import path from "path";
+import validatePackageName from "validate-npm-package-name";
 import type { ValidationResult } from "../types.js";
 
 /**

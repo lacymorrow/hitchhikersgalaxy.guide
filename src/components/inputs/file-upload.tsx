@@ -1,15 +1,15 @@
 "use client";
-import { Button } from "@/components/ui/button";
-import { ALLOWED_FILE_TYPES, FILE_UPLOAD_MAX_SIZE } from "@/config/file";
-import { env } from "@/env";
-import { logger } from "@/lib/logger";
-import { deleteFileAction, uploadFileAction } from "@/server/actions/file";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { File, Trash2, Upload } from "lucide-react";
 import type React from "react";
 import { type DragEvent, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { ALLOWED_FILE_TYPES, FILE_UPLOAD_MAX_SIZE } from "@/config/file";
+import { env } from "@/env";
+import { logger } from "@/lib/logger";
+import { deleteFileAction, uploadFileAction } from "@/server/actions/file";
 
 interface FileWithPreview {
 	id: string;
@@ -58,8 +58,8 @@ export function FileDropzone() {
 			// Set initial uploading state
 			setFiles((prev) =>
 				prev.map((f) =>
-					f.id === fileWithPreview.id ? { ...f, status: "uploading", progress: 10 } : f,
-				),
+					f.id === fileWithPreview.id ? { ...f, status: "uploading", progress: 10 } : f
+				)
 			);
 
 			// Start progress simulation
@@ -99,7 +99,7 @@ export function FileDropzone() {
 							};
 						}
 						return f;
-					}),
+					})
 				);
 
 				logger.info(`File uploaded successfully: ${fileName}`);
@@ -110,7 +110,7 @@ export function FileDropzone() {
 			clearInterval(progressIntervalRef.current[fileWithPreview.id]);
 
 			setFiles((prev) =>
-				prev.map((f) => (f.id === fileWithPreview.id ? { ...f, status: "error", progress: 0 } : f)),
+				prev.map((f) => (f.id === fileWithPreview.id ? { ...f, status: "error", progress: 0 } : f))
 			);
 
 			return {
@@ -278,10 +278,11 @@ export function FileDropzone() {
 	return (
 		<div className="h-auto w-full p-8">
 			<motion.div
-				className={`relative size-full cursor-pointer rounded-xl border-2 border-dashed p-12 text-center transition-colors ${isDragActive
-					? "border-blue-500 bg-blue-500/5"
-					: "border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 dark:hover:border-neutral-500"
-					}`}
+				className={`relative size-full cursor-pointer rounded-xl border-2 border-dashed p-12 text-center transition-colors ${
+					isDragActive
+						? "border-blue-500 bg-blue-500/5"
+						: "border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 dark:hover:border-neutral-500"
+				}`}
 				onClick={handleButtonClick}
 				onDragEnter={handleDragEnter}
 				onDragLeave={handleDragLeave}
@@ -346,7 +347,7 @@ export function FileDropzone() {
 							>
 								<div
 									className={`absolute left-0 top-0 z-0 h-full rounded-lg transition-all duration-300 ${getStatusColor(
-										file.status,
+										file.status
 									)}`}
 									style={{ width: `${file.progress}%`, opacity: 0.2 }}
 								/>

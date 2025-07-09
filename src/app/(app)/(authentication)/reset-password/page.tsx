@@ -3,20 +3,20 @@ import { CardContent, CardDescription, CardHeader, CardTitle } from "@/component
 import { AuthenticationCard } from "../_components/authentication-card";
 
 export default async function ResetPasswordPage({
-    searchParams,
+	searchParams,
 }: {
-    searchParams: Promise<{ token?: string }>;
+	searchParams: Promise<{ token?: string }>;
 }) {
-    const resolvedSearchParams = await searchParams;
-    return (
-        <AuthenticationCard>
-            <CardHeader>
-                <CardTitle className="text-2xl">Reset Password</CardTitle>
-                <CardDescription>Create a new password for your account</CardDescription>
-            </CardHeader>
-            <CardContent>
-                <ResetPasswordForm token={resolvedSearchParams?.token} />
-            </CardContent>
-        </AuthenticationCard>
-    );
+	const resolvedSearchParams = await searchParams;
+	return (
+		<AuthenticationCard>
+			<CardHeader>
+				<CardTitle className="text-2xl">Reset Password</CardTitle>
+				<CardDescription>Create a new password for your account</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<ResetPasswordForm token={resolvedSearchParams?.token} />
+			</CardContent>
+		</AuthenticationCard>
+	);
 }

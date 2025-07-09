@@ -12,7 +12,7 @@ export function createAudioContext(): AudioContext | undefined {
 
 export function setupAudioAnalyser(
 	context: AudioContext,
-	stream: MediaStream,
+	stream: MediaStream
 ): AnalyserNode | undefined {
 	try {
 		const analyser = context.createAnalyser();

@@ -95,7 +95,7 @@ export class LocalProjectStorage {
 			role: "owner",
 			createdAt: now,
 			updatedAt: now,
-			user: this.getUserFromStorage(creatorUserId),
+			user: LocalProjectStorage.getUserFromStorage(creatorUserId),
 		};
 
 		// Save to storage
@@ -183,7 +183,7 @@ export class LocalProjectStorage {
 			role,
 			createdAt: new Date(),
 			updatedAt: new Date(),
-			user: this.getUserFromStorage(userId),
+			user: LocalProjectStorage.getUserFromStorage(userId),
 		};
 
 		projectMembers.push(member);
@@ -271,7 +271,7 @@ export class LocalProjectStorage {
 
 		if (projects.length === 0) {
 			// Create a demo project
-			this.createProject(teamId, "Demo Project", userId);
+			LocalProjectStorage.createProject(teamId, "Demo Project", userId);
 		}
 	}
 

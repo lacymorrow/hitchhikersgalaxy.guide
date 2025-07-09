@@ -1,6 +1,6 @@
+import { Redis } from "@upstash/redis";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
-import { Redis } from "@upstash/redis";
 
 // Try to create Redis instance if configured
 let redis: Redis | null = null;
@@ -49,7 +49,10 @@ export class MetricsService {
 		};
 
 		try {
-			await redis!.zadd(`${this.prefix}:${name}`, { score: metric.timestamp, member: JSON.stringify(metric) });
+			await redis!.zadd(`${this.prefix}:${name}`, {
+				score: metric.timestamp,
+				member: JSON.stringify(metric),
+			});
 		} catch (error) {
 			logger.error("Failed to record metric", {
 				name,
@@ -88,17 +91,14 @@ export class MetricsService {
 			await redis!
 				.pipeline()
 				.incrby(key, value)
-				.zadd(
-					`${this.prefix}:${name}`,
-					{
-						score: Date.now(),
-						member: JSON.stringify({
-							value,
-							timestamp: Date.now(),
-							metadata,
-						} as MetricData)
-					}
-				)
+				.zadd(`${this.prefix}:${name}`, {
+					score: Date.now(),
+					member: JSON.stringify({
+						value,
+						timestamp: Date.now(),
+						metadata,
+					} as MetricData),
+				})
 				.exec();
 		} catch (error) {
 			logger.error("Failed to increment counter", {

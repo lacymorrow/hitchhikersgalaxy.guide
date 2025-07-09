@@ -1,5 +1,12 @@
 "use client";
 
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { useWindowScroll } from "@uidotdev/usehooks";
+import { cva } from "class-variance-authority";
+import { AnimatePresence, motion } from "framer-motion";
+import { useSession } from "next-auth/react";
+import type React from "react";
+import { useMemo } from "react";
 import { Icon } from "@/components/assets/icon";
 import { LoginButton } from "@/components/buttons/sign-in-button";
 import { Link } from "@/components/primitives/link-with-transition";
@@ -8,26 +15,14 @@ import { UserMenu } from "@/components/shipkit/user-menu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { useWindowScroll } from "@uidotdev/usehooks";
-import { cva } from "class-variance-authority";
-import { useSession } from "next-auth/react";
-import type React from "react";
-import { useMemo } from "react";
 import { BuyButton } from "../buttons/lemonsqueezy-buy-button";
+import type { User } from "@/types/user";
 
 import styles from "@/styles/header.module.css";
-import { AnimatePresence, motion } from "framer-motion";
-import type { User } from "@/types/user";
 
 interface NavLink {
 	href: string;
@@ -52,21 +47,19 @@ const defaultNavLinks = [
 	{ href: routes.pricing, label: "Pricing", isCurrent: false },
 ];
 
-const headerVariants = cva(
-	"translate-z-0 z-50 p-md",
-	{
-		variants: {
-			variant: {
-				default: "relative",
-				floating: "sticky top-0 h-24",
-				sticky: "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-			},
+const headerVariants = cva("translate-z-0 z-50 p-md", {
+	variants: {
+		variant: {
+			default: "relative",
+			floating: "sticky top-0 h-24",
+			sticky:
+				"sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
 		},
-		defaultVariants: {
-			variant: "default",
-		},
-	}
-);
+	},
+	defaultVariants: {
+		variant: "default",
+	},
+});
 
 export const Header: React.FC<HeaderProps> = ({
 	logoHref = routes.home,
@@ -90,7 +83,9 @@ export const Header: React.FC<HeaderProps> = ({
 					headerVariants({ variant }),
 					variant === "floating" && styles.header,
 					variant === "floating" && isOpaque && styles.opaque,
-					variant === "floating" && isOpaque && "-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]",
+					variant === "floating" &&
+					isOpaque &&
+					"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]",
 					className
 				)}
 			>
@@ -110,9 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
 								<Link
 									key={routes.docs}
 									href={routes.docs}
-									className={cn(
-										"transition-colors text-muted-foreground hover:text-foreground",
-									)}
+									className={cn("transition-colors text-muted-foreground hover:text-foreground")}
 								>
 									Documentation
 								</Link>
@@ -123,9 +116,7 @@ export const Header: React.FC<HeaderProps> = ({
 									href={link.href}
 									className={cn(
 										"transition-colors hover:text-foreground",
-										link.isCurrent
-											? "text-foreground"
-											: "text-muted-foreground",
+										link.isCurrent ? "text-foreground" : "text-muted-foreground"
 									)}
 								>
 									{link.label}
@@ -136,21 +127,14 @@ export const Header: React.FC<HeaderProps> = ({
 
 					<Sheet>
 						<SheetTrigger asChild>
-							<Button
-								variant="outline"
-								size="icon"
-								className="shrink-0 md:hidden"
-							>
+							<Button variant="outline" size="icon" className="shrink-0 md:hidden">
 								<HamburgerMenuIcon className="h-5 w-5" />
 								<span className="sr-only">Toggle navigation menu</span>
 							</Button>
 						</SheetTrigger>
 						<SheetContent side="left">
 							<nav className="grid gap-6 font-medium">
-								<Link
-									href={logoHref}
-									className="flex items-center gap-2 text-lg font-semibold"
-								>
+								<Link href={logoHref} className="flex items-center gap-2 text-lg font-semibold">
 									{logoIcon}
 									<span className="sr-only">{logoText}</span>
 								</Link>
@@ -160,7 +144,7 @@ export const Header: React.FC<HeaderProps> = ({
 										href={link.href}
 										className={cn(
 											"text-muted-foreground hover:text-foreground",
-											link.isCurrent ? "text-foreground" : "",
+											link.isCurrent ? "text-foreground" : ""
 										)}
 									>
 										{link.label}
@@ -172,24 +156,21 @@ export const Header: React.FC<HeaderProps> = ({
 											href={routes.auth.signIn}
 											className={cn(
 												buttonVariants({ variant: "default" }),
-												"w-full justify-center",
+												"w-full justify-center"
 											)}
 										>
 											Get Shipkit
 										</Link>
-										<LoginButton className={cn(
-											buttonVariants({ variant: "ghost" }),
-											"w-full justify-center",
-										)} />
+										<LoginButton
+											className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-center")}
+										/>
 									</>
 								)}
 								{isLoggedIn && (
 									<>
 										<Link
 											href={routes.docs}
-											className={cn(
-												"text-muted-foreground hover:text-foreground",
-											)}
+											className={cn("text-muted-foreground hover:text-foreground")}
 										>
 											Documentation
 										</Link>
@@ -197,7 +178,7 @@ export const Header: React.FC<HeaderProps> = ({
 											href={routes.app.dashboard}
 											className={cn(
 												buttonVariants({ variant: "default" }),
-												"w-full justify-center",
+												"w-full justify-center"
 											)}
 										>
 											Dashboard
@@ -219,8 +200,6 @@ export const Header: React.FC<HeaderProps> = ({
 							<UserMenu user={user} size="sm" />
 
 							<div className="flex items-center gap-2">
-
-
 								{!session && (
 									<AnimatePresence mode="wait">
 										{y && y > 700 ? (
@@ -243,9 +222,7 @@ export const Header: React.FC<HeaderProps> = ({
 															sideOffset={3}
 															className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
 														>
-															<LoginButton className="hover:text-foreground">
-																or Login
-															</LoginButton>
+															<LoginButton className="hover:text-foreground">or Login</LoginButton>
 														</TooltipContent>
 													</Tooltip>
 												</TooltipProvider>
@@ -258,10 +235,7 @@ export const Header: React.FC<HeaderProps> = ({
 												exit={{ opacity: 0, scale: 0.9 }}
 												transition={{ duration: 0.1 }}
 											>
-												<LoginButton
-													variant="outline"
-													nextUrl={routes.app.dashboard}
-												>
+												<LoginButton variant="outline" nextUrl={routes.app.dashboard}>
 													Dashboard
 												</LoginButton>
 											</motion.div>
@@ -269,7 +243,6 @@ export const Header: React.FC<HeaderProps> = ({
 									</AnimatePresence>
 								)}
 							</div>
-
 						</div>
 					</div>
 				</nav>

@@ -1,38 +1,34 @@
-'use client'
+"use client";
 
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import * as React from "react";
 import {
 	Accordion,
 	AccordionContent,
 	AccordionItem,
 	AccordionTrigger,
-} from "@/components/ui/accordion"
-import type { NavSection } from "@/lib/docs"
-import { cn } from "@/lib/utils/cn"
-import Link from "next/link"
-import { usePathname } from "next/navigation"
-import * as React from "react"
+} from "@/components/ui/accordion";
+import type { NavSection } from "@/lib/docs";
+import { cn } from "@/lib/utils/cn";
 
 interface DocsSidebarProps {
-	className?: string
-	navigation: NavSection[]
+	className?: string;
+	navigation: NavSection[];
 }
 
 export function DocsSidebar({ className, navigation }: DocsSidebarProps) {
-	const pathname = usePathname()
+	const pathname = usePathname();
 
 	return (
 		<div className={cn("w-full", className)}>
 			<Accordion
 				type="multiple"
-				defaultValue={navigation.map(section => section.title)}
+				defaultValue={navigation.map((section) => section.title)}
 				className="space-y-1"
 			>
 				{navigation.map((section) => (
-					<AccordionItem
-						key={section.title}
-						value={section.title}
-						className="border-none px-1"
-					>
+					<AccordionItem key={section.title} value={section.title} className="border-none px-1">
 						<AccordionTrigger className="py-1.5 text-sm hover:no-underline">
 							<span className="font-medium text-foreground/70">{section.title}</span>
 						</AccordionTrigger>
@@ -61,5 +57,5 @@ export function DocsSidebar({ className, navigation }: DocsSidebarProps) {
 				))}
 			</Accordion>
 		</div>
-	)
+	);
 }

@@ -1,11 +1,12 @@
+import { eq } from "drizzle-orm";
+import type { NextAuthConfig } from "next-auth";
 import { routes } from "@/config/routes";
 import { providers } from "@/server/auth-providers.config";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { grantGitHubAccess } from "@/server/services/github/github-service";
 import { userService } from "@/server/services/user-service";
-import { eq } from "drizzle-orm";
-import type { NextAuthConfig } from "next-auth";
+import { logger } from "@/lib/logger";
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -45,17 +46,11 @@ export const authOptions: NextAuthConfig = {
 
 			// Handle guest user sign-in
 			if (account?.provider === "guest") {
-				console.debug("Guest user sign-in", { user });
 				return true; // Always allow guest sign-in
 			}
 
 			// Handle GitHub OAuth connection
 			if (account?.provider === "github" && account.access_token) {
-				console.debug("GitHub OAuth signIn callback", {
-					user,
-					account,
-				});
-
 				// Note: We don't call connectGitHub here because the session doesn't exist yet
 				// The GitHub connection information is handled in the JWT callback
 				return true;
@@ -69,18 +64,33 @@ export const authOptions: NextAuthConfig = {
 				return true;
 			}
 
-			// Ensure the user exists in the Shipkit database
-			// This handles cases where a user was created through OAuth but not in Shipkit
-			try {
-				await userService.ensureUserExists({
-					id: user.id,
-					email: user.email as string,
-					name: user.name,
-					image: user.image,
-				});
-			} catch (error) {
-				console.error("Error ensuring user exists in Shipkit database:", error);
-				// Don't fail the sign-in if this fails, just log the error
+			// For OAuth providers, use profile data to ensure user exists and is up to date
+			// This handles cases where a user was created through OAuth but profile info changed
+			if (account?.provider && profile) {
+				try {
+					await userService.ensureUserExists({
+						id: user.id,
+						email: user.email as string,
+						name: profile.name || user.name,  // Use profile name if available
+						image: profile.image || profile.picture || user.image,  // Use profile image if available
+					});
+				} catch (error) {
+					console.error("Error ensuring user exists in Shipkit database:", error);
+					// Don't fail the sign-in if this fails, just log the error
+				}
+			} else {
+				// Fallback for non-OAuth providers
+				try {
+					await userService.ensureUserExists({
+						id: user.id,
+						email: user.email as string,
+						name: user.name,
+						image: user.image,
+					});
+				} catch (error) {
+					console.error("Error ensuring user exists in Shipkit database:", error);
+					// Don't fail the sign-in if this fails, just log the error
+				}
 			}
 
 			// Log the sign in activity
@@ -126,15 +136,9 @@ export const authOptions: NextAuthConfig = {
 				// This happens in the JWT callback where we have access to the user ID and account data
 				(async () => {
 					try {
-						console.log("Updating GitHub connection in database", {
-							userId: user.id,
-							githubUsername: (user as any).githubUsername || "unknown",
-							providerAccountId: account.providerAccountId,
-						});
 
 						// Get current user metadata
 						if (!user.id) {
-							console.error("User ID is missing, cannot update GitHub connection");
 							return;
 						}
 
@@ -174,7 +178,7 @@ export const authOptions: NextAuthConfig = {
 							if (githubUsername) {
 								try {
 									await grantGitHubAccess({ githubUsername });
-									console.log("Successfully granted GitHub repository access", {
+									logger.info("Successfully granted GitHub repository access", {
 										userId: user.id,
 										githubUsername,
 									});

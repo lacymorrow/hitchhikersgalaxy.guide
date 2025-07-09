@@ -1,6 +1,7 @@
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import React, { HTMLAttributes, useCallback, useMemo } from "react";
+import type React from "react";
+import { type HTMLAttributes, useCallback, useMemo } from "react";
+import { cn } from "@/lib/utils";
 
 interface WarpBackgroundProps extends HTMLAttributes<HTMLDivElement> {
 	children: React.ReactNode;
@@ -69,8 +70,7 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
 
 		for (let i = 0; i < beamsPerSide; i++) {
 			const x = Math.floor(i * step);
-			const delay =
-				Math.random() * (beamDelayMax - beamDelayMin) + beamDelayMin;
+			const delay = Math.random() * (beamDelayMax - beamDelayMin) + beamDelayMin;
 			beams.push({ x, delay });
 		}
 		return beams;

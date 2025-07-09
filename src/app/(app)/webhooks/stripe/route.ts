@@ -1,11 +1,11 @@
-import { env } from "@/env";
-import { logger } from "@/lib/logger";
-import { verifyStripeWebhookSignature, processStripeWebhook } from "@/lib/stripe";
-import { PaymentService } from "@/server/services/payment-service";
-import { userService } from "@/server/services/user-service";
 import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 import Stripe from "stripe";
+import { env } from "@/env";
+import { logger } from "@/lib/logger";
+import { processStripeWebhook, verifyStripeWebhookSignature } from "@/lib/stripe";
+import { PaymentService } from "@/server/services/payment-service";
+import { userService } from "@/server/services/user-service";
 
 /**
  * Stripe webhook handler
@@ -67,15 +67,15 @@ export async function POST(request: Request) {
 						});
 
 						// Get customer ID - handle both string and object cases
-						const customerId = typeof session.customer === 'string' ? session.customer : session.customer.id;
+						const customerId =
+							typeof session.customer === "string" ? session.customer : session.customer.id;
 						const customer = await stripe.customers.retrieve(customerId);
 
 						if (customer && !customer.deleted) {
 							// Find or create user by email
-							const { user } = await userService.findOrCreateUserByEmail(
-								customer.email!,
-								{ name: customer.name ?? undefined }
-							);
+							const { user } = await userService.findOrCreateUserByEmail(customer.email!, {
+								name: customer.name ?? undefined,
+							});
 
 							// Create payment record
 							await PaymentService.createPayment({
@@ -113,7 +113,7 @@ export async function POST(request: Request) {
 			case "payment_intent.succeeded": {
 				const paymentIntent = event.data.object as Stripe.PaymentIntent;
 				logger.debug("Processing payment intent succeeded", {
-					paymentIntentId: paymentIntent.id
+					paymentIntentId: paymentIntent.id,
 				});
 
 				if (paymentIntent.customer) {
@@ -123,15 +123,17 @@ export async function POST(request: Request) {
 						});
 
 						// Get customer ID - handle both string and object cases
-						const customerId = typeof paymentIntent.customer === 'string' ? paymentIntent.customer : paymentIntent.customer.id;
+						const customerId =
+							typeof paymentIntent.customer === "string"
+								? paymentIntent.customer
+								: paymentIntent.customer.id;
 						const customer = await stripe.customers.retrieve(customerId);
 
 						if (customer && !customer.deleted) {
 							// Find or create user by email
-							const { user } = await userService.findOrCreateUserByEmail(
-								customer.email!,
-								{ name: customer.name ?? undefined }
-							);
+							const { user } = await userService.findOrCreateUserByEmail(customer.email!, {
+								name: customer.name ?? undefined,
+							});
 
 							// Check if we already have a payment record for this payment intent
 							const existingPayment = await PaymentService.getPaymentByOrderId(paymentIntent.id);
@@ -190,15 +192,17 @@ export async function POST(request: Request) {
 					});
 
 					// Get customer ID - handle both string and object cases
-					const customerId = typeof subscription.customer === 'string' ? subscription.customer : subscription.customer.id;
+					const customerId =
+						typeof subscription.customer === "string"
+							? subscription.customer
+							: subscription.customer.id;
 					const customer = await stripe.customers.retrieve(customerId);
 
 					if (customer && !customer.deleted) {
 						// Find or create user by email
-						const { user } = await userService.findOrCreateUserByEmail(
-							customer.email!,
-							{ name: customer.name ?? undefined }
-						);
+						const { user } = await userService.findOrCreateUserByEmail(customer.email!, {
+							name: customer.name ?? undefined,
+						});
 
 						// For active subscriptions, ensure we have a payment record
 						if (subscription.status === "active") {
@@ -215,15 +219,21 @@ export async function POST(request: Request) {
 									subscriptionStatus: subscription.status,
 								};
 
-								if (Object.hasOwn(subscription, "current_period_start") && typeof (subscription as any).current_period_start === 'number') {
+								if (
+									Object.hasOwn(subscription, "current_period_start") &&
+									typeof (subscription as any).current_period_start === "number"
+								) {
 									metadata.currentPeriodStart = new Date(
-										(subscription as any).current_period_start * 1000,
+										(subscription as any).current_period_start * 1000
 									).toISOString();
 								}
 
-								if (Object.hasOwn(subscription, "current_period_end") && typeof (subscription as any).current_period_end === 'number') {
+								if (
+									Object.hasOwn(subscription, "current_period_end") &&
+									typeof (subscription as any).current_period_end === "number"
+								) {
 									metadata.currentPeriodEnd = new Date(
-										(subscription as any).current_period_end * 1000,
+										(subscription as any).current_period_end * 1000
 									).toISOString();
 								}
 
@@ -267,15 +277,15 @@ export async function POST(request: Request) {
 						});
 
 						// Get customer ID - handle both string and object cases
-						const customerId = typeof invoice.customer === 'string' ? invoice.customer : invoice.customer.id;
+						const customerId =
+							typeof invoice.customer === "string" ? invoice.customer : invoice.customer.id;
 						const customer = await stripe.customers.retrieve(customerId);
 
 						if (customer && !customer.deleted) {
 							// Find or create user by email
-							const { user } = await userService.findOrCreateUserByEmail(
-								customer.email!,
-								{ name: customer.name ?? undefined }
-							);
+							const { user } = await userService.findOrCreateUserByEmail(customer.email!, {
+								name: customer.name ?? undefined,
+							});
 
 							logger.info("Invoice payment succeeded", {
 								invoiceId: invoice.id,

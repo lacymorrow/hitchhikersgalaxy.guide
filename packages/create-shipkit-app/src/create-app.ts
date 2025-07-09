@@ -1,19 +1,19 @@
 import chalk from "chalk";
+import { execa } from "execa";
+import fs from "fs-extra";
 import inquirer from "inquirer";
 import ora from "ora";
 import path from "path";
-import fs from "fs-extra";
-import { execa } from "execa";
+import { getAvailableFeatures, getAvailableTemplates } from "./config/templates.js";
+import { scaffoldProject } from "./scaffold/index.js";
 import type { CreateAppOptions, ProjectConfig } from "./types.js";
+import { initializeGit } from "./utils/git.js";
+import { installDependencies } from "./utils/install.js";
 import {
-	validateProjectName,
 	validateProjectDirectory,
+	validateProjectName,
 	validateSystemRequirements,
 } from "./utils/validation.js";
-import { getAvailableTemplates, getAvailableFeatures } from "./config/templates.js";
-import { scaffoldProject } from "./scaffold/index.js";
-import { installDependencies } from "./utils/install.js";
-import { initializeGit } from "./utils/git.js";
 
 export async function createShipKitApp(options: CreateAppOptions): Promise<void> {
 	// Validate system requirements

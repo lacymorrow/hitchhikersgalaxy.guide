@@ -1,8 +1,7 @@
-import { db } from "@/server/db";
-import { and, asc, desc, eq, sql } from "drizzle-orm";
+import { and, asc, type Column, desc, eq, type SQL, sql } from "drizzle-orm";
 import type { PgTable } from "drizzle-orm/pg-core";
-import { Column, SQL } from "drizzle-orm";
 import { nanoid } from "nanoid";
+import { db } from "@/server/db";
 
 export interface BaseServiceOptions<T extends PgTable> {
 	table: T;

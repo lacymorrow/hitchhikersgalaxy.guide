@@ -1,7 +1,8 @@
 "use client";
 
+import { CaretSortIcon } from "@radix-ui/react-icons";
 import { useSession } from "next-auth/react";
-
+import { useState } from "react";
 import { UserMenuDropdown } from "@/components/shipkit/user-menu-dropdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -13,8 +14,6 @@ import {
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useSubscription } from "@/hooks/use-subscription";
 import { cn } from "@/lib/utils";
-import { CaretSortIcon } from "@radix-ui/react-icons";
-import { useState } from "react";
 
 interface NavUserProps {
 	className?: string;
@@ -28,6 +27,7 @@ export function NavUser({ className, showUpgrade = true }: NavUserProps) {
 	const isAdmin = useIsAdmin();
 	const { hasActiveSubscription } = useSubscription();
 	const isLoading = status === "loading";
+	console.log("session", session?.user);
 
 	const userInitials = session?.user?.name
 		?.split(" ")
@@ -55,7 +55,7 @@ export function NavUser({ className, showUpgrade = true }: NavUserProps) {
 						size="lg"
 						className={cn(
 							"data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground",
-							isLoading && "opacity-50",
+							isLoading && "opacity-50"
 						)}
 					>
 						<Avatar className="h-8 w-8 rounded-lg">
@@ -63,17 +63,11 @@ export function NavUser({ className, showUpgrade = true }: NavUserProps) {
 								src={session?.user?.image ?? undefined}
 								alt={session?.user?.name ?? "User"}
 							/>
-							<AvatarFallback className="rounded-lg">
-								{userInitials ?? "ME"}
-							</AvatarFallback>
+							<AvatarFallback className="rounded-lg">{userInitials ?? "ME"}</AvatarFallback>
 						</Avatar>
 						<div className="grid flex-1 text-left text-sm leading-tight">
-							<span className="truncate font-semibold">
-								{session?.user?.name ?? "Guest User"}
-							</span>
-							<span className="truncate text-xs">
-								{session?.user?.email ?? "Not signed in"}
-							</span>
+							<span className="truncate font-semibold">{session?.user?.name ?? "Guest User"}</span>
+							<span className="truncate text-xs">{session?.user?.email ?? "Not signed in"}</span>
 						</div>
 						<CaretSortIcon className="ml-auto size-4" />
 					</SidebarMenuButton>

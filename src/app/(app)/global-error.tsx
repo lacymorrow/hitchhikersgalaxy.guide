@@ -31,7 +31,12 @@ export default function GlobalError({
 		// ! We don't use the RootLayout here because there could be an error in it.
 		<html lang="en" suppressHydrationWarning>
 			<body className="bg-background">
-				<Boundary title="Something went wrong!" actionText="Try again" onAction={resetAction} className="h-screen w-screen">
+				<Boundary
+					title="Something went wrong!"
+					actionText="Try again"
+					onAction={resetAction}
+					className="h-screen w-screen"
+				>
 					{process.env.NODE_ENV === "development" && (
 						<div className="text-xs">
 							<pre>{error.message}</pre>

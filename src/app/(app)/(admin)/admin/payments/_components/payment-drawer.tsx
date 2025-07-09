@@ -1,5 +1,17 @@
 "use client";
 
+import { format } from "date-fns";
+import {
+	CalendarDays,
+	ChevronDown,
+	ChevronUp,
+	CreditCard,
+	DollarSign,
+	Mail,
+	Tag,
+	User,
+} from "lucide-react";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,9 +29,6 @@ import { JsonViewer } from "@/components/ui/json-viewer";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import type { PaymentData } from "@/server/services/payment-service";
-import { format } from "date-fns";
-import { CalendarDays, ChevronDown, ChevronUp, CreditCard, DollarSign, Mail, Tag, User } from "lucide-react";
-import { useState } from "react";
 
 interface PaymentDrawerProps {
 	payment: PaymentData | null;
@@ -49,9 +58,7 @@ export const PaymentDrawer = ({ payment, open, onClose }: PaymentDrawerProps) =>
 			<DrawerContent className="max-h-[90vh] flex flex-col">
 				<DrawerHeader>
 					<DrawerTitle>Payment Details</DrawerTitle>
-					<DrawerDescription>
-						Order ID: {payment.orderId}
-					</DrawerDescription>
+					<DrawerDescription>Order ID: {payment.orderId}</DrawerDescription>
 				</DrawerHeader>
 
 				<ScrollArea className="flex-grow overflow-y-auto">
@@ -70,20 +77,27 @@ export const PaymentDrawer = ({ payment, open, onClose }: PaymentDrawerProps) =>
 													<h4 className="text-xl font-medium">{payment.productName}</h4>
 													<div className="flex items-center gap-2 text-sm text-muted-foreground">
 														<DollarSign className="h-3 w-3" />
-														<span>{new Intl.NumberFormat("en-US", {
-															style: "currency",
-															currency: "USD",
-														}).format(typeof payment.amount === 'string' ? Number.parseFloat(payment.amount) : payment.amount)}</span>
+														<span>
+															{new Intl.NumberFormat("en-US", {
+																style: "currency",
+																currency: "USD",
+															}).format(
+																typeof payment.amount === "string"
+																	? Number.parseFloat(payment.amount)
+																	: payment.amount
+															)}
+														</span>
 													</div>
 												</div>
 												<div className="ml-auto flex gap-2">
-													<Badge variant={productType.variant}>
-														{productType.label}
-													</Badge>
+													<Badge variant={productType.variant}>{productType.label}</Badge>
 													<Badge
 														variant={
-															payment.status === "paid" ? "default" :
-																payment.status === "refunded" ? "destructive" : "secondary"
+															payment.status === "paid"
+																? "default"
+																: payment.status === "refunded"
+																	? "destructive"
+																	: "secondary"
 														}
 													>
 														{payment.status.charAt(0).toUpperCase() + payment.status.slice(1)}
@@ -99,7 +113,9 @@ export const PaymentDrawer = ({ payment, open, onClose }: PaymentDrawerProps) =>
 															<CalendarDays className="h-5 w-5 text-primary" />
 														</div>
 														<div>
-															<p className="text-sm font-medium text-muted-foreground">Purchase Date</p>
+															<p className="text-sm font-medium text-muted-foreground">
+																Purchase Date
+															</p>
 															<p className="font-medium">{format(payment.purchaseDate, "PPP")}</p>
 														</div>
 													</div>
@@ -123,7 +139,9 @@ export const PaymentDrawer = ({ payment, open, onClose }: PaymentDrawerProps) =>
 															<Tag className="h-5 w-5 text-primary" />
 														</div>
 														<div>
-															<p className="text-sm font-medium text-muted-foreground">Product Type</p>
+															<p className="text-sm font-medium text-muted-foreground">
+																Product Type
+															</p>
 															<Badge variant={productType.variant} className="mt-1">
 																{productType.label}
 															</Badge>
@@ -170,7 +188,11 @@ export const PaymentDrawer = ({ payment, open, onClose }: PaymentDrawerProps) =>
 								<Collapsible open={isJsonOpen} onOpenChange={setIsJsonOpen} className="w-full">
 									<div className="flex items-center justify-end">
 										<CollapsibleTrigger asChild>
-											<Button variant="ghost" size="sm" className="h-7 px-2 text-xs text-muted-foreground">
+											<Button
+												variant="ghost"
+												size="sm"
+												className="h-7 px-2 text-xs text-muted-foreground"
+											>
 												{isJsonOpen ? (
 													<>
 														<ChevronUp className="h-3 w-3 mr-1" />

@@ -1,13 +1,10 @@
 "use client";
 
-import {
-	shortcutConfig,
-	type ShortcutActionType
-} from "@/config/keyboard-shortcuts";
 import type { HotkeyItem } from "@mantine/hooks";
 import { useHotkeys } from "@mantine/hooks";
 import type React from "react";
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { type ShortcutActionType, shortcutConfig } from "@/config/keyboard-shortcuts";
 
 interface ShortcutHandler {
 	action: ShortcutActionType;

@@ -1,3 +1,5 @@
+import { DownloadIcon } from "lucide-react";
+import type { Session } from "next-auth";
 import { BuyButton } from "@/components/buttons/lemonsqueezy-buy-button";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
 import { GitHubConnectDialog } from "@/components/buttons/github-connect-dialog";
@@ -11,24 +13,20 @@ import { downloadRepo } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
 import { apiKeyService } from "@/server/services/api-key-service";
 import { checkGitHubConnection } from "@/server/services/github/github-service";
-import { DownloadIcon } from "lucide-react";
-import type { Session } from "next-auth";
+import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
 
 interface DownloadSectionProps {
 	isCustomer: boolean;
 }
 
 export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
-	const session = await auth() as Session | null;
+	const session = (await auth()) as Session | null;
 
 	// If not authenticated, show login button
 	if (!session?.user) {
 		return (
 			<div className="flex flex-wrap items-stretch justify-stretch max-w-md">
-				<LoginButton
-					size="lg"
-					className="w-full"
-				>
+				<LoginButton size="lg" className="w-full">
 					Sign in to download {siteConfig.title}
 				</LoginButton>
 			</div>
@@ -50,9 +48,10 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
 	}
 
 	// Run all async operations in parallel
-	const [userApiKeys, isGitHubConnected] = await Promise.all([
+	const [userApiKeys, isGitHubConnected, isVercelConnected] = await Promise.all([
 		apiKeyService.getUserApiKeys(userId),
-		checkGitHubConnection(userId)
+		checkGitHubConnection(userId),
+		checkVercelConnection(userId),
 	]);
 
 	// Get the user's API key
@@ -65,7 +64,10 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
 	const deployUrl = new URL(routes.external.vercelDeployShipkit);
 	const redirectUrl = deployUrl.searchParams.get("redirect-url");
 	if (apiKey) {
-		deployUrl.searchParams.set("redirect-url", encodeURIComponent(`${redirectUrl ?? BASE_URL}${routes.vercelDeploy}/${apiKey}`));
+		deployUrl.searchParams.set(
+			"redirect-url",
+			encodeURIComponent(`${redirectUrl ?? BASE_URL}${routes.vercelDeploy}/${apiKey}`)
+		);
 	}
 	const vercelDeployHref = deployUrl.toString();
 
@@ -75,17 +77,13 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
 			<div className="flex flex-wrap items-stretch justify-stretch w-full gap-3">
 				{/* Download button */}
 				<form action={downloadRepo} className="w-full">
-					<Button
-						type="submit"
-						size="lg"
-						className="w-full"
-					>
+					<Button type="submit" size="lg" className="w-full">
 						<DownloadIcon className="mr-2 h-4 w-4" />
 						Download {siteConfig.title}
 					</Button>
 				</form>
 
-				{/* <VercelDeployButton className="w-full" href={vercelDeployHref} /> */}
+				{isVercelConnected && <VercelDeployButton className="w-full" href={vercelDeployHref} />}
 			</div>
 			{/* GitHub connection section */}
 			{isGitHubConnected ? (

@@ -1,9 +1,8 @@
-
+import type { GetServerSideProps } from "next";
+import Link from "next/link";
 import { PagesRouterLayout } from "@/components/layouts/pages-router-layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { createRoute, routes } from "@/config/routes";
-import type { GetServerSideProps } from "next";
-import Link from "next/link";
 
 interface DynamicPageProps {
 	id: string;
@@ -53,8 +52,8 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
 								</pre>
 							</div>
 							<p className="text-sm text-muted-foreground">
-								Try changing the ID in the URL to see how the page updates dynamically! For
-								example, try visiting{" "}
+								Try changing the ID in the URL to see how the page updates dynamically! For example,
+								try visiting{" "}
 								<Link
 									suppressHydrationWarning
 									href={dynamicExampleRoute.path}

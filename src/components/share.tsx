@@ -1,5 +1,7 @@
 "use client";
 
+import { Facebook, Linkedin, Link as LinkIcon, Share2, Twitter } from "lucide-react";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -9,14 +11,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { BASE_URL } from "@/config/base-url";
 import { useToast } from "@/hooks/use-toast";
-import {
-	Facebook,
-	Link as LinkIcon,
-	Linkedin,
-	Share2,
-	Twitter,
-} from "lucide-react";
-import { usePathname } from "next/navigation";
 
 interface ShareProps {
 	title?: string;
@@ -82,37 +76,24 @@ export const Share = ({
 	};
 
 	const openShareWindow = (shareUrl: string) => {
-		window.open(
-			shareUrl,
-			"share-dialog",
-			"width=600,height=400,location=no,menubar=no",
-		);
+		window.open(shareUrl, "share-dialog", "width=600,height=400,location=no,menubar=no");
 	};
 
 	// Social media share URLs
 	const twitterUrl = `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-		url,
-	)}&text=${encodeURIComponent(description)}&via=${via}&hashtags=${hashtags.join(
-		",",
-	)}`;
+		url
+	)}&text=${encodeURIComponent(description)}&via=${via}&hashtags=${hashtags.join(",")}`;
 
-	const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
-		url,
-	)}`;
+	const facebookUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`;
 
 	const linkedinUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
-		url,
+		url
 	)}`;
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
-				<Button
-					variant="outline"
-					size="icon"
-					className={className}
-					onClick={handleNativeShare}
-				>
+				<Button variant="outline" size="icon" className={className} onClick={handleNativeShare}>
 					<Share2 className="h-4 w-4" />
 				</Button>
 			</DropdownMenuTrigger>

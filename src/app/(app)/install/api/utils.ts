@@ -5,10 +5,10 @@
 import {
 	BINARY_EXTENSIONS,
 	CONTENT_TYPE_MAP,
-	TEMPLATE_BASE_DIR,
 	getContentType,
 	sanitizePath,
 	shouldIgnoreFile,
+	TEMPLATE_BASE_DIR,
 } from "../shared-utils";
 
 // Export utilities that are also used in the API routes

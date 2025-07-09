@@ -1,9 +1,6 @@
-import {
-	createFeedback,
-	updateFeedbackStatus,
-} from "@/server/services/feedback-service";
+import { beforeAll, describe, expect, it } from "vitest";
 import { db } from "@/server/db";
-import { describe, expect, it, beforeAll } from "vitest";
+import { createFeedback, updateFeedbackStatus } from "@/server/services/feedback-service";
 
 const options = {
 	skipEmail: true,
@@ -26,7 +23,7 @@ const testSuite = () => {
 						content: "Test feedback",
 						source: "dialog",
 					},
-					options,
+					options
 				);
 
 				expect(feedback).toBeDefined();
@@ -46,7 +43,7 @@ const testSuite = () => {
 						source: "dialog",
 						metadata,
 					},
-					options,
+					options
 				);
 
 				expect(feedback).toBeDefined();
@@ -65,7 +62,7 @@ const testSuite = () => {
 						source: "dialog",
 						metadata: {},
 					},
-					options,
+					options
 				);
 
 				expect(feedback).toBeDefined();
@@ -84,7 +81,7 @@ const testSuite = () => {
 						content: longContent,
 						source: "dialog",
 					},
-					options,
+					options
 				);
 
 				expect(feedback).toBeDefined();
@@ -103,7 +100,7 @@ const testSuite = () => {
 						content: specialContent,
 						source: "dialog",
 					},
-					options,
+					options
 				);
 
 				expect(feedback).toBeDefined();
@@ -122,8 +119,8 @@ const testSuite = () => {
 							content: "",
 							source: "dialog",
 						},
-						options,
-					),
+						options
+					)
 				).rejects.toThrow();
 			});
 
@@ -134,8 +131,8 @@ const testSuite = () => {
 							content: "Test feedback",
 							source: "invalid" as any,
 						},
-						options,
-					),
+						options
+					)
 				).rejects.toThrow();
 			});
 		});
@@ -147,20 +144,16 @@ const testSuite = () => {
 						content: "Test feedback",
 						source: "dialog",
 					},
-					options,
+					options
 				);
 
 				expect(feedback).toBeDefined();
 				if (!feedback) throw new Error("Feedback should be defined");
 
-				const updatedFeedback = await updateFeedbackStatus(
-					feedback.id,
-					"reviewed",
-				);
+				const updatedFeedback = await updateFeedbackStatus(feedback.id, "reviewed");
 
 				expect(updatedFeedback).toBeDefined();
-				if (!updatedFeedback)
-					throw new Error("Updated feedback should be defined");
+				if (!updatedFeedback) throw new Error("Updated feedback should be defined");
 				expect(updatedFeedback.status).toBe("reviewed");
 				expect(updatedFeedback.updatedAt).toBeInstanceOf(Date);
 			});
@@ -176,15 +169,13 @@ const testSuite = () => {
 						content: "Test feedback",
 						source: "dialog",
 					},
-					options,
+					options
 				);
 
 				expect(feedback).toBeDefined();
 				if (!feedback) throw new Error("Feedback should be defined");
 
-				await expect(
-					updateFeedbackStatus(feedback.id, "invalid" as any),
-				).rejects.toThrow();
+				await expect(updateFeedbackStatus(feedback.id, "invalid" as any)).rejects.toThrow();
 			});
 		});
 	});

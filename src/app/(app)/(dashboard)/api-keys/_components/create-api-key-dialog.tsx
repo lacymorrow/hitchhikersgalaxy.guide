@@ -1,5 +1,7 @@
 "use client";
 
+import { PlusIcon } from "@radix-ui/react-icons";
+import * as React from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { CopyButton } from "@/components/ui/copy-button";
@@ -23,8 +25,6 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { PlusIcon } from "@radix-ui/react-icons";
-import * as React from "react";
 
 interface CreateApiKeyDialogProps {
 	onSubmit: (data: {
@@ -96,10 +96,13 @@ export function CreateApiKeyDialog({ onSubmit, userId }: CreateApiKeyDialogProps
 
 	return (
 		<>
-			<Dialog open={open && !showKeyDialog} onOpenChange={(isOpen) => {
-				setOpen(isOpen);
-				if (!isOpen) resetForm();
-			}}>
+			<Dialog
+				open={open && !showKeyDialog}
+				onOpenChange={(isOpen) => {
+					setOpen(isOpen);
+					if (!isOpen) resetForm();
+				}}
+			>
 				<DialogTrigger asChild>
 					<Button>
 						<PlusIcon className="mr-2 h-4 w-4" /> Create API Key
@@ -110,8 +113,8 @@ export function CreateApiKeyDialog({ onSubmit, userId }: CreateApiKeyDialogProps
 						<DialogHeader>
 							<DialogTitle>Create API Key</DialogTitle>
 							<DialogDescription>
-								Create a new API key to access the API. Keep this key secure and never
-								share it publicly.
+								Create a new API key to access the API. Keep this key secure and never share it
+								publicly.
 							</DialogDescription>
 						</DialogHeader>
 
@@ -154,11 +157,7 @@ export function CreateApiKeyDialog({ onSubmit, userId }: CreateApiKeyDialogProps
 						</div>
 
 						<DialogFooter>
-							<Button
-								variant="outline"
-								onClick={() => setOpen(false)}
-								type="button"
-							>
+							<Button variant="outline" onClick={() => setOpen(false)} type="button">
 								Cancel
 							</Button>
 							<Button type="submit" disabled={isLoading}>
@@ -175,7 +174,8 @@ export function CreateApiKeyDialog({ onSubmit, userId }: CreateApiKeyDialogProps
 					<DialogHeader>
 						<DialogTitle>API Key Created</DialogTitle>
 						<DialogDescription>
-							Your API key has been created successfully. This is the only time you will see the full key. Please copy it now.
+							Your API key has been created successfully. This is the only time you will see the
+							full key. Please copy it now.
 						</DialogDescription>
 					</DialogHeader>
 
@@ -193,9 +193,7 @@ export function CreateApiKeyDialog({ onSubmit, userId }: CreateApiKeyDialogProps
 					</div>
 
 					<DialogFooter>
-						<Button onClick={handleCloseKeyDialog}>
-							Done
-						</Button>
+						<Button onClick={handleCloseKeyDialog}>Done</Button>
 					</DialogFooter>
 				</DialogContent>
 			</Dialog>

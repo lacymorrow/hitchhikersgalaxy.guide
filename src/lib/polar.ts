@@ -1,9 +1,9 @@
+import { Polar } from "@polar-sh/sdk";
+import { eq } from "drizzle-orm";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import { payments, users } from "@/server/db/schema";
-import { Polar } from "@polar-sh/sdk";
-import { eq } from "drizzle-orm";
 
 // Define interfaces for Polar types
 export interface PolarPaymentData {
@@ -89,7 +89,7 @@ export const getOrdersByEmail = async (email: string): Promise<PolarOrder[]> => 
 		// Call the Polar API to fetch orders by email with expanded product information
 		// Request product and variant details to extract proper product names
 		const response = await polarClient.orders.list({
-			include: ['product', 'product.variants', 'items', 'items.product', 'items.variant']
+			include: ["product", "product.variants", "items", "items.product", "items.variant"],
 		} as any);
 
 		// Extract orders from the response
@@ -127,7 +127,7 @@ export const getAllOrders = async (): Promise<PolarOrder[]> => {
 		// Call the Polar API to fetch all orders with expanded product information
 		// Request product and variant details to extract proper product names
 		const response = await polarClient.orders.list({
-			include: ['product', 'product.variants', 'items', 'items.product', 'items.variant']
+			include: ["product", "product.variants", "items", "items.product", "items.variant"],
 		} as any);
 
 		// Log the raw response for debugging
@@ -283,10 +283,16 @@ const mapToPolarOrder = (order: any): PolarOrder => {
 		const firstItem = order.items[0];
 		if (firstItem.product?.name) {
 			productName = firstItem.product.name;
-			logger.debug("Product name extracted from order.items[0].product.name", { orderId, productName });
+			logger.debug("Product name extracted from order.items[0].product.name", {
+				orderId,
+				productName,
+			});
 		} else if (firstItem.variant?.name) {
 			productName = firstItem.variant.name;
-			logger.debug("Product name extracted from order.items[0].variant.name", { orderId, productName });
+			logger.debug("Product name extracted from order.items[0].variant.name", {
+				orderId,
+				productName,
+			});
 		} else if (firstItem.name) {
 			productName = firstItem.name;
 			logger.debug("Product name extracted from order.items[0].name", { orderId, productName });
@@ -305,8 +311,8 @@ const mapToPolarOrder = (order: any): PolarOrder => {
 				orderProductName: order.productName,
 				description: order.description,
 				hasItems: !!(order.items && Array.isArray(order.items) && order.items.length > 0),
-				firstItemStructure: order.items?.[0] ? Object.keys(order.items[0]) : null
-			}
+				firstItemStructure: order.items?.[0] ? Object.keys(order.items[0]) : null,
+			},
 		});
 	}
 

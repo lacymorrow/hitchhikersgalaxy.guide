@@ -12,7 +12,6 @@ export const PagesRouterLayout = ({
 }) => {
 	return (
 		<>
-
 			<div className="flex min-h-screen flex-col py-10">
 				<main className="flex-1">{children}</main>
 			</div>

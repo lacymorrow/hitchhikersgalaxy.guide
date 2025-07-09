@@ -2,14 +2,7 @@ import { execSync } from "child_process";
 import { copyFile, mkdir, readdir, rm } from "fs/promises";
 import { join, relative } from "path";
 
-const EXCLUDED_DIRS = [
-	"node_modules",
-	".next",
-	".git",
-	"dist",
-	"build",
-	"temp",
-];
+const EXCLUDED_DIRS = ["node_modules", ".next", ".git", "dist", "build", "temp"];
 
 /*
  * Executes a git command and returns the output
@@ -74,11 +67,7 @@ async function main() {
 		console.log("\nCleaning working directory...");
 		const entries = await readdir(sourceDir, { withFileTypes: true });
 		for (const entry of entries) {
-			if (
-				entry.name === "temp" ||
-				entry.name === ".git" ||
-				EXCLUDED_DIRS.includes(entry.name)
-			) {
+			if (entry.name === "temp" || entry.name === ".git" || EXCLUDED_DIRS.includes(entry.name)) {
 				continue;
 			}
 			await rm(join(sourceDir, entry.name), { recursive: true, force: true });

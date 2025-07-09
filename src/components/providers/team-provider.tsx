@@ -24,9 +24,9 @@ interface TeamProviderProps {
 
 export const TeamProvider = ({ children, initialTeams }: TeamProviderProps) => {
 	const [teams] = useState<(TeamData & { slug: string })[]>(() =>
-		(initialTeams || []).map(team => ({
+		(initialTeams || []).map((team) => ({
 			...team,
-			slug: team.name.toLowerCase().replace(/\s+/g, '-'),
+			slug: team.name.toLowerCase().replace(/\s+/g, "-"),
 		}))
 	);
 	const [selectedTeamId, setSelectedTeamId] = useState<string | null>(() => {

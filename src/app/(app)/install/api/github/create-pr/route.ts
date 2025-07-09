@@ -1,6 +1,6 @@
-import { env } from "@/env";
 import { Octokit } from "@octokit/rest";
 import { NextResponse } from "next/server";
+import { env } from "@/env";
 
 export async function POST(req: Request) {
 	try {

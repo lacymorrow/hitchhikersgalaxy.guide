@@ -1,9 +1,9 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { auth } from "@/server/auth";
 import { createGitHubTemplateService } from "@/lib/github-template";
-import { createVercelAPIService, COMMON_ENV_VARIABLES } from "@/lib/vercel-api";
+import { COMMON_ENV_VARIABLES, createVercelAPIService } from "@/lib/vercel-api";
+import { auth } from "@/server/auth";
 import { getVercelAccessToken } from "@/server/services/vercel/vercel-service";
 
 /**
@@ -11,7 +11,9 @@ import { getVercelAccessToken } from "@/server/services/vercel/vercel-service";
  */
 
 // Define a common type for environment variable targets
-type EnvVarTarget = ReadonlyArray<"production" | "preview" | "development"> | ("production" | "preview" | "development")[];
+type EnvVarTarget =
+	| ReadonlyArray<"production" | "preview" | "development">
+	| ("production" | "preview" | "development")[];
 
 export interface DeploymentConfig {
 	templateRepo: string; // e.g., "shipkit/private-template"
@@ -52,13 +54,11 @@ export interface DeploymentResult {
 /**
  * Deploy a private repository template to user's GitHub and Vercel accounts
  */
-export async function deployPrivateRepository(
-	config: DeploymentConfig
-): Promise<DeploymentResult> {
+export async function deployPrivateRepository(config: DeploymentConfig): Promise<DeploymentResult> {
 	const session = await auth();
 
 	// Handle NextResponse type from auth function when redirecting
-	if (!session || (typeof session === 'object' && 'status' in session)) {
+	if (!session || (typeof session === "object" && "status" in session)) {
 		return {
 			success: false,
 			error: "Authentication required. Please log in to continue.",
@@ -73,7 +73,14 @@ export async function deployPrivateRepository(
 	}
 
 	// Get user's GitHub token from the config (still needed for private template access)
-	const { templateRepo, newRepoName, projectName, description, environmentVariables = [], githubToken } = config;
+	const {
+		templateRepo,
+		newRepoName,
+		projectName,
+		description,
+		environmentVariables = [],
+		githubToken,
+	} = config;
 
 	// Get user's Vercel access token using the service
 	const vercelToken = await getVercelAccessToken(session.user.id);
@@ -104,7 +111,7 @@ export async function deployPrivateRepository(
 		console.log(`🚀 Starting deployment: ${templateRepo} → ${projectName}`);
 
 		// Parse templateRepo to get owner and repo name
-		const [templateOwner, templateRepoName] = templateRepo.split('/');
+		const [templateOwner, templateRepoName] = templateRepo.split("/");
 		if (!templateOwner || !templateRepoName) {
 			return {
 				success: false,
@@ -120,7 +127,9 @@ export async function deployPrivateRepository(
 		if (!userInfo.success || !userInfo.username) {
 			return {
 				success: false,
-				error: userInfo.error || "Failed to get GitHub user information. Please check your access token.",
+				error:
+					userInfo.error ||
+					"Failed to get GitHub user information. Please check your access token.",
 			};
 		}
 
@@ -231,7 +240,7 @@ export async function validateDeploymentConfig(config: {
 	const { templateRepo, projectName, githubToken, vercelToken } = config;
 
 	// Validate template repo format
-	if (!templateRepo || !templateRepo.includes('/')) {
+	if (!templateRepo || !templateRepo.includes("/")) {
 		return {
 			success: false,
 			error: "Template repository must be in format 'owner/repo-name'",
@@ -295,7 +304,7 @@ export async function checkNameAvailability(
 		const session = await auth();
 
 		// Handle NextResponse type from auth function when redirecting
-		if (!session || (typeof session === 'object' && 'status' in session)) {
+		if (!session || (typeof session === "object" && "status" in session)) {
 			throw new Error("Authentication required");
 		}
 
@@ -321,7 +330,6 @@ export async function checkNameAvailability(
 		} catch (error: any) {
 			results.vercel.error = error.message;
 		}
-
 	} catch (error: any) {
 		results.github.error = error.message;
 		results.vercel.error = error.message;
@@ -356,9 +364,9 @@ export async function getTemplateRepositories(
 
 		return {
 			success: result.success,
-			repositories: result.repositories.map(repo => ({
+			repositories: result.repositories.map((repo) => ({
 				...repo,
-				topics: repo.topics || []
+				topics: repo.topics || [],
 			})),
 			error: result.error,
 		};
@@ -370,7 +378,6 @@ export async function getTemplateRepositories(
 		};
 	}
 }
-
 
 /**
  * Generate suggested project names based on repository name
@@ -386,26 +393,24 @@ export async function generateProjectNameSuggestions(repoName: string): Promise<
 	];
 
 	// Remove duplicates and invalid names
-	return [...new Set(suggestions)].filter(name =>
-		name.length <= 52 &&
-		/^[a-z0-9-]+$/.test(name) &&
-		!name.startsWith("-") &&
-		!name.endsWith("-") &&
-		!name.includes("--")
+	return [...new Set(suggestions)].filter(
+		(name) =>
+			name.length <= 52 &&
+			/^[a-z0-9-]+$/.test(name) &&
+			!name.startsWith("-") &&
+			!name.endsWith("-") &&
+			!name.includes("--")
 	);
 }
 
 /**
  * Get deployment status by checking both GitHub and Vercel
  */
-export async function getDeploymentStatus(
-	githubRepo: string,
-	vercelProjectId: string
-) {
+export async function getDeploymentStatus(githubRepo: string, vercelProjectId: string) {
 	const session = await auth();
 
 	// Handle NextResponse type from auth function when redirecting
-	if (!session || (typeof session === 'object' && 'status' in session)) {
+	if (!session || (typeof session === "object" && "status" in session)) {
 		return {
 			success: false,
 			error: "Authentication required",

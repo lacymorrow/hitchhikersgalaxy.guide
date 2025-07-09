@@ -1,8 +1,3 @@
-import { RESEND_FROM_EMAIL } from "@/config/constants";
-import { STATUS_CODES } from "@/config/status-codes";
-// Import the list of enabled provider IDs from the single source of truth
-import { availableProviderIds } from "@/server/auth-providers";
-import { AuthService } from "@/server/services/auth-service";
 import Bitbucket from "@auth/core/providers/bitbucket";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
@@ -12,6 +7,11 @@ import GitLab from "next-auth/providers/gitlab";
 import Google from "next-auth/providers/google";
 import Resend from "next-auth/providers/resend";
 import Twitter from "next-auth/providers/twitter";
+import { RESEND_FROM_EMAIL } from "@/config/constants";
+import { STATUS_CODES } from "@/config/status-codes";
+// Import the list of enabled provider IDs from the single source of truth
+import { availableProviderIds } from "@/server/auth-providers";
+import { AuthService } from "@/server/services/auth-service";
 
 // Define types for Vercel OAuth
 interface VercelTokens {

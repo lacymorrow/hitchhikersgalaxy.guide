@@ -1,13 +1,13 @@
 #!/usr/bin/env node
 
-import { Command } from "commander";
 import chalk from "chalk";
+import { Command } from "commander";
 import { readFileSync } from "fs";
-import { fileURLToPath } from "url";
 import path from "path";
+import { fileURLToPath } from "url";
 import { createShipKitApp } from "./create-app.js";
-import { validateProjectName } from "./utils/validation.js";
 import type { CreateAppOptions } from "./types.js";
+import { validateProjectName } from "./utils/validation.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);

@@ -1,7 +1,7 @@
+import { eq } from "drizzle-orm";
 import { db } from "@/server/db";
 import type { NewCreditTransaction } from "@/server/db/schema";
 import { creditTransactions, userCredits, users } from "@/server/db/schema";
-import { eq } from "drizzle-orm";
 
 /**
  * Retrieves the credit balance for a specific user.
@@ -59,10 +59,7 @@ export async function updateUserCredits({
 		});
 
 		if (!currentCredits) {
-			[currentCredits] = await tx
-				.insert(userCredits)
-				.values({ userId, balance: 0 })
-				.returning();
+			[currentCredits] = await tx.insert(userCredits).values({ userId, balance: 0 }).returning();
 			if (!currentCredits) {
 				// This should ideally not happen if the insert succeeded
 				tx.rollback();
@@ -82,10 +79,7 @@ export async function updateUserCredits({
 		}
 
 		// Update user's credit balance
-		await tx
-			.update(userCredits)
-			.set({ balance: newBalance })
-			.where(eq(userCredits.userId, userId));
+		await tx.update(userCredits).set({ balance: newBalance }).where(eq(userCredits.userId, userId));
 
 		// Log the credit transaction
 		await tx.insert(creditTransactions).values({

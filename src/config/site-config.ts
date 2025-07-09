@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { Manifest } from "next/dist/lib/metadata/types/manifest-types";
+
 // import { routes } from "@/config/routes"; // Import if needed for startUrl
 
 /**
@@ -116,7 +117,7 @@ interface SiteConfig {
 
 	// E-commerce store configuration
 	store: {
-		storeId: string;
+		id: string;
 		products: {
 			[key: string]: string;
 		};
@@ -239,7 +240,7 @@ export const siteConfig: SiteConfig = {
 	},
 
 	store: {
-		storeId: "shipkit",
+		id: "shipkit",
 		products: {
 			// LemonSqueezy Checkout URLs use Variant IDs (not Product IDs)
 			// Format: variant UUID from LemonSqueezy dashboard

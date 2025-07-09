@@ -57,7 +57,7 @@ async function writeJsonFile(filePath: string, content: any): Promise<void> {
 
 export async function generateBlockJson(
 	blockConfig: BlockConfig,
-	options: GeneratorOptions,
+	options: GeneratorOptions
 ): Promise<void> {
 	const {
 		name,
@@ -85,7 +85,7 @@ export async function generateBlockJson(
 				type: file.type || "registry:component",
 				target: file.target || "",
 			};
-		}),
+		})
 	);
 
 	const blockJson = {
@@ -98,19 +98,12 @@ export async function generateBlockJson(
 		files,
 	};
 
-	const outputPath = path.join(
-		options.outputDir,
-		"styles",
-		"default",
-		`${name}.json`,
-	);
+	const outputPath = path.join(options.outputDir, "styles", "default", `${name}.json`);
 
 	await writeJsonFile(outputPath, blockJson);
 }
 
-export async function generateAllBlocks(
-	options: GeneratorOptions,
-): Promise<void> {
+export async function generateAllBlocks(options: GeneratorOptions): Promise<void> {
 	const blockDirs = await fs.readdir(options.blocksDir);
 
 	for (const blockDir of blockDirs) {

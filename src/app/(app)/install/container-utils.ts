@@ -3,7 +3,7 @@
 // We're moving this to a client component since WebContainer can only run in the browser
 import type { FileSystemTree } from "@webcontainer/api";
 import { logInfo } from "./logging";
-import { ProjectPaths, getAlternativePaths, getEssentialConfigFiles } from "./project-config";
+import { getAlternativePaths, getEssentialConfigFiles, ProjectPaths } from "./project-config";
 import { processTemplateFiles } from "./shared-utils";
 import type { ContainerFile } from "./types";
 

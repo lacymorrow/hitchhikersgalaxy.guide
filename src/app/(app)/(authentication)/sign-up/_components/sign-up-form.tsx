@@ -1,10 +1,10 @@
 "use client";
 
-import { signUpSchema } from "@/lib/schemas/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useForm } from "react-hook-form";
+import { toast } from "sonner";
 import type { z } from "zod";
 
 import { Button } from "@/components/ui/button";
@@ -18,9 +18,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { routes } from "@/config/routes";
+import { signUpSchema } from "@/lib/schemas/auth";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
 import { signUpWithCredentialsAction } from "@/server/actions/auth";
-import { toast } from "sonner";
 
 type SignUpFormValues = z.infer<typeof signUpSchema>;
 
@@ -40,10 +40,10 @@ export const SignUpForm = () => {
 		try {
 			// Create FormData to match the expected function signature
 			const formData = new FormData();
-			formData.append('email', values.email);
-			formData.append('password', values.password);
-			formData.append('redirect', 'false');
-			formData.append('redirectTo', routes.home);
+			formData.append("email", values.email);
+			formData.append("password", values.password);
+			formData.append("redirect", "false");
+			formData.append("redirectTo", routes.home);
 
 			const result = await signUpWithCredentialsAction({}, formData);
 

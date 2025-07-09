@@ -1,12 +1,12 @@
 "use server";
 
-import { db } from "@/server/db";
-import { permissions, rolePermissions, roles, users } from "@/server/db/schema";
+import crypto from "crypto";
 import { sql } from "drizzle-orm";
 import { nanoid } from "nanoid";
-import { z } from "zod";
-import crypto from "crypto";
 import { promisify } from "util";
+import { z } from "zod";
+import { db } from "@/server/db";
+import { permissions, rolePermissions, roles, users } from "@/server/db/schema";
 
 // Constants for password hashing
 const SALT_LENGTH = 32;
@@ -18,13 +18,9 @@ const SCRYPT_OPTIONS = {
 } as const;
 
 // Promisify scrypt
-const scrypt = promisify<
-	string | Buffer,
-	Buffer,
-	number,
-	crypto.ScryptOptions,
-	Buffer
->(crypto.scrypt);
+const scrypt = promisify<string | Buffer, Buffer, number, crypto.ScryptOptions, Buffer>(
+	crypto.scrypt
+);
 
 /**
  * Hash a password using scrypt

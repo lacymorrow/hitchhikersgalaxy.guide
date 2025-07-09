@@ -1,5 +1,5 @@
-import { siteConfig } from "@/config/site-config";
 import Script from "next/script";
+import { siteConfig } from "@/config/site-config";
 
 interface JsonLdProps {
 	organization?: boolean;
@@ -75,10 +75,7 @@ export function JsonLd({
 					caption: siteConfig.title,
 				},
 				image: { "@id": `${siteConfig.url}/#logo` },
-				sameAs: [
-					siteConfig.links.twitter,
-					siteConfig.links.github,
-				].filter(Boolean),
+				sameAs: [siteConfig.links.twitter, siteConfig.links.github].filter(Boolean),
 			},
 			website && {
 				"@type": "WebSite",
@@ -188,11 +185,7 @@ export function JsonLd({
 	};
 
 	return (
-		<Script
-			id="json-ld"
-			type="application/ld+json"
-			strategy="worker"
-		>
+		<Script id="json-ld" type="application/ld+json" strategy="worker">
 			{`${JSON.stringify(structuredData)}`}
 		</Script>
 	);

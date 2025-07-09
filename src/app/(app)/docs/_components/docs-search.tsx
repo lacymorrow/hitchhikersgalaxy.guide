@@ -1,5 +1,9 @@
-'use client'
+"use client";
 
+import { DialogTitle } from "@radix-ui/react-dialog";
+import { MagnifyingGlassIcon } from "@radix-ui/react-icons";
+import { useRouter } from "next/navigation";
+import { useCallback, useState } from "react";
 import {
 	CommandDialog,
 	CommandEmpty,
@@ -7,21 +11,17 @@ import {
 	CommandInput,
 	CommandItem,
 	CommandList,
-} from "@/components/ui/command"
-import { Input } from "@/components/ui/input"
-import { DialogTitle } from "@radix-ui/react-dialog"
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
-import { useRouter } from "next/navigation"
-import { useCallback, useState } from "react"
+} from "@/components/ui/command";
+import { Input } from "@/components/ui/input";
 
 export function DocsSearch() {
-	const router = useRouter()
-	const [open, setOpen] = useState(false)
+	const router = useRouter();
+	const [open, setOpen] = useState(false);
 
 	const runCommand = useCallback((command: () => unknown) => {
-		setOpen(false)
-		command()
-	}, [])
+		setOpen(false);
+		command();
+	}, []);
 
 	return (
 		<>
@@ -44,21 +44,21 @@ export function DocsSearch() {
 					<CommandGroup heading="Documentation">
 						<CommandItem
 							onSelect={() => {
-								runCommand(() => router.push("/docs/introduction"))
+								runCommand(() => router.push("/docs/introduction"));
 							}}
 						>
 							Introduction
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {
-								runCommand(() => router.push("/docs/quickstart"))
+								runCommand(() => router.push("/docs/quickstart"));
 							}}
 						>
 							Quickstart Guide
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {
-								runCommand(() => router.push("/docs/core/architecture"))
+								runCommand(() => router.push("/docs/core/architecture"));
 							}}
 						>
 							Architecture
@@ -67,14 +67,14 @@ export function DocsSearch() {
 					<CommandGroup heading="API Reference">
 						<CommandItem
 							onSelect={() => {
-								runCommand(() => router.push("/docs/api-reference/authentication"))
+								runCommand(() => router.push("/docs/api-reference/authentication"));
 							}}
 						>
 							Authentication API
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {
-								runCommand(() => router.push("/docs/api-reference/integrations"))
+								runCommand(() => router.push("/docs/api-reference/integrations"));
 							}}
 						>
 							Integrations API
@@ -83,5 +83,5 @@ export function DocsSearch() {
 				</CommandList>
 			</CommandDialog>
 		</>
-	)
+	);
 }

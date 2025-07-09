@@ -1,15 +1,15 @@
 "use client";
 
+import { LifeBuoy, type LucideIcon, Send, Settings2 } from "lucide-react";
+import type React from "react";
 import { Link } from "@/components/primitives/link-with-transition";
-
 import { FeedbackDialog } from "@/components/shipkit/feedback-dialog";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
-import { LifeBuoy, type LucideIcon, Send, Settings2 } from "lucide-react";
-import type React from "react";
+
 const data = [
 	{
 		title: "Feedback",
@@ -88,9 +88,16 @@ export function NavSecondary({ items, className }: NavSecondaryProps) {
 							key={item.title}
 							trigger={
 								<NavItemWrapper title={item.title} open={open}>
-									<Button {...buttonProps} className="w-full justify-start group-data-[collapsible=icon]:px-2">
+									<Button
+										{...buttonProps}
+										className="w-full justify-start group-data-[collapsible=icon]:px-2"
+									>
 										<Icon className="h-4 w-4 shrink-0" />
-										{open && <span className="ml-2 transition-all duration-200 group-data-[collapsible=icon]:opacity-0">{item.title}</span>}
+										{open && (
+											<span className="ml-2 transition-all duration-200 group-data-[collapsible=icon]:opacity-0">
+												{item.title}
+											</span>
+										)}
 									</Button>
 								</NavItemWrapper>
 							}

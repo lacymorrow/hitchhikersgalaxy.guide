@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { motion } from 'framer-motion';
-import React, { useEffect, useState } from 'react';
+import { motion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 
 export const BackgroundSpacetime: React.FC = () => {
 	const [dimensions, setDimensions] = useState({ width: 0, height: 0 });
@@ -15,9 +15,9 @@ export const BackgroundSpacetime: React.FC = () => {
 		};
 
 		updateDimensions();
-		window.addEventListener('resize', updateDimensions);
+		window.addEventListener("resize", updateDimensions);
 
-		return () => window.removeEventListener('resize', updateDimensions);
+		return () => window.removeEventListener("resize", updateDimensions);
 	}, []);
 
 	const gridSize = 60; // Increased grid size for better visibility
@@ -61,13 +61,13 @@ export const BackgroundSpacetime: React.FC = () => {
 									y1: [
 										point.y * gridSize,
 										point.y * gridSize + Math.sin(point.x / 2) * 20,
-										point.y * gridSize
+										point.y * gridSize,
 									],
 									y2: [
 										point.y * gridSize,
 										point.y * gridSize + Math.sin((point.x + 1) / 2) * 20,
-										point.y * gridSize
-									]
+										point.y * gridSize,
+									],
 								}}
 								transition={{
 									repeat: Infinity,
@@ -90,13 +90,13 @@ export const BackgroundSpacetime: React.FC = () => {
 									x1: [
 										point.x * gridSize,
 										point.x * gridSize + Math.sin(point.y / 2) * 20,
-										point.x * gridSize
+										point.x * gridSize,
 									],
 									x2: [
 										point.x * gridSize,
 										point.x * gridSize + Math.sin((point.y + 1) / 2) * 20,
-										point.x * gridSize
-									]
+										point.x * gridSize,
+									],
 								}}
 								transition={{
 									repeat: Infinity,
@@ -112,4 +112,3 @@ export const BackgroundSpacetime: React.FC = () => {
 		</div>
 	);
 };
-

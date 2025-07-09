@@ -1,7 +1,7 @@
+import { and, eq } from "drizzle-orm";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import { accounts } from "@/server/db/schema";
-import { and, eq } from "drizzle-orm";
 
 /**
  * Check if a user has connected their Vercel account
@@ -103,7 +103,7 @@ export async function getVercelAccessToken(userId: string): Promise<string | nul
 				logger.warn("Vercel access token has expired", {
 					userId,
 					expiresAt: vercelAccount.expires_at,
-					now
+					now,
 				});
 				return null;
 			}

@@ -1,5 +1,8 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Loader2 } from "lucide-react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -17,9 +20,6 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { submitContactForm } from "@/server/actions/contact";
 import { type ContactFormData, contactFormSchema } from "@/types/contact";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
-import { useForm } from "react-hook-form";
 
 interface ContactFormProps {
 	/** Optional default values for the form */
@@ -30,11 +30,7 @@ interface ContactFormProps {
 	className?: string;
 }
 
-export function ContactForm({
-	defaultValues,
-	onSuccess,
-	className,
-}: ContactFormProps) {
+export function ContactForm({ defaultValues, onSuccess, className }: ContactFormProps) {
 	const { toast } = useToast();
 
 	const form = useForm<ContactFormData>({
@@ -83,7 +79,12 @@ export function ContactForm({
 	return (
 		<Form {...form}>
 			<form onSubmit={form.handleSubmit(onSubmit)} className={className}>
-				<div className={cn("grid gap-6", form.formState.isSubmitting && "opacity-60 pointer-events-none")}>
+				<div
+					className={cn(
+						"grid gap-6",
+						form.formState.isSubmitting && "opacity-60 pointer-events-none"
+					)}
+				>
 					{/* Name Field */}
 					<FormField
 						control={form.control}
@@ -111,7 +112,9 @@ export function ContactForm({
 							<FormItem>
 								<FormLabel>
 									Contact Info{" "}
-									<span className="text-xs text-muted-foreground">(email or phone number, optional)</span>
+									<span className="text-xs text-muted-foreground">
+										(email or phone number, optional)
+									</span>
 								</FormLabel>
 								<FormControl>
 									<Input
@@ -169,11 +172,7 @@ export function ContactForm({
 					/>
 				</div>
 
-				<Button
-					type="submit"
-					className="mt-8 w-full"
-					disabled={form.formState.isSubmitting}
-				>
+				<Button type="submit" className="mt-8 w-full" disabled={form.formState.isSubmitting}>
 					{form.formState.isSubmitting ? (
 						<>
 							<Loader2 className="mr-2 h-4 w-4 animate-spin" />

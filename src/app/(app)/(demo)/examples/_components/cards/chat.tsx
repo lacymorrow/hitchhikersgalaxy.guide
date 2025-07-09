@@ -1,20 +1,11 @@
-"use client"
+"use client";
 
-import { Check, Plus, Send } from "lucide-react"
-import * as React from "react"
+import { Check, Plus, Send } from "lucide-react";
+import * as React from "react";
 
-import {
-	Avatar,
-	AvatarFallback,
-	AvatarImage,
-} from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-} from "@/components/ui/card"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import {
 	Command,
 	CommandEmpty,
@@ -22,7 +13,7 @@ import {
 	CommandInput,
 	CommandItem,
 	CommandList,
-} from "@/components/ui/command"
+} from "@/components/ui/command";
 import {
 	Dialog,
 	DialogContent,
@@ -30,15 +21,10 @@ import {
 	DialogFooter,
 	DialogHeader,
 	DialogTitle,
-} from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { cn } from "@/lib/utils";
 
 const users = [
 	{
@@ -66,13 +52,13 @@ const users = [
 		email: "will@email.com",
 		avatar: "https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/04.png",
 	},
-] as const
+] as const;
 
-type User = (typeof users)[number]
+type User = (typeof users)[number];
 
 export function CardsChat() {
-	const [open, setOpen] = React.useState(false)
-	const [selectedUsers, setSelectedUsers] = React.useState<User[]>([])
+	const [open, setOpen] = React.useState(false);
+	const [selectedUsers, setSelectedUsers] = React.useState<User[]>([]);
 
 	const [messages, setMessages] = React.useState([
 		{
@@ -91,9 +77,9 @@ export function CardsChat() {
 			role: "user",
 			content: "I can't log in.",
 		},
-	])
-	const [input, setInput] = React.useState("")
-	const inputLength = input.trim().length
+	]);
+	const [input, setInput] = React.useState("");
+	const inputLength = input.trim().length;
 
 	return (
 		<>
@@ -101,7 +87,10 @@ export function CardsChat() {
 				<CardHeader className="flex flex-row items-center">
 					<div className="flex items-center space-x-4">
 						<Avatar>
-							<AvatarImage src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/01.png" alt="Image" />
+							<AvatarImage
+								src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/01.png"
+								alt="Image"
+							/>
 							<AvatarFallback>OM</AvatarFallback>
 						</Avatar>
 						<div>
@@ -146,16 +135,16 @@ export function CardsChat() {
 				<CardFooter>
 					<form
 						onSubmit={(event) => {
-							event.preventDefault()
-							if (inputLength === 0) return
+							event.preventDefault();
+							if (inputLength === 0) return;
 							setMessages([
 								...messages,
 								{
 									role: "user",
 									content: input,
 								},
-							])
-							setInput("")
+							]);
+							setInput("");
 						}}
 						className="flex w-full items-center space-x-2"
 					>
@@ -179,8 +168,7 @@ export function CardsChat() {
 					<DialogHeader className="px-4 pb-4 pt-5">
 						<DialogTitle>New message</DialogTitle>
 						<DialogDescription>
-							Invite a user to this thread. This will create a new group
-							message.
+							Invite a user to this thread. This will create a new group message.
 						</DialogDescription>
 					</DialogHeader>
 					<Command className="overflow-hidden rounded-t-none border-t bg-transparent">
@@ -195,17 +183,13 @@ export function CardsChat() {
 										onSelect={() => {
 											if (selectedUsers.includes(user)) {
 												return setSelectedUsers(
-													selectedUsers.filter(
-														(selectedUser) => selectedUser !== user
-													)
-												)
+													selectedUsers.filter((selectedUser) => selectedUser !== user)
+												);
 											}
 
 											return setSelectedUsers(
-												[...users].filter((u) =>
-													[...selectedUsers, user].includes(u)
-												)
-											)
+												[...users].filter((u) => [...selectedUsers, user].includes(u))
+											);
 										}}
 									>
 										<Avatar>
@@ -213,12 +197,8 @@ export function CardsChat() {
 											<AvatarFallback>{user.name[0]}</AvatarFallback>
 										</Avatar>
 										<div className="ml-2">
-											<p className="text-sm font-medium leading-none">
-												{user.name}
-											</p>
-											<p className="text-sm text-muted-foreground">
-												{user.email}
-											</p>
+											<p className="text-sm font-medium leading-none">{user.name}</p>
+											<p className="text-sm text-muted-foreground">{user.email}</p>
 										</div>
 										{selectedUsers.includes(user) ? (
 											<Check className="ml-auto flex h-5 w-5 text-primary" />
@@ -232,24 +212,19 @@ export function CardsChat() {
 						{selectedUsers.length > 0 ? (
 							<div className="flex -space-x-2 overflow-hidden">
 								{selectedUsers.map((user) => (
-									<Avatar
-										key={user.email}
-										className="inline-block border-2 border-background"
-									>
+									<Avatar key={user.email} className="inline-block border-2 border-background">
 										<AvatarImage src={user.avatar} />
 										<AvatarFallback>{user.name[0]}</AvatarFallback>
 									</Avatar>
 								))}
 							</div>
 						) : (
-							<p className="text-sm text-muted-foreground">
-								Select users to add to this thread.
-							</p>
+							<p className="text-sm text-muted-foreground">Select users to add to this thread.</p>
 						)}
 						<Button
 							disabled={selectedUsers.length < 2}
 							onClick={() => {
-								setOpen(false)
+								setOpen(false);
 							}}
 						>
 							Continue
@@ -258,5 +233,5 @@ export function CardsChat() {
 				</DialogContent>
 			</Dialog>
 		</>
-	)
+	);
 }

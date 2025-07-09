@@ -1,15 +1,15 @@
-import { CardsActivityGoal } from "./activity-goal"
-import { CardsCalendar } from "./calendar"
-import { CardsChat } from "./chat"
-import { CardsCookieSettings } from "./cookie-settings"
-import { CardsCreateAccount } from "./create-account"
-import { CardsDataTable } from "./data-table"
-import { CardsMetric } from "./metric"
-import { CardsPaymentMethod } from "./payment-method"
-import { CardsReportIssue } from "./report-issue"
-import { CardsShare } from "./share"
-import { CardsStats } from "./stats"
-import { CardsTeamMembers } from "./team-members"
+import { CardsActivityGoal } from "./activity-goal";
+import { CardsCalendar } from "./calendar";
+import { CardsChat } from "./chat";
+import { CardsCookieSettings } from "./cookie-settings";
+import { CardsCreateAccount } from "./create-account";
+import { CardsDataTable } from "./data-table";
+import { CardsMetric } from "./metric";
+import { CardsPaymentMethod } from "./payment-method";
+import { CardsReportIssue } from "./report-issue";
+import { CardsShare } from "./share";
+import { CardsStats } from "./stats";
+import { CardsTeamMembers } from "./team-members";
 
 export function CardsDemo() {
 	return (
@@ -59,5 +59,5 @@ export function CardsDemo() {
 				</div>
 			</div>
 		</div>
-	)
+	);
 }

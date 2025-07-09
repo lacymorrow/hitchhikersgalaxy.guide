@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import { Icons } from "@/components/assets/icons"
-import { Button } from "@/components/ui/button"
+import { Icons } from "@/components/assets/icons";
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -9,36 +9,29 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
 export function CardsPaymentMethod() {
 	return (
 		<Card>
 			<CardHeader>
 				<CardTitle>Payment Method</CardTitle>
-				<CardDescription>
-					Add a new payment method to your account.
-				</CardDescription>
+				<CardDescription>Add a new payment method to your account.</CardDescription>
 			</CardHeader>
 			<CardContent className="grid gap-6">
 				<RadioGroup defaultValue="card" className="grid grid-cols-3 gap-4">
 					<div>
-						<RadioGroupItem
-							value="card"
-							id="card"
-							className="peer sr-only"
-							aria-label="Card"
-						/>
+						<RadioGroupItem value="card" id="card" className="peer sr-only" aria-label="Card" />
 						<Label
 							htmlFor="card"
 							className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
@@ -75,12 +68,7 @@ export function CardsPaymentMethod() {
 						</Label>
 					</div>
 					<div>
-						<RadioGroupItem
-							value="apple"
-							id="apple"
-							className="peer sr-only"
-							aria-label="Apple"
-						/>
+						<RadioGroupItem value="apple" id="apple" className="peer sr-only" aria-label="Apple" />
 						<Label
 							htmlFor="apple"
 							className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary "
@@ -150,5 +138,5 @@ export function CardsPaymentMethod() {
 				<Button className="w-full">Continue</Button>
 			</CardFooter>
 		</Card>
-	)
+	);
 }

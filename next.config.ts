@@ -1,9 +1,9 @@
+import type { NextConfig } from "next";
+import path from "path";
 import { buildTimeFeatureFlags } from "@/config/features-config";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
 import { withPlugins } from "@/config/with-plugins";
-import type { NextConfig } from "next";
-import path from "path";
 
 const nextConfig: NextConfig = {
 	env: {
@@ -155,7 +155,7 @@ const nextConfig: NextConfig = {
 		 * Optimizes navigation performance by caching page segments
 		 */
 		staleTimes: {
-			dynamic: 90, // 90 seconds for dynamic routes
+			dynamic: buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED ? 0 : 90, // Payload needs to be re-rendered on every request
 			static: 3600, // 3600 seconds for static routes
 		},
 
@@ -261,7 +261,6 @@ const nextConfig: NextConfig = {
 		},
 	},
 
-
 	/*
 	 * Webpack configuration
 	 */
@@ -363,8 +362,7 @@ const nextConfig: NextConfig = {
 		}
 
 		return config;
-	}
-
+	},
 };
 
 /*

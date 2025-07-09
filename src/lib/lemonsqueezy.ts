@@ -1,11 +1,11 @@
+import { lemonSqueezySetup, listOrders, listProducts } from "@lemonsqueezy/lemonsqueezy.js";
+import { eq } from "drizzle-orm";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 // src/config/lemonsqueezy.ts
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import type { LemonSqueezyOrderAttributes } from "@/types/lemonsqueezy";
-import { lemonSqueezySetup, listOrders, listProducts } from "@lemonsqueezy/lemonsqueezy.js";
-import { eq } from "drizzle-orm";
 
 export interface PaymentData {
 	id: string;
@@ -46,7 +46,7 @@ export const getOrdersByEmail = async (email: string) => {
 			filter: {
 				userEmail: email.trim(),
 			},
-			include: ['order-items', 'customer']
+			include: ["order-items", "customer"],
 		});
 
 		if (!response || !Array.isArray(response.data?.data)) {
@@ -110,7 +110,7 @@ export const getAllOrders = async () => {
 
 		// Include order-items in the response to get detailed product information
 		const response = await listOrders({
-			include: ['order-items', 'customer']
+			include: ["order-items", "customer"],
 		});
 
 		if (!response || !Array.isArray(response.data?.data)) {
@@ -292,7 +292,7 @@ export const fetchConfiguredLemonSqueezyProducts = async () => {
 			.map((variant: any) => {
 				// Find the product key for this variant
 				const productKey = Object.keys(siteConfig.store.products).find(
-					key => siteConfig.store.products[key] === variant.id
+					(key) => siteConfig.store.products[key] === variant.id
 				);
 
 				return {
@@ -541,7 +541,7 @@ export const getProductKeyForVariant = async (variantId: string): Promise<string
 	try {
 		const { siteConfig } = await import("@/config/site-config");
 		const productKey = Object.keys(siteConfig.store.products).find(
-			key => siteConfig.store.products[key] === variantId
+			(key) => siteConfig.store.products[key] === variantId
 		);
 		return productKey || null;
 	} catch (error) {
@@ -608,7 +608,7 @@ export const getUserPurchasedConfiguredProducts = async (userId: string): Promis
 			}
 		}
 
-		logger.debug(`User ${userId} has purchased products: [${purchasedProducts.join(', ')}]`);
+		logger.debug(`User ${userId} has purchased products: [${purchasedProducts.join(", ")}]`);
 		return purchasedProducts;
 	} catch (error) {
 		logger.error("Error getting user's purchased configured products:", error);

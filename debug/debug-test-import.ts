@@ -27,7 +27,7 @@ async function testImportAndCheck() {
 		}
 
 		console.log("\n🔎 Step 4: Check for 'Unknown Product' entries");
-		const unknownProducts = payments.filter(p => p.productName === "Unknown Product");
+		const unknownProducts = payments.filter((p) => p.productName === "Unknown Product");
 		console.log(`Found ${unknownProducts.length} payments with "Unknown Product"`);
 
 		if (unknownProducts.length > 0) {
@@ -39,7 +39,6 @@ async function testImportAndCheck() {
 		}
 
 		console.log("\n✅ Import and check complete!");
-
 	} catch (error) {
 		console.error("❌ Error in test:", error);
 	}

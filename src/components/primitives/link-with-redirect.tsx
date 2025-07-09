@@ -5,10 +5,10 @@
  * It's used to redirect the user back to the page they were on after they sign in.
  */
 
-import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import Link, { type LinkProps } from "next/link";
 import { usePathname } from "next/navigation";
 import { type ReactNode, useMemo } from "react";
+import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 
 export type LinkWithRedirectProps = LinkProps & {
 	redirectTo?: string;
@@ -39,10 +39,7 @@ export const LinkWithRedirect = ({
 	params.set(SEARCH_PARAM_KEYS.nextUrl, String(nextUrl));
 
 	return (
-		<Link
-			{...props}
-			href={`${typeof href === "string" ? href : href.href}?${String(params)}`}
-		>
+		<Link {...props} href={`${typeof href === "string" ? href : href.href}?${String(params)}`}>
 			{children}
 		</Link>
 	);

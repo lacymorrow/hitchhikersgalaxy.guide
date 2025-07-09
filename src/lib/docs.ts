@@ -50,7 +50,7 @@ function sanitizeFilePath(inputPath: string): string {
 		.replace(/\/+$/, ""); // Remove trailing slashes
 
 	// Validate that the path only contains safe characters
-	if (!/^[\w\-\/\.]*$/.test(sanitized)) {
+	if (!/^[\w\-/.]*$/.test(sanitized)) {
 		throw new Error("Invalid file path characters");
 	}
 
@@ -69,7 +69,7 @@ function validateSlug(slug: string): string {
 	}
 
 	// Allow only safe characters
-	if (!/^[\w\-\/]*$/.test(sanitized)) {
+	if (!/^[\w\-/]*$/.test(sanitized)) {
 		throw new Error("Invalid slug format");
 	}
 
@@ -308,7 +308,6 @@ function processDirectory(dir: string): NavSection[] {
 				}
 			} catch (error) {
 				console.error(`Error reading file ${entry.name}:`, error);
-				continue;
 			}
 		}
 
@@ -354,9 +353,7 @@ export async function getAllDocSlugsFromFileSystem(): Promise<string[]> {
 					collectSlugs(fullPath, prefix ? `${prefix}/${entry.name}` : entry.name);
 				} else if (entry.name.endsWith(".mdx") || entry.name.endsWith(".md")) {
 					const fileName = entry.name.replace(/\.(mdx|md)$/, "");
-					const slug = prefix
-						? `${prefix}/${fileName}`
-						: fileName;
+					const slug = prefix ? `${prefix}/${fileName}` : fileName;
 
 					// Only add if we haven't already processed this slug from this directory
 					if (!processedInThisDir.has(fileName)) {

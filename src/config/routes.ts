@@ -1,5 +1,6 @@
 import type { Route } from "next";
 import { siteConfig } from "./site-config";
+
 type ParamValue = string | number | null;
 export type RouteParams = Record<string, ParamValue>;
 

@@ -1,6 +1,6 @@
+import { createAuthClient } from "better-auth/react";
 import { BASE_URL } from "@/config/base-url";
 import { env } from "@/env";
-import { createAuthClient } from "better-auth/react";
 
 /**
  * Better Auth client for frontend use

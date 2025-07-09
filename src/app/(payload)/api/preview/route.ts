@@ -1,5 +1,5 @@
-import { getPayloadClient } from "@/lib/payload/payload";
 import { NextResponse } from "next/server";
+import { getPayloadClient } from "@/lib/payload/payload";
 
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);

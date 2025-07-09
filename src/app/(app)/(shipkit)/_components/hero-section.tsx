@@ -1,12 +1,16 @@
 "use client";
 
+import { ArrowRight, Box, Code, Zap } from "lucide-react";
 import { ShipkitLogoParticles } from "@/app/(app)/(shipkit)/_components/shipkit-logo-particles";
 import { Link } from "@/components/primitives/link-with-transition";
-import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/primitives/page-header";
+import {
+	PageHeader,
+	PageHeaderDescription,
+	PageHeaderHeading,
+} from "@/components/primitives/page-header";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { buttonVariants } from "@/components/ui/button";
 import { siteConfig } from "@/config/site-config";
-import { ArrowRight, Box, Code, Zap } from "lucide-react";
 
 export function HeroSection() {
 	return (
@@ -23,15 +27,12 @@ export function HeroSection() {
 								The Next.js 15 Accelerator.
 							</PageHeaderHeading>
 							<PageHeaderDescription className="max-w-[600px] md:text-xl">
-								Launch your Next.js projects with {siteConfig.title}. Fast,
-								flexible, and feature-packed for the modern web.
+								Launch your Next.js projects with {siteConfig.title}. Fast, flexible, and
+								feature-packed for the modern web.
 							</PageHeaderDescription>
 						</PageHeader>
 						<div className="flex flex-col gap-2 min-[400px]:flex-row">
-							<Link
-								href="https://shipkit.io"
-								className={buttonVariants({ size: "lg" })}
-							>
+							<Link href="https://shipkit.io" className={buttonVariants({ size: "lg" })}>
 								Get Started
 								<ArrowRight className="ml-2 h-4 w-4" />
 							</Link>

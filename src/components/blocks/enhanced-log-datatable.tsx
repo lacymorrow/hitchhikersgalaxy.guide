@@ -1,5 +1,20 @@
 "use client";
 
+import {
+	type ColumnDef,
+	type ColumnFiltersState,
+	flexRender,
+	getCoreRowModel,
+	getFilteredRowModel,
+	getPaginationRowModel,
+	getSortedRowModel,
+	type SortingState,
+	useReactTable,
+	type VisibilityState,
+} from "@tanstack/react-table";
+import { motion } from "framer-motion";
+import { AlertCircle, ArrowUpDown, CheckCircle, Info, MoreHorizontal } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Loader } from "@/components/primitives/loader";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -21,27 +36,6 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
-import {
-	type ColumnDef,
-	type ColumnFiltersState,
-	type SortingState,
-	type VisibilityState,
-	flexRender,
-	getCoreRowModel,
-	getFilteredRowModel,
-	getPaginationRowModel,
-	getSortedRowModel,
-	useReactTable,
-} from "@tanstack/react-table";
-import { motion } from "framer-motion";
-import {
-	AlertCircle,
-	ArrowUpDown,
-	CheckCircle,
-	Info,
-	MoreHorizontal,
-} from "lucide-react";
-import { useEffect, useState } from "react";
 
 type LogLevel = "info" | "warning" | "error" | "success";
 
@@ -127,9 +121,7 @@ const columns: ColumnDef<Log>[] = [
 					</DropdownMenuTrigger>
 					<DropdownMenuContent align="end">
 						<DropdownMenuLabel>Actions</DropdownMenuLabel>
-						<DropdownMenuItem
-							onClick={() => navigator?.clipboard?.writeText(log.message)}
-						>
+						<DropdownMenuItem onClick={() => navigator?.clipboard?.writeText(log.message)}>
 							Copy message
 						</DropdownMenuItem>
 						<DropdownMenuSeparator />
@@ -246,17 +238,13 @@ export function EnhancedLogDatatable() {
 
 	const handleDeleteSelected = () => {
 		const selectedIds = Object.keys(rowSelection).map(Number);
-		setLogs((prevLogs) =>
-			prevLogs.filter((log) => !selectedIds.includes(log.id)),
-		);
+		setLogs((prevLogs) => prevLogs.filter((log) => !selectedIds.includes(log.id)));
 		setRowSelection({});
 	};
 
 	return (
 		<div className="mx-auto mt-10 w-full max-w-6xl rounded-lg bg-white p-6 shadow-xl">
-			<h1 className="mb-6 text-3xl font-bold text-gray-800">
-				Enhanced Log DataTable
-			</h1>
+			<h1 className="mb-6 text-3xl font-bold text-gray-800">Enhanced Log DataTable</h1>
 			<div className="mb-4 flex items-center justify-between">
 				<div className="space-x-2">
 					<Button onClick={addLog} size="sm">
@@ -281,12 +269,8 @@ export function EnhancedLogDatatable() {
 						<div className="flex items-center py-4">
 							<Input
 								placeholder="Filter messages..."
-								value={
-									(table.getColumn("message")?.getFilterValue() as string) ?? ""
-								}
-								onChange={(event) =>
-									table.getColumn("message")?.setFilterValue(event.target.value)
-								}
+								value={(table.getColumn("message")?.getFilterValue() as string) ?? ""}
+								onChange={(event) => table.getColumn("message")?.setFilterValue(event.target.value)}
 								className="max-w-sm"
 							/>
 							<DropdownMenu>
@@ -305,9 +289,7 @@ export function EnhancedLogDatatable() {
 													key={column.id}
 													className="capitalize"
 													checked={column.getIsVisible()}
-													onCheckedChange={(value) =>
-														column.toggleVisibility(!!value)
-													}
+													onCheckedChange={(value) => column.toggleVisibility(!!value)}
 												>
 													{column.id}
 												</DropdownMenuCheckboxItem>
@@ -326,10 +308,7 @@ export function EnhancedLogDatatable() {
 													<TableHead key={header.id}>
 														{header.isPlaceholder
 															? null
-															: flexRender(
-																header.column.columnDef.header,
-																header.getContext(),
-															)}
+															: flexRender(header.column.columnDef.header, header.getContext())}
 													</TableHead>
 												);
 											})}
@@ -356,20 +335,14 @@ export function EnhancedLogDatatable() {
 											>
 												{row.getVisibleCells().map((cell) => (
 													<TableCell key={cell.id}>
-														{flexRender(
-															cell.column.columnDef.cell,
-															cell.getContext(),
-														)}
+														{flexRender(cell.column.columnDef.cell, cell.getContext())}
 													</TableCell>
 												))}
 											</motion.tr>
 										))
 									) : (
 										<TableRow>
-											<TableCell
-												colSpan={columns.length}
-												className="h-24 text-center"
-											>
+											<TableCell colSpan={columns.length} className="h-24 text-center">
 												No results.
 											</TableCell>
 										</TableRow>

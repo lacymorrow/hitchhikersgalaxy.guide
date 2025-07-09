@@ -1,5 +1,5 @@
-import { siteConfig } from "@/config/site-config";
 import type { MetadataRoute } from "next";
+import { siteConfig } from "@/config/site-config";
 
 /* Robots.txt Configuration
  * This file controls how search engines and other web robots interact with your site

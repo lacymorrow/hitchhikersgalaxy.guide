@@ -12,7 +12,7 @@ import { BASE_URL } from "@/config/base-url";
 import type { AppRouter } from "@/lib/trpc/api/root";
 import { createQueryClient } from "./query-client";
 
-let clientQueryClientSingleton: QueryClient | undefined = undefined;
+let clientQueryClientSingleton: QueryClient | undefined;
 const getQueryClient = () => {
 	if (typeof window === "undefined") {
 		// Server: always make a new query client

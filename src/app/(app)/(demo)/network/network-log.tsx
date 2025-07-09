@@ -1,11 +1,11 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import { type VariantProps, cva } from "class-variance-authority";
+import { cva, type VariantProps } from "class-variance-authority";
 import { AnimatePresence, motion } from "framer-motion";
 import { RefreshCw, SearchIcon, Wifi, WifiOff } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type LogLevel = "info" | "warning" | "error" | "success";
 type RequestType = "fetch" | "xmlhttprequest" | "other";
@@ -47,14 +47,10 @@ const formatBytes = (bytes: number): string => {
 	const k = 1024;
 	const sizes = ["Bytes", "KB", "MB", "GB"];
 	const i = Math.floor(Math.log(bytes) / Math.log(k));
-	return `${Number.parseFloat((bytes / (k ** i)).toFixed(2))} ${sizes[i]}`;
+	return `${Number.parseFloat((bytes / k ** i).toFixed(2))} ${sizes[i]}`;
 };
 
-const StatusIndicator = ({
-	status,
-}: {
-	status: RequestStatus;
-}) => {
+const StatusIndicator = ({ status }: { status: RequestStatus }) => {
 	const baseClasses = "h-2 w-2 rounded-full";
 	const statusClasses = {
 		pending: "bg-blue-400",
@@ -105,9 +101,7 @@ export const NetworkLog = ({
 							name: entry.name,
 							status: entry.duration > 0 ? "success" : "error",
 							type: (entry as PerformanceResourceTiming).initiatorType,
-							size: formatBytes(
-								(entry as PerformanceResourceTiming).transferSize,
-							),
+							size: formatBytes((entry as PerformanceResourceTiming).transferSize),
 							time: Math.round(entry.duration),
 							level: entry.duration > 1000 ? "warning" : "info",
 						};
@@ -155,19 +149,19 @@ export const NetworkLog = ({
 	};
 
 	const filteredRequests = searchQuery
-		? requests.filter((request) =>
-			request.name.toLowerCase().includes(searchQuery.toLowerCase())
-		)
+		? requests.filter((request) => request.name.toLowerCase().includes(searchQuery.toLowerCase()))
 		: requests;
 
 	return (
 		<div className={cn(networkLogVariants({ variant, size }), className)}>
 			<div className="flex items-center justify-between border-b border-gray-700 p-4">
 				<div className="flex items-center space-x-2">
-					<h2 className={cn(
-						"font-semibold",
-						variant === "modern" ? "text-xl text-white" : "text-gray-400"
-					)}>
+					<h2
+						className={cn(
+							"font-semibold",
+							variant === "modern" ? "text-xl text-white" : "text-gray-400"
+						)}
+					>
 						Network Activity
 					</h2>
 				</div>
@@ -175,10 +169,7 @@ export const NetworkLog = ({
 					<Button
 						variant="ghost"
 						size="icon"
-						className={cn(
-							"hover:bg-black/20",
-							isSearchOpen && "bg-black/20"
-						)}
+						className={cn("hover:bg-black/20", isSearchOpen && "bg-black/20")}
 						onClick={handleSearchToggle}
 					>
 						<SearchIcon className="h-5 w-5 text-gray-400" />
@@ -232,9 +223,7 @@ export const NetworkLog = ({
 								>
 									<div className="flex items-center space-x-3">
 										<StatusIndicator status={request.status} />
-										<span className="max-w-[150px] truncate font-medium">
-											{request.name}
-										</span>
+										<span className="max-w-[150px] truncate font-medium">{request.name}</span>
 									</div>
 									<div className="flex space-x-4 text-xs text-gray-400">
 										<span>{request.type}</span>

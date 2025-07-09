@@ -1,11 +1,11 @@
-import { Link } from "@/components/primitives/link-with-transition"
-import { Button, buttonVariants } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
-import type { PricingPlan } from "@/content/pricing/pricing-content"
-import { cn } from "@/lib/utils"
-import { Check, Sparkles } from 'lucide-react'
-import type React from "react"
+import { Check, Sparkles } from "lucide-react";
+import type React from "react";
+import { Link } from "@/components/primitives/link-with-transition";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import type { PricingPlan } from "@/content/pricing/pricing-content";
+import { cn } from "@/lib/utils";
 
 interface PricingSectionSingleProps {
 	plans?: PricingPlan[];
@@ -21,7 +21,8 @@ export function PricingSectionSingle({ plans, plan, children }: PricingSectionSi
 		return null;
 	}
 
-	const price = selectedPlan.price.monthly || selectedPlan.price.annually || selectedPlan.price.oneTime || 0;
+	const price =
+		selectedPlan.price.monthly || selectedPlan.price.annually || selectedPlan.price.oneTime || 0;
 	const originalPrice = price * 2; // Example: showing original price as double
 
 	return (
@@ -40,7 +41,9 @@ export function PricingSectionSingle({ plans, plan, children }: PricingSectionSi
 
 						<div className="space-y-2">
 							<div className="flex items-center justify-center gap-3">
-								<span className="text-2xl font-bold text-gray-400 line-through sm:text-3xl">${originalPrice}</span>
+								<span className="text-2xl font-bold text-gray-400 line-through sm:text-3xl">
+									${originalPrice}
+								</span>
 								<span className="text-4xl font-bold sm:text-5xl">${price}</span>
 							</div>
 							<div className="inline-block rounded-full bg-purple-500/10 px-4 py-1 text-purple-400">
@@ -67,16 +70,24 @@ export function PricingSectionSingle({ plans, plan, children }: PricingSectionSi
 
 						<div className="pt-4">
 							{selectedPlan.isComingSoon ? (
-								<Button disabled className={cn("w-full bg-purple-500 text-lg text-white hover:bg-purple-600")}>
+								<Button
+									disabled
+									className={cn("w-full bg-purple-500 text-lg text-white hover:bg-purple-600")}
+								>
 									Coming Soon
 								</Button>
 							) : (
-								<Link href={selectedPlan.href} className={cn(buttonVariants({ variant: "default" }), "w-full bg-purple-500 text-lg text-white hover:bg-purple-600")}>
+								<Link
+									href={selectedPlan.href}
+									className={cn(
+										buttonVariants({ variant: "default" }),
+										"w-full bg-purple-500 text-lg text-white hover:bg-purple-600"
+									)}
+								>
 									Get {selectedPlan.title} Now
 								</Link>
 							)}
 						</div>
-
 					</CardContent>
 					{children && (
 						<CardFooter className="relative flex flex-col gap-4">
@@ -87,6 +98,5 @@ export function PricingSectionSingle({ plans, plan, children }: PricingSectionSi
 				</Card>
 			</div>
 		</div>
-	)
+	);
 }
-

@@ -1,11 +1,12 @@
 /**
  * Next.js instrumentation file
  * @see https://nextjs.org/docs/app/api-reference/file-conventions/instrumentation
+ * WARNING: This needs to load on Node.js AND Edge runtime.
  */
 
-import { displayLaunchMessage } from "@/lib/utils/shipkit-launch-message";
 import { registerOTel } from "@vercel/otel";
 import type { Instrumentation } from "next";
+import { displayLaunchMessage } from "@/lib/utils/shipkit-launch-message";
 
 /**
  * Registers OpenTelemetry for observability in the application.

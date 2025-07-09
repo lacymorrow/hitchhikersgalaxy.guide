@@ -1,9 +1,9 @@
 "use server";
 
+import { redirect } from "next/navigation";
 import { routes } from "@/config/routes";
 import { auth } from "@/server/auth";
 import { createTemporaryLink, getTemporaryLinkData } from "@/server/services/temporary-links";
-import { redirect } from "next/navigation";
 
 export const generateTemporaryLink = async ({
 	data = "hello",

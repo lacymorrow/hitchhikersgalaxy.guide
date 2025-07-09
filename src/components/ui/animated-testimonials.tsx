@@ -62,9 +62,7 @@ export const AnimatedTestimonials = ({
 										scale: isActive(index) ? 1 : 0.95,
 										z: isActive(index) ? 0 : -100,
 										rotate: isActive(index) ? 0 : randomRotateY(),
-										zIndex: isActive(index)
-											? 999
-											: testimonials.length + 2 - index,
+										zIndex: isActive(index) ? 999 : testimonials.length + 2 - index,
 										y: isActive(index) ? [0, -80, 0] : 0,
 									}}
 									exit={{

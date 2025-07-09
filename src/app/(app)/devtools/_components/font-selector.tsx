@@ -1,10 +1,8 @@
-'use client';
+"use client";
 
+import { Check, ChevronsUpDown, ListPlus, Loader2 } from "lucide-react";
 import * as React from "react";
-import { Check, ChevronsUpDown, Loader2, ListPlus } from "lucide-react";
 import { useDebounce } from "use-debounce";
-
-import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import {
 	Command,
@@ -15,12 +13,9 @@ import {
 	CommandList,
 	CommandSeparator,
 } from "@/components/ui/command";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { GOOGLE_FONTS } from "@/config/fonts"; // Initial curated list
+import { cn } from "@/lib/utils";
 
 interface FontsApiResponse {
 	families: string[];
@@ -61,7 +56,7 @@ export function FontSelector() {
 
 	// Apply Font Function (Memoized)
 	const applyFont = React.useCallback((fontFamily: string, fallbacks: string) => {
-		if (!fallbacks || typeof window === 'undefined') return;
+		if (!fallbacks || typeof window === "undefined") return;
 		const existingLink = document.head.querySelector('link[data-font-selector="true"]');
 		if (existingLink) document.head.removeChild(existingLink);
 
@@ -74,7 +69,11 @@ export function FontSelector() {
 			document.head.appendChild(link);
 		}
 
-		const fontName = fontFamily ? (fontFamily.includes(" ") ? `"${fontFamily}"` : fontFamily) : null;
+		const fontName = fontFamily
+			? fontFamily.includes(" ")
+				? `"${fontFamily}"`
+				: fontFamily
+			: null;
 		document.body.style.fontFamily = fontName ? `${fontName}, ${fallbacks}` : fallbacks;
 	}, []);
 
@@ -102,12 +101,24 @@ export function FontSelector() {
 				const errorMsg = e.message || "Failed to load initial data";
 				setInitialError(errorMsg);
 				setBrowseError(errorMsg);
-				setFallbackFonts([
-					'ui-sans-serif', 'system-ui', '-apple-system', 'BlinkMacSystemFont',
-					'"Segoe UI"', 'Roboto', '"Helvetica Neue"', 'Arial', '"Noto Sans"',
-					'sans-serif', '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"',
-					'"Noto Color Emoji"',
-				].join(', '));
+				setFallbackFonts(
+					[
+						"ui-sans-serif",
+						"system-ui",
+						"-apple-system",
+						"BlinkMacSystemFont",
+						'"Segoe UI"',
+						"Roboto",
+						'"Helvetica Neue"',
+						"Arial",
+						'"Noto Sans"',
+						"sans-serif",
+						'"Apple Color Emoji"',
+						'"Segoe UI Emoji"',
+						'"Segoe UI Symbol"',
+						'"Noto Color Emoji"',
+					].join(", ")
+				);
 			} finally {
 				setInitialLoading(false);
 				setBrowseLoading(false);
@@ -122,11 +133,11 @@ export function FontSelector() {
 		const getInitialFont = () => {
 			const currentStyle = document.body.style.fontFamily;
 			if (currentStyle) {
-				const firstFont = currentStyle.split(',')[0].trim().replace(/['"]/g, "");
-				if (GOOGLE_FONTS.some(f => f.family === firstFont)) return firstFont;
+				const firstFont = currentStyle.split(",")[0].trim().replace(/['"]/g, "");
+				if (GOOGLE_FONTS.some((f) => f.family === firstFont)) return firstFont;
 				if (browsedFonts.includes(firstFont)) return firstFont;
 			}
-			const defaultFont = GOOGLE_FONTS.find(f => f.family === "Inter")?.family || "";
+			const defaultFont = GOOGLE_FONTS.find((f) => f.family === "Inter")?.family || "";
 			if (!currentStyle && defaultFont) {
 				document.body.style.fontFamily = `${defaultFont}, ${fallbackFonts}`;
 			}
@@ -149,7 +160,7 @@ export function FontSelector() {
 				throw new Error(data.error || `HTTP error! status: ${response.status}`);
 			}
 			const data: FontsApiResponse = await response.json();
-			setBrowsedFonts(prev => [...prev, ...data.families]);
+			setBrowsedFonts((prev) => [...prev, ...data.families]);
 			setBrowseHasMore(data.hasMore ?? false);
 			setBrowsePage(nextPage);
 		} catch (e: any) {
@@ -170,7 +181,9 @@ export function FontSelector() {
 			setSearchLoading(true);
 			setSearchError(null);
 			try {
-				const response = await fetch(`/devtools/api/fonts?search=${encodeURIComponent(debouncedSearchQuery)}`);
+				const response = await fetch(
+					`/devtools/api/fonts?search=${encodeURIComponent(debouncedSearchQuery)}`
+				);
 				if (!response.ok) {
 					const data: Partial<FontsApiResponse> = await response.json();
 					throw new Error(data.error || `HTTP error! status: ${response.status}`);
@@ -212,15 +225,18 @@ export function FontSelector() {
 
 	return (
 		<div className="fixed bottom-4 right-4 z-[1000]">
-			<Popover open={open} onOpenChange={(isOpen) => {
-				setOpen(isOpen);
-				if (!isOpen) {
-					setSearchQuery("");
-					setSearchResults([]);
-					setSearchLoading(false);
-					setSearchError(null);
-				}
-			}}>
+			<Popover
+				open={open}
+				onOpenChange={(isOpen) => {
+					setOpen(isOpen);
+					if (!isOpen) {
+						setSearchQuery("");
+						setSearchResults([]);
+						setSearchLoading(false);
+						setSearchError(null);
+					}
+				}}
+			>
 				<PopoverTrigger asChild>
 					<Button
 						variant="outline"
@@ -254,12 +270,16 @@ export function FontSelector() {
 										</div>
 									)}
 									{!searchLoading && searchError && (
-										<div className="p-2 text-center text-xs text-destructive">Error: {searchError}</div>
+										<div className="p-2 text-center text-xs text-destructive">
+											Error: {searchError}
+										</div>
 									)}
 									{!searchLoading && !searchError && searchResults.length === 0 && (
 										<CommandEmpty>No results for "{searchQuery}".</CommandEmpty>
 									)}
-									{!searchLoading && !searchError && searchResults.length > 0 && (
+									{!searchLoading &&
+										!searchError &&
+										searchResults.length > 0 &&
 										searchResults.map((fontFamily) => (
 											<CommandItem
 												key={`search-${fontFamily}`}
@@ -267,13 +287,15 @@ export function FontSelector() {
 												onSelect={handleSelectFont}
 											>
 												<Check
-													className={cn("mr-2 h-4 w-4", selectedFont === fontFamily ? "opacity-100" : "opacity-0")}
+													className={cn(
+														"mr-2 h-4 w-4",
+														selectedFont === fontFamily ? "opacity-100" : "opacity-0"
+													)}
 													aria-hidden="true"
 												/>
 												<span>{fontFamily}</span>
 											</CommandItem>
-										))
-									)}
+										))}
 								</CommandGroup>
 							) : (
 								/* --- Browse View --- */
@@ -287,7 +309,10 @@ export function FontSelector() {
 													onSelect={handleSelectFont}
 												>
 													<Check
-														className={cn("mr-2 h-4 w-4", selectedFont === font.family ? "opacity-100" : "opacity-0")}
+														className={cn(
+															"mr-2 h-4 w-4",
+															selectedFont === font.family ? "opacity-100" : "opacity-0"
+														)}
 														aria-hidden="true"
 													/>
 													<span>{font.family}</span>
@@ -301,21 +326,24 @@ export function FontSelector() {
 									<CommandSeparator />
 
 									<CommandGroup heading="Browse Fonts">
-										{browsedFonts.length > 0 ? (
-											browsedFonts.map((fontFamily) => (
-												<CommandItem
-													key={`browse-${fontFamily}`}
-													value={fontFamily}
-													onSelect={handleSelectFont}
-												>
-													<Check
-														className={cn("mr-2 h-4 w-4", selectedFont === fontFamily ? "opacity-100" : "opacity-0")}
-														aria-hidden="true"
-													/>
-													<span>{fontFamily}</span>
-												</CommandItem>
-											))
-										) : null}
+										{browsedFonts.length > 0
+											? browsedFonts.map((fontFamily) => (
+													<CommandItem
+														key={`browse-${fontFamily}`}
+														value={fontFamily}
+														onSelect={handleSelectFont}
+													>
+														<Check
+															className={cn(
+																"mr-2 h-4 w-4",
+																selectedFont === fontFamily ? "opacity-100" : "opacity-0"
+															)}
+															aria-hidden="true"
+														/>
+														<span>{fontFamily}</span>
+													</CommandItem>
+												))
+											: null}
 
 										{/* Loading/Error/Load More Section */}
 										{browseLoading && (
@@ -324,21 +352,28 @@ export function FontSelector() {
 											</div>
 										)}
 										{!browseLoading && browseError && (
-											<div className="p-2 text-center text-xs text-destructive">Error: {browseError}</div>
+											<div className="p-2 text-center text-xs text-destructive">
+												Error: {browseError}
+											</div>
 										)}
 										{!browseLoading && !browseError && browseHasMore && (
 											<CommandItem
 												key="load-more"
-												onSelect={() => { void loadMoreFonts(); }}
+												onSelect={() => {
+													void loadMoreFonts();
+												}}
 												className="flex cursor-pointer items-center justify-center text-sm text-muted-foreground hover:bg-accent"
 											>
 												<ListPlus className="mr-2 h-4 w-4" /> Load More
 											</CommandItem>
 										)}
-										{!browseLoading && !browseError && !browseHasMore && browsedFonts.length === 0 && (
-											// This state means initial load succeeded (no error) but returned no fonts
-											<CommandEmpty>No fonts found to browse.</CommandEmpty>
-										)}
+										{!browseLoading &&
+											!browseError &&
+											!browseHasMore &&
+											browsedFonts.length === 0 && (
+												// This state means initial load succeeded (no error) but returned no fonts
+												<CommandEmpty>No fonts found to browse.</CommandEmpty>
+											)}
 									</CommandGroup>
 								</>
 							)}

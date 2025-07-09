@@ -1,3 +1,4 @@
+import { RocketIcon } from "lucide-react";
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { Link } from "@/components/primitives/link-with-transition";
 import {
@@ -8,7 +9,6 @@ import {
 import { WavesBackground } from "@/components/ui/background-waves";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { RocketIcon } from "lucide-react";
 
 const config = {
 	speed: 0.002,
@@ -26,14 +26,9 @@ interface NotFoundPageProps {
 	descriptionClassName?: string;
 }
 
-const NoOpProvider = ({ children }: { children: React.ReactNode }) => (
-	<>{children}</>
-);
+const NoOpProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
 
-export const NotFoundPage = ({
-	containerClassName,
-	descriptionClassName,
-}: NotFoundPageProps) => {
+export const NotFoundPage = ({ containerClassName, descriptionClassName }: NotFoundPageProps) => {
 	return (
 		<AppRouterLayout themeProvider={NoOpProvider}>
 			<WavesBackground config={config} />
@@ -41,19 +36,17 @@ export const NotFoundPage = ({
 				<div
 					className={cn(
 						"mx-auto flex max-w-[420px] flex-col items-center justify-center text-center",
-						containerClassName,
+						containerClassName
 					)}
 				>
 					<div className="flex h-20 w-20 items-center justify-center rounded-2xl bg-muted">
 						<RocketIcon className="h-10 w-10 rotate-45 text-muted-foreground" />
 					</div>
 					<PageHeader className="bg-background/30 backdrop-blur-sm">
-						<PageHeaderHeading className="w-full text-center">
-							Lost in space
-						</PageHeaderHeading>
+						<PageHeaderHeading className="w-full text-center">Lost in space</PageHeaderHeading>
 						<PageHeaderDescription className={cn(descriptionClassName)}>
-							The page you&apos;re looking for has drifted into deep space.
-							Let&apos;s get you back to familiar territory.
+							The page you&apos;re looking for has drifted into deep space. Let&apos;s get you back
+							to familiar territory.
 						</PageHeaderDescription>
 					</PageHeader>
 					<Link
@@ -63,7 +56,7 @@ export const NotFoundPage = ({
 								variant: "default",
 								size: "lg",
 							}),
-							"relative overflow-hidden",
+							"relative overflow-hidden"
 						)}
 					>
 						<span className="relative z-10">Launch me back to earth</span>
@@ -74,8 +67,6 @@ export const NotFoundPage = ({
 					</p>
 				</div>
 			</div>
-
 		</AppRouterLayout>
-
 	);
 };

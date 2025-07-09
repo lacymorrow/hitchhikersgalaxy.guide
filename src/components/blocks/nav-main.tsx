@@ -1,28 +1,30 @@
 "use client";
 
+import { ChevronRightIcon } from "@radix-ui/react-icons";
 import type { LucideIcon } from "lucide-react";
+import {
+	ArrowLeftFromLineIcon,
+	FileTerminalIcon,
+	Rocket,
+	Settings2,
+	SquareTerminal,
+	Wrench,
+} from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-
 import { buttonVariants } from "@/components/ui/button";
-import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
 	SidebarGroup,
 	SidebarGroupLabel,
 	SidebarMenu,
 	SidebarMenuButton,
 	SidebarMenuItem,
-	SidebarMenuSub
+	SidebarMenuSub,
 } from "@/components/ui/sidebar";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { ChevronRightIcon } from "@radix-ui/react-icons";
-import { ArrowLeftFromLineIcon, FileTerminalIcon, Settings2, SquareTerminal, Wrench, Rocket } from "lucide-react";
 
 const data = [
 	{
@@ -53,7 +55,6 @@ const data = [
 		title: "Demos",
 		icon: FileTerminalIcon,
 		items: [
-
 			{ title: "UI Demo", url: routes.examples.index },
 			{ title: "Builder.io", url: routes.demo.builderio },
 			{ title: "Payload CMS", url: routes.demo.payloadCms },
@@ -62,7 +63,8 @@ const data = [
 			{ title: "TRPC Example", url: routes.demo.trpc },
 
 			{
-				title: "AI", items: [
+				title: "AI",
+				items: [
 					// Core AI Features
 					{ title: "Code Completion", url: routes.ai.codeCompletion },
 					{ title: "Spam Detection", url: routes.ai.spam },
@@ -105,7 +107,7 @@ const data = [
 					{ title: "Janus", url: routes.ai.janusWebgpu },
 					{ title: "Janus Pro", url: routes.ai.janusProWebgpu },
 					{ title: "Moonshine Web", url: routes.ai.moonshineWeb },
-				]
+				],
 			},
 		],
 	},
@@ -114,7 +116,7 @@ const data = [
 		url: routes.app.tools,
 		icon: Wrench,
 	},
-]
+];
 
 // Helper function to determine if a route is active
 const isRouteActive = (currentPath: string, itemPath: string) => {
@@ -130,22 +132,20 @@ type NavItem = {
 	items?: (NavItem | { title: string; url: string })[];
 };
 
-export function NavMain({
-	items = data,
-}: {
-	items?: NavItem[];
-}) {
+export function NavMain({ items = data }: { items?: NavItem[] }) {
 	const pathname = usePathname();
 
 	// Recursive function to render menu items
 	const renderMenuItem = (item: NavItem | { title: string; url: string }) => {
 		if (!pathname) return null;
-		const isActive = 'url' in item && item.url ? isRouteActive(pathname, item.url) : false;
-		const hasActiveChild = 'items' in item && item.items?.some((subItem) =>
-			'url' in subItem && subItem.url ? isRouteActive(pathname, subItem.url) : false,
-		);
+		const isActive = "url" in item && item.url ? isRouteActive(pathname, item.url) : false;
+		const hasActiveChild =
+			"items" in item &&
+			item.items?.some((subItem) =>
+				"url" in subItem && subItem.url ? isRouteActive(pathname, subItem.url) : false
+			);
 
-		if (!('items' in item)) {
+		if (!("items" in item)) {
 			return (
 				<SidebarMenuItem key={item.title}>
 					<SidebarMenuButton
@@ -155,16 +155,16 @@ export function NavMain({
 						className={cn(
 							"relative",
 							"before:absolute before:left-0 before:top-1/2 before:h-8 before:w-[2px] before:-translate-y-1/2 before:rounded-l before:bg-primary before:opacity-0 before:transition-opacity",
-							"data-[active=true]:bg-muted data-[active=true]:before:opacity-100",
+							"data-[active=true]:bg-muted data-[active=true]:before:opacity-100"
 						)}
 					>
 						<Link href={item?.url ?? "#"} className="w-full max-w-full">
-							{'icon' in item && item.icon && (
+							{"icon" in item && item.icon && (
 								<item.icon
 									className={cn(
 										"text-muted-foreground transition-colors shrink-0",
 										"group-hover:text-foreground",
-										isActive && "text-foreground",
+										isActive && "text-foreground"
 									)}
 								/>
 							)}
@@ -172,7 +172,7 @@ export function NavMain({
 								className={cn(
 									"text-muted-foreground transition-colors truncate",
 									"group-hover:text-foreground",
-									isActive && "font-medium text-foreground",
+									isActive && "font-medium text-foreground"
 								)}
 							>
 								{item.title}
@@ -203,7 +203,7 @@ export function NavMain({
 										className={cn(
 											"text-muted-foreground transition-colors shrink-0",
 											"group-hover:text-foreground",
-											(isActive || hasActiveChild) && "text-foreground",
+											(isActive || hasActiveChild) && "text-foreground"
 										)}
 									/>
 								)}
@@ -211,8 +211,7 @@ export function NavMain({
 									className={cn(
 										"text-muted-foreground transition-colors truncate",
 										"group-hover:text-foreground",
-										(isActive || hasActiveChild) &&
-										"font-medium text-foreground",
+										(isActive || hasActiveChild) && "font-medium text-foreground"
 									)}
 								>
 									{item.title}
@@ -235,9 +234,20 @@ export function NavMain({
 
 	return (
 		<>
-			<SidebarGroup className={cn("relative pl-0 max-w-full", "opacity-50 hover:opacity-100 transition-opacity")}>
+			<SidebarGroup
+				className={cn(
+					"relative pl-0 max-w-full",
+					"opacity-50 hover:opacity-100 transition-opacity"
+				)}
+			>
 				<SidebarGroupLabel className="p-0">
-					<Link href={routes.home} className={cn(buttonVariants({ variant: "link", size: "sm" }), "flex items-center justify-start gap-2 w-full max-w-full")}>
+					<Link
+						href={routes.home}
+						className={cn(
+							buttonVariants({ variant: "link", size: "sm" }),
+							"flex items-center justify-start gap-2 w-full max-w-full"
+						)}
+					>
 						<ArrowLeftFromLineIcon className="h-4 w-4 shrink-0" />
 						<span className="truncate">{siteConfig.title} Home</span>
 					</Link>

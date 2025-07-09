@@ -1,10 +1,10 @@
 "use client";
 
+import { ResetIcon } from "@radix-ui/react-icons";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/use-local-storage";
-import { ResetIcon } from "@radix-ui/react-icons";
 import type { User } from "@/types/user";
-import { useEffect, useState } from "react";
 import { OnboardingWizard } from "./onboarding-wizard";
 
 interface OnboardingCheckProps {
@@ -18,7 +18,7 @@ export function OnboardingCheck({
 	user,
 	hasGitHubConnection = false,
 	hasVercelConnection = false,
-	hasPurchased = false
+	hasPurchased = false,
 }: OnboardingCheckProps) {
 	const userId = user?.id ?? "";
 	const [showOnboarding, setShowOnboarding] = useState(false);
@@ -61,7 +61,7 @@ export function RestartOnboardingButton({
 	user,
 	hasGitHubConnection = false,
 	hasVercelConnection = false,
-	className = ""
+	className = "",
 }: OnboardingCheckProps & { className?: string }) {
 	const [onboardingState, setOnboardingState] = useLocalStorage<{
 		completed: boolean;
@@ -89,12 +89,7 @@ export function RestartOnboardingButton({
 	}
 
 	return (
-		<Button
-			type="button"
-			variant="ghost"
-			onClick={restartOnboarding}
-			className={className}
-		>
+		<Button type="button" variant="ghost" onClick={restartOnboarding} className={className}>
 			<ResetIcon className="mr-2 size-4" />
 			Restart Onboarding
 		</Button>

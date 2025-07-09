@@ -1,6 +1,6 @@
+import { Redis } from "@upstash/redis";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
-import { Redis } from "@upstash/redis";
 
 let redisClient: Redis | null = null;
 

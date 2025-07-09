@@ -1,10 +1,10 @@
 "use server";
 
+import { and, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { accounts, users } from "@/server/db/schema";
-import { and, eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 
 interface ProfileData {
 	name: string;

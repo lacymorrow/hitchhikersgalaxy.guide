@@ -1,8 +1,8 @@
+import type { NextConfig } from "next";
 import { buildTimeFeatureFlags } from "@/config/features-config";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
 import { withPlugins } from "@/config/with-plugins";
-import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
 	env: {
@@ -26,15 +26,15 @@ const nextConfig: NextConfig = {
 		if (process.env.DOCS_DOMAIN) {
 			multiZoneRewrites.push(
 				{
-					source: '/docs',
+					source: "/docs",
 					destination: `${process.env.DOCS_DOMAIN}/docs`,
 				},
 				{
-					source: '/docs/:path*',
+					source: "/docs/:path*",
 					destination: `${process.env.DOCS_DOMAIN}/docs/:path*`,
 				},
 				{
-					source: '/docs-static/:path*',
+					source: "/docs-static/:path*",
 					destination: `${process.env.DOCS_DOMAIN}/docs-static/:path*`,
 				}
 			);
@@ -45,15 +45,15 @@ const nextConfig: NextConfig = {
 		if (process.env.BLOG_DOMAIN) {
 			multiZoneRewrites.push(
 				{
-					source: '/blog',
+					source: "/blog",
 					destination: `${process.env.BLOG_DOMAIN}/blog`,
 				},
 				{
-					source: '/blog/:path*',
+					source: "/blog/:path*",
 					destination: `${process.env.BLOG_DOMAIN}/blog/:path*`,
 				},
 				{
-					source: '/blog-static/:path*',
+					source: "/blog-static/:path*",
 					destination: `${process.env.BLOG_DOMAIN}/blog-static/:path*`,
 				}
 			);
@@ -64,15 +64,15 @@ const nextConfig: NextConfig = {
 		if (process.env.UI_DOMAIN) {
 			multiZoneRewrites.push(
 				{
-					source: '/ui',
+					source: "/ui",
 					destination: `${process.env.UI_DOMAIN}/ui`,
 				},
 				{
-					source: '/ui/:path*',
+					source: "/ui/:path*",
 					destination: `${process.env.UI_DOMAIN}/ui/:path*`,
 				},
 				{
-					source: '/ui-static/:path*',
+					source: "/ui-static/:path*",
 					destination: `${process.env.UI_DOMAIN}/ui-static/:path*`,
 				}
 			);
@@ -83,15 +83,15 @@ const nextConfig: NextConfig = {
 		if (process.env.TOOLS_DOMAIN) {
 			multiZoneRewrites.push(
 				{
-					source: '/tools',
+					source: "/tools",
 					destination: `${process.env.TOOLS_DOMAIN}/tools`,
 				},
 				{
-					source: '/tools/:path*',
+					source: "/tools/:path*",
 					destination: `${process.env.TOOLS_DOMAIN}/tools/:path*`,
 				},
 				{
-					source: '/tools-static/:path*',
+					source: "/tools-static/:path*",
 					destination: `${process.env.TOOLS_DOMAIN}/tools-static/:path*`,
 				}
 			);
@@ -182,8 +182,8 @@ const nextConfig: NextConfig = {
 			bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
 			// Allow server actions from shipkit.io and zone domains
 			allowedOrigins: [
-				'https://shipkit.io',
-				'https://www.shipkit.io',
+				"https://shipkit.io",
+				"https://www.shipkit.io",
 				...(process.env.VERCEL_URL ? [`https://${process.env.VERCEL_URL}`] : []),
 				...(process.env.NEXT_PUBLIC_APP_URL ? [process.env.NEXT_PUBLIC_APP_URL] : []),
 				// Allow server actions from zone domains if they need to communicate back

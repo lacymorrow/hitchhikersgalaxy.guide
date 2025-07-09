@@ -1,5 +1,7 @@
 "use client";
 
+import * as React from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -12,11 +14,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import * as React from "react";
-import { toast } from "sonner";
 
 export default function SecurityPage() {
-
 	const [passwords, setPasswords] = React.useState({
 		current: "",
 		new: "",
@@ -28,25 +27,19 @@ export default function SecurityPage() {
 		setPasswords((prev) => ({ ...prev, [name]: value }));
 	};
 
-
 	return (
 		<div className="space-y-6">
 			<div>
 				<h3 className="text-lg font-medium">Security</h3>
-				<p className="text-sm text-muted-foreground">
-					Manage your account security settings.
-				</p>
+				<p className="text-sm text-muted-foreground">Manage your account security settings.</p>
 			</div>
 			<Separator />
-
 
 			{/* Password Change - Coming Soon */}
 			<Card>
 				<CardHeader>
 					<CardTitle>Change Password</CardTitle>
-					<CardDescription>
-						Update your password to keep your account secure.
-					</CardDescription>
+					<CardDescription>Update your password to keep your account secure.</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
 					<div className="space-y-2">
@@ -87,11 +80,7 @@ export default function SecurityPage() {
 					<Button
 						type="submit"
 						disabled={true}
-						onClick={() =>
-							toast.info(
-								"Password changes will be available in a future update",
-							)
-						}
+						onClick={() => toast.info("Password changes will be available in a future update")}
 					>
 						Coming Soon
 					</Button>
@@ -102,30 +91,24 @@ export default function SecurityPage() {
 			<Card>
 				<CardHeader>
 					<CardTitle>Two-Factor Authentication</CardTitle>
-					<CardDescription>
-						Add an extra layer of security to your account.
-					</CardDescription>
+					<CardDescription>Add an extra layer of security to your account.</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<p className="text-sm text-muted-foreground">
-						Two-factor authentication adds an extra layer of security to your
-						account by requiring more than just a password to sign in.
+						Two-factor authentication adds an extra layer of security to your account by requiring
+						more than just a password to sign in.
 					</p>
 				</CardContent>
 				<CardFooter>
 					<Button
 						variant="outline"
-						onClick={() =>
-							toast.info("2FA will be available in a future update")
-						}
+						onClick={() => toast.info("2FA will be available in a future update")}
 						disabled
 					>
 						Coming Soon
 					</Button>
 				</CardFooter>
 			</Card>
-
-
 		</div>
 	);
 }

@@ -1,5 +1,5 @@
-import { logger } from "@/lib/logger";
 import { z } from "zod";
+import { logger } from "@/lib/logger";
 
 export interface ValidationError {
 	code: "VALIDATION_ERROR";
@@ -17,10 +17,7 @@ export class ValidationService {
 	/**
 	 * Validates data against a schema and returns a strongly typed result
 	 */
-	static async validate<T>(
-		schema: z.ZodType<T>,
-		data: unknown,
-	): Promise<ValidationResult<T>> {
+	static async validate<T>(schema: z.ZodType<T>, data: unknown): Promise<ValidationResult<T>> {
 		try {
 			const validatedData = await schema.parseAsync(data);
 			return {
@@ -36,7 +33,7 @@ export class ValidationService {
 						}
 						return acc;
 					},
-					{} as Record<string, string[]>,
+					{} as Record<string, string[]>
 				);
 
 				logger.error("Validation error", { error: fieldErrors });
@@ -66,11 +63,8 @@ export class ValidationService {
 	/**
 	 * Validates data and throws an error if validation fails
 	 */
-	static async validateOrThrow<T>(
-		schema: z.ZodType<T>,
-		data: unknown,
-	): Promise<T> {
-		const result = await this.validate(schema, data);
+	static async validateOrThrow<T>(schema: z.ZodType<T>, data: unknown): Promise<T> {
+		const result = await ValidationService.validate(schema, data);
 		if (!result.success) {
 			throw result.error;
 		}

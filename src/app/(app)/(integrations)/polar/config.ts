@@ -1,5 +1,5 @@
-import { BASE_URL } from "@/config/base-url";
 import type { CheckoutConfig } from "@polar-sh/nextjs";
+import { BASE_URL } from "@/config/base-url";
 
 export const polarConfig: CheckoutConfig = {
 	accessToken: process.env.POLAR_ACCESS_TOKEN || "",

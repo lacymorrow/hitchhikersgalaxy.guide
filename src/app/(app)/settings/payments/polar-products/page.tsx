@@ -28,7 +28,7 @@ export default async function PolarProductsPage() {
 			price: "$9.99/month",
 			checkoutUrl: `https://polar.sh/lacy/subscriptions/${env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID}`,
 		},
-	].filter(product => !!product.id); // Only include products with valid IDs
+	].filter((product) => !!product.id); // Only include products with valid IDs
 
 	// Get user's purchased products if logged in
 	let userProducts: any[] = [];
@@ -44,9 +44,7 @@ export default async function PolarProductsPage() {
 			<div className="flex flex-col gap-8">
 				<div>
 					<h1 className="text-3xl font-bold tracking-tight">Polar Products</h1>
-					<p className="text-muted-foreground">
-						View and purchase products through Polar
-					</p>
+					<p className="text-muted-foreground">View and purchase products through Polar</p>
 				</div>
 
 				{polarProducts.length > 0 ? (
@@ -70,9 +68,7 @@ export default async function PolarProductsPage() {
 											successText="Purchased ✓"
 										/>
 									) : (
-										<div className="text-sm text-muted-foreground">
-											Please log in to purchase
-										</div>
+										<div className="text-sm text-muted-foreground">Please log in to purchase</div>
 									)}
 								</CardContent>
 							</Card>
@@ -81,7 +77,8 @@ export default async function PolarProductsPage() {
 				) : (
 					<div className="bg-muted p-4 rounded-md">
 						<p className="text-muted-foreground">
-							No Polar products configured. Add NEXT_PUBLIC_POLAR_ONE_TIME_PRICE_ID and/or NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID to your environment variables.
+							No Polar products configured. Add NEXT_PUBLIC_POLAR_ONE_TIME_PRICE_ID and/or
+							NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID to your environment variables.
 						</p>
 					</div>
 				)}

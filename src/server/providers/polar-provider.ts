@@ -1,3 +1,4 @@
+import { eq } from "drizzle-orm";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import {
@@ -7,23 +8,22 @@ import {
 	getOrderById as polarGetOrderById,
 	getOrdersByEmail as polarGetOrdersByEmail,
 	getPolarPaymentStatus as polarGetPaymentStatus,
+	getUserPurchasedProducts as polarGetUserPurchasedProducts,
 	hasUserActiveSubscription as polarHasUserActiveSubscription,
 	hasUserPurchasedProduct as polarHasUserPurchasedProduct,
-	getUserPurchasedProducts as polarGetUserPurchasedProducts,
 	processPolarWebhook, // Assuming this exists and handles things
 } from "@/lib/polar"; // Import utility functions from the lib
 import { db } from "@/server/db"; // For importPayments
 import { payments } from "@/server/db/schema"; // For importPayments
-import { eq } from "drizzle-orm";
 import { userService } from "../services/user-service"; // For importPayments
 import { BasePaymentProvider } from "./base-provider";
 import {
 	type CheckoutOptions,
 	type ImportStats,
 	type OrderData,
+	PaymentProviderError,
 	type ProductData,
 	type ProviderConfig, // Use the standard config type
-	PaymentProviderError,
 } from "./types";
 // Removed crypto as webhook verification is expected to be handled (or needed) in processPolarWebhook
 
@@ -116,16 +116,16 @@ export class PolarProvider extends BasePaymentProvider {
 		try {
 			this.checkProviderReady();
 			const polarProducts = await polarGetUserPurchasedProducts(userId);
-					// Map the response from the lib function (which returns any[]) to ProductData
-		return polarProducts.map((product: any) => ({
-			id: String(product.id), // Ensure ID is string
-			name: product.name || "Unknown Product", // Use consistent fallback
-			// Assuming price comes back in cents from the lib function; adjust if not
-			price: typeof product.price === "number" ? product.price / 100 : undefined,
-			provider: this.id,
-			isSubscription: product.isSubscription ?? false, // Check if lib provides this hint
-			attributes: product, // Include original attributes for flexibility
-		}));
+			// Map the response from the lib function (which returns any[]) to ProductData
+			return polarProducts.map((product: any) => ({
+				id: String(product.id), // Ensure ID is string
+				name: product.name || "Unknown Product", // Use consistent fallback
+				// Assuming price comes back in cents from the lib function; adjust if not
+				price: typeof product.price === "number" ? product.price / 100 : undefined,
+				provider: this.id,
+				isSubscription: product.isSubscription ?? false, // Check if lib provides this hint
+				attributes: product, // Include original attributes for flexibility
+			}));
 		} catch (error) {
 			if (error instanceof PaymentProviderError && error.code === "provider_not_configured") {
 				return []; // Return empty array if not configured
@@ -228,7 +228,7 @@ export class PolarProvider extends BasePaymentProvider {
 	 */
 	async importPayments(): Promise<ImportStats> {
 		this.checkProviderReady(); // Ensures API key is present and feature enabled
-				const stats: ImportStats = { total: 0, imported: 0, skipped: 0, errors: 0, usersCreated: 0 };
+		const stats: ImportStats = { total: 0, imported: 0, skipped: 0, errors: 0, usersCreated: 0 };
 
 		if (!db) {
 			logger.error("Database not initialized. Cannot import Polar payments.");

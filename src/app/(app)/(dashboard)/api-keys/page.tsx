@@ -1,13 +1,9 @@
-import {
-	Alert,
-	AlertDescription,
-	AlertTitle,
-} from "@/components/ui/alert";
+import { AlertCircleIcon } from "lucide-react";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { auth } from "@/server/auth";
 import { apiKeyService } from "@/server/services/api-key-service";
 import { cacheConfigs, cacheService } from "@/server/services/cache-service";
 import { ErrorService } from "@/server/services/error-service";
-import { AlertCircleIcon } from "lucide-react";
 import { ApiKeysTable } from "./_components/api-keys-table";
 
 export default async function ApiKeysPage() {
@@ -19,8 +15,9 @@ export default async function ApiKeysPage() {
 		const userApiKeys = await cacheService.getOrSet(
 			`user:${user.id}:api-keys`,
 			() => apiKeyService.getUserApiKeys(user.id),
-			cacheConfigs.short,
-		);[]
+			cacheConfigs.short
+		);
+		[];
 
 		// Filter out deleted API keys and map to the format expected by DataTable
 		const activeApiKeys = userApiKeys
@@ -56,9 +53,7 @@ export default async function ApiKeysPage() {
 				<Alert>
 					<AlertCircleIcon className="h-4 w-4" />
 					<AlertTitle>Error</AlertTitle>
-					<AlertDescription>
-						{appError.message}
-					</AlertDescription>
+					<AlertDescription>{appError.message}</AlertDescription>
 				</Alert>
 			</div>
 		);

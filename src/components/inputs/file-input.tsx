@@ -5,15 +5,15 @@
  */
 "use client";
 
+import { X } from "lucide-react";
+import { useRef, useState } from "react";
+import { toast } from "sonner";
 import { buttonVariants } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { ALLOWED_FILE_TYPES, FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { logger } from "@/lib/logger";
 import { cn } from "@/lib/utils";
 import { uploadFileAction } from "@/server/actions/file";
-import { X } from "lucide-react";
-import { useRef, useState } from "react";
-import { toast } from "sonner";
 
 export default function FileInput() {
 	const [files, setFiles] = useState<File[]>([]);
@@ -55,7 +55,7 @@ export default function FileInput() {
 		const validFiles = newFiles.filter(isValidFile);
 		if (validFiles.length < newFiles.length) {
 			toast.error(
-				`Some files were not added. Only allowed file types up to the size limit are allowed.`,
+				`Some files were not added. Only allowed file types up to the size limit are allowed.`
 			);
 		}
 		setFiles((prevFiles) => [...prevFiles, ...validFiles]);
@@ -104,13 +104,13 @@ export default function FileInput() {
 			const successfulUploads = results
 				.filter(
 					(result): result is PromiseFulfilledResult<string> =>
-						result.status === "fulfilled" && result.value !== null,
+						result.status === "fulfilled" && result.value !== null
 				)
 				.map((result) => result.value);
 
 			setUploadedFiles((prev) => [...prev, ...successfulUploads]);
 			setFiles((prevFiles) =>
-				prevFiles.filter((_, index) => results[index]?.status !== "fulfilled"),
+				prevFiles.filter((_, index) => results[index]?.status !== "fulfilled")
 			);
 
 			if (successfulUploads.length > 0) {
@@ -137,8 +137,9 @@ export default function FileInput() {
 				{fileList.map((file, index) => (
 					<li
 						key={index}
-						className={`flex items-center justify-between rounded-md px-4 py-2 ${isUploaded ? "bg-green-100" : "bg-muted"
-							}`}
+						className={`flex items-center justify-between rounded-md px-4 py-2 ${
+							isUploaded ? "bg-green-100" : "bg-muted"
+						}`}
 					>
 						<div className="truncate">{typeof file === "string" ? file : file.name}</div>
 						{!isUploaded && (
@@ -175,7 +176,7 @@ export default function FileInput() {
 						"flex flex-col items-center justify-center gap-2 rounded-md border-2 border-dashed px-4 py-8 transition-colors",
 						isDragging
 							? "border-primary bg-primary/10"
-							: "border-primary hover:border-primary-foreground",
+							: "border-primary hover:border-primary-foreground"
 					)}
 				>
 					<UploadIcon className="h-8 w-8 text-primary" />

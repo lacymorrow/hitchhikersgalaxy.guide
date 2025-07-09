@@ -1,11 +1,12 @@
 // @ts-nocheck
 "use client";
 import { OrbitControls } from "@react-three/drei";
-import { Canvas, extend, Object3DNode, useThree } from "@react-three/fiber";
+import { Canvas, extend, type Object3DNode, useThree } from "@react-three/fiber";
 import { useEffect, useRef, useState } from "react";
 import { Color, Fog, PerspectiveCamera, Scene, Vector3 } from "three";
 import ThreeGlobe from "three-globe";
 import countries from "./globe-data.json";
+
 declare module "@react-three/fiber" {
 	interface ThreeElements {
 		threeGlobe: Object3DNode<ThreeGlobe, typeof ThreeGlobe>;
@@ -64,12 +65,12 @@ let numbersOfRings = [0];
 export function Globe({ globeConfig, data }: WorldProps) {
 	const [globeData, setGlobeData] = useState<
 		| {
-			size: number;
-			order: number;
-			color: (t: number) => string;
-			lat: number;
-			lng: number;
-		}[]
+				size: number;
+				order: number;
+				color: (t: number) => string;
+				lat: number;
+				lng: number;
+		  }[]
 		| null
 	>(null);
 
@@ -116,7 +117,7 @@ export function Globe({ globeConfig, data }: WorldProps) {
 
 	const _buildData = () => {
 		const arcs = data;
-		let points = [];
+		const points = [];
 		for (let i = 0; i < arcs.length; i++) {
 			const arc = arcs[i];
 			const rgb = hexToRgb(arc.color) as { r: number; g: number; b: number };
@@ -140,10 +141,8 @@ export function Globe({ globeConfig, data }: WorldProps) {
 		const filteredPoints = points.filter(
 			(v, i, a) =>
 				a.findIndex((v2) =>
-					["lat", "lng"].every(
-						(k) => v2[k as "lat" | "lng"] === v[k as "lat" | "lng"],
-					),
-				) === i,
+					["lat", "lng"].every((k) => v2[k as "lat" | "lng"] === v[k as "lat" | "lng"])
+				) === i
 		);
 
 		setGlobeData(filteredPoints);
@@ -198,9 +197,7 @@ export function Globe({ globeConfig, data }: WorldProps) {
 			.ringColor((e: any) => (t: any) => e.color(t))
 			.ringMaxRadius(defaultProps.maxRings)
 			.ringPropagationSpeed(RING_PROPAGATION_SPEED)
-			.ringRepeatPeriod(
-				(defaultProps.arcTime * defaultProps.arcLength) / defaultProps.rings,
-			);
+			.ringRepeatPeriod((defaultProps.arcTime * defaultProps.arcLength) / defaultProps.rings);
 	};
 
 	useEffect(() => {
@@ -208,15 +205,9 @@ export function Globe({ globeConfig, data }: WorldProps) {
 
 		const interval = setInterval(() => {
 			if (!globeRef.current || !globeData) return;
-			numbersOfRings = genRandomNumbers(
-				0,
-				data.length,
-				Math.floor((data.length * 4) / 5),
-			);
+			numbersOfRings = genRandomNumbers(0, data.length, Math.floor((data.length * 4) / 5));
 
-			globeRef.current.ringsData(
-				globeData.filter((d, i) => numbersOfRings.includes(i)),
-			);
+			globeRef.current.ringsData(globeData.filter((d, i) => numbersOfRings.includes(i)));
 		}, 2000);
 
 		return () => {
@@ -281,17 +272,15 @@ export function World(props: WorldProps) {
 
 export function hexToRgb(hex: string) {
 	var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-	hex = hex.replace(shorthandRegex, function (m, r, g, b) {
-		return r + r + g + g + b + b;
-	});
+	hex = hex.replace(shorthandRegex, (m, r, g, b) => r + r + g + g + b + b);
 
 	var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
 	return result
 		? {
-			r: parseInt(result[1], 16),
-			g: parseInt(result[2], 16),
-			b: parseInt(result[3], 16),
-		}
+				r: parseInt(result[1], 16),
+				g: parseInt(result[2], 16),
+				b: parseInt(result[3], 16),
+			}
 		: null;
 }
 

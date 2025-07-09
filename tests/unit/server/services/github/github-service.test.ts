@@ -1,3 +1,5 @@
+import { eq } from "drizzle-orm";
+import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import {
@@ -5,8 +7,6 @@ import {
 	grantGitHubAccess,
 	revokeGitHubAccess,
 } from "@/server/services/github/github-service";
-import { eq } from "drizzle-orm";
-import { afterAll, beforeAll, describe, expect, test } from "vitest";
 
 const TEST_USER = {
 	email: "lacy@shipkit.io",

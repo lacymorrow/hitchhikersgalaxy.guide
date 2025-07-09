@@ -39,11 +39,7 @@ export type TestimonialsBlock = {
 	background?: "none" | "light" | "dark";
 };
 
-export type PageBlock =
-	| HeroBlock
-	| ContentBlock
-	| FeaturesBlock
-	| TestimonialsBlock;
+export type PageBlock = HeroBlock | ContentBlock | FeaturesBlock | TestimonialsBlock;
 
 export interface Page {
 	id: string;

@@ -1,9 +1,9 @@
 "use server";
 
-import { db } from "@/server/db";
-import { temporaryLinks } from "@/server/db/schema";
 import { addMinutes } from "date-fns";
 import { and, eq, gt } from "drizzle-orm";
+import { db } from "@/server/db";
+import { temporaryLinks } from "@/server/db/schema";
 
 const EXPIRES_IN_MINUTES = 30;
 
@@ -39,7 +39,7 @@ export async function getTemporaryLinkData(linkId: string, userId: string) {
 		where: and(
 			eq(temporaryLinks.id, linkId),
 			eq(temporaryLinks.userId, userId),
-			gt(temporaryLinks.expiresAt, new Date()),
+			gt(temporaryLinks.expiresAt, new Date())
 		),
 	});
 

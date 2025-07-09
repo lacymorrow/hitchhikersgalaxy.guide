@@ -1,4 +1,5 @@
 "use client";
+
 /*
  * DataTable component built on top of TanStack Table v8
  * Provides a feature-rich data table with:
@@ -11,22 +12,22 @@
  * - Animated row transitions
  */
 
+import { ChevronDownIcon, DotsHorizontalIcon, DownloadIcon, PlusIcon } from "@radix-ui/react-icons";
 import {
 	type ColumnDef,
 	type ColumnFiltersState,
 	type ExpandedState,
-	type SortingState,
-	type VisibilityState,
 	flexRender,
 	getCoreRowModel,
 	getExpandedRowModel,
 	getFilteredRowModel,
 	getPaginationRowModel,
 	getSortedRowModel,
+	type SortingState,
 	useReactTable,
+	type VisibilityState,
 } from "@tanstack/react-table";
 import * as React from "react";
-
 import { Loader } from "@/components/primitives/loader";
 import { Button } from "@/components/ui/button";
 import {
@@ -48,12 +49,6 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
-import {
-	ChevronDownIcon,
-	DotsHorizontalIcon,
-	DownloadIcon,
-	PlusIcon,
-} from "@radix-ui/react-icons";
 
 interface DataTableProps<TData, TValue> {
 	columns: ColumnDef<TData, TValue>[];
@@ -244,7 +239,6 @@ export function DataTable<TData, TValue>({
 									))}
 									{(onEdit || onDelete || rowActions) && (
 										<TableCell>
-
 											<DropdownMenu>
 												<DropdownMenuTrigger asChild>
 													<Button variant="ghost" className="h-8 w-8 p-0">

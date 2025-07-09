@@ -1,14 +1,14 @@
 "use client";
 
+import type { ColumnDef } from "@tanstack/react-table";
+import { format } from "date-fns";
+import { ExternalLink, Trash2, Users } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { useToast } from "@/hooks/use-toast";
-import { type GitHubProfile } from "@/server/services/github/github-service";
-import type { ColumnDef } from "@tanstack/react-table";
-import { format } from "date-fns";
-import { ExternalLink, Trash2, Users } from "lucide-react";
+import type { GitHubProfile } from "@/server/services/github/github-service";
 import { revokeGitHubAccessAction } from "../actions";
 
 export interface GitHubUserData {
@@ -129,12 +129,7 @@ export const columns: ColumnDef<GitHubUserData>[] = [
 			};
 
 			return (
-				<Button
-					variant="ghost"
-					size="icon"
-					onClick={() => void handleRevoke()}
-					className="h-8 w-8"
-				>
+				<Button variant="ghost" size="icon" onClick={() => void handleRevoke()} className="h-8 w-8">
 					<Trash2 className="h-4 w-4" />
 				</Button>
 			);

@@ -19,12 +19,13 @@ export default async function FeedbackPage() {
 								{new Date(item.createdAt).toLocaleString()}
 							</span>
 							<span
-								className={`rounded-full px-2 py-1 text-xs ${item.status === "new"
-									? "bg-blue-100 text-blue-800"
-									: item.status === "reviewed"
-										? "bg-green-100 text-green-800"
-										: "bg-gray-100 text-gray-800"
-									}`}
+								className={`rounded-full px-2 py-1 text-xs ${
+									item.status === "new"
+										? "bg-blue-100 text-blue-800"
+										: item.status === "reviewed"
+											? "bg-green-100 text-green-800"
+											: "bg-gray-100 text-gray-800"
+								}`}
 							>
 								{item.status}
 							</span>
@@ -39,9 +40,7 @@ export default async function FeedbackPage() {
 					</div>
 				)) || []}
 				{(!feedbackItems || feedbackItems.length === 0) && (
-					<p className="text-center text-muted-foreground">
-						No feedback received yet.
-					</p>
+					<p className="text-center text-muted-foreground">No feedback received yet.</p>
 				)}
 			</div>
 		</div>

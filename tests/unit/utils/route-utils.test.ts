@@ -1,8 +1,7 @@
-import { describe, it, expect } from "vitest";
-import { getRoutePath } from "@/lib/utils/route-utils";
 import type { Route } from "next";
+import { describe, expect, it } from "vitest";
 import type { RouteObject } from "@/config/routes";
-import { rx } from "@/lib/utils/route-utils";
+import { getRoutePath, rx } from "@/lib/utils/route-utils";
 
 describe("route-utils", () => {
 	describe("getRoutePath", () => {

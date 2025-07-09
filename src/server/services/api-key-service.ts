@@ -1,8 +1,8 @@
+import crypto from "crypto";
+import { eq, isNull } from "drizzle-orm";
 import { siteConfig } from "@/config/site-config";
 import { db } from "@/server/db";
 import { apiKeys, users } from "@/server/db/schema";
-import crypto from "crypto";
-import { eq, isNull } from "drizzle-orm";
 
 export class ApiKeyService {
 	/**

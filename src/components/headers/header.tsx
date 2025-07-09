@@ -1,5 +1,9 @@
 "use client";
 
+import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { cva } from "class-variance-authority";
+import { useSession } from "next-auth/react";
+import type React from "react";
 import { Icon } from "@/components/assets/icon";
 import { Link } from "@/components/primitives/link-with-transition";
 import { SearchMenu } from "@/components/search/search-menu";
@@ -12,12 +16,9 @@ import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
 import { cn } from "@/lib/utils";
-import styles from "@/styles/header.module.css";
-import { HamburgerMenuIcon } from "@radix-ui/react-icons";
-import { cva } from "class-variance-authority";
-import { useSession } from "next-auth/react";
-import type React from "react";
 import { BuyButton } from "../buttons/lemonsqueezy-buy-button";
+
+import styles from "@/styles/header.module.css";
 
 interface HeaderProps {
 	navLinks?: NavLink[];
@@ -35,22 +36,20 @@ const defaultNavLinks = [
 	{ href: routes.pricing, label: "Pricing", isCurrent: false },
 ];
 
-const headerVariants = cva(
-	"translate-z-0 z-50 p-md",
-	{
-		variants: {
-			variant: {
-				default: "relative",
-				floating: "sticky top-0 h-24",
-				sticky: "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
-				"logo-only": "relative",
-			},
+const headerVariants = cva("translate-z-0 z-50 p-md", {
+	variants: {
+		variant: {
+			default: "relative",
+			floating: "sticky top-0 h-24",
+			sticky:
+				"sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+			"logo-only": "relative",
 		},
-		defaultVariants: {
-			variant: "default",
-		},
-	}
-);
+	},
+	defaultVariants: {
+		variant: "default",
+	},
+});
 
 export const Header: React.FC<HeaderProps> = ({
 	logoHref = routes.home,
@@ -77,14 +76,18 @@ export const Header: React.FC<HeaderProps> = ({
 				)}
 			>
 				{variant === "floating" && <div className="h-[12px] w-full" />}
-				<nav className={cn(
-					"container flex items-center gap-md",
-					isLogoOnly ? "justify-center" : "justify-between"
-				)}>
-					<div className={cn(
-						"flex-col gap-md md:flex md:flex-row md:items-center",
-						isLogoOnly ? "flex" : "hidden"
-					)}>
+				<nav
+					className={cn(
+						"container flex items-center gap-md",
+						isLogoOnly ? "justify-center" : "justify-between"
+					)}
+				>
+					<div
+						className={cn(
+							"flex-col gap-md md:flex md:flex-row md:items-center",
+							isLogoOnly ? "flex" : "hidden"
+						)}
+					>
 						<Link
 							href={logoHref}
 							className="flex grow items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
@@ -146,7 +149,10 @@ export const Header: React.FC<HeaderProps> = ({
 												</Link>
 												<Link
 													href={signInRedirectUrl}
-													className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-center")}
+													className={cn(
+														buttonVariants({ variant: "ghost" }),
+														"w-full justify-center"
+													)}
 												>
 													Login
 												</Link>
@@ -180,7 +186,9 @@ export const Header: React.FC<HeaderProps> = ({
 										<Link
 											key={routes.docs}
 											href={routes.docs}
-											className={cn("text-muted-foreground transition-colors hover:text-foreground")}
+											className={cn(
+												"text-muted-foreground transition-colors hover:text-foreground"
+											)}
 										>
 											Documentation
 										</Link>
@@ -197,7 +205,7 @@ export const Header: React.FC<HeaderProps> = ({
 											>
 												{link.label}
 											</Link>
-										)
+										);
 									})}
 								</div>
 								<div className="flex items-center gap-2">
@@ -205,9 +213,7 @@ export const Header: React.FC<HeaderProps> = ({
 
 									<UserMenu size="sm" />
 
-									{!session && (
-										<BuyButton />
-									)}
+									{!session && <BuyButton />}
 								</div>
 							</div>
 						</>

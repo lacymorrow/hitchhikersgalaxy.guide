@@ -1,5 +1,8 @@
 "use client";
 
+import { useSession } from "next-auth/react";
+import * as React from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
 	Card,
@@ -15,9 +18,6 @@ import { Separator } from "@/components/ui/separator";
 import { TextMorph } from "@/components/ui/text-morph";
 import { Textarea } from "@/components/ui/textarea";
 import { updateProfile } from "@/server/actions/settings";
-import { useSession } from "next-auth/react";
-import * as React from "react";
-import { toast } from "sonner";
 
 interface ProfileFormData {
 	name: string;
@@ -44,9 +44,7 @@ export default function SettingsPage() {
 	}, [session?.user]);
 
 	// Handle form input changes
-	const handleChange = (
-		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-	) => {
+	const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({ ...prev, [name]: value }));
 	};
@@ -120,9 +118,7 @@ export default function SettingsPage() {
 		<div className="space-y-6">
 			<div>
 				<h3 className="text-2xl font-medium">
-					<TextMorph className="">
-						{formData.name || "Profile"}
-					</TextMorph>
+					<TextMorph className="">{formData.name || "Profile"}</TextMorph>
 				</h3>
 				<p className="text-sm text-muted-foreground">
 					This is how others will see you on the site.
@@ -165,7 +161,6 @@ export default function SettingsPage() {
 					</CardFooter>
 				</Card>
 			</form>
-
 		</div>
 	);
 }

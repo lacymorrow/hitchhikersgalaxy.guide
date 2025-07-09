@@ -51,9 +51,9 @@ export const Boxes = () => {
 						},
 					}}
 					style={{
-						transform: `perspective(1000px) rotateX(${(mousePosition.y - (i * 50 + 25)) / 20
-							}deg) rotateY(${(mousePosition.x - (j * 50 + 25)) / 20
-							}deg)`,
+						transform: `perspective(1000px) rotateX(${
+							(mousePosition.y - (i * 50 + 25)) / 20
+						}deg) rotateY(${(mousePosition.x - (j * 50 + 25)) / 20}deg)`,
 					}}
 				/>
 			);

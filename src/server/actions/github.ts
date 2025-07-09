@@ -1,5 +1,7 @@
 "use server";
 
+import { eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
 import { auth, update as updateSession } from "@/server/auth";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
@@ -8,8 +10,6 @@ import {
 	revokeGitHubAccess,
 	verifyAndStoreGitHubUsername,
 } from "@/server/services/github/github-service";
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { getUserRoles } from "./rbac";
 
 interface GitHubConnectionData {

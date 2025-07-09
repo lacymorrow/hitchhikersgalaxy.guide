@@ -1,13 +1,13 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import type { PaymentData } from "@/server/services/payment-service";
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowUpDown, Eye, Tag } from "lucide-react";
 import { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import type { PaymentData } from "@/server/services/payment-service";
 import { PaymentDrawer } from "./payment-drawer";
 
 export const columns: ColumnDef<PaymentData>[] = [
@@ -59,9 +59,7 @@ export const columns: ColumnDef<PaymentData>[] = [
 				<div>
 					<div className="font-medium">{productName}</div>
 					{variantName && (
-						<div className="text-xs text-muted-foreground">
-							Variant: {variantName}
-						</div>
+						<div className="text-xs text-muted-foreground">Variant: {variantName}</div>
 					)}
 				</div>
 			);
@@ -101,14 +99,26 @@ export const columns: ColumnDef<PaymentData>[] = [
 			const amount = Number.parseFloat(row.getValue("amount"));
 
 			if (isFreeProduct) {
-				return <Badge variant="default" className="flex items-center gap-1"><Tag className="h-3 w-3" /> Free</Badge>;
+				return (
+					<Badge variant="default" className="flex items-center gap-1">
+						<Tag className="h-3 w-3" /> Free
+					</Badge>
+				);
 			}
 
 			if (amount === 0) {
-				return <Badge variant="secondary" className="flex items-center gap-1"><Tag className="h-3 w-3" /> Discounted</Badge>;
+				return (
+					<Badge variant="secondary" className="flex items-center gap-1">
+						<Tag className="h-3 w-3" /> Discounted
+					</Badge>
+				);
 			}
 
-			return <Badge variant="default" className="flex items-center gap-1"><Tag className="h-3 w-3" /> Paid</Badge>;
+			return (
+				<Badge variant="default" className="flex items-center gap-1">
+					<Tag className="h-3 w-3" /> Paid
+				</Badge>
+			);
 		},
 	},
 	{

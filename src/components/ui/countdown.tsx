@@ -1,9 +1,9 @@
 "use client";
 
+import { Timer } from "lucide-react";
+import type * as React from "react";
 import { useCountdown } from "@/hooks/use-countdown";
 import { cn } from "@/lib/utils";
-import { Timer } from "lucide-react";
-import * as React from "react";
 
 interface CountdownProps extends React.HTMLAttributes<HTMLDivElement> {
 	targetDate: string | Date;

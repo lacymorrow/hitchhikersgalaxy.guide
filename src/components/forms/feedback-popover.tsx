@@ -1,5 +1,7 @@
 "use client";
 
+import { ExternalLink, Mail } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	PopoverCloseButton,
@@ -14,8 +16,6 @@ import {
 } from "@/components/ui/cults/animated-popover";
 import { generateFeedbackMailto } from "@/lib/utils/email-utils";
 import { submitFeedback } from "@/server/actions/feedback-actions";
-import { ExternalLink, Mail } from "lucide-react";
-import { useState } from "react";
 
 export const FeedbackPopover = () => {
 	const [loading, setLoading] = useState(false);

@@ -72,7 +72,7 @@ export class VercelAPIService {
 				outputDirectory: config.outputDirectory,
 				installCommand: config.installCommand,
 				devCommand: config.devCommand,
-				environmentVariables: config.environmentVariables?.map(env => ({
+				environmentVariables: config.environmentVariables?.map((env) => ({
 					key: env.key,
 					value: env.value,
 					type: "encrypted" as const,
@@ -118,10 +118,12 @@ export class VercelAPIService {
 
 			const deploymentData = {
 				name: projectId,
-				gitSource: gitRef ? {
-					type: "github" as const,
-					ref: gitRef,
-				} : undefined,
+				gitSource: gitRef
+					? {
+							type: "github" as const,
+							ref: gitRef,
+						}
+					: undefined,
 				target: "production" as const,
 			};
 
@@ -227,13 +229,13 @@ export class VercelAPIService {
 					results.push({
 						key: variable.key,
 						success: true,
-						id: response.id
+						id: response.id,
 					});
 				} catch (error: any) {
 					results.push({
 						key: variable.key,
 						success: false,
-						error: this.formatErrorMessage(error)
+						error: this.formatErrorMessage(error),
 					});
 				}
 			}
@@ -269,13 +271,13 @@ export class VercelAPIService {
 					results.push({
 						domain,
 						success: true,
-						details: response
+						details: response,
 					});
 				} catch (error: any) {
 					results.push({
 						domain,
 						success: false,
-						error: this.formatErrorMessage(error)
+						error: this.formatErrorMessage(error),
 					});
 				}
 			}
@@ -361,7 +363,9 @@ export class VercelAPIService {
 	 */
 	async getDeployments(projectId: string, limit = 10) {
 		try {
-			const response = await this.makeRequest(`/v6/deployments?projectId=${projectId}&limit=${limit}`);
+			const response = await this.makeRequest(
+				`/v6/deployments?projectId=${projectId}&limit=${limit}`
+			);
 
 			return response.deployments ?? [];
 		} catch (error: any) {
@@ -382,7 +386,7 @@ export class VercelAPIService {
 		const response = await fetch(url.toString(), {
 			...options,
 			headers: {
-				"Authorization": `Bearer ${this.accessToken}`,
+				Authorization: `Bearer ${this.accessToken}`,
 				"Content-Type": "application/json",
 				...options.headers,
 			},
@@ -459,7 +463,10 @@ export function validateVercelProjectName(name: string): { valid: boolean; error
 
 	// Must contain only lowercase letters, numbers, and hyphens
 	if (!/^[a-z0-9-]+$/.test(name)) {
-		return { valid: false, error: "Project name can only contain lowercase letters, numbers, and hyphens" };
+		return {
+			valid: false,
+			error: "Project name can only contain lowercase letters, numbers, and hyphens",
+		};
 	}
 
 	// Cannot start or end with hyphens

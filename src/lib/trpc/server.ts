@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createHydrationHelpers } from "@trpc/react-query/rsc";
-import { type UnsafeUnwrappedHeaders, headers } from "next/headers";
+import { headers, type UnsafeUnwrappedHeaders } from "next/headers";
 import { cache } from "react";
 
 import { type AppRouter, createCaller } from "@/lib/trpc/api/root";

@@ -1,11 +1,11 @@
 "use client";
 
-import { Link } from "@/components/primitives/link-with-transition";
-import type { BlogPost } from "@/lib/blog";
-import { cn } from "@/lib/utils";
 import { ChevronDownIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { Link } from "@/components/primitives/link-with-transition";
+import type { BlogPost } from "@/lib/blog";
+import { cn } from "@/lib/utils";
 
 interface BlogSidebarProps {
 	posts: BlogPost[];
@@ -68,11 +68,7 @@ export const BlogSidebar = ({ posts }: BlogSidebarProps) => {
 		setExpandedFolders(newExpanded);
 	};
 
-	const renderFolder = (
-		structure: FolderStructure,
-		path = "",
-		level = 0
-	) => {
+	const renderFolder = (structure: FolderStructure, path = "", level = 0) => {
 		return Object.entries(structure).map(([name, { posts, subfolders }]) => {
 			const currentPath = path ? `${path}/${name}` : name;
 			const hasContent = posts.length > 0 || Object.keys(subfolders).length > 0;
@@ -127,10 +123,7 @@ export const BlogSidebar = ({ posts }: BlogSidebarProps) => {
 				<nav className="flex flex-col gap-2">
 					<div className="flex items-center justify-between px-2 text-sm font-semibold text-muted-foreground">
 						<span>Navigation</span>
-						<Link
-							href="/blog/categories"
-							className="text-xs hover:text-foreground"
-						>
+						<Link href="/blog/categories" className="text-xs hover:text-foreground">
 							View Categories
 						</Link>
 					</div>

@@ -1,7 +1,7 @@
+import type { NextRequest } from "next/server";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { processPolarWebhook } from "@/lib/polar";
-import type { NextRequest } from "next/server";
 
 /**
  * Polar webhook handler
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 		logger.debug("Parsed Polar webhook event", {
 			eventType: event?.type,
 			eventId: event?.id,
-			orderId: event?.data?.id
+			orderId: event?.data?.id,
 		});
 
 		// Verify webhook signature if configured
@@ -58,7 +58,11 @@ export async function POST(request: NextRequest) {
 			} else if (webhookData.description) {
 				productName = webhookData.description;
 				extractionSource = "webhookData.description";
-			} else if (webhookData.items && Array.isArray(webhookData.items) && webhookData.items.length > 0) {
+			} else if (
+				webhookData.items &&
+				Array.isArray(webhookData.items) &&
+				webhookData.items.length > 0
+			) {
 				const firstItem = webhookData.items[0];
 				if (firstItem.product?.name) {
 					productName = firstItem.product.name;
@@ -85,15 +89,19 @@ export async function POST(request: NextRequest) {
 					variantName: webhookData.variant?.name,
 					webhookProductName: webhookData.productName,
 					description: webhookData.description,
-					hasItems: !!(webhookData.items && Array.isArray(webhookData.items) && webhookData.items.length > 0),
-				}
+					hasItems: !!(
+						webhookData.items &&
+						Array.isArray(webhookData.items) &&
+						webhookData.items.length > 0
+					),
+				},
 			});
 
 			// Enhance the webhook data with extracted product name
 			event.data = {
 				...webhookData,
 				productName: productName,
-				_productNameExtractionSource: extractionSource
+				_productNameExtractionSource: extractionSource,
 			};
 		}
 
@@ -102,17 +110,15 @@ export async function POST(request: NextRequest) {
 
 		logger.debug("Polar webhook processed successfully", {
 			eventType: event?.type,
-			eventId: event?.id
+			eventId: event?.id,
 		});
 
 		return new Response("Webhook processed", { status: 200 });
-
 	} catch (error: unknown) {
-
 		if (error instanceof Error) {
 			logger.error("Error processing Polar webhook", {
 				error: error.message,
-				stack: error.stack
+				stack: error.stack,
 			});
 
 			// Return 200 to prevent webhook retries for non-recoverable errors
@@ -125,7 +131,7 @@ export async function POST(request: NextRequest) {
 		}
 
 		logger.error("Error processing Polar webhook", {
-			error: error
+			error: error,
 		});
 
 		return new Response("Webhook processing failed", { status: 200 });

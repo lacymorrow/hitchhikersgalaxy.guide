@@ -1,3 +1,4 @@
+import { DownloadIcon } from "lucide-react";
 import { AuthForm } from "@/app/(app)/(authentication)/_components/auth-form";
 import { SignIn } from "@/app/(app)/(authentication)/sign-in/_components/sign-in";
 import { LoginButton } from "@/components/buttons/sign-in-button";
@@ -13,7 +14,6 @@ import { cn } from "@/lib/utils";
 import { downloadRepoAnonymously } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
 import { PaymentService } from "@/server/services/payment-service";
-import { DownloadIcon } from "lucide-react";
 
 interface SearchParams {
 	// Lemon Squeezy parameters
@@ -47,7 +47,9 @@ interface PageProps {
 	searchParams: Promise<SearchParams>;
 }
 
-export default async function CheckoutSuccessPage({ searchParams: searchParamsPromise }: PageProps) {
+export default async function CheckoutSuccessPage({
+	searchParams: searchParamsPromise,
+}: PageProps) {
 	const searchParams = await searchParamsPromise;
 	const session = await auth();
 	const requestId = crypto.randomUUID();
@@ -138,7 +140,7 @@ export default async function CheckoutSuccessPage({ searchParams: searchParamsPr
 		if (orderId && (session?.user?.id || customData.user_id)) {
 			try {
 				await PaymentService.createPayment({
-					userId: session?.user?.id || customData.user_id as string,
+					userId: session?.user?.id || (customData.user_id as string),
 					orderId: orderId,
 					status: status,
 					amount: 0,
@@ -195,20 +197,14 @@ export default async function CheckoutSuccessPage({ searchParams: searchParamsPr
 
 				{/* Content */}
 				<div className="relative z-10 mx-auto flex min-h-screen max-w-5xl flex-col items-center justify-center px-4 py-20">
-					<h1 className="mb-8 text-center text-xl font-bold">
-						Success!
-					</h1>
+					<h1 className="mb-8 text-center text-xl font-bold">Success!</h1>
 					<div className="mb-8 text-center">
-						<h2 className="mb-2 text-4xl font-semibold">
-							Welcome aboard
-						</h2>
+						<h2 className="mb-2 text-4xl font-semibold">Welcome aboard</h2>
 						<p className="text-muted-foreground">
 							Your purchase was successful, we can't wait to see what you build.
 						</p>
 						{accessGranted && (
-							<p className="mt-2 text-sm text-green-500">
-								✓ Access granted successfully
-							</p>
+							<p className="mt-2 text-sm text-green-500">✓ Access granted successfully</p>
 						)}
 					</div>
 
@@ -219,9 +215,7 @@ export default async function CheckoutSuccessPage({ searchParams: searchParamsPr
 								Your account is ready to go! Head to the dashboard to get started.
 							</p>
 							<Button asChild size="lg" className="w-full">
-								<Link href={routes.app.dashboard}>
-									Go to Dashboard
-								</Link>
+								<Link href={routes.app.dashboard}>Go to Dashboard</Link>
 							</Button>
 						</Card>
 					) : (
@@ -230,19 +224,12 @@ export default async function CheckoutSuccessPage({ searchParams: searchParamsPr
 
 					{canDownload && (
 						<div className="mt-20 text-center">
-							<h3 className="mb-4 text-lg font-semibold">
-								Just want the code?
-							</h3>
+							<h3 className="mb-4 text-lg font-semibold">Just want the code?</h3>
 							{/* Download button */}
 							<form action={downloadRepoAnonymously} className="w-full">
 								<input type="hidden" name="email" value={email} />
 								<input type="hidden" name="orderId" value={orderId} />
-								<Button
-									type="submit"
-									variant="outline"
-									size="lg"
-									className={cn("w-full")}
-								>
+								<Button type="submit" variant="outline" size="lg" className={cn("w-full")}>
 									<DownloadIcon className="mr-2 h-4 w-4" />
 									Download {siteConfig.title}
 								</Button>
@@ -252,19 +239,13 @@ export default async function CheckoutSuccessPage({ searchParams: searchParamsPr
 
 					{/* Additional resources */}
 					<div className="mt-20 text-center">
-						<h3 className="mb-4 text-lg font-semibold">
-							Need Help Getting Started?
-						</h3>
+						<h3 className="mb-4 text-lg font-semibold">Need Help Getting Started?</h3>
 						<div className="flex flex-wrap justify-center gap-4">
 							<Button variant="outline" asChild>
-								<Link href={routes.docs}>
-									View Documentation
-								</Link>
+								<Link href={routes.docs}>View Documentation</Link>
 							</Button>
 							<Button variant="outline" asChild>
-								<Link href={routes.contact}>
-									Contact Support
-								</Link>
+								<Link href={routes.contact}>Contact Support</Link>
 							</Button>
 						</div>
 					</div>

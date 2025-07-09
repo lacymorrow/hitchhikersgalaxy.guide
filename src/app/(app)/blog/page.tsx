@@ -1,16 +1,17 @@
+import { FolderIcon } from "lucide-react";
+import type { Metadata } from "next";
+import { Fragment } from "react";
+import { Link } from "@/components/primitives/link-with-transition";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { constructMetadata } from "@/config/metadata";
 import { type BlogPost, getBlogPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils/format-date";
-import { FolderIcon } from "lucide-react";
-import type { Metadata } from "next";
-import { Link } from "@/components/primitives/link-with-transition";
-import { Fragment } from "react";
 
 export const metadata: Metadata = constructMetadata({
 	title: "Blog - Latest Updates & Guides | Shipkit",
-	description: "Stay up to date with the latest app development trends, tutorials, and best practices. Learn how to build better apps faster with Shipkit's expert guides and tips.",
+	description:
+		"Stay up to date with the latest app development trends, tutorials, and best practices. Learn how to build better apps faster with Shipkit's expert guides and tips.",
 });
 
 const BlogPage = async () => {
@@ -73,9 +74,7 @@ const BlogPage = async () => {
 							<CardContent>
 								<div className="flex items-center gap-2 text-sm text-muted-foreground">
 									{featuredPost.author && (
-										<span className="font-medium text-foreground">
-											{featuredPost.author}
-										</span>
+										<span className="font-medium text-foreground">{featuredPost.author}</span>
 									)}
 									{featuredPost.publishedAt && (
 										<Fragment>
@@ -118,25 +117,19 @@ const BlogPage = async () => {
 											{post.title}
 										</CardTitle>
 										{post.description && (
-											<CardDescription className="line-clamp-2">
-												{post.description}
-											</CardDescription>
+											<CardDescription className="line-clamp-2">{post.description}</CardDescription>
 										)}
 									</Link>
 								</CardHeader>
 								<CardContent>
 									<div className="flex items-center gap-2 text-sm text-muted-foreground">
 										{post.author && (
-											<span className="font-medium text-foreground">
-												{post.author}
-											</span>
+											<span className="font-medium text-foreground">{post.author}</span>
 										)}
 										{post.publishedAt && (
 											<Fragment>
 												<span>•</span>
-												<time dateTime={post.publishedAt}>
-													{formatDate(post.publishedAt)}
-												</time>
+												<time dateTime={post.publishedAt}>{formatDate(post.publishedAt)}</time>
 											</Fragment>
 										)}
 									</div>

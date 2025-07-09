@@ -1,7 +1,8 @@
 // Actions middleware
+
+import type { z } from "zod";
 import { auth } from "@/server/auth";
 import type { User } from "@/types/user";
-import type { z } from "zod";
 
 export interface ActionState {
 	error?: string;

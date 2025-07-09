@@ -1,5 +1,7 @@
 "use client";
 
+import { FolderSyncIcon, Loader2, RotateCcw, Trash2 } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -12,8 +14,6 @@ import {
 import { useAsyncAction } from "@/hooks/use-async-state";
 import { useToast } from "@/hooks/use-toast";
 import { deleteAllPayments, importPayments, refreshAllPayments } from "@/server/actions/payments";
-import { FolderSyncIcon, Loader2, RotateCcw, Trash2 } from "lucide-react";
-import { useState } from "react";
 
 type PaymentProvider = "lemonsqueezy" | "polar" | "stripe" | "all";
 type ActionType = "import" | "delete" | "refresh";
@@ -57,42 +57,46 @@ export function ImportPayments() {
 	const [currentProvider, setCurrentProvider] = useState<PaymentProvider | null>(null);
 	const [currentAction, setCurrentAction] = useState<ActionType | null>(null);
 
-	const { loading, error, execute } = useAsyncAction(async (action: ActionType, provider?: PaymentProvider) => {
-		setCurrentAction(action);
+	const { loading, error, execute } = useAsyncAction(
+		async (action: ActionType, provider?: PaymentProvider) => {
+			setCurrentAction(action);
 
-		if (action === "import" && provider) {
-			setCurrentProvider(provider);
-			const result = await importPayments(provider);
+			if (action === "import" && provider) {
+				setCurrentProvider(provider);
+				const result = await importPayments(provider);
 
-			// Show success toast
-			toast({
-				title: `${provider === "all" ? "All payments" : provider} import complete`,
-				description: formatImportMessage(provider, result),
-				variant: "default",
-			});
-		} else if (action === "delete") {
-			const result = await deleteAllPayments();
+				// Show success toast
+				toast({
+					title: `${provider === "all" ? "All payments" : provider} import complete`,
+					description: formatImportMessage(provider, result),
+					variant: "default",
+				});
+			} else if (action === "delete") {
+				const result = await deleteAllPayments();
 
-			// Show success toast
-			toast({
-				title: "All payments deleted",
-				description: result.message || `Successfully deleted ${result.deletedCount} payments`,
-				variant: "default",
-			});
-		} else if (action === "refresh") {
-			const result = await refreshAllPayments();
+				// Show success toast
+				toast({
+					title: "All payments deleted",
+					description: result.message || `Successfully deleted ${result.deletedCount} payments`,
+					variant: "default",
+				});
+			} else if (action === "refresh") {
+				const result = await refreshAllPayments();
 
-			// Show success toast
-			toast({
-				title: "All payments refreshed",
-				description: result.message || `Successfully refreshed payments: deleted ${result.deletedCount} old payments and imported fresh data`,
-				variant: "default",
-			});
+				// Show success toast
+				toast({
+					title: "All payments refreshed",
+					description:
+						result.message ||
+						`Successfully refreshed payments: deleted ${result.deletedCount} old payments and imported fresh data`,
+					variant: "default",
+				});
+			}
+
+			setCurrentProvider(null);
+			setCurrentAction(null);
 		}
-
-		setCurrentProvider(null);
-		setCurrentAction(null);
-	});
+	);
 
 	// Show error toast when error occurs
 	if (error) {
@@ -186,41 +190,26 @@ export function ImportPayments() {
 			<DropdownMenuContent align="end" className="w-56">
 				<DropdownMenuLabel>Import Payments</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem
-					onClick={() => handleImport("lemonsqueezy")}
-					disabled={loading}
-				>
+				<DropdownMenuItem onClick={() => handleImport("lemonsqueezy")} disabled={loading}>
 					<FolderSyncIcon className="mr-2 h-4 w-4" />
 					Import Lemon Squeezy
 				</DropdownMenuItem>
-				<DropdownMenuItem
-					onClick={() => handleImport("polar")}
-					disabled={loading}
-				>
+				<DropdownMenuItem onClick={() => handleImport("polar")} disabled={loading}>
 					<FolderSyncIcon className="mr-2 h-4 w-4" />
 					Import Polar
 				</DropdownMenuItem>
-				<DropdownMenuItem
-					onClick={() => handleImport("stripe")}
-					disabled={loading}
-				>
+				<DropdownMenuItem onClick={() => handleImport("stripe")} disabled={loading}>
 					<FolderSyncIcon className="mr-2 h-4 w-4" />
 					Import Stripe
 				</DropdownMenuItem>
-				<DropdownMenuItem
-					onClick={() => handleImport("all")}
-					disabled={loading}
-				>
+				<DropdownMenuItem onClick={() => handleImport("all")} disabled={loading}>
 					<FolderSyncIcon className="mr-2 h-4 w-4" />
 					Import All Providers
 				</DropdownMenuItem>
 				<DropdownMenuSeparator />
 				<DropdownMenuLabel>Manage Payments</DropdownMenuLabel>
 				<DropdownMenuSeparator />
-				<DropdownMenuItem
-					onClick={handleRefreshAll}
-					disabled={loading}
-				>
+				<DropdownMenuItem onClick={handleRefreshAll} disabled={loading}>
 					<RotateCcw className="mr-2 h-4 w-4" />
 					Refresh All Payments
 				</DropdownMenuItem>

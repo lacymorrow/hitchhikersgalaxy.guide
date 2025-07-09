@@ -1,7 +1,7 @@
-import { auth } from "@/server/auth";
-import { db } from "@/server/db";
 import { Octokit } from "@octokit/rest";
 import { NextResponse } from "next/server";
+import { auth } from "@/server/auth";
+import { db } from "@/server/db";
 
 export async function POST(request: Request) {
 	try {

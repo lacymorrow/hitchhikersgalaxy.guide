@@ -1,17 +1,17 @@
+import { lemonSqueezySetup, listOrders, listProducts } from "@lemonsqueezy/lemonsqueezy.js";
+import crypto from "crypto";
+import { eq } from "drizzle-orm";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import { payments, users } from "@/server/db/schema";
-import { lemonSqueezySetup, listOrders, listProducts } from "@lemonsqueezy/lemonsqueezy.js";
-import crypto from "crypto";
-import { eq } from "drizzle-orm";
 import { userService } from "../services/user-service";
 import { BasePaymentProvider } from "./base-provider";
-import { type CheckoutOptions, type ImportStats, type OrderData, type ProductData } from "./types";
+import type { CheckoutOptions, ImportStats, OrderData, ProductData } from "./types";
 
-	/**
-	 * LemonSqueezy implementation of the PaymentProvider interface
-	 */
+/**
+ * LemonSqueezy implementation of the PaymentProvider interface
+ */
 export class LemonSqueezyProvider extends BasePaymentProvider {
 	readonly name = "Lemon Squeezy";
 	readonly id = "lemonsqueezy";
@@ -22,7 +22,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 		// Auto-initialize if environment variables are available
 		if (env.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED && env.LEMONSQUEEZY_API_KEY) {
 			this.initialize({
-				apiKey: env.LEMONSQUEEZY_API_KEY
+				apiKey: env.LEMONSQUEEZY_API_KEY,
 			});
 		}
 	}
@@ -34,7 +34,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 		logger.debug("LemonSqueezy validateConfig called", {
 			featureEnabled: env.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED,
 			apiKeyExists: !!env.LEMONSQUEEZY_API_KEY,
-			apiKeyLength: env.LEMONSQUEEZY_API_KEY?.length || 0
+			apiKeyLength: env.LEMONSQUEEZY_API_KEY?.length || 0,
 		});
 
 		// Check the feature flag first
@@ -309,7 +309,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 
 			// Get user orders with enhanced product information
 			const orders = await listOrders({
-				include: ['order-items', 'customer']
+				include: ["order-items", "customer"],
 			});
 			const userOrders =
 				orders.data?.data?.filter((order) => {
@@ -386,7 +386,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 
 			// Include order-items in the response to get detailed product information
 			const response = await listOrders({
-				include: ['order-items', 'customer']
+				include: ["order-items", "customer"],
 			});
 
 			if (!response || !Array.isArray(response.data?.data)) {
@@ -475,7 +475,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 				filter: {
 					userEmail: email.trim(),
 				},
-				include: ['order-items', 'customer']
+				include: ["order-items", "customer"],
 			});
 
 			if (!response || !Array.isArray(response.data?.data)) {
@@ -838,7 +838,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 								...(userId && !existingPayment.userId ? { userId } : {}),
 								metadata: JSON.stringify(paymentMetadata),
 							})
-							.where(eq(payments.orderId, order.orderId));
+							.where(eq(payments.id, existingPayment.id));
 						stats.skipped++;
 						continue;
 					}
@@ -874,7 +874,8 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 						};
 
 						await db.insert(payments).values({
-							orderId: order.orderId,
+							orderId: order.orderId, // This is the identifier (formatted order number)
+							processorOrderId: order.id, // Store the internal ID as processorOrderId
 							userId,
 							amount: Math.round(order.amount * 100), // Convert to cents for storage
 							status: order.status === "paid" ? "completed" : order.status,

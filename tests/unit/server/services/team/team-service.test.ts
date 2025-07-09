@@ -1,8 +1,8 @@
+import { eq } from "drizzle-orm";
+import { afterAll, afterEach, beforeAll, describe, expect, it, test } from "vitest";
 import { db } from "@/server/db";
 import { teamMembers, teams, users } from "@/server/db/schema";
 import { TeamService } from "@/server/services/team-service";
-import { eq } from "drizzle-orm";
-import { afterAll, afterEach, beforeAll, describe, expect, it, test } from "vitest";
 
 const TEST_USER = {
 	id: "test-user-id",

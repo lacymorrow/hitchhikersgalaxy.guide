@@ -1,3 +1,5 @@
+import { and, eq, inArray } from "drizzle-orm";
+import { type NextRequest, NextResponse } from "next/server";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import {
@@ -7,8 +9,6 @@ import {
 	roles,
 	teamMembers,
 } from "@/server/db/schema";
-import { and, eq, inArray } from "drizzle-orm";
-import { type NextRequest, NextResponse } from "next/server";
 import { BaseService } from "./base-service";
 
 export interface Permission {

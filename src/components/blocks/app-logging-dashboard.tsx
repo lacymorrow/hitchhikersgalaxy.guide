@@ -1,5 +1,9 @@
 "use client";
 
+import { type ColumnDef, flexRender, getCoreRowModel, useReactTable } from "@tanstack/react-table";
+import { AnimatePresence, motion } from "framer-motion";
+import { AlertCircle, CheckCircle, Info } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Loader } from "@/components/primitives/loader";
 import {
 	Table,
@@ -10,15 +14,6 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { routes } from "@/config/routes";
-import {
-	type ColumnDef,
-	flexRender,
-	getCoreRowModel,
-	useReactTable,
-} from "@tanstack/react-table";
-import { AnimatePresence, motion } from "framer-motion";
-import { AlertCircle, CheckCircle, Info } from "lucide-react";
-import { useEffect, useState } from "react";
 
 type LogLevel = "info" | "warning" | "error" | "success";
 
@@ -79,9 +74,7 @@ interface AppLoggingDashboardComponentProps {
 	apiKey: string | null;
 }
 
-export function AppLoggingDashboardComponent({
-	apiKey,
-}: AppLoggingDashboardComponentProps) {
+export function AppLoggingDashboardComponent({ apiKey }: AppLoggingDashboardComponentProps) {
 	const [logs, setLogs] = useState<Log[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
 
@@ -116,9 +109,7 @@ export function AppLoggingDashboardComponent({
 
 	return (
 		<div className="mx-auto mt-10 w-full max-w-6xl rounded-lg bg-white p-6 shadow-xl">
-			<h1 className="mb-6 text-3xl font-bold text-gray-800">
-				App Logging Dashboard
-			</h1>
+			<h1 className="mb-6 text-3xl font-bold text-gray-800">App Logging Dashboard</h1>
 			<div className="mb-4 flex items-center justify-between">
 				<div className="text-sm text-gray-500">Total Logs: {logs.length}</div>
 			</div>
@@ -133,10 +124,7 @@ export function AppLoggingDashboardComponent({
 									<TableRow key={headerGroup.id}>
 										{headerGroup.headers.map((header) => (
 											<TableHead key={header.id}>
-												{flexRender(
-													header.column.columnDef.header,
-													header.getContext(),
-												)}
+												{flexRender(header.column.columnDef.header, header.getContext())}
 											</TableHead>
 										))}
 									</TableRow>
@@ -154,10 +142,7 @@ export function AppLoggingDashboardComponent({
 										>
 											{row.getVisibleCells().map((cell) => (
 												<TableCell key={cell.id}>
-													{flexRender(
-														cell.column.columnDef.cell,
-														cell.getContext(),
-													)}
+													{flexRender(cell.column.columnDef.cell, cell.getContext())}
 												</TableCell>
 											))}
 										</motion.tr>

@@ -1,11 +1,11 @@
 import { exec, spawn } from "child_process";
+import { migrate } from "drizzle-orm/postgres-js/migrator";
 import path from "path";
 import { promisify } from "util";
 // import "../scripts/env-config.js";
 import { getPayloadClient } from "@/lib/payload/payload";
 import { seed } from "@/lib/payload/seed";
 import { db } from "@/server/db";
-import { migrate } from "drizzle-orm/postgres-js/migrator";
 
 const execAsync = promisify(exec);
 

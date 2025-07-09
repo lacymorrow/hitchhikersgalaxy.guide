@@ -1,6 +1,6 @@
+import type { ComponentProps } from "react";
 import { Link } from "@/components/primitives/link-with-transition";
 import { cn } from "@/lib/utils";
-import { ComponentProps } from "react";
 
 interface NavLinkProps extends ComponentProps<typeof Link> {
 	active?: boolean;
@@ -8,20 +8,14 @@ interface NavLinkProps extends ComponentProps<typeof Link> {
 	children: React.ReactNode;
 }
 
-export const NavLink = ({
-	active = false,
-	className,
-	icon,
-	children,
-	...props
-}: NavLinkProps) => {
+export const NavLink = ({ active = false, className, icon, children, ...props }: NavLinkProps) => {
 	return (
 		<Link
 			className={cn(
 				"flex items-center gap-2 rounded-lg px-3 py-2 text-sm transition-colors",
 				"hover:bg-accent hover:text-accent-foreground",
 				active && "bg-accent text-accent-foreground",
-				className,
+				className
 			)}
 			{...props}
 		>

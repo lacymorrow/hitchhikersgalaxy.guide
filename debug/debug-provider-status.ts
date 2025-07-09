@@ -6,9 +6,15 @@ config();
 async function debugProviderStatus() {
 	console.log("🔧 Environment Variable Debug:");
 	console.log(`  NODE_ENV: ${process.env.NODE_ENV}`);
-	console.log(`  LEMONSQUEEZY_API_KEY: ${process.env.LEMONSQUEEZY_API_KEY ? "✅ Set" : "❌ Not set"}`);
-	console.log(`  LEMONSQUEEZY_STORE_ID: ${process.env.LEMONSQUEEZY_STORE_ID ? "✅ Set" : "❌ Not set"}`);
-	console.log(`  NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED: ${process.env.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED}`);
+	console.log(
+		`  LEMONSQUEEZY_API_KEY: ${process.env.LEMONSQUEEZY_API_KEY ? "✅ Set" : "❌ Not set"}`
+	);
+	console.log(
+		`  LEMONSQUEEZY_STORE_ID: ${process.env.LEMONSQUEEZY_STORE_ID ? "✅ Set" : "❌ Not set"}`
+	);
+	console.log(
+		`  NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED: ${process.env.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED}`
+	);
 	console.log(`  DATABASE_URL: ${process.env.DATABASE_URL ? "✅ Set" : "❌ Not set"}`);
 
 	// Try to import and initialize providers
@@ -20,7 +26,9 @@ async function debugProviderStatus() {
 		console.log(`  Found ${providers.length} enabled providers`);
 
 		for (const provider of providers) {
-			console.log(`  - ${provider.name} (${provider.id}): ${provider.isEnabled ? "✅ Enabled" : "❌ Disabled"}`);
+			console.log(
+				`  - ${provider.name} (${provider.id}): ${provider.isEnabled ? "✅ Enabled" : "❌ Disabled"}`
+			);
 		}
 
 		// Check Lemon Squeezy specifically
@@ -30,7 +38,6 @@ async function debugProviderStatus() {
 			console.log(`  Enabled: ${lemonSqueezyProvider.isEnabled}`);
 			console.log(`  Configured: ${lemonSqueezyProvider.isConfigured}`);
 		}
-
 	} catch (error) {
 		console.error("❌ Error checking providers:", error);
 	}

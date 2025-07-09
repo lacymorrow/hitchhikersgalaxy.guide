@@ -1,15 +1,20 @@
-'use client';
+"use client";
 
+import Link from "next/link";
 import { type ComponentPropsWithoutRef, type ReactNode, Suspense } from "react";
-
 import { OAuthButtons } from "@/app/(app)/(authentication)/_components/oauth-buttons";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
-import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import { isGuestOnlyMode } from "@/server/auth-providers";
-import Link from "next/link";
 
 interface AuthFormProps extends ComponentPropsWithoutRef<"div"> {
 	mode: "sign-in" | "sign-up";
@@ -31,10 +36,18 @@ export function AuthForm({
 	...props
 }: AuthFormProps) {
 	const isSignIn = mode === "sign-in";
-	const cardTitle = typeof title === "string" ? title : (isSignIn ? `Welcome to ${siteConfig.title}` : "Create an account");
-	const cardDescription = typeof description === "string" ? description : isSignIn
-		? "Login to get started"
-		: "Sign up to get started";
+	const cardTitle =
+		typeof title === "string"
+			? title
+			: isSignIn
+				? `Welcome to ${siteConfig.title}`
+				: "Create an account";
+	const cardDescription =
+		typeof description === "string"
+			? description
+			: isSignIn
+				? "Login to get started"
+				: "Sign up to get started";
 	const alternateLink = isSignIn
 		? { text: "Don't have an account?", href: routes.auth.signUp, label: "Sign up" }
 		: { text: "Already have an account?", href: routes.auth.signIn, label: "Sign in" };
@@ -55,14 +68,9 @@ export function AuthForm({
 			)}
 			<CardContent className="pb-0">
 				<div className="grid gap-6 relative">
-					<OAuthButtons
-						collapsible
-						variant="icons"
-					/>
+					<OAuthButtons collapsible variant="icons" />
 
-					<Suspense fallback={<SuspenseFallback />}>
-						{children}
-					</Suspense>
+					<Suspense fallback={<SuspenseFallback />}>{children}</Suspense>
 					{shouldShowAlternateLink && (
 						<div className="text-center text-sm">
 							{alternateLink.text}{" "}

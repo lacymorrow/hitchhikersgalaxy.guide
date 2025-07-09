@@ -1,7 +1,7 @@
 "use server";
 
-import { projectService } from "@/server/services/project-service";
 import { revalidatePath } from "next/cache";
+import { projectService } from "@/server/services/project-service";
 
 /**
  * Creates a new project and adds the current user as the owner.

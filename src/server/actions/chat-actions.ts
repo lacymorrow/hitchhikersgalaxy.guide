@@ -1,9 +1,9 @@
 "use server";
 
+import { z } from "zod";
 import { openai } from "@/lib/open-ai";
 import { ErrorService } from "@/server/services/error-service";
 import { ValidationService } from "@/server/services/validation-service";
-import { z } from "zod";
 
 const schemas = {
 	chat: z.object({
@@ -11,7 +11,7 @@ const schemas = {
 			z.object({
 				role: z.enum(["user", "assistant", "system"]),
 				content: z.string(),
-			}),
+			})
 		),
 	}),
 } as const;
@@ -42,8 +42,7 @@ export async function chat(data: z.infer<typeof schemas.chat>) {
 					}
 					controller.close();
 				} catch (error) {
-					const errorMessage =
-						error instanceof Error ? error.message : "Stream error";
+					const errorMessage = error instanceof Error ? error.message : "Stream error";
 					controller.enqueue(encoder.encode(`Error: ${errorMessage}`));
 					controller.close();
 				}
@@ -66,7 +65,7 @@ export async function chat(data: z.infer<typeof schemas.chat>) {
 				headers: {
 					"Content-Type": "application/json",
 				},
-			},
+			}
 		);
 	}
 }

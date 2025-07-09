@@ -9,9 +9,9 @@
  * const builder = builderInit();
  */
 
-import { env } from "@/env";
 import { Builder } from "@builder.io/react";
 import dynamic from "next/dynamic";
+import { env } from "@/env";
 
 // Register your components here
 const BUILDER_COMPONENTS = {

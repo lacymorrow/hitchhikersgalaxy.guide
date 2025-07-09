@@ -1,3 +1,6 @@
+import crypto from "node:crypto";
+import { promisify } from "node:util";
+import { eq } from "drizzle-orm";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { STATUS_CODES } from "@/config/status-codes";
@@ -9,9 +12,6 @@ import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { userService } from "@/server/services/user-service";
 import type { User, UserRole } from "@/types/user";
-import { eq } from "drizzle-orm";
-import crypto from "node:crypto";
-import { promisify } from "node:util";
 import "server-only";
 
 // Define a simplified type for Payload User to avoid import issues
@@ -480,13 +480,7 @@ export const AuthService = {
 	 * @param options Options for updating the session
 	 * @returns The updated session
 	 */
-	async updateSession({
-		userId,
-		data,
-	}: {
-		userId: string;
-		data: Record<string, any>;
-	}) {
+	async updateSession({ userId, data }: { userId: string; data: Record<string, any> }) {
 		try {
 			// Import the update function from auth.ts
 			const { update } = await import("@/server/auth");
@@ -793,7 +787,7 @@ export const AuthService = {
 			return {
 				success: true,
 				message: "Profile updated successfully",
-				user: updatedUser as User
+				user: updatedUser as User,
 			};
 		} catch (error) {
 			console.error("Error updating user profile:", error);

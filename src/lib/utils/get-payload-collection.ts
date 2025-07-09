@@ -1,6 +1,6 @@
+import type { Where } from "payload";
 import { getPayloadClient } from "@/lib/payload/payload";
 import type { Config } from "@/payload-types";
-import type { Where } from "payload";
 
 type Collections = Config["collections"];
 type CollectionKey = keyof Collections;

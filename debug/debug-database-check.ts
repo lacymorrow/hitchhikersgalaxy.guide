@@ -10,7 +10,9 @@ async function debugDatabaseContent() {
 
 	// Check if database is initialized
 	if (!db) {
-		console.error("❌ Database not initialized. Please check your DATABASE_URL environment variable.");
+		console.error(
+			"❌ Database not initialized. Please check your DATABASE_URL environment variable."
+		);
 		return;
 	}
 
@@ -39,11 +41,15 @@ async function debugDatabaseContent() {
 					try {
 						const metadata = JSON.parse(payment.metadata);
 						console.log(`  Metadata:`);
-						console.log(`    Product Name: "${metadata.productName || metadata.product_name || 'N/A'}"`);
-						console.log(`    Variant Name: "${metadata.variantName || metadata.variant_name || 'N/A'}"`);
-						console.log(`    Product ID: "${metadata.productId || metadata.product_id || 'N/A'}"`);
-						console.log(`    Variant ID: "${metadata.variantId || metadata.variant_id || 'N/A'}"`);
-						console.log(`    Raw metadata keys: ${Object.keys(metadata).join(', ')}`);
+						console.log(
+							`    Product Name: "${metadata.productName || metadata.product_name || "N/A"}"`
+						);
+						console.log(
+							`    Variant Name: "${metadata.variantName || metadata.variant_name || "N/A"}"`
+						);
+						console.log(`    Product ID: "${metadata.productId || metadata.product_id || "N/A"}"`);
+						console.log(`    Variant ID: "${metadata.variantId || metadata.variant_id || "N/A"}"`);
+						console.log(`    Raw metadata keys: ${Object.keys(metadata).join(", ")}`);
 					} catch (error) {
 						console.log(`  Metadata: Invalid JSON - ${payment.metadata}`);
 					}
@@ -68,19 +74,18 @@ async function debugDatabaseContent() {
 
 		// Check for any payments with "Unknown Product" in metadata
 		console.log("\n🔎 Checking for 'Unknown Product' in metadata...");
-		const unknownProducts = allPayments.filter(payment => {
+		const unknownProducts = allPayments.filter((payment) => {
 			if (!payment.metadata) return false;
 			try {
 				const metadata = JSON.parse(payment.metadata);
-				const productName = metadata.productName || metadata.product_name || '';
-				return productName === 'Unknown Product';
+				const productName = metadata.productName || metadata.product_name || "";
+				return productName === "Unknown Product";
 			} catch {
 				return false;
 			}
 		});
 
 		console.log(`Found ${unknownProducts.length} payments with "Unknown Product" in metadata`);
-
 	} catch (error) {
 		console.error("❌ Error querying database:", error);
 	}

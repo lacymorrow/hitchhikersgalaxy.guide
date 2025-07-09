@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 interface TableOfContentsProps {
 	headings: {
@@ -26,7 +26,7 @@ export const TableOfContents = ({ headings }: TableOfContentsProps) => {
 			{
 				rootMargin: "0% 0% -80% 0%",
 				threshold: 0.2,
-			},
+			}
 		);
 
 		for (const heading of headings) {
@@ -46,7 +46,7 @@ export const TableOfContents = ({ headings }: TableOfContentsProps) => {
 						key={heading.id}
 						className={cn(
 							"transition-all duration-200 ease-in-out",
-							heading.level === 2 ? "ml-0" : `ml-${(heading.level - 2) * 3}`,
+							heading.level === 2 ? "ml-0" : `ml-${(heading.level - 2) * 3}`
 						)}
 					>
 						<a
@@ -61,7 +61,7 @@ export const TableOfContents = ({ headings }: TableOfContentsProps) => {
 								"group flex items-center py-1",
 								"text-muted-foreground hover:text-foreground",
 								"transition-all duration-200",
-								activeId === heading.id && "font-medium text-primary",
+								activeId === heading.id && "font-medium text-primary"
 							)}
 						>
 							<span
@@ -70,14 +70,11 @@ export const TableOfContents = ({ headings }: TableOfContentsProps) => {
 									"rounded-full bg-muted",
 									"transition-all duration-200",
 									activeId === heading.id && "bg-primary",
-									"group-hover:scale-125 group-hover:bg-primary",
+									"group-hover:scale-125 group-hover:bg-primary"
 								)}
 							/>
 							<span
-								className={cn(
-									"inline-block transition-transform",
-									"group-hover:translate-x-[2px]",
-								)}
+								className={cn("inline-block transition-transform", "group-hover:translate-x-[2px]")}
 							>
 								{heading.text}
 							</span>

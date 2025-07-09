@@ -1,18 +1,25 @@
 "use client";
 
-import { GitHubConnectDialog } from "@/components/buttons/github-connect-dialog";
-import { VercelConnectButton } from "@/components/shipkit/vercel-connect-button";
-import { VercelDeployButton } from "@/components/shipkit/vercel-deploy-button";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { siteConfig } from "@/config/site-config";
-import { useLocalStorage } from "@/hooks/use-local-storage";
-import { useToast } from "@/hooks/use-toast";
 import { IconBrandVercelFilled } from "@tabler/icons-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { CheckIcon, GithubIcon } from "lucide-react";
 import { useEffect, useState } from "react";
+import { GitHubConnectDialog } from "@/components/buttons/github-connect-dialog";
+import { VercelConnectButton } from "@/components/shipkit/vercel-connect-button";
+import { VercelDeployButton } from "@/components/shipkit/vercel-deploy-button";
+import { Button } from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardDescription,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { siteConfig } from "@/config/site-config";
+import { useLocalStorage } from "@/hooks/use-local-storage";
+import { useToast } from "@/hooks/use-toast";
 import type { User } from "@/types/user";
 
 // Define the onboarding steps
@@ -65,12 +72,12 @@ export function OnboardingWizard({
 	user,
 	hasGitHubConnection = false,
 	hasVercelConnection = false,
-	onComplete
+	onComplete,
 }: OnboardingWizardProps) {
 	// Check if there has been a Vercel connection attempt
 	const hasVercelConnectionAttempt = !!user?.vercelConnectionAttemptedAt || hasVercelConnection;
 
-	const initialStep = hasGitHubConnection ? hasVercelConnectionAttempt ? 2 : 1 : 0;
+	const initialStep = hasGitHubConnection ? (hasVercelConnectionAttempt ? 2 : 1) : 0;
 	// Check if onboarding has been completed
 	const [onboardingState, setOnboardingState] = useLocalStorage<{
 		completed: boolean;
@@ -92,9 +99,12 @@ export function OnboardingWizard({
 
 	// Update the steps when connection status changes
 	useEffect(() => {
-		setOnboardingState(prev => {
+		setOnboardingState((prev) => {
 			// Only update if the values are different to prevent infinite loop
-			if (prev.steps.github === hasGitHubConnection && prev.steps.vercel === hasVercelConnectionAttempt) {
+			if (
+				prev.steps.github === hasGitHubConnection &&
+				prev.steps.vercel === hasVercelConnectionAttempt
+			) {
 				return prev;
 			}
 
@@ -116,7 +126,7 @@ export function OnboardingWizard({
 	// Update onboardingState when step changes, but avoid the useEffect for this
 	const updateStep = (newStep: number) => {
 		setCurrentStep(newStep);
-		setOnboardingState(prev => ({
+		setOnboardingState((prev) => ({
 			...prev,
 			currentStep: newStep,
 		}));
@@ -124,7 +134,7 @@ export function OnboardingWizard({
 
 	// Mark a step as completed
 	const completeStep = (stepId: string) => {
-		setOnboardingState(prev => ({
+		setOnboardingState((prev) => ({
 			...prev,
 			steps: {
 				...prev.steps,
@@ -153,7 +163,7 @@ export function OnboardingWizard({
 	// Complete the onboarding process
 	const completeOnboarding = () => {
 		completeStep(STEPS[currentStep].id);
-		setOnboardingState(prev => ({
+		setOnboardingState((prev) => ({
 			...prev,
 			completed: true,
 		}));
@@ -170,7 +180,7 @@ export function OnboardingWizard({
 
 	// Skip onboarding
 	const skipOnboarding = () => {
-		setOnboardingState(prev => ({
+		setOnboardingState((prev) => ({
 			...prev,
 			completed: true,
 		}));
@@ -232,8 +242,8 @@ export function OnboardingWizard({
 											<div>
 												<h3 className="font-semibold">Connect your GitHub account</h3>
 												<p className="text-sm text-muted-foreground mt-1">
-													Connecting GitHub allows you to easily manage your codebase, track changes,
-													and deploy your site directly from your repository.
+													Connecting GitHub allows you to easily manage your codebase, track
+													changes, and deploy your site directly from your repository.
 												</p>
 
 												{hasGitHubConnection && (
@@ -241,11 +251,9 @@ export function OnboardingWizard({
 														<CheckIcon className="h-4 w-4" />
 														<span>GitHub account connected</span>
 													</div>
-
 												)}
 
 												<div className="mx-auto">
-
 													<GitHubConnectDialog className="mt-4" />
 												</div>
 											</div>
@@ -265,8 +273,8 @@ export function OnboardingWizard({
 											<div>
 												<h3 className="font-semibold">Connect your Vercel account</h3>
 												<p className="text-sm text-muted-foreground mt-1">
-													Link your Vercel account to enable one-click deployments, preview environments,
-													and continuous integration.
+													Link your Vercel account to enable one-click deployments, preview
+													environments, and continuous integration.
 												</p>
 
 												{hasVercelConnection && (
@@ -282,14 +290,9 @@ export function OnboardingWizard({
 														<span>Connection attempted - you can proceed to the next step</span>
 													</div>
 												)}
-
 											</div>
 										</div>
-										<VercelConnectButton
-											className="mt-4 w-full"
-											user={user}
-										/>
-
+										<VercelConnectButton className="mt-4 w-full" user={user} />
 									</div>
 
 									<div className="rounded-lg bg-muted p-4">
@@ -323,14 +326,12 @@ export function OnboardingWizard({
 											<div>
 												<h3 className="font-semibold">Deploy your project</h3>
 												<p className="text-sm text-muted-foreground mt-1">
-													Deploy your Next.js application to Vercel with just a few clicks.
-													Your project will be live and accessible to everyone instantly.
+													Deploy your Next.js application to Vercel with just a few clicks. Your
+													project will be live and accessible to everyone instantly.
 												</p>
-
 											</div>
 										</div>
 										<div className="mx-auto">
-
 											<VercelDeployButton />
 										</div>
 									</div>
@@ -338,8 +339,8 @@ export function OnboardingWizard({
 									<div className="rounded-lg bg-primary/10 p-4 text-center">
 										<h3 className="font-semibold">Almost there!</h3>
 										<p className="text-sm text-muted-foreground mt-1">
-											Once deployed, your site will be available at your custom domain or a Vercel-provided URL.
-											Click "Finish" below to complete the onboarding process.
+											Once deployed, your site will be available at your custom domain or a
+											Vercel-provided URL. Click "Finish" below to complete the onboarding process.
 										</p>
 									</div>
 								</div>
@@ -349,11 +350,7 @@ export function OnboardingWizard({
 				</CardContent>
 
 				<CardFooter className="flex justify-between border-t p-6">
-					<Button
-						variant="outline"
-						onClick={prevStep}
-						disabled={currentStep === 0}
-					>
+					<Button variant="outline" onClick={prevStep} disabled={currentStep === 0}>
 						Previous
 					</Button>
 

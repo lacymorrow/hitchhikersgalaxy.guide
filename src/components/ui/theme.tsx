@@ -30,9 +30,9 @@
  */
 
 "use client";
+import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { ThemeProvider, useTheme } from "next-themes";
 import React from "react";
-
 import { Button, type ButtonProps } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -40,7 +40,6 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 
 const ThemeButton = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
 	<Button variant="ghost" size="icon" {...props} ref={ref}>

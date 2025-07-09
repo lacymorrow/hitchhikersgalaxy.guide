@@ -1,5 +1,8 @@
 "use client";
 
+import { Trash2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -14,9 +17,6 @@ import {
 import type { ButtonProps } from "@/components/ui/button";
 import { Button } from "@/components/ui/button";
 import { deleteApiKey } from "@/server/actions/api-key-actions";
-import { Trash2 } from "lucide-react";
-import { useState } from "react";
-import { toast } from "sonner";
 
 interface DeleteApiKeyDialogProps {
 	apiKeyId: string;
@@ -55,9 +55,8 @@ export const DeleteApiKeyDialog = ({ apiKeyId, triggerProps }: DeleteApiKeyDialo
 				<AlertDialogHeader>
 					<AlertDialogTitle>Delete API Key</AlertDialogTitle>
 					<AlertDialogDescription>
-						Are you sure you want to delete this API key? This action cannot be
-						undone and any applications using this key will stop working
-						immediately.
+						Are you sure you want to delete this API key? This action cannot be undone and any
+						applications using this key will stop working immediately.
 					</AlertDialogDescription>
 				</AlertDialogHeader>
 				<AlertDialogFooter>

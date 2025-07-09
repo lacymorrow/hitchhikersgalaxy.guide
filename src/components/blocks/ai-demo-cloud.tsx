@@ -1,14 +1,15 @@
 "use client";
 
+import { Bot, Loader2, Send, Sparkles, Terminal, Wand2 } from "lucide-react";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Bot, Loader2, Send, Sparkles, Terminal, Wand2 } from "lucide-react";
-import * as React from "react";
 
 const SYSTEM_PROMPT = {
 	role: "system" as const,
-	content: "You are a helpful AI assistant. You provide clear, accurate, and concise responses. You are direct and to the point, but maintain a friendly tone. If you're not sure about something, you say so. You do not make up information."
+	content:
+		"You are a helpful AI assistant. You provide clear, accurate, and concise responses. You are direct and to the point, but maintain a friendly tone. If you're not sure about something, you say so. You do not make up information.",
 };
 
 const demoPrompts = [
@@ -66,7 +67,10 @@ export const AIDemoCloud: React.FC = () => {
 		setResponse(""); // Clear previous response
 
 		try {
-			const newMessages: Message[] = [...messages.slice(-4), { role: "user" as const, content: prompt.trim() }];
+			const newMessages: Message[] = [
+				...messages.slice(-4),
+				{ role: "user" as const, content: prompt.trim() },
+			];
 			setMessages(newMessages);
 
 			const response = await fetch("/api/chat", {
@@ -107,12 +111,16 @@ export const AIDemoCloud: React.FC = () => {
 			}
 
 			setMessages([...newMessages, { role: "assistant" as const, content: fullResponse }]);
-			setRequestCount(prev => prev + 1);
+			setRequestCount((prev) => prev + 1);
 			lastRequestTime.current = Date.now();
 			setPrompt(""); // Clear input after successful response
 		} catch (error) {
 			console.error("AI Generation error:", error);
-			setError(error instanceof Error ? error.message : "An error occurred while generating the response. Please try again.");
+			setError(
+				error instanceof Error
+					? error.message
+					: "An error occurred while generating the response. Please try again."
+			);
 		} finally {
 			setLoading(false);
 		}
@@ -128,7 +136,7 @@ export const AIDemoCloud: React.FC = () => {
 		if (element) {
 			element.scrollTo({
 				top: element.scrollHeight,
-				behavior: "smooth"
+				behavior: "smooth",
 			});
 		}
 	}, []);
@@ -163,11 +171,7 @@ export const AIDemoCloud: React.FC = () => {
 								className="min-h-[100px]"
 							/>
 						</div>
-						<Button
-							type="submit"
-							disabled={loading || !prompt}
-							className="w-full"
-						>
+						<Button type="submit" disabled={loading || !prompt} className="w-full">
 							{loading ? (
 								<Loader2 className="h-4 w-4 animate-spin mr-2" />
 							) : (
@@ -175,9 +179,7 @@ export const AIDemoCloud: React.FC = () => {
 							)}
 							Generate Response
 						</Button>
-						{error && (
-							<p className="text-sm text-red-500 mt-2">{error}</p>
-						)}
+						{error && <p className="text-sm text-red-500 mt-2">{error}</p>}
 					</form>
 					<div className="mt-4">
 						<p className="text-sm text-gray-500 mb-2">Try these examples:</p>
@@ -187,10 +189,11 @@ export const AIDemoCloud: React.FC = () => {
 									key={demoPrompt}
 									type="button"
 									onClick={() => handleDemoClick(demoPrompt)}
-									className={`text-xs px-3 py-1.5 rounded-full transition-colors ${selectedDemo === demoPrompt
-										? "bg-primary text-primary-foreground"
-										: "bg-secondary hover:bg-secondary/80"
-										}`}
+									className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
+										selectedDemo === demoPrompt
+											? "bg-primary text-primary-foreground"
+											: "bg-secondary hover:bg-secondary/80"
+									}`}
 								>
 									{demoPrompt}
 								</button>
@@ -245,7 +248,8 @@ export const AIDemoCloud: React.FC = () => {
 
 			<div className="text-center">
 				<p className="text-sm text-gray-500">
-					This demo uses OpenAI's GPT-4 model to generate responses. Limited to 5 requests per minute.
+					This demo uses OpenAI's GPT-4 model to generate responses. Limited to 5 requests per
+					minute.
 				</p>
 			</div>
 		</>

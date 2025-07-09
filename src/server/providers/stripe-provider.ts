@@ -1,3 +1,4 @@
+import { eq, or } from "drizzle-orm";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import {
@@ -13,16 +14,15 @@ import {
 } from "@/lib/stripe";
 import { db } from "@/server/db";
 import { payments } from "@/server/db/schema";
-import { eq, or } from "drizzle-orm";
 import { userService } from "../services/user-service";
 import { BasePaymentProvider } from "./base-provider";
 import {
 	type CheckoutOptions,
 	type ImportStats,
 	type OrderData,
+	PaymentProviderError,
 	type ProductData,
 	type ProviderConfig,
-	PaymentProviderError,
 } from "./types";
 
 /*
@@ -233,7 +233,7 @@ export class StripeProvider extends BasePaymentProvider {
 							logger.warn("Error retrieving product for subscription", {
 								subscriptionId: subscription.id,
 								priceId: item.price.id,
-								error
+								error,
 							});
 						}
 					}
@@ -293,7 +293,7 @@ export class StripeProvider extends BasePaymentProvider {
 			this.checkProviderReady();
 
 			const allOrders = await this.getAllOrders();
-			return allOrders.filter(order => order.userEmail === email);
+			return allOrders.filter((order) => order.userEmail === email);
 		} catch (error) {
 			if (error instanceof PaymentProviderError && error.code === "provider_not_configured") {
 				return [];
@@ -312,7 +312,7 @@ export class StripeProvider extends BasePaymentProvider {
 			this.checkProviderReady();
 
 			const allOrders = await this.getAllOrders();
-			return allOrders.find(order => order.orderId === orderId) ?? null;
+			return allOrders.find((order) => order.orderId === orderId) ?? null;
 		} catch (error) {
 			if (error instanceof PaymentProviderError && error.code === "provider_not_configured") {
 				return null;
@@ -393,10 +393,7 @@ export class StripeProvider extends BasePaymentProvider {
 					// Check if payment already exists by either orderId or processorOrderId
 					const existingPayment = await db.query.payments.findFirst({
 						where: (payments, { eq, or }) =>
-							or(
-								eq(payments.orderId, order.orderId),
-								eq(payments.processorOrderId, order.orderId)
-							),
+							or(eq(payments.orderId, order.orderId), eq(payments.processorOrderId, order.orderId)),
 					});
 
 					if (existingPayment) {
@@ -473,7 +470,7 @@ export class StripeProvider extends BasePaymentProvider {
 			if (checkoutUrl) {
 				logger.debug(`${this.name} checkout URL created successfully`, {
 					priceId: options.productId,
-					url: checkoutUrl
+					url: checkoutUrl,
 				});
 			}
 
@@ -508,7 +505,6 @@ export class StripeProvider extends BasePaymentProvider {
 			// Process the webhook event
 			await processStripeWebhook(event);
 			logger.info("Processed Stripe webhook event", { type: event?.type });
-
 		} catch (error) {
 			// Don't re-throw if it's just not configured
 			if (error instanceof PaymentProviderError && error.code === "provider_not_configured") {

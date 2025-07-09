@@ -1,10 +1,10 @@
+import { AlertCircle, Code, ExternalLink, Eye, GitFork, Star } from "lucide-react";
+import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getRepo } from "@/server/services/github/github-service";
-import { AlertCircle, Code, ExternalLink, Eye, GitFork, Star } from "lucide-react";
-import Link from "next/link";
 
 export function RepoInfoSkeleton() {
 	return (
@@ -41,8 +41,8 @@ export async function RepoInfoContent() {
 					<div className="flex items-center space-x-2 text-muted-foreground">
 						<AlertCircle className="h-5 w-5" />
 						<p>
-							Could not retrieve repository information. Check your GitHub API token and
-							repository configuration in site settings.
+							Could not retrieve repository information. Check your GitHub API token and repository
+							configuration in site settings.
 						</p>
 					</div>
 				</CardContent>
@@ -57,15 +57,15 @@ export async function RepoInfoContent() {
 					<Code className="h-5 w-5" />
 					Repository Information
 				</CardTitle>
-				<CardDescription>
-					Details about the GitHub repository for this application
-				</CardDescription>
+				<CardDescription>Details about the GitHub repository for this application</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<div className="grid gap-4">
 					<div className="space-y-2">
 						<h3 className="font-medium">{repo.full_name}</h3>
-						<p className="text-sm text-muted-foreground">{repo.description || "No description available"}</p>
+						<p className="text-sm text-muted-foreground">
+							{repo.description || "No description available"}
+						</p>
 
 						{repo.homepage && (
 							<p className="text-sm">
@@ -85,7 +85,11 @@ export async function RepoInfoContent() {
 							<Badge variant={repo.private ? "default" : "secondary"}>
 								{repo.private ? "Private" : "Public"}
 							</Badge>
-							{repo.archived && <Badge variant="destructive" className="ml-2">Archived</Badge>}
+							{repo.archived && (
+								<Badge variant="destructive" className="ml-2">
+									Archived
+								</Badge>
+							)}
 							{repo.default_branch && (
 								<Badge variant="outline" className="ml-2">
 									Branch: {repo.default_branch}
@@ -97,11 +101,15 @@ export async function RepoInfoContent() {
 					<div className="flex flex-wrap gap-4 pt-2">
 						<div className="flex items-center gap-2">
 							<Star className="h-4 w-4 text-amber-500" />
-							<span className="text-sm font-medium">{repo.stargazers_count.toLocaleString()} stars</span>
+							<span className="text-sm font-medium">
+								{repo.stargazers_count.toLocaleString()} stars
+							</span>
 						</div>
 						<div className="flex items-center gap-2">
 							<Eye className="h-4 w-4 text-blue-500" />
-							<span className="text-sm font-medium">{repo.watchers_count.toLocaleString()} watchers</span>
+							<span className="text-sm font-medium">
+								{repo.watchers_count.toLocaleString()} watchers
+							</span>
 						</div>
 						<div className="flex items-center gap-2">
 							<GitFork className="h-4 w-4 text-purple-500" />

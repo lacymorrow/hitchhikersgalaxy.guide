@@ -1,7 +1,7 @@
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { routes } from '@/config/routes'
-import Link from 'next/link'
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { routes } from "@/config/routes";
 
 export default function PagesRouterDemo() {
 	return (
@@ -12,9 +12,7 @@ export default function PagesRouterDemo() {
 					<Card>
 						<CardHeader>
 							<CardTitle>Static Page Example</CardTitle>
-							<CardDescription>
-								Shows how static pages work in the Pages Router
-							</CardDescription>
+							<CardDescription>Shows how static pages work in the Pages Router</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<Link href={routes.pages.static} passHref>
@@ -28,9 +26,7 @@ export default function PagesRouterDemo() {
 					<Card>
 						<CardHeader>
 							<CardTitle>Dynamic Page Example</CardTitle>
-							<CardDescription>
-								Shows how dynamic routes work in the Pages Router
-							</CardDescription>
+							<CardDescription>Shows how dynamic routes work in the Pages Router</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<Link href={routes.pages.dynamic} passHref>
@@ -44,9 +40,7 @@ export default function PagesRouterDemo() {
 					<Card>
 						<CardHeader>
 							<CardTitle>API Route Example</CardTitle>
-							<CardDescription>
-								Demonstrates API routes in the Pages Router
-							</CardDescription>
+							<CardDescription>Demonstrates API routes in the Pages Router</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<Link href={routes.pages.apiExample} passHref>
@@ -75,5 +69,5 @@ export default function PagesRouterDemo() {
 				</div>
 			</div>
 		</>
-	)
+	);
 }

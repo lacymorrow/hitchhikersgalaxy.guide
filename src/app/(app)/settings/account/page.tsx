@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { DeleteAccountCard } from "@/app/(app)/settings/_components/delete-account-card";
 import { GitHubConnectDialog } from "@/components/buttons/github-connect-dialog";
 import { VercelConnectButton } from "@/components/shipkit/vercel-connect-button";
@@ -12,7 +13,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { auth } from "@/server/auth";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
-import { redirect } from "next/navigation";
 
 export default async function AccountPage() {
 	const session = await auth();
@@ -47,9 +47,7 @@ export default async function AccountPage() {
 		<div className="space-y-6">
 			<div>
 				<h3 className="text-lg font-medium">Account</h3>
-				<p className="text-sm text-muted-foreground">
-					Manage your account settings.
-				</p>
+				<p className="text-sm text-muted-foreground">Manage your account settings.</p>
 			</div>
 			<Separator />
 
@@ -78,9 +76,7 @@ export default async function AccountPage() {
 			<Card>
 				<CardHeader>
 					<CardTitle>GitHub Connection</CardTitle>
-					<CardDescription>
-						Connect your GitHub account to access the repository.
-					</CardDescription>
+					<CardDescription>Connect your GitHub account to access the repository.</CardDescription>
 				</CardHeader>
 				<CardContent>
 					<GitHubConnectDialog />

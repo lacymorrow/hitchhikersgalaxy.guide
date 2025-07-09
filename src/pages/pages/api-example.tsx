@@ -1,31 +1,31 @@
-import { PagesRouterLayout } from '@/components/layouts/pages-router-layout'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { useState } from 'react'
+import { useState } from "react";
+import { PagesRouterLayout } from "@/components/layouts/pages-router-layout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ApiResponse {
-	message: string
-	timestamp: string
-	method: string
-	query: Record<string, string | string[] | undefined>
+	message: string;
+	timestamp: string;
+	method: string;
+	query: Record<string, string | string[] | undefined>;
 }
 
 export default function ApiExample() {
-	const [response, setResponse] = useState<ApiResponse | null>(null)
-	const [loading, setLoading] = useState(false)
+	const [response, setResponse] = useState<ApiResponse | null>(null);
+	const [loading, setLoading] = useState(false);
 
 	const fetchApi = async () => {
-		setLoading(true)
+		setLoading(true);
 		try {
-			const res = await fetch('/api/demo?example=true')
-			const data = await res.json()
-			setResponse(data)
+			const res = await fetch("/api/demo?example=true");
+			const data = await res.json();
+			setResponse(data);
 		} catch (error) {
-			console.error('Error fetching API:', error)
+			console.error("Error fetching API:", error);
 		} finally {
-			setLoading(false)
+			setLoading(false);
 		}
-	}
+	};
 
 	return (
 		<PagesRouterLayout>
@@ -40,19 +40,14 @@ export default function ApiExample() {
 							</CardDescription>
 						</CardHeader>
 						<CardContent>
-							<Button
-								onClick={fetchApi}
-								disabled={loading}
-							>
-								{loading ? 'Loading...' : 'Test API Route'}
+							<Button onClick={fetchApi} disabled={loading}>
+								{loading ? "Loading..." : "Test API Route"}
 							</Button>
 
 							{response && (
 								<div className="mt-4 p-4 bg-muted rounded-lg">
 									<pre className="whitespace-pre-wrap">
-										<code>
-											{JSON.stringify(response, null, 2)}
-										</code>
+										<code>{JSON.stringify(response, null, 2)}</code>
 									</pre>
 								</div>
 							)}
@@ -62,14 +57,13 @@ export default function ApiExample() {
 					<Card>
 						<CardHeader>
 							<CardTitle>API Route Code</CardTitle>
-							<CardDescription>
-								Here&apos;s how the API route is implemented
-							</CardDescription>
+							<CardDescription>Here&apos;s how the API route is implemented</CardDescription>
 						</CardHeader>
 						<CardContent>
 							<div className="p-4 bg-muted rounded-lg">
 								<pre className="whitespace-pre-wrap">
-									<code>{`
+									<code>
+										{`
 // pages/api/demo.ts
 export default function handler(
   req: NextApiRequest,
@@ -90,5 +84,5 @@ export default function handler(
 				</div>
 			</div>
 		</PagesRouterLayout>
-	)
+	);
 }

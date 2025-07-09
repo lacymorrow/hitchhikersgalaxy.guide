@@ -1,6 +1,7 @@
 // import { routes } from "@/config/routes"; // No longer needed directly
-import { siteConfig } from "@/config/site-config";
+
 import type { MetadataRoute } from "next";
+import { siteConfig } from "@/config/site-config";
 
 export default function manifest(): MetadataRoute.Manifest {
 	return {

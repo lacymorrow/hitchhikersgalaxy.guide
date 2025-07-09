@@ -1,5 +1,9 @@
 "use client";
 
+import { usePathname } from "next/navigation";
+import { signIn, useSession } from "next-auth/react";
+import { useState } from "react";
+import { toast } from "sonner";
 import { Icons } from "@/components/assets/icons";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -10,10 +14,6 @@ import { siteConfig } from "@/config/site-config";
 import { STATUS_CODES } from "@/config/status-codes";
 import { cn } from "@/lib/utils";
 import { disconnectGitHub } from "@/server/actions/github";
-import { signIn, useSession } from "next-auth/react";
-import { usePathname } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
 
 interface GitHubSession {
 	user: {

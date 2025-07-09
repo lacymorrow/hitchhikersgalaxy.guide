@@ -1,9 +1,9 @@
+import { eq } from "drizzle-orm";
 import { adminConfig } from "@/config/admin-config";
 import { getPayloadClient } from "@/lib/payload/payload";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { rbacService } from "@/server/services/rbac";
-import { eq } from "drizzle-orm";
 
 /**
  * Admin service for server-side admin checking
@@ -28,15 +28,16 @@ export async function isAdmin({
 	email?: string | null;
 	userId?: string;
 }): Promise<boolean> {
-	if (typeof email !== "string" || !userId) {
+	if (typeof email !== "string") {
 		return false;
 	}
 
-	// 1. Check admin config (static configuration)
+	// 1. Check admin config (static configuration) - works without userId
 	if (adminConfig.isAdminByEmailConfig(email)) {
 		return true;
 	}
 
+	// For the remaining checks, we need either userId or we can try to get it from the database
 	// 2. Check if user is admin by querying the database directly
 	const user = await db?.query.users.findFirst({
 		where: eq(users.email, email),
@@ -50,7 +51,7 @@ export async function isAdmin({
 		return true;
 	}
 
-	// 3. Check RBAC permissions if userId is provided
+	// 3. Check RBAC permissions if userId is provided or we found it in the database
 	const userIdToCheck = userId || user?.id;
 	if (userIdToCheck) {
 		try {
@@ -121,5 +122,4 @@ export async function getAdminDomains(requestingEmail?: string | null): Promise<
 		return adminConfig.domains;
 	}
 	return [];
-
 }

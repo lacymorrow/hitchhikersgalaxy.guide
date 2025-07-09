@@ -1,3 +1,17 @@
+import {
+	DesktopIcon,
+	ExitIcon,
+	GearIcon,
+	LockClosedIcon,
+	MoonIcon,
+	PersonIcon,
+	RocketIcon,
+	SunIcon,
+} from "@radix-ui/react-icons";
+import { Sparkles } from "lucide-react";
+import Link from "next/link";
+import { signOut } from "next-auth/react";
+import type * as React from "react";
 import { RestartOnboardingButton } from "@/app/(app)/(dashboard)/_components/onboarding-check";
 import {
 	DropdownMenu,
@@ -16,20 +30,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
-import {
-	DesktopIcon,
-	ExitIcon,
-	GearIcon,
-	LockClosedIcon,
-	MoonIcon,
-	PersonIcon,
-	RocketIcon,
-	SunIcon
-} from "@radix-ui/react-icons";
-import { Sparkles } from "lucide-react";
-import { signOut } from "next-auth/react";
-import Link from "next/link";
-import type * as React from "react";
 import type { User } from "@/types/user";
 export interface MenuItemProps {
 	href?: string;
@@ -77,7 +77,6 @@ export function UserMenuDropdown({
 	contentClassName,
 	additionalMenuItems = [],
 }: UserMenuDropdownProps) {
-
 	const handleSignOut = () => {
 		setIsOpen(false);
 		signOut();
@@ -85,7 +84,9 @@ export function UserMenuDropdown({
 
 	return (
 		<DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-			<DropdownMenuTrigger asChild className={className}>{children}</DropdownMenuTrigger>
+			<DropdownMenuTrigger asChild className={className}>
+				{children}
+			</DropdownMenuTrigger>
 			<DropdownMenuContent
 				className={cn("w-56", contentClassName)}
 				align={align}
@@ -98,8 +99,10 @@ export function UserMenuDropdown({
 			>
 				<DropdownMenuLabel className="font-normal">
 					<div className="flex flex-col space-y-1">
-						<p className="text-sm font-medium leading-none">{user?.name || "Guest User"}</p>
-						<p className="text-xs leading-none text-muted-foreground">{user?.email || "Not signed in"}</p>
+						<p className="text-sm font-medium leading-none">{user?.name ?? "Guest User"}</p>
+						<p className="text-xs leading-none text-muted-foreground">
+							{user?.email || "Not signed in"}
+						</p>
 					</div>
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator />
@@ -205,10 +208,7 @@ export function UserMenuDropdown({
 				)}
 
 				<DropdownMenuSeparator />
-				<DropdownMenuItem
-					className="text-red-600 dark:text-red-400"
-					onClick={handleSignOut}
-				>
+				<DropdownMenuItem className="text-red-600 dark:text-red-400" onClick={handleSignOut}>
 					<ExitIcon className="mr-2 size-4" />
 					Sign out
 					<DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>

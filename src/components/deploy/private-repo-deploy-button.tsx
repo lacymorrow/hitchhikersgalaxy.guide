@@ -1,20 +1,27 @@
 "use client";
 
+import { AlertCircle, CheckCircle, Clock, ExternalLink, Github } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle, Clock, AlertCircle, ExternalLink, Github } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { deployPrivateRepository } from "@/server/actions/deploy-private-repo";
-import { toast } from "sonner";
 
 interface DeploymentStatus {
-	step: "idle" | "validating" | "creating-repo" | "creating-vercel" | "deploying" | "completed" | "error";
+	step:
+		| "idle"
+		| "validating"
+		| "creating-repo"
+		| "creating-vercel"
+		| "deploying"
+		| "completed"
+		| "error";
 	message?: string;
 	githubRepo?: {
 		url: string;
@@ -126,8 +133,8 @@ export const PrivateRepoDeployButton = () => {
 					Deploy Private Repository
 				</CardTitle>
 				<CardDescription>
-					Deploy a private GitHub repository template to your GitHub and Vercel accounts.
-					Make sure you have connected your Vercel account in Settings first.
+					Deploy a private GitHub repository template to your GitHub and Vercel accounts. Make sure
+					you have connected your Vercel account in Settings first.
 				</CardDescription>
 			</CardHeader>
 			<CardContent className="space-y-6">
@@ -140,9 +147,7 @@ export const PrivateRepoDeployButton = () => {
 								{status.step.replace("-", " ").toUpperCase()}
 							</Badge>
 						</div>
-						<AlertDescription className="mt-2">
-							{status.message || status.error}
-						</AlertDescription>
+						<AlertDescription className="mt-2">{status.message || status.error}</AlertDescription>
 					</Alert>
 				)}
 
@@ -279,11 +284,7 @@ export const PrivateRepoDeployButton = () => {
 							</p>
 						</div>
 
-						<Button
-							onClick={handleDeploy}
-							disabled={isDeploying}
-							className="w-full"
-						>
+						<Button onClick={handleDeploy} disabled={isDeploying} className="w-full">
 							{isDeploying ? "Deploying..." : "Deploy Repository"}
 						</Button>
 					</div>

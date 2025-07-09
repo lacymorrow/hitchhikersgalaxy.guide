@@ -1,5 +1,5 @@
-import type { Faq } from "@/payload-types";
 import type { Payload } from "payload";
+import type { Faq } from "@/payload-types";
 
 // Define common resources and actions for RBAC
 const resources = ["team", "project", "user", "api_key", "billing", "settings"] as const;

@@ -1,15 +1,15 @@
+import { eq } from "drizzle-orm";
 import { logger } from "@/lib/logger";
 import { safeDbExecute } from "@/server/db";
 import { type Payment, payments, users } from "@/server/db/schema";
 import {
-	type OrderData,
-	type ProductData,
 	getEnabledProviders,
 	getProvider,
 	hasProvider,
 	isProviderEnabled,
+	type OrderData,
+	type ProductData,
 } from "@/server/providers";
-import { eq } from "drizzle-orm";
 
 // Define PaymentData interface for frontend use
 export interface PaymentData {
@@ -197,7 +197,7 @@ const PaymentService = {
 				if (paymentProvider && isProviderEnabled(provider)) {
 					logger.debug(`Checking variant purchase with specific provider: ${provider}`);
 					// Check if the provider has a specific method for variants
-					if (typeof (paymentProvider as any).hasUserPurchasedVariant === 'function') {
+					if (typeof (paymentProvider as any).hasUserPurchasedVariant === "function") {
 						return await (paymentProvider as any).hasUserPurchasedVariant(userId, variantId);
 					}
 					// Fall back to product check
@@ -212,7 +212,7 @@ const PaymentService = {
 				logger.debug(`Checking variant purchase with provider: ${provider.id}`);
 
 				// Check if the provider has a specific method for variants
-				if (typeof (provider as any).hasUserPurchasedVariant === 'function') {
+				if (typeof (provider as any).hasUserPurchasedVariant === "function") {
 					const purchased = await (provider as any).hasUserPurchasedVariant(userId, variantId);
 					if (purchased) {
 						logger.debug(`User ${userId} has purchased variant ${variantId} via ${provider.id}`);
@@ -412,7 +412,8 @@ const PaymentService = {
 				for (const payment of userPayments) {
 					try {
 						const metadata = JSON.parse(payment.metadata || "{}");
-						const productId = metadata.productId || metadata.variant_id || metadata.product_id || payment.orderId;
+						const productId =
+							metadata.productId || metadata.variant_id || metadata.product_id || payment.orderId;
 
 						// Enhanced product name extraction from multiple possible fields
 						const productName =
@@ -525,39 +526,38 @@ const PaymentService = {
 					return existingPayment;
 				}
 
-				// Create the payment
-				/*
- * Handle free vs discounted products correctly when creating payments:
- * - Free products: Never went through payment processing
- * - Discounted products: Went through payment processing with 100% discount
- *
- * Users with 100% discounts should be treated as paid customers since they
- * completed the checkout process, even if the final amount was $0.
- */
-				const isFreeProduct = data.isFreeProduct !== undefined
-					? data.isFreeProduct
-					: (data.status !== "paid" && data.amount === 0);
-
-				const [payment] = await db
+				// Create new payment
+				const newPayment = await db
 					.insert(payments)
 					.values({
 						userId: data.userId,
 						orderId: data.orderId,
+						processorOrderId: data.orderId, // Store same value for consistency
 						amount: data.amount,
 						status: data.status,
 						processor: data.processor || "unknown",
-						isFreeProduct,
-						metadata: data.metadata ? JSON.stringify(data.metadata) : "{}",
+						isFreeProduct: data.isFreeProduct || false,
+						metadata: JSON.stringify(data.metadata || {}),
+						createdAt: new Date(),
+						updatedAt: new Date(),
 					})
-					.returning();
+					.returning()
+					.then((rows: any[]) => rows[0] || null);
 
-				logger.debug("Payment created", { id: payment.id, orderId: data.orderId });
+				logger.info("Payment created", {
+					paymentId: newPayment?.id,
+					orderId: data.orderId,
+					userId: data.userId,
+					amount: data.amount,
+					status: data.status,
+					processor: data.processor,
+				});
 
-				return payment;
-			}, null);
+				return newPayment;
+			});
 		} catch (error) {
-			logger.error("Error creating payment:", error);
-			return null;
+			logger.error("Error creating payment", { error, orderId: data.orderId });
+			throw error;
 		}
 	},
 
@@ -603,26 +603,13 @@ const PaymentService = {
 		logger.debug("Fetching payment by order ID", { orderId });
 
 		return safeDbExecute(async (db) => {
-			const payment = await db
+			return await db
 				.select()
 				.from(payments)
 				.where(eq(payments.orderId, orderId))
 				.limit(1)
 				.then((rows) => rows[0] || null);
-
-			if (payment) {
-				logger.debug("Payment found", {
-					paymentId: payment.id,
-					orderId,
-					status: payment.status,
-					processor: payment.processor,
-				});
-				return payment;
-			}
-
-			logger.debug("Payment not found", { orderId });
-			return null;
-		}, null);
+		});
 	},
 
 	/**
@@ -671,10 +658,7 @@ const PaymentService = {
 									"Unknown Product";
 
 								// Extract variant name separately
-								variantName =
-									metadata.variantName ||
-									metadata.variant_name ||
-									null;
+								variantName = metadata.variantName || metadata.variant_name || null;
 
 								if (metadata.isFreeProduct !== undefined) {
 									isFreeProduct = metadata.isFreeProduct;
@@ -750,7 +734,8 @@ const PaymentService = {
 								// Try to extract variant name from order attributes if available
 								if ((order as any).attributes) {
 									const orderAttributes = (order as any).attributes;
-									const variantName = orderAttributes.first_order_item?.variant_name ||
+									const variantName =
+										orderAttributes.first_order_item?.variant_name ||
 										orderAttributes.variant_name ||
 										null;
 									if (variantName && !existingEntry.variantName) {
@@ -758,16 +743,17 @@ const PaymentService = {
 									}
 								}
 								/*
- * Handle free vs discounted products correctly:
- * - Free products: Never went through payment processing
- * - Discounted products: Went through payment processing with 100% discount
- *
- * Users with 100% discounts should be treated as paid customers since they
- * completed the checkout process, even if the final amount was $0.
- */
-								existingEntry.isFreeProduct = (order as any).isFreeProduct !== undefined
-									? (order as any).isFreeProduct
-									: (order.status !== "paid" && order.amount === 0);
+								 * Handle free vs discounted products correctly:
+								 * - Free products: Never went through payment processing
+								 * - Discounted products: Went through payment processing with 100% discount
+								 *
+								 * Users with 100% discounts should be treated as paid customers since they
+								 * completed the checkout process, even if the final amount was $0.
+								 */
+								existingEntry.isFreeProduct =
+									(order as any).isFreeProduct !== undefined
+										? (order as any).isFreeProduct
+										: order.status !== "paid" && order.amount === 0;
 							}
 						} else {
 							// Add new entry from API (not found in DB)
@@ -775,22 +761,24 @@ const PaymentService = {
 								(u) => u.email?.toLowerCase() === order.userEmail?.toLowerCase()
 							);
 							/*
- * Handle free vs discounted products correctly:
- * - Free products: Never went through payment processing
- * - Discounted products: Went through payment processing with 100% discount
- *
- * Users with 100% discounts should be treated as paid customers since they
- * completed the checkout process, even if the final amount was $0.
- */
-							const isFreeProduct = (order as any).isFreeProduct !== undefined
-								? (order as any).isFreeProduct
-								: (order.status !== "paid" && order.amount === 0);
+							 * Handle free vs discounted products correctly:
+							 * - Free products: Never went through payment processing
+							 * - Discounted products: Went through payment processing with 100% discount
+							 *
+							 * Users with 100% discounts should be treated as paid customers since they
+							 * completed the checkout process, even if the final amount was $0.
+							 */
+							const isFreeProduct =
+								(order as any).isFreeProduct !== undefined
+									? (order as any).isFreeProduct
+									: order.status !== "paid" && order.amount === 0;
 
 							// Try to extract variant name from order attributes if available
 							let variantName: string | null = null;
 							if ((order as any).attributes) {
 								const orderAttributes = (order as any).attributes;
-								variantName = orderAttributes.first_order_item?.variant_name ||
+								variantName =
+									orderAttributes.first_order_item?.variant_name ||
 									orderAttributes.variant_name ||
 									null;
 							}
@@ -891,10 +879,7 @@ const PaymentService = {
 										"Unknown Product";
 
 									// Extract variant name separately
-									variantName =
-										metadata.variantName ||
-										metadata.variant_name ||
-										null;
+									variantName = metadata.variantName || metadata.variant_name || null;
 								}
 							} catch (error) {
 								// Ignore parsing errors

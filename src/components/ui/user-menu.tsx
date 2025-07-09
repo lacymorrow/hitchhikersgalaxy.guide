@@ -1,5 +1,12 @@
 "use client";
 
+import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { UserIcon } from "lucide-react";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
+import { useTheme } from "next-themes";
+import * as React from "react";
 import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
 import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -20,20 +27,13 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ShortcutAction, ShortcutActionType } from "@/config/keyboard-shortcuts";
+import { ShortcutAction, type ShortcutActionType } from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { updateTheme } from "@/server/actions/settings";
-import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
-import { UserIcon } from "lucide-react";
-import { signOut, useSession } from "next-auth/react";
-import { useTheme } from "next-themes";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import * as React from "react";
 
 type Theme = "light" | "dark" | "system";
 
@@ -167,7 +167,10 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
 		return (
 			<Link
 				href={signInRedirectUrl}
-				className={cn(buttonVariants({ variant: "ghost", size: "icon" }), "rounded-full cursor-pointer")}
+				className={cn(
+					buttonVariants({ variant: "ghost", size: "icon" }),
+					"rounded-full cursor-pointer"
+				)}
 			>
 				<UserIcon className="size-4" />
 			</Link>
@@ -234,7 +237,10 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
 							<DropdownMenuRadioItem value="light">
 								<SunIcon className="mr-2 size-4" />
 								Light
-								<ShortcutDisplay action={ShortcutAction.SET_THEME_LIGHT} as={DropdownMenuShortcut} />
+								<ShortcutDisplay
+									action={ShortcutAction.SET_THEME_LIGHT}
+									as={DropdownMenuShortcut}
+								/>
 							</DropdownMenuRadioItem>
 							<DropdownMenuRadioItem value="dark">
 								<MoonIcon className="mr-2 size-4" />
@@ -244,7 +250,10 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
 							<DropdownMenuRadioItem value="system">
 								<DesktopIcon className="mr-2 size-4" />
 								System
-								<ShortcutDisplay action={ShortcutAction.SET_THEME_SYSTEM} as={DropdownMenuShortcut} />
+								<ShortcutDisplay
+									action={ShortcutAction.SET_THEME_SYSTEM}
+									as={DropdownMenuShortcut}
+								/>
 							</DropdownMenuRadioItem>
 						</DropdownMenuRadioGroup>
 					</DropdownMenuSubContent>

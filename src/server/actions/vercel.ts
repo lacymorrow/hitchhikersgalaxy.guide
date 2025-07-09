@@ -1,10 +1,9 @@
 "use server";
 
+import { and, eq } from "drizzle-orm";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { accounts } from "@/server/db/schema";
-import { and, eq } from "drizzle-orm";
-
 
 interface DeployToVercelResult {
 	success: boolean;

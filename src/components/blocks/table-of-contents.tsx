@@ -30,10 +30,9 @@ export const TableOfContents = ({ headings }: TableOfContentsProps) => {
 							whileHover={{ scale: 1.05 }}
 							whileTap={{ scale: 0.95 }}
 							onClick={() => setActiveItem(heading.id)}
-							className={`flex w-full items-center rounded-md px-2 py-1 text-left transition-colors ${activeItem === heading.id
-								? "bg-primary text-primary-foreground"
-								: "hover:bg-muted"
-								}`}
+							className={`flex w-full items-center rounded-md px-2 py-1 text-left transition-colors ${
+								activeItem === heading.id ? "bg-primary text-primary-foreground" : "hover:bg-muted"
+							}`}
 						>
 							<span className="text-sm">{heading.text}</span>
 						</motion.button>

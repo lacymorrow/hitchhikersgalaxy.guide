@@ -132,6 +132,7 @@ export const env = createEnv({
 		VERCEL_ACCESS_TOKEN: z.string().optional(),
 		VERCEL_CLIENT_ID: z.string().optional(),
 		VERCEL_CLIENT_SECRET: z.string().optional(),
+		VERCEL_BLOB_READ_WRITE_TOKEN: z.string().optional(),
 	},
 
 	/**
@@ -295,6 +296,7 @@ export const env = createEnv({
 		VERCEL_ACCESS_TOKEN: process.env.VERCEL_ACCESS_TOKEN,
 		VERCEL_CLIENT_ID: process.env.VERCEL_CLIENT_ID,
 		VERCEL_CLIENT_SECRET: process.env.VERCEL_CLIENT_SECRET,
+		VERCEL_BLOB_READ_WRITE_TOKEN: process.env.VERCEL_BLOB_READ_WRITE_TOKEN,
 
 		// Consent Manager
 		NEXT_PUBLIC_C15T_URL: process.env.NEXT_PUBLIC_C15T_URL,

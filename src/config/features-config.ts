@@ -48,7 +48,7 @@ const isResendAuthEnabled = process.env.NODE_ENV !== "production" && !!process.e
 
 // Builder is enabled if the API key exists and it's not explicitly disabled
 export const isBuilderEnabled =
-	!!process.env.NEXT_PUBLIC_BUILDER_API_KEY && process.env.DISABLE_BUILDER !== "true";
+	!!process.env.NEXT_PUBLIC_BUILDER_API_KEY;
 
 // MDX is always enabled unless explicitly disabled
 export const isMDXEnabled = process.env.DISABLE_MDX !== "true";
@@ -84,7 +84,7 @@ const isRedisEnabled =
 
 const isVercelApiEnabled = !!process.env.VERCEL_ACCESS_TOKEN;
 
-const isVercelBlobEnabled = !!process.env.BLOB_READ_WRITE_TOKEN;
+const isVercelBlobEnabled = !!process.env.VERCEL_BLOB_READ_WRITE_TOKEN;
 
 // Analytics
 const isPostHogEnabled =

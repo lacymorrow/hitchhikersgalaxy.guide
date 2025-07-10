@@ -190,14 +190,18 @@ const nextConfig: NextConfig = {
 	compiler: {
 		// Remove all console logs
 		// removeConsole: true
+
 		// Remove console logs only in production, excluding error logs
 		// removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
 
+		// Logs are disabled in production unless DISABLE_LOGGING is set
 		// Use DISABLE_LOGGING to disable all logging except error logs
 		// Use DISABLE_ERROR_LOGGING to disable error logging too
 		removeConsole:
-			process.env.DISABLE_LOGGING === "true"
-				? process.env.DISABLE_ERROR_LOGGING === "true"
+			process.env.DISABLE_LOGGING === "true" ||
+				(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+				? process.env.DISABLE_ERROR_LOGGING === "true" ||
+					(process.env.NODE_ENV === "production" && !process.env.DISABLE_ERROR_LOGGING)
 					? true
 					: { exclude: ["error"] }
 				: false,

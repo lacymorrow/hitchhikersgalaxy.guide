@@ -28,6 +28,6 @@ export async function downloadRepo() {
  */
 export async function downloadRepoAnonymously(formData: FormData) {
 	redirect(
-		`${routes.api.download}?email=${formData.get("email")}&orderId=${formData.get("orderId")}`
+		`${routes.api.download}?email=${formData.get("email")}`
 	);
 }

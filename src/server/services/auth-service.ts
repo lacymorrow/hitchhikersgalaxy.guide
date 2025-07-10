@@ -4,7 +4,6 @@ import { eq } from "drizzle-orm";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { STATUS_CODES } from "@/config/status-codes";
-import { isPayloadEnabled } from "@/lib/payload/is-payload-enabled";
 import { getPayloadClient, payload } from "@/lib/payload/payload";
 import { signInSchema } from "@/lib/schemas/auth";
 import { signIn, signOut } from "@/server/auth";
@@ -13,6 +12,7 @@ import { users } from "@/server/db/schema";
 import { userService } from "@/server/services/user-service";
 import type { User, UserRole } from "@/types/user";
 import "server-only";
+import { env } from "@/env";
 
 // Define a simplified type for Payload User to avoid import issues
 interface PayloadUser {
@@ -680,7 +680,7 @@ export const AuthService = {
 	},
 
 	async verifyEmail(token: string): Promise<{ success: boolean; message: string }> {
-		if (!isPayloadEnabled()) {
+		if (!env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED) {
 			return { success: false, message: "Email verification not available" };
 		}
 
@@ -707,7 +707,7 @@ export const AuthService = {
 		token: string,
 		password: string
 	): Promise<{ success: boolean; message: string }> {
-		if (!isPayloadEnabled()) {
+		if (!env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED) {
 			return { success: false, message: "Password reset not available" };
 		}
 

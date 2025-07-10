@@ -12,6 +12,7 @@ ShipKit conditionally initializes Payload CMS based on environment variables. Th
 ## Conditional Initialization
 
 ### Database Requirement Check
+
 Payload CMS only initializes when a database is available:
 
 ```typescript
@@ -19,6 +20,7 @@ const isPayloadEnabled = !!process.env.DATABASE_URL && process.env.ENABLE_PAYLOA
 ```
 
 ### Plugin Array Pattern
+
 Plugins are conditionally added using array spread patterns:
 
 ```typescript
@@ -47,7 +49,7 @@ plugins: [
     ? [
         vercelBlobStorage({
           collections: { media: true },
-          token: process.env.BLOB_READ_WRITE_TOKEN!,
+          token: process.env.VERCEL_BLOB_READ_WRITE_TOKEN!,
         }),
       ]
     : []),
@@ -69,6 +71,7 @@ plugins: [
 ## Database Configuration
 
 ### Conditional Database Adapter
+
 The database adapter is only added when Payload is enabled:
 
 ```typescript
@@ -109,16 +112,20 @@ if (isPayloadEnabled) {
 ## Environment Variables
 
 ### Required for Payload
+
 - `DATABASE_URL` - PostgreSQL connection string
 - `ENABLE_PAYLOAD` - Must be "true" to enable Payload CMS
 
 ### Optional Features
+
 - `AWS_BUCKET_NAME`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_REGION` - For S3 storage
-- `BLOB_READ_WRITE_TOKEN` - For Vercel Blob storage
+- `VERCEL_BLOB_READ_WRITE_TOKEN` - For Vercel Blob storage
 - `RESEND_API_KEY` - For Resend email adapter
 
 ### Build-time Feature Flags
+
 Feature flags from **[src/config/features-config.ts](mdc:src/config/features-config.ts)**:
+
 - `NEXT_PUBLIC_FEATURE_S3_ENABLED`
 - `NEXT_PUBLIC_FEATURE_VERCEL_BLOB_ENABLED`
 - `NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED`
@@ -126,6 +133,7 @@ Feature flags from **[src/config/features-config.ts](mdc:src/config/features-con
 ## Auto-Seeding Pattern
 
 ### Conditional Seeding
+
 Only seed when Payload is enabled and database exists:
 
 ```typescript
@@ -159,6 +167,7 @@ async onInit(payload: any) {
 ```
 
 ### Seeding Status Management
+
 Track seeding completion to avoid duplicate seeding:
 
 ```typescript
@@ -197,6 +206,7 @@ async function markSeedingCompleted(payload: any): Promise<void> {
 ## Collections and Globals
 
 ### Schema Integration
+
 Payload collections integrate with application database schema:
 
 ```typescript
@@ -229,6 +239,7 @@ rbac: {
 ## Common Patterns
 
 ### Array Spread for Conditional Plugins
+
 ALWAYS use array spread for conditional plugins:
 
 ```typescript
@@ -240,6 +251,7 @@ ALWAYS use array spread for conditional plugins:
 ```
 
 ### Object Spread for Configuration Fields
+
 Use object spread for configuration fields like email adapters:
 
 ```typescript
@@ -251,6 +263,7 @@ Use object spread for configuration fields like email adapters:
 ```
 
 ### Feature Flag Integration
+
 Check both environment variables and build-time feature flags:
 
 ```typescript
@@ -261,6 +274,7 @@ const isFeatureEnabled =
 ```
 
 ### Error Boundaries
+
 Wrap Payload initialization in try-catch blocks:
 
 ```typescript
@@ -275,6 +289,7 @@ try {
 ## Debugging
 
 ### Check Payload Status
+
 ```typescript
 console.log("Payload enabled:", isPayloadEnabled);
 console.log("Database URL set:", !!process.env.DATABASE_URL);
@@ -282,6 +297,7 @@ console.log("Enable flag:", process.env.ENABLE_PAYLOAD);
 ```
 
 ### Plugin Loading
+
 ```typescript
 console.log("Active plugins:", config.plugins?.length || 0);
 console.log("S3 enabled:", process.env.NEXT_PUBLIC_FEATURE_S3_ENABLED === "true");

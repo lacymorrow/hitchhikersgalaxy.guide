@@ -186,14 +186,14 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		adminUrl: "https://s3.console.aws.amazon.com/",
 	});
 
-	const blobToken = !!process.env.BLOB_READ_WRITE_TOKEN;
+	const blobToken = !!process.env.VERCEL_BLOB_READ_WRITE_TOKEN;
 	addStatus("Storage", {
 		name: "Vercel Blob Storage",
 		enabled: blobToken,
 		configured: blobToken,
 		message: blobToken
-			? "Configured (BLOB_READ_WRITE_TOKEN set)."
-			: "Disabled (Missing BLOB_READ_WRITE_TOKEN).",
+			? "Configured (VERCEL_BLOB_READ_WRITE_TOKEN set)."
+			: "Disabled (Missing VERCEL_BLOB_READ_WRITE_TOKEN).",
 		adminUrl: "https://vercel.com/dashboard",
 	});
 

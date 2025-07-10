@@ -30,7 +30,7 @@ export function OnboardingHeader() {
 						Below you'll find everything you need to configure your features and start shipping.
 					</p>
 
-					<div className="flex flex-col gap-4 sm:flex-row sm:justify-center">
+					<div className="flex gap-4 flex-row justify-center">
 						<Link href="/docs" className="inline-flex">
 							<Button variant="outline" size="lg">
 								<BookOpen className="mr-2 h-4 w-4" />

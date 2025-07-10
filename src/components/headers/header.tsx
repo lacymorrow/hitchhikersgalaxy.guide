@@ -211,7 +211,7 @@ export const Header: React.FC<HeaderProps> = ({
 								<div className="flex items-center gap-2">
 									{!session && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
 
-									<UserMenu size="sm" />
+									<UserMenu />
 
 									{!session && <BuyButton />}
 								</div>

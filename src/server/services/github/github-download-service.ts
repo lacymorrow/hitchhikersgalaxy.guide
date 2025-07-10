@@ -266,8 +266,7 @@ async function downloadLatestRelease(): Promise<{
 	const { isValid, scopes, error } = await verifyTokenPermissions();
 	if (!isValid) {
 		throw new Error(
-			`GitHub token verification failed: ${error}. Required scopes: repo. Current scopes: ${
-				scopes?.join(", ") || "none"
+			`GitHub token verification failed: ${error}. Required scopes: repo. Current scopes: ${scopes?.join(", ") || "none"
 			}`
 		);
 	}

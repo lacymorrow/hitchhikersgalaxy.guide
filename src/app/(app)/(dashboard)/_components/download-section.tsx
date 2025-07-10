@@ -76,14 +76,15 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
 		<div className="flex flex-wrap items-stretch justify-stretch max-w-md gap-3">
 			<div className="flex flex-wrap items-stretch justify-stretch w-full gap-3">
 				{/* Download button */}
-				<form action={downloadRepo} className="w-full">
+				<form action={downloadRepo} className="grow">
+					<input type="hidden" name="email" value={session.user.email} />
 					<Button type="submit" size="lg" className="w-full">
 						<DownloadIcon className="mr-2 h-4 w-4" />
 						Download {siteConfig.title}
 					</Button>
 				</form>
 
-				{isVercelConnected && <VercelDeployButton className="w-full" href={vercelDeployHref} />}
+				{isVercelConnected && <VercelDeployButton className="grow" href={vercelDeployHref} />}
 			</div>
 			{/* GitHub connection section */}
 			{isGitHubConnected ? (

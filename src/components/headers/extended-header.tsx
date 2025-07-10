@@ -197,7 +197,7 @@ export const Header: React.FC<HeaderProps> = ({
 								<ThemeToggle variant="ghost" size="icon" className="hidden md:flex rounded-full" />
 							)}
 
-							<UserMenu user={user} size="sm" />
+							<UserMenu user={user} />
 
 							<div className="flex items-center gap-2">
 								{!session && (

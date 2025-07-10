@@ -1,5 +1,3 @@
-"use client";
-
 import "@/lib/fontawesome";
 import type { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -1,6 +1,3 @@
-"use client";
-
-import { Builder } from "@builder.io/react";
 import { cn } from "@/lib/utils";
 
 interface Stat {
@@ -62,72 +59,4 @@ export const Stats = ({
 	);
 };
 
-// Register the component with Builder.io
-Builder.registerComponent(Stats, {
-	name: "Stats",
-	inputs: [
-		{
-			name: "title",
-			type: "string",
-			defaultValue: "Our Impact in Numbers",
-		},
-		{
-			name: "subtitle",
-			type: "string",
-			defaultValue: "See how we are making a difference",
-		},
-		{
-			name: "columns",
-			type: "number",
-			defaultValue: 3,
-			enum: [
-				{ label: "2 Columns", value: 2 },
-				{ label: "3 Columns", value: 3 },
-				{ label: "4 Columns", value: 4 },
-			],
-			helperText: "Number of columns to display stats in",
-		},
-		{
-			name: "background",
-			type: "string",
-			defaultValue: "white",
-			enum: ["white", "gray"],
-			helperText: "Background color of the section",
-		},
-		{
-			name: "stats",
-			type: "list",
-			defaultValue: [
-				{
-					value: "10M+",
-					label: "Active Users",
-					description: "Growing every day",
-				},
-				{
-					value: "99.9%",
-					label: "Uptime",
-					description: "Industry-leading reliability",
-				},
-				{
-					value: "24/7",
-					label: "Support",
-					description: "Always here to help",
-				},
-			],
-			subFields: [
-				{
-					name: "value",
-					type: "string",
-				},
-				{
-					name: "label",
-					type: "string",
-				},
-				{
-					name: "description",
-					type: "string",
-				},
-			],
-		},
-	],
-});
+

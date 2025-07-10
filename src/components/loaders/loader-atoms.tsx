@@ -1,5 +1,3 @@
-"use client";
-
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { cn } from "@/lib/utils";
@@ -26,7 +24,7 @@ const loaderVariants = cva("loader", {
 
 export interface LoaderAtomsProps
 	extends Omit<React.HTMLAttributes<HTMLDivElement>, "color">,
-		VariantProps<typeof loaderVariants> {
+	VariantProps<typeof loaderVariants> {
 	label?: string;
 }
 

@@ -1,0 +1,205 @@
+# Shipkit Codebase Performance & Code Smell Audit Plan
+
+*Created: 2024-12-28*
+*Status: Planning Phase*
+
+## Overview
+
+This document outlines a comprehensive audit plan for the Shipkit codebase to identify and fix performance issues, code smells, and optimization opportunities. The audit focuses on Next.js App Router best practices, React performance patterns, and database optimization.
+
+## 🎯 Goals
+
+- [ ] Reduce bundle size and improve loading performance
+- [ ] Optimize database queries and prevent N+1 patterns
+- [ ] Minimize unnecessary client-side JavaScript
+- [ ] Improve component reusability and maintainability
+- [ ] Standardize error handling and caching strategies
+- [ ] Ensure proper separation of concerns between client/server
+
+## 📋 Audit Checklist
+
+### Phase 1: Component Architecture Audit
+
+#### ✅ 1. Client Components Audit (`use client`)
+**Status: Pending**
+**Priority: High**
+**Estimated Time: 4-6 hours**
+
+**Objective**: Identify components marked with `"use client"` that don't actually need client-side features and can be converted to Server Components for better performance.
+
+**Areas to Review**:
+- [ ] Components using `"use client"` without hooks or browser APIs
+- [ ] Server Components nested in Client Components (should be passed as props/children)
+- [ ] Data fetching happening in `useEffect` (should move to Server Components)
+- [ ] Static components unnecessarily marked as client
+
+**Key Files Found**:
+- `src/hooks/use-toast.ts` - Complex client-side logic with hydration issues
+- `src/hooks/use-local-storage.ts` - Good example of proper client component
+- `src/components/forms/contact-form.tsx` - Review if form needs to be fully client-side
+- `src/app/(app)/connect/github/page.tsx` - Has custom client wrapper logic
+
+**Expected Impact**: 20-30% reduction in client JavaScript bundle size
+
+#### ✅ 2. Large File Breakdown
+**Status: Pending**
+**Priority: Medium**
+**Estimated Time: 6-8 hours**
+
+**Objective**: Break down files exceeding 500-700 lines into smaller, focused components following atomic design principles.
+
+**Files to Audit**:
+- [ ] Find files >500 lines
+- [ ] Identify logical breakpoints
+- [ ] Extract reusable components
+- [ ] Improve component composition
+
+### Phase 2: Performance Optimization
+
+#### ✅ 3. Database Query Optimization
+**Status: Pending**
+**Priority: High**
+**Estimated Time: 8-10 hours**
+
+**Objective**: Optimize database queries, prevent N+1 patterns, and improve data loading performance.
+
+**Areas to Review**:
+- [ ] `src/server/services/payment-service.ts` - Complex queries with multiple provider calls
+- [ ] `src/server/services/base-service.ts` - Generic service patterns that might be inefficient
+- [ ] Webhook processing in `src/app/(app)/webhooks/` - Database transaction optimization
+- [ ] User service operations - Potential for batch operations
+
+**Key Patterns Found**:
+- Heavy use of `safeDbExecute` wrapper - might hide performance issues
+- Complex payment provider fallback logic
+- Multiple database calls that could be batched
+
+**Expected Impact**: 40-60% reduction in database query time
+
+#### ✅ 4. Server Actions Optimization
+**Status: Pending**
+**Priority: High**
+**Estimated Time: 4-6 hours**
+
+**Objective**: Review server actions for proper separation of concerns, error handling, and performance.
+
+**Areas to Review**:
+- [ ] Server actions doing complex business logic (should call services)
+- [ ] Server actions used for data fetching (should use Server Components)
+- [ ] Error handling patterns and user feedback
+- [ ] Validation and security patterns
+
+**Key Files**:
+- `src/server/actions/payments.ts` - Complex payment creation logic
+- `src/server/actions/waitlist-actions.ts` - Email integration patterns
+- `src/lib/server-action-wrapper.tsx` - Wrapper complexity analysis
+
+### Phase 3: Memory & Resource Optimization
+
+#### ✅ 5. Memory Leak Detection
+**Status: Pending**
+**Priority: Medium**
+**Estimated Time: 3-4 hours**
+
+**Objective**: Identify and fix potential memory leaks in React hooks, event listeners, and subscriptions.
+
+**Areas to Review**:
+- [ ] `useEffect` cleanup functions
+- [ ] Event listener registration/cleanup
+- [ ] Subscription patterns
+- [ ] Context provider memory usage
+- [ ] Toast and notification systems
+
+**Key Hooks Found**:
+- `src/hooks/use-toast.ts` - Complex state management with listeners
+- `src/hooks/use-local-storage.ts` - Storage event listeners
+- `src/hooks/use-permission.ts` - API polling patterns
+
+#### ✅ 6. Bundle Size Analysis
+**Status: Pending**
+**Priority: Medium**
+**Estimated Time: 2-3 hours**
+
+**Objective**: Analyze and optimize JavaScript bundle size, identify heavy dependencies, and implement proper code splitting.
+
+**Tasks**:
+- [ ] Run bundle analyzer
+- [ ] Identify heavy dependencies
+- [ ] Implement dynamic imports for large components
+- [ ] Review tree shaking effectiveness
+- [ ] Optimize import patterns
+
+### Phase 4: Code Quality & Patterns
+
+#### ✅ 7. Error Handling Standardization
+**Status: Pending**
+**Priority: Medium**
+**Estimated Time: 4-5 hours**
+
+**Objective**: Standardize error handling patterns across the application for better user experience and debugging.
+
+**Areas to Review**:
+- [ ] Error boundary implementation
+- [ ] Server action error responses
+- [ ] API error handling
+- [ ] Database error patterns
+- [ ] Webhook error handling
+
+**Key Files**:
+- `src/lib/server-action-wrapper.tsx` - Complex error handling logic
+- `src/server/services/error-service.ts` - Error standardization patterns
+
+#### ✅ 8. Caching Strategy Optimization
+**Status: Pending**
+**Priority: Medium**
+**Estimated Time: 3-4 hours**
+
+**Objective**: Review and optimize caching strategies for better performance and consistency.
+
+**Areas to Review**:
+- [ ] Next.js cache usage patterns
+- [ ] Database query caching
+- [ ] API response caching
+- [ ] Static asset caching
+- [ ] CDN optimization
+
+## 🔍 Immediate Issues Found
+
+### Critical Issues
+1. **Hydration Issues**: `use-toast.ts` has client-side hydration checks that could cause layout shifts
+2. **Complex Database Logic**: Payment service has intricate fallback logic that might impact performance
+3. **Large Components**: Several components exceed recommended size limits
+
+### Medium Priority Issues
+1. **Inconsistent Error Patterns**: Multiple error handling approaches across the codebase
+2. **Memory Patterns**: Some hooks don't properly cleanup event listeners
+3. **Bundle Optimization**: Potential for better code splitting
+
+## 📊 Success Metrics
+
+**Performance Goals**:
+- [ ] Reduce initial JavaScript bundle by 25%
+- [ ] Improve Core Web Vitals scores
+- [ ] Reduce database query count by 30%
+- [ ] Eliminate hydration mismatches
+
+**Code Quality Goals**:
+- [ ] All files under 500 lines
+- [ ] Standardized error handling patterns
+- [ ] 100% proper cleanup in useEffect hooks
+- [ ] Zero memory leaks in production
+
+## 🚀 Implementation Strategy
+
+1. **Start with High-Impact, Low-Effort** - Client component audit first
+2. **Measure Before/After** - Use performance monitoring for each phase
+3. **Incremental Changes** - Complete one area before moving to next
+4. **Test Thoroughly** - Ensure no regressions with each optimization
+
+## 📝 Progress Log
+
+*Use this section to track completion of each phase with date and summary*
+
+---
+
+**Next Steps**: Begin with Client Components Audit (Phase 1.1) - Review use of `"use client"` directive across the codebase.

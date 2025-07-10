@@ -1,6 +1,3 @@
-"use client";
-
-import { Builder } from "@builder.io/react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
 
@@ -41,34 +38,4 @@ export const Hero = ({ title, subtitle, buttonText, buttonLink, backgroundImage 
 	);
 };
 
-// Register the component with Builder.io
-Builder.registerComponent(Hero, {
-	name: "Hero",
-	inputs: [
-		{
-			name: "title",
-			type: "string",
-			defaultValue: "Welcome to Our Platform",
-		},
-		{
-			name: "subtitle",
-			type: "string",
-			defaultValue: "The best solution for your needs",
-		},
-		{
-			name: "buttonText",
-			type: "string",
-			defaultValue: "Get Started",
-		},
-		{
-			name: "buttonLink",
-			type: "string",
-			defaultValue: "#",
-		},
-		{
-			name: "backgroundImage",
-			type: "string",
-			defaultValue: "",
-		},
-	],
-});
+

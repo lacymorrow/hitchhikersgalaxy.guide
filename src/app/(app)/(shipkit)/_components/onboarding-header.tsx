@@ -3,6 +3,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Link } from "@/components/primitives/link-with-transition";
+import { RainbowButton } from "@/components/ui/magicui/rainbow-button";
 
 export function OnboardingHeader() {
 	return (
@@ -37,6 +38,12 @@ export function OnboardingHeader() {
 								View Documentation
 							</Button>
 						</Link>
+						<RainbowButton>
+							<Link href="/docs" className="inline-flex">
+								<BookOpen className="mr-2 h-4 w-4" />
+								View Documentation
+							</Link>
+						</RainbowButton>
 					</div>
 
 					<div className="flex items-center justify-center gap-2 text-sm text-muted-foreground py-6">

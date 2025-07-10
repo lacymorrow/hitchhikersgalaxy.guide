@@ -24,6 +24,7 @@ import {
 	type ProductData,
 	type ProviderConfig,
 } from "./types";
+import { users } from "@/server/db/schema";
 
 /*
  * Extended provider config interface for Stripe-specific configuration
@@ -356,37 +357,189 @@ export class StripeProvider extends BasePaymentProvider {
 					const userName = order.userName;
 
 					if (userEmail && userEmail !== "Unknown") {
-						// Try to find existing user
-						let user = await userService.getUserByEmail(userEmail);
+						// Look for existing user with this email
+						const existingUser = await db
+							.select()
+							.from(users)
+							.where(eq(users.email, userEmail))
+							.limit(1)
+							.then((rows) => rows[0] || null);
 
-						if (!user) {
-							// Create new user using the findOrCreateUserByEmail method
+						if (existingUser) {
+							userId = existingUser.id;
+							logger.debug(`Found existing user for email ${userEmail}`);
+
+							// Update user information with data from payment
+							const updates: Record<string, any> = {};
+
+							// Extract enhanced user data from order attributes
+							const enhancedUserData = (order as any).attributes?.enhancedUserData;
+
+							// Update name if needed
+							if (userName && !existingUser.name) {
+								updates.name = userName;
+							}
+
+							// Update image if we found one and user doesn't have one
+							if (enhancedUserData?.image && !existingUser.image) {
+								updates.image = enhancedUserData.image;
+								logger.debug(`Found profile image for user ${userEmail}: ${enhancedUserData.image}`);
+							}
+
+							// Extract additional user information from the order
+							const orderAny = order as any;
+
+							// Prepare metadata fields to update
+							const metadataUpdates: Record<string, any> = {};
+
+							// Add address information if available
+							if (enhancedUserData?.address) {
+								metadataUpdates.address = enhancedUserData.address;
+							}
+
+							// Add phone information if available
+							if (enhancedUserData?.phone) {
+								metadataUpdates.phoneNumber = enhancedUserData.phone;
+							}
+
+							// Add custom user data if available
+							if (enhancedUserData?.customData && Object.keys(enhancedUserData.customData).length > 0) {
+								metadataUpdates.customUserData = enhancedUserData.customData;
+							}
+
+							// Update or merge metadata
+							interface UserMetadata {
+								lastPaymentInfo: {
+									processor: string;
+									orderId: string;
+									productName: string;
+									amount: number;
+									purchaseDate: Date;
+								};
+								lastImportedAt: string;
+								paymentSources: string[];
+								address?: any;
+								phoneNumber?: string | null;
+								customUserData?: Record<string, any>;
+								[key: string]: any; // Allow for additional properties
+							}
+
+							let newMetadata: Partial<UserMetadata> = {
+								lastPaymentInfo: {
+									processor: this.id,
+									orderId: order.orderId,
+									productName: order.productName,
+									amount: order.amount,
+									purchaseDate: order.purchaseDate,
+								},
+								lastImportedAt: new Date().toISOString(),
+							};
+
+							// Add all metadata updates to newMetadata
+							Object.assign(newMetadata, metadataUpdates);
+
+							// If user has existing metadata, merge it
+							if (existingUser.metadata) {
+								try {
+									const currentMetadata = JSON.parse(existingUser.metadata as string);
+									// Don't overwrite existing fields that aren't being updated
+									newMetadata = {
+										...currentMetadata,
+										...newMetadata,
+										paymentSources: [...(currentMetadata.paymentSources || []), this.id],
+									};
+								} catch (err) {
+									logger.warn(`Failed to parse existing metadata for user ${existingUser.id}`, err);
+									// If parsing fails, just set paymentSources
+									newMetadata.paymentSources = [this.id];
+								}
+							} else {
+								newMetadata.paymentSources = [this.id];
+							}
+
+							// Update metadata in the updates object
+							updates.metadata = JSON.stringify(newMetadata);
+
+							// Only update if we have changes
+							if (Object.keys(updates).length > 0) {
+								await db
+									.update(users)
+									.set({
+										...updates,
+										updatedAt: new Date(),
+									})
+									.where(eq(users.id, existingUser.id));
+								logger.debug(`Updated user information for ${userEmail}`, { updates: Object.keys(updates) });
+							}
+						} else {
+							// Create a new user with this email using the UserService
+							logger.debug(`Creating new user for email ${userEmail}`);
 							try {
-								const { user: newUser, created } = await userService.findOrCreateUserByEmail(
-									userEmail,
-									{ name: userName ?? undefined }
-								);
-								user = newUser;
-								if (created) {
+								// Extract enhanced user data from order attributes
+								const enhancedUserData = (order as any).attributes?.enhancedUserData;
+
+								// Create the user with UserService to ensure proper initialization with team
+								const newUser = await userService.ensureUserExists({
+									id: crypto.randomUUID(), // Generate a new UUID for the user
+									email: userEmail,
+									name: userName || null,
+									image: enhancedUserData?.image || null, // Include profile image if available
+								});
+
+								if (newUser) {
+									userId = newUser.id;
 									stats.usersCreated++;
-									logger.debug(`Created new user for Stripe order`, {
-										email: userEmail,
-										orderId: order.orderId,
+									logger.debug(`Created new user ${newUser.id} for email ${userEmail}`, {
+										hasImage: !!enhancedUserData?.image,
 									});
+
+									// After user is created, update with additional payment metadata
+									const userMetadata: Record<string, any> = {
+										source: `${this.id}_import`,
+										importedAt: new Date().toISOString(),
+										paymentInfo: {
+											processor: this.id,
+											orderId: order.orderId,
+											productName: order.productName,
+											amount: order.amount,
+											purchaseDate: order.purchaseDate,
+										},
+										// Store all original attributes to preserve any additional info
+										originalData: order.attributes,
+										paymentSources: [this.id],
+									};
+
+									// Add address information if available
+									if (enhancedUserData?.address) {
+										userMetadata.address = enhancedUserData.address;
+									}
+
+									// Add phone if available
+									if (enhancedUserData?.phone) {
+										userMetadata.phoneNumber = enhancedUserData.phone;
+									}
+
+									// Add custom user data if available
+									if (enhancedUserData?.customData && Object.keys(enhancedUserData.customData).length > 0) {
+										userMetadata.customUserData = enhancedUserData.customData;
+									}
+
+									// Update the user with the additional metadata
+									await db
+										.update(users)
+										.set({
+											metadata: JSON.stringify(userMetadata),
+											updatedAt: new Date(),
+										})
+										.where(eq(users.id, newUser.id));
+								} else {
+									throw new Error("Failed to create user");
 								}
 							} catch (createError) {
-								logger.error(`Failed to create user for Stripe order`, {
-									email: userEmail,
-									orderId: order.orderId,
-									error: createError,
-								});
+								logger.error(`Failed to create user for ${userEmail}`, createError);
 								stats.errors++;
 								continue;
 							}
-						}
-
-						if (user) {
-							userId = user.id;
 						}
 					}
 
@@ -397,7 +550,26 @@ export class StripeProvider extends BasePaymentProvider {
 					});
 
 					if (existingPayment) {
-						logger.debug(`Stripe order ${order.orderId} already imported, skipping`);
+						logger.debug(`Stripe order ${order.orderId} already imported, updating if needed`);
+
+						// Update existing payment in case data has changed
+						await db
+							.update(payments)
+							.set({
+								amount: Math.round(order.amount * 100), // Convert to cents for storage
+								status: order.status === "paid" ? "completed" : order.status,
+								updatedAt: new Date(),
+								// Update userId if we found/created one and it was previously null
+								...(userId && !existingPayment.userId ? { userId } : {}),
+								metadata: JSON.stringify({
+									// Store product information at top level for easy access
+									productName: order.productName || "Unknown Product",
+									product_name: order.productName || "Unknown Product",
+									// Store complete order data for reference
+									order_data: order.attributes,
+								}),
+							})
+							.where(eq(payments.id, existingPayment.id));
 						stats.skipped++;
 						continue;
 					}

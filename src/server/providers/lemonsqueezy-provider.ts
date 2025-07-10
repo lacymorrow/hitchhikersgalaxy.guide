@@ -438,26 +438,48 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 					return variantName || productName || "Unknown Product";
 				};
 
+				// Determine if this is a free product vs discounted to $0
+				const isFreeProduct = amount === 0 && attributes.subtotal === 0;
+
+				// Extract enhanced user data including potential profile image
+				const enhancedUserData = {
+					email: attributes.user_email ?? "Unknown",
+					name: attributes.user_name,
+					// Extract additional user fields if available
+					address: attr.user_address || null,
+					city: attr.user_city || null,
+					country: attr.user_country || null,
+					phone: attr.user_phone || null,
+					// Try to extract profile image from various possible sources
+					image: attr.user_image || attr.user_avatar || attr.customer_image || null,
+					// Include any custom user properties
+					customUserData,
+				};
+
 				return {
 					id: order.id,
 					orderId: attributes.identifier,
-					userEmail: attributes.user_email ?? "Unknown",
-					userName: attributes.user_name,
+					userEmail: enhancedUserData.email,
+					userName: enhancedUserData.name,
 					amount,
 					status: attributes.status as "paid" | "refunded" | "pending",
 					productName: getProductName(),
 					purchaseDate: new Date(attributes.created_at),
 					processor: this.id,
 					discountCode: (attr.discount_code || null) as string | null,
-					isFreeProduct: amount === 0,
-					attributes,
+					isFreeProduct,
+					attributes: {
+						...attributes,
+						// Include enhanced user data in attributes for import processing
+						enhancedUserData,
+					},
 				};
 			});
 		} catch (error) {
 			if (error instanceof Error && error.message.includes("not properly configured")) {
 				return [];
 			}
-			return this.handleError(error, "Error fetching Lemon Squeezy orders");
+			return this.handleError(error, "Error getting all Lemon Squeezy orders");
 		}
 	}
 
@@ -606,9 +628,18 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 							// Update user information with data from payment
 							const updates: Record<string, any> = {};
 
+							// Extract enhanced user data from order attributes
+							const enhancedUserData = (order as any).attributes?.enhancedUserData;
+
 							// Update name if needed
 							if (userName && !existingUser.name) {
 								updates.name = userName;
+							}
+
+							// Update image if we found one and user doesn't have one
+							if (enhancedUserData?.image && !existingUser.image) {
+								updates.image = enhancedUserData.image;
+								logger.debug(`Found profile image for user ${userEmail}: ${enhancedUserData.image}`);
 							}
 
 							// Extract additional user information from the order
@@ -617,25 +648,27 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 							// Prepare metadata fields to update
 							const metadataUpdates: Record<string, any> = {};
 
-							if (orderAny.userAddress) {
-								metadataUpdates.address = orderAny.userAddress;
+							if (enhancedUserData?.address || orderAny.userAddress) {
+								metadataUpdates.address = enhancedUserData?.address || orderAny.userAddress;
 							}
 
-							if (orderAny.userCity || orderAny.userCountry) {
+							if (enhancedUserData?.city || enhancedUserData?.country || orderAny.userCity || orderAny.userCountry) {
 								// Store location information in metadata
 								metadataUpdates.locationInfo = {
-									city: orderAny.userCity,
-									country: orderAny.userCountry,
+									city: enhancedUserData?.city || orderAny.userCity,
+									country: enhancedUserData?.country || orderAny.userCountry,
 								};
 							}
 
-							if (orderAny.userPhone) {
+							if (enhancedUserData?.phone || orderAny.userPhone) {
 								// Store phone in metadata
-								metadataUpdates.phoneNumber = orderAny.userPhone;
+								metadataUpdates.phoneNumber = enhancedUserData?.phone || orderAny.userPhone;
 							}
 
 							// Additional custom user data fields
-							if (orderAny.customUserData && Object.keys(orderAny.customUserData).length > 0) {
+							if (enhancedUserData?.customUserData && Object.keys(enhancedUserData.customUserData).length > 0) {
+								metadataUpdates.customUserData = enhancedUserData.customUserData;
+							} else if (orderAny.customUserData && Object.keys(orderAny.customUserData).length > 0) {
 								metadataUpdates.customUserData = orderAny.customUserData;
 							}
 
@@ -705,13 +738,14 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 										updatedAt: new Date(),
 									})
 									.where(eq(users.id, existingUser.id));
-								logger.debug(`Updated user information for ${userEmail}`);
+								logger.debug(`Updated user information for ${userEmail}`, { updates: Object.keys(updates) });
 							}
 						} else {
 							// Create a new user with this email using the UserService
 							logger.debug(`Creating new user for email ${userEmail}`);
 							try {
-								// Extract additional user information
+								// Extract enhanced user data from order attributes
+								const enhancedUserData = (order as any).attributes?.enhancedUserData;
 								const orderAny = order as any;
 
 								// Create the user with UserService to ensure proper initialization with team
@@ -719,13 +753,15 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 									id: crypto.randomUUID(), // Generate a new UUID for the user
 									email: userEmail,
 									name: userName || null,
-									image: null,
+									image: enhancedUserData?.image || null, // Include profile image if available
 								});
 
 								if (newUser) {
 									userId = newUser.id;
 									stats.usersCreated++;
-									logger.debug(`Created new user ${newUser.id} for email ${userEmail}`);
+									logger.debug(`Created new user ${newUser.id} for email ${userEmail}`, {
+										hasImage: !!enhancedUserData?.image,
+									});
 
 									// After user is created, update with additional payment metadata
 									const userMetadata: Record<string, any> = {
@@ -744,26 +780,28 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 									};
 
 									// Add location information if available
-									if (orderAny.userCity || orderAny.userCountry) {
+									if (enhancedUserData?.city || enhancedUserData?.country || orderAny.userCity || orderAny.userCountry) {
 										userMetadata.locationInfo = {
-											city: orderAny.userCity,
-											country: orderAny.userCountry,
+											city: enhancedUserData?.city || orderAny.userCity,
+											country: enhancedUserData?.country || orderAny.userCountry,
 										};
 									}
 
 									// Add phone if available
-									if (orderAny.userPhone) {
-										userMetadata.phoneNumber = orderAny.userPhone;
-									}
-
-									// Add custom user data if available
-									if (orderAny.customUserData && Object.keys(orderAny.customUserData).length > 0) {
-										userMetadata.customUserData = orderAny.customUserData;
+									if (enhancedUserData?.phone || orderAny.userPhone) {
+										userMetadata.phoneNumber = enhancedUserData?.phone || orderAny.userPhone;
 									}
 
 									// Add address if available
-									if (orderAny.userAddress) {
-										userMetadata.address = orderAny.userAddress;
+									if (enhancedUserData?.address || orderAny.userAddress) {
+										userMetadata.address = enhancedUserData?.address || orderAny.userAddress;
+									}
+
+									// Add custom user data if available
+									if (enhancedUserData?.customUserData && Object.keys(enhancedUserData.customUserData).length > 0) {
+										userMetadata.customUserData = enhancedUserData.customUserData;
+									} else if (orderAny.customUserData && Object.keys(orderAny.customUserData).length > 0) {
+										userMetadata.customUserData = orderAny.customUserData;
 									}
 
 									// Update the user with the additional metadata

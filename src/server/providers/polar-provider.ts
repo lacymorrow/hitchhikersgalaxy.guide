@@ -142,20 +142,42 @@ export class PolarProvider extends BasePaymentProvider {
 			this.checkProviderReady();
 			// Delegate to the lib function - assuming it returns the PolarOrder[] structure from lib/polar.ts
 			const polarOrders = await polarGetAllOrders();
-			// Map PolarOrder to OrderData, adding the provider ID
-			return polarOrders.map((order) => ({
-				id: order.id,
-				orderId: order.orderId,
-				userEmail: order.userEmail,
-				userName: order.userName,
-				amount: order.amount, // Assuming amount is in dollars from lib function
-				status: order.status,
-				productName: order.productName,
-				purchaseDate: order.purchaseDate,
-				processor: this.id, // Add processor ID
-				discountCode: order.discountCode,
-				attributes: order.attributes,
-			}));
+			// Map PolarOrder to OrderData, adding the provider ID and extracting enhanced user data
+			return polarOrders.map((order) => {
+				// Extract enhanced user data from order attributes if available
+				const enhancedUserData = {
+					email: order.userEmail,
+					name: order.userName,
+					// Try to extract additional user fields from order attributes
+					image: (order.attributes as any)?.customer?.avatar ||
+						(order.attributes as any)?.customer?.image ||
+						(order.attributes as any)?.user_image ||
+						(order.attributes as any)?.customer_image ||
+						null,
+					// Extract other user data if available
+					phone: (order.attributes as any)?.customer?.phone || null,
+					country: (order.attributes as any)?.customer?.country || null,
+					address: (order.attributes as any)?.customer?.address || null,
+				};
+
+				return {
+					id: order.id,
+					orderId: order.orderId,
+					userEmail: order.userEmail,
+					userName: order.userName,
+					amount: order.amount, // Assuming amount is in dollars from lib function
+					status: order.status,
+					productName: order.productName,
+					purchaseDate: order.purchaseDate,
+					processor: this.id, // Add processor ID
+					discountCode: order.discountCode,
+					attributes: {
+						...order.attributes,
+						// Include enhanced user data in attributes for import processing
+						enhancedUserData,
+					},
+				};
+			});
 		} catch (error) {
 			if (error instanceof PaymentProviderError && error.code === "provider_not_configured") {
 				return [];
@@ -271,14 +293,73 @@ export class PolarProvider extends BasePaymentProvider {
 					// Find or create user
 					const { user, created: userCreated } = await userService.findOrCreateUserByEmail(
 						order.userEmail,
-						{ name: order.userName } // Pass name if available
+						{
+							name: order.userName,
+							image: (order.attributes as any)?.enhancedUserData?.image || null,
+						}
 					);
 					if (userCreated) {
 						stats.usersCreated++;
 						logger.info("Created new user during Polar import", {
 							email: order.userEmail,
 							userId: user.id,
+							hasImage: !!(order.attributes as any)?.enhancedUserData?.image,
 						});
+
+						// If we created a new user and have enhanced data, update with additional metadata
+						const enhancedUserData = (order.attributes as any)?.enhancedUserData;
+						if (enhancedUserData) {
+							const userMetadata: Record<string, any> = {
+								source: `${this.id}_import`,
+								importedAt: new Date().toISOString(),
+								paymentInfo: {
+									processor: this.id,
+									orderId: order.orderId,
+									productName: order.productName,
+									amount: order.amount,
+									purchaseDate: order.purchaseDate,
+								},
+								paymentSources: [this.id],
+							};
+
+							// Add location information if available
+							if (enhancedUserData.country) {
+								userMetadata.locationInfo = {
+									country: enhancedUserData.country,
+								};
+							}
+
+							// Add phone if available
+							if (enhancedUserData.phone) {
+								userMetadata.phoneNumber = enhancedUserData.phone;
+							}
+
+							// Add address if available
+							if (enhancedUserData.address) {
+								userMetadata.address = enhancedUserData.address;
+							}
+
+							// Update the user with the additional metadata
+							await db.update(users).set({
+								metadata: JSON.stringify(userMetadata),
+								updatedAt: new Date(),
+							}).where(eq(users.id, user.id));
+						}
+					} else if (user) {
+						// User already exists, but check if we should update their profile image
+						const enhancedUserData = (order.attributes as any)?.enhancedUserData;
+						if (enhancedUserData?.image && !user.image) {
+							logger.info("Updating existing user with profile image from Polar order", {
+								userId: user.id,
+								email: order.userEmail,
+								image: enhancedUserData.image,
+							});
+
+							await db.update(users).set({
+								image: enhancedUserData.image,
+								updatedAt: new Date(),
+							}).where(eq(users.id, user.id));
+						}
 					}
 
 					// Create payment record

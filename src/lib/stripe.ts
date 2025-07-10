@@ -391,17 +391,45 @@ export const getAllStripeOrders = async (): Promise<StripeOrder[]> => {
 						});
 					}
 
+					// Extract enhanced user data from Stripe customer
+					const enhancedUserData = {
+						email: customer.email ?? "Unknown",
+						name: customer.name ?? null,
+						// Extract profile image from various possible sources
+						image: customer.metadata?.image ||
+							customer.metadata?.avatar ||
+							customer.metadata?.profile_image ||
+							customer.metadata?.user_image ||
+							null,
+						// Extract additional customer information if available
+						phone: customer.phone || customer.metadata?.phone || null,
+						address: customer.address ? {
+							line1: customer.address.line1,
+							line2: customer.address.line2,
+							city: customer.address.city,
+							state: customer.address.state,
+							postal_code: customer.address.postal_code,
+							country: customer.address.country,
+						} : null,
+						// Extract custom metadata
+						customData: customer.metadata || {},
+					};
+
 					orders.push({
 						id: paymentIntent.id,
 						orderId: paymentIntent.id,
-						userEmail: customer.email ?? "Unknown",
-						userName: customer.name ?? null,
+						userEmail: enhancedUserData.email,
+						userName: enhancedUserData.name,
 						amount: paymentIntent.amount / 100, // Convert from cents
 						status: "paid",
 						productName,
 						purchaseDate: new Date(paymentIntent.created * 1000),
 						discountCode: null,
-						attributes: paymentIntent,
+						attributes: {
+							...paymentIntent,
+							// Include enhanced user data in attributes for import processing
+							enhancedUserData,
+						},
 						isSubscription: false,
 						customerId: customer.id,
 					});
@@ -451,11 +479,35 @@ export const getAllStripeOrders = async (): Promise<StripeOrder[]> => {
 					}
 				}
 
+				// Extract enhanced user data from Stripe customer
+				const enhancedUserData = {
+					email: customer.email ?? "Unknown",
+					name: customer.name ?? null,
+					// Extract profile image from various possible sources
+					image: customer.metadata?.image ||
+						customer.metadata?.avatar ||
+						customer.metadata?.profile_image ||
+						customer.metadata?.user_image ||
+						null,
+					// Extract additional customer information if available
+					phone: customer.phone || customer.metadata?.phone || null,
+					address: customer.address ? {
+						line1: customer.address.line1,
+						line2: customer.address.line2,
+						city: customer.address.city,
+						state: customer.address.state,
+						postal_code: customer.address.postal_code,
+						country: customer.address.country,
+					} : null,
+					// Extract custom metadata
+					customData: customer.metadata || {},
+				};
+
 				orders.push({
 					id: subscription.id,
 					orderId: subscription.id,
-					userEmail: customer.email ?? "Unknown",
-					userName: customer.name ?? null,
+					userEmail: enhancedUserData.email,
+					userName: enhancedUserData.name,
 					amount: subscription.items.data[0]?.price.unit_amount
 						? subscription.items.data[0].price.unit_amount / 100
 						: 0,
@@ -463,7 +515,11 @@ export const getAllStripeOrders = async (): Promise<StripeOrder[]> => {
 					productName,
 					purchaseDate: new Date(subscription.created * 1000),
 					discountCode: null,
-					attributes: subscription,
+					attributes: {
+						...subscription,
+						// Include enhanced user data in attributes for import processing
+						enhancedUserData,
+					},
 					isSubscription: true,
 					subscriptionId: subscription.id,
 					customerId: customer.id,

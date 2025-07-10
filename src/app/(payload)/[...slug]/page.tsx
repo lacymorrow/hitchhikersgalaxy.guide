@@ -132,16 +132,20 @@ export async function generateMetadata({
 	params: paramsPromise,
 	searchParams: searchParamsPromise,
 }: PageProps): Promise<Metadata> {
+	if (!env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED && !env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED) {
+		return notFound();
+	}
+
 	const params = await paramsPromise;
 	// const searchParams = await searchParamsPromise;
 	// const isPreview = searchParams.preview === "true";
-	const pageData = await getPageData(params.slug, 1);
-	const slugString = params.slug.join("/");
 
+	const slugString = params.slug.join("/");
 	if (shouldSkip(slugString)) {
 		return notFound();
 	}
 
+	const pageData = await getPageData(params.slug, 1);
 	if (!pageData) {
 		return notFound();
 	}
@@ -181,16 +185,19 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params: paramsPromise }: PageProps) {
+	if (!env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED && !env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED) {
+		return notFound();
+	}
+
 	const params = await paramsPromise;
 	// const searchParams = await searchParamsPromise;
 	// const isPreview = searchParams.preview === "true";
-	const pageData = await getPageData(params.slug, 1);
 	const slugString = params.slug.join("/");
-
 	if (shouldSkip(slugString)) {
 		return notFound();
 	}
 
+	const pageData = await getPageData(params.slug, 1);
 	if (!pageData) {
 		return notFound();
 	}

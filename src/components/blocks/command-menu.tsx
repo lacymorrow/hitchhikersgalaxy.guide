@@ -27,7 +27,7 @@ export function CommandMenu() {
 			setOpen((prevOpen) => !prevOpen);
 		},
 		undefined,
-		[setOpen]
+		[]
 	);
 
 	return (

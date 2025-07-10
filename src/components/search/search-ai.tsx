@@ -182,7 +182,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 			setOpen(true);
 		},
 		undefined,
-		[setOpen]
+		[]
 	);
 
 	React.useEffect(() => {

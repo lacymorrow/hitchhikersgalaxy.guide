@@ -93,7 +93,7 @@ export function SearchMenu({
 			setOpen((prevOpen) => !prevOpen);
 		},
 		undefined,
-		[setOpen]
+		[]
 	);
 
 	const runCommand = React.useCallback((command: () => unknown) => {

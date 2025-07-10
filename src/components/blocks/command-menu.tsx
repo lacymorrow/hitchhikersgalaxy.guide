@@ -13,7 +13,7 @@ import {
 	CommandList,
 } from "@/components/ui/command";
 import { ShortcutAction } from "@/config/keyboard-shortcuts";
-import { useKeyboardShortcut } from "@/contexts/keyboard-shortcut-context";
+import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { cn } from "@/lib/utils";
 
 export function CommandMenu() {

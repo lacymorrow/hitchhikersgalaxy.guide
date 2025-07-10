@@ -134,19 +134,24 @@ export function useKeyboardShortcut(
 	// eslint-disable-next-line react-hooks/exhaustive-deps
 	const memoizedIsActive = useCallback(isActive ?? (() => true), deps);
 
-	useEffect(() => {
-		const handler: ShortcutHandler = {
+	// Memoize the handler object itself to prevent unnecessary re-registrations
+	const handler = useMemo(
+		() => ({
 			action,
 			callback: memoizedCallback,
 			isActive: memoizedIsActive,
-		};
+		}),
+		[action, memoizedCallback, memoizedIsActive]
+	);
+
+	useEffect(() => {
 		const unregister = registerShortcut(handler);
 
 		// Cleanup function to unregister the shortcut when the component unmounts or dependencies change
 		return () => {
 			unregister();
 		};
-		// We only want registration to happen based on the memoized functions and action
+		// registerShortcut is stable and doesn't need to be in deps
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [action, registerShortcut, memoizedCallback, memoizedIsActive]);
+	}, [handler]);
 }

@@ -8,14 +8,11 @@ import {
 	Database,
 	ExternalLink,
 	FileText,
-	Github,
 	Mail,
 	Settings,
 	Shield,
 	X,
-	Zap,
-	ExternalLink,
-	LucideIcon
+	type LucideIcon
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -150,118 +147,91 @@ export function FeatureGrid() {
 			</div>
 
 			<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-				{features.map((feature) => (
-					<Card key={feature.name} className="relative transition-all hover:shadow-lg">
-						<CardHeader className="pb-3">
-							<div className="flex items-start justify-between">
-								<feature.icon />
-								<div className="flex items-center gap-2">
-									<Badge variant="outline" className={categoryColors[feature.category]}>
-										{feature.category}
-									</Badge>
-									{feature.isEnabled ? (
-										<TooltipProvider>
-											<Tooltip>
-												<TooltipTrigger>
-													<Check className="h-4 w-4 text-green-500" />
-												</TooltipTrigger>
-												<TooltipContent>
-													<p>Feature is enabled</p>
-												</TooltipContent>
-											</Tooltip>
-										</TooltipProvider>
-									) : (
-										<TooltipProvider>
-											<Tooltip>
-												<TooltipTrigger>
-													<X className="h-4 w-4 text-gray-400" />
-												</TooltipTrigger>
-												<TooltipContent>
-													<p>Feature is disabled</p>
-												</TooltipContent>
-											</Tooltip>
-										</TooltipProvider>
-									)}
-								</div>
-							</div>
-							<CardTitle className="text-lg">{feature.name}</CardTitle>
-							<CardDescription>{feature.description}</CardDescription>
-						</CardHeader>
-						<CardContent className="space-y-4">
-							{feature.dependencies && feature.dependencies.length > 0 && (
-								<>
-									<div className="space-y-2">
-										<span className="text-sm font-medium">Required Variables:</span>
-										{feature.dependencies.map((dep) => (
-											<div key={dep} className="flex items-center justify-between">
-												<code className="text-xs bg-muted px-2 py-1 rounded">{dep}</code>
-												<TooltipProvider>
-													<Tooltip>
-														<TooltipTrigger asChild>
-															<Button
-																variant="ghost"
-																size="sm"
-																onClick={() => copyToClipboard(dep)}
-																className="h-6 px-2"
-															>
-																<Copy className="h-3 w-3" />
-															</Button>
-														</TooltipTrigger>
-														<TooltipContent>
-															<p>Copy variable name</p>
-														</TooltipContent>
-													</Tooltip>
-												</TooltipProvider>
-											</div>
-										))}
+				{features.map((feature) => {
+					const Icon = feature.icon;
+					return (
+						<Card key={feature.name} className="relative transition-all hover:shadow-lg">
+							<CardHeader className="pb-3">
+								<div className="flex items-start justify-between">
+									<Icon />
+									<div className="flex items-center gap-2">
+										<Badge
+											variant="outline"
+											className={categoryColors[feature.category]}
+										>
+											{feature.category}
+										</Badge>
+										{feature.isEnabled ? (
+											<TooltipProvider>
+												<Tooltip>
+													<TooltipTrigger>
+														<Check className="h-4 w-4 text-green-500" />
+													</TooltipTrigger>
+													<TooltipContent>
+														<p>Feature is enabled</p>
+													</TooltipContent>
+												</Tooltip>
+											</TooltipProvider>
+										) : (
+											<TooltipProvider>
+												<Tooltip>
+													<TooltipTrigger>
+														<X className="h-4 w-4 text-gray-400" />
+													</TooltipTrigger>
+													<TooltipContent>
+														<p>Feature is disabled</p>
+													</TooltipContent>
+												</Tooltip>
+											</TooltipProvider>
+										)}
 									</div>
 								</div>
-							<CardTitle className="text-lg">{feature.name}</CardTitle>
-							<CardDescription>{feature.description}</CardDescription>
-						</CardHeader>
-						<CardContent className="space-y-4">
-							{feature.dependencies && feature.dependencies.length > 0 && (
-								<>
-									<div className="space-y-2">
-										<span className="text-sm font-medium">Required Variables:</span>
-										{feature.dependencies.map((dep) => (
-											<div key={dep} className="flex items-center justify-between">
-												<code className="text-xs bg-muted px-2 py-1 rounded">
-													{dep}
-												</code>
-												<TooltipProvider>
-													<Tooltip>
-														<TooltipTrigger asChild>
-															<Button
-																variant="ghost"
-																size="sm"
-																onClick={() => copyToClipboard(dep)}
-																className="h-6 px-2"
-															>
-																<Copy className="h-3 w-3" />
-															</Button>
-														</TooltipTrigger>
-														<TooltipContent>
-															<p>Copy variable name</p>
-														</TooltipContent>
-													</Tooltip>
-												</TooltipProvider>
-											</div>
-										))}
-									</div>
-								</>
-							)}
+								<CardTitle className="text-lg">{feature.name}</CardTitle>
+								<CardDescription>{feature.description}</CardDescription>
+							</CardHeader>
+							<CardContent className="space-y-4">
+								{feature.dependencies && feature.dependencies.length > 0 && (
+									<>
+										<div className="space-y-2">
+											<span className="text-sm font-medium">Required Variables:</span>
+											{feature.dependencies.map((dep) => (
+												<div key={dep} className="flex items-center justify-between">
+													<code className="text-xs bg-muted px-2 py-1 rounded">
+														{dep}
+													</code>
+													<TooltipProvider>
+														<Tooltip>
+															<TooltipTrigger asChild>
+																<Button
+																	variant="ghost"
+																	size="sm"
+																	onClick={() => copyToClipboard(dep)}
+																	className="h-6 px-2"
+																>
+																	<Copy className="h-3 w-3" />
+																</Button>
+															</TooltipTrigger>
+															<TooltipContent>
+																<p>Copy variable name</p>
+															</TooltipContent>
+														</Tooltip>
+													</TooltipProvider>
+												</div>
+											))}
+										</div>
+									</>
+								)}
 
-							<Separator />
-							<Button variant="outline" size="sm" className="w-full" asChild>
-								<a href={feature.setupGuide} className="flex items-center gap-2">
-									<ExternalLink className="h-3 w-3" />
-									Setup Guide
-								</a>
-							</Button>
-						</CardContent>
-					</Card>
-				);
+								<Separator />
+								<Button variant="outline" size="sm" className="w-full" asChild>
+									<a href={feature.setupGuide} className="flex items-center gap-2">
+										<ExternalLink className="h-3 w-3" />
+										Setup Guide
+									</a>
+								</Button>
+							</CardContent>
+						</Card>
+					);
 				})}
 			</div>
 		</div>

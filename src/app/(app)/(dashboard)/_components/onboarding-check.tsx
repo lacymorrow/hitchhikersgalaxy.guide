@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import type { User } from "@/types/user";
 import { OnboardingWizard } from "./onboarding-wizard";
+import { buildTimeFeatureFlags } from "@/config/features-config";
 
 interface OnboardingCheckProps {
 	user?: User | null;
@@ -20,6 +21,10 @@ export function OnboardingCheck({
 	hasVercelConnection = false,
 	hasPurchased = false,
 }: OnboardingCheckProps) {
+	if (!buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_VERCEL_API_ENABLED || !buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED) {
+		return null;
+	}
+
 	const userId = user?.id ?? "";
 	const [showOnboarding, setShowOnboarding] = useState(false);
 	const [onboardingState, setOnboardingState] = useLocalStorage<{

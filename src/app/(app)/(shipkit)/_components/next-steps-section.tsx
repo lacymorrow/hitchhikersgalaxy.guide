@@ -5,7 +5,6 @@ import {
 	CreditCard,
 	Database,
 	FileText,
-	Rocket,
 	Shield,
 	Zap,
 	Rocket,
@@ -112,8 +111,8 @@ export function NextStepsSection() {
 					<Card
 						key={step.title}
 						className={`transition-all ${step.isComplete
-								? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
-								: "hover:shadow-md"
+							? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
+							: "hover:shadow-md"
 							}`}
 					>
 						<CardHeader className="pb-3">

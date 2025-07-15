@@ -7,7 +7,8 @@ import {
 	FileText,
 	CreditCard,
 	Zap,
-	Rocket
+	Rocket,
+	type LucideIcon
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -20,7 +21,7 @@ import { isGuestOnlyMode } from "@/server/auth-providers";
 interface NextStep {
 	title: string;
 	description: string;
-	icon: React.ElementType;
+	icon: LucideIcon;
 	href: string;
 	isComplete: boolean;
 	isOptional?: boolean;
@@ -34,7 +35,8 @@ const nextSteps: NextStep[] = [
 		icon: Database,
 		href: "/docs/database",
 		isComplete: !!env?.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED,
-		estimatedTime: "5 min"
+		estimatedTime: "5 min",
+		isOptional: true
 	},
 	{
 		title: "Configure authentication",
@@ -42,7 +44,8 @@ const nextSteps: NextStep[] = [
 		icon: Shield,
 		href: "/docs/auth",
 		isComplete: !isGuestOnlyMode,
-		estimatedTime: "10 min"
+		estimatedTime: "10 min",
+		isOptional: true
 	},
 	{
 		title: "Choose your CMS",

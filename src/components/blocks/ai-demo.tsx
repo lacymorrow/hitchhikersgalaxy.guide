@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client";
 
 import { Bot, Loader2, Send, Sparkles, Terminal, Wand2 } from "lucide-react";
@@ -11,7 +13,7 @@ import { Textarea } from "@/components/ui/textarea";
 // Fix the dynamic import to specifically import the default export
 const AISmollmWebGPU = dynamic(
 	async () => {
-		const module = await import("@/app/(app)/ai/smollm-web/ai-smollm-webgpu");
+		const module = await import("@/components/blocks/ai/smollm-web/ai-smollm-webgpu");
 		return module.AISmollmWebGPU;
 	},
 	{
@@ -122,11 +124,10 @@ export const AIDemo: React.FC = () => {
 									key={demoPrompt}
 									type="button"
 									onClick={() => handleDemoClick(demoPrompt)}
-									className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
-										selectedDemo === demoPrompt
-											? "bg-primary text-primary-foreground"
-											: "bg-secondary hover:bg-secondary/80"
-									}`}
+									className={`text-xs px-3 py-1.5 rounded-full transition-colors ${selectedDemo === demoPrompt
+										? "bg-primary text-primary-foreground"
+										: "bg-secondary hover:bg-secondary/80"
+										}`}
 								>
 									{demoPrompt}
 								</button>

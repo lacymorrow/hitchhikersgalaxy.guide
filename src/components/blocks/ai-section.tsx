@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import type { KeyboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
-import { BuyButton } from "@/components/buttons/buy-button";
+import { BuyButton } from "@/components/buttons/lemonsqueezy-buy-button";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,9 +32,9 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'\n
 
 export function ${prompt
-			.split(" ")
-			.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-			.join("")}() {
+				.split(" ")
+				.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+				.join("")}() {
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-2">${prompt}</h2>

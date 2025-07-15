@@ -26,6 +26,7 @@ export const routes = {
 	terms: "/terms-of-service",
 	privacy: "/privacy-policy",
 	eula: "/eula",
+	legal: "/legal",
 
 	// Marketing routes
 	faq: "/faq",

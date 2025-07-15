@@ -993,25 +993,74 @@ const PaymentService = {
 			return results;
 		}
 
-		// Import payments from each provider
-		for (const provider of providers) {
+		// Import payments from each provider with timeout and error handling
+		const importPromises = providers.map(async (provider) => {
+			const providerResult = {
+				provider: provider.id,
+				stats: null as any,
+				error: null as string | null,
+				duration: 0,
+			};
+
+			const startTime = Date.now();
+
 			try {
 				logger.info(`Starting payment import for ${provider.name}`);
-				const stats = await provider.importPayments();
-				results[provider.id] = stats;
-				logger.info(`Completed payment import for ${provider.name}`, stats);
+
+				// Add timeout to prevent hanging
+				const importPromise = provider.importPayments();
+				const timeoutPromise = new Promise<never>((_, reject) => {
+					setTimeout(
+						() => {
+							reject(new Error(`Import timeout after 5 minutes for ${provider.name}`));
+						},
+						5 * 60 * 1000
+					); // 5 minutes timeout
+				});
+
+				const stats = await Promise.race([importPromise, timeoutPromise]);
+				providerResult.stats = stats;
+				providerResult.duration = Date.now() - startTime;
+
+				logger.info(`Completed payment import for ${provider.name}`, {
+					stats,
+					duration: providerResult.duration,
+				});
+
+				return providerResult;
 			} catch (error) {
 				const errorMessage = error instanceof Error ? error.message : String(error);
-				logger.error(`Error during ${provider.name} import`, { error: errorMessage });
-				results[provider.id] = {
-					error: true,
-					message: errorMessage,
+				providerResult.error = errorMessage;
+				providerResult.duration = Date.now() - startTime;
+
+				logger.error(`Error during ${provider.name} import`, {
+					error: errorMessage,
+					duration: providerResult.duration,
+				});
+
+				return providerResult;
+			}
+		});
+
+		// Wait for all imports to complete (or timeout)
+		const allResults = await Promise.all(importPromises);
+
+		// Format results for response
+		for (const result of allResults) {
+			if (result.error) {
+				results[result.provider] = {
+					error: result.error,
+					duration: result.duration,
+				};
+			} else {
+				results[result.provider] = {
+					...result.stats,
+					duration: result.duration,
 				};
 			}
 		}
 
-		logger.info("All payment imports complete", results);
-
+		logger.info("All payment imports complete", { results });
 		return results;
 	},
 

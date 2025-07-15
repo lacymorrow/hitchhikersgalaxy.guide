@@ -1,7 +1,7 @@
 "use client";
 
-import { useSession, signOut } from "next-auth/react";
 import { usePathname } from "next/navigation";
+import { signOut, useSession } from "next-auth/react";
 import type React from "react";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -41,19 +41,14 @@ export const SignInButton = ({
 		}
 		await signOut({
 			callbackUrl: nextUrl || routes.home,
-			redirect: true
+			redirect: true,
 		});
 	};
 
 	// Loading state
 	if (isLoading) {
 		return (
-			<Button
-				variant={variant}
-				size={size}
-				className={cn(className)}
-				disabled
-			>
+			<Button variant={variant} size={size} className={cn(className)} disabled>
 				Loading...
 			</Button>
 		);
@@ -62,12 +57,7 @@ export const SignInButton = ({
 	// Authenticated state - show sign out button
 	if (isAuthenticated && showSignOut) {
 		return (
-			<Button
-				variant={variant}
-				size={size}
-				className={cn(className)}
-				onClick={handleSignOut}
-			>
+			<Button variant={variant} size={size} className={cn(className)} onClick={handleSignOut}>
 				{children || "Sign Out"}
 			</Button>
 		);
@@ -79,10 +69,7 @@ export const SignInButton = ({
 		: signInRedirectUrl;
 
 	return (
-		<Link
-			href={signInUrl}
-			className={cn(buttonVariants({ variant, size }), className)}
-		>
+		<Link href={signInUrl} className={cn(buttonVariants({ variant, size }), className)}>
 			{children || "Sign In"}
 		</Link>
 	);

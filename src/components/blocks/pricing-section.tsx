@@ -1,10 +1,10 @@
-import { Link } from "@/components/primitives/link-with-transition"
-import { buttonVariants } from "@/components/ui/button"
-import { Card, CardContent, CardHeader } from "@/components/ui/card"
-import { routes } from "@/config/routes"
-import { siteConfig } from "@/config/site-config"
-import { cn } from "@/lib/utils"
-import { ArrowRight, Check, Sparkles } from 'lucide-react'
+import { ArrowRight, Check, Sparkles } from "lucide-react";
+import { Link } from "@/components/primitives/link-with-transition";
+import { buttonVariants } from "@/components/ui/button";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { routes } from "@/config/routes";
+import { siteConfig } from "@/config/site-config";
+import { cn } from "@/lib/utils";
 
 export function PricingSectionSingle() {
 	return (
@@ -23,7 +23,9 @@ export function PricingSectionSingle() {
 
 						<div className="space-y-2">
 							<div className="flex items-center justify-center gap-3">
-								<span className="text-2xl font-bold text-gray-400 line-through sm:text-3xl">$250</span>
+								<span className="text-2xl font-bold text-gray-400 line-through sm:text-3xl">
+									$250
+								</span>
 								<span className="text-4xl font-bold sm:text-5xl">$99</span>
 							</div>
 							<div className="inline-block rounded-full bg-purple-500/10 px-4 py-1 text-purple-400">
@@ -42,7 +44,7 @@ export function PricingSectionSingle() {
 								"Regular Updates",
 								"Commercial License",
 								"Team Collaboration",
-								"Custom Workflows"
+								"Custom Workflows",
 							].map((feature) => (
 								<div key={feature} className="flex items-center gap-2">
 									<Check className="h-5 w-5 shrink-0 text-purple-400" />
@@ -52,14 +54,20 @@ export function PricingSectionSingle() {
 						</div>
 
 						<div className="pt-4">
-							<Link href={routes.external.buy} className={cn(buttonVariants({ variant: "default" }), "w-full bg-purple-500 text-lg text-white hover:bg-purple-600")}>
+							<Link
+								href={routes.external.buy}
+								className={cn(
+									buttonVariants({ variant: "default" }),
+									"w-full bg-purple-500 text-lg text-white hover:bg-purple-600"
+								)}
+							>
 								Get Shipkit Now
 							</Link>
 						</div>
 
 						<div className="mt-8 border-t border-gray-800 pt-8 text-center text-sm text-gray-400">
 							<p>
-								Want to see what Shipkit can do?{' '}
+								Want to see what Shipkit can do?{" "}
 								<a
 									href={routes.external.bones}
 									className="inline-flex items-center gap-1 text-purple-400 hover:text-purple-300"
@@ -73,6 +81,5 @@ export function PricingSectionSingle() {
 				</Card>
 			</div>
 		</div>
-	)
+	);
 }
-

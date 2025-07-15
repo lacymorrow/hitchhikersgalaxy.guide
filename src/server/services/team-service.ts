@@ -3,7 +3,6 @@ import { and, eq } from "drizzle-orm";
 import type { TeamData } from "@/components/providers/team-provider";
 import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
-import { LocalTeamStorage } from "@/lib/local-storage/team-storage";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import { teamMembers, teams, users } from "@/server/db/schema";
@@ -21,27 +20,14 @@ export class TeamService extends BaseService<typeof teams> {
 	}
 
 	/**
-	 * Utility method to check if DB is initialized
-	 * @returns True if database is initialized
-	 */
-	private checkDB(): boolean {
-		if (!db) {
-			logger.error("Database not initialized");
-			return false;
-		}
-		return true;
-	}
-
-	/**
 	 * Creates a personal team for a user.
 	 * @param userId - The ID of the user.
 	 * @returns The created personal team with its members.
 	 */
 	async createPersonalTeam(userId: string) {
 		if (!db) {
-			logger.debug("Database not available, using local storage for personal team", { userId });
-			const team = LocalTeamStorage.createPersonalTeam(userId);
-			return { ...team, members: LocalTeamStorage.getTeamMembers(team.id) };
+			logger.error("Database not initialized", { userId });
+			return null;
 		}
 		try {
 			logger.debug("Creating personal team for user", { userId });
@@ -76,24 +62,54 @@ export class TeamService extends BaseService<typeof teams> {
 			}
 
 			const teamId = randomUUID();
+			const memberId = randomUUID();
 
-			await db.transaction(async (tx) => {
-				await tx.insert(teams).values({
-					id: teamId,
-					name: "Personal",
-					type: "personal",
+			// Use transaction to create team and member, then return the data directly
+			const result = await db.transaction(async (tx) => {
+				// Create team
+				const [createdTeam] = await tx
+					.insert(teams)
+					.values({
+						id: teamId,
+						name: "Personal",
+						type: "personal",
+					})
+					.returning();
+
+				// Create team member
+				const [createdMember] = await tx
+					.insert(teamMembers)
+					.values({
+						id: memberId,
+						teamId,
+						userId,
+						role: "owner",
+					})
+					.returning();
+
+				// Get the user data to construct the complete response
+				const user = await tx.query.users.findFirst({
+					where: eq(users.id, userId),
 				});
 
-				await tx.insert(teamMembers).values({
-					id: randomUUID(),
-					teamId,
-					userId,
-					role: "owner",
-				});
+				if (!user) {
+					throw new Error("User not found during team creation");
+				}
+
+				// Return the complete team data with members
+				return {
+					...createdTeam,
+					members: [
+						{
+							...createdMember,
+							user: user,
+						},
+					],
+				};
 			});
 
 			logger.debug("Created personal team", { userId, teamId });
-			return this.findByIdWithMembers(teamId);
+			return result;
 		} catch (error) {
 			logger.error("Error creating personal team", {
 				userId,
@@ -110,9 +126,8 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	private async getAllPersonalTeams(userId: string) {
 		if (!db) {
-			return LocalTeamStorage.getUserTeams(userId)
-				.filter((ut) => ut.team.type === "personal")
-				.map((ut) => ut.team);
+			logger.error("Database not initialized", { userId });
+			return [];
 		}
 		try {
 			if (!db) {
@@ -150,7 +165,8 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async ensureOnePersonalTeam(userId: string) {
 		if (!db) {
-			return LocalTeamStorage.ensurePersonalTeam(userId);
+			logger.error("Database not initialized", { userId });
+			return null;
 		}
 		try {
 			const personalTeams = await this.getAllPersonalTeams(userId);
@@ -171,13 +187,11 @@ export class TeamService extends BaseService<typeof teams> {
 			);
 
 			// Soft delete extra personal teams
-			if (db) {
-				await Promise.all(
-					teamsToDelete.map((team) =>
-						db?.update(teams).set({ deletedAt: new Date() }).where(eq(teams.id, team.id))
-					)
-				);
-			}
+			await Promise.all(
+				teamsToDelete.map((team) =>
+					db!.update(teams).set({ deletedAt: new Date() }).where(eq(teams.id, team.id))
+				)
+			);
 
 			return oldestTeam;
 		} catch (error) {
@@ -197,9 +211,8 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async getPersonalTeam(userId: string) {
 		if (!db) {
-			const team = LocalTeamStorage.getPersonalTeam(userId);
-			if (!team) return null;
-			return { ...team, members: LocalTeamStorage.getTeamMembers(team.id) };
+			logger.error("Database not initialized", { userId });
+			return null;
 		}
 		try {
 			// First ensure the user has exactly one personal team
@@ -237,42 +250,57 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async createTeam(userId: string, teamName: string) {
 		if (!db) {
-			const team = LocalTeamStorage.createTeam(userId, teamName);
-			return { ...team, members: LocalTeamStorage.getTeamMembers(team.id) };
+			logger.error("Database not initialized", { userId });
+			return null;
 		}
 		const teamId = randomUUID();
+		const memberId = randomUUID();
 
-		await db?.transaction(async (tx) => {
-			await tx.insert(teams).values({
-				id: teamId,
-				name: teamName,
-				type: "workspace",
+		// Use transaction to create team and member, then return the data directly
+		const result = await db.transaction(async (tx) => {
+			// Create team
+			const [createdTeam] = await tx
+				.insert(teams)
+				.values({
+					id: teamId,
+					name: teamName,
+					type: "workspace",
+				})
+				.returning();
+
+			// Create team member
+			const [createdMember] = await tx
+				.insert(teamMembers)
+				.values({
+					id: memberId,
+					userId: userId,
+					teamId: teamId,
+					role: "owner",
+				})
+				.returning();
+
+			// Get the user data to construct the complete response
+			const user = await tx.query.users.findFirst({
+				where: eq(users.id, userId),
 			});
 
-			await tx.insert(teamMembers).values({
-				id: randomUUID(),
-				userId: userId,
-				teamId: teamId,
-				role: "owner",
-			});
-		});
+			if (!user) {
+				throw new Error("User not found during team creation");
+			}
 
-		const team = await db?.query.teams.findFirst({
-			where: eq(teams.id, teamId),
-			with: {
-				members: {
-					with: {
-						user: true,
+			// Return the complete team data with members
+			return {
+				...createdTeam,
+				members: [
+					{
+						...createdMember,
+						user: user,
 					},
-				},
-			},
+				],
+			};
 		});
 
-		if (!team) {
-			throw new Error("Failed to create team");
-		}
-
-		return team;
+		return result;
 	}
 
 	/**
@@ -284,7 +312,8 @@ export class TeamService extends BaseService<typeof teams> {
 		userId: string
 	): Promise<{ team: TeamData & { type: TeamType }; role: string }[]> {
 		if (!db) {
-			return LocalTeamStorage.getUserTeams(userId);
+			logger.error("Database not initialized", { userId });
+			return [];
 		}
 		try {
 			// First ensure the user has exactly one personal team
@@ -337,10 +366,11 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async addTeamMember(teamId: string, userId: string, role: string) {
 		if (!db) {
-			return LocalTeamStorage.addTeamMember(teamId, userId, role);
+			logger.error("Database not initialized", { teamId, userId });
+			return null;
 		}
 		const result = await db
-			?.insert(teamMembers)
+			.insert(teamMembers)
 			.values({
 				id: randomUUID(),
 				teamId,
@@ -360,10 +390,11 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async removeTeamMember(teamId: string, userId: string) {
 		if (!db) {
-			return LocalTeamStorage.removeTeamMember(teamId, userId);
+			logger.error("Database not initialized", { teamId, userId });
+			return false;
 		}
 		const result = await db
-			?.delete(teamMembers)
+			.delete(teamMembers)
 			.where(and(eq(teamMembers.teamId, teamId), eq(teamMembers.userId, userId)))
 			.returning();
 		const member = result?.[0];
@@ -380,10 +411,11 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async updateTeamMemberRole(teamId: string, userId: string, role: string) {
 		if (!db) {
-			return LocalTeamStorage.updateTeamMemberRole(teamId, userId, role);
+			logger.error("Database not initialized", { teamId, userId });
+			return null;
 		}
 		const result = await db
-			?.update(teamMembers)
+			.update(teamMembers)
 			.set({
 				role,
 			})
@@ -400,9 +432,10 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async getTeamMembers(teamId: string) {
 		if (!db) {
-			return LocalTeamStorage.getTeamMembers(teamId);
+			logger.error("Database not initialized", { teamId });
+			return [];
 		}
-		return db?.query.teamMembers.findMany({
+		return db.query.teamMembers.findMany({
 			where: eq(teamMembers.teamId, teamId),
 			with: {
 				user: true,
@@ -418,9 +451,8 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async updateTeam(teamId: string, data: { name?: string }) {
 		if (!db) {
-			const team = LocalTeamStorage.updateTeam(teamId, data);
-			if (!team) return null;
-			return { ...team, members: LocalTeamStorage.getTeamMembers(teamId) };
+			logger.error("Database not initialized", { teamId });
+			return null;
 		}
 		const team = await this.update(teamId, data);
 
@@ -428,7 +460,7 @@ export class TeamService extends BaseService<typeof teams> {
 			return null;
 		}
 
-		return db?.query.teams.findFirst({
+		return db.query.teams.findFirst({
 			where: eq(teams.id, teamId),
 			with: {
 				members: {
@@ -447,9 +479,10 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async deleteTeam(teamId: string) {
 		if (!db) {
-			return LocalTeamStorage.deleteTeam(teamId);
+			logger.error("Database not initialized", { teamId });
+			return false;
 		}
-		const team = await db?.query.teams.findFirst({
+		const team = await db.query.teams.findFirst({
 			where: eq(teams.id, teamId),
 		});
 
@@ -462,7 +495,7 @@ export class TeamService extends BaseService<typeof teams> {
 		}
 
 		const result = await db
-			?.update(teams)
+			.update(teams)
 			.set({ deletedAt: new Date() })
 			.where(eq(teams.id, teamId))
 			.returning();
@@ -477,7 +510,8 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async ensurePersonalTeam(userId: string) {
 		if (!db) {
-			return LocalTeamStorage.ensurePersonalTeam(userId);
+			logger.error("Database not initialized", { userId });
+			return null;
 		}
 		const personalTeam = await this.getPersonalTeam(userId);
 		if (!personalTeam) {

@@ -142,42 +142,20 @@ export class PolarProvider extends BasePaymentProvider {
 			this.checkProviderReady();
 			// Delegate to the lib function - assuming it returns the PolarOrder[] structure from lib/polar.ts
 			const polarOrders = await polarGetAllOrders();
-			// Map PolarOrder to OrderData, adding the provider ID and extracting enhanced user data
-			return polarOrders.map((order) => {
-				// Extract enhanced user data from order attributes if available
-				const enhancedUserData = {
-					email: order.userEmail,
-					name: order.userName,
-					// Try to extract additional user fields from order attributes
-					image: (order.attributes as any)?.customer?.avatar ||
-						(order.attributes as any)?.customer?.image ||
-						(order.attributes as any)?.user_image ||
-						(order.attributes as any)?.customer_image ||
-						null,
-					// Extract other user data if available
-					phone: (order.attributes as any)?.customer?.phone || null,
-					country: (order.attributes as any)?.customer?.country || null,
-					address: (order.attributes as any)?.customer?.address || null,
-				};
-
-				return {
-					id: order.id,
-					orderId: order.orderId,
-					userEmail: order.userEmail,
-					userName: order.userName,
-					amount: order.amount, // Assuming amount is in dollars from lib function
-					status: order.status,
-					productName: order.productName,
-					purchaseDate: order.purchaseDate,
-					processor: this.id, // Add processor ID
-					discountCode: order.discountCode,
-					attributes: {
-						...order.attributes,
-						// Include enhanced user data in attributes for import processing
-						enhancedUserData,
-					},
-				};
-			});
+			// Map PolarOrder to OrderData, adding the provider ID
+			return polarOrders.map((order) => ({
+				id: order.id,
+				orderId: order.orderId,
+				userEmail: order.userEmail,
+				userName: order.userName,
+				amount: order.amount, // Assuming amount is in dollars from lib function
+				status: order.status,
+				productName: order.productName,
+				purchaseDate: order.purchaseDate,
+				processor: this.id, // Add processor ID
+				discountCode: order.discountCode,
+				attributes: order.attributes,
+			}));
 		} catch (error) {
 			if (error instanceof PaymentProviderError && error.code === "provider_not_configured") {
 				return [];
@@ -260,138 +238,62 @@ export class PolarProvider extends BasePaymentProvider {
 
 		try {
 			logger.info("Starting Polar payment import...");
-			const allPolarOrders = await this.getAllOrders(); // Use the provider's method
+
+			// Add timeout to prevent hanging
+			const ordersPromise = this.getAllOrders();
+			const timeoutPromise = new Promise<never>((_, reject) => {
+				setTimeout(() => {
+					reject(new Error("Timeout getting orders from Polar API"));
+				}, 30 * 1000); // 30 seconds timeout
+			});
+
+			const allPolarOrders = await Promise.race([ordersPromise, timeoutPromise]);
 			stats.total = allPolarOrders.length;
 			logger.info(`Found ${stats.total} total Polar orders to process.`);
 
-			for (const order of allPolarOrders) {
-				if (!order.userEmail || order.status !== "paid") {
-					logger.debug("Skipping Polar order (no email or not paid)", {
-						orderId: order.orderId,
-						status: order.status,
-					});
-					stats.skipped++;
-					continue;
-				}
+			if (allPolarOrders.length === 0) {
+				logger.info("No Polar orders found");
+				return stats;
+			}
 
-				// Use the raw orderId from the provider
-				const processorOrderId = order.orderId;
+			// Process orders in batches to avoid overwhelming the database
+			const BATCH_SIZE = 3;
+			const batches: any[][] = [];
 
-				try {
-					// Check if payment already exists by raw processor ID
-					const existingPayment = await db.query.payments.findFirst({
-						where: eq(payments.processorOrderId, processorOrderId),
-						columns: { id: true }, // Only need ID to check existence
-					});
+			for (let i = 0; i < allPolarOrders.length; i += BATCH_SIZE) {
+				batches.push(allPolarOrders.slice(i, i + BATCH_SIZE));
+			}
 
-					if (existingPayment) {
-						logger.debug("Skipping already imported Polar order", { processorOrderId });
-						stats.skipped++;
-						continue;
-					}
+			// Process batches sequentially to control database load
+			for (let i = 0; i < batches.length; i++) {
+				const batch = batches[i];
+				logger.debug(`Processing batch ${i + 1}/${batches.length} (${batch.length} orders)`);
 
-					// Find or create user
-					const { user, created: userCreated } = await userService.findOrCreateUserByEmail(
-						order.userEmail,
-						{
-							name: order.userName,
-							image: (order.attributes as any)?.enhancedUserData?.image || null,
-						}
-					);
-					if (userCreated) {
-						stats.usersCreated++;
-						logger.info("Created new user during Polar import", {
-							email: order.userEmail,
-							userId: user.id,
-							hasImage: !!(order.attributes as any)?.enhancedUserData?.image,
+				// Process each order in the batch
+				for (const order of batch) {
+					try {
+						// Add timeout for each order processing
+						const orderPromise = this.processOrder(order);
+						const orderTimeoutPromise = new Promise<never>((_, reject) => {
+							setTimeout(() => {
+								reject(new Error(`Order processing timeout: ${order.orderId}`));
+							}, 15 * 1000); // 15 seconds per order
 						});
 
-						// If we created a new user and have enhanced data, update with additional metadata
-						const enhancedUserData = (order.attributes as any)?.enhancedUserData;
-						if (enhancedUserData) {
-							const userMetadata: Record<string, any> = {
-								source: `${this.id}_import`,
-								importedAt: new Date().toISOString(),
-								paymentInfo: {
-									processor: this.id,
-									orderId: order.orderId,
-									productName: order.productName,
-									amount: order.amount,
-									purchaseDate: order.purchaseDate,
-								},
-								paymentSources: [this.id],
-							};
+						const result = await Promise.race([orderPromise, orderTimeoutPromise]);
 
-							// Add location information if available
-							if (enhancedUserData.country) {
-								userMetadata.locationInfo = {
-									country: enhancedUserData.country,
-								};
+						if (result.action === "imported") {
+							stats.imported++;
+							if (result.userCreated) {
+								stats.usersCreated++;
 							}
-
-							// Add phone if available
-							if (enhancedUserData.phone) {
-								userMetadata.phoneNumber = enhancedUserData.phone;
-							}
-
-							// Add address if available
-							if (enhancedUserData.address) {
-								userMetadata.address = enhancedUserData.address;
-							}
-
-							// Update the user with the additional metadata
-							await db.update(users).set({
-								metadata: JSON.stringify(userMetadata),
-								updatedAt: new Date(),
-							}).where(eq(users.id, user.id));
+						} else if (result.action === "skipped") {
+							stats.skipped++;
 						}
-					} else if (user) {
-						// User already exists, but check if we should update their profile image
-						const enhancedUserData = (order.attributes as any)?.enhancedUserData;
-						if (enhancedUserData?.image && !user.image) {
-							logger.info("Updating existing user with profile image from Polar order", {
-								userId: user.id,
-								email: order.userEmail,
-								image: enhancedUserData.image,
-							});
-
-							await db.update(users).set({
-								image: enhancedUserData.image,
-								updatedAt: new Date(),
-							}).where(eq(users.id, user.id));
-						}
+					} catch (error) {
+						logger.error(`Error processing Polar order ${order.orderId}`, { error });
+						stats.errors++;
 					}
-
-					// Create payment record
-					await db.insert(payments).values({
-						userId: user.id,
-						orderId: processorOrderId, // Store order ID for compatibility
-						amount: Math.round(order.amount * 100), // Store amount in cents
-						status: "completed", // Map 'paid' status to 'completed'
-						processor: this.id,
-						processorOrderId: processorOrderId, // Store the raw Polar order ID
-						productName: order.productName, // Store the extracted product name
-						metadata: JSON.stringify(order.attributes || {}), // Store original attributes
-						purchasedAt: order.purchaseDate,
-					});
-
-					logger.info("Successfully imported Polar order", {
-						processorOrderId,
-						userId: user.id,
-						productName: order.productName,
-						amount: order.amount,
-					});
-					stats.imported++;
-
-					// Optional: Update user metadata here if needed, similar to LemonSqueezyProvider
-					// await userService.updateUserMetadata(user.id, { ... });
-				} catch (innerError: any) {
-					logger.error("Error importing single Polar order", {
-						orderId: order.orderId,
-						email: order.userEmail,
-						error: innerError?.message || innerError,
-					});
-					stats.errors++;
 				}
 			}
 		} catch (error) {
@@ -402,6 +304,90 @@ export class PolarProvider extends BasePaymentProvider {
 
 		logger.info("Polar payment import finished", stats);
 		return stats;
+	}
+
+	/**
+	 * Process a single Polar order with proper error handling
+	 */
+	private async processOrder(
+		order: any
+	): Promise<{ action: "imported" | "skipped"; userCreated?: boolean }> {
+		// Validate order data
+		if (!order.userEmail || order.status !== "paid") {
+			logger.debug("Skipping Polar order (no email or not paid)", {
+				orderId: order.orderId,
+				status: order.status,
+			});
+			return { action: "skipped" };
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
+		// Use the raw orderId from the provider
+		const processorOrderId = order.orderId;
+
+		// Check if payment already exists by raw processor ID
+		const existingPayment = await db.query.payments.findFirst({
+			where: eq(payments.processorOrderId, processorOrderId),
+			columns: { id: true }, // Only need ID to check existence
+		});
+
+		if (existingPayment) {
+			logger.debug("Skipping already imported Polar order", { processorOrderId });
+			return { action: "skipped" };
+		}
+
+		// Find or create user
+		let userId: string;
+		let userCreated = false;
+
+		try {
+			const { user, created } = await userService.findOrCreateUserByEmail(
+				order.userEmail.toLowerCase().trim(),
+				{ name: order.userName } // Pass name if available
+			);
+
+			userId = user.id;
+			userCreated = created;
+
+			if (created) {
+				logger.info("Created new user during Polar import", {
+					email: order.userEmail,
+					userId: user.id,
+				});
+			}
+		} catch (createError) {
+			logger.error("Failed to find or create user for Polar order", {
+				orderId: order.orderId,
+				email: order.userEmail,
+				error: createError,
+			});
+			throw createError;
+		}
+
+		// Create payment record
+		await db.insert(payments).values({
+			userId: userId,
+			orderId: processorOrderId, // Store order ID for compatibility
+			amount: Math.round(order.amount * 100), // Store amount in cents
+			status: "completed", // Map 'paid' status to 'completed'
+			processor: this.id,
+			processorOrderId: processorOrderId, // Store the raw Polar order ID
+			productName: order.productName, // Store the extracted product name
+			metadata: JSON.stringify(order.attributes || {}), // Store original attributes
+			purchasedAt: order.purchaseDate,
+		});
+
+		logger.info("Successfully imported Polar order", {
+			processorOrderId,
+			userId: userId,
+			productName: order.productName,
+			amount: order.amount,
+		});
+
+		return { action: "imported", userCreated };
 	}
 
 	/**

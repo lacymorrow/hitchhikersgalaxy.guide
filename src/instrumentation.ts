@@ -14,7 +14,8 @@ import { displayLaunchMessage } from "@/lib/utils/shipkit-launch-message";
  */
 export function register() {
 	if (process.env.NEXT_RUNTIME === "nodejs") {
-		// await import('./instrumentation-node')
+		// Initialize payment providers once on server startup
+		// await import("./instrumentation-node");
 	}
 
 	if (process.env.NEXT_RUNTIME === "edge") {

@@ -438,48 +438,26 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 					return variantName || productName || "Unknown Product";
 				};
 
-				// Determine if this is a free product vs discounted to $0
-				const isFreeProduct = amount === 0 && attributes.subtotal === 0;
-
-				// Extract enhanced user data including potential profile image
-				const enhancedUserData = {
-					email: attributes.user_email ?? "Unknown",
-					name: attributes.user_name,
-					// Extract additional user fields if available
-					address: attr.user_address || null,
-					city: attr.user_city || null,
-					country: attr.user_country || null,
-					phone: attr.user_phone || null,
-					// Try to extract profile image from various possible sources
-					image: attr.user_image || attr.user_avatar || attr.customer_image || null,
-					// Include any custom user properties
-					customUserData,
-				};
-
 				return {
 					id: order.id,
 					orderId: attributes.identifier,
-					userEmail: enhancedUserData.email,
-					userName: enhancedUserData.name,
+					userEmail: attributes.user_email ?? "Unknown",
+					userName: attributes.user_name,
 					amount,
 					status: attributes.status as "paid" | "refunded" | "pending",
 					productName: getProductName(),
 					purchaseDate: new Date(attributes.created_at),
 					processor: this.id,
 					discountCode: (attr.discount_code || null) as string | null,
-					isFreeProduct,
-					attributes: {
-						...attributes,
-						// Include enhanced user data in attributes for import processing
-						enhancedUserData,
-					},
+					isFreeProduct: amount === 0,
+					attributes,
 				};
 			});
 		} catch (error) {
 			if (error instanceof Error && error.message.includes("not properly configured")) {
 				return [];
 			}
-			return this.handleError(error, "Error getting all Lemon Squeezy orders");
+			return this.handleError(error, "Error fetching Lemon Squeezy orders");
 		}
 	}
 
@@ -599,347 +577,200 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 				throw new Error("Database is not initialized");
 			}
 
-			// Get all orders from Lemon Squeezy
-			const lemonSqueezyOrders = await this.getAllOrders();
+			// Get all orders from Lemon Squeezy with timeout
+			const ordersPromise = this.getAllOrders();
+			const timeoutPromise = new Promise<never>((_, reject) => {
+				setTimeout(() => {
+					reject(new Error("Timeout getting orders from LemonSqueezy API"));
+				}, 30 * 1000); // 30 seconds timeout
+			});
+
+			const lemonSqueezyOrders = await Promise.race([ordersPromise, timeoutPromise]);
 			stats.total = lemonSqueezyOrders.length;
 			logger.debug(`Found ${lemonSqueezyOrders.length} Lemon Squeezy orders`);
 
-			// Process each order
-			for (const order of lemonSqueezyOrders) {
-				try {
-					// Try to find or create user by email
-					let userId = null;
-					const userEmail = order.userEmail;
-					const userName = order.userName;
+			if (lemonSqueezyOrders.length === 0) {
+				logger.info("No LemonSqueezy orders found");
+				return stats;
+			}
 
-					if (userEmail && userEmail !== "Unknown") {
-						// Look for existing user with this email
-						const existingUser = await db
-							.select()
-							.from(users)
-							.where(eq(users.email, userEmail))
-							.limit(1)
-							.then((rows) => rows[0] || null);
+			// Process orders in smaller batches to avoid overwhelming the database
+			const BATCH_SIZE = 3; // Reduced batch size
+			const MAX_CONCURRENT_BATCHES = 2; // Limit concurrent batches
 
-						if (existingUser) {
-							userId = existingUser.id;
-							logger.debug(`Found existing user for email ${userEmail}`);
+			// Split orders into batches
+			const batches: any[][] = [];
+			for (let i = 0; i < lemonSqueezyOrders.length; i += BATCH_SIZE) {
+				batches.push(lemonSqueezyOrders.slice(i, i + BATCH_SIZE));
+			}
 
-							// Update user information with data from payment
-							const updates: Record<string, any> = {};
+			// Process batches with concurrency limit
+			for (let i = 0; i < batches.length; i += MAX_CONCURRENT_BATCHES) {
+				const batchGroup = batches.slice(i, i + MAX_CONCURRENT_BATCHES);
+				const batchPromises = batchGroup.map(async (batch, batchIndex) => {
+					const actualBatchIndex = i + batchIndex;
+					logger.debug(
+						`Processing batch ${actualBatchIndex + 1}/${batches.length} (${batch.length} orders)`
+					);
 
-							// Extract enhanced user data from order attributes
-							const enhancedUserData = (order as any).attributes?.enhancedUserData;
+					const batchStats = {
+						imported: 0,
+						skipped: 0,
+						errors: 0,
+						usersCreated: 0,
+					};
 
-							// Update name if needed
-							if (userName && !existingUser.name) {
-								updates.name = userName;
-							}
+					// Process each order in the batch sequentially to avoid race conditions
+					for (const order of batch) {
+						try {
+							// Add timeout for each order processing
+							const orderPromise = this.processOrder(order);
+							const orderTimeoutPromise = new Promise<never>((_, reject) => {
+								setTimeout(() => {
+									reject(new Error(`Order processing timeout: ${order.orderId}`));
+								}, 15 * 1000); // 15 seconds per order
+							});
 
-							// Update image if we found one and user doesn't have one
-							if (enhancedUserData?.image && !existingUser.image) {
-								updates.image = enhancedUserData.image;
-								logger.debug(`Found profile image for user ${userEmail}: ${enhancedUserData.image}`);
-							}
+							const result = await Promise.race([orderPromise, orderTimeoutPromise]);
 
-							// Extract additional user information from the order
-							const orderAny = order as any;
-
-							// Prepare metadata fields to update
-							const metadataUpdates: Record<string, any> = {};
-
-							if (enhancedUserData?.address || orderAny.userAddress) {
-								metadataUpdates.address = enhancedUserData?.address || orderAny.userAddress;
-							}
-
-							if (enhancedUserData?.city || enhancedUserData?.country || orderAny.userCity || orderAny.userCountry) {
-								// Store location information in metadata
-								metadataUpdates.locationInfo = {
-									city: enhancedUserData?.city || orderAny.userCity,
-									country: enhancedUserData?.country || orderAny.userCountry,
-								};
-							}
-
-							if (enhancedUserData?.phone || orderAny.userPhone) {
-								// Store phone in metadata
-								metadataUpdates.phoneNumber = enhancedUserData?.phone || orderAny.userPhone;
-							}
-
-							// Additional custom user data fields
-							if (enhancedUserData?.customUserData && Object.keys(enhancedUserData.customUserData).length > 0) {
-								metadataUpdates.customUserData = enhancedUserData.customUserData;
-							} else if (orderAny.customUserData && Object.keys(orderAny.customUserData).length > 0) {
-								metadataUpdates.customUserData = orderAny.customUserData;
-							}
-
-							// Update or merge metadata
-							interface UserMetadata {
-								lastPaymentInfo: {
-									processor: string;
-									orderId: string;
-									productName: string;
-									amount: number;
-									purchaseDate: Date;
-								};
-								lastImportedAt: string;
-								paymentSources: string[];
-								locationInfo?: {
-									city?: string | null;
-									country?: string | null;
-								};
-								phoneNumber?: string | null;
-								customUserData?: Record<string, any>;
-								address?: string | null;
-								[key: string]: any; // Allow for additional properties
-							}
-
-							let newMetadata: Partial<UserMetadata> = {
-								lastPaymentInfo: {
-									processor: this.id,
-									orderId: order.orderId,
-									productName: order.productName,
-									amount: order.amount,
-									purchaseDate: order.purchaseDate,
-								},
-								lastImportedAt: new Date().toISOString(),
-							};
-
-							// Add all metadata updates to newMetadata
-							Object.assign(newMetadata, metadataUpdates);
-
-							// If user has existing metadata, merge it
-							if (existingUser.metadata) {
-								try {
-									const currentMetadata = JSON.parse(existingUser.metadata as string);
-									// Don't overwrite existing fields that aren't being updated
-									newMetadata = {
-										...currentMetadata,
-										...newMetadata,
-										paymentSources: [...(currentMetadata.paymentSources || []), this.id],
-									};
-								} catch (err) {
-									logger.warn(`Failed to parse existing metadata for user ${existingUser.id}`, err);
-									// If parsing fails, just set paymentSources
-									newMetadata.paymentSources = [this.id];
+							if (result.action === "imported") {
+								batchStats.imported++;
+								if (result.userCreated) {
+									batchStats.usersCreated++;
 								}
-							} else {
-								newMetadata.paymentSources = [this.id];
+							} else if (result.action === "skipped") {
+								batchStats.skipped++;
 							}
-
-							// Update metadata in the updates object
-							updates.metadata = JSON.stringify(newMetadata);
-
-							// Only update if we have changes
-							if (Object.keys(updates).length > 0) {
-								await db
-									.update(users)
-									.set({
-										...updates,
-										updatedAt: new Date(),
-									})
-									.where(eq(users.id, existingUser.id));
-								logger.debug(`Updated user information for ${userEmail}`, { updates: Object.keys(updates) });
-							}
-						} else {
-							// Create a new user with this email using the UserService
-							logger.debug(`Creating new user for email ${userEmail}`);
-							try {
-								// Extract enhanced user data from order attributes
-								const enhancedUserData = (order as any).attributes?.enhancedUserData;
-								const orderAny = order as any;
-
-								// Create the user with UserService to ensure proper initialization with team
-								const newUser = await userService.ensureUserExists({
-									id: crypto.randomUUID(), // Generate a new UUID for the user
-									email: userEmail,
-									name: userName || null,
-									image: enhancedUserData?.image || null, // Include profile image if available
-								});
-
-								if (newUser) {
-									userId = newUser.id;
-									stats.usersCreated++;
-									logger.debug(`Created new user ${newUser.id} for email ${userEmail}`, {
-										hasImage: !!enhancedUserData?.image,
-									});
-
-									// After user is created, update with additional payment metadata
-									const userMetadata: Record<string, any> = {
-										source: `${this.id}_import`,
-										importedAt: new Date().toISOString(),
-										paymentInfo: {
-											processor: this.id,
-											orderId: order.orderId,
-											productName: order.productName,
-											amount: order.amount,
-											purchaseDate: order.purchaseDate,
-										},
-										// Store all original attributes to preserve any additional info
-										originalData: order.attributes,
-										paymentSources: [this.id],
-									};
-
-									// Add location information if available
-									if (enhancedUserData?.city || enhancedUserData?.country || orderAny.userCity || orderAny.userCountry) {
-										userMetadata.locationInfo = {
-											city: enhancedUserData?.city || orderAny.userCity,
-											country: enhancedUserData?.country || orderAny.userCountry,
-										};
-									}
-
-									// Add phone if available
-									if (enhancedUserData?.phone || orderAny.userPhone) {
-										userMetadata.phoneNumber = enhancedUserData?.phone || orderAny.userPhone;
-									}
-
-									// Add address if available
-									if (enhancedUserData?.address || orderAny.userAddress) {
-										userMetadata.address = enhancedUserData?.address || orderAny.userAddress;
-									}
-
-									// Add custom user data if available
-									if (enhancedUserData?.customUserData && Object.keys(enhancedUserData.customUserData).length > 0) {
-										userMetadata.customUserData = enhancedUserData.customUserData;
-									} else if (orderAny.customUserData && Object.keys(orderAny.customUserData).length > 0) {
-										userMetadata.customUserData = orderAny.customUserData;
-									}
-
-									// Update the user with the additional metadata
-									await db
-										.update(users)
-										.set({
-											metadata: JSON.stringify(userMetadata),
-											updatedAt: new Date(),
-										})
-										.where(eq(users.id, newUser.id));
-								} else {
-									throw new Error("Failed to create user");
-								}
-							} catch (createError) {
-								logger.error(`Failed to create user for ${userEmail}`, createError);
-								// Continue without user ID, we'll try to find a matching user ID later
-							}
+						} catch (error) {
+							logger.error(`Error processing order ${order.orderId}`, { error });
+							batchStats.errors++;
 						}
-					} else {
-						// No email provided, generate a placeholder
-						logger.debug("No email provided for order, generating placeholder");
-						// We'll still process the payment but leave userId as null
 					}
 
-					// Check if order already exists in the database
-					const existingPayment = await db
-						.select()
-						.from(payments)
-						.where(eq(payments.orderId, order.orderId))
-						.limit(1)
-						.then((rows) => rows[0] || null);
+					return batchStats;
+				});
 
-					if (existingPayment) {
-						logger.debug(`Order ${order.orderId} already exists, updating`);
+				// Wait for current batch group to complete
+				const batchResults = await Promise.all(batchPromises);
 
-						// Extract product information for metadata
-						const orderAttributes = order.attributes as any;
-						const firstOrderItem = orderAttributes.first_order_item;
-
-						// Create comprehensive metadata with product information at the top level
-						const paymentMetadata = {
-							// Store product information at top level for easy access
-							productName: firstOrderItem?.product_name || "Unknown Product",
-							variantName: firstOrderItem?.variant_name || null,
-							product_name: firstOrderItem?.product_name || "Unknown Product",
-							variant_name: firstOrderItem?.variant_name || null,
-							productId: firstOrderItem?.product_id || null,
-							variantId: firstOrderItem?.variant_id || null,
-							product_id: firstOrderItem?.product_id || null,
-							variant_id: firstOrderItem?.variant_id || null,
-
-							// Store order details
-							order_identifier: orderAttributes.identifier,
-							order_number: orderAttributes.order_number,
-							customer_id: orderAttributes.customer_id,
-							currency: orderAttributes.currency,
-							test_mode: orderAttributes.test_mode,
-							custom_data: orderAttributes.custom_data,
-
-							// Store complete order data for reference
-							order_data: order.attributes,
-						};
-
-						// Update existing payment in case data has changed
-						await db
-							.update(payments)
-							.set({
-								amount: Math.round(order.amount * 100), // Convert to cents for storage
-								status: order.status === "paid" ? "completed" : order.status,
-								updatedAt: new Date(),
-								// Update userId if we found/created one and it was previously null
-								...(userId && !existingPayment.userId ? { userId } : {}),
-								metadata: JSON.stringify(paymentMetadata),
-							})
-							.where(eq(payments.id, existingPayment.id));
-						stats.skipped++;
-						continue;
-					}
-
-					// Create new payment record - only if we have a userId
-					if (userId) {
-						// Extract product information for metadata
-						const orderAttributes = order.attributes as any;
-						const firstOrderItem = orderAttributes.first_order_item;
-
-						// Create comprehensive metadata with product information at the top level
-						const paymentMetadata = {
-							// Store product information at top level for easy access
-							productName: firstOrderItem?.product_name || "Unknown Product",
-							variantName: firstOrderItem?.variant_name || null,
-							product_name: firstOrderItem?.product_name || "Unknown Product",
-							variant_name: firstOrderItem?.variant_name || null,
-							productId: firstOrderItem?.product_id || null,
-							variantId: firstOrderItem?.variant_id || null,
-							product_id: firstOrderItem?.product_id || null,
-							variant_id: firstOrderItem?.variant_id || null,
-
-							// Store order details
-							order_identifier: orderAttributes.identifier,
-							order_number: orderAttributes.order_number,
-							customer_id: orderAttributes.customer_id,
-							currency: orderAttributes.currency,
-							test_mode: orderAttributes.test_mode,
-							custom_data: orderAttributes.custom_data,
-
-							// Store complete order data for reference
-							order_data: order.attributes,
-						};
-
-						await db.insert(payments).values({
-							orderId: order.orderId, // This is the identifier (formatted order number)
-							processorOrderId: order.id, // Store the internal ID as processorOrderId
-							userId,
-							amount: Math.round(order.amount * 100), // Convert to cents for storage
-							status: order.status === "paid" ? "completed" : order.status,
-							processor: this.id,
-							createdAt: order.purchaseDate,
-							updatedAt: new Date(),
-							metadata: JSON.stringify(paymentMetadata),
-						});
-
-						logger.debug(`Imported ${this.name} order ${order.orderId}`);
-						stats.imported++;
-					} else {
-						logger.debug(`Skipping ${this.name} order ${order.orderId} - no user found or created`);
-						stats.skipped++;
-					}
-				} catch (error) {
-					logger.error(`Error importing ${this.name} order ${order.orderId}`, error);
-					stats.errors++;
+				// Aggregate results
+				for (const batchResult of batchResults) {
+					stats.imported += batchResult.imported;
+					stats.skipped += batchResult.skipped;
+					stats.errors += batchResult.errors;
+					stats.usersCreated += batchResult.usersCreated;
 				}
 			}
 
 			logger.info(`${this.name} payment import complete`, stats);
 			return stats;
 		} catch (error) {
+			logger.error("Critical error during LemonSqueezy import", { error });
 			return this.handleError(error, `Error importing ${this.name} payments`);
 		}
+	}
+
+	/**
+	 * Process a single order with proper error handling and database transaction
+	 */
+	private async processOrder(
+		order: any
+	): Promise<{ action: "imported" | "skipped"; userCreated?: boolean }> {
+		// Validate order data
+		if (!order.userEmail || order.userEmail === "Unknown") {
+			logger.debug("Skipping order with no valid email", { orderId: order.orderId });
+			return { action: "skipped" };
+		}
+
+		if (order.status !== "paid") {
+			logger.debug("Skipping unpaid order", { orderId: order.orderId, status: order.status });
+			return { action: "skipped" };
+		}
+
+		if (!db) {
+			throw new Error("Database is not initialized");
+		}
+
+		// Check if order already exists
+		const existingPayment = await db
+			.select({ id: payments.id })
+			.from(payments)
+			.where(eq(payments.orderId, order.orderId))
+			.limit(1)
+			.then((rows) => rows[0] || null);
+
+		if (existingPayment) {
+			logger.debug(`Order ${order.orderId} already exists`);
+			return { action: "skipped" };
+		}
+
+		// Find or create user with better error handling
+		let userId: string;
+		let userCreated = false;
+
+		try {
+			const { user, created } = await userService.findOrCreateUserByEmail(
+				order.userEmail.toLowerCase().trim(),
+				{ name: order.userName ?? undefined }
+			);
+
+			userId = user.id;
+			userCreated = created;
+
+			if (created) {
+				logger.debug(`Created new user for LemonSqueezy order`, {
+					email: order.userEmail,
+					orderId: order.orderId,
+					userId: user.id,
+				});
+			}
+		} catch (createError) {
+			logger.error(`Failed to find or create user for LemonSqueezy order`, {
+				email: order.userEmail,
+				orderId: order.orderId,
+				error: createError,
+			});
+			throw createError;
+		}
+
+		// Extract product information
+		const orderAttributes = order.attributes as any;
+		const firstOrderItem = orderAttributes.first_order_item;
+
+		// Create payment metadata
+		const paymentMetadata = {
+			productName: firstOrderItem?.product_name || "Unknown Product",
+			variantName: firstOrderItem?.variant_name || null,
+			product_name: firstOrderItem?.product_name || "Unknown Product",
+			variant_name: firstOrderItem?.variant_name || null,
+			productId: firstOrderItem?.product_id || null,
+			variantId: firstOrderItem?.variant_id || null,
+			product_id: firstOrderItem?.product_id || null,
+			variant_id: firstOrderItem?.variant_id || null,
+			order_identifier: orderAttributes.identifier,
+			order_number: orderAttributes.order_number,
+			customer_id: orderAttributes.customer_id,
+			currency: orderAttributes.currency,
+			test_mode: orderAttributes.test_mode,
+			custom_data: orderAttributes.custom_data,
+		};
+
+		// Create payment record
+		await db.insert(payments).values({
+			orderId: order.orderId,
+			processorOrderId: order.id,
+			userId,
+			amount: Math.round(order.amount * 100), // Convert to cents
+			status: "completed",
+			processor: this.id,
+			productName: firstOrderItem?.product_name || "Unknown Product",
+			createdAt: order.purchaseDate,
+			updatedAt: new Date(),
+			metadata: JSON.stringify(paymentMetadata),
+		});
+
+		logger.debug(`Successfully imported LemonSqueezy order ${order.orderId}`);
+		return { action: "imported", userCreated };
 	}
 
 	/**

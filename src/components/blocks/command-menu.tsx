@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
+import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { Button } from "@/components/ui/button";
 import {
 	CommandDialog,
@@ -13,7 +14,6 @@ import {
 	CommandList,
 } from "@/components/ui/command";
 import { ShortcutAction } from "@/config/keyboard-shortcuts";
-import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { cn } from "@/lib/utils";
 
 export function CommandMenu() {

@@ -19,10 +19,9 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { BuyButton } from "../buttons/lemonsqueezy-buy-button";
-import type { User } from "@/types/user";
-
 import styles from "@/styles/header.module.css";
+import type { User } from "@/types/user";
+import { BuyButton } from "../buttons/lemonsqueezy-buy-button";
 
 interface NavLink {
 	href: string;
@@ -84,8 +83,8 @@ export const Header: React.FC<HeaderProps> = ({
 					variant === "floating" && styles.header,
 					variant === "floating" && isOpaque && styles.opaque,
 					variant === "floating" &&
-					isOpaque &&
-					"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]",
+						isOpaque &&
+						"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]",
 					className
 				)}
 			>

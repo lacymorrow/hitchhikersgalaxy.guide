@@ -2,7 +2,7 @@
 
 import { AlertCircle, CheckCircle, ExternalLink } from "lucide-react";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Icons } from "@/components/assets/icons";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -16,6 +16,10 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { checkUserPurchasedProduct, createPolarCheckoutUrl } from "@/server/actions/payments";
+
+// Simple cache to prevent repeated API calls
+const productStatusCache = new Map<string, { data: boolean; timestamp: number }>();
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 interface PolarProductStatusProps {
 	productId: string;
@@ -49,30 +53,53 @@ export function PolarProductStatus({
 	const [isLoading, setIsLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
+	// Memoize the check function to prevent unnecessary re-renders
+	const checkPurchaseStatus = useCallback(async () => {
+		if (!session?.user?.id) {
+			setIsLoading(false);
+			return;
+		}
+
+		// Check cache first
+		const cacheKey = `${session.user.id}-${productId}`;
+		const cached = productStatusCache.get(cacheKey);
+		const now = Date.now();
+
+		if (cached && now - cached.timestamp < CACHE_DURATION) {
+			setIsPurchased(cached.data);
+			setIsLoading(false);
+			return;
+		}
+
+		try {
+			setIsLoading(true);
+			const result = await checkUserPurchasedProduct(productId, "polar");
+
+			if (result.success) {
+				// Cache the result
+				productStatusCache.set(cacheKey, {
+					data: result.purchased,
+					timestamp: now,
+				});
+
+				setIsPurchased(result.purchased);
+			} else {
+				setError(result.message || "Failed to check purchase status");
+			}
+		} catch (err) {
+			setError("An error occurred while checking purchase status");
+			console.error(err);
+		} finally {
+			setIsLoading(false);
+		}
+	}, [session?.user?.id, productId]);
+
 	// Check if user has purchased this product
 	useEffect(() => {
-		if (!session?.user?.id) return;
-
-		const checkPurchaseStatus = async () => {
-			try {
-				setIsLoading(true);
-				const result = await checkUserPurchasedProduct(productId, "polar");
-
-				if (result.success) {
-					setIsPurchased(result.purchased);
-				} else {
-					setError(result.message || "Failed to check purchase status");
-				}
-			} catch (err) {
-				setError("An error occurred while checking purchase status");
-				console.error(err);
-			} finally {
-				setIsLoading(false);
-			}
-		};
-
-		checkPurchaseStatus();
-	}, [session?.user?.id, productId]);
+		if (session?.user?.id) {
+			checkPurchaseStatus();
+		}
+	}, [session?.user?.id, productId, checkPurchaseStatus]);
 
 	const handlePurchase = async () => {
 		if (!session?.user?.id) {

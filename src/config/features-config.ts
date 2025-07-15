@@ -47,8 +47,7 @@ const isCredentialsAuthEnabled =
 const isResendAuthEnabled = process.env.NODE_ENV !== "production" && !!process.env.RESEND_API_KEY; // TODO: Remove this once we have a production key
 
 // Builder is enabled if the API key exists and it's not explicitly disabled
-export const isBuilderEnabled =
-	!!process.env.NEXT_PUBLIC_BUILDER_API_KEY;
+export const isBuilderEnabled = !!process.env.NEXT_PUBLIC_BUILDER_API_KEY;
 
 // MDX is always enabled unless explicitly disabled
 export const isMDXEnabled = process.env.DISABLE_MDX !== "true";

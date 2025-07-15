@@ -1,11 +1,11 @@
 import { redirect } from "next/navigation";
-import { Suspense, type ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 import { DashboardLayout } from "@/components/layouts/dashboard-layout";
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { BASE_URL } from "@/config/base-url";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { auth } from "@/server/auth";
-import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 
 export default async function Layout({ children }: { children: ReactNode }) {
 	const session = await auth();

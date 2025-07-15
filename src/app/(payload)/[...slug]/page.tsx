@@ -168,18 +168,17 @@ export async function generateMetadata({
 			openGraph:
 				meta?.image && isMedia(meta.image) && meta.image.url
 					? {
-						images: [
-							{
-								url: meta.image.url,
-								width: 1200,
-								height: 630,
-							},
-						],
-					}
+							images: [
+								{
+									url: meta.image.url,
+									width: 1200,
+									height: 630,
+								},
+							],
+						}
 					: undefined,
 		};
 	}
-
 
 	notFound();
 }

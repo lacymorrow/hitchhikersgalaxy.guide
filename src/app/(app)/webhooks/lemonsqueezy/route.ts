@@ -9,6 +9,7 @@ import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import { payments, users } from "@/server/db/schema";
 import { PaymentService } from "@/server/services/payment-service";
+import { userService } from "@/server/services/user-service";
 
 // Types for webhook payload structure
 interface WebhookMeta {
@@ -158,7 +159,7 @@ async function isEventProcessed(eventId: string, eventName: string): Promise<boo
 }
 
 /**
- * Find or create user from webhook data
+ * Find or create user from webhook data using consistent userService method
  */
 async function findOrCreateUser(
 	userEmail: string,
@@ -176,38 +177,25 @@ async function findOrCreateUser(
 			}
 		}
 
-		// Try to find user by email
-		const existingUser = await db?.query.users.findFirst({
-			where: eq(users.email, userEmail.toLowerCase()),
+		// Use the consistent userService method for finding or creating users
+		const { user, created } = await userService.findOrCreateUserByEmail(userEmail, {
+			name: userName || null,
 		});
 
-		if (existingUser) {
-			return existingUser.id;
+		if (created) {
+			logger.info("Created new user from webhook", {
+				userId: user.id,
+				email: userEmail,
+				name: userName,
+			});
+		} else {
+			logger.debug("Found existing user from webhook", {
+				userId: user.id,
+				email: userEmail,
+			});
 		}
 
-		// Create new user if not found
-		const result = await db
-			?.insert(users)
-			.values({
-				email: userEmail.toLowerCase(),
-				name: userName || null,
-				emailVerified: new Date(), // Consider email verified since they made a purchase
-			})
-			.returning();
-
-		if (!result) {
-			throw new Error("Failed to create user");
-		}
-
-		const [newUser] = result;
-
-		logger.info("Created new user from webhook", {
-			userId: newUser.id,
-			email: userEmail,
-			name: userName,
-		});
-
-		return newUser.id;
+		return user.id;
 	} catch (error) {
 		logger.error("Error finding or creating user", { userEmail, userName, error });
 		throw new Error(`Failed to find or create user: ${error}`);

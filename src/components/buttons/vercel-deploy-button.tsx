@@ -1,15 +1,18 @@
+import Link from "next/link";
+import type { FC } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-import type { FC } from "react";
 
 interface VercelDeployButtonProps {
 	href?: string;
 	className?: string;
 }
 
-export const VercelDeployButton: FC<VercelDeployButtonProps> = ({ href = routes.external.vercelDeployBones, className }) => {
+export const VercelDeployButton: FC<VercelDeployButtonProps> = ({
+	href = routes.external.vercelDeployBones,
+	className,
+}) => {
 	return (
 		<Link
 			href={href}

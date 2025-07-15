@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import type React from "react";
+import { Suspense } from "react";
 import { Header } from "@/components/headers/header";
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { routes } from "@/config/routes";
 import { auth } from "@/server/auth";
 import { isAdmin } from "@/server/services/admin-service";
@@ -28,7 +30,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
 
 	return (
 		<div className="min-h-screen">
-			<Header navLinks={navLinks} variant="sticky" />
+			<Suspense fallback={<SuspenseFallback />}>
+				<Header navLinks={navLinks} variant="sticky" />
+			</Suspense>
 			<div className="container mx-auto flex-1 py-6 md:py-10">{children}</div>
 		</div>
 	);

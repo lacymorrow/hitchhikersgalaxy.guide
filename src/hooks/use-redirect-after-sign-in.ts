@@ -34,6 +34,5 @@ export const useRedirectAfterSignIn = (error?: Error) => {
 			logger.info("ErrorBoundary: Authentication error, redirecting to sign in");
 			redirectToSignIn();
 		}
-
 	}, [error, router, pathname]);
 };

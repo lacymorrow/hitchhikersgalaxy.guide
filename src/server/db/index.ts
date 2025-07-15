@@ -1,4 +1,4 @@
-import "server-only";
+// import "server-only";
 
 import { sql } from "drizzle-orm";
 import type { PostgresJsDatabase } from "drizzle-orm/postgres-js";
@@ -7,12 +7,12 @@ import postgres from "postgres";
 import { env } from "@/env";
 import * as schema from "./schema";
 
-// Configure postgres with proper options to avoid stream transformation issues
+// Configure postgres with proper options for production workloads
 const client = env.DATABASE_URL
 	? postgres(env.DATABASE_URL, {
-			max: 1, // Use a single connection to avoid transform issues
-			connect_timeout: 10, // Faster connection timeout for serverless
-			idle_timeout: 20, // Lower idle timeout
+			max: 3, // Increase connection pool for concurrent operations
+			connect_timeout: 30, // Longer timeout for heavy operations
+			idle_timeout: 30, // Longer idle timeout
 			max_lifetime: 60 * 30, // 30 minutes max lifetime
 			...(process.env.NODE_ENV === "development"
 				? {

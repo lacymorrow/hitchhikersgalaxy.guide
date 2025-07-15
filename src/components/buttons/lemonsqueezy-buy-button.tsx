@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import { useEffect, useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
@@ -103,117 +103,120 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
 	const userEmail = session?.user?.email;
 
 	// Memoize the event handler to prevent it from changing on every render
-	const eventHandler = useCallback(async (event: LemonSqueezyEvent) => {
-		if (!event?.event?.startsWith("Checkout")) {
-			return;
-		}
+	const eventHandler = useCallback(
+		async (event: LemonSqueezyEvent) => {
+			if (!event?.event?.startsWith("Checkout")) {
+				return;
+			}
 
-		logger.info("Lemon Squeezy event received", {
-			checkoutId,
-			event: event.event,
-			orderId: event.data?.order?.data?.id,
-			userId,
-		});
+			logger.info("Lemon Squeezy event received", {
+				checkoutId,
+				event: event.event,
+				orderId: event.data?.order?.data?.id,
+				userId,
+			});
 
-		switch (event.event) {
-			case "Checkout.Success": {
-				const orderData = event.data.order.data;
+			switch (event.event) {
+				case "Checkout.Success": {
+					const orderData = event.data.order.data;
 
-				logger.info("Purchase successful", {
-					checkoutId,
-					orderId: orderData.id,
-					userId,
-					orderData: {
-						identifier: orderData.attributes.identifier,
-						status: orderData.attributes.status,
-						total: orderData.attributes.total,
-						productName: orderData.attributes.first_order_item.product_name,
-					},
-				});
-
-				// Close the overlay
-				window.LemonSqueezy?.Url.Close();
-				// Re-enable scrolling
-				toggleBodyScroll(false);
-
-				try {
-					logger.info("Creating payment record", {
+					logger.info("Purchase successful", {
 						checkoutId,
 						orderId: orderData.id,
 						userId,
+						orderData: {
+							identifier: orderData.attributes.identifier,
+							status: orderData.attributes.status,
+							total: orderData.attributes.total,
+							productName: orderData.attributes.first_order_item.product_name,
+						},
 					});
 
-					// Call server action to create payment record
-					const result = await createLemonSqueezyPayment({
-						orderId: orderData.attributes.identifier, // Use identifier as primary orderId
-						orderIdentifier: orderData.attributes.identifier, // Keep for backward compatibility
-						userId,
-						userEmail: orderData.attributes.user_email || undefined,
-						customData: event.data.custom_data,
-						status: orderData.attributes.status,
-						total: orderData.attributes.total,
-						productName: orderData.attributes.first_order_item?.product_name || "Unknown Product",
-					});
+					// Close the overlay
+					window.LemonSqueezy?.Url.Close();
+					// Re-enable scrolling
+					toggleBodyScroll(false);
 
-					logger.info("Payment record created successfully", {
-						checkoutId,
-						orderId: orderData.id,
-						userId,
-						result,
-					});
+					try {
+						logger.info("Creating payment record", {
+							checkoutId,
+							orderId: orderData.id,
+							userId,
+						});
 
-					toast.success("Payment processed! Redirecting to dashboard...");
-					router.push(routes.app.dashboard);
-				} catch (error) {
-					logger.error("Error creating payment record", {
-						checkoutId,
-						orderId: orderData.id,
-						userId,
-						error: error instanceof Error ? error.message : String(error),
-						stack: error instanceof Error ? error.stack : undefined,
-					});
+						// Call server action to create payment record
+						const result = await createLemonSqueezyPayment({
+							orderId: orderData.attributes.identifier, // Use identifier as primary orderId
+							orderIdentifier: orderData.attributes.identifier, // Keep for backward compatibility
+							userId,
+							userEmail: orderData.attributes.user_email || undefined,
+							customData: event.data.custom_data,
+							status: orderData.attributes.status,
+							total: orderData.attributes.total,
+							productName: orderData.attributes.first_order_item?.product_name || "Unknown Product",
+						});
 
-					// Fallback to success page redirect if API fails
-					const successUrl = new URL("/checkout/success", window.location.origin);
+						logger.info("Payment record created successfully", {
+							checkoutId,
+							orderId: orderData.id,
+							userId,
+							result,
+						});
 
-					// Add order data to URL
-					successUrl.searchParams.set("order_id", orderData.attributes.identifier);
-					successUrl.searchParams.set("email", orderData.attributes.user_email || "");
-					successUrl.searchParams.set("status", orderData.attributes.status);
+						toast.success("Payment processed! Redirecting to dashboard...");
+						router.push(routes.app.dashboard);
+					} catch (error) {
+						logger.error("Error creating payment record", {
+							checkoutId,
+							orderId: orderData.id,
+							userId,
+							error: error instanceof Error ? error.message : String(error),
+							stack: error instanceof Error ? error.stack : undefined,
+						});
 
-					// Add custom data that was passed during checkout
-					if (userId) {
-						const customData = {
-							user_id: userId,
-							user_email: userEmail,
-						};
-						successUrl.searchParams.set("custom_data", JSON.stringify(customData));
+						// Fallback to success page redirect if API fails
+						const successUrl = new URL("/checkout/success", window.location.origin);
+
+						// Add order data to URL
+						successUrl.searchParams.set("order_id", orderData.attributes.identifier);
+						successUrl.searchParams.set("email", orderData.attributes.user_email || "");
+						successUrl.searchParams.set("status", orderData.attributes.status);
+
+						// Add custom data that was passed during checkout
+						if (userId) {
+							const customData = {
+								user_id: userId,
+								user_email: userEmail,
+							};
+							successUrl.searchParams.set("custom_data", JSON.stringify(customData));
+						}
+
+						toast.error(
+							"There was an issue processing your payment. Redirecting to order confirmation..."
+						);
+						router.push(successUrl.toString());
 					}
-
-					toast.error(
-						"There was an issue processing your payment. Redirecting to order confirmation..."
-					);
-					router.push(successUrl.toString());
+					break;
 				}
-				break;
+				case "Checkout.Closed": {
+					logger.info("Checkout closed", {
+						checkoutId,
+						userId,
+					});
+					break;
+				}
+				default: {
+					logger.info("Unknown event", {
+						checkoutId,
+						event: event.event,
+					});
+				}
 			}
-			case "Checkout.Closed": {
-				logger.info("Checkout closed", {
-					checkoutId,
-					userId,
-				});
-				break;
-			}
-			default: {
-				logger.info("Unknown event", {
-					checkoutId,
-					event: event.event,
-				});
-			}
-		}
 
-		toggleBodyScroll(false); // Re-enable scrolling
-	}, [checkoutId, userId, userEmail, router]);
+			toggleBodyScroll(false); // Re-enable scrolling
+		},
+		[checkoutId, userId, userEmail, router]
+	);
 
 	useEffect(() => {
 		// Prevent duplicate script loading
@@ -266,16 +269,11 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
 
 		// Use the configured checkout URL from site config
 		// This ensures we're using the correct variant ID for checkout
-		const checkoutUrl = new URL(
-			`https://${storeId}.lemonsqueezy.com/checkout/buy/${checkoutId}`
-		);
+		const checkoutUrl = new URL(`https://${storeId}.lemonsqueezy.com/checkout/buy/${checkoutId}`);
 
 		// Add success page URL
 		const successUrl = new URL(routes.checkoutSuccess, window.location.origin);
-		checkoutUrl.searchParams.set(
-			"checkout[success_url]",
-			successUrl.toString()
-		);
+		checkoutUrl.searchParams.set("checkout[success_url]", successUrl.toString());
 
 		if (userEmail) {
 			// Add user data
@@ -300,10 +298,11 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
 		window.LemonSqueezy?.Url.Open(checkoutUrl.toString());
 	};
 
-	return (<>
-		<Button onClick={handleClick} variant="default" className={cn(className)}>
-			Get {siteConfig.title}
-		</Button>
-	</>
+	return (
+		<>
+			<Button onClick={handleClick} variant="default" className={cn(className)}>
+				Get {siteConfig.title}
+			</Button>
+		</>
 	);
 };

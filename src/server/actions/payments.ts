@@ -7,7 +7,7 @@ import { routes } from "@/config/routes";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { auth } from "@/server/auth";
-import { db, isDatabaseInitialized } from "@/server/db";
+import { db } from "@/server/db";
 import { payments, users } from "@/server/db/schema";
 import { getProvider } from "@/server/providers";
 import { isAdmin } from "@/server/services/admin-service";
@@ -462,7 +462,7 @@ export async function importPayments(
 			},
 		});
 
-		if (!user || !isAdmin({ email })) {
+		if (!user || !(await isAdmin({ email }))) {
 			logger.warn("Unauthorized payment import attempt", {
 				userId,
 				role: user?.role,
@@ -471,50 +471,90 @@ export async function importPayments(
 			throw new Error("Unauthorized: Only admins can import payments");
 		}
 
-		// Apply rate limiting
-		await rateLimitService.checkLimit(userId, "importPayments", rateLimits.importPayments);
+		// Apply rate limiting with longer duration for imports
+		const importRateLimit = {
+			requests: 2, // Only 2 import requests
+			duration: 60 * 60, // per hour (increased from 30 minutes)
+		};
+		await rateLimitService.checkLimit(userId, "importPayments", importRateLimit);
 
 		logger.info(`Starting payment import for provider: ${provider}`, { userId });
 
-		// Handle import based on the provider argument
-		if (provider === "all") {
-			// Import from all enabled providers
-			// This returns Record<string, any>
-			const result = await PaymentService.importAllPayments();
+		// Add overall timeout for the import process
+		const importPromise = async () => {
+			// Handle import based on the provider argument
+			if (provider === "all") {
+				// Import from all enabled providers
+				// This returns Record<string, any>
+				const result = await PaymentService.importAllPayments();
+
+				// Revalidate the admin users page to reflect the new imported data
+				revalidatePath("/admin/users");
+
+				return result;
+			}
+
+			// If not 'all', import from the specific provider
+			const specificProvider = getProvider(provider);
+
+			if (!specificProvider) {
+				throw new Error(`Provider "${provider}" not found.`);
+			}
+
+			if (!specificProvider.isEnabled) {
+				throw new Error(`Provider "${provider}" is not enabled.`);
+			}
+
+			// Call the specific provider's import method
+			// This returns ImportStats
+			const stats: ImportStats = await specificProvider.importPayments();
 
 			// Revalidate the admin users page to reflect the new imported data
 			revalidatePath("/admin/users");
 
-			return result;
-		}
+			return stats;
+		};
 
-		// If not 'all', import from the specific provider
-		const specificProvider = getProvider(provider);
+		// Set up timeout for the entire import process
+		const timeoutPromise = new Promise<never>((_, reject) => {
+			setTimeout(
+				() => {
+					reject(new Error(`Import timeout after 10 minutes for provider: ${provider}`));
+				},
+				10 * 60 * 1000
+			); // 10 minutes timeout
+		});
 
-		if (!specificProvider) {
-			throw new Error(`Provider \"${provider}\" not found.`);
-		}
+		const result = await Promise.race([importPromise(), timeoutPromise]);
 
-		if (!specificProvider.isEnabled) {
-			throw new Error(`Provider \"${provider}\" is not enabled.`);
-		}
+		logger.info(`Payment import completed for provider: ${provider}`, {
+			userId,
+			provider,
+			result: typeof result === "object" ? Object.keys(result) : result,
+		});
 
-		// Call the specific provider's import method
-		// This returns ImportStats
-		const stats: ImportStats = await specificProvider.importPayments();
-
-		// Revalidate the admin users page to reflect the new imported data
-		revalidatePath("/admin/users");
-
-		return stats;
+		return result;
 	} catch (error) {
+		const errorMessage = error instanceof Error ? error.message : String(error);
 		logger.error("Error importing payments", {
 			userId, // Now accessible here
 			provider,
-			error: error instanceof Error ? error.message : String(error),
+			error: errorMessage,
 		});
+
+		// Don't expose detailed error messages to the client for security
+		if (errorMessage.includes("Unauthorized")) {
+			throw new Error("Unauthorized access");
+		}
+		if (errorMessage.includes("timeout") || errorMessage.includes("Timeout")) {
+			throw new Error("Import process timed out. Please try again later.");
+		}
+		if (errorMessage.includes("rate limit") || errorMessage.includes("Rate limit")) {
+			throw new Error("Rate limit exceeded. Please wait before trying again.");
+		}
+
 		// Re-throw the error so the client knows the operation failed
-		throw error;
+		throw new Error("Import failed. Please try again later.");
 	}
 }
 
@@ -907,7 +947,7 @@ export async function getAllPayments() {
 	}
 }
 
-export async function importPaymentsFromAllProviders(force = false) {
+export async function importPaymentsFromAllProviders() {
 	try {
 		const sessionOrResponse = await auth();
 

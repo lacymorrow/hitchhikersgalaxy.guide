@@ -1,12 +1,12 @@
 import { eq } from "drizzle-orm";
 import type { NextAuthConfig } from "next-auth";
 import { routes } from "@/config/routes";
+import { logger } from "@/lib/logger";
 import { providers } from "@/server/auth-providers.config";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { grantGitHubAccess } from "@/server/services/github/github-service";
 import { userService } from "@/server/services/user-service";
-import { logger } from "@/lib/logger";
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -14,7 +14,7 @@ import { logger } from "@/lib/logger";
  * @see https://next-auth.js.org/configuration/options
  */
 export const authOptions: NextAuthConfig = {
-	debug: process.env.NODE_ENV !== "production",
+	debug: process.env.DEBUG_AUTH === "true",
 	providers,
 	pages: {
 		error: routes.auth.error,
@@ -71,8 +71,8 @@ export const authOptions: NextAuthConfig = {
 					await userService.ensureUserExists({
 						id: user.id,
 						email: user.email as string,
-						name: profile.name || user.name,  // Use profile name if available
-						image: profile.image || profile.picture || user.image,  // Use profile image if available
+						name: profile.name || user.name, // Use profile name if available
+						image: profile.image || profile.picture || user.image, // Use profile image if available
 					});
 				} catch (error) {
 					console.error("Error ensuring user exists in Shipkit database:", error);
@@ -136,7 +136,6 @@ export const authOptions: NextAuthConfig = {
 				// This happens in the JWT callback where we have access to the user ID and account data
 				(async () => {
 					try {
-
 						// Get current user metadata
 						if (!user.id) {
 							return;

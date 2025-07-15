@@ -116,14 +116,15 @@ export async function configureSetup(input: SetupInput) {
 			}
 
 			// Create admin user if it doesn't exist
+			const normalizedEmail = validatedInput.adminEmail.toLowerCase();
 			const existingAdmin = await tx.query.users.findFirst({
-				where: (users, { eq }) => eq(users.email, validatedInput.adminEmail),
+				where: (users, { eq }) => eq(users.email, normalizedEmail),
 			});
 
 			if (!existingAdmin) {
 				const hashedPassword = await hashPassword(validatedInput.adminPassword);
 				await tx.insert(users).values({
-					email: validatedInput.adminEmail,
+					email: normalizedEmail,
 					password: hashedPassword,
 					role: "admin", // This is the basic role field
 					emailVerified: new Date(),

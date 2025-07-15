@@ -75,11 +75,6 @@ export async function POST(request: Request) {
 							// Find or create user by email
 							const { user } = await userService.findOrCreateUserByEmail(customer.email!, {
 								name: customer.name ?? undefined,
-								image: customer.metadata?.image ||
-									customer.metadata?.avatar ||
-									customer.metadata?.profile_image ||
-									customer.metadata?.user_image ||
-									undefined,
 							});
 
 							// Create payment record
@@ -95,8 +90,6 @@ export async function POST(request: Request) {
 									customerEmail: customer.email,
 									paymentStatus: session.payment_status,
 									mode: session.mode,
-									// Include customer metadata for future reference
-									customerMetadata: customer.metadata,
 								},
 							});
 
@@ -105,7 +98,6 @@ export async function POST(request: Request) {
 								userId: user.id,
 								customerEmail: customer.email,
 								amount: session.amount_total,
-								hasImage: !!(customer.metadata?.image || customer.metadata?.avatar || customer.metadata?.profile_image || customer.metadata?.user_image),
 							});
 						}
 					} catch (error) {
@@ -141,11 +133,6 @@ export async function POST(request: Request) {
 							// Find or create user by email
 							const { user } = await userService.findOrCreateUserByEmail(customer.email!, {
 								name: customer.name ?? undefined,
-								image: customer.metadata?.image ||
-									customer.metadata?.avatar ||
-									customer.metadata?.profile_image ||
-									customer.metadata?.user_image ||
-									undefined,
 							});
 
 							// Check if we already have a payment record for this payment intent
@@ -164,8 +151,6 @@ export async function POST(request: Request) {
 										customerId: customer.id,
 										customerEmail: customer.email,
 										paymentMethod: paymentIntent.payment_method,
-										// Include customer metadata for future reference
-										customerMetadata: customer.metadata,
 									},
 								});
 
@@ -174,7 +159,6 @@ export async function POST(request: Request) {
 									userId: user.id,
 									customerEmail: customer.email,
 									amount: paymentIntent.amount,
-									hasImage: !!(customer.metadata?.image || customer.metadata?.avatar || customer.metadata?.profile_image || customer.metadata?.user_image),
 								});
 							} else {
 								logger.debug("Payment intent already recorded", {
@@ -218,11 +202,6 @@ export async function POST(request: Request) {
 						// Find or create user by email
 						const { user } = await userService.findOrCreateUserByEmail(customer.email!, {
 							name: customer.name ?? undefined,
-							image: customer.metadata?.image ||
-								customer.metadata?.avatar ||
-								customer.metadata?.profile_image ||
-								customer.metadata?.user_image ||
-								undefined,
 						});
 
 						// For active subscriptions, ensure we have a payment record
@@ -238,8 +217,6 @@ export async function POST(request: Request) {
 									customerId: customer.id,
 									customerEmail: customer.email,
 									subscriptionStatus: subscription.status,
-									// Include customer metadata for future reference
-									customerMetadata: customer.metadata,
 								};
 
 								if (
@@ -275,7 +252,6 @@ export async function POST(request: Request) {
 									customerEmail: customer.email,
 									status: subscription.status,
 									eventType: event.type,
-									hasImage: !!(customer.metadata?.image || customer.metadata?.avatar || customer.metadata?.profile_image || customer.metadata?.user_image),
 								});
 							}
 						}
@@ -309,11 +285,6 @@ export async function POST(request: Request) {
 							// Find or create user by email
 							const { user } = await userService.findOrCreateUserByEmail(customer.email!, {
 								name: customer.name ?? undefined,
-								image: customer.metadata?.image ||
-									customer.metadata?.avatar ||
-									customer.metadata?.profile_image ||
-									customer.metadata?.user_image ||
-									undefined,
 							});
 
 							logger.info("Invoice payment succeeded", {
@@ -321,7 +292,6 @@ export async function POST(request: Request) {
 								userId: user.id,
 								customerEmail: customer.email,
 								amount: invoice.amount_paid,
-								hasImage: !!(customer.metadata?.image || customer.metadata?.avatar || customer.metadata?.profile_image || customer.metadata?.user_image),
 							});
 						}
 					} catch (error) {

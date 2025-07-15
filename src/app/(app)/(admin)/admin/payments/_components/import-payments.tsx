@@ -1,7 +1,7 @@
 "use client";
 
 import { FolderSyncIcon, Loader2, RotateCcw, Trash2 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -27,25 +27,42 @@ interface SingleProviderResult {
 }
 
 interface AllProvidersResult {
-	lemonsqueezy: SingleProviderResult;
-	polar: SingleProviderResult;
-	stripe: SingleProviderResult;
+	[key: string]: SingleProviderResult;
 }
 
 /**
  * Formats the import result message based on the provider and result data
  */
 const formatImportMessage = (provider: PaymentProvider, result: unknown): string => {
+	if (!result) {
+		return "No result returned from import operation";
+	}
+
 	if (provider === "all") {
 		const allResult = result as AllProvidersResult;
-		return `
-			Lemon Squeezy: ${allResult.lemonsqueezy.imported} imported, ${allResult.lemonsqueezy.skipped} skipped, ${allResult.lemonsqueezy.errors} errors, ${allResult.lemonsqueezy.usersCreated} users created.
-			Polar: ${allResult.polar.imported} imported, ${allResult.polar.skipped} skipped, ${allResult.polar.errors} errors, ${allResult.polar.usersCreated} users created.
-			Stripe: ${allResult.stripe.imported} imported, ${allResult.stripe.skipped} skipped, ${allResult.stripe.errors} errors, ${allResult.stripe.usersCreated} users created.
-		`.trim();
+		const messages: string[] = [];
+
+		// Format each provider's results
+		for (const [providerId, stats] of Object.entries(allResult)) {
+			if (stats && typeof stats === "object" && !("error" in stats)) {
+				const providerStats = stats as SingleProviderResult;
+				const providerName = providerId.charAt(0).toUpperCase() + providerId.slice(1);
+				messages.push(
+					`${providerName}: ${providerStats.imported} imported, ${providerStats.skipped} skipped, ${providerStats.errors} errors, ${providerStats.usersCreated} users created`
+				);
+			} else if (stats && typeof stats === "object" && "error" in stats) {
+				const providerName = providerId.charAt(0).toUpperCase() + providerId.slice(1);
+				messages.push(`${providerName}: Error - ${stats.error || "Unknown error"}`);
+			}
+		}
+
+		return messages.length > 0 ? messages.join("\n") : "No valid results from providers";
 	}
 
 	const singleResult = result as SingleProviderResult;
+	if (!singleResult || typeof singleResult.imported === "undefined") {
+		return "Invalid result structure for single provider import";
+	}
 	return `${singleResult.imported} imported, ${singleResult.skipped} skipped, ${singleResult.errors} errors, ${singleResult.usersCreated} users created.`;
 };
 
@@ -56,65 +73,137 @@ export function ImportPayments() {
 	const { toast } = useToast();
 	const [currentProvider, setCurrentProvider] = useState<PaymentProvider | null>(null);
 	const [currentAction, setCurrentAction] = useState<ActionType | null>(null);
+	const [progress, setProgress] = useState<string>("");
 
 	const { loading, error, execute } = useAsyncAction(
 		async (action: ActionType, provider?: PaymentProvider) => {
 			setCurrentAction(action);
+			setProgress("");
 
 			if (action === "import" && provider) {
 				setCurrentProvider(provider);
-				const result = await importPayments(provider);
+				setProgress("Connecting to payment provider...");
 
-				// Show success toast
+				// Show initial progress
 				toast({
-					title: `${provider === "all" ? "All payments" : provider} import complete`,
-					description: formatImportMessage(provider, result),
+					title: `Starting ${provider === "all" ? "multi-provider" : provider} import`,
+					description: "This may take several minutes. Please do not close this page.",
 					variant: "default",
 				});
+
+				try {
+					setProgress("Fetching payment data...");
+					const result = await importPayments(provider);
+
+					// Show success toast
+					toast({
+						title: `${provider === "all" ? "All payments" : provider} import complete`,
+						description: formatImportMessage(provider, result),
+						variant: "default",
+					});
+
+					setProgress("Import completed successfully");
+				} catch (importError) {
+					setProgress("Import failed");
+					throw importError;
+				}
 			} else if (action === "delete") {
-				const result = await deleteAllPayments();
+				setProgress("Deleting all payments...");
 
-				// Show success toast
 				toast({
-					title: "All payments deleted",
-					description: result.message || `Successfully deleted ${result.deletedCount} payments`,
-					variant: "default",
+					title: "Deleting all payments",
+					description: "This operation cannot be undone.",
+					variant: "destructive",
 				});
+
+				try {
+					const result = await deleteAllPayments();
+
+					// Show success toast
+					toast({
+						title: "All payments deleted",
+						description: result.message || `Successfully deleted ${result.deletedCount} payments`,
+						variant: "default",
+					});
+
+					setProgress("Deletion completed");
+				} catch (deleteError) {
+					setProgress("Deletion failed");
+					throw deleteError;
+				}
 			} else if (action === "refresh") {
-				const result = await refreshAllPayments();
+				setProgress("Refreshing all payments...");
 
-				// Show success toast
 				toast({
-					title: "All payments refreshed",
+					title: "Refreshing all payments",
 					description:
-						result.message ||
-						`Successfully refreshed payments: deleted ${result.deletedCount} old payments and imported fresh data`,
+						"Deleting existing data and importing fresh data. This may take several minutes.",
 					variant: "default",
 				});
+
+				try {
+					const result = await refreshAllPayments();
+
+					// Show success toast
+					toast({
+						title: "All payments refreshed",
+						description:
+							result.message ||
+							`Successfully refreshed payments: deleted ${result.deletedCount} old payments and imported fresh data`,
+						variant: "default",
+					});
+
+					setProgress("Refresh completed");
+				} catch (refreshError) {
+					setProgress("Refresh failed");
+					throw refreshError;
+				}
 			}
 
 			setCurrentProvider(null);
 			setCurrentAction(null);
+			setProgress("");
 		}
 	);
 
-	// Show error toast when error occurs
-	if (error) {
-		toast({
-			title: `${currentAction === "import" ? "Import" : currentAction === "delete" ? "Delete" : "Refresh"} failed`,
-			description: error,
-			variant: "destructive",
-		});
-	}
+	// Handle error toast in useEffect to avoid calling during render
+	useEffect(() => {
+		if (error) {
+			// Convert error to string if it's an Error object
+			const errorString = error instanceof Error ? error.message : String(error);
+			let errorMessage = errorString;
+
+			// Provide user-friendly error messages
+			if (errorString.includes("timeout") || errorString.includes("Timeout")) {
+				errorMessage =
+					"The import process timed out. This usually means there's a lot of data to process. Please try again later or contact support.";
+			} else if (errorString.includes("rate limit") || errorString.includes("Rate limit")) {
+				errorMessage = "Too many import requests. Please wait an hour before trying again.";
+			} else if (errorString.includes("Unauthorized")) {
+				errorMessage = "You don't have permission to perform this action.";
+			} else if (errorString.includes("connection") || errorString.includes("Connection")) {
+				errorMessage = "Database connection error. Please try again in a few minutes.";
+			}
+
+			toast({
+				title: `${currentAction === "import" ? "Import" : currentAction === "delete" ? "Delete" : "Refresh"} failed`,
+				description: errorMessage,
+				variant: "destructive",
+			});
+		}
+	}, [error, currentAction, toast]);
 
 	/**
 	 * Handles the import process for a specific provider
 	 */
 	const handleImport = (provider: PaymentProvider) => {
+		if (loading) return; // Prevent multiple simultaneous imports
+
 		execute("import", provider).catch((err: Error) => {
 			console.error("Error importing payments", err);
 			setCurrentProvider(null);
 			setCurrentAction(null);
+			setProgress("");
 		});
 	};
 
@@ -122,9 +211,12 @@ export function ImportPayments() {
 	 * Handles the delete all payments process
 	 */
 	const handleDeleteAll = () => {
+		if (loading) return;
+
 		execute("delete").catch((err: Error) => {
 			console.error("Error deleting payments", err);
 			setCurrentAction(null);
+			setProgress("");
 		});
 	};
 
@@ -132,9 +224,12 @@ export function ImportPayments() {
 	 * Handles the refresh all payments process
 	 */
 	const handleRefreshAll = () => {
+		if (loading) return;
+
 		execute("refresh").catch((err: Error) => {
 			console.error("Error refreshing payments", err);
 			setCurrentAction(null);
+			setProgress("");
 		});
 	};
 
@@ -142,6 +237,10 @@ export function ImportPayments() {
 	 * Gets the loading text based on current action
 	 */
 	const getLoadingText = () => {
+		if (progress) {
+			return progress;
+		}
+
 		if (currentAction === "import") {
 			return `Importing ${currentProvider}...`;
 		}

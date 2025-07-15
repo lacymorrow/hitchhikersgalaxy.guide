@@ -186,7 +186,7 @@ export class UserService extends BaseService<typeof users> {
 		}
 
 		return db.query.users.findFirst({
-			where: eq(users.email, email),
+			where: eq(users.email, email.toLowerCase()),
 		});
 	}
 
@@ -413,6 +413,7 @@ export class UserService extends BaseService<typeof users> {
 	/**
 	 * Finds a user by email or creates one if they don't exist.
 	 * Intended for use cases like payment imports where only email is known initially.
+	 * Uses database transactions to prevent race conditions.
 	 * @param email - The email address to find or create.
 	 * @param userData - Optional data for creating a new user (e.g., name).
 	 * @returns An object containing the user and a boolean indicating if the user was created.
@@ -428,59 +429,89 @@ export class UserService extends BaseService<typeof users> {
 			throw new Error("Email is required to find or create a user.");
 		}
 
-		let user = await this.getUserByEmail(email);
-		let created = false;
+		// Normalize email to lowercase for consistent matching
+		const normalizedEmail = email.toLowerCase();
 
-		if (!user) {
-			logger.info("User not found by email, creating new user.", { email });
-			// Create the user
-			const newUserId = crypto.randomUUID(); // Ensure crypto is imported at the top
-			const [newUserRecord] = await db
-				.insert(users)
-				.values({
-					id: newUserId,
-					email: email,
-					name: userData?.name ?? null,
-					image: userData?.image ?? null,
-					createdAt: new Date(),
-					updatedAt: new Date(),
-					// emailVerified might need specific handling depending on requirements
-				})
-				.returning();
+		// Use a transaction to prevent race conditions
+		return await db
+			.transaction(async (tx) => {
+				// First, try to find the user within the transaction
+				let user = await tx.query.users.findFirst({
+					where: eq(users.email, normalizedEmail),
+				});
 
-			if (!newUserRecord) {
-				throw new Error(`Failed to create user with email: ${email}`);
-			}
+				if (user) {
+					logger.debug("Found existing user by email.", {
+						email: normalizedEmail,
+						userId: user.id,
+					});
+					return { user, created: false };
+				}
 
-			user = newUserRecord;
-			created = true;
+				// User doesn't exist, create a new one
+				logger.info("User not found by email, creating new user.", { email: normalizedEmail });
+				const newUserId = crypto.randomUUID();
 
-			// Create personal team for the new user
-			await this.createPersonalTeam(user.id);
+				const [newUserRecord] = await tx
+					.insert(users)
+					.values({
+						id: newUserId,
+						email: normalizedEmail,
+						name: userData?.name ?? null,
+						image: userData?.image ?? null,
+						createdAt: new Date(),
+						updatedAt: new Date(),
+						// emailVerified might need specific handling depending on requirements
+					})
+					.returning();
 
-			// Create default API key
-			const apiKey = await apiKeyService.createApiKey({
-				userId: user.id,
-				name: "Default API Key",
-				description: "Created automatically during import/creation",
+				if (!newUserRecord) {
+					throw new Error(`Failed to create user with email: ${normalizedEmail}`);
+				}
+
+				user = newUserRecord;
+
+				// Create personal team for the new user within the transaction
+				try {
+					await this.createPersonalTeam(user.id);
+				} catch (error) {
+					logger.error("Failed to create personal team for new user", {
+						userId: user.id,
+						email: normalizedEmail,
+						error: error instanceof Error ? error.message : String(error),
+					});
+					// Don't fail the user creation if team creation fails
+				}
+
+				// Create default API key (outside transaction since it's not critical)
+				// We'll do this after the transaction completes
+
+				return { user, created: true };
+			})
+			.then(async (result) => {
+				// Create default API key outside the transaction
+				if (result.created) {
+					try {
+						const apiKey = await apiKeyService.createApiKey({
+							userId: result.user.id,
+							name: "Default API Key",
+							description: "Created automatically during import/creation",
+						});
+						logger.info("Created default API key for newly created user", {
+							userId: result.user.id,
+							apiKeyId: apiKey.id,
+						});
+					} catch (error) {
+						logger.error("Failed to create default API key for new user", {
+							userId: result.user.id,
+							error: error instanceof Error ? error.message : String(error),
+						});
+						// Don't fail the user creation if API key creation fails
+					}
+				}
+
+				return result;
 			});
-			logger.info("Created default API key for newly created user", {
-				userId: user.id,
-				apiKeyId: apiKey.id,
-			});
-		} else {
-			logger.debug("Found existing user by email.", { email, userId: user.id });
-			// Optionally update existing user data if userData is provided and different
-			// const updates: Partial<User> = {};
-			// if (userData?.name && !user.name) updates.name = userData.name;
-			// if (userData?.image && !user.image) updates.image = userData.image;
-			// if (Object.keys(updates).length > 0) {
-			//   await this.update(user.id, updates);
-			//   user = { ...user, ...updates }; // Update local user object
-			// }
-		}
-
-		return { user, created };
 	}
 }
 

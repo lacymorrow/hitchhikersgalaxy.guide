@@ -28,18 +28,26 @@ export interface GitHubProfile {
 
 // Conditionally initialize Octokit
 let octokit: Octokit | null = null;
+let isInitialized = false;
+
 if (env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED) {
 	if (!env.GITHUB_ACCESS_TOKEN) {
-		logger.error("GitHub API feature is enabled, but GITHUB_ACCESS_TOKEN is missing.");
+		if (!isInitialized) {
+			logger.error("GitHub API feature is enabled, but GITHUB_ACCESS_TOKEN is missing.");
+			isInitialized = true;
+		}
 	} else {
 		octokit = new Octokit({
 			auth: env.GITHUB_ACCESS_TOKEN,
 		});
-		logger.info("Initialized GitHub service with admin token", {
-			hasToken: true,
-			repoOwner: siteConfig.repo.owner,
-			repoName: siteConfig.repo.name,
-		});
+		if (!isInitialized) {
+			logger.info("Initialized GitHub service with admin token", {
+				hasToken: true,
+				repoOwner: siteConfig.repo.owner,
+				repoName: siteConfig.repo.name,
+			});
+			isInitialized = true;
+		}
 	}
 } else {
 	// logger.debug("GitHub API feature is disabled.");

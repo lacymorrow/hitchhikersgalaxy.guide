@@ -4,16 +4,24 @@ import { logger } from "@/lib/logger";
 
 // Try to create Redis instance if configured
 let redis: Redis | null = null;
+let isInitialized = false;
+
 try {
 	if (env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN) {
 		redis = new Redis({
 			url: env.UPSTASH_REDIS_REST_URL,
 			token: env.UPSTASH_REDIS_REST_TOKEN,
 		});
-		logger.info("Redis metrics initialized");
+		if (!isInitialized) {
+			logger.info("Redis metrics initialized");
+			isInitialized = true;
+		}
 	}
 } catch (error) {
-	logger.error("Failed to initialize Redis for metrics", { error });
+	if (!isInitialized) {
+		logger.error("Failed to initialize Redis for metrics", { error });
+		isInitialized = true;
+	}
 }
 
 export interface MetricData {

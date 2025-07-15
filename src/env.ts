@@ -2,6 +2,7 @@ import { vercel } from "@t3-oss/env-core/presets-zod";
 import { createEnv } from "@t3-oss/env-nextjs";
 import { z } from "zod";
 import { BASE_URL } from "./config/base-url";
+
 // Helper function for boolean feature flags defined at build time
 const zBooleanFeatureFlag = z
 	.enum(["true", "false"])
@@ -166,7 +167,6 @@ export const env = createEnv({
 		NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
 
 		NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().optional(),
-
 
 		// ======== Build-Time Feature Flags (Derived in next.config.ts) ========
 		NEXT_PUBLIC_FEATURE_DATABASE_ENABLED: zBooleanFeatureFlag,

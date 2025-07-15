@@ -16,9 +16,8 @@ import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
 import { cn } from "@/lib/utils";
-import { BuyButton } from "../buttons/lemonsqueezy-buy-button";
-
 import styles from "@/styles/header.module.css";
+import { BuyButton } from "../buttons/lemonsqueezy-buy-button";
 
 interface HeaderProps {
 	navLinks?: NavLink[];

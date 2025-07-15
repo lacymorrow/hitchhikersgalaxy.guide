@@ -591,8 +591,9 @@ export class ContainerManager {
 							`${description} has been installing for ${Math.round(idleTime / 1000)}s, still waiting...`
 						);
 						// Reset the last output time to prevent timeout during installation
+						// Provide a 5-second buffer for output pauses to avoid false timeouts
 						if (isShadcn) {
-							lastOutputTime = Date.now() - 5000; // Still track idle time, but give more buffer
+							lastOutputTime = Date.now() - 5000; // Provide 5-second buffer for output pauses
 						}
 					} else {
 						logInfo(

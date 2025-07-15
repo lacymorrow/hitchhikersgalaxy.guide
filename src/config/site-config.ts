@@ -249,7 +249,7 @@ export const siteConfig: SiteConfig = {
 			bones: "411883",
 			muscles: "411883",
 			brains: "411883",
-		}
+		},
 	},
 
 	metadata: {

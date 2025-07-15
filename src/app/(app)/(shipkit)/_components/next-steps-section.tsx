@@ -1,20 +1,21 @@
 import {
+	ArrowRight,
 	CheckCircle,
 	Circle,
-	ArrowRight,
-	Database,
-	Shield,
-	FileText,
 	CreditCard,
+	Database,
+	FileText,
+	Rocket,
+	Shield,
 	Zap,
 	Rocket,
 	type LucideIcon
 } from "lucide-react";
+import { Link } from "@/components/primitives/link-with-transition";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Link } from "@/components/primitives/link-with-transition";
 import { env } from "@/env";
 import { isGuestOnlyMode } from "@/server/auth-providers";
 
@@ -52,22 +53,26 @@ const nextSteps: NextStep[] = [
 		description: "Set up Payload CMS or Builder.io for content management",
 		icon: FileText,
 		href: "/docs/cms",
-		isComplete: !!env?.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED || !!env?.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED,
+		isComplete:
+			!!env?.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED || !!env?.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED,
 		isOptional: true,
-		estimatedTime: "15 min"
+		estimatedTime: "15 min",
 	},
 	{
 		title: "Enable payments",
 		description: "Configure Stripe, Polar, or LemonSqueezy for subscriptions and one-time payments",
 		icon: CreditCard,
 		href: "/docs/payments",
-		isComplete: !!env?.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED || !!env?.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED || !!env?.NEXT_PUBLIC_FEATURE_POLAR_ENABLED,
+		isComplete:
+			!!env?.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED ||
+			!!env?.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED ||
+			!!env?.NEXT_PUBLIC_FEATURE_POLAR_ENABLED,
 		isOptional: true,
-		estimatedTime: "20 min"
-	}
+		estimatedTime: "20 min",
+	},
 ];
 
-const completedSteps = nextSteps.filter(step => step.isComplete).length;
+const completedSteps = nextSteps.filter((step) => step.isComplete).length;
 const totalSteps = nextSteps.length;
 const progressPercentage = (completedSteps / totalSteps) * 100;
 
@@ -107,8 +112,8 @@ export function NextStepsSection() {
 					<Card
 						key={step.title}
 						className={`transition-all ${step.isComplete
-							? 'bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800'
-							: 'hover:shadow-md'
+								? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
+								: "hover:shadow-md"
 							}`}
 					>
 						<CardHeader className="pb-3">
@@ -137,7 +142,10 @@ export function NextStepsSection() {
 								</div>
 								<div className="flex-shrink-0">
 									{step.isComplete ? (
-										<Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+										<Badge
+											variant="outline"
+											className="bg-green-50 text-green-700 border-green-200"
+										>
 											Complete
 										</Badge>
 									) : (

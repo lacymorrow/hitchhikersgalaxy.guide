@@ -52,6 +52,28 @@ const nextConfig: NextConfig = {
 	 */
 	redirects,
 
+	/*
+	 * PostHog reverse proxy configuration
+	 */
+	async rewrites() {
+		return [
+			{
+				source: "/relay-64tM/static/:path*",
+				destination: "https://us-assets.i.posthog.com/static/:path*",
+			},
+			{
+				source: "/relay-64tM/:path*",
+				destination: "https://us.i.posthog.com/:path*",
+			},
+			{
+				source: "/relay-64tM/flags",
+				destination: "https://us.i.posthog.com/flags",
+			},
+		];
+	},
+	// This is required to support PostHog trailing slash API requests
+	skipTrailingSlashRedirect: true,
+
 	async headers() {
 		return Promise.resolve([
 			// /install
@@ -199,7 +221,7 @@ const nextConfig: NextConfig = {
 		// Use DISABLE_ERROR_LOGGING to disable error logging too
 		removeConsole:
 			process.env.DISABLE_LOGGING === "true" ||
-				(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+			(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
 				? process.env.DISABLE_ERROR_LOGGING === "true" ||
 					(process.env.NODE_ENV === "production" && !process.env.DISABLE_ERROR_LOGGING)
 					? true

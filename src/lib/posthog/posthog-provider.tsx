@@ -11,7 +11,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 	}
 
 	const posthogKey = env?.NEXT_PUBLIC_POSTHOG_KEY;
-	const posthogHost = env?.NEXT_PUBLIC_POSTHOG_HOST;
+	const posthogHost = env?.NEXT_PUBLIC_POSTHOG_HOST || "/relay-64tM";
 
 	// Also check if keys are actually present (belt and suspenders)
 	if (!posthogKey || !posthogHost) {
@@ -22,6 +22,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
 	useEffect(() => {
 		posthog.init(posthogKey, {
 			api_host: posthogHost,
+			ui_host: "https://us.posthog.com",
 			person_profiles: "identified_only", // or 'always' to create profiles for anonymous users as well
 		});
 	}, []);

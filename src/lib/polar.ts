@@ -130,14 +130,16 @@ export const getAllOrders = async (): Promise<PolarOrder[]> => {
 			include: ["product", "product.variants", "items", "items.product", "items.variant"],
 		} as any);
 
-		// Log the raw response for debugging
-		logger.debug("Raw Polar API response:", { response: JSON.stringify(response, null, 2) });
+		// Log the raw response for debugging (only in development)
+		if (process.env.NODE_ENV === "development") {
+			logger.debug("Raw Polar API response:", { response: JSON.stringify(response, null, 2) });
+		}
 
 		// Extract orders from the response
 		const orders = extractOrdersFromResponse(response);
 
-		// Log the first extracted order (if any) to see its structure
-		if (orders.length > 0) {
+		// Log the first extracted order (if any) to see its structure (only in development)
+		if (orders.length > 0 && process.env.NODE_ENV === "development") {
 			logger.debug("First extracted Polar order structure:", {
 				firstOrder: JSON.stringify(orders[0], null, 2),
 			});

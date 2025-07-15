@@ -5,10 +5,15 @@ import { logger } from "@/lib/logger";
 
 // Initialize S3 client only if the feature is enabled
 let s3Client: S3Client | null = null;
+let isInitialized = false;
+
 if (env.NEXT_PUBLIC_FEATURE_S3_ENABLED) {
 	// Explicitly check required env vars for type safety, even though the flag implies they exist.
 	if (!env.AWS_REGION || !env.AWS_ACCESS_KEY_ID || !env.AWS_SECRET_ACCESS_KEY) {
-		logger.error("❌ S3 feature is enabled, but required AWS credentials or region are missing.");
+		if (!isInitialized) {
+			logger.error("❌ S3 feature is enabled, but required AWS credentials or region are missing.");
+			isInitialized = true;
+		}
 	} else {
 		try {
 			s3Client = new S3Client({
@@ -18,9 +23,15 @@ if (env.NEXT_PUBLIC_FEATURE_S3_ENABLED) {
 					secretAccessKey: env.AWS_SECRET_ACCESS_KEY, // Now guaranteed to be string
 				},
 			});
-			logger.info("✅ S3 Client Initialized");
+			if (!isInitialized) {
+				logger.info("✅ S3 Client Initialized");
+				isInitialized = true;
+			}
 		} catch (error) {
-			logger.error("❌ Failed to initialize S3 client:", error);
+			if (!isInitialized) {
+				logger.error("❌ Failed to initialize S3 client:", error);
+				isInitialized = true;
+			}
 			// Keep s3Client as null if initialization fails
 		}
 	}

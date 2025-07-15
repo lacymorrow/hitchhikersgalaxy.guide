@@ -1,8 +1,8 @@
 import { DownloadIcon } from "lucide-react";
 import type { Session } from "next-auth";
-import { BuyButton } from "@/components/buttons/lemonsqueezy-buy-button";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
 import { GitHubConnectDialog } from "@/components/buttons/github-connect-dialog";
+import { BuyButton } from "@/components/buttons/lemonsqueezy-buy-button";
 import { LoginButton } from "@/components/buttons/sign-in-button";
 import { VercelDeployButton } from "@/components/shipkit/vercel-deploy-button";
 import { Button } from "@/components/ui/button";

@@ -40,7 +40,7 @@ export async function isAdmin({
 	// For the remaining checks, we need either userId or we can try to get it from the database
 	// 2. Check if user is admin by querying the database directly
 	const user = await db?.query.users.findFirst({
-		where: eq(users.email, email),
+		where: eq(users.email, email.toLowerCase()),
 		columns: {
 			role: true,
 			id: true,

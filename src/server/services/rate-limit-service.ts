@@ -6,16 +6,24 @@ import { ErrorService } from "./error-service";
 
 // Try to create Redis instance if configured
 let redis: Redis | null = null;
+let isInitialized = false;
+
 try {
 	if (env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN) {
 		redis = new Redis({
 			url: env.UPSTASH_REDIS_REST_URL,
 			token: env.UPSTASH_REDIS_REST_TOKEN,
 		});
-		logger.info("Redis rate limiting initialized");
+		if (!isInitialized) {
+			logger.info("Redis rate limiting initialized");
+			isInitialized = true;
+		}
 	}
 } catch (error) {
-	logger.error("Failed to initialize Redis for rate limiting", { error });
+	if (!isInitialized) {
+		logger.error("Failed to initialize Redis for rate limiting", { error });
+		isInitialized = true;
+	}
 }
 
 export interface RateLimitConfig {

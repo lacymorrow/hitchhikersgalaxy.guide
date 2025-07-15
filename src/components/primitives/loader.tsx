@@ -1,3 +1,5 @@
+"use client";
+
 import * as React from "react";
 import { LoaderAtoms } from "@/components/loaders/loader-atoms";
 import { cn } from "@/lib/utils";

@@ -35,6 +35,7 @@ const shouldSkip = (slugString: string) => {
 	return (
 		slugString.startsWith("api/") ||
 		slugString.includes(".") || // Any file with extension
+		slugString.includes(".well-known") || // Any file with extension
 		// Next.js built-in routes
 		slugString.includes("manifest.json") ||
 		slugString.includes("sitemap.xml") ||
@@ -66,7 +67,15 @@ async function getPageData(
 ): Promise<
 	{ source: "payload"; data: PayloadPage } | { source: "builder"; data: BuilderContent } | null
 > {
-	console.log(`Getting page data for ${slug.join("/")}`);
+	if (!env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED && !env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED) {
+		return notFound();
+	}
+
+	const slugString = slug.join("/");
+	if (shouldSkip(slugString)) {
+		return notFound();
+	}
+
 	if (env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED) {
 		try {
 			const payload = await getPayloadClient();
@@ -132,18 +141,9 @@ export async function generateMetadata({
 	params: paramsPromise,
 	searchParams: searchParamsPromise,
 }: PageProps): Promise<Metadata> {
-	if (!env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED && !env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED) {
-		return notFound();
-	}
-
 	const params = await paramsPromise;
 	// const searchParams = await searchParamsPromise;
 	// const isPreview = searchParams.preview === "true";
-
-	const slugString = params.slug.join("/");
-	if (shouldSkip(slugString)) {
-		return notFound();
-	}
 
 	const pageData = await getPageData(params.slug, 1);
 	if (!pageData) {
@@ -185,17 +185,9 @@ export async function generateMetadata({
 }
 
 export default async function Page({ params: paramsPromise }: PageProps) {
-	if (!env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED && !env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED) {
-		return notFound();
-	}
-
 	const params = await paramsPromise;
 	// const searchParams = await searchParamsPromise;
 	// const isPreview = searchParams.preview === "true";
-	const slugString = params.slug.join("/");
-	if (shouldSkip(slugString)) {
-		return notFound();
-	}
 
 	const pageData = await getPageData(params.slug, 1);
 	if (!pageData) {

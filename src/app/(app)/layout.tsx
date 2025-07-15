@@ -5,6 +5,7 @@ import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { Body } from "@/components/primitives/body";
 import { metadata as defaultMetadata } from "@/config/metadata";
 import { initializePaymentProviders } from "@/server/providers";
+import { LoaderAtoms } from "@/components/loaders/loader-atoms";
 
 export const metadata: Metadata = defaultMetadata;
 export const fetchCache = "default-cache";

@@ -32,6 +32,9 @@ export async function createTeam(userId: string, name: string) {
 
 		// Create team
 		const team = await teamService.createTeam(userId, name);
+		if (!team) {
+			throw new Error("Failed to create team");
+		}
 
 		// Metrics end
 		await metricsService.recordTiming(metrics.api.latency, startTime);

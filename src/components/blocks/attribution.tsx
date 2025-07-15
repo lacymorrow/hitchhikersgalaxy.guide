@@ -119,8 +119,7 @@ export function Attribution({
 						<LinkOrButton
 							href={href}
 							className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-							variant="outline"
-							onClick={() => onClick?.()}
+							variant="link"
 						>
 							More...
 						</LinkOrButton>

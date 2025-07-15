@@ -169,6 +169,9 @@ export function ProjectDialog({
 		setIsLoading(true);
 		try {
 			const team = await createTeam(userId, newTeamName);
+			if (!team) {
+				throw new Error("Failed to create team");
+			}
 			form.setValue("teamId", team.id);
 			setShowNewTeamInput(false);
 			setNewTeamName("");

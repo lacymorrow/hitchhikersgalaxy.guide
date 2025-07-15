@@ -455,8 +455,6 @@ export default function Charts() {
 									fill="var(--color-steps)"
 									radius={2}
 									fillOpacity={0.2}
-									activeIndex={6}
-									activeBar={<Rectangle fillOpacity={0.8} />}
 								/>
 								<XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={4} hide />
 							</BarChart>
@@ -712,8 +710,6 @@ export default function Charts() {
 									fill="var(--color-calories)"
 									radius={2}
 									fillOpacity={0.2}
-									activeIndex={6}
-									activeBar={<Rectangle fillOpacity={0.8} />}
 								/>
 								<XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={4} hide />
 							</BarChart>

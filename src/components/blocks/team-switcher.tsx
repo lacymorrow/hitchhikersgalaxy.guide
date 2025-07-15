@@ -100,6 +100,9 @@ export function TeamSwitcher({
 		setIsLoading(true);
 		try {
 			const team = await createTeam(userId, newTeamName.trim());
+			if (!team) {
+				throw new Error("Failed to create team");
+			}
 
 			// Reload teams to get the updated list for consistency
 			const userTeams = await getUserTeams(userId);

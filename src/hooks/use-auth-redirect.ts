@@ -28,7 +28,7 @@ export function createSignOutRedirectUrl(pathname: string): string {
  */
 export function useSignInRedirectUrl(): string {
 	const pathname = usePathname();
-	return createSignInRedirectUrl(pathname);
+	return createSignInRedirectUrl(pathname || '/');
 }
 
 /**
@@ -37,5 +37,5 @@ export function useSignInRedirectUrl(): string {
  */
 export function useSignOutRedirectUrl(): string {
 	const pathname = usePathname();
-	return createSignOutRedirectUrl(pathname);
+	return createSignOutRedirectUrl(pathname || '/');
 }

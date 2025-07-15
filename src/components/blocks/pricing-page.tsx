@@ -106,7 +106,7 @@ export function PricingPageComponent() {
 	);
 }
 
-function Feature({ children, included = false }) {
+function Feature({ children, included = false }: { children: React.ReactNode; included?: boolean }) {
 	return (
 		<div className="flex items-center space-x-2">
 			{included ? (

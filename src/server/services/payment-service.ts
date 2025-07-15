@@ -554,7 +554,7 @@ const PaymentService = {
 				});
 
 				return newPayment;
-			});
+			}, null);
 		} catch (error) {
 			logger.error("Error creating payment", { error, orderId: data.orderId });
 			throw error;
@@ -609,7 +609,7 @@ const PaymentService = {
 				.where(eq(payments.orderId, orderId))
 				.limit(1)
 				.then((rows) => rows[0] || null);
-		});
+		}, null);
 	},
 
 	/**

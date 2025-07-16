@@ -71,7 +71,6 @@ export async function deployToVercel(projectId: string): Promise<DeployToVercelR
 
 		// If using default project, we'll deploy the Shipkit starter
 		if (projectId === "default") {
-			console.log("simulating deployment of default Shipkit project");
 			// For now, we'll just simulate a successful deployment
 			await new Promise((resolve) => setTimeout(resolve, 1000));
 

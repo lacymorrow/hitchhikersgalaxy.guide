@@ -52,7 +52,6 @@ export async function saveVercelDeployment(deploymentInfo: DeploymentInfo) {
 		});
 
 		if (existing.docs.length > 0) {
-			console.log(`Deployment ${deploymentInfo.deploymentId} already exists, skipping save.`);
 			return existing.docs[0] as VercelDeployment; // Return the existing one
 		}
 
@@ -72,7 +71,6 @@ export async function saveVercelDeployment(deploymentInfo: DeploymentInfo) {
 			},
 		});
 
-		console.log(`Successfully saved Vercel deployment: ${newDeployment.id}`);
 		return newDeployment as VercelDeployment;
 	} catch (error) {
 		console.error("Error saving Vercel deployment info:", error);

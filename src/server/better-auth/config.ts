@@ -97,13 +97,11 @@ export const auth = (() => {
 		callbacks: {
 			async signUp({ user, account }: { user: any; account: any }) {
 				// Custom logic after user signs up
-				console.log("Better Auth: User signed up", { userId: user.id, email: user.email });
 				return { user, account };
 			},
 
 			async signIn({ user, account }: { user: any; account: any }) {
 				// Custom logic after user signs in
-				console.log("Better Auth: User signed in", { userId: user.id, email: user.email });
 				return { user, account };
 			},
 		},

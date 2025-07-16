@@ -168,14 +168,14 @@ export async function generateMetadata({
 			openGraph:
 				meta?.image && isMedia(meta.image) && meta.image.url
 					? {
-							images: [
-								{
-									url: meta.image.url,
-									width: 1200,
-									height: 630,
-								},
-							],
-						}
+						images: [
+							{
+								url: meta.image.url,
+								width: 1200,
+								height: 630,
+							},
+						],
+					}
 					: undefined,
 		};
 	}
@@ -195,7 +195,7 @@ export default async function Page({ params: paramsPromise }: PageProps) {
 
 	if (pageData.source === "payload" || pageData.source === "builder") {
 		return (
-			<AppRouterLayout>
+			<>
 				{pageData.source === "payload" && (
 					<BlockRenderer blocks={(pageData.data.layout as PageBlock[]) ?? []} />
 				)}
@@ -203,7 +203,7 @@ export default async function Page({ params: paramsPromise }: PageProps) {
 				{pageData.source === "builder" && (
 					<RenderBuilderContent content={pageData.data} model="page" />
 				)}
-			</AppRouterLayout>
+			</>
 		);
 	}
 

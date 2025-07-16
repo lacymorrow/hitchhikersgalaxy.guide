@@ -1,0 +1,81 @@
+{
+  "sessionId": "session-1752648063963-0du12c7qf",
+  "checkpointId": "checkpoint-1752648093967-l9ukvtnwk",
+  "checkpointName": "auto-save-1752648093967",
+  "timestamp": "2025-07-16T06:41:33.967Z",
+  "data": {
+    "timestamp": "2025-07-16T06:41:33.967Z",
+    "changeCount": 5,
+    "changesByType": {
+      "swarm_created": [
+        {
+          "type": "swarm_created",
+          "data": {
+            "swarmId": "swarm-1752648063962-jq2s9zk3s",
+            "swarmName": "hive-1752648063950",
+            "objective": "Clean up the codebase and distill all documentation down into just the necessary details, deleting redundancies, removing unnecessary files, documenting all code for an LLM hive mind",
+            "workerCount": 8
+          },
+          "timestamp": "2025-07-16T06:41:03.965Z"
+        }
+      ],
+      "agent_activity": [
+        {
+          "type": "agent_activity",
+          "data": {
+            "agentId": "worker-swarm-1752648063962-jq2s9zk3s-0",
+            "activity": "spawned",
+            "data": {
+              "type": "researcher",
+              "name": "Researcher Worker 1"
+            }
+          },
+          "timestamp": "2025-07-16T06:41:03.968Z"
+        },
+        {
+          "type": "agent_activity",
+          "data": {
+            "agentId": "worker-swarm-1752648063962-jq2s9zk3s-1",
+            "activity": "spawned",
+            "data": {
+              "type": "coder",
+              "name": "Coder Worker 2"
+            }
+          },
+          "timestamp": "2025-07-16T06:41:03.968Z"
+        },
+        {
+          "type": "agent_activity",
+          "data": {
+            "agentId": "worker-swarm-1752648063962-jq2s9zk3s-2",
+            "activity": "spawned",
+            "data": {
+              "type": "analyst",
+              "name": "Analyst Worker 3"
+            }
+          },
+          "timestamp": "2025-07-16T06:41:03.969Z"
+        },
+        {
+          "type": "agent_activity",
+          "data": {
+            "agentId": "worker-swarm-1752648063962-jq2s9zk3s-3",
+            "activity": "spawned",
+            "data": {
+              "type": "tester",
+              "name": "Tester Worker 4"
+            }
+          },
+          "timestamp": "2025-07-16T06:41:03.969Z"
+        }
+      ]
+    },
+    "statistics": {
+      "tasksProcessed": 0,
+      "tasksCompleted": 0,
+      "memoryUpdates": 0,
+      "agentActivities": 4,
+      "consensusDecisions": 0
+    }
+  }
+}

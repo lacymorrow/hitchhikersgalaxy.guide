@@ -32,12 +32,12 @@ export function OnboardingHeader() {
 					</p>
 
 					<div className="flex gap-4 flex-row justify-center">
-						<RainbowButton>
-							<Link href="/docs" className="inline-flex">
+						<Link href="/docs" className="inline-flex">
+							<RainbowButton>
 								<BookOpen className="mr-2 h-4 w-4" />
 								View Documentation
-							</Link>
-						</RainbowButton>
+							</RainbowButton>
+						</Link>
 					</div>
 
 					<div className="flex items-center justify-center gap-2 text-sm text-muted-foreground py-6">

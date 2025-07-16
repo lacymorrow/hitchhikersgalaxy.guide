@@ -1,45 +1,127 @@
 "use client";
 
-// We're moving this to a client component since WebContainer can only run in the browser
+/**
+ * WEBCONTAINER MANAGEMENT SYSTEM
+ * 
+ * This file provides a comprehensive interface for managing WebContainer instances
+ * in the browser environment. WebContainer is a browser-based runtime that enables
+ * running Node.js applications directly in the browser without server-side execution.
+ * 
+ * KEY FEATURES:
+ * - Container lifecycle management (boot, install, run commands)
+ * - File system operations and change tracking
+ * - Package installation and dependency management
+ * - Command execution with output streaming
+ * - Template file processing and project setup
+ * 
+ * IMPORTANT: This module runs client-side only as WebContainer requires browser APIs
+ * and cannot function in server-side environments.
+ * 
+ * @file container-utils.ts
+ * @version 1.0.0
+ * @author Shipkit Development Team
+ */
+
 import type { FileSystemTree } from "@webcontainer/api";
 import { logInfo } from "./logging";
 import { getAlternativePaths, getEssentialConfigFiles, ProjectPaths } from "./project-config";
 import { processTemplateFiles } from "./shared-utils";
 import type { ContainerFile } from "./types";
 
-// Track whether the container has already been booted
+/**
+ * GLOBAL CONTAINER STATE
+ * 
+ * These variables maintain singleton state for the WebContainer instance
+ * to prevent multiple containers from being created unnecessarily.
+ */
 let containerInstance: any = null;
 let bootPromise: Promise<any> | null = null;
 
-// Simplified interface for working with WebContainers
+/**
+ * CONTAINER MANAGER CLASS
+ * 
+ * Provides a simplified, high-level interface for working with WebContainers.
+ * This class manages the entire lifecycle of a WebContainer instance including:
+ * 
+ * - Container initialization and boot process
+ * - File system operations and change tracking
+ * - Package installation and dependency management
+ * - Command execution with real-time output streaming
+ * - Template processing and project setup
+ * 
+ * USAGE EXAMPLE:
+ * ```typescript
+ * const manager = new ContainerManager("/path/to/templates");
+ * await manager.boot();
+ * await manager.install("react");
+ * const output = await manager.run("npm", ["start"]);
+ * ```
+ */
 export class ContainerManager {
+	/** WebContainer instance - the core runtime environment */
 	private container: any;
+	
+	/** Flag indicating if container has been initialized and is ready for operations */
 	private isReady = false;
+	
+	/** File system snapshot taken before operations to track changes */
 	private fileSystemSnapshotBefore: Map<string, string> = new Map();
+	
+	/** File system snapshot taken after operations to track changes */
 	private fileSystemSnapshotAfter: Map<string, string> = new Map();
+	
+	/** List of files that have been modified during container operations */
 	private changedFiles: ContainerFile[] = [];
 
+	/**
+	 * Initialize a new ContainerManager instance
+	 * 
+	 * @param templateBaseDir - Base directory path containing template files
+	 *                         used for initializing the container file system
+	 */
 	constructor(private templateBaseDir: string) {}
 
+	/**
+	 * Initialize and boot the WebContainer instance
+	 * 
+	 * This method handles the complete initialization process including:
+	 * 1. Singleton pattern - reuses existing container if available
+	 * 2. Dynamic WebContainer import (only loads when needed)
+	 * 3. Template file processing and file system setup
+	 * 4. Container boot process with error handling
+	 * 
+	 * IMPORTANT: This method implements a singleton pattern to prevent
+	 * multiple container instances, which can cause resource conflicts.
+	 * 
+	 * @returns Promise<any> - The initialized WebContainer instance
+	 * @throws Error if container fails to boot or template processing fails
+	 */
 	async boot() {
+		// Return existing boot promise if container is already being initialized
 		if (bootPromise) {
 			return bootPromise;
 		}
 
+		// Return existing container instance if already booted
 		if (containerInstance) {
 			this.container = containerInstance;
 			this.isReady = true;
 			return Promise.resolve(this.container);
 		}
 
+		// Initialize new container instance
 		bootPromise = (async () => {
+			// Dynamic import to avoid loading WebContainer in server environments
 			const { WebContainer } = await import("@webcontainer/api");
 
+			// Process template files for initial file system setup
 			const templateFiles = await processTemplateFiles(this.templateBaseDir);
 			const templateFileSystem = new Map(templateFiles.map((file) => [file.path, file.content]));
 
+			// Boot the WebContainer instance
 			this.container = await WebContainer.boot();
 
+			// Store singleton reference and mark as ready
 			containerInstance = this.container;
 			this.isReady = true;
 
@@ -49,15 +131,33 @@ export class ContainerManager {
 		return bootPromise;
 	}
 
+	/**
+	 * Install a package in the WebContainer using npm
+	 * 
+	 * This method handles npm package installation within the container
+	 * with real-time output streaming and error handling.
+	 * 
+	 * PROCESS FLOW:
+	 * 1. Validate container is ready for operations
+	 * 2. Spawn npm install process with specified package
+	 * 3. Stream output in real-time using WritableStream
+	 * 4. Monitor exit code and handle errors
+	 * 
+	 * @param packageName - Name of the npm package to install
+	 * @returns Promise<string> - Combined output from the installation process
+	 * @throws Error if container is not ready or installation fails
+	 */
 	async install(packageName: string) {
 		if (!this.isReady) {
 			throw new Error("Container is not ready");
 		}
 
+		// Spawn npm install process within the container
 		const installProcess = await this.container.spawn("npm", ["install", packageName]);
 
 		const output: string[] = [];
 
+		// Stream output from the installation process
 		installProcess.output.pipeTo(
 			new WritableStream({
 				write: (chunk) => {
@@ -67,6 +167,7 @@ export class ContainerManager {
 			})
 		);
 
+		// Wait for process completion and check exit code
 		const exitCode = await installProcess.exit;
 
 		if (exitCode !== 0) {
@@ -76,15 +177,34 @@ export class ContainerManager {
 		return output.join("");
 	}
 
+	/**
+	 * Execute a command in the WebContainer
+	 * 
+	 * This method provides a generic interface for running any command
+	 * within the container environment with real-time output streaming.
+	 * 
+	 * SUPPORTED COMMANDS:
+	 * - npm/yarn/pnpm package manager commands
+	 * - Node.js script execution
+	 * - Build tools (webpack, vite, etc.)
+	 * - Custom shell commands
+	 * 
+	 * @param command - The command to execute (e.g., "npm", "node", "npx")
+	 * @param args - Array of arguments to pass to the command
+	 * @returns Promise<string> - Combined output from the command execution
+	 * @throws Error if container is not ready or command fails
+	 */
 	async run(command: string, args: string[] = []) {
 		if (!this.isReady) {
 			throw new Error("Container is not ready");
 		}
 
+		// Spawn the specified command within the container
 		const process = await this.container.spawn(command, args);
 
 		const output: string[] = [];
 
+		// Stream output from the command execution
 		process.output.pipeTo(
 			new WritableStream({
 				write: (chunk) => {
@@ -94,6 +214,7 @@ export class ContainerManager {
 			})
 		);
 
+		// Wait for process completion and check exit code
 		const exitCode = await process.exit;
 
 		if (exitCode !== 0) {

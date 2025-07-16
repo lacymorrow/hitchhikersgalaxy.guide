@@ -54,8 +54,6 @@ const CredentialsSchema = z.object({
 type SignInCredentialsInput = z.infer<typeof CredentialsSchema>;
 
 export const signInWithCredentialsAction = async (input: SignInCredentialsInput) => {
-	// Log the received input for debugging
-	console.log("signInWithCredentialsAction received input:", JSON.stringify(input, null, 2));
 
 	// Validate input using the schema (optional but good practice)
 	const parsed = CredentialsSchema.safeParse(input);
@@ -73,7 +71,6 @@ export const signInWithCredentialsAction = async (input: SignInCredentialsInput)
 			redirect: redirect ?? false, // Use provided redirect, default to false
 			redirectTo,
 		});
-		// console.log("Sign in result:", result);
 		return result;
 	} catch (error: any) {
 		console.error("Error in signInWithCredentialsAction:", error);
@@ -88,10 +85,6 @@ export const signInWithCredentialsAction = async (input: SignInCredentialsInput)
 };
 
 export const signUpWithCredentialsAction = async (_prevState: ActionState, formData: FormData) => {
-	// console.log("signUpWithCredentialsAction called with:", {
-	// 	email: formData.get("email"),
-	// 	passwordExists: !!formData.get("password"),
-	// });
 
 	const parsed = CredentialsSchema.safeParse(Object.fromEntries(formData));
 
@@ -100,7 +93,6 @@ export const signUpWithCredentialsAction = async (_prevState: ActionState, formD
 	}
 	try {
 		const result = await AuthService.signUpWithCredentials(parsed.data);
-		// console.log("Sign up result:", result);
 
 		if (!result.success || !result.user) {
 			return { success: false, error: result.error || "Sign up failed" };
@@ -112,7 +104,6 @@ export const signUpWithCredentialsAction = async (_prevState: ActionState, formD
 				console.warn("Resend client not initialized - skipping verification email");
 			} else {
 				const RESEND_FROM_EMAIL = env.RESEND_FROM_EMAIL || "noreply@example.com";
-				// console.log(RESEND_FROM_EMAIL);
 				await resend.emails.send({
 					from: RESEND_FROM_EMAIL,
 					to: parsed.data.email,
@@ -146,7 +137,6 @@ export const forgotPasswordAction = createServerAction()
 			await AuthService.forgotPassword(input.email);
 			return { success: true };
 		} catch (error) {
-			console.log(RESEND_FROM_EMAIL);
 			console.error("Error in forgotPasswordAction:", error);
 			return {
 				success: false,

@@ -6,72 +6,22 @@ Made with ❤️ by [Lacy](https://lacy.sh)
 
 ## Deploy in 30 Seconds
 
-Get started with ShipKit in three easy steps:
-
-1. **Click Deploy** 👇
-2. **Connect to Vercel**
-3. **Follow the Setup Wizard**
-
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshipkit-io%2Fbones&project-name=bones-app&repository-name=bones-app&redirect-url=https%3A%2F%2Fshipkit.io%2Fx%2Fvercel%2Fdeploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=%2F%2Fshipkit.io%2Fimages%2Fdemo.png)
 
 [![Open in Codeflow](https://developer.stackblitz.com/img/open_in_codeflow.svg)](https://pr.new/lacymorrow/shipkit)
+
 No environment variables needed to start! Our setup wizard will guide you through the configuration after deployment.
 
 ## What's Included
 
-- 🔐 **Authentication** - Multiple providers (Discord, GitHub, Google) + Guest access
-- 💳 **Payments** - Integrated with Lemon Squeezy
-- 📝 **CMS** - Built-in Payload CMS
-- 🎨 **Visual Editor** - Builder.io integration
-- 📧 **Email** - Resend for transactional emails
-- 🤖 **AI Ready** - OpenAI/Anthropic integration
-- 🎯 **Analytics** - Track user behavior
-- 🚀 **Performance** - Edge-optimized
-
-### 🔐 Authentication Features
-
-ShipKit includes flexible authentication that adapts to your needs:
-
-**OAuth Providers**: Google, GitHub, Discord, Twitter, GitLab, Bitbucket
-**Magic Link**: Email-based authentication via Resend  
-**Credentials**: Username/password with Payload CMS
-**Guest Access**: Automatic fallback when no auth methods are configured
-
-#### Guest Authentication
-
-When no authentication providers are configured, ShipKit automatically enables guest authentication. Users can simply enter their name to access the application without creating an account. Perfect for:
-
-- Development and testing environments
-- Demo applications
-- Apps that don't require user accounts
-- Gradual authentication rollout
-
-To enable guest-only mode, simply don't set any `NEXT_PUBLIC_FEATURE_AUTH_*_ENABLED` environment variables.
-
-## Quick Start Guide
-
-### 1. Deploy to Vercel
-
-Click the "Deploy with Vercel" button above and follow the prompts.
-
-### 2. Run Setup Wizard
-
-After deployment, you'll be guided through setting up:
-
-- Database connection
-- Authentication providers
-- Payment processing
-- Content management
-- Optional services
-
-### 3. Start Building
-
-Once setup is complete, you're ready to:
-
-- Customize your UI
-- Add content
-- Configure payments
-- Launch your product!
+- 🔐 **Authentication** - Multiple providers + Guest access ([details](docs/auth.mdx))
+- 💳 **Payments** - Lemon Squeezy, Stripe, Polar ([details](docs/payments.mdx))
+- 📝 **CMS** - Payload CMS v3 ([details](docs/content-management/payload.mdx))
+- 🎨 **Visual Editor** - Builder.io ([details](docs/content-management/builder.mdx))
+- 📧 **Email** - Resend integration ([details](docs/email.mdx))
+- 🤖 **AI Ready** - OpenAI/Anthropic ([details](docs/ai/claude.mdx))
+- 🎯 **Analytics** - PostHog & Vercel ([details](docs/analytics.mdx))
+- 🚀 **Performance** - Edge-optimized with caching ([details](docs/caching.mdx))
 
 ## Development Tools
 
@@ -86,11 +36,32 @@ Built with modern technologies:
 - 🎨 [Builder.io](https://builder.io) - Visual Editing
 - 📧 [Resend](https://resend.com) - Email Service
 
+## Quick Start
+
+1. **Deploy** - Click the Deploy button above
+2. **Configure** - Follow the setup wizard
+3. **Build** - Start customizing your app
+
+## Development
+
+```bash
+# Clone and install
+git clone https://github.com/shipkit-io/shipkit
+cd shipkit
+pnpm install
+
+# Start development
+pnpm dev
+```
+
+For detailed development instructions, see [CLAUDE.md](CLAUDE.md) (for AI assistants) or [docs/development.mdx](docs/development.mdx).
+
 ## Documentation
 
-- [Setup Guide](docs/development/deployment.mdx)
-- [Configuration](docs/development/environment.mdx)
-- [Development](docs/development.mdx)
+- 📚 [Full Documentation](docs/index.mdx)
+- 🚀 [Deployment Guide](docs/deployment.mdx)
+- 🔧 [Development Guide](docs/development.mdx)
+- 🤖 [AI Assistant Guide](CLAUDE.md)
 
 ## Support
 

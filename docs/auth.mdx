@@ -5,14 +5,45 @@ description: 'Authentication configuration using Auth.js (NextAuth) in ShipKit'
 
 # Authentication
 
-ShipKit uses [Auth.js](https://authjs.dev) (formerly NextAuth.js) for authentication, supporting multiple providers out of the box.
+ShipKit provides flexible authentication that adapts to your needs using [Auth.js](https://authjs.dev) (NextAuth.js v5) and Better Auth as alternative providers.
 
-## Supported Providers
+## Authentication Methods
 
-- Discord
-- GitHub
-- Google
-- Email (Passwordless)
+### OAuth Providers
+- **Google** - Sign in with Google account
+- **GitHub** - Developer-friendly authentication  
+- **Discord** - Gaming and community apps
+- **Twitter** - Social login
+- **GitLab** - Alternative to GitHub
+- **Bitbucket** - Atlassian ecosystem
+
+### Other Methods
+- **Magic Link** - Passwordless email authentication via Resend
+- **Credentials** - Username/password with Payload CMS integration
+- **Guest Access** - Automatic fallback when no auth methods configured
+
+## Guest Authentication
+
+When no authentication providers are configured (no `NEXT_PUBLIC_FEATURE_AUTH_*_ENABLED` variables set), ShipKit automatically enables guest authentication. Users can simply enter their name to access the application.
+
+Perfect for:
+- Development and testing environments
+- Demo applications  
+- Apps that don't require user accounts
+- Gradual authentication rollout
+
+## Feature Flags
+
+Enable specific auth providers using environment variables:
+
+```env
+# Enable specific providers
+NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED=true
+NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED=true
+NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED=true
+NEXT_PUBLIC_FEATURE_AUTH_MAGICLINK_ENABLED=true
+NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED=true
+```
 
 ## Configuration
 

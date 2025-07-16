@@ -1,6 +1,17 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "buildCommand": "pnpm run build",
+  "rewrites": [
+    {
+      "source": "/ai",
+      "destination": "https://ai-offline.vercel.app/"
+    },
+    {
+      "source": "/ai/:match*",
+      "destination": "https://ai-offline.vercel.app/:match*"
+    }
+  ],
+
+	"buildCommand": "pnpm run build",
   "devCommand": "pnpm run dev",
   "installCommand": "pnpm install",
 

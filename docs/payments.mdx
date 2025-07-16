@@ -98,6 +98,57 @@ The checkout flow is now properly configured:
 
 ## Webhooks Security & Best Practices
 
+### Security Requirements
+
+**CRITICAL:** Always verify webhook signatures to prevent malicious actors from sending fake webhooks:
+
+```typescript
+function verifyWebhookSignature(rawBody: string, signature: string): boolean {
+  const hmac = crypto.createHmac("sha256", env.LEMONSQUEEZY_WEBHOOK_SECRET);
+  const digest = Buffer.from(hmac.update(rawBody, "utf8").digest("hex"), "hex");
+  const signatureBuffer = Buffer.from(signature, "hex");
+  
+  // Use timing-safe comparison
+  return crypto.timingSafeEqual(digest, signatureBuffer);
+}
+```
+
+### Webhook Configuration
+
+1. Set webhook URL in Lemon Squeezy dashboard: `https://yourdomain.com/api/webhooks/lemonsqueezy`
+2. Generate a secure webhook secret
+3. Subscribe to required events:
+   - `order_created` - New purchases
+   - `order_refunded` - Handle refunds
+   - `subscription_created` - New subscriptions
+   - `subscription_updated` - Plan changes
+   - `subscription_cancelled` - Cancellations
+   - `subscription_resumed` - Reactivations
+   - `subscription_expired` - Expirations
+   - `subscription_payment_*` - Payment events
+
+### Implementation Best Practices
+
+- **Process asynchronously** - Return 200 immediately, process in background
+- **Implement idempotency** - Handle duplicate webhooks gracefully
+- **Log everything** - Track all webhook events for debugging
+- **Handle all event types** - Even if you don't process them yet
+- **Test thoroughly** - Use Lemon Squeezy's webhook testing tools
+
+## Multiple Payment Providers
+
+ShipKit also supports:
+- **Stripe** - Enterprise-grade payments
+- **Polar** - Creator-focused platform
+
+Enable with feature flags:
+```env
+NEXT_PUBLIC_FEATURE_PAYMENTS_STRIPE_ENABLED=true
+NEXT_PUBLIC_FEATURE_PAYMENTS_POLAR_ENABLED=true
+```
+
+See provider-specific documentation in `/docs/integrations/`
+
 **⚠️ CRITICAL:** Webhooks are essential for secure payment processing. Our implementation includes:
 
 - ✅ **Signature verification** (prevents fake webhooks)

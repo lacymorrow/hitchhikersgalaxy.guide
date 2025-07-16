@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { STATUS_CODES } from "@/config/status-codes";
+import { logger } from "@/lib/logger";
 import { getPayloadClient, payload } from "@/lib/payload/payload";
 import { signInSchema } from "@/lib/schemas/auth";
 import { signIn, signOut } from "@/server/auth";
@@ -125,10 +126,10 @@ export const AuthService = {
 					})) as unknown as PayloadUser;
 				} catch (error) {
 					// User doesn't exist in Payload CMS
-					console.debug(`User ${id} not found in Payload CMS, will create`);
+					logger.debug(`User ${id} not found in Payload CMS, will create`);
 				}
 			} else {
-				console.debug("Payload CMS is not available, proceeding without it");
+				logger.debug("Payload CMS is not available, proceeding without it");
 			}
 
 			// Create user in Payload CMS if not exists
@@ -146,9 +147,9 @@ export const AuthService = {
 							password: crypto.randomBytes(16).toString("hex"),
 						},
 					})) as unknown as PayloadUser;
-					console.log(`Created user ${id} in Payload CMS`);
+					logger.info(`Created user ${id} in Payload CMS`);
 				} catch (error) {
-					console.error(`Failed to create user ${id} in Payload CMS:`, error);
+					logger.error(`Failed to create user ${id} in Payload CMS:`, error);
 					throw new Error("Failed to create user in Payload CMS");
 				}
 			}
@@ -160,11 +161,11 @@ export const AuthService = {
 				name: name || email,
 				image,
 			});
-			// console.log(`Ensured user ${id} exists in Shipkit database`);
+			// logger.info(`Ensured user ${id} exists in Shipkit database`);
 
 			return { id, email };
 		} catch (error) {
-			console.error("Error synchronizing user:", error);
+			logger.error("Error synchronizing user:", error);
 			// Attempt cleanup if partial creation occurred
 			await this.cleanupPartialUserCreation(id);
 			throw error;
@@ -187,10 +188,10 @@ export const AuthService = {
 						collection: "users",
 						id: userId,
 					});
-					console.debug(`Cleaned up user ${userId} from Payload CMS`);
+					logger.debug(`Cleaned up user ${userId} from Payload CMS`);
 				} catch (error) {
 					// Ignore if user doesn't exist
-					console.debug(`User ${userId} not found in Payload CMS during cleanup`);
+					logger.debug(`User ${userId} not found in Payload CMS during cleanup`);
 				}
 			}
 
@@ -198,18 +199,18 @@ export const AuthService = {
 			try {
 				if (db) {
 					await db.delete(users).where(eq(users.id, userId));
-					// console.log(`Cleaned up user ${userId} from Shipkit database`);
+					// logger.info(`Cleaned up user ${userId} from Shipkit database`);
 				}
 			} catch (error) {
 				// Ignore if user doesn't exist
 				if (!(error instanceof Error && error.message.includes("Record to delete not found"))) {
-					console.warn(`Error cleaning up user ${userId} from Shipkit database:`, error);
+					logger.warn(`Error cleaning up user ${userId} from Shipkit database:`, error);
 				} else {
-					console.debug(`User ${userId} not found in Shipkit database during cleanup`);
+					logger.debug(`User ${userId} not found in Shipkit database during cleanup`);
 				}
 			}
 		} catch (error) {
-			console.error(`Error during cleanup for user ${userId}:`, error);
+			logger.error(`Error during cleanup for user ${userId}:`, error);
 		}
 	},
 
@@ -240,9 +241,9 @@ export const AuthService = {
 						id: userId,
 						data: payloadUpdateData,
 					});
-					// console.log(`Updated user ${userId} in Payload CMS`);
+					// logger.info(`Updated user ${userId} in Payload CMS`);
 				} catch (payloadError) {
-					console.warn("Failed to update user in Payload:", payloadError);
+					logger.warn("Failed to update user in Payload:", payloadError);
 				}
 			}
 
@@ -261,16 +262,16 @@ export const AuthService = {
 							updatedAt: new Date(),
 						})
 						.where(eq(users.id, userId));
-					// console.log(`Updated user ${userId} in Shipkit database`);
+					// logger.info(`Updated user ${userId} in Shipkit database`);
 				} catch (error) {
-					console.error(`Failed to update user ${userId} in Shipkit database:`, error);
+					logger.error(`Failed to update user ${userId} in Shipkit database:`, error);
 					throw new Error("Failed to update user in Shipkit database");
 				}
 			}
 
 			return { id: userId, email: userData.email };
 		} catch (error) {
-			console.error(`Error updating user ${userId}:`, error);
+			logger.error(`Error updating user ${userId}:`, error);
 			throw error;
 		}
 	},
@@ -290,9 +291,9 @@ export const AuthService = {
 						collection: "users",
 						id: userId,
 					});
-					// console.log(`Deleted user ${userId} from Payload CMS`);
+					// logger.info(`Deleted user ${userId} from Payload CMS`);
 				} catch (payloadError) {
-					console.warn("Failed to delete user from Payload:", payloadError);
+					logger.warn("Failed to delete user from Payload:", payloadError);
 				}
 			}
 
@@ -304,16 +305,16 @@ export const AuthService = {
 				});
 
 				if (shipkitUser) {
-					console.warn(
+					logger.warn(
 						`User ${userId} still exists in Shipkit after Payload deletion, forcing delete`
 					);
 					await db.delete(users).where(eq(users.id, userId));
 				}
 			}
 
-			// console.log(`Successfully deleted user ${userId} from both databases`);
+			// logger.info(`Successfully deleted user ${userId} from both databases`);
 		} catch (error) {
-			console.error(`Error deleting user ${userId}:`, error);
+			logger.error(`Error deleting user ${userId}:`, error);
 			throw error;
 		}
 	},
@@ -368,7 +369,7 @@ export const AuthService = {
 				callbackUrl: redirectTo, // Use callbackUrl instead of redirectTo
 			});
 		} catch (error) {
-			console.error("Error in signInWithCredentials:", error);
+			logger.error("Error in signInWithCredentials:", error);
 			throw error;
 		}
 	},
@@ -390,7 +391,7 @@ export const AuthService = {
 	}) {
 		try {
 			if (!payload) {
-				console.error("Payload CMS is not initialized");
+				logger.error("Payload CMS is not initialized");
 				throw new Error("Authentication service unavailable");
 			}
 
@@ -410,7 +411,7 @@ export const AuthService = {
 
 			// Generate a consistent ID for both databases
 			const userId = this.generateConsistentId();
-			// console.log(`Generated consistent ID ${userId} for new user`);
+			// logger.info(`Generated consistent ID ${userId} for new user`);
 
 			// Create new user in Payload CMS with the consistent ID
 			const newUser = await payload.create({
@@ -428,7 +429,7 @@ export const AuthService = {
 				throw new Error("Failed to create Payload CMS user");
 			}
 
-			console.debug(`Created user in Payload CMS with ID ${userId}`);
+			logger.debug(`Created user in Payload CMS with ID ${userId}`);
 
 			// Create the user in the Shipkit database with the same ID
 			await userService.ensureUserExists({
@@ -438,7 +439,7 @@ export const AuthService = {
 				image: null,
 			});
 
-			console.debug(`Created user in Shipkit database with ID ${userId}`);
+			logger.debug(`Created user in Shipkit database with ID ${userId}`);
 
 			// Sign in the user and return the result directly
 			return await signIn("credentials", {
@@ -448,7 +449,7 @@ export const AuthService = {
 				callbackUrl: redirectTo, // Use callbackUrl instead of redirectTo
 			});
 		} catch (error) {
-			console.error("Sign up error:", error);
+			logger.error("Sign up error:", error);
 			// If we have a userId, attempt cleanup
 			if (error instanceof Error && error.message.includes("ID")) {
 				const match = error.message.match(/ID\s+(\S+)/);
@@ -493,10 +494,10 @@ export const AuthService = {
 				},
 			});
 
-			console.debug(`Updated session for user ${userId} with new data`);
+			logger.debug(`Updated session for user ${userId} with new data`);
 			return updatedSession;
 		} catch (error) {
-			console.error(`Error updating session for user ${userId}:`, error);
+			logger.error(`Error updating session for user ${userId}:`, error);
 			throw error;
 		}
 	},
@@ -510,7 +511,7 @@ export const AuthService = {
 		try {
 			// Validate email exists in Payload CMS first
 			if (!payload) {
-				console.error("Payload CMS is not initialized");
+				logger.error("Payload CMS is not initialized");
 				throw new Error("Authentication service unavailable");
 			}
 
@@ -525,7 +526,7 @@ export const AuthService = {
 			});
 
 			if (existingUsers.docs.length === 0) {
-				console.warn(`No user found with email: ${email}`);
+				logger.warn(`No user found with email: ${email}`);
 				// Return success even when the email doesn't exist to prevent email enumeration
 				return { success: true };
 			}
@@ -538,10 +539,10 @@ export const AuthService = {
 				},
 			});
 
-			console.debug(`Password reset email sent to ${email}`);
+			logger.debug(`Password reset email sent to ${email}`);
 			return { success: true };
 		} catch (error) {
-			console.error("Error in forgotPassword:", error);
+			logger.error("Error in forgotPassword:", error);
 			throw error;
 		}
 	},
@@ -555,7 +556,7 @@ export const AuthService = {
 	async resetPassword(token: string, password: string): Promise<{ success: true }> {
 		try {
 			if (!payload) {
-				console.error("Payload CMS is not initialized");
+				logger.error("Payload CMS is not initialized");
 				throw new Error("Authentication service unavailable");
 			}
 
@@ -569,10 +570,10 @@ export const AuthService = {
 				overrideAccess: true,
 			});
 
-			// console.log("Password reset successful");
+			// logger.info("Password reset successful");
 			return { success: true };
 		} catch (error) {
-			console.error("Error in resetPassword:", error);
+			logger.error("Error in resetPassword:", error);
 			throw error;
 		}
 	},
@@ -585,18 +586,18 @@ export const AuthService = {
 		try {
 			// Log the credentials for debugging (excluding password)
 			if (credentials && typeof credentials === "object") {
-				console.debug("Validating credentials:", {
+				logger.debug("Validating credentials:", {
 					...(credentials as Record<string, unknown>),
 					password: "[REDACTED]",
 				});
 			} else {
-				console.debug("Invalid credentials format:", typeof credentials);
+				logger.debug("Invalid credentials format:", typeof credentials);
 			}
 
 			const parsedCredentials = signInSchema.safeParse(credentials);
 
 			if (!parsedCredentials.success) {
-				console.error("Validation error:", parsedCredentials.error);
+				logger.error("Validation error:", parsedCredentials.error);
 				throw new Error(STATUS_CODES.CREDENTIALS.message);
 			}
 
@@ -604,7 +605,7 @@ export const AuthService = {
 
 			// Use Payload CMS for authentication
 			if (!payload) {
-				console.error("Payload CMS is not initialized");
+				logger.error("Payload CMS is not initialized");
 				throw new Error(STATUS_CODES.AUTH_ERROR.message);
 			}
 
@@ -620,7 +621,7 @@ export const AuthService = {
 				});
 
 				if (existingUsers.docs.length === 0) {
-					console.warn(`No user found with email: ${email}`);
+					logger.warn(`No user found with email: ${email}`);
 					// Throw a specific error instead of returning null
 					throw new Error(STATUS_CODES.CREDENTIALS.message);
 				}
@@ -636,7 +637,7 @@ export const AuthService = {
 					});
 
 					if (!result?.user) {
-						console.warn(`Invalid password for user: ${email}`);
+						logger.warn(`Invalid password for user: ${email}`);
 						throw new Error(STATUS_CODES.CREDENTIALS.message);
 					}
 
@@ -658,14 +659,14 @@ export const AuthService = {
 						image: user.image,
 					});
 
-					// console.log("User authenticated successfully:", user.id);
+					// logger.info("User authenticated successfully:", user.id);
 					return user;
 				} catch (loginError) {
-					console.warn(`Login failed for existing user: ${email}`, loginError);
+					logger.warn(`Login failed for existing user: ${email}`, loginError);
 					throw new Error(STATUS_CODES.CREDENTIALS.message);
 				}
 			} catch (error) {
-				console.error("Authentication error:", error);
+				logger.error("Authentication error:", error);
 				// Re-throw the error if it's already a specific error message
 				if (error instanceof Error && error.message === STATUS_CODES.CREDENTIALS.message) {
 					throw error;
@@ -673,7 +674,7 @@ export const AuthService = {
 				throw new Error(STATUS_CODES.AUTH_ERROR.message);
 			}
 		} catch (error) {
-			console.error("Auth error:", error);
+			logger.error("Auth error:", error);
 			// Re-throw the error instead of returning null
 			throw error;
 		}
@@ -698,7 +699,7 @@ export const AuthService = {
 
 			return { success: true, message: "Email verified successfully" };
 		} catch (error) {
-			console.error("Error verifying email:", error);
+			logger.error("Error verifying email:", error);
 			return { success: false, message: "Failed to verify email" };
 		}
 	},
@@ -726,7 +727,7 @@ export const AuthService = {
 
 			return { success: true, message: "Password reset successful" };
 		} catch (error) {
-			console.error("Error resetting password:", error);
+			logger.error("Error resetting password:", error);
 			return { success: false, message: "Failed to reset password" };
 		}
 	},
@@ -760,7 +761,7 @@ export const AuthService = {
 						data: payloadUpdateData,
 					});
 				} catch (payloadError) {
-					console.warn("Failed to update user in Payload:", payloadError);
+					logger.warn("Failed to update user in Payload:", payloadError);
 				}
 			}
 
@@ -790,7 +791,7 @@ export const AuthService = {
 				user: updatedUser as User,
 			};
 		} catch (error) {
-			console.error("Error updating user profile:", error);
+			logger.error("Error updating user profile:", error);
 			return { success: false, message: "Failed to update user profile" };
 		}
 	},
@@ -815,7 +816,7 @@ export const AuthService = {
 						id: userId,
 					});
 				} catch (payloadError) {
-					console.warn("Failed to delete user from Payload:", payloadError);
+					logger.warn("Failed to delete user from Payload:", payloadError);
 				}
 			}
 
@@ -826,7 +827,7 @@ export const AuthService = {
 
 			return { success: true, message: "Account deleted successfully" };
 		} catch (error) {
-			console.error("Error deleting user account:", error);
+			logger.error("Error deleting user account:", error);
 			return { success: false, message: "Failed to delete user account" };
 		}
 	},
@@ -879,7 +880,7 @@ export const AuthService = {
 
 			return { user: newUser };
 		} catch (error) {
-			console.error("Error creating user via CMS:", error);
+			logger.error("Error creating user via CMS:", error);
 			return { error: "Failed to create user" };
 		}
 	},
@@ -910,7 +911,7 @@ export const AuthService = {
 
 			return { success: true, message: "Password reset email sent" };
 		} catch (error) {
-			console.error("Error initiating password reset:", error);
+			logger.error("Error initiating password reset:", error);
 			// Return generic message for security
 			return { success: false, message: "An error occurred" };
 		}
@@ -934,7 +935,7 @@ export const AuthService = {
 
 			return { success: true, message: "Password reset successful" };
 		} catch (error) {
-			console.error("Error resetting password:", error);
+			logger.error("Error resetting password:", error);
 			return { success: false, message: "Invalid or expired token" };
 		}
 	},
@@ -982,11 +983,11 @@ export const AuthService = {
 
 				return { user };
 			} catch (loginError) {
-				console.warn("Login failed:", loginError);
+				logger.warn("Login failed:", loginError);
 				return { error: "Invalid credentials" };
 			}
 		} catch (error) {
-			console.error("Authentication error:", error);
+			logger.error("Authentication error:", error);
 			return { error: "Authentication error" };
 		}
 	},

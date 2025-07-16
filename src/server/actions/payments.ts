@@ -1,3 +1,30 @@
+/**
+ * @fileoverview Server actions for payment processing and management
+ * @module server/actions/payments
+ * 
+ * This file handles all payment-related server actions including:
+ * - Creating payment records from webhooks
+ * - Importing payments from external providers
+ * - Managing payment access and verification
+ * - Administrative payment operations
+ * 
+ * Key responsibilities:
+ * - Process webhook events from payment providers (Lemon Squeezy, Stripe, Polar)
+ * - Grant user access based on successful payments
+ * - Synchronize payment data with external providers
+ * - Enforce rate limiting to prevent abuse
+ * - Provide admin tools for payment management
+ * 
+ * Dependencies:
+ * - PaymentService: Core payment business logic
+ * - RateLimitService: Prevent API abuse
+ * - Multiple payment provider integrations
+ * 
+ * @security All actions require authentication except webhook handlers
+ * @security Rate limiting applied to prevent abuse
+ * @security Admin actions require admin role verification
+ */
+
 "use server";
 
 import { eq } from "drizzle-orm";
@@ -15,31 +42,50 @@ import { PaymentService } from "@/server/services/payment-service";
 import { RateLimitService } from "@/server/services/rate-limit-service";
 import type { ImportProvider, ImportStats } from "@/types/payments";
 
-// Rate limiting service
+// Rate limiting service instance - prevents API abuse
 const rateLimitService = new RateLimitService();
 
-// Rate limits
+/**
+ * Rate limit configurations for payment actions
+ * Prevents abuse and ensures system stability
+ */
 const rateLimits = {
 	importPayments: {
-		requests: 5, // 5 requests
-		duration: 60 * 30, // per 30 minutes
+		requests: 5, // Limited due to high processing cost
+		duration: 60 * 30, // 30 minutes window
 	},
 	createPayment: {
-		requests: 10, // 10 requests
-		duration: 60 * 5, // per 5 minutes
+		requests: 10, // Moderate limit for webhook processing
+		duration: 60 * 5, // 5 minutes window
 	},
 	getPayments: {
-		requests: 20, // 20 requests
-		duration: 60 * 5, // per 5 minutes
+		requests: 20, // Higher limit for read operations
+		duration: 60 * 5, // 5 minutes window
 	},
 	getAllPayments: {
-		requests: 10, // 10 requests
-		duration: 60 * 10, // per 10 minutes
+		requests: 10, // Admin operation with stricter limit
+		duration: 60 * 10, // 10 minutes window
 	},
 };
 
 /**
- * Server action to create a LemonSqueezy payment record and grant access
+ * Creates a payment record from LemonSqueezy webhook and grants user access
+ * 
+ * @param data - Payment data from LemonSqueezy webhook
+ * @param data.orderId - LemonSqueezy order ID
+ * @param data.orderIdentifier - Order identifier for lookup
+ * @param data.userId - Optional user ID (from custom data or session)
+ * @param data.userEmail - User email for account lookup
+ * @param data.customData - Custom data passed during checkout
+ * 
+ * @returns Success status and optional error message
+ * 
+ * @remarks
+ * This is typically called from webhook handlers after payment verification.
+ * It handles user account creation if needed and grants appropriate access.
+ * 
+ * @security No authentication required as this is called from webhooks
+ * @security Payment data must be verified before calling this action
  */
 export async function createLemonSqueezyPayment(data: {
 	orderId: string;

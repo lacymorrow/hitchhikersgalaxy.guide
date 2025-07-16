@@ -1,3 +1,26 @@
+/**
+ * @fileoverview Database schema definitions for ShipKit using Drizzle ORM
+ * @module server/db/schema
+ * 
+ * This file defines all database tables, relationships, and enums for the ShipKit application.
+ * It uses Drizzle ORM with PostgreSQL and supports multi-tenant architecture via table prefixing.
+ * 
+ * Key entities:
+ * - Authentication: users, accounts, sessions, verificationTokens
+ * - Payments: plans, payments, subscriptions, usage
+ * - Teams: teams, teamMembers, invitations 
+ * - API Management: apiKeys, usage tracking
+ * - Features: waitlist, analytics
+ * 
+ * Dependencies:
+ * - drizzle-orm: Type-safe ORM for database operations
+ * - next-auth: Authentication adapter types
+ * - @/env: Environment configuration for DB_PREFIX
+ * 
+ * @security All user data is properly indexed and foreign key constrained
+ * @performance Indexes are added for common query patterns
+ */
+
 import { relations, sql } from "drizzle-orm";
 import {
 	boolean,
@@ -15,39 +38,58 @@ import type { AdapterAccountType } from "next-auth/adapters";
 import { env } from "@/env";
 
 /**
- * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
- * database instance for multiple projects.
- *
- * @see https://orm.drizzle.team/docs/goodies#multi-project-schema
+ * Table creator with optional prefix support for multi-tenant deployments.
+ * Prefix is determined by DB_PREFIX environment variable.
+ * 
+ * @example
+ * // With DB_PREFIX="app1", table "users" becomes "app1_users"
+ * // Without DB_PREFIX, table remains "users"
  */
 const createTable = pgTableCreator((name) => `${env?.DB_PREFIX ?? ""}_${name}`);
 
-/* src/db/schema.ts */
+/**
+ * Subscription plans table - defines pricing tiers and billing intervals
+ * 
+ * @remarks
+ * Plans are tied to payment processor variants (not products).
+ * Each plan represents a specific pricing option (e.g., "Pro Monthly", "Pro Yearly").
+ * 
+ * @see payments - Records of actual payments made
+ * @see subscriptions - Active user subscriptions
+ */
 export const plans = createTable("plan", {
 	id: serial("id").primaryKey(),
-	productId: integer("productId").notNull(),
-	productName: text("productName"),
-	variantId: integer("variantId").notNull().unique(),
-	name: text("name").notNull(),
-	description: text("description"),
-	price: text("price").notNull(),
-	isUsageBased: boolean("isUsageBased").default(false),
-	interval: text("interval"),
-	intervalCount: integer("intervalCount"),
-	trialInterval: text("trialInterval"),
-	trialIntervalCount: integer("trialIntervalCount"),
-	sort: integer("sort"),
+	productId: integer("productId").notNull(), // Payment processor product ID
+	productName: text("productName"), // Human-readable product name
+	variantId: integer("variantId").notNull().unique(), // Payment processor variant ID (CRITICAL: use this for checkout)
+	name: text("name").notNull(), // Plan display name
+	description: text("description"), // Plan features/description
+	price: text("price").notNull(), // Price in smallest currency unit (cents)
+	isUsageBased: boolean("isUsageBased").default(false), // Whether plan has usage-based pricing
+	interval: text("interval"), // Billing interval: 'month', 'year', etc.
+	intervalCount: integer("intervalCount"), // Number of intervals (e.g., 1 month, 3 months)
+	trialInterval: text("trialInterval"), // Trial period interval
+	trialIntervalCount: integer("trialIntervalCount"), // Trial period length
+	sort: integer("sort"), // Display order
 });
 export type NewPlan = typeof plans.$inferInsert;
-
 export type Plan = typeof plans.$inferSelect;
 
+/**
+ * Payments table - records all payment transactions
+ * 
+ * @remarks
+ * Stores both one-time and subscription payments.
+ * Links to multiple payment processors (Lemon Squeezy, Stripe, Polar).
+ * 
+ * @security PII is minimized - only essential payment data stored
+ */
 export const payments = createTable("payment", {
 	id: serial("id").primaryKey(),
-	userId: varchar("user_id", { length: 255 }).notNull(),
-	orderId: varchar("order_id", { length: 255 }),
-	processorOrderId: varchar("processor_order_id", { length: 255 }),
-	amount: integer("amount"),
+	userId: varchar("user_id", { length: 255 }).notNull(), // User who made payment
+	orderId: varchar("order_id", { length: 255 }), // Internal order ID
+	processorOrderId: varchar("processor_order_id", { length: 255 }), // Payment processor's order ID
+	amount: integer("amount"), // Amount in cents
 	status: varchar("status", { length: 255 }).notNull(),
 	processor: varchar("processor", { length: 50 }),
 	productName: text("product_name"),

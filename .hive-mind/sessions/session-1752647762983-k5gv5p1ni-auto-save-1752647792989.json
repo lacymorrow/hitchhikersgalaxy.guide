@@ -1,0 +1,81 @@
+{
+  "sessionId": "session-1752647762983-k5gv5p1ni",
+  "checkpointId": "checkpoint-1752647792989-ua2d4l9fd",
+  "checkpointName": "auto-save-1752647792989",
+  "timestamp": "2025-07-16T06:36:32.991Z",
+  "data": {
+    "timestamp": "2025-07-16T06:36:32.989Z",
+    "changeCount": 5,
+    "changesByType": {
+      "swarm_created": [
+        {
+          "type": "swarm_created",
+          "data": {
+            "swarmId": "swarm-1752647762976-w62ihvi9y",
+            "swarmName": "hive-1752647762966",
+            "objective": "Analyze our event-driven architecture, look for race conditions, inconsistencies, redundancies, code smells, and improvements we should make",
+            "workerCount": 8
+          },
+          "timestamp": "2025-07-16T06:36:02.987Z"
+        }
+      ],
+      "agent_activity": [
+        {
+          "type": "agent_activity",
+          "data": {
+            "agentId": "worker-swarm-1752647762976-w62ihvi9y-0",
+            "activity": "spawned",
+            "data": {
+              "type": "researcher",
+              "name": "Researcher Worker 1"
+            }
+          },
+          "timestamp": "2025-07-16T06:36:02.996Z"
+        },
+        {
+          "type": "agent_activity",
+          "data": {
+            "agentId": "worker-swarm-1752647762976-w62ihvi9y-1",
+            "activity": "spawned",
+            "data": {
+              "type": "coder",
+              "name": "Coder Worker 2"
+            }
+          },
+          "timestamp": "2025-07-16T06:36:02.997Z"
+        },
+        {
+          "type": "agent_activity",
+          "data": {
+            "agentId": "worker-swarm-1752647762976-w62ihvi9y-2",
+            "activity": "spawned",
+            "data": {
+              "type": "analyst",
+              "name": "Analyst Worker 3"
+            }
+          },
+          "timestamp": "2025-07-16T06:36:02.998Z"
+        },
+        {
+          "type": "agent_activity",
+          "data": {
+            "agentId": "worker-swarm-1752647762976-w62ihvi9y-3",
+            "activity": "spawned",
+            "data": {
+              "type": "tester",
+              "name": "Tester Worker 4"
+            }
+          },
+          "timestamp": "2025-07-16T06:36:02.999Z"
+        }
+      ]
+    },
+    "statistics": {
+      "tasksProcessed": 0,
+      "tasksCompleted": 0,
+      "memoryUpdates": 0,
+      "agentActivities": 4,
+      "consensusDecisions": 0
+    }
+  }
+}

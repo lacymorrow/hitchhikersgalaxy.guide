@@ -3,7 +3,7 @@ import { CredentialsForm } from "@/app/(app)/(authentication)/_components/creden
 import { GuestForm } from "@/app/(app)/(authentication)/_components/guest-form";
 import { Divider } from "@/components/primitives/divider";
 import { env } from "@/env";
-import { isGuestOnlyMode } from "@/server/auth-providers";
+import { isGuestOnlyMode } from "@/server/auth-providers-utils";
 
 export const SignIn = async () => {
 	// Special handling for guest-only mode

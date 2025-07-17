@@ -1,26 +1,28 @@
 import type { ReactNode } from "react";
-import { Header } from "@/components/headers/header";
 import { BlogSidebar } from "@/components/layouts/blog-sidebar";
-import MainLayout from "@/components/layouts/main-layout";
-import { routes } from "@/config/routes";
+import { BlogHero } from "@/components/blog/hero";
 import { getBlogPosts } from "@/lib/blog";
-
-const blogNavLinks = [
-	{ href: routes.faq, label: "Faqs", isCurrent: false },
-	{ href: routes.features, label: "Features", isCurrent: false },
-	{ href: routes.pricing, label: "Pricing", isCurrent: false },
-	{ href: "/blog", label: "Blog", isCurrent: true },
-];
+import "@/styles/blog.css";
 
 export default async function BlogLayout({ children }: { children: ReactNode }) {
 	const posts = await getBlogPosts();
 
 	return (
-		<MainLayout header={<Header navLinks={blogNavLinks} variant="sticky" />}>
-			<div className="prose prose-headings:mt-8 prose-headings:font-semibold prose-headings:text-black prose-h1:text-5xl prose-h2:text-4xl prose-h3:text-3xl prose-h4:text-2xl prose-h5:text-xl prose-h6:text-lg dark:prose-headings:text-white flex gap-4">
-				<BlogSidebar posts={posts} />
-				<div className="flex-1 p-4">{children}</div>
+		<main className="min-h-screen relative">
+			<BlogHero />
+			<div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+				{/* Mobile: Sidebar navigation is handled internally by BlogSidebar */}
+				{/* Desktop: Flex layout with sidebar and content side by side */}
+				<div className="lg:flex lg:gap-6">
+					{/* Blog Navigation Sidebar */}
+					<BlogSidebar posts={posts} />
+
+					{/* Main Content Area */}
+					<section className="flex-1 min-w-0 w-full lg:w-auto py-4">
+						{children}
+					</section>
+				</div>
 			</div>
-		</MainLayout>
+		</main>
 	);
 }

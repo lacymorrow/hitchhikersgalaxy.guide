@@ -6,389 +6,409 @@ import { redirects } from "@/config/routes";
 import { withPlugins } from "@/config/with-plugins";
 
 const nextConfig: NextConfig = {
-	env: {
-		// Add client-side feature flags
-		...buildTimeFeatureFlags,
+  env: {
+    // Add client-side feature flags
+    ...buildTimeFeatureFlags,
 
-		// You can add other build-time env variables here if needed
-	},
+    // You can add other build-time env variables here if needed
+  },
 
-	/*
-	 * Next.js configuration
-	 */
-	images: {
-		remotePatterns: [
-			{ hostname: "picsum.photos" }, // @dev: for testing
-			{ hostname: "avatar.vercel.sh" }, // @dev: for testing
-			{ hostname: "github.com" }, // @dev: for testing
-			{ hostname: "images.unsplash.com" }, // @dev: for testing
-			{ hostname: "2.gravatar.com" }, // @dev: for testing
-			{ hostname: "avatars.githubusercontent.com" }, // @dev: github avatars
-			{ hostname: "vercel.com" }, // @dev: vercel button
-			{
-				protocol: "https",
-				hostname: "**.vercel.app",
-			},
-			{
-				protocol: "https",
-				hostname: "shipkit.s3.**.amazonaws.com",
-			},
-		],
-		/*
-		 * Next.js 15 Image Optimization
-		 * Enhanced image formats and caching for better performance
-		 */
-		// formats: ["image/avif", "image/webp"],
-		// deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-		// imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-		// minimumCacheTTL: 60,
-		// dangerouslyAllowSVG: true,
-		// contentDispositionType: "attachment",
-		// contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
-	},
+  /*
+   * Next.js configuration
+   */
+  images: {
+    remotePatterns: [
+      { hostname: "shipkit.io" }, // @dev: for testing
+      { hostname: "picsum.photos" }, // @dev: for testing
+      { hostname: "avatar.vercel.sh" }, // @dev: for testing
+      { hostname: "github.com" }, // @dev: for testing
+      { hostname: "images.unsplash.com" }, // @dev: for testing
+      { hostname: "2.gravatar.com" }, // @dev: for testing
+      { hostname: "avatars.githubusercontent.com" }, // @dev: github avatars
+      { hostname: "vercel.com" }, // @dev: vercel button
+      {
+        protocol: "https",
+        hostname: "**.vercel.app",
+      },
+      {
+        protocol: "https",
+        hostname: "shipkit.s3.**.amazonaws.com",
+      },
+      {
+        protocol: "https",
+        hostname: "better-auth.com",
+      },
+    ],
+    /*
+     * Next.js 15 Image Optimization
+     * Enhanced image formats and caching for better performance
+     */
+    // formats: ["image/avif", "image/webp"],
+    // deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    // imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    // minimumCacheTTL: 60,
+    // dangerouslyAllowSVG: true,
+    // contentDispositionType: "attachment",
+    // contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+  },
 
-	/*
-	 * Redirects are located in the `src/config/routes.ts` file
-	 */
-	redirects,
+  /*
+   * Redirects are located in the `src/config/routes.ts` file
+   */
+  redirects,
 
-	/*
-	 * PostHog reverse proxy configuration
-	 */
-	async rewrites() {
-		return [
-			{
-				source: "/relay-64tM/static/:path*",
-				destination: "https://us-assets.i.posthog.com/static/:path*",
-			},
-			{
-				source: "/relay-64tM/:path*",
-				destination: "https://us.i.posthog.com/:path*",
-			},
-			{
-				source: "/relay-64tM/flags",
-				destination: "https://us.i.posthog.com/flags",
-			},
-		];
-	},
-	// This is required to support PostHog trailing slash API requests
-	skipTrailingSlashRedirect: true,
+  /*
+   * PostHog reverse proxy configuration
+   */
+  async rewrites() {
+    return [
+      {
+        source: "/relay-64tM/static/:path*",
+        destination: "https://us-assets.i.posthog.com/static/:path*",
+      },
+      {
+        source: "/relay-64tM/:path*",
+        destination: "https://us.i.posthog.com/:path*",
+      },
+      {
+        source: "/relay-64tM/flags",
+        destination: "https://us.i.posthog.com/flags",
+      },
+    ];
+  },
+  // This is required to support PostHog trailing slash API requests
+  skipTrailingSlashRedirect: true,
 
-	async headers() {
-		return Promise.resolve([
-			// /install
-			{
-				source: "/install",
-				headers: [
-					{
-						key: "Cross-Origin-Opener-Policy",
-						value: "same-origin",
-					},
-					{
-						key: "Cross-Origin-Embedder-Policy",
-						value: "require-corp",
-					},
-				],
-			},
-			/*
-			 * Enhanced Security Headers
-			 * Adds Content Security Policy for better security
-			 */
-			// {
-			// 	source: "/(.*)",
-			// 	headers: [
-			// 		{
-			// 			key: "X-Frame-Options",
-			// 			value: "DENY",
-			// 		},
-			// 		{
-			// 			key: "X-Content-Type-Options",
-			// 			value: "nosniff",
-			// 		},
-			// 		{
-			// 			key: "Referrer-Policy",
-			// 			value: "origin-when-cross-origin",
-			// 		},
-			// 		{
-			// 			key: "Permissions-Policy",
-			// 			value: "camera=(), microphone=(), geolocation=()",
-			// 		},
-			// 	],
-			// },
-		]);
-	},
+  async headers() {
+    return Promise.resolve([
+      // /install
+      {
+        source: "/install",
+        headers: [
+          {
+            key: "Cross-Origin-Opener-Policy",
+            value: "same-origin",
+          },
+          {
+            key: "Cross-Origin-Embedder-Policy",
+            value: "require-corp",
+          },
+        ],
+      },
+      /*
+       * Enhanced Security Headers
+       * Adds Content Security Policy for better security
+       */
+      {
+        source: "/(.*)",
+        headers: [
+          {
+            key: "X-Frame-Options",
+            value: "DENY",
+          },
+          {
+            key: "X-Content-Type-Options",
+            value: "nosniff",
+          },
+          {
+            key: "Referrer-Policy",
+            value: "origin-when-cross-origin",
+          },
+          {
+            key: "X-XSS-Protection",
+            value: "1; mode=block",
+          },
+          // @production
+          // {
+          // 	key: "Permissions-Policy",
+          // 	value: "camera=(), microphone=(), geolocation=()",
+          // },
+        ],
+      },
+    ]);
+  },
 
-	/*
-	 * React configuration
-	 */
-	reactStrictMode: true,
+  // Production optimizations
+  compress: true,
+  poweredByHeader: false,
 
-	/*
-	 * Source maps - DISABLED to reduce memory usage during build
-	 * Enable only in development or when specifically needed
-	 */
-	productionBrowserSourceMaps: false,
+  /*
+   * React configuration
+   */
+  reactStrictMode: true,
 
-	/*
-	 * Lint configuration
-	 */
-	eslint: {
-		/*
+  /*
+   * Source maps - DISABLED to reduce memory usage during build
+   * Enable only in development or when specifically needed
+   */
+  productionBrowserSourceMaps: false,
+
+  /*
+   * Lint configuration
+   */
+  eslint: {
+    /*
 			!! WARNING !!
 			* This allows production builds to successfully complete even if
 			* your project has ESLint errors.
 		*/
-		ignoreDuringBuilds: true,
-	},
-	typescript: {
-		/*
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    /*
 			!! WARNING !!
 			* Dangerously allow production builds to successfully complete even if
 			* your project has type errors.
 		*/
-		// ignoreBuildErrors: true,
-	},
+    // ignoreBuildErrors: true,
+  },
 
-	// Configure `pageExtensions` to include markdown and MDX files
-	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+  // Configure `pageExtensions` to include markdown and MDX files
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 
-	/*
-	 * Experimental configuration
-	 */
-	experimental: {
-		// esmExternals: true,
-		// mdxRs: true,
-		// mdxRs: {
-		// 	jsxRuntime: "automatic",
-		// 	jsxImportSource: "jsx-runtime",
-		// 	mdxType: "gfm",
-		// },
+  /*
+   * Experimental configuration
+   */
+  experimental: {
+    // esmExternals: true,
+    // mdxRs: true,
+    // mdxRs: {
+    // 	jsxRuntime: "automatic",
+    // 	jsxImportSource: "jsx-runtime",
+    // 	mdxType: "gfm",
+    // },
 
-		nextScriptWorkers: true,
-		serverActions: {
-			bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
-		},
-		// @see: https://nextjs.org/docs/app/api-reference/next-config-js/viewTransition
-		viewTransition: true,
-		webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
+    nextScriptWorkers: true,
+    serverActions: {
+      bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
+    },
+    // @see: https://nextjs.org/docs/app/api-reference/next-config-js/viewTransition
+    viewTransition: true,
+    webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
 
-		/*
-		 * Next.js 15 Client-side Router Cache Configuration
-		 * Optimizes navigation performance by caching page segments
-		 */
-		staleTimes: {
-			dynamic: buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED ? 0 : 90, // Payload needs to be re-rendered on every request
-			static: 3600, // 3600 seconds for static routes
-		},
+    /*
+     * Next.js 15 Client-side Router Cache Configuration
+     * Optimizes navigation performance by caching page segments
+     */
+    staleTimes: {
+      dynamic: buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED
+        ? 0
+        : 90, // Payload needs to be re-rendered on every request
+      static: 3600, // 3600 seconds for static routes
+    },
 
-		/*
-		 * Build Performance Optimization
-		 * Use available CPU cores efficiently (leave one core free)
-		 */
-		// cpus: Math.max(1, (os.cpus()?.length ?? 1) - 1),
+    /*
+     * Build Performance Optimization
+     * Use available CPU cores efficiently (leave one core free)
+     */
+    // cpus: Math.max(1, (os.cpus()?.length ?? 1) - 1),
 
-		// Memory optimization - reduce worker memory
-		// workerThreads: false,
-	},
+    // Memory optimization - reduce worker memory
+    // workerThreads: false,
+  },
 
-	/*
-	 * Miscellaneous configuration
-	 */
-	devIndicators: {
-		position: "bottom-left" as const,
-	},
+  /*
+   * Miscellaneous configuration
+   */
+  devIndicators: {
+    position: "bottom-left" as const,
+  },
 
-	/*
-	 * Logging configuration
-	 * @see https://nextjs.org/docs/app/api-reference/next-config-js/logging
-	 */
-	logging: {
-		fetches: {
-			fullUrl: true, // This will log the full URL of the fetch request even if cached
-			// hmrRefreshes: true,
-		},
-	},
+  /*
+   * Logging configuration
+   * @see https://nextjs.org/docs/app/api-reference/next-config-js/logging
+   */
+  logging: {
+    fetches: {
+      fullUrl: true, // This will log the full URL of the fetch request even if cached
+      // hmrRefreshes: true,
+    },
+  },
 
-	compiler: {
-		// Remove all console logs
-		// removeConsole: true
+  compiler: {
+    // Remove all console logs
+    // removeConsole: true
 
-		// Remove console logs only in production, excluding error logs
-		// removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
+    // Remove console logs only in production, excluding error logs
+    // removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
 
-		// Logs are disabled in production unless DISABLE_LOGGING is set
-		// Use DISABLE_LOGGING to disable all logging except error logs
-		// Use DISABLE_ERROR_LOGGING to disable error logging too
-		removeConsole:
-			process.env.DISABLE_LOGGING === "true" ||
-			(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
-				? process.env.DISABLE_ERROR_LOGGING === "true" ||
-					(process.env.NODE_ENV === "production" && !process.env.DISABLE_ERROR_LOGGING)
-					? true
-					: { exclude: ["error"] }
-				: false,
-	},
+    // Logs are disabled in production unless DISABLE_LOGGING is set
+    // Use DISABLE_LOGGING to disable all logging except error logs
+    // Use DISABLE_ERROR_LOGGING to disable error logging too
+    removeConsole:
+      process.env.DISABLE_LOGGING === "true" ||
+      (process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+        ? process.env.DISABLE_ERROR_LOGGING === "true" ||
+          (process.env.NODE_ENV === "production" &&
+            !process.env.DISABLE_ERROR_LOGGING)
+          ? true
+          : { exclude: ["error"] }
+        : false,
+  },
 
-	/*
-	 * Bundle Size Optimization - Enhanced
-	 * Excludes additional heavy dependencies and dev tools from production bundles
-	 */
-	outputFileTracingExcludes: {
-		"*": [
-			"**/*.test.*",
-			"**/*.spec.*",
-			"**/*.stories.*",
-			"**/tests/**",
-			"**/.git/**",
-			"**/.github/**",
-			"**/.vscode/**",
-			"**/.next/cache/**",
-			"**/node_modules/typescript/**",
-			"**/node_modules/@types/**",
-			"**/node_modules/eslint/**",
-			"**/node_modules/prettier/**",
-			"**/node_modules/typescript/**",
-			"**/node_modules/react-syntax-highlighter/**",
-			"**/node_modules/canvas-confetti/**",
-			"**/node_modules/@huggingface/transformers/**",
-			"**/node_modules/three/**",
-			"**/node_modules/@react-three/**",
-			"**/node_modules/jspdf/**",
-			// Additional Next.js 15 optimizations
-			"**/node_modules/monaco-editor/**",
-			"**/node_modules/@playwright/**",
-			"**/node_modules/typescript/lib/**",
-			// Exclude more heavy dependencies
-			"**/node_modules/remotion/**",
-			"**/node_modules/@opentelemetry/**",
-			"**/node_modules/googleapis/**",
-			"**/node_modules/@tsparticles/**",
-			"**/node_modules/marked/**",
-			"**/node_modules/remark/**",
-			"**/node_modules/rehype/**",
-		],
-	},
-	outputFileTracingIncludes: {
-		"*": ["./docs/**/*", "./src/content/**/*"],
-	},
+  /*
+   * Bundle Size Optimization - Enhanced
+   * Excludes additional heavy dependencies and dev tools from production bundles
+   */
+  outputFileTracingExcludes: {
+    "*": [
+      "**/*.test.*",
+      "**/*.spec.*",
+      "**/*.stories.*",
+      "**/tests/**",
+      "**/.git/**",
+      "**/.github/**",
+      "**/.vscode/**",
+      "**/.next/cache/**",
+      "**/node_modules/typescript/**",
+      "**/node_modules/@types/**",
+      "**/node_modules/eslint/**",
+      "**/node_modules/prettier/**",
+      "**/node_modules/typescript/**",
+      "**/node_modules/react-syntax-highlighter/**",
+      "**/node_modules/canvas-confetti/**",
+      "**/node_modules/@huggingface/transformers/**",
+      "**/node_modules/three/**",
+      "**/node_modules/@react-three/**",
+      "**/node_modules/jspdf/**",
+      // Additional Next.js 15 optimizations
+      "**/node_modules/monaco-editor/**",
+      "**/node_modules/@playwright/**",
+      "**/node_modules/typescript/lib/**",
+      // Exclude more heavy dependencies
+      "**/node_modules/remotion/**",
+      "**/node_modules/@opentelemetry/**",
+      "**/node_modules/googleapis/**",
+      "**/node_modules/@tsparticles/**",
+      "**/node_modules/marked/**",
+      "**/node_modules/remark/**",
+      "**/node_modules/rehype/**",
+    ],
+  },
+  outputFileTracingIncludes: {
+    "*": ["./docs/**/*", "./src/content/**/*"],
+  },
 
-	/*
-	 * Turbopack configuration
-	 * @see https://nextjs.org/docs/app/api-reference/next-config-js/turbo
-	 */
-	turbopack: {
-		rules: {
-			// Add rules for raw-loader to handle specific file types
-			// This mirrors the webpack config for these extensions
-			"*.(node|bin|html)": {
-				loaders: ["raw-loader"],
-				as: "*.js",
-			},
-		},
-	},
+  /*
+   * Turbopack configuration
+   * @see https://nextjs.org/docs/app/api-reference/next-config-js/turbo
+   */
+  turbopack: {
+    rules: {
+      // Add rules for raw-loader to handle specific file types
+      // This mirrors the webpack config for these extensions
+      "*.(node|bin|html)": {
+        loaders: ["raw-loader"],
+        as: "*.js",
+      },
+    },
+  },
 
-	/*
-	 * Webpack configuration
-	 */
-	webpack: (config: any, { dev, isServer }: { dev: boolean; isServer: boolean }) => {
-		// Enable top-level await
-		config.experiments = { ...config.experiments, topLevelAwait: true };
-		if (!dev) {
-			// // Disable source maps for node_modules to save memory
-			// config.module.rules.push({
-			// 	test: /\.js$/,
-			// 	include: /node_modules/,
-			// 	use: {
-			// 		loader: 'source-map-loader',
-			// 		options: {
-			// 			enforce: 'pre',
-			// 		},
-			// 	},
-			// 	enforce: 'pre',
-			// });
+  /*
+   * Webpack configuration
+   */
+  webpack: (
+    config: any,
+    { dev, isServer }: { dev: boolean; isServer: boolean },
+  ) => {
+    // Enable top-level await
+    config.experiments = { ...config.experiments, topLevelAwait: true };
+    if (!dev) {
+      // // Disable source maps for node_modules to save memory
+      // config.module.rules.push({
+      // 	test: /\.js$/,
+      // 	include: /node_modules/,
+      // 	use: {
+      // 		loader: 'source-map-loader',
+      // 		options: {
+      // 			enforce: 'pre',
+      // 		},
+      // 	},
+      // 	enforce: 'pre',
+      // });
 
-			// Optimize chunk splitting to prevent large chunks
-			config.optimization = {
-				...config.optimization,
-				splitChunks: {
-					...config.optimization.splitChunks,
-					cacheGroups: {
-						...config.optimization.splitChunks?.cacheGroups,
-						// Split large vendor libraries into separate chunks
-						vendor: {
-							test: /[\\/]node_modules[\\/]/,
-							name: "vendors",
-							chunks: "all",
-							maxSize: 244000, // ~240KB chunks
-						},
-						// Split three.js and related 3D libraries
-						threejs: {
-							test: /[\\/]node_modules[\\/](@react-three|three)[\\/]/,
-							name: "threejs",
-							chunks: "all",
-							priority: 10,
-						},
-						// Split AI/ML libraries
-						ai: {
-							test: /[\\/]node_modules[\\/](@huggingface|openai|remotion)[\\/]/,
-							name: "ai-libs",
-							chunks: "all",
-							priority: 10,
-						},
-					},
-				},
-			};
+      // Optimize chunk splitting to prevent large chunks
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          ...config.optimization.splitChunks,
+          cacheGroups: {
+            ...config.optimization.splitChunks?.cacheGroups,
+            // Split large vendor libraries into separate chunks
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: "vendors",
+              chunks: "all",
+              maxSize: 244000, // ~240KB chunks
+            },
+            // Split three.js and related 3D libraries
+            threejs: {
+              test: /[\\/]node_modules[\\/](@react-three|three)[\\/]/,
+              name: "threejs",
+              chunks: "all",
+              priority: 10,
+            },
+            // Split AI/ML libraries
+            ai: {
+              test: /[\\/]node_modules[\\/](@huggingface|openai|remotion)[\\/]/,
+              name: "ai-libs",
+              chunks: "all",
+              priority: 10,
+            },
+          },
+        },
+      };
 
-			// Limit memory usage - SLOW BUILD
-			// config.optimization.moduleIds = 'deterministic';
-			// config.optimization.chunkIds = 'deterministic';
-		}
+      // Limit memory usage - SLOW BUILD
+      // config.optimization.moduleIds = 'deterministic';
+      // config.optimization.chunkIds = 'deterministic';
+    }
 
-		if (isServer) {
-			// config.resolve.alias = {
-			// 	...config.resolve.alias,
-			// };
+    if (isServer) {
+      // config.resolve.alias = {
+      // 	...config.resolve.alias,
+      // };
 
-			// Ensure docs directory is included in the bundle for dynamic imports
-			config.module.rules.push({
-				test: /\.(md|mdx)$/,
-				include: [
-					path.join(process.cwd(), "docs"),
-					// require("path").join(process.cwd(), "src/content/docs"),
-				],
-				use: "raw-loader",
-			});
+      // Ensure docs directory is included in the bundle for dynamic imports
+      config.module.rules.push({
+        test: /\.(md|mdx)$/,
+        include: [
+          path.join(process.cwd(), "docs"),
+          // require("path").join(process.cwd(), "src/content/docs"),
+        ],
+        use: "raw-loader",
+      });
 
-			config.externals = [
-				...(config.externals ?? []),
-				// Externalize heavy client-only libraries on server
-				{
-					three: "three",
-					"@react-three/fiber": "@react-three/fiber",
-					"@react-three/drei": "@react-three/drei",
-					"canvas-confetti": "canvas-confetti",
-					"@huggingface/transformers": "@huggingface/transformers",
-					remotion: "remotion",
-					"@opentelemetry/instrumentation": "@opentelemetry/instrumentation",
-				},
-			];
-		} else {
-			config.watchOptions = {
-				...config.watchOptions,
-				ignored: [
-					"**/node_modules",
-					"**/.git",
-					"**/.next",
-					"**/node_modules/three",
-					"**/node_modules/@react-three",
-					"**/node_modules/remotion",
-					// Don't ignore docs directory
-				],
-			};
-		}
+      config.externals = [
+        ...(config.externals ?? []),
+        // Externalize heavy client-only libraries on server
+        {
+          three: "three",
+          "@react-three/fiber": "@react-three/fiber",
+          "@react-three/drei": "@react-three/drei",
+          "canvas-confetti": "canvas-confetti",
+          "@huggingface/transformers": "@huggingface/transformers",
+          remotion: "remotion",
+          "@opentelemetry/instrumentation": "@opentelemetry/instrumentation",
+        },
+      ];
+    } else {
+      config.watchOptions = {
+        ...config.watchOptions,
+        ignored: [
+          "**/node_modules",
+          "**/.git",
+          "**/.next",
+          "**/node_modules/three",
+          "**/node_modules/@react-three",
+          "**/node_modules/remotion",
+          // Don't ignore docs directory
+        ],
+      };
+    }
 
-		return config;
-	},
+    return config;
+  },
 };
 
 /*

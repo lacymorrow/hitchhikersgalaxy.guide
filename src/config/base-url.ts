@@ -46,12 +46,13 @@ function getBaseUrl(): string {
 			return `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`;
 		}
 
-		if (process.env.VERCEL_URL) {
-			return `https://${process.env.VERCEL_URL}`;
-		}
-
 		if (siteConfig.url) {
 			return siteConfig.url;
+		}
+
+		// Fall back to vercel url
+		if (process.env.VERCEL_URL) {
+			return `https://${process.env.VERCEL_URL}`;
 		}
 
 		// Fallback for production (should not reach here in most cases)

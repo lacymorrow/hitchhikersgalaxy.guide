@@ -16,7 +16,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { env } from "@/env";
-import { isGuestOnlyMode } from "@/server/auth-providers";
+import { isGuestOnlyMode } from "@/server/auth-providers-utils";
 
 interface NextStep {
 	title: string;

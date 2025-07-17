@@ -14,7 +14,7 @@ import {
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { isGuestOnlyMode } from "@/server/auth-providers";
+import { isGuestOnlyMode } from "@/server/auth-providers-utils";
 
 interface AuthFormProps extends ComponentPropsWithoutRef<"div"> {
 	mode: "sign-in" | "sign-up";

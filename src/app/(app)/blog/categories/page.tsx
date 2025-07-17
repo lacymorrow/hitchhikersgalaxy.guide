@@ -4,46 +4,52 @@ import { getBlogCategories, getBlogPosts } from "@/lib/blog";
 import { cn } from "@/lib/utils";
 
 interface Props {
-	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }
 
 export default async function CategoriesPage({ searchParams }: Props) {
-	const params = await searchParams;
-	const posts = await getBlogPosts();
-	const categories = getBlogCategories(posts);
-	const selectedCategory = typeof params.category === "string" ? params.category : undefined;
+  const params = await searchParams;
+  const posts = await getBlogPosts();
+  const categories = getBlogCategories(posts);
+  const selectedCategory =
+    typeof params.category === "string" ? params.category : undefined;
 
-	// Filter categories if a category is selected
-	const filteredCategories = selectedCategory
-		? categories.filter((category) => category.name === selectedCategory)
-		: categories;
+  // Filter categories if a category is selected
+  const filteredCategories = selectedCategory
+    ? categories.filter((category) => category.name === selectedCategory)
+    : categories;
 
-	return (
-		<div className="container py-8">
-			<div className="mb-8 flex items-center justify-between">
-				<h1 className="text-3xl font-bold">Blog Categories</h1>
-				{selectedCategory && (
-					<Link
-						href="/blog/categories"
-						className="text-sm text-muted-foreground hover:text-foreground"
-					>
-						Clear filter
-					</Link>
-				)}
-			</div>
+  return (
+    <div className="container py-8">
+      <div className="mb-8 flex items-center justify-between">
+        <h1 className="text-3xl font-bold">Blog Categories</h1>
+        {selectedCategory && (
+          <Link
+            href="/blog/categories"
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
+            Clear filter
+          </Link>
+        )}
+      </div>
 
-			<div className="mb-8 flex flex-wrap gap-2">
-				{categories.map((category) => (
-					<Link key={category.name} href={`/blog/categories/${encodeURIComponent(category.name)}`}>
-						<Badge
-							variant={category.name === selectedCategory ? "default" : "secondary"}
-							className="hover:bg-secondary/80"
-						>
-							{category.name} ({category.posts.length})
-						</Badge>
-					</Link>
-				))}
-			</div>
+      <div className="mb-8 flex flex-wrap gap-2">
+        {categories.map((category) => (
+          <Link
+            key={category.name}
+            href={`/blog/categories/${encodeURIComponent(category.name)}`}
+          >
+            <Badge
+              variant={
+                category.name === selectedCategory ? "default" : "secondary"
+              }
+              className="hover:bg-secondary/80"
+            >
+              {category.name} ({category.posts.length})
+            </Badge>
+          </Link>
+        ))}
+      </div>
 
 			<div className="grid gap-8">
 				{filteredCategories.map((category) => (

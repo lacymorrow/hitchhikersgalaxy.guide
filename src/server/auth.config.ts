@@ -7,6 +7,7 @@ import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { grantGitHubAccess } from "@/server/services/github/github-service";
 import { userService } from "@/server/services/user-service";
+import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -95,6 +96,23 @@ export const authOptions: NextAuthConfig = {
 
 			// Log the sign in activity
 			return true;
+		},
+		async redirect({ url, baseUrl }) {
+			// Handle the nextUrl parameter for redirects
+			const redirectUrl = new URL(url, baseUrl);
+			const nextUrl = redirectUrl.searchParams.get(SEARCH_PARAM_KEYS.nextUrl);
+
+			if (nextUrl) {
+				// Ensure it's a relative URL for security
+				if (nextUrl.startsWith('/')) {
+					return `${baseUrl}${nextUrl}`;
+				}
+			}
+
+			// Default redirect
+			if (url.startsWith("/")) return `${baseUrl}${url}`;
+			if (new URL(url).origin === baseUrl) return url;
+			return baseUrl;
 		},
 		jwt({ token, user, account, trigger, session }) {
 			// Save user data to the token

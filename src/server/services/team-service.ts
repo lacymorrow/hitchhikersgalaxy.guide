@@ -1,4 +1,3 @@
-import { randomUUID } from "node:crypto";
 import { and, eq } from "drizzle-orm";
 import type { TeamData } from "@/components/providers/team-provider";
 import { routes } from "@/config/routes";
@@ -61,8 +60,8 @@ export class TeamService extends BaseService<typeof teams> {
 				return null;
 			}
 
-			const teamId = randomUUID();
-			const memberId = randomUUID();
+			const teamId = crypto.randomUUID();
+			const memberId = crypto.randomUUID();
 
 			// Use transaction to create team and member, then return the data directly
 			const result = await db.transaction(async (tx) => {
@@ -253,8 +252,8 @@ export class TeamService extends BaseService<typeof teams> {
 			logger.error("Database not initialized", { userId });
 			return null;
 		}
-		const teamId = randomUUID();
-		const memberId = randomUUID();
+		const teamId = crypto.randomUUID();
+		const memberId = crypto.randomUUID();
 
 		// Use transaction to create team and member, then return the data directly
 		const result = await db.transaction(async (tx) => {
@@ -372,7 +371,7 @@ export class TeamService extends BaseService<typeof teams> {
 		const result = await db
 			.insert(teamMembers)
 			.values({
-				id: randomUUID(),
+				id: crypto.randomUUID(),
 				teamId,
 				userId,
 				role,

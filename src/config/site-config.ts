@@ -11,346 +11,349 @@ import type { Manifest } from "next/dist/lib/metadata/types/manifest-types";
  */
 
 interface ManifestConfig {
-	startUrl: string;
-	display: Manifest["display"];
-	displayOverride?: Manifest["display_override"];
-	orientation: Manifest["orientation"];
-	categories: Manifest["categories"];
-	dir: Manifest["dir"];
-	lang: Manifest["lang"];
-	preferRelatedApplications: Manifest["prefer_related_applications"];
-	scope: Manifest["scope"];
-	launchHandler?: Manifest["launch_handler"];
-	icons: {
-		favicon: string;
-		appIcon192: string;
-		appIcon512: string;
-	};
-	relatedApplications?: Manifest["related_applications"];
+  startUrl: string;
+  display: Manifest["display"];
+  displayOverride?: Manifest["display_override"];
+  orientation: Manifest["orientation"];
+  categories: Manifest["categories"];
+  dir: Manifest["dir"];
+  lang: Manifest["lang"];
+  preferRelatedApplications: Manifest["prefer_related_applications"];
+  scope: Manifest["scope"];
+  launchHandler?: Manifest["launch_handler"];
+  icons: {
+    favicon: string;
+    appIcon192: string;
+    appIcon512: string;
+  };
+  relatedApplications?: Manifest["related_applications"];
 }
 
 interface PayloadConfig {
-	adminTitleSuffix: string;
-	adminIconPath: string;
-	adminLogoPath: string;
-	dbSchemaName: string;
-	emailFromName: string;
+  adminTitleSuffix: string;
+  adminIconPath: string;
+  adminLogoPath: string;
+  dbSchemaName: string;
+  emailFromName: string;
 }
 
 interface SiteConfig {
-	// Core site information
-	name: string;
-	title: string;
-	url: string;
-	ogImage: string;
-	description: string;
-	tagline: string;
-	// UI behavior settings
-	behavior: {
-		pageTransitions: boolean;
-	};
+  // Core site information
+  name: string;
+  title: string;
+  url: string;
+  ogImage: string;
+  description: string;
+  tagline: string;
+  // UI behavior settings
+  behavior: {
+    pageTransitions: boolean;
+  };
 
-	// Branding information
-	branding: {
-		projectName: string;
-		projectSlug: string;
-		productNames: {
-			// TODO: Remove these once we have a proper product name
-			bones: string;
-			muscles: string;
-			brains: string;
-			main: string;
-		};
-		domain: string;
-		protocol: string;
-		githubOrg: string;
-		githubRepo: string;
-		vercelProjectName: string;
-		databaseName: string;
-	};
+  // Branding information
+  branding: {
+    projectName: string;
+    projectSlug: string;
+    productNames: {
+      // TODO: Remove these once we have a proper product name
+      bones: string;
+      muscles: string;
+      brains: string;
+      main: string;
+    };
+    domain: string;
+    protocol: string;
+    githubOrg: string;
+    githubRepo: string;
+    vercelProjectName: string;
+    databaseName: string;
+  };
 
-	// External links
-	links: {
-		twitter: string;
-		twitter_follow: string;
-		x: string;
-		x_follow: string;
-		github: string;
-	};
+  // External links
+  links: {
+    twitter: string;
+    twitter_follow: string;
+    x: string;
+    x_follow: string;
+    github: string;
+  };
 
-	// Repository information
-	repo: {
-		owner: string;
-		name: string;
-		url: string;
-		format: {
-			clone: () => string;
-			ssh: () => string;
-		};
-	};
+  // Repository information
+  repo: {
+    owner: string;
+    name: string;
+    url: string;
+    format: {
+      clone: () => string;
+      ssh: () => string;
+    };
+  };
 
-	// Email addresses and formatting
-	email: {
-		support: string;
-		team: string;
-		noreply: string;
-		domain: string;
-		legal: string;
-		privacy: string;
-		format: (type: Exclude<keyof SiteConfig["email"], "format">) => string;
-	};
+  // Email addresses and formatting
+  email: {
+    support: string;
+    team: string;
+    noreply: string;
+    domain: string;
+    legal: string;
+    privacy: string;
+    format: (type: Exclude<keyof SiteConfig["email"], "format">) => string;
+  };
 
-	// Creator information
-	creator: {
-		name: string;
-		email: string;
-		url: string;
-		twitter: string;
-		twitter_handle: string;
-		domain: string;
-		fullName: string;
-		role: string;
-		avatar: string;
-		location: string;
-		bio: string;
-	};
+  // Creator information
+  creator: {
+    name: string;
+    email: string;
+    url: string;
+    twitter: string;
+    twitter_handle: string;
+    domain: string;
+    fullName: string;
+    role: string;
+    avatar: string;
+    location: string;
+    bio: string;
+  };
 
-	// E-commerce store configuration
-	store: {
-		id: string;
-		products: {
-			[key: string]: string;
-		};
-	};
+  // E-commerce store configuration
+  store: {
+    id: string;
+    products: {
+      [key: string]: string;
+    };
+  };
 
-	// SEO and metadata
-	metadata: {
-		keywords: string[];
-		themeColor: {
-			light: string;
-			dark: string;
-		};
-		locale: string;
-		generator: string;
-		referrer: Metadata["referrer"];
-		category: string;
-		classification: string;
-		openGraph: {
-			imageWidth: number;
-			imageHeight: number;
-		};
-		twitter: {
-			card: "summary" | "summary_large_image" | "app" | "player";
-		};
-		robots: Metadata["robots"];
-		formatDetection: Metadata["formatDetection"];
-		alternates: Metadata["alternates"];
-		appleWebApp: Metadata["appleWebApp"];
-		appLinks: Metadata["appLinks"];
-		assetsPath: string;
-		bookmarksPath: string;
-		blogPath: string;
-	};
+  // SEO and metadata
+  metadata: {
+    keywords: string[];
+    themeColor: {
+      light: string;
+      dark: string;
+    };
+    locale: string;
+    generator: string;
+    referrer: Metadata["referrer"];
+    category: string;
+    classification: string;
+    openGraph: {
+      imageWidth: number;
+      imageHeight: number;
+    };
+    twitter: {
+      card: "summary" | "summary_large_image" | "app" | "player";
+    };
+    robots: Metadata["robots"];
+    formatDetection: Metadata["formatDetection"];
+    alternates: Metadata["alternates"];
+    appleWebApp: Metadata["appleWebApp"];
+    appLinks: Metadata["appLinks"];
+    assetsPath: string;
+    bookmarksPath: string;
+    blogPath: string;
+  };
 
-	// Application settings
-	app: {
-		apiKeyPrefix: string;
-	};
+  // Application settings
+  app: {
+    apiKeyPrefix: string;
+  };
 
-	// PWA Manifest settings
-	manifest: ManifestConfig;
+  // PWA Manifest settings
+  manifest: ManifestConfig;
 
-	// Payload CMS settings
-	payload: PayloadConfig;
+  // Payload CMS settings
+  payload: PayloadConfig;
 }
 
 // Use 'let' to allow modification after definition
 export const siteConfig: SiteConfig = {
-	behavior: {
-		pageTransitions: true,
-	},
+  behavior: {
+    pageTransitions: true,
+  },
 
-	name: "Shipkit",
-	title: "Shipkit",
-	tagline: "Launch your app at light speed.",
-	url: "https://shipkit.io",
-	ogImage: "https://shipkit.io/app/og-image.png",
-	description:
-		"Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.",
+  name: "Shipkit",
+  title: "Shipkit",
+  tagline: "Launch your app at light speed.",
+  url: "https://shipkit.io",
+  ogImage: "https://shipkit.io/app/og-image.png",
+  description:
+    "Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.",
 
-	branding: {
-		projectName: "Shipkit",
-		projectSlug: "shipkit",
-		productNames: {
-			bones: "Bones",
-			muscles: "Muscles",
-			brains: "Brains",
-			main: "Shipkit",
-		},
-		domain: "shipkit.io",
-		protocol: "web+shipkit",
-		githubOrg: "shipkit-io",
-		githubRepo: "shipkit",
-		vercelProjectName: "shipkit-app",
-		databaseName: "shipkit",
-	},
+  branding: {
+    projectName: "Shipkit",
+    projectSlug: "shipkit",
+    productNames: {
+      bones: "Bones",
+      muscles: "Muscles",
+      brains: "Brains",
+      main: "Shipkit",
+    },
+    domain: "shipkit.io",
+    protocol: "web+shipkit",
+    githubOrg: "shipkit-io",
+    githubRepo: "shipkit",
+    vercelProjectName: "shipkit-app",
+    databaseName: "shipkit",
+  },
 
-	links: {
-		twitter: "https://twitter.com/lacybuilds",
-		twitter_follow: "https://twitter.com/intent/follow?screen_name=lacybuilds",
-		x: "https://x.com/lacybuilds",
-		x_follow: "https://x.com/intent/follow?screen_name=lacybuilds",
-		github: "https://github.com/lacymorrow/shipkit",
-	},
+  links: {
+    twitter: "https://twitter.com/lacybuilds",
+    twitter_follow: "https://twitter.com/intent/follow?screen_name=lacybuilds",
+    x: "https://x.com/lacybuilds",
+    x_follow: "https://x.com/intent/follow?screen_name=lacybuilds",
+    github: "https://github.com/lacymorrow/shipkit",
+  },
 
-	repo: {
-		owner: "lacymorrow",
-		name: "shipkit",
-		url: "https://github.com/lacymorrow/shipkit",
-		format: {
-			// Placeholder format functions - assigned below
-			clone: () => "",
-			ssh: () => "",
-		},
-	},
+  repo: {
+    owner: "lacymorrow",
+    name: "shipkit",
+    url: "https://github.com/lacymorrow/shipkit",
+    format: {
+      // Placeholder format functions - assigned below
+      clone: () => "",
+      ssh: () => "",
+    },
+  },
 
-	email: {
-		support: "feedback@shipkit.io",
-		team: "team@shipkit.io",
-		noreply: "noreply@shipkit.io",
-		domain: "shipkit.io",
-		legal: "legal@shipkit.io",
-		privacy: "privacy@shipkit.io",
-		// Placeholder format function - assigned below
-		format: (type) => "",
-	},
+  email: {
+    support: "feedback@shipkit.io",
+    team: "team@shipkit.io",
+    noreply: "noreply@shipkit.io",
+    domain: "shipkit.io",
+    legal: "legal@shipkit.io",
+    privacy: "privacy@shipkit.io",
+    // Placeholder format function - assigned below
+    format: (type) => "",
+  },
 
-	creator: {
-		name: "lacymorrow",
-		email: "lacy@shipkit.io",
-		url: "https://lacymorrow.com",
-		twitter: "@lacybuilds",
-		twitter_handle: "lacybuilds",
-		domain: "lacymorrow.com",
-		fullName: "Lacy Morrow",
-		role: "Engineer",
-		avatar: "https://avatars.githubusercontent.com/u/1311301?v=4",
-		location: "San Francisco, CA",
-		bio: "Founder, developer, and product designer.",
-	},
+  creator: {
+    name: "lacymorrow",
+    email: "lacy@shipkit.io",
+    url: "https://lacymorrow.com",
+    twitter: "@lacybuilds",
+    twitter_handle: "lacybuilds",
+    domain: "lacymorrow.com",
+    fullName: "Lacy Morrow",
+    role: "Engineer",
+    avatar: "https://avatars.githubusercontent.com/u/1311301?v=4",
+    location: "San Francisco, CA",
+    bio: "Founder, developer, and product designer.",
+  },
 
-	store: {
-		id: "shipkit",
-		products: {
-			// LemonSqueezy Checkout URLs use Variant IDs (not Product IDs)
-			// Format: variant UUID from LemonSqueezy dashboard
-			shipkit: "411883",
-			// Examples:
-			bones: "411883",
-			muscles: "411883",
-			brains: "411883",
-		},
-	},
+  store: {
+    id: "shipkit",
+    products: {
+      // LemonSqueezy Checkout URLs use Variant IDs (not Product IDs)
+      // Format: variant UUID from LemonSqueezy dashboard
+      shipkit: "411883",
+      // Examples:
+      bones: "411883",
+      muscles: "411883",
+      brains: "411883",
+    },
+  },
 
-	metadata: {
-		keywords: [
-			"Next.js",
-			"React",
-			"Tailwind CSS",
-			"Server Components",
-			"Shipkit",
-			"Shadcn",
-			"UI Components",
-		],
-		themeColor: {
-			light: "white",
-			dark: "black",
-		},
-		locale: "en-US",
-		generator: "Next.js", // Use Next.js as generator
-		referrer: "origin-when-cross-origin",
-		category: "technology", // Use technology as category
-		classification: "Business Software",
-		openGraph: {
-			imageWidth: 1200,
-			imageHeight: 630,
-		},
-		twitter: {
-			card: "summary_large_image",
-		},
-		robots: {
-			index: true,
-			follow: true,
-			googleBot: {
-				index: true,
-				follow: true,
-				"max-video-preview": -1,
-				"max-image-preview": "large",
-				"max-snippet": -1,
-			},
-		},
-		formatDetection: {
-			email: false,
-			address: false,
-			telephone: false,
-		},
-		alternates: {},
-		appleWebApp: {
-			capable: true,
-			statusBarStyle: "default",
-			startupImage: [
-				{
-					url: "/apple-touch-icon.png",
-					media: "(device-width: 768px) and (device-height: 1024px)",
-				},
-			],
-		},
-		appLinks: {},
-		assetsPath: "/assets",
-		bookmarksPath: "/",
-		blogPath: "/blog",
-	},
+  metadata: {
+    keywords: [
+      "Next.js",
+      "React",
+      "Tailwind CSS",
+      "Server Components",
+      "Shipkit",
+      "Shadcn",
+      "UI Components",
+    ],
+    themeColor: {
+      light: "white",
+      dark: "black",
+    },
+    locale: "en-US",
+    generator: "Next.js", // Use Next.js as generator
+    referrer: "origin-when-cross-origin",
+    category: "technology", // Use technology as category
+    classification: "Business Software",
+    openGraph: {
+      imageWidth: 1200,
+      imageHeight: 630,
+    },
+    twitter: {
+      card: "summary_large_image",
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
+    },
+    formatDetection: {
+      email: false,
+      address: false,
+      telephone: false,
+    },
+    alternates: {},
+    appleWebApp: {
+      capable: true,
+      statusBarStyle: "default",
+      startupImage: [
+        {
+          url: "/apple-touch-icon.png",
+          media: "(device-width: 768px) and (device-height: 1024px)",
+        },
+      ],
+    },
+    appLinks: {},
+    assetsPath: "/assets",
+    bookmarksPath: "/",
+    blogPath: "/blog",
+  },
 
-	manifest: {
-		startUrl: "/", // Use literal for now, update below if needed
-		display: "standalone",
-		displayOverride: ["window-controls-overlay"],
-		orientation: "portrait-primary",
-		categories: ["development", "productivity", "utilities"],
-		dir: "ltr",
-		lang: "en-US",
-		preferRelatedApplications: false,
-		scope: "/",
-		launchHandler: { client_mode: ["navigate-existing", "auto"] },
-		icons: {
-			favicon: "/favicon.ico",
-			appIcon192: "/app/web-app-manifest-192x192.png",
-			appIcon512: "/app/web-app-manifest-512x512.png",
-		},
-		relatedApplications: [],
-	},
+  manifest: {
+    startUrl: "/", // Use literal for now, update below if needed
+    display: "standalone",
+    displayOverride: ["window-controls-overlay"],
+    orientation: "portrait-primary",
+    categories: ["development", "productivity", "utilities"],
+    dir: "ltr",
+    lang: "en-US",
+    preferRelatedApplications: false,
+    scope: "/",
+    launchHandler: { client_mode: ["navigate-existing", "auto"] },
+    icons: {
+      favicon: "/favicon.ico",
+      appIcon192: "/app/web-app-manifest-192x192.png",
+      appIcon512: "/app/web-app-manifest-512x512.png",
+    },
+    relatedApplications: [],
+  },
 
-	payload: {
-		adminTitleSuffix: " CMS", // Updated below
-		adminIconPath: "./lib/payload/components/payload-icon",
-		adminLogoPath: "./lib/payload/components/payload-logo",
-		dbSchemaName: "payload",
-		emailFromName: "Payload CMS",
-	},
+  payload: {
+    adminTitleSuffix: " CMS", // Updated below
+    adminIconPath: "./lib/payload/components/payload-icon",
+    adminLogoPath: "./lib/payload/components/payload-logo",
+    dbSchemaName: "payload",
+    emailFromName: "Payload CMS",
+  },
 
-	app: {
-		apiKeyPrefix: "sk",
-	},
+  app: {
+    apiKeyPrefix: "sk",
+  },
 };
 
 // Assign dynamic values AFTER the main object is defined
 siteConfig.repo.format = {
-	clone: () => `https://github.com/${siteConfig.repo.owner}/${siteConfig.repo.name}.git`,
-	ssh: () => `git@github.com:${siteConfig.repo.owner}/${siteConfig.repo.name}.git`,
+  clone: () =>
+    `https://github.com/${siteConfig.repo.owner}/${siteConfig.repo.name}.git`,
+  ssh: () =>
+    `git@github.com:${siteConfig.repo.owner}/${siteConfig.repo.name}.git`,
 };
 
-siteConfig.email.format = (type: Exclude<keyof SiteConfig["email"], "format">) =>
-	siteConfig.email[type];
+siteConfig.email.format = (
+  type: Exclude<keyof SiteConfig["email"], "format">,
+) => siteConfig.email[type];
 
 siteConfig.payload.adminTitleSuffix = ` - ${siteConfig.title} CMS`;
 
@@ -358,29 +361,32 @@ siteConfig.payload.adminTitleSuffix = ` - ${siteConfig.title} CMS`;
 
 // Make sure alternates exists before assigning canonical
 if (!siteConfig.metadata.alternates) {
-	siteConfig.metadata.alternates = {};
+  siteConfig.metadata.alternates = {};
 }
 siteConfig.metadata.alternates.canonical = siteConfig.url;
 
 // Check appleWebApp is an object before assigning title
-if (siteConfig.metadata.appleWebApp && typeof siteConfig.metadata.appleWebApp === "object") {
-	siteConfig.metadata.appleWebApp.title = siteConfig.title;
+if (
+  siteConfig.metadata.appleWebApp &&
+  typeof siteConfig.metadata.appleWebApp === "object"
+) {
+  siteConfig.metadata.appleWebApp.title = siteConfig.title;
 }
 
 // Ensure appLinks and appLinks.web are objects before assigning url
 if (!siteConfig.metadata.appLinks) {
-	siteConfig.metadata.appLinks = {};
+  siteConfig.metadata.appLinks = {};
 }
 if (!siteConfig.metadata.appLinks.web) {
-	siteConfig.metadata.appLinks.web = { url: "", should_fallback: false }; // Initialize web if needed
+  siteConfig.metadata.appLinks.web = { url: "", should_fallback: false }; // Initialize web if needed
 }
 // Check type again after potential initialization
 if (
-	siteConfig.metadata.appLinks?.web &&
-	typeof siteConfig.metadata.appLinks.web === "object" &&
-	!Array.isArray(siteConfig.metadata.appLinks.web) // Ensure it's not an array
+  siteConfig.metadata.appLinks?.web &&
+  typeof siteConfig.metadata.appLinks.web === "object" &&
+  !Array.isArray(siteConfig.metadata.appLinks.web) // Ensure it's not an array
 ) {
-	siteConfig.metadata.appLinks.web.url = siteConfig.url;
+  siteConfig.metadata.appLinks.web.url = siteConfig.url;
 }
 
 // Update paths to be absolute URLs based on siteConfig.url

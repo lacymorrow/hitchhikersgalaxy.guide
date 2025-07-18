@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { constructMetadata } from "@/config/metadata";
 import { getBlogPosts } from "@/lib/blog";
-import { cn } from "@/lib/utils";
 import { formatDate } from "@/lib/utils/format-date";
 import {
   getActiveAuthors,

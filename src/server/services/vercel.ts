@@ -1,4 +1,4 @@
-import { isPayloadEnabled } from "@/config/features-config";
+import { env } from "@/env";
 import { getPayloadClient } from "@/lib/payload/payload";
 import type { VercelDeployment } from "@/payload-types"; // Assuming payload-types are generated
 
@@ -21,7 +21,7 @@ interface DeploymentInfo {
  * @returns Promise<VercelDeployment | null> - The created deployment record or null if failed/skipped.
  */
 export async function saveVercelDeployment(deploymentInfo: DeploymentInfo) {
-	if (!isPayloadEnabled) {
+	if (!env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED) {
 		console.warn("Payload not enabled, skipping Vercel deployment save.");
 		return null;
 	}

@@ -1,9 +1,5 @@
 import { Redis } from "@upstash/redis";
-
-const redis = new Redis({
-	url: process.env.UPSTASH_REDIS_REST_URL!,
-	token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+import { redis } from "./rate-limit";
 
 interface RequestLog {
 	timestamp: string;
@@ -16,6 +12,10 @@ interface RequestLog {
 }
 
 export async function logRequest(data: RequestLog) {
+	if (!redis) {
+		console.warn("Redis not configured, skipping request logging");
+		return;
+	}
 	const key = `request-logs:${new Date().toISOString().split("T")[0]}`;
 
 	// Store log in Redis with 30-day expiry
@@ -24,6 +24,10 @@ export async function logRequest(data: RequestLog) {
 }
 
 export async function getRecentLogs(days = 7): Promise<RequestLog[]> {
+	if (!redis) {
+		console.warn("Redis not configured, cannot fetch logs");
+		return [];
+	}
 	const keys = [];
 	const now = new Date();
 
@@ -35,7 +39,7 @@ export async function getRecentLogs(days = 7): Promise<RequestLog[]> {
 	}
 
 	// Get all logs
-	const logs = await Promise.all(keys.map((key) => redis.lrange(key, 0, -1)));
+	const logs = await Promise.all(keys.map((key) => redis?.lrange(key, 0, -1) ?? []));
 
 	// Parse and flatten logs
 	return logs

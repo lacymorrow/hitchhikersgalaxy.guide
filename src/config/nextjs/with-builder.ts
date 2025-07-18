@@ -1,6 +1,6 @@
 import BuilderDevTools from "@builder.io/dev-tools/next";
 import type { NextConfig } from "next";
-import { isBuilderEnabled } from "../features-config";
+import { buildTimeFeatures } from "../features-config";
 
 /**
  * Applies Builder.io configuration to the Next.js config.
@@ -10,7 +10,7 @@ import { isBuilderEnabled } from "../features-config";
 
 const builderConfig = {};
 export function withBuilderConfig(nextConfig: NextConfig): NextConfig {
-	if (isBuilderEnabled) {
+	if (buildTimeFeatures.BUILDER_ENABLED) {
 		return BuilderDevTools(builderConfig)(nextConfig);
 	}
 	return nextConfig;

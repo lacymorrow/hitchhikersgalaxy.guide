@@ -1,149 +1,100 @@
 /**
- * Validate environment variables
- *
- * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
- * for Docker builds.
+ * Build-time Feature Flag Detection
+ * 
+ * This file runs during the build process to detect which buildTimeFeatures are enabled
+ * based on environment variables. It generates flags for injection into the client bundle.
+ * 
+ * @note This runs BEFORE T3 Env validation, so we use raw process.env
  */
-// NOTE: We are NOT using the validated `env` object from `@/env` here
-// because this file runs EARLIER in the build process. We must use raw `process.env`.
 
-// ======== Calculate Feature Flags at Build Time =========
-const isDatabaseEnabled = !!process.env.DATABASE_URL;
-export const isPayloadEnabled = isDatabaseEnabled && process.env.ENABLE_PAYLOAD === "true";
+// ======== Utility Functions =========
 
-// ======== Better Auth Feature Detection =========
-const isBetterAuthEnabled =
-	process.env.BETTER_AUTH_ENABLED === "true" || !!process.env.BETTER_AUTH_SECRET;
+/**
+ * Check if environment variable exists and has a value
+ */
+function hasEnv(...names: string[]): boolean {
+	return names.every(name => {
+		const value = process.env[name];
+		return typeof value === "string" && value.trim().length > 0;
+	});
+}
 
-// ======== OAuth Provider Feature Detection =========
-// Clerk Authentication (alternative to Auth.js)
-const isClerkEnabled =
-	!!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY && !!process.env.CLERK_SECRET_KEY;
+/**
+ * Check if environment variable is enabled (true/1/yes/on)
+ */
+function isEnabled(name: string): boolean {
+	const value = process.env[name]?.toLowerCase().trim();
+	return ["true", "1", "yes", "on", "enable", "enabled"].includes(value || "");
+}
 
-// Stack Auth is enabled if all required keys are present
-const isStackAuthEnabled = !!(
-	process.env.STACK_PROJECT_ID &&
-	process.env.STACK_PUBLISHABLE_CLIENT_KEY &&
-	process.env.STACK_SECRET_SERVER_KEY
-);
+// ======== Feature Detection =========
 
-const isBitbucketAuthEnabled =
-	!!process.env.AUTH_BITBUCKET_ID && !!process.env.AUTH_BITBUCKET_SECRET;
-const isDiscordAuthEnabled = !!process.env.AUTH_DISCORD_ID && !!process.env.AUTH_DISCORD_SECRET;
-const isGitHubAuthEnabled = !!process.env.AUTH_GITHUB_ID && !!process.env.AUTH_GITHUB_SECRET;
-const isGitLabAuthEnabled = !!process.env.AUTH_GITLAB_ID && !!process.env.AUTH_GITLAB_SECRET;
-const isGoogleAuthEnabled = !!process.env.AUTH_GOOGLE_ID && !!process.env.AUTH_GOOGLE_SECRET;
-const isTwitterAuthEnabled = !!process.env.AUTH_TWITTER_ID && !!process.env.AUTH_TWITTER_SECRET;
-const isVercelAuthEnabled = !!process.env.VERCEL_CLIENT_ID && !!process.env.VERCEL_CLIENT_SECRET;
+const buildTimeFeatures = {} as Record<string, boolean>;
 
-// Supabase Auth - enabled when both URL and anon key are present
-const isSupabaseAuthEnabled =
-	!!process.env.NEXT_PUBLIC_SUPABASE_URL && !!process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+// Core Features
+buildTimeFeatures.DATABASE_ENABLED = hasEnv("DATABASE_URL");
+buildTimeFeatures.PAYLOAD_ENABLED = buildTimeFeatures.DATABASE_ENABLED && isEnabled("ENABLE_PAYLOAD");
+buildTimeFeatures.BUILDER_ENABLED = hasEnv("NEXT_PUBLIC_BUILDER_API_KEY");
+buildTimeFeatures.MDX_ENABLED = !isEnabled("DISABLE_MDX");
+buildTimeFeatures.PWA_ENABLED = !isEnabled("DISABLE_PWA");
 
-// ======== Auth.js Feature Detection =========
-const isCredentialsAuthEnabled =
-	isPayloadEnabled && process.env.AUTH_CREDENTIALS_ENABLED === "true";
+// Authentication
+buildTimeFeatures.BETTER_AUTH_ENABLED = isEnabled("BETTER_AUTH_ENABLED") || hasEnv("BETTER_AUTH_SECRET");
+buildTimeFeatures.AUTH_CREDENTIALS_ENABLED = buildTimeFeatures.PAYLOAD_ENABLED && isEnabled("AUTH_CREDENTIALS_ENABLED");
+buildTimeFeatures.AUTH_RESEND_ENABLED = process.env.NODE_ENV !== "production" && hasEnv("RESEND_API_KEY");
+buildTimeFeatures.AUTH_CLERK_ENABLED = hasEnv("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY");
+buildTimeFeatures.AUTH_STACK_ENABLED = hasEnv("STACK_PROJECT_ID", "STACK_PUBLISHABLE_CLIENT_KEY", "STACK_SECRET_SERVER_KEY");
+buildTimeFeatures.AUTH_BITBUCKET_ENABLED = hasEnv("AUTH_BITBUCKET_ID", "AUTH_BITBUCKET_SECRET");
+buildTimeFeatures.AUTH_DISCORD_ENABLED = hasEnv("AUTH_DISCORD_ID", "AUTH_DISCORD_SECRET");
+buildTimeFeatures.AUTH_GITHUB_ENABLED = hasEnv("AUTH_GITHUB_ID", "AUTH_GITHUB_SECRET");
+buildTimeFeatures.AUTH_GITLAB_ENABLED = hasEnv("AUTH_GITLAB_ID", "AUTH_GITLAB_SECRET");
+buildTimeFeatures.AUTH_GOOGLE_ENABLED = hasEnv("AUTH_GOOGLE_ID", "AUTH_GOOGLE_SECRET");
+buildTimeFeatures.AUTH_TWITTER_ENABLED = hasEnv("AUTH_TWITTER_ID", "AUTH_TWITTER_SECRET");
+buildTimeFeatures.AUTH_VERCEL_ENABLED = hasEnv("VERCEL_CLIENT_ID", "VERCEL_CLIENT_SECRET");
+buildTimeFeatures.SUPABASE_AUTH_ENABLED = hasEnv("NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY");
 
-const isResendAuthEnabled = process.env.NODE_ENV !== "production" && !!process.env.RESEND_API_KEY; // TODO: Remove this once we have a production key
+// External Services
+buildTimeFeatures.GITHUB_API_ENABLED = hasEnv("GITHUB_ACCESS_TOKEN");
+buildTimeFeatures.GOOGLE_SERVICE_ACCOUNT_ENABLED = hasEnv("GOOGLE_CLIENT_EMAIL", "GOOGLE_PRIVATE_KEY");
+buildTimeFeatures.OPENAI_ENABLED = hasEnv("OPENAI_API_KEY");
+buildTimeFeatures.ANTHROPIC_ENABLED = hasEnv("ANTHROPIC_API_KEY");
 
-// Builder is enabled if the API key exists and it's not explicitly disabled
-export const isBuilderEnabled = !!process.env.NEXT_PUBLIC_BUILDER_API_KEY;
+// Payment Providers
+buildTimeFeatures.LEMONSQUEEZY_ENABLED = hasEnv("LEMONSQUEEZY_API_KEY", "LEMONSQUEEZY_STORE_ID");
+buildTimeFeatures.POLAR_ENABLED = hasEnv("POLAR_ACCESS_TOKEN");
+buildTimeFeatures.STRIPE_ENABLED = hasEnv("STRIPE_SECRET_KEY", "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY");
 
-// MDX is always enabled unless explicitly disabled
-export const isMDXEnabled = process.env.DISABLE_MDX !== "true";
+// Storage
+buildTimeFeatures.S3_ENABLED = hasEnv("AWS_REGION", "AWS_ACCESS_KEY_ID", "AWS_SECRET_ACCESS_KEY", "AWS_BUCKET_NAME");
+buildTimeFeatures.VERCEL_BLOB_ENABLED = hasEnv("VERCEL_BLOB_READ_WRITE_TOKEN");
 
-// PWA is always enabled unless explicitly disabled
-export const isPwaEnabled = process.env.DISABLE_PWA !== "true";
-
-// External Services (Feature flags for integrations)
-const isGitHubApiEnabled = !!process.env.GITHUB_ACCESS_TOKEN;
-
-const isGoogleServiceAccountEnabled =
-	!!process.env.GOOGLE_CLIENT_EMAIL && !!process.env.GOOGLE_PRIVATE_KEY;
-
-const isOpenAiEnabled = !!process.env.OPENAI_API_KEY;
-const isAnthropicEnabled = !!process.env.ANTHROPIC_API_KEY;
-
-const isLemonSqueezyEnabled =
-	!!process.env.LEMONSQUEEZY_API_KEY && !!process.env.LEMONSQUEEZY_STORE_ID;
-
-const isPolarEnabled = !!process.env.POLAR_ACCESS_TOKEN;
-
-const isStripeEnabled =
-	!!process.env.STRIPE_SECRET_KEY && !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-
-const isS3Enabled =
-	!!process.env.AWS_REGION &&
-	!!process.env.AWS_ACCESS_KEY_ID &&
-	!!process.env.AWS_SECRET_ACCESS_KEY &&
-	!!process.env.AWS_BUCKET_NAME;
-
-const isRedisEnabled =
-	!!process.env.UPSTASH_REDIS_REST_URL && !!process.env.UPSTASH_REDIS_REST_TOKEN;
-
-const isVercelApiEnabled = !!process.env.VERCEL_ACCESS_TOKEN;
-
-const isVercelBlobEnabled = !!process.env.VERCEL_BLOB_READ_WRITE_TOKEN;
+// Infrastructure
+buildTimeFeatures.REDIS_ENABLED = hasEnv("UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN");
+buildTimeFeatures.VERCEL_API_ENABLED = hasEnv("VERCEL_ACCESS_TOKEN");
 
 // Analytics
-const isPostHogEnabled =
-	!!process.env.NEXT_PUBLIC_POSTHOG_KEY && !!process.env.NEXT_PUBLIC_POSTHOG_HOST;
-
-const isUmamiEnabled = !!process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+buildTimeFeatures.POSTHOG_ENABLED = hasEnv("NEXT_PUBLIC_POSTHOG_KEY", "NEXT_PUBLIC_POSTHOG_HOST");
+buildTimeFeatures.UMAMI_ENABLED = hasEnv("NEXT_PUBLIC_UMAMI_WEBSITE_ID");
 
 // Consent Manager
-const isConsentManagerEnabled =
-	!!process.env.NEXT_PUBLIC_C15T_URL || process.env.ENABLE_CONSENT_MANAGER === "true";
+buildTimeFeatures.C15T_ENABLED = hasEnv("NEXT_PUBLIC_C15T_URL");
+buildTimeFeatures.CONSENT_MANAGER_ENABLED = buildTimeFeatures.C15T_ENABLED || isEnabled("ENABLE_CONSENT_MANAGER");
 
-// File Upload (combine S3 and Vercel Blob)
-const isFileUploadEnabled = isS3Enabled || isVercelBlobEnabled;
+// Composite Features
+buildTimeFeatures.FILE_UPLOAD_ENABLED = buildTimeFeatures.S3_ENABLED || buildTimeFeatures.VERCEL_BLOB_ENABLED;
 
-// Object containing flags to be injected into process.env
-// Use string values as process.env converts everything to strings
-export const buildTimeFeatureFlags = {
-	NEXT_PUBLIC_FEATURE_DATABASE_ENABLED: String(isDatabaseEnabled),
-	NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED: String(isPayloadEnabled),
-	NEXT_PUBLIC_FEATURE_BUILDER_ENABLED: String(isBuilderEnabled),
-	NEXT_PUBLIC_FEATURE_MDX_ENABLED: String(isMDXEnabled),
-	NEXT_PUBLIC_FEATURE_PWA_ENABLED: String(isPwaEnabled),
+// ======== Generate Feature Flags =========
 
-	// Better Auth Features
-	NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED: String(isBetterAuthEnabled),
+export { buildTimeFeatures };
 
-	// Auth.js Features
-	NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED: String(isResendAuthEnabled),
-	NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED: String(isCredentialsAuthEnabled),
-	NEXT_PUBLIC_FEATURE_AUTH_CLERK_ENABLED: String(isClerkEnabled),
-	NEXT_PUBLIC_FEATURE_AUTH_STACK_ENABLED: String(isStackAuthEnabled),
-	NEXT_PUBLIC_FEATURE_AUTH_BITBUCKET_ENABLED: String(isBitbucketAuthEnabled),
-	NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED: String(isDiscordAuthEnabled),
-	NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED: String(isGitHubAuthEnabled),
-	NEXT_PUBLIC_FEATURE_AUTH_GITLAB_ENABLED: String(isGitLabAuthEnabled),
-	NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED: String(isGoogleAuthEnabled),
-	NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED: String(isTwitterAuthEnabled),
-	NEXT_PUBLIC_FEATURE_AUTH_VERCEL_ENABLED: String(isVercelAuthEnabled),
-	NEXT_PUBLIC_FEATURE_SUPABASE_AUTH_ENABLED: String(isSupabaseAuthEnabled),
+/**
+ * Build-time flags for injection into client bundle via Next.js env vars
+ * Use string values as process.env converts everything to strings
+ */
+export const buildTimeFeatureFlags = Object.fromEntries(
+	Object.entries(buildTimeFeatures).map(([key, enabled]) => [
+		`NEXT_PUBLIC_FEATURE_${key}`,
+		String(enabled)
+	])
+) as Record<`NEXT_PUBLIC_FEATURE_${string}`, string>;
 
-	// External Services
-	NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED: String(isGitHubApiEnabled),
-	NEXT_PUBLIC_FEATURE_GOOGLE_SERVICE_ACCOUNT_ENABLED: String(isGoogleServiceAccountEnabled),
-	NEXT_PUBLIC_FEATURE_OPENAI_ENABLED: String(isOpenAiEnabled),
-	NEXT_PUBLIC_FEATURE_ANTHROPIC_ENABLED: String(isAnthropicEnabled),
-	NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED: String(isLemonSqueezyEnabled),
-	NEXT_PUBLIC_FEATURE_POLAR_ENABLED: String(isPolarEnabled),
-	NEXT_PUBLIC_FEATURE_STRIPE_ENABLED: String(isStripeEnabled),
-	NEXT_PUBLIC_FEATURE_S3_ENABLED: String(isS3Enabled),
-	NEXT_PUBLIC_FEATURE_REDIS_ENABLED: String(isRedisEnabled),
-	NEXT_PUBLIC_FEATURE_VERCEL_API_ENABLED: String(isVercelApiEnabled),
-	NEXT_PUBLIC_FEATURE_VERCEL_BLOB_ENABLED: String(isVercelBlobEnabled),
-
-	// Analytics
-	NEXT_PUBLIC_FEATURE_POSTHOG_ENABLED: String(isPostHogEnabled),
-	NEXT_PUBLIC_FEATURE_UMAMI_ENABLED: String(isUmamiEnabled),
-
-	// Consent Manager
-	NEXT_PUBLIC_FEATURE_C15T_ENABLED: String(isConsentManagerEnabled),
-
-	NEXT_PUBLIC_FEATURE_FILE_UPLOAD_ENABLED: String(isFileUploadEnabled),
-};
-// =======================================================

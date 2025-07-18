@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 import path from "path";
-import { buildTimeFeatureFlags } from "@/config/features-config";
+import { buildTimeFeatureFlags, buildTimeFeatures } from "@/config/features-config";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
 import { withPlugins } from "@/config/with-plugins";
@@ -131,6 +131,7 @@ const nextConfig: NextConfig = {
   // Production optimizations
   compress: true,
   poweredByHeader: false,
+  transpilePackages: ["@c15t/nextjs"],
 
   /*
    * React configuration
@@ -148,18 +149,18 @@ const nextConfig: NextConfig = {
    */
   eslint: {
     /*
-			!! WARNING !!
-			* This allows production builds to successfully complete even if
-			* your project has ESLint errors.
-		*/
+      !! WARNING !!
+      * This allows production builds to successfully complete even if
+      * your project has ESLint errors.
+    */
     ignoreDuringBuilds: true,
   },
   typescript: {
     /*
-			!! WARNING !!
-			* Dangerously allow production builds to successfully complete even if
-			* your project has type errors.
-		*/
+      !! WARNING !!
+      * Dangerously allow production builds to successfully complete even if
+      * your project has type errors.
+    */
     // ignoreBuildErrors: true,
   },
 
@@ -191,7 +192,7 @@ const nextConfig: NextConfig = {
      * Optimizes navigation performance by caching page segments
      */
     staleTimes: {
-      dynamic: buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED
+      dynamic: buildTimeFeatures.PAYLOAD_ENABLED
         ? 0
         : 90, // Payload needs to be re-rendered on every request
       static: 3600, // 3600 seconds for static routes
@@ -237,7 +238,7 @@ const nextConfig: NextConfig = {
     // Use DISABLE_ERROR_LOGGING to disable error logging too
     removeConsole:
       process.env.DISABLE_LOGGING === "true" ||
-      (process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+        (process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
         ? process.env.DISABLE_ERROR_LOGGING === "true" ||
           (process.env.NODE_ENV === "production" &&
             !process.env.DISABLE_ERROR_LOGGING)
@@ -313,6 +314,19 @@ const nextConfig: NextConfig = {
   ) => {
     // Enable top-level await
     config.experiments = { ...config.experiments, topLevelAwait: true };
+
+    // Add support for async/await in web workers
+    config.module.rules.push({
+      test: /\.worker\.(js|ts)$/,
+      use: {
+        loader: "worker-loader",
+        options: {
+          filename: "static/[hash].worker.js",
+          publicPath: "/_next/",
+        },
+      },
+    });
+
     if (!dev) {
       // // Disable source maps for node_modules to save memory
       // config.module.rules.push({

@@ -1,5 +1,6 @@
 "use server";
 
+import { env } from "@/env";
 import { getPayloadClient } from "@/lib/payload/payload";
 import { seedAllDirect } from "@/lib/payload/seed-utils";
 import { auth } from "@/server/auth";
@@ -47,10 +48,10 @@ export async function getCMSStatusAction() {
 		return { configured: false, message: "Unauthorized to check status." };
 	}
 
-	const payloadSecret = process.env.PAYLOAD_SECRET;
-	const databaseUrl = process.env.DATABASE_URL;
+	const payloadSecret = env.PAYLOAD_SECRET;
+	const databaseUrl = env.DATABASE_URL;
 	// Check the feature flag as well
-	const isPayloadEnabled = process.env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED === "true";
+	const isPayloadEnabled = env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED;
 
 	if (payloadSecret && databaseUrl && isPayloadEnabled) {
 		return {

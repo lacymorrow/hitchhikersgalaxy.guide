@@ -1,10 +1,7 @@
 import { Redis } from "@upstash/redis";
 import { nanoid } from "nanoid";
 
-const redis = new Redis({
-	url: process.env.UPSTASH_REDIS_REST_URL!,
-	token: process.env.UPSTASH_REDIS_REST_TOKEN!,
-});
+import { redis } from "./rate-limit";
 
 interface ApiKeyInfo {
 	id: string;
@@ -18,6 +15,10 @@ interface ApiKeyInfo {
 }
 
 export async function validateApiKey(apiKey: string): Promise<ApiKeyInfo | null> {
+	if (!redis) {
+		return null;
+	}
+
 	const keyInfo = await redis.get<ApiKeyInfo>(`api-key:${apiKey}`);
 	if (!keyInfo) return null;
 
@@ -33,6 +34,10 @@ export async function createApiKey(
 	name: string,
 	rateLimit = { requests: 1000, duration: "1d" }
 ): Promise<{ apiKey: string; info: ApiKeyInfo }> {
+	if (!redis) {
+		throw new Error("Redis not configured");
+	}
+
 	const apiKey = `sk_${nanoid(32)}`;
 	const info: ApiKeyInfo = {
 		id: nanoid(),
@@ -47,15 +52,25 @@ export async function createApiKey(
 }
 
 export async function revokeApiKey(apiKey: string): Promise<boolean> {
+	if (!redis) {
+		console.warn("Redis not configured, cannot revoke API key");
+		return false;
+	}
+
 	return (await redis.del(`api-key:${apiKey}`)) > 0;
 }
 
 export async function listApiKeys(): Promise<{ key: string; info: ApiKeyInfo }[]> {
+	if (!redis) {
+		console.warn("Redis not configured, cannot list API keys");
+		return [];
+	}
+
 	const keys = await redis.keys("api-key:*");
 	const apiKeys = await Promise.all(
 		keys.map(async (key) => ({
 			key: key.replace("api-key:", ""),
-			info: await redis.get<ApiKeyInfo>(key),
+			info: await redis?.get<ApiKeyInfo>(key) ?? null,
 		}))
 	);
 

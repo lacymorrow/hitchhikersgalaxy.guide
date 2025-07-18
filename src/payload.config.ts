@@ -13,7 +13,7 @@ import sharp from "sharp";
 import { fileURLToPath } from "url";
 
 import { RESEND_FROM_EMAIL } from "@/config/constants";
-import { buildTimeFeatureFlags } from "@/config/features-config";
+import { buildTimeFeatures } from "@/config/features-config";
 import { siteConfig } from "./config/site-config";
 // Import components using path strings for Payload 3.0
 // We'll use component paths instead of direct imports
@@ -35,7 +35,7 @@ const dirname = path.dirname(filename);
 const { adminTitleSuffix, adminIconPath, adminLogoPath, dbSchemaName, emailFromName } =
 	siteConfig.payload;
 
-const isPayloadEnabled = buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED;
+const isPayloadEnabled = buildTimeFeatures.PAYLOAD_ENABLED;
 
 const config = {
 	secret: process.env.PAYLOAD_SECRET ?? "supersecret",
@@ -206,44 +206,44 @@ const config = {
 		payloadCloudPlugin(),
 
 		// Conditionally add storage adapters if enabled
-		...(buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_S3_ENABLED && isPayloadEnabled
+		...(buildTimeFeatures.S3_ENABLED && isPayloadEnabled
 			? [
-					s3Storage({
-						collections: {
-							media: true,
+				s3Storage({
+					collections: {
+						media: true,
+					},
+					bucket: process.env.AWS_BUCKET_NAME!,
+					config: {
+						credentials: {
+							accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
+							secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
 						},
-						bucket: process.env.AWS_BUCKET_NAME!,
-						config: {
-							credentials: {
-								accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-								secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-							},
-							region: process.env.AWS_REGION!,
-						},
-					}),
-				]
+						region: process.env.AWS_REGION!,
+					},
+				}),
+			]
 			: []),
 
-		...(buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_VERCEL_BLOB_ENABLED && isPayloadEnabled
+		...(buildTimeFeatures.VERCEL_BLOB_ENABLED && isPayloadEnabled
 			? [
-					vercelBlobStorage({
-						collections: {
-							media: true,
-						},
-						token: process.env.VERCEL_BLOB_READ_WRITE_TOKEN!,
-					}),
-				]
+				vercelBlobStorage({
+					collections: {
+						media: true,
+					},
+					token: process.env.VERCEL_BLOB_READ_WRITE_TOKEN!,
+				}),
+			]
 			: []),
 	],
 	// If RESEND_API_KEY is set, use the resend adapter
-	...(buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED
+	...(buildTimeFeatures.AUTH_RESEND_ENABLED
 		? {
-				email: resendAdapter({
-					defaultFromAddress: RESEND_FROM_EMAIL,
-					defaultFromName: emailFromName, // Use config value
-					apiKey: process.env.RESEND_API_KEY ?? "",
-				}),
-			}
+			email: resendAdapter({
+				defaultFromAddress: RESEND_FROM_EMAIL,
+				defaultFromName: emailFromName, // Use config value
+				apiKey: process.env.RESEND_API_KEY ?? "",
+			}),
+		}
 		: {}),
 	telemetry: false,
 };

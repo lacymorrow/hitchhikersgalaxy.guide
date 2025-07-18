@@ -195,7 +195,7 @@ const nextConfig: NextConfig = {
       dynamic: buildTimeFeatures.PAYLOAD_ENABLED
         ? 0
         : 90, // Payload needs to be re-rendered on every request
-      static: 3600, // 3600 seconds for static routes
+      static: 360, // 360 seconds for static routes
     },
 
     /*

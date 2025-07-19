@@ -191,7 +191,7 @@ const nextConfig: NextConfig = {
      * Next.js 15+ Performance Optimizations
      */
     // Enable Partial Prerendering for better performance
-    ppr: buildTimeFeatures.PAYLOAD_ENABLED ? false : "incremental",
+    // ppr: buildTimeFeatures.PAYLOAD_ENABLED ? false : "incremental",
 
     // Enable Turbopack for faster builds
     // turbo: {
@@ -359,36 +359,36 @@ const nextConfig: NextConfig = {
       // });
 
       // Optimize chunk splitting to prevent large chunks
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          ...config.optimization.splitChunks,
-          cacheGroups: {
-            ...config.optimization.splitChunks?.cacheGroups,
-            // Split large vendor libraries into separate chunks
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: "vendors",
-              chunks: "all",
-              maxSize: 244000, // ~240KB chunks
-            },
-            // Split three.js and related 3D libraries
-            threejs: {
-              test: /[\\/]node_modules[\\/](@react-three|three)[\\/]/,
-              name: "threejs",
-              chunks: "all",
-              priority: 10,
-            },
-            // Split AI/ML libraries
-            ai: {
-              test: /[\\/]node_modules[\\/](@huggingface|openai|remotion)[\\/]/,
-              name: "ai-libs",
-              chunks: "all",
-              priority: 10,
-            },
-          },
-        },
-      };
+      // config.optimization = {
+      //   ...config.optimization,
+      //   splitChunks: {
+      //     ...config.optimization.splitChunks,
+      //     cacheGroups: {
+      //       ...config.optimization.splitChunks?.cacheGroups,
+      //       // Split large vendor libraries into separate chunks
+      //       vendor: {
+      //         test: /[\\/]node_modules[\\/]/,
+      //         name: "vendors",
+      //         chunks: "all",
+      //         maxSize: 244000, // ~240KB chunks
+      //       },
+      //       // Split three.js and related 3D libraries
+      //       threejs: {
+      //         test: /[\\/]node_modules[\\/](@react-three|three)[\\/]/,
+      //         name: "threejs",
+      //         chunks: "all",
+      //         priority: 10,
+      //       },
+      //       // Split AI/ML libraries
+      //       ai: {
+      //         test: /[\\/]node_modules[\\/](@huggingface|openai|remotion)[\\/]/,
+      //         name: "ai-libs",
+      //         chunks: "all",
+      //         priority: 10,
+      //       },
+      //     },
+      //   },
+      // };
 
       // Limit memory usage - SLOW BUILD
       // config.optimization.moduleIds = 'deterministic';
@@ -410,32 +410,32 @@ const nextConfig: NextConfig = {
         use: "raw-loader",
       });
 
-      config.externals = [
-        ...(config.externals ?? []),
-        // Externalize heavy client-only libraries on server
-        {
-          three: "three",
-          "@react-three/fiber": "@react-three/fiber",
-          "@react-three/drei": "@react-three/drei",
-          "canvas-confetti": "canvas-confetti",
-          "@huggingface/transformers": "@huggingface/transformers",
-          remotion: "remotion",
-          "@opentelemetry/instrumentation": "@opentelemetry/instrumentation",
-        },
-      ];
+      // config.externals = [
+      //   ...(config.externals ?? []),
+      //   // Externalize heavy client-only libraries on server
+      //   {
+      //     three: "three",
+      //     "@react-three/fiber": "@react-three/fiber",
+      //     "@react-three/drei": "@react-three/drei",
+      //     "canvas-confetti": "canvas-confetti",
+      //     "@huggingface/transformers": "@huggingface/transformers",
+      //     remotion: "remotion",
+      //     "@opentelemetry/instrumentation": "@opentelemetry/instrumentation",
+      //   },
+      // ];
     } else {
-      config.watchOptions = {
-        ...config.watchOptions,
-        ignored: [
-          "**/node_modules",
-          "**/.git",
-          "**/.next",
-          "**/node_modules/three",
-          "**/node_modules/@react-three",
-          "**/node_modules/remotion",
-          // Don't ignore docs directory
-        ],
-      };
+      // config.watchOptions = {
+      //   ...config.watchOptions,
+      //   ignored: [
+      //     "**/node_modules",
+      //     "**/.git",
+      //     "**/.next",
+      //     "**/node_modules/three",
+      //     "**/node_modules/@react-three",
+      //     "**/node_modules/remotion",
+      //     // Don't ignore docs directory
+      //   ],
+      // };
     }
 
     return config;

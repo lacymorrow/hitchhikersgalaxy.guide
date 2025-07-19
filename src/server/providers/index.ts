@@ -6,7 +6,6 @@
  */
 
 import { env } from "@/env";
-import { logger } from "@/lib/logger";
 import { paymentProviderRegistry } from "./registry";
 import type { PaymentProvider } from "./types";
 
@@ -32,7 +31,7 @@ export async function initializePaymentProviders(): Promise<void> {
 
 	// Conditionally register and initialize LemonSqueezy
 	if (env.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED) {
-		logger.debug("LemonSqueezy feature enabled, initializing provider", {
+		console.debug("LemonSqueezy feature enabled, initializing provider", {
 			apiKeyExists: !!env.LEMONSQUEEZY_API_KEY,
 			storeIdExists: !!env.LEMONSQUEEZY_STORE_ID,
 		});
@@ -53,12 +52,12 @@ export async function initializePaymentProviders(): Promise<void> {
 						});
 					}
 
-					logger.info("✅ LemonSqueezy Provider Initialized", {
+					console.info("✅ LemonSqueezy Provider Initialized", {
 						isConfigured: lemonSqueezyProvider.isConfigured,
 						isEnabled: lemonSqueezyProvider.isEnabled,
 					});
 				} catch (error) {
-					logger.error("❌ Failed to initialize LemonSqueezy Provider", { error });
+					console.error("❌ Failed to initialize LemonSqueezy Provider", { error });
 				}
 			})()
 		);
@@ -79,9 +78,9 @@ export async function initializePaymentProviders(): Promise<void> {
 						apiKey: env.POLAR_ACCESS_TOKEN, // Use the validated env var
 						// Pass other config like sandbox if needed
 					});
-					logger.info("✅ Polar Provider Initialized");
+					console.info("✅ Polar Provider Initialized");
 				} catch (error) {
-					logger.error("❌ Failed to initialize Polar Provider", { error });
+					console.error("❌ Failed to initialize Polar Provider", { error });
 				}
 			})()
 		);
@@ -104,9 +103,9 @@ export async function initializePaymentProviders(): Promise<void> {
 						webhookSecret: env.STRIPE_WEBHOOK_SECRET,
 						// Pass other config like sandbox if needed
 					} as any); // Cast to any since StripeProviderConfig extends ProviderConfig
-					logger.info("✅ Stripe Provider Initialized");
+					console.info("✅ Stripe Provider Initialized");
 				} catch (error) {
-					logger.error("❌ Failed to initialize Stripe Provider", { error });
+					console.error("❌ Failed to initialize Stripe Provider", { error });
 				}
 			})()
 		);
@@ -115,7 +114,7 @@ export async function initializePaymentProviders(): Promise<void> {
 	// Wait for all initializations to complete
 	await Promise.all(initializers);
 
-	// logger.info("Payment providers initialization complete\n", {
+	// console.info("Payment providers initialization complete\n", {
 	// 	totalRegistered: paymentProviderRegistry.count,
 	// 	enabled: paymentProviderRegistry.enabledCount, // Note: This relies on initialize() setting isEnabled correctly
 	// });

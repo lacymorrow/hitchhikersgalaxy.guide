@@ -19,7 +19,7 @@ export const Link = ({ children, ...props }: React.ComponentProps<typeof NextLin
 
 	if (siteConfig?.behavior?.pageTransitions) {
 		return (
-			<TransitionsLink prefetch {...props}>
+			<TransitionsLink prefetch={props?.prefetch ?? true} {...props}>
 				{children}
 			</TransitionsLink>
 		);

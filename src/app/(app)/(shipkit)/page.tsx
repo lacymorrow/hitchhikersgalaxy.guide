@@ -1,10 +1,16 @@
+import { Suspense } from "react";
 import { NextStepsSection } from "./_components/next-steps-section";
 import { OnboardingHeader } from "./_components/onboarding-header";
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
+
+export const runtime = "edge";
 
 export default function ShipkitOnboardingPage() {
 	return (
 		<div className="min-h-screen bg-gradient-to-br from-background to-muted/20">
-			<OnboardingHeader />
+			<Suspense fallback={<SuspenseFallback />}>
+				<OnboardingHeader />
+			</Suspense>
 
 			<div className="container mx-auto px-4 py-8 space-y-12 max-w-screen-md">
 				{/* <Suspense fallback={<SuspenseFallback />}>

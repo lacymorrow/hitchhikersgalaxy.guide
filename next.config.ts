@@ -40,13 +40,13 @@ const nextConfig: NextConfig = {
       },
     ],
     /*
-     * Next.js 15 Image Optimization
-     * Enhanced image formats and caching for better performance
+     * Next.js 15+ Enhanced Image Optimization
+     * Optimized for Core Web Vitals and performance
      */
-    // formats: ["image/avif", "image/webp"],
-    // deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
-    // imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    // minimumCacheTTL: 60,
+    formats: ["image/avif", "image/webp"],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 3600, // 1 hour cache
     // dangerouslyAllowSVG: true,
     // contentDispositionType: "attachment",
     // contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
@@ -188,7 +188,24 @@ const nextConfig: NextConfig = {
     webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
 
     /*
-     * Next.js 15 Client-side Router Cache Configuration
+     * Next.js 15+ Performance Optimizations
+     */
+    // Enable Partial Prerendering for better performance
+    ppr: buildTimeFeatures.PAYLOAD_ENABLED ? false : "incremental",
+
+    // Enable Turbopack for faster builds
+    // turbo: {
+    //   memoryLimit: 8000, // 8GB memory limit for better performance
+    // },
+
+    // Enhanced client-side router cache
+    clientSegmentCache: true,
+
+    // Optimized prefetching
+    optimisticClientCache: true,
+
+    /*
+     * Client-side Router Cache Configuration
      * Optimizes navigation performance by caching page segments
      */
     staleTimes: {

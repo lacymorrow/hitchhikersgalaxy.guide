@@ -5,7 +5,7 @@ description: "Set up and manage a product waitlist for your Next.js app"
 
 # Waitlist Feature
 
-ShipKit includes a complete waitlist implementation that allows you to collect user signups before your product launch. This feature includes email collection, detailed form data, database storage, and email notifications.
+Shipkit includes a complete waitlist implementation that allows you to collect user signups before your product launch. This feature includes email collection, detailed form data, database storage, and email notifications.
 
 ## Features
 
@@ -131,9 +131,9 @@ Edit the welcome email template in `src/server/actions/waitlist-actions.ts`:
 
 ```typescript
 await resend.emails.send({
-  from: env.RESEND_FROM_EMAIL || "ShipKit <noreply@shipkit.io>",
+  from: env.RESEND_FROM_EMAIL || "Shipkit <noreply@shipkit.io>",
   to: formData.email,
-  subject: "Welcome to the ShipKit Waitlist! 🚀",
+  subject: "Welcome to the Shipkit Waitlist! 🚀",
   html: `
     <!-- Your custom email template -->
   `,

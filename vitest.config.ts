@@ -1,5 +1,5 @@
 /**
- * @fileoverview Vitest configuration for unit tests in ShipKit
+ * @fileoverview Vitest configuration for unit tests in Shipkit
  * @module vitest.config
  * 
  * This configuration sets up the testing environment for React components and utilities.

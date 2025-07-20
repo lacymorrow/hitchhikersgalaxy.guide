@@ -1,6 +1,6 @@
-# ShipKit API Routes
+# Shipkit API Routes
 
-This directory contains API routes for the ShipKit installation workflow. These routes provide file system access and template management for the WebContainer-based installation process.
+This directory contains API routes for the Shipkit installation workflow. These routes provide file system access and template management for the WebContainer-based installation process.
 
 ## API Structure
 
@@ -49,7 +49,7 @@ Key configuration constants in `utils.ts`:
 
 ## Usage
 
-These API routes are consumed by the ShipKit installation WebContainer to:
+These API routes are consumed by the Shipkit installation WebContainer to:
 
 1. Browse available files
 2. Fetch file contents

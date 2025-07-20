@@ -1,6 +1,6 @@
 # Feature Flags
 
-ShipKit uses a simple, clean feature flag system based on environment variables.
+Shipkit uses a simple, clean feature flag system based on environment variables.
 
 ## How It Works
 

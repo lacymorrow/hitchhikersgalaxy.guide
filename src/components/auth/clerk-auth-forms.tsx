@@ -8,7 +8,7 @@ import { clerkConfig } from "@/lib/auth/clerk-config";
  * Clerk Authentication Form Components
  *
  * These components provide Clerk-specific authentication UI that integrates
- * with Clerk's built-in components and ShipKit's design system.
+ * with Clerk's built-in components and Shipkit's design system.
  */
 
 /**

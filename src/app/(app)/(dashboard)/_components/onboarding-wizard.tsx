@@ -170,7 +170,7 @@ export function OnboardingWizard({
 
 		toast({
 			title: "Onboarding completed!",
-			description: "You're all set to start building with ShipKit.",
+			description: "You're all set to start building with Shipkit.",
 		});
 
 		if (onComplete) {

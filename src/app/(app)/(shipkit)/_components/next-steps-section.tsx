@@ -81,7 +81,7 @@ export function NextStepsSection() {
 			<div className="text-center">
 				<h2 className="text-3xl font-bold tracking-tight">Your Next Steps</h2>
 				<p className="mt-2 text-lg text-muted-foreground">
-					Follow this roadmap to get your ShipKit app production-ready
+					Follow this roadmap to get your Shipkit app production-ready
 				</p>
 			</div>
 

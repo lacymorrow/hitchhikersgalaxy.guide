@@ -19,5 +19,5 @@ export default function WaitlistPage() {
 export const metadata = {
 	title: "Join the Waitlist - Stop Building the Same Things Over and Over",
 	description:
-		"Get early access to ShipKit, the Next.js starter that saves weeks of setup time. Join 1,000+ developers who are tired of rebuilding auth, payments, and databases from scratch.",
+		"Get early access to Shipkit, the Next.js starter that saves weeks of setup time. Join 1,000+ developers who are tired of rebuilding auth, payments, and databases from scratch.",
 };

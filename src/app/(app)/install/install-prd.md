@@ -1,8 +1,8 @@
-# ShipKit Installation Workflow - Product Requirements Document
+# Shipkit Installation Workflow - Product Requirements Document
 
 ## Overview
 
-The ShipKit installation workflow provides a browser-based mechanism for installing and configuring shadcn/ui components. This document outlines the technical requirements, implementation details, and expected behavior of the installation process.
+The Shipkit installation workflow provides a browser-based mechanism for installing and configuring shadcn/ui components. This document outlines the technical requirements, implementation details, and expected behavior of the installation process.
 
 ## Goals
 

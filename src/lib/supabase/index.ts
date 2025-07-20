@@ -1,5 +1,5 @@
 /**
- * Supabase Integration for ShipKit
+ * Supabase Integration for Shipkit
  *
  * This module provides a complete Supabase integration that works alongside
  * the existing Auth.js implementation. It includes:

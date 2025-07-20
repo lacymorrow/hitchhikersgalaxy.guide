@@ -1,6 +1,6 @@
-# Testing in ShipKit
+# Testing in Shipkit
 
-This directory contains tests for the ShipKit application. The test suite is organized into different categories:
+This directory contains tests for the Shipkit application. The test suite is organized into different categories:
 
 ## Directory Structure
 

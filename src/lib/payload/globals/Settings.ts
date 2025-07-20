@@ -38,7 +38,7 @@ export const Settings: GlobalConfig = {
 		{
 			name: "siteTitle",
 			type: "text",
-			defaultValue: "ShipKit",
+			defaultValue: "Shipkit",
 			admin: {
 				description: "The title of the site used in various places",
 			},

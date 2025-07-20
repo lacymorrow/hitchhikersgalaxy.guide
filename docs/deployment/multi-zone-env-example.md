@@ -41,7 +41,7 @@ NEXTAUTH_SECRET=your_production_auth_secret
 ### Option 1: Vercel Proxy Project (Simplest)
 
 1. **Create 5 separate repositories:**
-   - `shipkit-main` (Current ShipKit repo)
+   - `shipkit-main` (Current Shipkit repo)
    - `shipkit-docs` (Documentation app with Nextra/MDX)
    - `shipkit-blog` (Blog app with MDX/CMS)
    - `shipkit-ui` (UI component library showcase)
@@ -91,7 +91,7 @@ NEXTAUTH_SECRET=your_production_auth_secret
    - `TOOLS_DOMAIN=https://tools-shipkit.vercel.app`
 3. **Assign shipkit.io domain to the main Shipkit app**
 
-### Option 3: Modified ShipKit Configuration (Incremental Approach)
+### Option 3: Modified Shipkit Configuration (Incremental Approach)
 
 1. **Add the rewrites to your existing `next.config.ts`** (see example-multi-zone-config.ts)
 2. **Set environment variables in Vercel dashboard**

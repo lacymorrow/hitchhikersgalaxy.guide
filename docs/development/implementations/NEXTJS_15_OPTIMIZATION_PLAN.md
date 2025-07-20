@@ -1,8 +1,8 @@
-# Next.js 15 Optimization Plan for ShipKit
+# Next.js 15 Optimization Plan for Shipkit
 
 ## Current Status ✅
 
-The ShipKit codebase is already well-optimized for Next.js 15! The team has done excellent work implementing most best practices:
+The Shipkit codebase is already well-optimized for Next.js 15! The team has done excellent work implementing most best practices:
 
 ### ✅ Already Implemented
 
@@ -221,7 +221,7 @@ The codebase now has an excellent foundation for Next.js 15 performance. Focus o
 
 ## Notes
 
-The ShipKit codebase demonstrates excellent Next.js 15 practices:
+The Shipkit codebase demonstrates excellent Next.js 15 practices:
 
 - ✅ Proper async/await patterns for params/searchParams
 - ✅ Smart caching strategies with Redis integration

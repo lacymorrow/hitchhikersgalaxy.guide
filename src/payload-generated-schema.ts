@@ -6,7 +6,7 @@
  * and re-run `payload generate:db-schema` to regenerate this file.
  */
 
-import type {} from "@payloadcms/db-postgres";
+import type { } from "@payloadcms/db-postgres";
 import {
   pgSchema,
   index,
@@ -847,7 +847,7 @@ export const settings = db_schema.table("settings", {
     withTimezone: true,
     precision: 3,
   }),
-  siteTitle: varchar("site_title").default("ShipKit"),
+  siteTitle: varchar("site_title").default("Shipkit"),
   siteDescription: varchar("site_description"),
   updatedAt: timestamp("updated_at", {
     mode: "string",

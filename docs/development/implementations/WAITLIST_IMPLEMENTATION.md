@@ -1,4 +1,4 @@
-# ✅ ShipKit Waitlist Implementation Complete
+# ✅ Shipkit Waitlist Implementation Complete
 
 The waitlist feature has been successfully implemented and is now fully functional.
 

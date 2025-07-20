@@ -120,9 +120,9 @@ export class VercelAPIService {
 				name: projectId,
 				gitSource: gitRef
 					? {
-							type: "github" as const,
-							ref: gitRef,
-						}
+						type: "github" as const,
+						ref: gitRef,
+					}
 					: undefined,
 				target: "production" as const,
 			};
@@ -411,7 +411,7 @@ export class VercelAPIService {
 			return explicitFramework;
 		}
 
-		// For ShipKit, we know it's Next.js
+		// For Shipkit, we know it's Next.js
 		return "nextjs";
 	}
 

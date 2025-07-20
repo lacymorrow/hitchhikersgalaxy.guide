@@ -6,7 +6,7 @@ alwaysApply: false
 # Waitlist Implementation Guide
 
 ## Overview
-ShipKit includes a complete waitlist feature for product launches. The implementation follows Next.js App Router patterns with Server Components, Server Actions, and Drizzle ORM.
+Shipkit includes a complete waitlist feature for product launches. The implementation follows Next.js App Router patterns with Server Components, Server Actions, and Drizzle ORM.
 
 ## Architecture Pattern
 

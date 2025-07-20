@@ -297,4 +297,4 @@ Required database environment variables:
 - `DATABASE_URL` - Connection string
 - `DB_PREFIX` - Table prefix for multi-tenant setups
 
-This pattern ensures consistent database operations across the ShipKit application while maintaining performance and data integrity.
+This pattern ensures consistent database operations across the Shipkit application while maintaining performance and data integrity.

@@ -106,7 +106,7 @@ export async function LaunchPageContent() {
 							<RocketIcon className="mx-auto mb-6 size-12 text-primary" />
 							<h2 className="mb-4 text-3xl font-bold">Ready for Takeoff?</h2>
 							<p className="mb-8 text-muted-foreground">
-								Join developers who are building production-ready applications with ShipKit.
+								Join developers who are building production-ready applications with Shipkit.
 							</p>
 							<Link className={buttonVariants()} href={routes.external.buy}>
 								Buy Now

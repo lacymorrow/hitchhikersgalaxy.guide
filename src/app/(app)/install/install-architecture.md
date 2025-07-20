@@ -1,8 +1,8 @@
-# ShipKit Installation Workflow - Architectural Improvements
+# Shipkit Installation Workflow - Architectural Improvements
 
 ## Current Architecture Overview
 
-The ShipKit installation workflow uses a browser-based WebContainer to process and install shadcn/ui components. The system processes template files from the repository, transforms them based on the project structure, and allows users to preview and install components.
+The Shipkit installation workflow uses a browser-based WebContainer to process and install shadcn/ui components. The system processes template files from the repository, transforms them based on the project structure, and allows users to preview and install components.
 
 ## Key Architectural Components
 

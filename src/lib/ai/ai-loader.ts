@@ -53,7 +53,7 @@ export class AILoader {
 
 	constructor() {
 		this.context = {
-			projectName: "ShipKit",
+			projectName: "Shipkit",
 			description: "Production-ready SaaS starter kit built with Next.js",
 			version: "1.0.0",
 			technologies: {

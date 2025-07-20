@@ -1,6 +1,6 @@
-# ShipKit Installation Module
+# Shipkit Installation Module
 
-This module handles the WebContainer installation for shadcn/ui components in ShipKit.
+This module handles the WebContainer installation for shadcn/ui components in Shipkit.
 
 ## Recent Improvements
 

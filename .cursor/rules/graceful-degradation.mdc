@@ -3,11 +3,11 @@ description:
 globs:
 alwaysApply: false
 ---
-# ShipKit Graceful Degradation
+# Shipkit Graceful Degradation
 
 ## Overview
 
-ShipKit implements graceful degradation to provide a seamless experience whether users have a database configured or not. When no `DATABASE_URL` is provided, the application automatically falls back to local storage for data persistence.
+Shipkit implements graceful degradation to provide a seamless experience whether users have a database configured or not. When no `DATABASE_URL` is provided, the application automatically falls back to local storage for data persistence.
 
 ## Architecture
 

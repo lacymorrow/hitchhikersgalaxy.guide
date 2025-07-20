@@ -1,5 +1,5 @@
 /**
- * @fileoverview User management service for ShipKit
+ * @fileoverview User management service for Shipkit
  * @module server/services/user-service
  * 
  * This service handles all user-related operations including:

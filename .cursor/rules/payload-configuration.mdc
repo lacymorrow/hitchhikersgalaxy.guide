@@ -7,7 +7,7 @@ alwaysApply: false
 
 ## Overview
 
-ShipKit conditionally initializes Payload CMS based on environment variables. The **[src/payload.config.ts](mdc:src/payload.config.ts)** file handles graceful degradation when no database is configured.
+Shipkit conditionally initializes Payload CMS based on environment variables. The **[src/payload.config.ts](mdc:src/payload.config.ts)** file handles graceful degradation when no database is configured.
 
 ## Conditional Initialization
 

@@ -61,7 +61,7 @@ export async function getClerkUserId(): Promise<string | null> {
 }
 
 /**
- * Convert Clerk user to ShipKit user format
+ * Convert Clerk user to Shipkit user format
  * This ensures compatibility with existing user interfaces
  */
 export function formatClerkUser(clerkUser: User) {

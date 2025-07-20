@@ -34,7 +34,7 @@ export class GitHubTemplateService {
 	constructor(config: GitHubConfig) {
 		this.octokit = new Octokit({
 			auth: config.accessToken,
-			userAgent: config.userAgent || "ShipKit-Deploy/1.0.0",
+			userAgent: config.userAgent || "Shipkit-Deploy/1.0.0",
 		});
 	}
 

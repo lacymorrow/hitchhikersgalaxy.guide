@@ -49,7 +49,7 @@ export async function POST(req: Request) {
 			messages: [
 				{
 					role: "system",
-					content: `You are a helpful documentation assistant for ShipKit.
+					content: `You are a helpful documentation assistant for Shipkit.
           Your responses should be clear, concise, and focused on answering the user's question.
           Include relevant code examples when appropriate.
           Format your responses in markdown.

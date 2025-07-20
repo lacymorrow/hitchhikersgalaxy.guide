@@ -52,7 +52,7 @@ function createGradient(text: string): string {
 }
 
 /**
- * ASCII art for ShipKit logo with a smooth left-to-right gradient
+ * ASCII art for Shipkit logo with a smooth left-to-right gradient
  */
 const shipArt = `
 ${createGradient("   ███████╗██╗  ██╗██╗██████╗ ██╗  ██╗██╗████████╗")}
@@ -71,7 +71,7 @@ let hasDisplayedMessage = false;
  * Display a colorful launch message in the console
  *
  * This function prints a fun, colorful ASCII art logo and launch message
- * for ShipKit, making the startup experience more engaging for non-coders.
+ * for Shipkit, making the startup experience more engaging for non-coders.
  *
  * The message will only be displayed once per process.
  */

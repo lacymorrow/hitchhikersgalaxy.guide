@@ -145,12 +145,12 @@ export interface User {
   loginAttempts?: number | null;
   lockUntil?: string | null;
   sessions?:
-    | {
-        id: string;
-        createdAt?: string | null;
-        expiresAt: string;
-      }[]
-    | null;
+  | {
+    id: string;
+    createdAt?: string | null;
+    expiresAt: string;
+  }[]
+  | null;
   password?: string | null;
 }
 /**
@@ -183,107 +183,107 @@ export interface Page {
   };
   layout: (
     | {
-        /**
-         * The main heading for this section
-         */
-        heading: string;
-        /**
-         * Optional subheading text
-         */
-        subheading?: string | null;
-        /**
-         * Background or featured image
-         */
-        image?: (number | null) | Media;
-        /**
-         * Text for the call-to-action button
-         */
-        ctaText?: string | null;
-        /**
-         * URL or path for the call-to-action button
-         */
-        ctaLink?: string | null;
-        /**
-         * Choose the layout style for this hero section
-         */
-        style?: ('default' | 'centered' | 'split') | null;
-        id?: string | null;
-        blockName?: string | null;
-        blockType: 'hero';
-      }
+      /**
+       * The main heading for this section
+       */
+      heading: string;
+      /**
+       * Optional subheading text
+       */
+      subheading?: string | null;
+      /**
+       * Background or featured image
+       */
+      image?: (number | null) | Media;
+      /**
+       * Text for the call-to-action button
+       */
+      ctaText?: string | null;
+      /**
+       * URL or path for the call-to-action button
+       */
+      ctaLink?: string | null;
+      /**
+       * Choose the layout style for this hero section
+       */
+      style?: ('default' | 'centered' | 'split') | null;
+      id?: string | null;
+      blockName?: string | null;
+      blockType: 'hero';
+    }
     | {
-        /**
-         * The main content for this section
-         */
-        content: {
-          root: {
+      /**
+       * The main content for this section
+       */
+      content: {
+        root: {
+          type: string;
+          children: {
             type: string;
-            children: {
-              type: string;
-              version: number;
-              [k: string]: unknown;
-            }[];
-            direction: ('ltr' | 'rtl') | null;
-            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
-            indent: number;
             version: number;
-          };
-          [k: string]: unknown;
+            [k: string]: unknown;
+          }[];
+          direction: ('ltr' | 'rtl') | null;
+          format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+          indent: number;
+          version: number;
         };
-        /**
-         * Choose the width of the content container
-         */
-        width?: ('default' | 'wide' | 'narrow') | null;
-        /**
-         * Choose a background style for this section
-         */
-        background?: ('none' | 'gray' | 'accent') | null;
-        id?: string | null;
-        blockName?: string | null;
-        blockType: 'content';
-      }
+        [k: string]: unknown;
+      };
+      /**
+       * Choose the width of the content container
+       */
+      width?: ('default' | 'wide' | 'narrow') | null;
+      /**
+       * Choose a background style for this section
+       */
+      background?: ('none' | 'gray' | 'accent') | null;
+      id?: string | null;
+      blockName?: string | null;
+      blockType: 'content';
+    }
     | {
-        /**
-         * Optional section heading
-         */
-        heading?: string | null;
-        /**
-         * Select features to display in this section
-         */
-        features: (number | Feature)[];
-        /**
-         * Choose how to display the features
-         */
-        layout?: ('grid' | 'list' | 'carousel') | null;
-        /**
-         * Number of columns in grid layout
-         */
-        columns?: ('2' | '3' | '4') | null;
-        id?: string | null;
-        blockName?: string | null;
-        blockType: 'features';
-      }
+      /**
+       * Optional section heading
+       */
+      heading?: string | null;
+      /**
+       * Select features to display in this section
+       */
+      features: (number | Feature)[];
+      /**
+       * Choose how to display the features
+       */
+      layout?: ('grid' | 'list' | 'carousel') | null;
+      /**
+       * Number of columns in grid layout
+       */
+      columns?: ('2' | '3' | '4') | null;
+      id?: string | null;
+      blockName?: string | null;
+      blockType: 'features';
+    }
     | {
-        /**
-         * Optional section heading
-         */
-        heading?: string | null;
-        /**
-         * Select testimonials to display in this section
-         */
-        testimonials: (number | Testimonial)[];
-        /**
-         * Choose how to display the testimonials
-         */
-        layout?: ('grid' | 'slider' | 'single') | null;
-        /**
-         * Choose a background style for this section
-         */
-        background?: ('none' | 'light' | 'dark') | null;
-        id?: string | null;
-        blockName?: string | null;
-        blockType: 'testimonials';
-      }
+      /**
+       * Optional section heading
+       */
+      heading?: string | null;
+      /**
+       * Select testimonials to display in this section
+       */
+      testimonials: (number | Testimonial)[];
+      /**
+       * Choose how to display the testimonials
+       */
+      layout?: ('grid' | 'slider' | 'single') | null;
+      /**
+       * Choose a background style for this section
+       */
+      background?: ('none' | 'light' | 'dark') | null;
+      id?: string | null;
+      blockName?: string | null;
+      blockType: 'testimonials';
+    }
   )[];
   /**
    * Date when this page was published
@@ -393,7 +393,7 @@ export interface Rbac {
   createdAt: string;
 }
 /**
- * Stores details of Vercel deployments initiated via ShipKit.
+ * Stores details of Vercel deployments initiated via Shipkit.
  *
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "vercel-deployments".
@@ -419,38 +419,38 @@ export interface VercelDeployment {
 export interface PayloadLockedDocument {
   id: number;
   document?:
-    | ({
-        relationTo: 'users';
-        value: number | User;
-      } | null)
-    | ({
-        relationTo: 'pages';
-        value: number | Page;
-      } | null)
-    | ({
-        relationTo: 'media';
-        value: number | Media;
-      } | null)
-    | ({
-        relationTo: 'faqs';
-        value: number | Faq;
-      } | null)
-    | ({
-        relationTo: 'features';
-        value: number | Feature;
-      } | null)
-    | ({
-        relationTo: 'testimonials';
-        value: number | Testimonial;
-      } | null)
-    | ({
-        relationTo: 'rbac';
-        value: number | Rbac;
-      } | null)
-    | ({
-        relationTo: 'vercel-deployments';
-        value: number | VercelDeployment;
-      } | null);
+  | ({
+    relationTo: 'users';
+    value: number | User;
+  } | null)
+  | ({
+    relationTo: 'pages';
+    value: number | Page;
+  } | null)
+  | ({
+    relationTo: 'media';
+    value: number | Media;
+  } | null)
+  | ({
+    relationTo: 'faqs';
+    value: number | Faq;
+  } | null)
+  | ({
+    relationTo: 'features';
+    value: number | Feature;
+  } | null)
+  | ({
+    relationTo: 'testimonials';
+    value: number | Testimonial;
+  } | null)
+  | ({
+    relationTo: 'rbac';
+    value: number | Rbac;
+  } | null)
+  | ({
+    relationTo: 'vercel-deployments';
+    value: number | VercelDeployment;
+  } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
@@ -471,14 +471,14 @@ export interface PayloadPreference {
   };
   key?: string | null;
   value?:
-    | {
-        [k: string]: unknown;
-      }
-    | unknown[]
-    | string
-    | number
-    | boolean
-    | null;
+  | {
+    [k: string]: unknown;
+  }
+  | unknown[]
+  | string
+  | number
+  | boolean
+  | null;
   updatedAt: string;
   createdAt: string;
 }
@@ -508,12 +508,12 @@ export interface UsersSelect<T extends boolean = true> {
   loginAttempts?: T;
   lockUntil?: T;
   sessions?:
-    | T
-    | {
-        id?: T;
-        createdAt?: T;
-        expiresAt?: T;
-      };
+  | T
+  | {
+    id?: T;
+    createdAt?: T;
+    expiresAt?: T;
+  };
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -523,57 +523,57 @@ export interface PagesSelect<T extends boolean = true> {
   title?: T;
   slug?: T;
   meta?:
-    | T
-    | {
-        title?: T;
-        description?: T;
-        image?: T;
-      };
+  | T
+  | {
+    title?: T;
+    description?: T;
+    image?: T;
+  };
   layout?:
+  | T
+  | {
+    hero?:
     | T
     | {
-        hero?:
-          | T
-          | {
-              heading?: T;
-              subheading?: T;
-              image?: T;
-              ctaText?: T;
-              ctaLink?: T;
-              style?: T;
-              id?: T;
-              blockName?: T;
-            };
-        content?:
-          | T
-          | {
-              content?: T;
-              width?: T;
-              background?: T;
-              id?: T;
-              blockName?: T;
-            };
-        features?:
-          | T
-          | {
-              heading?: T;
-              features?: T;
-              layout?: T;
-              columns?: T;
-              id?: T;
-              blockName?: T;
-            };
-        testimonials?:
-          | T
-          | {
-              heading?: T;
-              testimonials?: T;
-              layout?: T;
-              background?: T;
-              id?: T;
-              blockName?: T;
-            };
-      };
+      heading?: T;
+      subheading?: T;
+      image?: T;
+      ctaText?: T;
+      ctaLink?: T;
+      style?: T;
+      id?: T;
+      blockName?: T;
+    };
+    content?:
+    | T
+    | {
+      content?: T;
+      width?: T;
+      background?: T;
+      id?: T;
+      blockName?: T;
+    };
+    features?:
+    | T
+    | {
+      heading?: T;
+      features?: T;
+      layout?: T;
+      columns?: T;
+      id?: T;
+      blockName?: T;
+    };
+    testimonials?:
+    | T
+    | {
+      heading?: T;
+      testimonials?: T;
+      layout?: T;
+      background?: T;
+      id?: T;
+      blockName?: T;
+    };
+  };
   publishedAt?: T;
   updatedAt?: T;
   createdAt?: T;
@@ -750,5 +750,5 @@ export interface Auth {
 
 
 declare module 'payload' {
-  export interface GeneratedTypes extends Config {}
+  export interface GeneratedTypes extends Config { }
 }

@@ -21,7 +21,7 @@ export interface CodeReviewGuidelines {
 
 /**
  * AIAssistant helps make decisions about code implementation and provides
- * guidance on best practices for the ShipKit codebase.
+ * guidance on best practices for the Shipkit codebase.
  */
 export class AIAssistant {
 	private context = aiLoader.getContext();

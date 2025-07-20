@@ -6,7 +6,7 @@ alwaysApply: false
 # Documentation System
 
 ## Overview
-The ShipKit documentation system uses dynamic file-based loading from the `/docs` directory at the project root. It supports both `.mdx` and `.md` files with full production-ready security features.
+The Shipkit documentation system uses dynamic file-based loading from the `/docs` directory at the project root. It supports both `.mdx` and `.md` files with full production-ready security features.
 
 ## Architecture
 

@@ -46,7 +46,7 @@ export function getClerkWebhookSecret(): string | undefined {
  * Clerk configuration options
  */
 export const clerkConfig = {
-	// Appearance customization to match ShipKit's design
+	// Appearance customization to match Shipkit's design
 	appearance: {
 		elements: {
 			// Customize Clerk components to match Tailwind/Shadcn styling
@@ -59,7 +59,7 @@ export const clerkConfig = {
 			showOptionalFields: false,
 		},
 	},
-	// Sign-in and sign-up URLs that match ShipKit's routing
+	// Sign-in and sign-up URLs that match Shipkit's routing
 	signInUrl: "/sign-in",
 	signUpUrl: "/sign-up",
 	afterSignInUrl: "/dashboard",

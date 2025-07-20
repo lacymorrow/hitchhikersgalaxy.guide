@@ -16,7 +16,7 @@
 - ✅ You're comfortable with more complex setup
 - ✅ You want to leverage Shipkit's full feature set in each zone
 
-### Choose **Modified ShipKit Config** if
+### Choose **Modified Shipkit Config** if
 
 - ✅ You want to keep your current shipkit.io setup mostly intact
 - ✅ You only need a few additional zones (start with docs or blog)

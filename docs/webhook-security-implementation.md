@@ -2,7 +2,7 @@
 
 ## Overview
 
-This document provides a comprehensive guide to implementing secure webhook handling in ShipKit, with specific focus on Lemon Squeezy integration and payment processing webhooks.
+This document provides a comprehensive guide to implementing secure webhook handling in Shipkit, with specific focus on Lemon Squeezy integration and payment processing webhooks.
 
 ## 🚨 Critical Security Requirements
 

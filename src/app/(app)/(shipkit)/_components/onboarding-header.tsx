@@ -21,12 +21,12 @@ export function OnboardingHeader() {
 					<h1 className="mb-4 text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
 						Welcome to{" "}
 						<span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-							ShipKit
+							Shipkit
 						</span>
 					</h1>
 
 					<p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
-						🎉 Congratulations! You've successfully deployed ShipKit. Now let's get you set up and
+						🎉 Congratulations! You've successfully deployed Shipkit. Now let's get you set up and
 						ready to build amazing things. Below you'll find everything you need to configure your
 						features and start shipping.
 					</p>

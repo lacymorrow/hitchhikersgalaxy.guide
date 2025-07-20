@@ -44,7 +44,7 @@ async function makeGitHubRequest(url: string): Promise<{
 		const makeRequest = (requestUrl: string) => {
 			const options = {
 				headers: {
-					"User-Agent": "ShipKit-Downloader",
+					"User-Agent": "Shipkit-Downloader",
 					Authorization: `Bearer ${env.GITHUB_ACCESS_TOKEN}`,
 					Accept: "application/vnd.github.v3+json",
 				},
@@ -189,7 +189,7 @@ async function downloadFile(url: string, filePath: string): Promise<void> {
 		const makeRequest = (requestUrl: string) => {
 			const options = {
 				headers: {
-					"User-Agent": "ShipKit-Downloader",
+					"User-Agent": "Shipkit-Downloader",
 					Authorization: `Bearer ${env.GITHUB_ACCESS_TOKEN}`,
 					Accept: "application/vnd.github.v3+json",
 				},
@@ -266,8 +266,7 @@ async function downloadLatestRelease(): Promise<{
 	const { isValid, scopes, error } = await verifyTokenPermissions();
 	if (!isValid) {
 		throw new Error(
-			`GitHub token verification failed: ${error}. Required scopes: repo. Current scopes: ${
-				scopes?.join(", ") || "none"
+			`GitHub token verification failed: ${error}. Required scopes: repo. Current scopes: ${scopes?.join(", ") || "none"
 			}`
 		);
 	}

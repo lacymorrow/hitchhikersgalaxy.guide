@@ -1,5 +1,5 @@
 /**
- * @fileoverview Environment configuration loader for ShipKit
+ * @fileoverview Environment configuration loader for Shipkit
  * @module config/env-config
  * 
  * This file ensures environment variables are loaded from .env files

@@ -1,6 +1,6 @@
-# ShipKit Installation Module Consolidation
+# Shipkit Installation Module Consolidation
 
-This document outlines the consolidation work performed on the ShipKit installation system and provides guidance for future refinements.
+This document outlines the consolidation work performed on the Shipkit installation system and provides guidance for future refinements.
 
 ## Completed Consolidation
 

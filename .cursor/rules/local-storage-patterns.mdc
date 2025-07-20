@@ -7,7 +7,7 @@ alwaysApply: false
 
 ## Overview
 
-ShipKit uses browser local storage as a fallback when no database is configured. This provides a zero-config development experience while maintaining feature parity with database mode.
+Shipkit uses browser local storage as a fallback when no database is configured. This provides a zero-config development experience while maintaining feature parity with database mode.
 
 ## Core Principles
 

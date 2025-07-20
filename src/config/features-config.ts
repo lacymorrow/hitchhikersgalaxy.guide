@@ -33,7 +33,7 @@ const buildTimeFeatures = {} as Record<string, boolean>;
 
 // Core Features
 buildTimeFeatures.DATABASE_ENABLED = hasEnv("DATABASE_URL");
-buildTimeFeatures.PAYLOAD_ENABLED = buildTimeFeatures.DATABASE_ENABLED && isEnabled("ENABLE_PAYLOAD");
+buildTimeFeatures.PAYLOAD_ENABLED = buildTimeFeatures.DATABASE_ENABLED && (isEnabled("ENABLE_PAYLOAD") || hasEnv("PAYLOAD_SECRET"));
 buildTimeFeatures.BUILDER_ENABLED = hasEnv("NEXT_PUBLIC_BUILDER_API_KEY");
 buildTimeFeatures.MDX_ENABLED = !isEnabled("DISABLE_MDX");
 buildTimeFeatures.PWA_ENABLED = !isEnabled("DISABLE_PWA");

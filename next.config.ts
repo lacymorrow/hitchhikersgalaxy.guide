@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 import path from "path";
-import { buildTimeFeatureFlags, buildTimeFeatures } from "@/config/features-config";
+import {
+  buildTimeFeatureFlags,
+  buildTimeFeatures,
+} from "@/config/features-config";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
 import { withPlugins } from "@/config/with-plugins";
@@ -131,7 +134,6 @@ const nextConfig: NextConfig = {
   // Production optimizations
   compress: true,
   poweredByHeader: false,
-  transpilePackages: ["@c15t/nextjs"],
 
   /*
    * React configuration
@@ -187,17 +189,6 @@ const nextConfig: NextConfig = {
     viewTransition: true,
     webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
 
-    /*
-     * Next.js 15+ Performance Optimizations
-     */
-    // Enable Partial Prerendering for better performance
-    // ppr: buildTimeFeatures.PAYLOAD_ENABLED ? false : "incremental",
-
-    // Enable Turbopack for faster builds
-    // turbo: {
-    //   memoryLimit: 8000, // 8GB memory limit for better performance
-    // },
-
     // Enhanced client-side router cache
     clientSegmentCache: true,
 
@@ -209,20 +200,9 @@ const nextConfig: NextConfig = {
      * Optimizes navigation performance by caching page segments
      */
     staleTimes: {
-      dynamic: buildTimeFeatures.PAYLOAD_ENABLED
-        ? 0
-        : 90, // Payload needs to be re-rendered on every request
+      dynamic: buildTimeFeatures.PAYLOAD_ENABLED ? 0 : 90, // Payload needs to be re-rendered on every request
       static: 360, // 360 seconds for static routes
     },
-
-    /*
-     * Build Performance Optimization
-     * Use available CPU cores efficiently (leave one core free)
-     */
-    // cpus: Math.max(1, (os.cpus()?.length ?? 1) - 1),
-
-    // Memory optimization - reduce worker memory
-    // workerThreads: false,
   },
 
   /*
@@ -244,18 +224,12 @@ const nextConfig: NextConfig = {
   },
 
   compiler: {
-    // Remove all console logs
-    // removeConsole: true
-
-    // Remove console logs only in production, excluding error logs
-    // removeConsole: process.env.NODE_ENV === "production" ? { exclude: ["error"] } : false,
-
     // Logs are disabled in production unless DISABLE_LOGGING is set
     // Use DISABLE_LOGGING to disable all logging except error logs
     // Use DISABLE_ERROR_LOGGING to disable error logging too
     removeConsole:
       process.env.DISABLE_LOGGING === "true" ||
-        (process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+      (process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
         ? process.env.DISABLE_ERROR_LOGGING === "true" ||
           (process.env.NODE_ENV === "production" &&
             !process.env.DISABLE_ERROR_LOGGING)
@@ -344,62 +318,7 @@ const nextConfig: NextConfig = {
       },
     });
 
-    if (!dev) {
-      // // Disable source maps for node_modules to save memory
-      // config.module.rules.push({
-      // 	test: /\.js$/,
-      // 	include: /node_modules/,
-      // 	use: {
-      // 		loader: 'source-map-loader',
-      // 		options: {
-      // 			enforce: 'pre',
-      // 		},
-      // 	},
-      // 	enforce: 'pre',
-      // });
-
-      // Optimize chunk splitting to prevent large chunks
-      // config.optimization = {
-      //   ...config.optimization,
-      //   splitChunks: {
-      //     ...config.optimization.splitChunks,
-      //     cacheGroups: {
-      //       ...config.optimization.splitChunks?.cacheGroups,
-      //       // Split large vendor libraries into separate chunks
-      //       vendor: {
-      //         test: /[\\/]node_modules[\\/]/,
-      //         name: "vendors",
-      //         chunks: "all",
-      //         maxSize: 244000, // ~240KB chunks
-      //       },
-      //       // Split three.js and related 3D libraries
-      //       threejs: {
-      //         test: /[\\/]node_modules[\\/](@react-three|three)[\\/]/,
-      //         name: "threejs",
-      //         chunks: "all",
-      //         priority: 10,
-      //       },
-      //       // Split AI/ML libraries
-      //       ai: {
-      //         test: /[\\/]node_modules[\\/](@huggingface|openai|remotion)[\\/]/,
-      //         name: "ai-libs",
-      //         chunks: "all",
-      //         priority: 10,
-      //       },
-      //     },
-      //   },
-      // };
-
-      // Limit memory usage - SLOW BUILD
-      // config.optimization.moduleIds = 'deterministic';
-      // config.optimization.chunkIds = 'deterministic';
-    }
-
     if (isServer) {
-      // config.resolve.alias = {
-      // 	...config.resolve.alias,
-      // };
-
       // Ensure docs directory is included in the bundle for dynamic imports
       config.module.rules.push({
         test: /\.(md|mdx)$/,
@@ -409,33 +328,6 @@ const nextConfig: NextConfig = {
         ],
         use: "raw-loader",
       });
-
-      // config.externals = [
-      //   ...(config.externals ?? []),
-      //   // Externalize heavy client-only libraries on server
-      //   {
-      //     three: "three",
-      //     "@react-three/fiber": "@react-three/fiber",
-      //     "@react-three/drei": "@react-three/drei",
-      //     "canvas-confetti": "canvas-confetti",
-      //     "@huggingface/transformers": "@huggingface/transformers",
-      //     remotion: "remotion",
-      //     "@opentelemetry/instrumentation": "@opentelemetry/instrumentation",
-      //   },
-      // ];
-    } else {
-      // config.watchOptions = {
-      //   ...config.watchOptions,
-      //   ignored: [
-      //     "**/node_modules",
-      //     "**/.git",
-      //     "**/.next",
-      //     "**/node_modules/three",
-      //     "**/node_modules/@react-three",
-      //     "**/node_modules/remotion",
-      //     // Don't ignore docs directory
-      //   ],
-      // };
     }
 
     return config;

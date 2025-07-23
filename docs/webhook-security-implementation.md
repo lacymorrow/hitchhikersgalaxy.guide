@@ -1,3 +1,8 @@
+---
+title: "Webhook Security Implementation Guide"
+description: "Learn how to implement secure webhook handling in Shipkit with proper signature verification, rate limiting, and security best practices."
+---
+
 # Webhook Security Implementation Guide
 
 ## Overview
@@ -52,14 +57,14 @@ This document provides a comprehensive guide to implementing secure webhook hand
 
 ## Quick Security Checklist
 
-✅ Webhook signature verification implemented with timing-safe comparison  
-✅ Environment variables properly configured and validated  
-✅ Idempotency implemented using unique event identifiers  
-✅ Database transactions used for atomic operations  
-✅ Comprehensive error handling with proper HTTP status codes  
-✅ Sensitive data excluded from logs  
-✅ Rate limiting implemented  
-✅ Monitoring and alerting configured  
+✅ Webhook signature verification implemented with timing-safe comparison
+✅ Environment variables properly configured and validated
+✅ Idempotency implemented using unique event identifiers
+✅ Database transactions used for atomic operations
+✅ Comprehensive error handling with proper HTTP status codes
+✅ Sensitive data excluded from logs
+✅ Rate limiting implemented
+✅ Monitoring and alerting configured
 
 ## Testing
 

@@ -1,3 +1,8 @@
+---
+title: "Rebranding Guide"
+description: "A comprehensive guide for customizing and rebranding your Shipkit application, including logos, colors, fonts, and content updates."
+---
+
 # Rebranding Guide
 
 This guide explains how to rebrand the Shipkit boilerplate to your own project name and branding.

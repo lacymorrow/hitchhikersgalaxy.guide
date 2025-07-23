@@ -1,3 +1,8 @@
+---
+title: "Better Auth Integration Implementation Plan"
+description: "Implementation plan and guide for integrating Better Auth with Shipkit for enhanced authentication capabilities and user management."
+---
+
 # Better Auth Integration Implementation Plan
 
 ## Overview
@@ -50,7 +55,9 @@ BETTER_AUTH_BASE_URL=http://localhost:3000
 Add to `src/config/features-config.ts`:
 
 ```typescript
-const isBetterAuthEnabled = process.env.BETTER_AUTH_ENABLED === "true" && !!process.env.BETTER_AUTH_SECRET;
+const isBetterAuthEnabled =
+  process.env.BETTER_AUTH_ENABLED === "true" &&
+  !!process.env.BETTER_AUTH_SECRET;
 ```
 
 ### 3. Better Auth Configuration Structure
@@ -112,15 +119,15 @@ Add Better Auth tables alongside existing auth tables:
 
 ### Better Auth vs Auth.js Decision Matrix
 
-| Feature | Auth.js | Better Auth |
-|---------|---------|-------------|
-| OAuth Providers | ✅ Built-in | ✅ Built-in |
-| Magic Links | ✅ | ✅ |
-| 2FA/MFA | ❌ | ✅ |
+| Feature            | Auth.js         | Better Auth |
+| ------------------ | --------------- | ----------- |
+| OAuth Providers    | ✅ Built-in     | ✅ Built-in |
+| Magic Links        | ✅              | ✅          |
+| 2FA/MFA            | ❌              | ✅          |
 | Session Management | ✅ JWT/Database | ✅ Database |
-| TypeScript | ⚠️ Partial | ✅ Full |
-| Middleware | ✅ | ✅ |
-| Customization | ⚠️ Limited | ✅ High |
+| TypeScript         | ⚠️ Partial      | ✅ Full     |
+| Middleware         | ✅              | ✅          |
+| Customization      | ⚠️ Limited      | ✅ High     |
 
 ### Environment Variable Patterns
 

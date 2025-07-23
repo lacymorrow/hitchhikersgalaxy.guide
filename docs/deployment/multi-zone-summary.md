@@ -1,3 +1,8 @@
+---
+title: "Multi-Zone Architecture Implementation Summary for Shipkit.io"
+description: "A comprehensive summary of the multi-zone architecture implementation for Shipkit.io, covering deployment strategies, configuration details, and best practices."
+---
+
 # Multi-Zone Architecture Implementation Summary for Shipkit.io
 
 ## Quick Decision Guide for Shipkit.io
@@ -42,7 +47,7 @@ shipkit.io/tools/*   -> Developer Tools Shipkit app (interactive utilities)
 // Add to your existing next.config.ts
 async rewrites() {
   const multiZoneRewrites = [];
-  
+
   // Documentation Zone
   if (process.env.DOCS_DOMAIN) {
     multiZoneRewrites.push(
@@ -51,7 +56,7 @@ async rewrites() {
       { source: '/docs-static/:path*', destination: `${process.env.DOCS_DOMAIN}/docs-static/:path*` }
     );
   }
-  
+
   // Blog Zone
   if (process.env.BLOG_DOMAIN) {
     multiZoneRewrites.push(
@@ -60,7 +65,7 @@ async rewrites() {
       { source: '/blog-static/:path*', destination: `${process.env.BLOG_DOMAIN}/blog-static/:path*` }
     );
   }
-  
+
   // UI Library Zone
   if (process.env.UI_DOMAIN) {
     multiZoneRewrites.push(
@@ -69,7 +74,7 @@ async rewrites() {
       { source: '/ui-static/:path*', destination: `${process.env.UI_DOMAIN}/ui-static/:path*` }
     );
   }
-  
+
   // Developer Tools Zone
   if (process.env.TOOLS_DOMAIN) {
     multiZoneRewrites.push(
@@ -78,7 +83,7 @@ async rewrites() {
       { source: '/tools-static/:path*', destination: `${process.env.TOOLS_DOMAIN}/tools-static/:path*` }
     );
   }
-  
+
   return multiZoneRewrites;
 }
 ```
@@ -112,11 +117,11 @@ const nextConfig: NextConfig = {
     ...buildTimeFeatureFlags,
   },
   redirects,
-  
+
   // Zone-specific configuration
-  assetPrefix: '/docs-static', // or /blog-static, /ui-static, /tools-static
-  basePath: '/docs', // or /blog, /ui, /tools
-  
+  assetPrefix: "/docs-static", // or /blog-static, /ui-static, /tools-static
+  basePath: "/docs", // or /blog, /ui, /tools
+
   // Rest of Shipkit configuration with zone customizations
   // ... existing Shipkit config
 };
@@ -160,7 +165,7 @@ NEXTAUTH_SECRET=your_auth_secret
 ALGOLIA_APP_ID=your_algolia_app_id
 ALGOLIA_API_KEY=your_algolia_api_key
 
-# shipkit-blog/.env.local  
+# shipkit-blog/.env.local
 NEXT_PUBLIC_APP_URL=http://localhost:3002
 DATABASE_URL=your_blog_database_url
 ADMIN_EMAIL=admin@shipkit.io

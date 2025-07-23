@@ -1,3 +1,8 @@
+---
+title: "Blog & Table of Contents Improvements"
+description: "This document outlines the recent improvements to the blog and table of contents system in Shipkit, including new features, better performance, and enhanced accessibility."
+---
+
 # Blog & Table of Contents Improvements
 
 This document outlines the recent improvements to the blog and table of contents system in Shipkit, including new features, better performance, and enhanced accessibility.
@@ -5,6 +10,7 @@ This document outlines the recent improvements to the blog and table of contents
 ## 🎯 Overview
 
 The blog system has been significantly enhanced with:
+
 - **Centralized Author Configuration**: Move away from hardcoded author data
 - **Error Boundaries**: Graceful handling of TOC failures
 - **Caching System**: Improved performance for heading extraction
@@ -16,6 +22,7 @@ The blog system has been significantly enhanced with:
 ### Migration from Legacy System
 
 **Before (MDX frontmatter):**
+
 ```yaml
 ---
 title: "My Post"
@@ -27,6 +34,7 @@ authors:
 ```
 
 **After (Centralized configuration):**
+
 ```yaml
 ---
 title: "My Post"
@@ -104,7 +112,7 @@ import { MobileToc } from "@/components/blog/mobile-toc";
 <nav role="navigation" aria-labelledby="toc-heading">
   <ul role="list">
     <li role="listitem">
-      <button 
+      <button
         aria-current={activeId === id ? "location" : undefined}
         aria-label={`Go to ${text} (heading level ${level})`}
       >
@@ -122,10 +130,10 @@ import { MobileToc } from "@/components/blog/mobile-toc";
 The system now caches heading extraction results for improved performance:
 
 ```typescript
-import { 
-  extractHeadings, 
-  clearHeadingCache, 
-  getHeadingCacheStats 
+import {
+  extractHeadings,
+  clearHeadingCache,
+  getHeadingCacheStats,
 } from "@/lib/utils/extract-headings";
 
 // Automatically cached
@@ -202,23 +210,23 @@ New components for displaying author information:
 import { AuthorProfile, AuthorByline } from "@/components/blog/author-profile";
 
 // Full author profile (for author pages)
-<AuthorProfile 
-  author={author} 
-  postCount={12} 
-  className="max-w-md" 
+<AuthorProfile
+  author={author}
+  postCount={12}
+  className="max-w-md"
 />
 
 // Compact author profile (for sidebars)
-<AuthorProfile 
-  author={author} 
-  postCount={12} 
-  showCompact={true} 
+<AuthorProfile
+  author={author}
+  postCount={12}
+  showCompact={true}
 />
 
 // Author byline (for post headers)
-<AuthorByline 
-  author={author} 
-  publishedAt={publishedDate} 
+<AuthorByline
+  author={author}
+  publishedAt={publishedDate}
 />
 ```
 
@@ -233,12 +241,12 @@ import { AuthorProfile, AuthorByline } from "@/components/blog/author-profile";
 
 ### Before & After Metrics
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|-------------|
-| Blog page load time | 2.3s | 1.6s | 30% faster |
-| TOC render time | 150ms | 45ms | 70% faster |
-| Cache hit ratio | 0% | 85% | New feature |
-| Bundle size | 245KB | 210KB | 14% smaller |
+| Metric              | Before | After | Improvement |
+| ------------------- | ------ | ----- | ----------- |
+| Blog page load time | 2.3s   | 1.6s  | 30% faster  |
+| TOC render time     | 150ms  | 45ms  | 70% faster  |
+| Cache hit ratio     | 0%     | 85%   | New feature |
+| Bundle size         | 245KB  | 210KB | 14% smaller |
 
 ### Optimization Techniques
 
@@ -310,9 +318,9 @@ describe("Table of Contents", () => {
     const headings = [
       { id: "intro", text: "Introduction", level: 2 }
     ];
-    
+
     render(<TableOfContents headings={headings} />);
-    
+
     expect(screen.getByRole("navigation")).toBeInTheDocument();
     expect(screen.getByLabelText(/go to introduction/i)).toBeInTheDocument();
   });
@@ -340,7 +348,7 @@ Error boundaries automatically log errors for monitoring:
 console.error("TOC Error:", error, {
   headings: headings.length,
   userAgent: navigator.userAgent,
-  timestamp: new Date().toISOString()
+  timestamp: new Date().toISOString(),
 });
 ```
 
@@ -352,13 +360,13 @@ All components use Tailwind classes and can be customized:
 
 ```typescript
 // Custom TOC styling
-<TableOfContents 
+<TableOfContents
   headings={headings}
   className="custom-toc-styles"
 />
 
 // Custom author profile styling
-<AuthorProfile 
+<AuthorProfile
   author={author}
   className="border-2 border-primary"
 />

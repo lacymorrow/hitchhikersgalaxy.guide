@@ -1,3 +1,8 @@
+---
+title: "Proxy-Safe Server Actions"
+description: "Learn how to implement proxy-safe server actions in Shipkit to handle requests securely behind proxies and load balancers while maintaining proper IP detection."
+---
+
 # Proxy-Safe Server Actions
 
 This guide explains how to implement robust error handling for server actions that gracefully handles corporate proxy blocking and network issues.
@@ -5,6 +10,7 @@ This guide explains how to implement robust error handling for server actions th
 ## The Problem
 
 Corporate proxies often block Next.js server actions, causing:
+
 - React error #418 (minified error)
 - "An unexpected response was received from the server"
 - 403 Forbidden responses
@@ -48,7 +54,7 @@ export function MyForm() {
       retries: 2,
       showToast: true,
       fallback: () => localFallbackFunction(),
-    }
+    },
   );
 
   const handleSubmit = async (e) => {
@@ -117,24 +123,26 @@ async function fallbackSubmission(formData: FormData) {
     email: formData.get("email"),
     name: formData.get("name"),
     timestamp: new Date().toISOString(),
-    method: "fallback"
+    method: "fallback",
   };
 
   // Store in localStorage
-  const existing = JSON.parse(localStorage.getItem("pending_submissions") || "[]");
+  const existing = JSON.parse(
+    localStorage.getItem("pending_submissions") || "[]",
+  );
   existing.push(data);
   localStorage.setItem("pending_submissions", JSON.stringify(existing));
 
   return {
     success: true,
     data,
-    message: "Data saved locally. Will sync when connection is restored."
+    message: "Data saved locally. Will sync when connection is restored.",
   };
 }
 
 // Use with server action
 const { execute } = useServerAction(myServerAction, {
-  fallback: () => fallbackSubmission(formData)
+  fallback: () => fallbackSubmission(formData),
 });
 ```
 
@@ -171,8 +179,8 @@ export function NewForm() {
     retries: 2,
     fallback: () => localFallback(),
     errorMessages: {
-      proxy: "Corporate firewall blocked this request. Data saved locally."
-    }
+      proxy: "Corporate firewall blocked this request. Data saved locally.",
+    },
   });
 
   const handleSubmit = async (e) => {
@@ -251,9 +259,7 @@ export function AdaptiveForm() {
         </div>
       )}
 
-      <ServerActionErrorBoundary>
-        {/* Your form */}
-      </ServerActionErrorBoundary>
+      <ServerActionErrorBoundary>{/* Your form */}</ServerActionErrorBoundary>
     </div>
   );
 }
@@ -265,11 +271,11 @@ The system categorizes errors into specific types:
 
 ```typescript
 enum ServerActionError {
-  NETWORK_ERROR = "NETWORK_ERROR",      // Connection issues
-  PROXY_BLOCKED = "PROXY_BLOCKED",      // Corporate proxy blocking
-  TIMEOUT = "TIMEOUT",                  // Request timeout
-  SERVER_ERROR = "SERVER_ERROR",        // 5xx server errors
-  UNKNOWN = "UNKNOWN"                   // Other errors
+  NETWORK_ERROR = "NETWORK_ERROR", // Connection issues
+  PROXY_BLOCKED = "PROXY_BLOCKED", // Corporate proxy blocking
+  TIMEOUT = "TIMEOUT", // Request timeout
+  SERVER_ERROR = "SERVER_ERROR", // 5xx server errors
+  UNKNOWN = "UNKNOWN", // Other errors
 }
 ```
 
@@ -290,9 +296,9 @@ Simulate corporate proxy blocking:
 // In browser dev tools console:
 // Block server actions by intercepting fetch
 const originalFetch = window.fetch;
-window.fetch = function(url, options) {
-  if (url.includes('/_next/static/chunks/') || options?.method === 'POST') {
-    return Promise.reject(new Error('403 Forbidden - Corporate proxy'));
+window.fetch = function (url, options) {
+  if (url.includes("/_next/static/chunks/") || options?.method === "POST") {
+    return Promise.reject(new Error("403 Forbidden - Corporate proxy"));
   }
   return originalFetch.apply(this, arguments);
 };
@@ -306,13 +312,13 @@ Track proxy blocking in your analytics:
 // In your error boundary onError callback
 onError: (error, errorInfo) => {
   if (isProxyBlockingError(error)) {
-    analytics.track('proxy_blocking_detected', {
+    analytics.track("proxy_blocking_detected", {
       userAgent: navigator.userAgent,
       hostname: window.location.hostname,
-      error: error.message
+      error: error.message,
     });
   }
-}
+};
 ```
 
 ## Global Configuration

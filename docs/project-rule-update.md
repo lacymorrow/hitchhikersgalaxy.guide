@@ -1,3 +1,8 @@
+---
+title: "Project Overview"
+description: "Comprehensive overview of the Shipkit project structure, components, and implementation details for developers working with the codebase."
+---
+
 # Project Overview
 
 This is a Next.js project using:
@@ -49,23 +54,23 @@ const nextConfig: NextConfig = {
     ...buildTimeFeatureFlags,
   },
   redirects,
-  
+
   // Multi-zone configuration
-  assetPrefix: '/docs-static',
-  basePath: '/docs',
-  
+  assetPrefix: "/docs-static",
+  basePath: "/docs",
+
   // Zone-specific rewrites for assets
   async rewrites() {
     return {
       beforeFiles: [
         {
-          source: '/docs-static/_next/:path+',
-          destination: '/_next/:path+',
+          source: "/docs-static/_next/:path+",
+          destination: "/_next/:path+",
         },
       ],
-    }
+    };
   },
-  
+
   // Rest of Shipkit configuration...
 };
 ```
@@ -78,7 +83,7 @@ The main Shipkit app uses rewrites to route to zones:
 // Main app next.config.ts
 async rewrites() {
   const multiZoneRewrites = [];
-  
+
   if (process.env.DOCS_DOMAIN) {
     multiZoneRewrites.push(
       { source: '/docs', destination: `${process.env.DOCS_DOMAIN}/docs` },
@@ -86,7 +91,7 @@ async rewrites() {
       { source: '/docs-static/:path*', destination: `${process.env.DOCS_DOMAIN}/docs-static/:path*` }
     );
   }
-  
+
   // Similar patterns for other zones...
   return multiZoneRewrites;
 }
@@ -132,14 +137,12 @@ Use anchor tags with Shipkit components for cross-zone navigation:
 import { Button } from "@/components/ui/button";
 
 <Button asChild variant="outline">
-  <a href="/docs/getting-started">
-    Read Documentation
-  </a>
-</Button>
+  <a href="/docs/getting-started">Read Documentation</a>
+</Button>;
 
 // ✅ Correct - Within zone navigation
-import Link from 'next/link';
-<Link href="/dashboard">Dashboard</Link>
+import Link from "next/link";
+<Link href="/dashboard">Dashboard</Link>;
 ```
 
 ### Zone Customization Guidelines

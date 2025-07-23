@@ -1,3 +1,8 @@
+---
+title: "Multi-Zone Environment Variables & Deployment for Shipkit.io"
+description: "Comprehensive guide for configuring environment variables and deployment settings for multi-zone Shipkit.io applications across different domains and environments."
+---
+
 # Multi-Zone Environment Variables & Deployment for Shipkit.io
 
 ## Environment Variables
@@ -52,19 +57,19 @@ NEXTAUTH_SECRET=your_production_auth_secret
    ```bash
    # Deploy main Shipkit app
    vercel --prod
-   
+
    # Deploy docs app
    cd ../shipkit-docs
    vercel --prod
-   
-   # Deploy blog app  
+
+   # Deploy blog app
    cd ../shipkit-blog
    vercel --prod
-   
+
    # Deploy UI library
    cd ../shipkit-ui
    vercel --prod
-   
+
    # Deploy tools app
    cd ../shipkit-tools
    vercel --prod
@@ -104,9 +109,9 @@ NEXTAUTH_SECRET=your_production_auth_secret
 ```javascript
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  assetPrefix: '/docs-static',
-  basePath: '/docs',
-  
+  assetPrefix: "/docs-static",
+  basePath: "/docs",
+
   // Optimized for documentation
   images: {
     remotePatterns: [
@@ -115,22 +120,22 @@ const nextConfig = {
       { hostname: "raw.githubusercontent.com" },
     ],
   },
-  
+
   // MDX support for documentation
-  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-  
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+
   // Rewrites for static assets (Next.js < 15)
   async rewrites() {
     return {
       beforeFiles: [
         {
-          source: '/docs-static/_next/:path+',
-          destination: '/_next/:path+',
+          source: "/docs-static/_next/:path+",
+          destination: "/_next/:path+",
         },
       ],
-    }
+    };
   },
-}
+};
 
 export default nextConfig;
 ```
@@ -140,9 +145,9 @@ export default nextConfig;
 ```javascript
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  assetPrefix: '/blog-static',
-  basePath: '/blog',
-  
+  assetPrefix: "/blog-static",
+  basePath: "/blog",
+
   // Optimized for blog content
   images: {
     remotePatterns: [
@@ -151,22 +156,22 @@ const nextConfig = {
       { hostname: "avatars.githubusercontent.com" },
     ],
   },
-  
+
   // MDX support for blog posts
-  pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-  
+  pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
+
   // Rewrites for static assets (Next.js < 15)
   async rewrites() {
     return {
       beforeFiles: [
         {
-          source: '/blog-static/_next/:path+',
-          destination: '/_next/:path+',
+          source: "/blog-static/_next/:path+",
+          destination: "/_next/:path+",
         },
       ],
-    }
+    };
   },
-}
+};
 
 export default nextConfig;
 ```
@@ -176,34 +181,31 @@ export default nextConfig;
 ```javascript
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  assetPrefix: '/ui-static',
-  basePath: '/ui',
-  
+  assetPrefix: "/ui-static",
+  basePath: "/ui",
+
   // Optimized for component showcase
   images: {
-    remotePatterns: [
-      { hostname: "shipkit.io" },
-      { hostname: "ui.shadcn.com" },
-    ],
+    remotePatterns: [{ hostname: "shipkit.io" }, { hostname: "ui.shadcn.com" }],
   },
-  
+
   // Support for component demos
   experimental: {
     mdxRs: true,
   },
-  
+
   // Rewrites for static assets (Next.js < 15)
   async rewrites() {
     return {
       beforeFiles: [
         {
-          source: '/ui-static/_next/:path+',
-          destination: '/_next/:path+',
+          source: "/ui-static/_next/:path+",
+          destination: "/_next/:path+",
         },
       ],
-    }
+    };
   },
-}
+};
 
 export default nextConfig;
 ```
@@ -213,16 +215,16 @@ export default nextConfig;
 ```javascript
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  assetPrefix: '/tools-static',
-  basePath: '/tools',
-  
+  assetPrefix: "/tools-static",
+  basePath: "/tools",
+
   // Optimized for interactive tools
   experimental: {
     serverActions: {
-      bodySizeLimit: '10mb', // For file uploads in tools
+      bodySizeLimit: "10mb", // For file uploads in tools
     },
   },
-  
+
   // Support for tools that might need WASM
   webpack: (config) => {
     config.experiments = {
@@ -231,19 +233,19 @@ const nextConfig = {
     };
     return config;
   },
-  
+
   // Rewrites for static assets (Next.js < 15)
   async rewrites() {
     return {
       beforeFiles: [
         {
-          source: '/tools-static/_next/:path+',
-          destination: '/_next/:path+',
+          source: "/tools-static/_next/:path+",
+          destination: "/_next/:path+",
         },
       ],
-    }
+    };
   },
-}
+};
 
 export default nextConfig;
 ```
@@ -261,12 +263,12 @@ export default nextConfig;
    # Terminal 2 - Documentation app
    cd ../shipkit-docs && pnpm dev -- --port 3001
 
-   # Terminal 3 - Blog app  
+   # Terminal 3 - Blog app
    cd ../shipkit-blog && pnpm dev -- --port 3002
-   
+
    # Terminal 4 - UI Library
    cd ../shipkit-ui && pnpm dev -- --port 3003
-   
+
    # Terminal 5 - Tools app
    cd ../shipkit-tools && pnpm dev -- --port 3004
    ```

@@ -1,3 +1,8 @@
+---
+title: "🔐 Lemon Squeezy Webhook Security Audit Checklist"
+description: "Comprehensive security audit checklist for Lemon Squeezy webhook implementations, covering signature verification, rate limiting, and vulnerability assessments."
+---
+
 # 🔐 Lemon Squeezy Webhook Security Audit Checklist
 
 **URGENT:** Use this checklist to audit your webhook implementation and prevent security vulnerabilities.
@@ -33,7 +38,9 @@
 ## 🚨 Critical Fixes Applied
 
 ### 1. Signature Verification (FIXED)
+
 **Before:** Signature verification was commented out - MAJOR security vulnerability!
+
 ```typescript
 // const signature = headersList.get("x-signature");
 // if (!signature) {
@@ -42,6 +49,7 @@
 ```
 
 **After:** Proper signature verification with timing-safe comparison
+
 ```typescript
 const signature = headersList.get("x-signature");
 if (!signature) {
@@ -54,9 +62,11 @@ if (!verifyWebhookSignature(rawBody, signature)) {
 ```
 
 ### 2. Comprehensive Event Handling (ADDED)
+
 **Before:** Only handled `order_created` and `order_refunded`
 
 **After:** Handles all critical events:
+
 - ✅ `order_created` - One-time purchases
 - ✅ `order_refunded` - Refunds
 - ✅ `subscription_created` - New subscriptions
@@ -64,9 +74,11 @@ if (!verifyWebhookSignature(rawBody, signature)) {
 - ✅ `subscription_payment_success/failed/recovered` - Recurring payments
 
 ### 3. Idempotency Protection (ADDED)
+
 **Before:** No duplicate event protection
 
 **After:** Checks if events already processed:
+
 ```typescript
 if (await isEventProcessed(data.id, eventName)) {
   return new NextResponse("Event already processed", { status: 200 });
@@ -74,9 +86,11 @@ if (await isEventProcessed(data.id, eventName)) {
 ```
 
 ### 4. Database Transactions (ADDED)
+
 **Before:** Individual database operations (risk of inconsistency)
 
 **After:** Atomic transactions for data consistency:
+
 ```typescript
 await db.transaction(async (tx) => {
   // All related operations in one transaction
@@ -86,6 +100,7 @@ await db.transaction(async (tx) => {
 ## 🧪 Testing Your Implementation
 
 ### 1. Test Signature Verification
+
 ```bash
 # Test with invalid signature (should return 401)
 curl -X POST http://localhost:3000/webhooks/lemonsqueezy \
@@ -95,7 +110,9 @@ curl -X POST http://localhost:3000/webhooks/lemonsqueezy \
 ```
 
 ### 2. Test With Valid Webhook
+
 Use ngrok + Lemon Squeezy test mode:
+
 ```bash
 # Start ngrok
 ngrok http 3000
@@ -105,7 +122,9 @@ ngrok http 3000
 ```
 
 ### 3. Check Database Records
+
 Verify webhook events create proper database records:
+
 ```sql
 SELECT * FROM payments WHERE processor = 'lemonsqueezy' ORDER BY created_at DESC LIMIT 10;
 ```
@@ -131,12 +150,12 @@ Set up monitoring for:
 
 Your webhook implementation now includes:
 
-✅ **Proper signature verification**  
-✅ **Comprehensive event handling**  
-✅ **Idempotency protection**  
-✅ **Database transaction safety**  
-✅ **Security best practices**  
-✅ **Production-ready error handling**  
+✅ **Proper signature verification**
+✅ **Comprehensive event handling**
+✅ **Idempotency protection**
+✅ **Database transaction safety**
+✅ **Security best practices**
+✅ **Production-ready error handling**
 
 The children are safe! 🚌✨
 

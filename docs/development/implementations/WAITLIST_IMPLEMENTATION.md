@@ -1,3 +1,8 @@
+---
+title: "✅ Shipkit Waitlist Implementation Complete"
+description: "Complete implementation guide and documentation for the Shipkit waitlist feature, including setup, configuration, and usage instructions."
+---
+
 # ✅ Shipkit Waitlist Implementation Complete
 
 The waitlist feature has been successfully implemented and is now fully functional.

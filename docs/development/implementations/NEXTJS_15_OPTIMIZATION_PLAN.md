@@ -1,3 +1,8 @@
+---
+title: "Next.js 15 Optimization Plan for Shipkit"
+description: "Comprehensive optimization plan for upgrading Shipkit to Next.js 15, covering performance improvements, new features, and migration strategies."
+---
+
 # Next.js 15 Optimization Plan for Shipkit
 
 ## Current Status ✅
@@ -75,15 +80,18 @@ Added comprehensive security headers:
 ```typescript
 headers: [
   {
-    source: '/(.*)',
+    source: "/(.*)",
     headers: [
-      { key: 'X-Frame-Options', value: 'DENY' },
-      { key: 'X-Content-Type-Options', value: 'nosniff' },
-      { key: 'Referrer-Policy', value: 'origin-when-cross-origin' },
-      { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
+      { key: "X-Frame-Options", value: "DENY" },
+      { key: "X-Content-Type-Options", value: "nosniff" },
+      { key: "Referrer-Policy", value: "origin-when-cross-origin" },
+      {
+        key: "Permissions-Policy",
+        value: "camera=(), microphone=(), geolocation=()",
+      },
     ],
-  }
-]
+  },
+];
 ```
 
 ### 6. Performance Utilities Library 📊 ✅

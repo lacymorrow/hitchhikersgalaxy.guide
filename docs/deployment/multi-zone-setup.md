@@ -1,3 +1,8 @@
+---
+title: "Multi-Zone Setup Guide for Shipkit.io"
+description: "A comprehensive guide for setting up multi-zone deployments with Shipkit, covering zone configuration, routing, and deployment strategies."
+---
+
 # Multi-Zone Setup Guide for Shipkit.io
 
 ## Overview
@@ -128,38 +133,38 @@ import { withPlugins } from "@/config/with-plugins";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
- env: {
-  ...buildTimeFeatureFlags,
- },
- redirects,
- 
- // Multi-zone configuration for docs
- assetPrefix: '/docs-static',
- basePath: '/docs',
- 
- // For Next.js versions < 15, add this rewrite
- async rewrites() {
-  return {
-   beforeFiles: [
-    {
-     source: '/docs-static/_next/:path+',
-     destination: '/_next/:path+',
-    },
-   ],
-  }
- },
- 
- // Rest of Shipkit configuration...
- images: {
-  remotePatterns: [
-   { hostname: "shipkit.io" },
-   { hostname: "github.com" },
-   { hostname: "raw.githubusercontent.com" },
-   // ... other patterns
-  ],
- },
- 
- // ... rest of your Shipkit config
+  env: {
+    ...buildTimeFeatureFlags,
+  },
+  redirects,
+
+  // Multi-zone configuration for docs
+  assetPrefix: "/docs-static",
+  basePath: "/docs",
+
+  // For Next.js versions < 15, add this rewrite
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/docs-static/_next/:path+",
+          destination: "/_next/:path+",
+        },
+      ],
+    };
+  },
+
+  // Rest of Shipkit configuration...
+  images: {
+    remotePatterns: [
+      { hostname: "shipkit.io" },
+      { hostname: "github.com" },
+      { hostname: "raw.githubusercontent.com" },
+      // ... other patterns
+    ],
+  },
+
+  // ... rest of your Shipkit config
 };
 
 export default withPlugins(nextConfig);
@@ -184,38 +189,38 @@ pnpm install
 ```typescript
 // shipkit-blog/next.config.ts
 const nextConfig: NextConfig = {
- env: {
-  ...buildTimeFeatureFlags,
- },
- redirects,
- 
- // Multi-zone configuration for blog
- assetPrefix: '/blog-static',
- basePath: '/blog',
- 
- // Blog-specific optimizations
- images: {
-  remotePatterns: [
-   { hostname: "shipkit.io" },
-   { hostname: "images.unsplash.com" },
-   { hostname: "avatars.githubusercontent.com" },
-   // ... other patterns for blog content
-  ],
- },
- 
- // For Next.js versions < 15
- async rewrites() {
-  return {
-   beforeFiles: [
-    {
-     source: '/blog-static/_next/:path+',
-     destination: '/_next/:path+',
-    },
-   ],
-  }
- },
- 
- // ... rest of Shipkit config
+  env: {
+    ...buildTimeFeatureFlags,
+  },
+  redirects,
+
+  // Multi-zone configuration for blog
+  assetPrefix: "/blog-static",
+  basePath: "/blog",
+
+  // Blog-specific optimizations
+  images: {
+    remotePatterns: [
+      { hostname: "shipkit.io" },
+      { hostname: "images.unsplash.com" },
+      { hostname: "avatars.githubusercontent.com" },
+      // ... other patterns for blog content
+    ],
+  },
+
+  // For Next.js versions < 15
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/blog-static/_next/:path+",
+          destination: "/_next/:path+",
+        },
+      ],
+    };
+  },
+
+  // ... rest of Shipkit config
 };
 ```
 
@@ -238,34 +243,34 @@ pnpm add @storybook/nextjs @storybook/addon-docs
 ```typescript
 // shipkit-ui/next.config.ts
 const nextConfig: NextConfig = {
- env: {
-  ...buildTimeFeatureFlags,
- },
- redirects,
- 
- // Multi-zone configuration for UI library
- assetPrefix: '/ui-static',
- basePath: '/ui',
- 
- // UI showcase optimizations
- experimental: {
-  ...buildTimeFeatureFlags,
-  mdxRs: true, // For component documentation
- },
- 
- // For Next.js versions < 15
- async rewrites() {
-  return {
-   beforeFiles: [
-    {
-     source: '/ui-static/_next/:path+',
-     destination: '/_next/:path+',
-    },
-   ],
-  }
- },
- 
- // ... rest of Shipkit config
+  env: {
+    ...buildTimeFeatureFlags,
+  },
+  redirects,
+
+  // Multi-zone configuration for UI library
+  assetPrefix: "/ui-static",
+  basePath: "/ui",
+
+  // UI showcase optimizations
+  experimental: {
+    ...buildTimeFeatureFlags,
+    mdxRs: true, // For component documentation
+  },
+
+  // For Next.js versions < 15
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/ui-static/_next/:path+",
+          destination: "/_next/:path+",
+        },
+      ],
+    };
+  },
+
+  // ... rest of Shipkit config
 };
 ```
 
@@ -288,45 +293,45 @@ pnpm add @monaco-editor/react @codemirror/state @codemirror/view
 ```typescript
 // shipkit-tools/next.config.ts
 const nextConfig: NextConfig = {
- env: {
-  ...buildTimeFeatureFlags,
- },
- redirects,
- 
- // Multi-zone configuration for tools
- assetPrefix: '/tools-static',
- basePath: '/tools',
- 
- // Tools-specific optimizations
- experimental: {
-  ...buildTimeFeatureFlags,
-  serverActions: {
-   bodySizeLimit: '10mb', // For file uploads in tools
+  env: {
+    ...buildTimeFeatureFlags,
   },
- },
- 
- // Support for tools that might need WASM
- webpack: (config) => {
-  config.experiments = {
-   ...config.experiments,
-   asyncWebAssembly: true,
-  };
-  return config;
- },
- 
- // For Next.js versions < 15
- async rewrites() {
-  return {
-   beforeFiles: [
-    {
-     source: '/tools-static/_next/:path+',
-     destination: '/_next/:path+',
+  redirects,
+
+  // Multi-zone configuration for tools
+  assetPrefix: "/tools-static",
+  basePath: "/tools",
+
+  // Tools-specific optimizations
+  experimental: {
+    ...buildTimeFeatureFlags,
+    serverActions: {
+      bodySizeLimit: "10mb", // For file uploads in tools
     },
-   ],
-  }
- },
- 
- // ... rest of Shipkit config
+  },
+
+  // Support for tools that might need WASM
+  webpack: (config) => {
+    config.experiments = {
+      ...config.experiments,
+      asyncWebAssembly: true,
+    };
+    return config;
+  },
+
+  // For Next.js versions < 15
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: "/tools-static/_next/:path+",
+          destination: "/_next/:path+",
+        },
+      ],
+    };
+  },
+
+  // ... rest of Shipkit config
 };
 ```
 
@@ -361,7 +366,7 @@ NEXTAUTH_SECRET=your_auth_secret
 ALGOLIA_APP_ID=your_algolia_app_id
 ALGOLIA_API_KEY=your_algolia_api_key
 
-# shipkit-blog/.env.local  
+# shipkit-blog/.env.local
 NEXT_PUBLIC_APP_URL=http://localhost:3002
 DATABASE_URL=your_blog_database_url
 ADMIN_EMAIL=admin@shipkit.io
@@ -395,13 +400,13 @@ CMS_API_URL=your_cms_api_url
 ```typescript
 // shipkit-docs/src/config/routes.ts
 export const routes = {
- // Documentation-specific routes
- home: "/docs", // Base path is /docs
- gettingStarted: "/docs/getting-started",
- apiReference: "/docs/api",
- components: "/docs/components",
- deployment: "/docs/deployment",
- // ... other doc routes
+  // Documentation-specific routes
+  home: "/docs", // Base path is /docs
+  gettingStarted: "/docs/getting-started",
+  apiReference: "/docs/api",
+  components: "/docs/components",
+  deployment: "/docs/deployment",
+  // ... other doc routes
 };
 ```
 

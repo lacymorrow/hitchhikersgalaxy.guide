@@ -1,3 +1,8 @@
+---
+title: "Shipkit.io Multi-Zone Implementation Checklist"
+description: "A comprehensive checklist for implementing multi-zone architecture with Shipkit.io, covering deployment, configuration, and best practices for scalable applications."
+---
+
 # Shipkit.io Multi-Zone Implementation Checklist
 
 ## Phase 1: Planning & Setup (Week 1)

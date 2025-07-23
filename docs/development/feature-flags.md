@@ -1,3 +1,8 @@
+---
+title: "Feature Flags"
+description: "Learn how to implement and use feature flags in Shipkit to enable/disable features dynamically and manage feature rollouts effectively."
+---
+
 # Feature Flags
 
 Shipkit uses a simple, clean feature flag system based on environment variables.
@@ -14,8 +19,9 @@ This allows natural boolean checks: `if (env.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED)
 ## Usage
 
 ### Client-side
+
 ```typescript
-import { env } from '@/env';
+import { env } from "@/env";
 
 if (env.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED) {
   // Stripe logic - only runs when feature is actually enabled
@@ -23,8 +29,9 @@ if (env.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED) {
 ```
 
 ### Build-time (Next.js config)
+
 ```typescript
-import { buildTimeFeatures } from '@/config/features-config';
+import { buildTimeFeatures } from "@/config/features-config";
 
 if (buildTimeFeatures.PAYLOAD_ENABLED) {
   // Configure payload at build time
@@ -52,15 +59,17 @@ Some features can be explicitly controlled:
 ## Adding New Features
 
 1. Add detection logic to the `features` object in `features-config.ts`:
+
    ```typescript
    const features = {
      // Single variable check
      myFeature: () => EnvChecker.has("MY_API_KEY"),
-     
+
      // Multiple variable check
      myAuthProvider: () => EnvChecker.has("MY_CLIENT_ID", "MY_CLIENT_SECRET"),
    };
    ```
+
 2. The build and server flags will be generated automatically
 3. Add corresponding env vars to `env.ts` for type safety
 
@@ -73,7 +82,7 @@ Some features can be explicitly controlled:
 ## Benefits
 
 - **Clean**: Simple object-based configuration
-- **Type-safe**: Integrated with T3 Env validation  
+- **Type-safe**: Integrated with T3 Env validation
 - **Flexible**: Supports `true/1/yes/on` and `false/0/no/off` values
 - **Automatic**: Flags generated based on available environment variables
-- **Consistent**: Single `has()` method for all variable checks 
+- **Consistent**: Single `has()` method for all variable checks

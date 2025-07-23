@@ -1,3 +1,8 @@
+---
+title: "Shipkit Implementation Guide"
+description: "A comprehensive guide for implementing Shipkit in your project, covering setup, configuration, and best practices for getting started."
+---
+
 # Shipkit Implementation Guide
 
 This directory contains comprehensive documentation for Shipkit's implementation, integrations, and deployment strategies.
@@ -14,7 +19,7 @@ This directory contains comprehensive documentation for Shipkit's implementation
 - [Graceful Degradation](./development/implementations/GRACEFUL_DEGRADATION_COMPLETE.md) - Implementation of graceful degradation for database-less operation
 - [Waitlist Implementation](./development/implementations/WAITLIST_IMPLEMENTATION.md) - Waitlist feature implementation documentation
 
-### Optimization Plans  
+### Optimization Plans
 
 - [Next.js 15 Optimization Plan](./development/implementations/NEXTJS_15_OPTIMIZATION_PLAN.md) - Performance optimization strategy for Next.js 15
 
@@ -40,7 +45,7 @@ This directory contains comprehensive documentation for Shipkit's implementation
 ## 📚 Other Documentation Sections
 
 - [Content Management](./content-management/) - CMS and content strategy documentation
-- [Development](./development/) - Development best practices and guides  
+- [Development](./development/) - Development best practices and guides
 - [Integrations](./integrations/) - Third-party service integrations
 - [Snippets](./snippets/) - Code snippets and examples
 

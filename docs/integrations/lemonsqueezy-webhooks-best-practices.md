@@ -1,3 +1,8 @@
+---
+title: "Lemon Squeezy Webhook Best Practices"
+description: "Best practices and guidelines for implementing secure and reliable Lemon Squeezy webhook handling in Shipkit applications."
+---
+
 # Lemon Squeezy Webhook Best Practices
 
 This document outlines the best practices for implementing Lemon Squeezy webhooks securely and reliably in your Next.js application.
@@ -24,6 +29,7 @@ Webhooks are HTTP callbacks that Lemon Squeezy sends to your application when sp
 - Revenue tracking
 
 **Why webhooks are better than polling APIs:**
+
 - Real-time updates
 - Reduced API calls and rate limiting
 - Better user experience
@@ -44,7 +50,10 @@ function verifyWebhookSignature(rawBody: string, signature: string): boolean {
 
   try {
     const hmac = crypto.createHmac("sha256", env.LEMONSQUEEZY_WEBHOOK_SECRET);
-    const digest = Buffer.from(hmac.update(rawBody, "utf8").digest("hex"), "hex");
+    const digest = Buffer.from(
+      hmac.update(rawBody, "utf8").digest("hex"),
+      "hex",
+    );
     const signatureBuffer = Buffer.from(signature, "hex");
 
     // Use timing-safe comparison to prevent timing attacks
@@ -77,15 +86,21 @@ Implement rate limiting to prevent abuse:
 
 ```typescript
 // Example using a simple in-memory store
-const webhookRateLimit = new Map<string, { count: number; resetTime: number }>();
+const webhookRateLimit = new Map<
+  string,
+  { count: number; resetTime: number }
+>();
 
 function checkRateLimit(clientIP: string): boolean {
   const now = Date.now();
   const windowMs = 60000; // 1 minute
   const maxRequests = 100;
 
-  const client = webhookRateLimit.get(clientIP) || { count: 0, resetTime: now + windowMs };
-  
+  const client = webhookRateLimit.get(clientIP) || {
+    count: 0,
+    resetTime: now + windowMs,
+  };
+
   if (now > client.resetTime) {
     client.count = 1;
     client.resetTime = now + windowMs;
@@ -105,7 +120,10 @@ function checkRateLimit(clientIP: string): boolean {
 Always check if an event has already been processed:
 
 ```typescript
-async function isEventProcessed(eventId: string, eventName: string): Promise<boolean> {
+async function isEventProcessed(
+  eventId: string,
+  eventName: string,
+): Promise<boolean> {
   try {
     const existingPayment = await db.query.payments.findFirst({
       where: eq(payments.orderId, eventId),
@@ -114,7 +132,7 @@ async function isEventProcessed(eventId: string, eventName: string): Promise<boo
     // For subscription events, also check by subscription ID
     if (!existingPayment && eventName.startsWith("subscription_")) {
       const existingSubscriptionPayment = await db.query.payments.findFirst({
-        where: (payments, { like }) => 
+        where: (payments, { like }) =>
           like(payments.metadata, `%"subscription_id":"${eventId}"%`),
       });
       return !!existingSubscriptionPayment;
@@ -122,7 +140,11 @@ async function isEventProcessed(eventId: string, eventName: string): Promise<boo
 
     return !!existingPayment;
   } catch (error) {
-    logger.error("Error checking if event is processed", { eventId, eventName, error });
+    logger.error("Error checking if event is processed", {
+      eventId,
+      eventName,
+      error,
+    });
     return false;
   }
 }
@@ -140,13 +162,18 @@ await db.transaction(async (tx) => {
     amount: attributes.total_usd || attributes.total,
     status: "completed",
     processor: "lemonsqueezy",
-    metadata: { /* ... */ },
+    metadata: {
+      /* ... */
+    },
   });
 
   // Any related updates should be in the same transaction
-  await tx.update(users).set({ 
-    hasActiveSubscription: true 
-  }).where(eq(users.id, userId));
+  await tx
+    .update(users)
+    .set({
+      hasActiveSubscription: true,
+    })
+    .where(eq(users.id, userId));
 });
 ```
 
@@ -189,7 +216,11 @@ switch (eventName) {
 Implement flexible user lookup and creation:
 
 ```typescript
-async function findOrCreateUser(userEmail: string, userName?: string | null, customData?: any): Promise<string> {
+async function findOrCreateUser(
+  userEmail: string,
+  userName?: string | null,
+  customData?: any,
+): Promise<string> {
   // 1. Try to find by custom data user_id first (for logged-in purchases)
   if (customData?.user_id) {
     const existingUser = await db.query.users.findFirst({
@@ -205,11 +236,14 @@ async function findOrCreateUser(userEmail: string, userName?: string | null, cus
   if (existingUser) return existingUser.id;
 
   // 3. Create new user
-  const [newUser] = await db.insert(users).values({
-    email: userEmail.toLowerCase(),
-    name: userName || null,
-    emailVerified: new Date(), // Verified since they made a purchase
-  }).returning();
+  const [newUser] = await db
+    .insert(users)
+    .values({
+      email: userEmail.toLowerCase(),
+      name: userName || null,
+      emailVerified: new Date(), // Verified since they made a purchase
+    })
+    .returning();
 
   return newUser.id;
 }
@@ -238,14 +272,17 @@ try {
   logger.error("Failed to process order_created webhook", {
     requestId,
     orderId: data.id,
-    error: error instanceof Error ? {
-      name: error.name,
-      message: error.message,
-      stack: error.stack,
-    } : String(error),
+    error:
+      error instanceof Error
+        ? {
+            name: error.name,
+            message: error.message,
+            stack: error.stack,
+          }
+        : String(error),
     payload: JSON.stringify(payload),
   });
-  
+
   // Return 500 to trigger Lemon Squeezy retry
   throw error;
 }

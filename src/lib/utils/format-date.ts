@@ -4,14 +4,14 @@
  * @returns Formatted date string or empty string for invalid dates
  */
 export function formatDate(date: string | Date | null | undefined): string {
-	if (!date) return '';
+	if (!date) return "";
 
 	try {
-		const dateObj = typeof date === 'string' ? new Date(date) : date;
+		const dateObj = typeof date === "string" ? new Date(date) : date;
 
 		// Check if date is valid
 		if (Number.isNaN(dateObj.getTime())) {
-			return '';
+			return "";
 		}
 
 		return dateObj.toLocaleDateString("en-US", {
@@ -20,7 +20,7 @@ export function formatDate(date: string | Date | null | undefined): string {
 			year: "numeric",
 		});
 	} catch {
-		return '';
+		return "";
 	}
 }
 
@@ -30,19 +30,19 @@ export function formatDate(date: string | Date | null | undefined): string {
  * @returns ISO string or empty string for invalid dates
  */
 export function formatDateTimeAttribute(date: string | Date | null | undefined): string {
-	if (!date) return '';
+	if (!date) return "";
 
 	try {
-		const dateObj = typeof date === 'string' ? new Date(date) : date;
+		const dateObj = typeof date === "string" ? new Date(date) : date;
 
 		// Check if date is valid
 		if (Number.isNaN(dateObj.getTime())) {
-			return '';
+			return "";
 		}
 
 		return dateObj.toISOString();
 	} catch {
-		return '';
+		return "";
 	}
 }
 
@@ -52,18 +52,18 @@ export function formatDateTimeAttribute(date: string | Date | null | undefined):
  * @returns Date string in YYYY-MM-DD format or empty string for invalid dates
  */
 export function formatDateForBlog(date: string | Date | null | undefined): string {
-	if (!date) return '';
+	if (!date) return "";
 
 	try {
-		const dateObj = typeof date === 'string' ? new Date(date) : date;
+		const dateObj = typeof date === "string" ? new Date(date) : date;
 
 		// Check if date is valid
 		if (Number.isNaN(dateObj.getTime())) {
-			return '';
+			return "";
 		}
 
-		return dateObj.toISOString().split('T')[0];
+		return dateObj.toISOString().split("T")[0];
 	} catch {
-		return '';
+		return "";
 	}
 }

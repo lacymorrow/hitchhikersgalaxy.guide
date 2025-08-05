@@ -718,14 +718,14 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 			userCreated = created;
 
 			if (created) {
-				logger.debug(`Created new user for LemonSqueezy order`, {
+				logger.debug("Created new user for LemonSqueezy order", {
 					email: order.userEmail,
 					orderId: order.orderId,
 					userId: user.id,
 				});
 			}
 		} catch (createError) {
-			logger.error(`Failed to find or create user for LemonSqueezy order`, {
+			logger.error("Failed to find or create user for LemonSqueezy order", {
 				email: order.userEmail,
 				orderId: order.orderId,
 				error: createError,

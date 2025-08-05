@@ -1,10 +1,10 @@
 // @ts-nocheck
 
 import {
-	AutoTokenizer,
 	AutoModelForCausalLM,
-	TextStreamer,
+	AutoTokenizer,
 	InterruptableStoppingCriteria,
+	TextStreamer,
 } from "@huggingface/transformers";
 
 /**
@@ -33,17 +33,23 @@ class TextGenerationPipeline {
 	static model_id = "HuggingFaceTB/SmolLM2-1.7B-Instruct";
 
 	static async getInstance(progress_callback = null) {
-		this.tokenizer ??= AutoTokenizer.from_pretrained(this.model_id, {
-			progress_callback,
-		});
+		TextGenerationPipeline.tokenizer ??= AutoTokenizer.from_pretrained(
+			TextGenerationPipeline.model_id,
+			{
+				progress_callback,
+			}
+		);
 
-		this.model ??= AutoModelForCausalLM.from_pretrained(this.model_id, {
-			dtype: "q4f16", // TODO: use "q4" as fallback when fixed
-			device: "webgpu",
-			progress_callback,
-		});
+		TextGenerationPipeline.model ??= AutoModelForCausalLM.from_pretrained(
+			TextGenerationPipeline.model_id,
+			{
+				dtype: "q4f16", // TODO: use "q4" as fallback when fixed
+				device: "webgpu",
+				progress_callback,
+			}
+		);
 
-		return Promise.all([this.tokenizer, this.model]);
+		return Promise.all([TextGenerationPipeline.tokenizer, TextGenerationPipeline.model]);
 	}
 }
 

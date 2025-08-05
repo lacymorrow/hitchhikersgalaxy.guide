@@ -2,8 +2,8 @@
 
 "use client";
 
-import { marked } from "marked";
 import DOMPurify from "dompurify";
+import { marked } from "marked";
 
 import BotIcon from "./icons/BotIcon";
 import UserIcon from "./icons/UserIcon";
@@ -45,9 +45,9 @@ export default function Chat({ messages }) {
 											/>
 										) : (
 											<span className="h-6 flex items-center gap-1">
-												<span className="w-2.5 h-2.5 bg-gray-600 dark:bg-gray-300 rounded-full animate-pulse"></span>
-												<span className="w-2.5 h-2.5 bg-gray-600 dark:bg-gray-300 rounded-full animate-pulse animation-delay-200"></span>
-												<span className="w-2.5 h-2.5 bg-gray-600 dark:bg-gray-300 rounded-full animate-pulse animation-delay-400"></span>
+												<span className="w-2.5 h-2.5 bg-gray-600 dark:bg-gray-300 rounded-full animate-pulse" />
+												<span className="w-2.5 h-2.5 bg-gray-600 dark:bg-gray-300 rounded-full animate-pulse animation-delay-200" />
+												<span className="w-2.5 h-2.5 bg-gray-600 dark:bg-gray-300 rounded-full animate-pulse animation-delay-400" />
 											</span>
 										)}
 									</p>
@@ -57,9 +57,7 @@ export default function Chat({ messages }) {
 							<>
 								<UserIcon className="h-6 w-6 min-h-6 min-w-6 my-3 text-gray-500 dark:text-gray-300" />
 								<div className="bg-blue-500 text-white rounded-lg p-4">
-									<p className="min-h-6 overflow-wrap-anywhere">
-										{msg.content}
-									</p>
+									<p className="min-h-6 overflow-wrap-anywhere">{msg.content}</p>
 								</div>
 							</>
 						)}

@@ -1,16 +1,16 @@
 /**
  * @fileoverview Vitest configuration for unit tests in Shipkit
  * @module vitest.config
- * 
+ *
  * This configuration sets up the testing environment for React components and utilities.
  * It's optimized for testing components that use React hooks, Tailwind CSS, and Next.js features.
- * 
+ *
  * Key features:
  * - JSDOM environment for React component testing
  * - TypeScript path resolution (@/* imports)
  * - Coverage reporting with v8 provider
  * - Global test utilities (describe, it, expect)
- * 
+ *
  * Test structure:
  * - Unit tests: tests/unit/**
  * @see vitest.config.browser.ts - For browser-based testing

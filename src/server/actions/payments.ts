@@ -1,25 +1,25 @@
 /**
  * @fileoverview Server actions for payment processing and management
  * @module server/actions/payments
- * 
+ *
  * This file handles all payment-related server actions including:
  * - Creating payment records from webhooks
  * - Importing payments from external providers
  * - Managing payment access and verification
  * - Administrative payment operations
- * 
+ *
  * Key responsibilities:
  * - Process webhook events from payment providers (Lemon Squeezy, Stripe, Polar)
  * - Grant user access based on successful payments
  * - Synchronize payment data with external providers
  * - Enforce rate limiting to prevent abuse
  * - Provide admin tools for payment management
- * 
+ *
  * Dependencies:
  * - PaymentService: Core payment business logic
  * - RateLimitService: Prevent API abuse
  * - Multiple payment provider integrations
- * 
+ *
  * @security All actions require authentication except webhook handlers
  * @security Rate limiting applied to prevent abuse
  * @security Admin actions require admin role verification
@@ -70,20 +70,20 @@ const rateLimits = {
 
 /**
  * Creates a payment record from LemonSqueezy webhook and grants user access
- * 
+ *
  * @param data - Payment data from LemonSqueezy webhook
  * @param data.orderId - LemonSqueezy order ID
  * @param data.orderIdentifier - Order identifier for lookup
  * @param data.userId - Optional user ID (from custom data or session)
  * @param data.userEmail - User email for account lookup
  * @param data.customData - Custom data passed during checkout
- * 
+ *
  * @returns Success status and optional error message
- * 
+ *
  * @remarks
  * This is typically called from webhook handlers after payment verification.
  * It handles user account creation if needed and grants appropriate access.
- * 
+ *
  * @security No authentication required as this is called from webhooks
  * @security Payment data must be verified before calling this action
  */

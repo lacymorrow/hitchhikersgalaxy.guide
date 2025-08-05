@@ -170,7 +170,10 @@ export function ImportPayments() {
 	useEffect(() => {
 		if (error) {
 			// Convert error to string if it's an Error object
-			const errorString = error && typeof error === 'object' && 'message' in error ? (error as Error).message : String(error);
+			const errorString =
+				error && typeof error === "object" && "message" in error
+					? (error as Error).message
+					: String(error);
 			let errorMessage = errorString;
 
 			// Provide user-friendly error messages

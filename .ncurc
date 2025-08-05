@@ -1,8 +1,9 @@
 {
   "reject": [
-		"tailwindcss",
 		"pg",
 		"sharp",
+		"tailwindcss",
+		"zod",
 		"lexical",
 		"@lexical/clipboard",
 		"@lexical/code",

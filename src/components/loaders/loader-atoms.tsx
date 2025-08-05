@@ -25,7 +25,7 @@ const loaderVariants = cva("loader", {
 
 export interface LoaderAtomsProps
 	extends Omit<React.HTMLAttributes<HTMLDivElement>, "color">,
-	VariantProps<typeof loaderVariants> {
+		VariantProps<typeof loaderVariants> {
 	label?: string;
 }
 

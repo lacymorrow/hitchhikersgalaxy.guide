@@ -3,14 +3,16 @@
 import { AlertCircle, CheckCircle, Clock, ExternalLink, Github } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { Link as LinkWithTransition } from "@/components/primitives/link-with-transition";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Textarea } from "@/components/ui/textarea";
+import { siteConfig } from "@/config/site-config";
+import { cn } from "@/lib/utils";
 import { deployPrivateRepository } from "@/server/actions/deploy-private-repo";
 
 interface DeploymentStatus {
@@ -34,19 +36,28 @@ interface DeploymentStatus {
 	error?: string;
 }
 
+// Get Shipkit repository from site config
+const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
+
 export const PrivateRepoDeployButton = () => {
 	const [formData, setFormData] = useState({
-		templateRepo: "",
 		projectName: "",
 		description: "",
-		githubToken: "",
 	});
 	const [status, setStatus] = useState<DeploymentStatus>({ step: "idle" });
 	const [isDeploying, setIsDeploying] = useState(false);
+	const [needsGitHubAuth, setNeedsGitHubAuth] = useState(false);
+
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (e.key === "Enter" && !isDeploying) {
+			e.preventDefault();
+			handleDeploy();
+		}
+	};
 
 	const handleDeploy = async () => {
-		if (!formData.templateRepo || !formData.projectName || !formData.githubToken) {
-			toast.error("Please fill in all required fields");
+		if (!formData.projectName) {
+			toast.error("Please enter a project name");
 			return;
 		}
 
@@ -55,10 +66,9 @@ export const PrivateRepoDeployButton = () => {
 
 		try {
 			const result = await deployPrivateRepository({
-				templateRepo: formData.templateRepo,
+				templateRepo: SHIPKIT_REPO,
 				projectName: formData.projectName,
-				description: formData.description,
-				githubToken: formData.githubToken,
+				description: formData.description || `Deployed from ${SHIPKIT_REPO}`,
 				newRepoName: formData.projectName,
 			});
 
@@ -71,11 +81,26 @@ export const PrivateRepoDeployButton = () => {
 				});
 				toast.success("Deployment completed successfully!");
 			} else {
+				// Check if the error is related to GitHub authentication
+				if (result.error?.includes("GitHub account not connected")) {
+					setNeedsGitHubAuth(true);
+				}
 				setStatus({
 					step: "error",
 					error: result.error || "Deployment failed",
+					githubRepo: result.data?.githubRepo, // Keep the GitHub repo info if available
 				});
-				toast.error(result.error || "Deployment failed");
+
+				// If manual import is required and we have a GitHub repo, open Vercel import
+				if (result.data?.requiresManualImport && result.data?.githubRepo?.url) {
+					toast.info("Opening Vercel import page...");
+					const importUrl = `https://vercel.com/new/import?s=${encodeURIComponent(
+						result.data.githubRepo.url
+					)}`;
+					window.open(importUrl, "_blank", "noopener,noreferrer");
+				} else {
+					toast.error(result.error || "Deployment failed");
+				}
 			}
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
@@ -92,11 +117,10 @@ export const PrivateRepoDeployButton = () => {
 	const resetForm = () => {
 		setStatus({ step: "idle" });
 		setFormData({
-			templateRepo: "",
 			projectName: "",
 			description: "",
-			githubToken: "",
 		});
+		setNeedsGitHubAuth(false);
 	};
 
 	const getStatusIcon = () => {
@@ -130,11 +154,11 @@ export const PrivateRepoDeployButton = () => {
 			<CardHeader>
 				<CardTitle className="flex items-center gap-2">
 					<Github className="h-5 w-5" />
-					Deploy Private Repository
+					Deploy Shipkit
 				</CardTitle>
 				<CardDescription>
-					Deploy a private GitHub repository template to your GitHub and Vercel accounts. Make sure
-					you have connected your Vercel account in Settings first.
+					Deploy your own instance of Shipkit to GitHub and Vercel. Make sure you have connected
+					both your GitHub and Vercel accounts in Settings first.
 				</CardDescription>
 			</CardHeader>
 			<CardContent className="space-y-6">
@@ -147,7 +171,49 @@ export const PrivateRepoDeployButton = () => {
 								{status.step.replace("-", " ").toUpperCase()}
 							</Badge>
 						</div>
-						<AlertDescription className="mt-2">{status.message || status.error}</AlertDescription>
+						<AlertDescription className="mt-2">
+							{status.message || status.error}
+							{needsGitHubAuth && (
+								<div className="mt-3">
+									<LinkWithTransition
+										href="/settings/accounts"
+										className={cn(
+											buttonVariants({ variant: "default", size: "sm" }),
+											"inline-flex items-center gap-2"
+										)}
+									>
+										<Github className="h-4 w-4" />
+										Connect GitHub Account
+									</LinkWithTransition>
+								</div>
+							)}
+							{status.step === "error" && status.githubRepo && (
+								<div className="mt-3 space-y-2">
+									<p className="text-sm">
+										✅ GitHub repository created:{" "}
+										<span className="font-mono text-xs">{status.githubRepo?.name}</span>
+									</p>
+									<p className="text-sm">
+										The Vercel import page should have opened in a new tab. If it didn't, click
+										below:
+									</p>
+									<Button
+										variant="default"
+										size="sm"
+										onClick={() => {
+											const importUrl = `https://vercel.com/new/import?s=${encodeURIComponent(
+												status.githubRepo?.url || ""
+											)}`;
+											window.open(importUrl, "_blank", "noopener,noreferrer");
+										}}
+										className="inline-flex items-center gap-2"
+									>
+										<ExternalLink className="h-4 w-4" />
+										Open Vercel Import
+									</Button>
+								</div>
+							)}
+						</AlertDescription>
 					</Alert>
 				)}
 
@@ -217,76 +283,62 @@ export const PrivateRepoDeployButton = () => {
 							</Card>
 						</div>
 						<Button onClick={resetForm} variant="outline" className="w-full">
-							Deploy Another Repository
+							Deploy Another Instance
 						</Button>
 					</div>
 				)}
 
-				{/* Form */}
-				{status.step === "idle" && (
+				{/* Form - Show on idle or error states */}
+				{(status.step === "idle" || status.step === "error") && (
 					<div className="space-y-4">
-						<div className="space-y-2">
-							<Label htmlFor="templateRepo">Template Repository *</Label>
-							<Input
-								id="templateRepo"
-								placeholder="owner/repository-name"
-								value={formData.templateRepo}
-								onChange={(e) => setFormData({ ...formData, templateRepo: e.target.value })}
-							/>
-							<p className="text-xs text-muted-foreground">
-								The private repository you want to deploy (e.g., "myorg/private-template")
-							</p>
-						</div>
+						<Alert>
+							<Github className="h-4 w-4" />
+							<AlertDescription>
+								This will create a copy of the Shipkit repository ({SHIPKIT_REPO}) in your GitHub
+								account and deploy it to Vercel.
+							</AlertDescription>
+						</Alert>
 
 						<div className="space-y-2">
 							<Label htmlFor="projectName">Project Name *</Label>
 							<Input
 								id="projectName"
-								placeholder="my-awesome-project"
+								placeholder="my-shipkit-instance"
 								value={formData.projectName}
 								onChange={(e) => setFormData({ ...formData, projectName: e.target.value })}
+								onKeyDown={handleKeyDown}
 							/>
 							<p className="text-xs text-muted-foreground">
-								Name for the new repository and Vercel project (lowercase, numbers, hyphens only)
+								Name for your Shipkit instance (lowercase, numbers, hyphens only)
 							</p>
 						</div>
 
 						<div className="space-y-2">
 							<Label htmlFor="description">Description</Label>
-							<Textarea
+							<Input
 								id="description"
-								placeholder="A brief description of your project"
+								placeholder="My custom Shipkit deployment"
 								value={formData.description}
 								onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-								rows={3}
+								onKeyDown={handleKeyDown}
 							/>
 						</div>
 
-						<div className="space-y-2">
-							<Label htmlFor="githubToken">GitHub Access Token *</Label>
-							<Input
-								id="githubToken"
-								type="password"
-								placeholder="ghp_xxxxxxxxxxxxxxxxxxxx"
-								value={formData.githubToken}
-								onChange={(e) => setFormData({ ...formData, githubToken: e.target.value })}
-							/>
-							<p className="text-xs text-muted-foreground">
-								Personal access token with repo permissions.
-								<a
-									href="https://github.com/settings/tokens"
-									target="_blank"
-									rel="noopener noreferrer"
-									className="text-blue-500 hover:underline ml-1"
+						<div className="pt-4 space-y-3">
+							<Button onClick={handleDeploy} disabled={isDeploying} className="w-full">
+								{isDeploying ? "Deploying..." : "Deploy Shipkit"}
+							</Button>
+							<p className="text-xs text-center text-muted-foreground">
+								Make sure you've connected your GitHub and Vercel accounts in{" "}
+								<LinkWithTransition
+									href="/settings/accounts"
+									className="text-primary hover:underline"
 								>
-									Create one here
-								</a>
+									Settings
+								</LinkWithTransition>{" "}
+								first.
 							</p>
 						</div>
-
-						<Button onClick={handleDeploy} disabled={isDeploying} className="w-full">
-							{isDeploying ? "Deploying..." : "Deploy Repository"}
-						</Button>
 					</div>
 				)}
 			</CardContent>

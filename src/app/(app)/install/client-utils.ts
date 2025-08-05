@@ -394,7 +394,7 @@ async function ensureGlobalsCss(container: any): Promise<void> {
 		await container.fs.writeFile(path, defaultContent);
 		logInfo(`Created default globals.css at ${path}`);
 	} catch (error) {
-		logInfo(`Error ensuring globals.css exists:`, error);
+		logInfo("Error ensuring globals.css exists:", error);
 		throw error;
 	}
 }
@@ -459,7 +459,7 @@ export function cn(...inputs: ClassValue[]) {
 		await container.fs.writeFile(path, defaultContent);
 		logInfo(`Created default utils.ts at ${path}`);
 	} catch (error) {
-		logInfo(`Error ensuring utils.ts exists:`, error);
+		logInfo("Error ensuring utils.ts exists:", error);
 		throw error;
 	}
 }

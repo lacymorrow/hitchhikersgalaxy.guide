@@ -1,7 +1,7 @@
 // @ts-nocheck
 
 "use client";
-import { useEffect, useState, useRef, useCallback } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import Chat from "./_components/Chat";
 import ArrowRightIcon from "./_components/icons/ArrowRightIcon";
@@ -110,15 +110,13 @@ export const AISmollmWebGPU = () => {
 								return { ...item, ...e.data };
 							}
 							return item;
-						}),
+						})
 					);
 					break;
 
 				case "done":
 					// Model file loaded: remove the progress item from the list.
-					setProgressItems((prev) =>
-						prev.filter((item) => item.file !== e.data.file),
-					);
+					setProgressItems((prev) => prev.filter((item) => item.file !== e.data.file));
 					break;
 
 				case "ready":
@@ -129,10 +127,7 @@ export const AISmollmWebGPU = () => {
 				case "start":
 					{
 						// Start generation
-						setMessages((prev) => [
-							...prev,
-							{ role: "assistant", content: "" },
-						]);
+						setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 					}
 					break;
 
@@ -198,10 +193,7 @@ export const AISmollmWebGPU = () => {
 	useEffect(() => {
 		if (!chatContainerRef.current || !isRunning) return;
 		const element = chatContainerRef.current;
-		if (
-			element.scrollHeight - element.scrollTop - element.clientHeight <
-			STICKY_SCROLL_THRESHOLD
-		) {
+		if (element.scrollHeight - element.scrollTop - element.clientHeight < STICKY_SCROLL_THRESHOLD) {
 			element.scrollTop = element.scrollHeight;
 		}
 	}, [messages, isRunning]);
@@ -231,17 +223,10 @@ export const AISmollmWebGPU = () => {
 			{status === null && messages.length === 0 && (
 				<div className="h-full overflow-auto scrollbar-thin flex justify-center items-center flex-col relative">
 					<div className="flex flex-col items-center mb-1 max-w-[320px] text-center">
-						<img
-							src="logo.png"
-							width="80%"
-							height="auto"
-							alt="SmolLM2 Logo"
-							className="block"
-						></img>
+						<img src="logo.png" width="80%" height="auto" alt="SmolLM2 Logo" className="block" />
 						<h1 className="text-4xl font-bold mb-1">SmolLM2 WebGPU</h1>
 						<h2 className="font-semibold">
-							A blazingly fast and powerful AI chatbot that runs locally in your
-							browser.
+							A blazingly fast and powerful AI chatbot that runs locally in your browser.
 						</h2>
 					</div>
 
@@ -257,8 +242,8 @@ export const AISmollmWebGPU = () => {
 							>
 								SmolLM2-1.7B-Instruct
 							</a>
-							, a 1.7B parameter LLM optimized for in-browser inference.
-							Everything runs entirely in your browser with{" "}
+							, a 1.7B parameter LLM optimized for in-browser inference. Everything runs entirely in
+							your browser with{" "}
 							<a
 								href="https://huggingface.co/docs/transformers.js"
 								target="_blank"
@@ -267,9 +252,8 @@ export const AISmollmWebGPU = () => {
 							>
 								🤗&nbsp;Transformers.js
 							</a>{" "}
-							and ONNX Runtime Web, meaning no data is sent to a server. Once
-							loaded, it can even be used offline. The source code for the demo
-							is available on{" "}
+							and ONNX Runtime Web, meaning no data is sent to a server. Once loaded, it can even be
+							used offline. The source code for the demo is available on{" "}
 							<a
 								href="https://github.com/huggingface/transformers.js-examples/tree/main/smollm-webgpu"
 								target="_blank"
@@ -283,9 +267,7 @@ export const AISmollmWebGPU = () => {
 
 						{error && (
 							<div className="text-red-500 text-center mb-2">
-								<p className="mb-1">
-									Unable to load model due to the following error:
-								</p>
+								<p className="mb-1">Unable to load model due to the following error:</p>
 								<p className="text-sm">{error}</p>
 							</div>
 						)}
@@ -308,12 +290,7 @@ export const AISmollmWebGPU = () => {
 					<div className="w-full max-w-[500px] text-left mx-auto p-4 bottom-0 mt-auto">
 						<p className="text-center mb-1">{loadingMessage}</p>
 						{progressItems.map(({ file, progress, total }, i) => (
-							<Progress
-								key={i}
-								text={file}
-								percentage={progress}
-								total={total}
-							/>
+							<Progress key={i} text={file} percentage={progress} total={total} />
 						))}
 					</div>
 				</>
@@ -343,8 +320,8 @@ export const AISmollmWebGPU = () => {
 							<>
 								{!isRunning && (
 									<span>
-										Generated {numTokens} tokens in{" "}
-										{(numTokens / tps).toFixed(2)} seconds&nbsp;&#40;
+										Generated {numTokens} tokens in {(numTokens / tps).toFixed(2)}{" "}
+										seconds&nbsp;&#40;
 									</span>
 								)}
 								{
@@ -352,9 +329,7 @@ export const AISmollmWebGPU = () => {
 										<span className="font-medium text-center mr-1 text-black dark:text-white">
 											{tps.toFixed(2)}
 										</span>
-										<span className="text-gray-500 dark:text-gray-300">
-											tokens/second
-										</span>
+										<span className="text-gray-500 dark:text-gray-300">tokens/second</span>
 									</>
 								}
 								{!isRunning && (
@@ -434,4 +409,4 @@ export const AISmollmWebGPU = () => {
 			</p>
 		</div>
 	);
-}
+};

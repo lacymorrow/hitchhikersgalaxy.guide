@@ -1,24 +1,30 @@
 // @ts-nocheck
-'use client';
+"use client";
 
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import Script from "next/script";
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
-const AISmollmWebGPU = dynamic(async () => {
-	const module = await import('./ai-smollm-webgpu');
-	return module.AISmollmWebGPU;
-}, { ssr: false });
+const AISmollmWebGPU = dynamic(
+	async () => {
+		const module = await import("./ai-smollm-webgpu");
+		return module.AISmollmWebGPU;
+	},
+	{ ssr: false }
+);
 
 export default function Page() {
 	useEffect(() => {
 		window.MathJax = {
 			tex: {
-				inlineMath: [['$', '$'], ['\\(', '\\)']],
+				inlineMath: [
+					["$", "$"],
+					["\\(", "\\)"],
+				],
 			},
 			svg: {
-				fontCache: 'global'
-			}
+				fontCache: "global",
+			},
 		};
 	}, []);
 
@@ -33,4 +39,3 @@ export default function Page() {
 		</>
 	);
 }
-

@@ -54,7 +54,6 @@ const CredentialsSchema = z.object({
 type SignInCredentialsInput = z.infer<typeof CredentialsSchema>;
 
 export const signInWithCredentialsAction = async (input: SignInCredentialsInput) => {
-
 	// Validate input using the schema (optional but good practice)
 	const parsed = CredentialsSchema.safeParse(input);
 	if (!parsed.success) {
@@ -85,7 +84,6 @@ export const signInWithCredentialsAction = async (input: SignInCredentialsInput)
 };
 
 export const signUpWithCredentialsAction = async (_prevState: ActionState, formData: FormData) => {
-
 	const parsed = CredentialsSchema.safeParse(Object.fromEntries(formData));
 
 	if (!parsed.success) {

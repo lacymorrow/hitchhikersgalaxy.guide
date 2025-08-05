@@ -70,7 +70,7 @@ export async function listApiKeys(): Promise<{ key: string; info: ApiKeyInfo }[]
 	const apiKeys = await Promise.all(
 		keys.map(async (key) => ({
 			key: key.replace("api-key:", ""),
-			info: await redis?.get<ApiKeyInfo>(key) ?? null,
+			info: (await redis?.get<ApiKeyInfo>(key)) ?? null,
 		}))
 	);
 

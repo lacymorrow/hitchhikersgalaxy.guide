@@ -511,7 +511,7 @@ export default function Dashboard() {
 										</CardDescription>
 									</CardHeader>
 									<CardContent>
-										<div></div>
+										<div />
 										<Button size="sm" variant="secondary">
 											Archive Product
 										</Button>

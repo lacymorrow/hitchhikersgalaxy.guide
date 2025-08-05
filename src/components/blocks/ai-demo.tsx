@@ -124,10 +124,11 @@ export const AIDemo: React.FC = () => {
 									key={demoPrompt}
 									type="button"
 									onClick={() => handleDemoClick(demoPrompt)}
-									className={`text-xs px-3 py-1.5 rounded-full transition-colors ${selectedDemo === demoPrompt
-										? "bg-primary text-primary-foreground"
-										: "bg-secondary hover:bg-secondary/80"
-										}`}
+									className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
+										selectedDemo === demoPrompt
+											? "bg-primary text-primary-foreground"
+											: "bg-secondary hover:bg-secondary/80"
+									}`}
 								>
 									{demoPrompt}
 								</button>

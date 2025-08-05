@@ -1,13 +1,13 @@
 import { eq } from "drizzle-orm";
 import type { NextAuthConfig } from "next-auth";
 import { routes } from "@/config/routes";
+import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { logger } from "@/lib/logger";
 import { providers } from "@/server/auth-providers.config";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { grantGitHubAccess } from "@/server/services/github/github-service";
 import { userService } from "@/server/services/user-service";
-import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -104,7 +104,7 @@ export const authOptions: NextAuthConfig = {
 
 			if (nextUrl) {
 				// Ensure it's a relative URL for security
-				if (nextUrl.startsWith('/')) {
+				if (nextUrl.startsWith("/")) {
 					return `${baseUrl}${nextUrl}`;
 				}
 			}

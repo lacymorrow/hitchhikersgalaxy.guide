@@ -1,7 +1,6 @@
 "use client";
 
 import { useAutoAnimate } from "@formkit/auto-animate/react";
-import { DialogTitle } from "@radix-ui/react-dialog";
 import { CursorTextIcon, LinkBreak1Icon, StarFilledIcon, StarIcon } from "@radix-ui/react-icons";
 import { IconBrandSpeedtest } from "@tabler/icons-react";
 import {
@@ -26,7 +25,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Dialog, DialogContent, DialogHeader } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { LOCAL_STORAGE_KEYS } from "@/config/local-storage-keys";
 import { cn } from "@/lib/utils";

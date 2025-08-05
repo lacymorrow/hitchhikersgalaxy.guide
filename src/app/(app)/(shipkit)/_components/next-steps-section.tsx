@@ -5,10 +5,10 @@ import {
 	CreditCard,
 	Database,
 	FileText,
+	type LucideIcon,
+	Rocket,
 	Shield,
 	Zap,
-	Rocket,
-	type LucideIcon
 } from "lucide-react";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Badge } from "@/components/ui/badge";
@@ -36,7 +36,7 @@ const nextSteps: NextStep[] = [
 		href: "/docs/database",
 		isComplete: !!env?.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED,
 		estimatedTime: "5 min",
-		isOptional: true
+		isOptional: true,
 	},
 	{
 		title: "Configure authentication",
@@ -45,7 +45,7 @@ const nextSteps: NextStep[] = [
 		href: "/docs/auth",
 		isComplete: !isGuestOnlyMode,
 		estimatedTime: "10 min",
-		isOptional: true
+		isOptional: true,
 	},
 	{
 		title: "Choose your CMS",
@@ -110,10 +110,11 @@ export function NextStepsSection() {
 				{nextSteps.map((step, index) => (
 					<Card
 						key={step.title}
-						className={`transition-all ${step.isComplete
-							? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
-							: "hover:shadow-md"
-							}`}
+						className={`transition-all ${
+							step.isComplete
+								? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
+								: "hover:shadow-md"
+						}`}
 					>
 						<CardHeader className="pb-3">
 							<div className="flex items-start gap-4">

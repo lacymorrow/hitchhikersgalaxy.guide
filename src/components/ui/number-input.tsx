@@ -15,8 +15,8 @@ interface NumberFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputEleme
 }
 
 export const NumberInput = ({
-	min = -Infinity,
-	max = Infinity,
+	min = Number.NEGATIVE_INFINITY,
+	max = Number.POSITIVE_INFINITY,
 	step = 1,
 	value = 0,
 	onChange,

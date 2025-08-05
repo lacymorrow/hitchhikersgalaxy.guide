@@ -369,13 +369,13 @@ export class StripeProvider extends BasePaymentProvider {
 								user = newUser;
 								if (created) {
 									stats.usersCreated++;
-									logger.debug(`Created new user for Stripe order`, {
+									logger.debug("Created new user for Stripe order", {
 										email: userEmail,
 										orderId: order.orderId,
 									});
 								}
 							} catch (createError) {
-								logger.error(`Failed to create user for Stripe order`, {
+								logger.error("Failed to create user for Stripe order", {
 									email: userEmail,
 									orderId: order.orderId,
 									error: createError,

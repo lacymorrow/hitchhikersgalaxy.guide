@@ -55,7 +55,7 @@ export default function FileInput() {
 		const validFiles = newFiles.filter(isValidFile);
 		if (validFiles.length < newFiles.length) {
 			toast.error(
-				`Some files were not added. Only allowed file types up to the size limit are allowed.`
+				"Some files were not added. Only allowed file types up to the size limit are allowed."
 			);
 		}
 		setFiles((prevFiles) => [...prevFiles, ...validFiles]);

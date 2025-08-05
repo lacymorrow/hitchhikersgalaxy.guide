@@ -79,7 +79,7 @@ export function SearchMenu({
 	const [isClient, setIsClient] = React.useState(false);
 
 	useKeyboardShortcut(
-		ShortcutAction.OPEN_SEARCH_MENU,
+		ShortcutAction.OPEN_SEARCH,
 		(event) => {
 			const target = event.target as HTMLElement;
 			if (
@@ -120,7 +120,7 @@ export function SearchMenu({
 				<span className="inline-flex text-xs">{buttonText}</span>
 				{showShortcut && (
 					<ShortcutDisplay
-						action={ShortcutAction.OPEN_SEARCH_MENU}
+						action={ShortcutAction.OPEN_SEARCH}
 						className={cn(
 							"pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden lg:flex text-xs",
 							"transition-opacity duration-300",
@@ -138,18 +138,16 @@ export function SearchMenu({
 						{docsConfig.mainNav
 							.filter((navitem) => !navitem.external)
 							.map((navItem) => (
-								<>
-									<CommandItem
-										key={navItem.href}
-										value={navItem.title}
-										onSelect={() => {
-											runCommand(() => router.push(navItem.href as string));
-										}}
-									>
-										<FileIcon className="mr-2 h-4 w-4" />
-										{navItem.title}
-									</CommandItem>
-								</>
+								<CommandItem
+									key={navItem.href}
+									value={navItem.title}
+									onSelect={() => {
+										runCommand(() => router.push(navItem.href as string));
+									}}
+								>
+									<FileIcon className="mr-2 h-4 w-4" />
+									{navItem.title}
+								</CommandItem>
 							))}
 					</CommandGroup>
 					{!minimal && (

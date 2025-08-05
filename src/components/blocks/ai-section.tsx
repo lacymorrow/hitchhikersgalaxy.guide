@@ -32,9 +32,9 @@ import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'\n
 
 export function ${prompt
-				.split(" ")
-				.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-				.join("")}() {
+			.split(" ")
+			.map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+			.join("")}() {
   return (
     <div className="p-4 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-2">${prompt}</h2>

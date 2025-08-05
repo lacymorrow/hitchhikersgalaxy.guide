@@ -24,8 +24,8 @@ import {
 } from "@/components/ui/sidebar";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
-import { cn } from "@/lib/utils";
 import { env } from "@/env";
+import { cn } from "@/lib/utils";
 
 const data = [
 	{
@@ -49,6 +49,7 @@ const data = [
 		items: [
 			{ title: "Projects", url: routes.app.projects },
 			{ title: "Teams", url: routes.app.teams },
+			{ title: "Deployments", url: routes.app.deployments },
 			{ title: "API Keys", url: routes.app.apiKeys },
 		],
 	},
@@ -57,9 +58,15 @@ const data = [
 		icon: FileTerminalIcon,
 		items: [
 			{ title: "UI Demo", url: routes.examples.index },
-			...(env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED ? [{ title: "Builder.io", url: routes.demo.builderio }] : []),
-			...(env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED ? [{ title: "Payload CMS", url: routes.demo.payloadCms }] : []),
-			...(env.NEXT_PUBLIC_FEATURE_MDX_ENABLED ? [{ title: "Markdown Content", url: routes.pages.markdown }] : []),
+			...(env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED
+				? [{ title: "Builder.io", url: routes.demo.builderio }]
+				: []),
+			...(env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED
+				? [{ title: "Payload CMS", url: routes.demo.payloadCms }]
+				: []),
+			...(env.NEXT_PUBLIC_FEATURE_MDX_ENABLED
+				? [{ title: "Markdown Content", url: routes.pages.markdown }]
+				: []),
 			{ title: "Pages Router", url: routes.pages.index },
 			{ title: "TRPC Example", url: routes.demo.trpc },
 

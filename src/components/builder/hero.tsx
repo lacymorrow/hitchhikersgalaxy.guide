@@ -37,5 +37,3 @@ export const Hero = ({ title, subtitle, buttonText, buttonLink, backgroundImage 
 		</div>
 	);
 };
-
-

@@ -1,4 +1,5 @@
 import { ExternalLink, Globe, Shield, Zap } from "lucide-react";
+import { PrivateRepoDeployButton } from "@/components/deploy/private-repo-deploy-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -69,6 +70,7 @@ export default function VercelDeployExample() {
 					</CardDescription>
 				</CardHeader>
 				<CardContent className="space-y-4">
+					<PrivateRepoDeployButton />
 					<Button asChild className="w-full">
 						<a
 							href="https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flacymorrow%2Fshipkit"

@@ -70,7 +70,7 @@ export const BackgroundSpacetime: React.FC = () => {
 									],
 								}}
 								transition={{
-									repeat: Infinity,
+									repeat: Number.POSITIVE_INFINITY,
 									repeatType: "reverse",
 									duration: 15,
 									ease: "easeInOut",
@@ -99,7 +99,7 @@ export const BackgroundSpacetime: React.FC = () => {
 									],
 								}}
 								transition={{
-									repeat: Infinity,
+									repeat: Number.POSITIVE_INFINITY,
 									repeatType: "reverse",
 									duration: 15,
 									ease: "easeInOut",

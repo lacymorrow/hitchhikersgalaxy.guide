@@ -21,10 +21,9 @@ export function loadEnvironment(isDev = process.env.NODE_ENV !== "production") {
 
 			// Return the combined environment
 			return combinedEnv;
-		} else {
-			logger.warn("No environment files loaded");
-			return null;
 		}
+		logger.warn("No environment files loaded");
+		return null;
 	} catch (error) {
 		logger.error("Failed to load environment:", error);
 		return null;
@@ -35,7 +34,7 @@ export function loadEnvironment(isDev = process.env.NODE_ENV !== "production") {
  * Get an environment variable with a fallback value
  * This handles the common pattern of checking if an env var exists and using a default if not
  */
-export function getEnvVar(name: string, defaultValue: string = ""): string {
+export function getEnvVar(name: string, defaultValue = ""): string {
 	return process.env[name] || defaultValue;
 }
 
@@ -43,7 +42,7 @@ export function getEnvVar(name: string, defaultValue: string = ""): string {
  * Get a boolean environment variable
  * This handles the common pattern of converting string env vars to booleans
  */
-export function getBooleanEnvVar(name: string, defaultValue: boolean = false): boolean {
+export function getBooleanEnvVar(name: string, defaultValue = false): boolean {
 	const value = process.env[name];
 	if (value === undefined) return defaultValue;
 	return value === "true" || value === "1";
@@ -53,7 +52,7 @@ export function getBooleanEnvVar(name: string, defaultValue: boolean = false): b
  * Get a numeric environment variable
  * This handles the common pattern of converting string env vars to numbers
  */
-export function getNumericEnvVar(name: string, defaultValue: number = 0): number {
+export function getNumericEnvVar(name: string, defaultValue = 0): number {
 	const value = process.env[name];
 	if (value === undefined) return defaultValue;
 
@@ -65,6 +64,6 @@ export function getNumericEnvVar(name: string, defaultValue: number = 0): number
  * Check if an environment feature flag is enabled
  * This is a utility for the common pattern of checking feature flags
  */
-export function isFeatureEnabled(featureName: string, defaultValue: boolean = false): boolean {
+export function isFeatureEnabled(featureName: string, defaultValue = false): boolean {
 	return getBooleanEnvVar(`FEATURE_${featureName.toUpperCase()}_ENABLED`, defaultValue);
 }

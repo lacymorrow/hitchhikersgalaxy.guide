@@ -7,9 +7,9 @@ import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
  * This utility function can be used in both Server and Client Components
  */
 export function createSignInRedirectUrl(pathname: string): string {
-  const url = new URL(routes.auth.signIn, BASE_URL);
-  url.searchParams.set(SEARCH_PARAM_KEYS.nextUrl, pathname);
-  return url.pathname + url.search;
+	const url = new URL(routes.auth.signIn, BASE_URL);
+	url.searchParams.set(SEARCH_PARAM_KEYS.nextUrl, pathname);
+	return url.pathname + url.search;
 }
 
 /**
@@ -17,7 +17,7 @@ export function createSignInRedirectUrl(pathname: string): string {
  * This utility function can be used in both Server and Client Components
  */
 export function createSignOutRedirectUrl(pathname: string): string {
-  const url = new URL(routes.auth.signOut, BASE_URL);
-  url.searchParams.set(SEARCH_PARAM_KEYS.nextUrl, pathname);
-  return url.pathname + url.search;
+	const url = new URL(routes.auth.signOut, BASE_URL);
+	url.searchParams.set(SEARCH_PARAM_KEYS.nextUrl, pathname);
+	return url.pathname + url.search;
 }

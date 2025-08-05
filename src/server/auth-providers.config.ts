@@ -12,6 +12,7 @@ import { STATUS_CODES } from "@/config/status-codes";
 // Import the list of enabled provider IDs from the single source of truth
 import { availableProviderIds } from "@/server/auth-providers-utils";
 import { AuthService } from "@/server/services/auth-service";
+import { env } from "@/env";
 
 // Define types for Vercel OAuth
 interface VercelTokens {
@@ -44,7 +45,7 @@ export const providers: NextAuthConfig["providers"] = [
 	 * Magic Link Provider - Resend
 	 * @see https://authjs.dev/getting-started/providers/resend
 	 */
-	...(availableProviderIds.includes("resend")
+	...(availableProviderIds.includes("resend") && env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED
 		? [
 			Resend({
 				apiKey: process.env.RESEND_API_KEY ?? "",

@@ -1,22 +1,22 @@
 /**
  * @fileoverview Database schema definitions for Shipkit using Drizzle ORM
  * @module server/db/schema
- * 
+ *
  * This file defines all database tables, relationships, and enums for the Shipkit application.
  * It uses Drizzle ORM with PostgreSQL and supports multi-tenant architecture via table prefixing.
- * 
+ *
  * Key entities:
  * - Authentication: users, accounts, sessions, verificationTokens
  * - Payments: plans, payments, subscriptions, usage
- * - Teams: teams, teamMembers, invitations 
+ * - Teams: teams, teamMembers, invitations
  * - API Management: apiKeys, usage tracking
  * - Features: waitlist, analytics
- * 
+ *
  * Dependencies:
  * - drizzle-orm: Type-safe ORM for database operations
  * - next-auth: Authentication adapter types
  * - @/env: Environment configuration for DB_PREFIX
- * 
+ *
  * @security All user data is properly indexed and foreign key constrained
  * @performance Indexes are added for common query patterns
  */
@@ -40,7 +40,7 @@ import { env } from "@/env";
 /**
  * Table creator with optional prefix support for multi-tenant deployments.
  * Prefix is determined by DB_PREFIX environment variable.
- * 
+ *
  * @example
  * // With DB_PREFIX="app1", table "users" becomes "app1_users"
  * // Without DB_PREFIX, table remains "users"
@@ -49,11 +49,11 @@ const createTable = pgTableCreator((name) => `${env?.DB_PREFIX ?? ""}_${name}`);
 
 /**
  * Subscription plans table - defines pricing tiers and billing intervals
- * 
+ *
  * @remarks
  * Plans are tied to payment processor variants (not products).
  * Each plan represents a specific pricing option (e.g., "Pro Monthly", "Pro Yearly").
- * 
+ *
  * @see payments - Records of actual payments made
  * @see subscriptions - Active user subscriptions
  */
@@ -77,11 +77,11 @@ export type Plan = typeof plans.$inferSelect;
 
 /**
  * Payments table - records all payment transactions
- * 
+ *
  * @remarks
  * Stores both one-time and subscription payments.
  * Links to multiple payment processors (Lemon Squeezy, Stripe, Polar).
- * 
+ *
  * @security PII is minimized - only essential payment data stored
  */
 export const payments = createTable("payment", {
@@ -634,3 +634,52 @@ export const waitlistEntries = createTable(
 
 export type WaitlistEntry = typeof waitlistEntries.$inferSelect;
 export type NewWaitlistEntry = typeof waitlistEntries.$inferInsert;
+
+/**
+ * Deployments schema - Tracks user deployments to Vercel
+ * Stores deployment history and metadata securely on the server
+ */
+export const deployments = createTable(
+	"deployments",
+	{
+		id: text("id")
+			.notNull()
+			.primaryKey()
+			.$defaultFn(() => crypto.randomUUID()),
+		userId: text("user_id")
+			.notNull()
+			.references(() => users.id, { onDelete: "cascade" }),
+		projectName: text("project_name").notNull(),
+		description: text("description"),
+		githubRepoUrl: text("github_repo_url"),
+		githubRepoName: text("github_repo_name"),
+		vercelProjectId: text("vercel_project_id"),
+		vercelProjectUrl: text("vercel_project_url"),
+		vercelDeploymentUrl: text("vercel_deployment_url"),
+		status: text("status", {
+			enum: ["deploying", "completed", "failed"],
+		})
+			.notNull()
+			.default("deploying"),
+		error: text("error"),
+		createdAt: timestamp("created_at", { withTimezone: true })
+			.default(sql`CURRENT_TIMESTAMP`)
+			.notNull(),
+		updatedAt: timestamp("updated_at", { withTimezone: true })
+			.default(sql`CURRENT_TIMESTAMP`)
+			.notNull(),
+	},
+	(deployment) => ({
+		userIdIdx: index("deployment_user_id_idx").on(deployment.userId),
+		statusIdx: index("deployment_status_idx").on(deployment.status),
+		createdAtIdx: index("deployment_created_at_idx").on(deployment.createdAt),
+	})
+);
+
+export type Deployment = typeof deployments.$inferSelect;
+export type NewDeployment = typeof deployments.$inferInsert;
+
+// Define relations for deployments
+export const deploymentsRelations = relations(deployments, ({ one }) => ({
+	user: one(users, { fields: [deployments.userId], references: [users.id] }),
+}));

@@ -38,9 +38,8 @@ export const addAudienceUser = async (email: string) => {
 		if (error instanceof Error) {
 			console.error("Error adding contact:", error.message);
 			return { success: false, error: error.message };
-		} else {
-			console.error("Error adding contact:", error);
-			return { success: false, error: "An unknown error occurred" };
 		}
+		console.error("Error adding contact:", error);
+		return { success: false, error: "An unknown error occurred" };
 	}
 };

@@ -52,14 +52,14 @@ const Dock = React.forwardRef<HTMLDivElement, DockProps>(
 		ref
 	) => {
 		// Use hooks inside the component
-		const mouseX = useMotionValue(Infinity);
+		const mouseX = useMotionValue(Number.POSITIVE_INFINITY);
 
 		return (
 			<DockContext.Provider value={{ mouseX, magnification, distance }}>
 				<motion.div
 					ref={ref}
 					onMouseMove={(e) => mouseX.set(e.pageX)}
-					onMouseLeave={() => mouseX.set(Infinity)}
+					onMouseLeave={() => mouseX.set(Number.POSITIVE_INFINITY)}
 					{...props}
 					className={cn(dockVariants({ className }), {
 						"items-start": direction === "top",
@@ -86,7 +86,7 @@ const DockIcon = ({ size, className, children, ...props }: DockIconProps) => {
 	const { mouseX, magnification, distance } = React.useContext(DockContext);
 
 	// Handle case where mouseX is null (should only happen if DockIcon is used outside of Dock)
-	const mouseXValue = mouseX || useMotionValue(Infinity);
+	const mouseXValue = mouseX || useMotionValue(Number.POSITIVE_INFINITY);
 
 	const distanceCalc = useTransform(mouseXValue, (val: number) => {
 		const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };

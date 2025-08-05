@@ -86,7 +86,7 @@ export function OAuthButtons({
 					className
 				)}
 			>
-				{collapsible && (
+				{collapsible && oauthProviders.length > 3 && (
 					<div
 						className={cn(
 							"flex justify-center items-center",

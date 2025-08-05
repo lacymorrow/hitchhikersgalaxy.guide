@@ -20,7 +20,7 @@ const defaultKbdStyles =
 
 /**
  * Finds the primary shortcut string for a given action.
- * Ignores alternatives like '/' for OPEN_SEARCH_MENU.
+ * Ignores alternatives like '/' for OPEN_SEARCH.
  */
 function findPrimaryShortcut(action: ShortcutActionType): string | null {
 	for (const [shortcut, act] of shortcutConfig) {

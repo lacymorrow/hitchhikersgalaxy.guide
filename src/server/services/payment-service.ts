@@ -1,23 +1,23 @@
 /**
  * @fileoverview Payment service for handling multi-provider payment operations
  * @module server/services/payment-service
- * 
+ *
  * This service provides a unified interface for payment processing across multiple providers
  * (Lemon Squeezy, Stripe, Polar). It handles payment verification, order synchronization,
  * and user purchase tracking.
- * 
+ *
  * Key responsibilities:
  * - Verify user purchases against payment provider APIs
  * - Synchronize payment data between providers and local database
  * - Check user purchase history and eligibility
  * - Import payment data from external providers
  * - Manage payment-related user permissions
- * 
+ *
  * Dependencies:
  * - Payment providers: LemonSqueezy, Stripe, Polar (feature-flagged)
  * - Database: Drizzle ORM for payment records
  * - Logger: Structured logging for payment operations
- * 
+ *
  * @security All payment verification uses provider APIs with proper authentication
  * @performance Caches payment data to reduce API calls
  */

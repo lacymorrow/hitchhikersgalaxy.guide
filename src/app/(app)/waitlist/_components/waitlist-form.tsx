@@ -83,7 +83,7 @@ export function WaitlistForm() {
 				<div className="container px-4 md:px-6">
 					<div className="mx-auto max-w-2xl text-center">
 						<div className="relative">
-							<div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl blur opacity-25"></div>
+							<div className="absolute -inset-1 bg-gradient-to-r from-green-600 to-emerald-600 rounded-2xl blur opacity-25" />
 							<Card className="relative border-green-200 dark:border-green-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm">
 								<CardContent className="p-12">
 									<div className="mb-6 flex justify-center">
@@ -157,7 +157,7 @@ export function WaitlistForm() {
 					</div>
 
 					<div className="relative">
-						<div className="absolute -inset-1 bg-gradient-to-r from-violet-600 to-purple-600 rounded-2xl blur opacity-20"></div>
+						<div className="absolute -inset-1 bg-gradient-to-r from-violet-600 to-purple-600 rounded-2xl blur opacity-20" />
 						<Card className="relative border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-900/90 backdrop-blur-sm">
 							<CardHeader className="text-center">
 								<CardTitle className="flex items-center justify-center gap-2">

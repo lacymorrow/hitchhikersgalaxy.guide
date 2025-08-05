@@ -5,10 +5,7 @@ let redis: Redis | null = null;
 let rateLimiter: Ratelimit | null = null;
 
 // Only initialize Redis if credentials are available
-if (
-	process.env.UPSTASH_REDIS_REST_URL &&
-	process.env.UPSTASH_REDIS_REST_TOKEN
-) {
+if (process.env.UPSTASH_REDIS_REST_URL && process.env.UPSTASH_REDIS_REST_TOKEN) {
 	redis = new Redis({
 		url: process.env.UPSTASH_REDIS_REST_URL,
 		token: process.env.UPSTASH_REDIS_REST_TOKEN,

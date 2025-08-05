@@ -129,6 +129,13 @@ const CommandShortcut = ({ className, ...props }: React.HTMLAttributes<HTMLSpanE
 };
 CommandShortcut.displayName = "CommandShortcut";
 
+const CommandLoading = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+	({ className, ...props }, ref) => (
+		<div ref={ref} className={cn("flex items-center justify-center py-6", className)} {...props} />
+	)
+);
+CommandLoading.displayName = "CommandLoading";
+
 export {
 	Command,
 	CommandDialog,
@@ -137,6 +144,7 @@ export {
 	CommandInput,
 	CommandItem,
 	CommandList,
+	CommandLoading,
 	CommandSeparator,
 	CommandShortcut,
 };

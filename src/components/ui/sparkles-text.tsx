@@ -110,9 +110,8 @@ const SparklesText: React.FC<SparklesTextProps> = ({
 				currentSparkles.map((star) => {
 					if (star.lifespan <= 0) {
 						return generateStar();
-					} else {
-						return { ...star, lifespan: star.lifespan - 0.1 };
 					}
+					return { ...star, lifespan: star.lifespan - 0.1 };
 				})
 			);
 		};
@@ -155,7 +154,7 @@ const Sparkle: React.FC<Sparkle> = ({ id, x, y, color, delay, scale, duration = 
 				scale: [0, scale, 0],
 				rotate: [75, 120, 150],
 			}}
-			transition={{ duration, repeat: Infinity, delay }}
+			transition={{ duration, repeat: Number.POSITIVE_INFINITY, delay }}
 			width="21"
 			height="21"
 			viewBox="0 0 21 21"

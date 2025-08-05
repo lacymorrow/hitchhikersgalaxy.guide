@@ -4,14 +4,11 @@ import { GitHubConnectButton } from "@/components/buttons/github-connect-button"
 import { GitHubConnectDialog } from "@/components/buttons/github-connect-dialog";
 import { BuyButton } from "@/components/buttons/lemonsqueezy-buy-button";
 import { LoginButton } from "@/components/buttons/sign-in-button";
-import { VercelDeployButton } from "@/components/shipkit/vercel-deploy-button";
+import { DashboardVercelDeploy } from "@/components/shipkit/dashboard-vercel-deploy";
 import { Button } from "@/components/ui/button";
-import { BASE_URL } from "@/config/base-url";
-import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { downloadRepo } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
-import { apiKeyService } from "@/server/services/api-key-service";
 import { checkGitHubConnection } from "@/server/services/github/github-service";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
 
@@ -48,28 +45,10 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
 	}
 
 	// Run all async operations in parallel
-	const [userApiKeys, isGitHubConnected, isVercelConnected] = await Promise.all([
-		apiKeyService.getUserApiKeys(userId),
+	const [isGitHubConnected, isVercelConnected] = await Promise.all([
 		checkGitHubConnection(userId),
 		checkVercelConnection(userId),
 	]);
-
-	// Get the user's API key
-	let apiKey: string | undefined;
-	if (userApiKeys && userApiKeys.length > 0) {
-		apiKey = userApiKeys[0].apiKey.key;
-	}
-
-	// Redirect after deploy to /vercel/deploy/${apiKey}
-	const deployUrl = new URL(routes.external.vercelDeployShipkit);
-	const redirectUrl = deployUrl.searchParams.get("redirect-url");
-	if (apiKey) {
-		deployUrl.searchParams.set(
-			"redirect-url",
-			encodeURIComponent(`${redirectUrl ?? BASE_URL}${routes.vercelDeploy}/${apiKey}`)
-		);
-	}
-	const vercelDeployHref = deployUrl.toString();
 
 	// User is authenticated and has purchased, show download options
 	return (
@@ -84,7 +63,7 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
 					</Button>
 				</form>
 
-				{isVercelConnected && <VercelDeployButton className="grow" href={vercelDeployHref} />}
+				<DashboardVercelDeploy className="grow" isVercelConnected={isVercelConnected} />
 			</div>
 			{/* GitHub connection section */}
 			{isGitHubConnected ? (

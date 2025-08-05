@@ -42,7 +42,7 @@ export default function BlurFade({
 	const isInView = !inView || inViewResult;
 	const defaultVariants: Variants = {
 		hidden: { y: yOffset, opacity: 0, filter: `blur(${blur})` },
-		visible: { y: -yOffset, opacity: 1, filter: `blur(0px)` },
+		visible: { y: -yOffset, opacity: 1, filter: "blur(0px)" },
 	};
 	const combinedVariants = variant || defaultVariants;
 	return (

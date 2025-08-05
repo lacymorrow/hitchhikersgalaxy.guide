@@ -72,13 +72,6 @@ export default async function DocsPage({ params }: PageProps) {
 
 	return (
 		<article className="docs-content">
-			<header className="mb-8 space-y-2">
-				{doc?.title && (
-					<h1 className="scroll-m-20 text-4xl font-bold tracking-tight">{doc.title}</h1>
-				)}
-				{doc?.description && <p className="text-lg text-muted-foreground">{doc.description}</p>}
-			</header>
-
 			<Suspense fallback={<SuspenseFallback />}>
 				<MDXRemote source={doc.content} components={useMDXComponents({})} />
 			</Suspense>

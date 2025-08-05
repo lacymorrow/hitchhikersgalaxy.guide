@@ -55,7 +55,7 @@ export function AuroraText({
 		const updateFontSize = () => {
 			if (containerRef.current) {
 				const computedStyle = window.getComputedStyle(containerRef.current);
-				const computedFontSize = parseFloat(computedStyle.fontSize);
+				const computedFontSize = Number.parseFloat(computedStyle.fontSize);
 
 				requestAnimationFrame(() => {
 					setFontSize(computedFontSize);

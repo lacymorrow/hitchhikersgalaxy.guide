@@ -450,12 +450,7 @@ export default function Charts() {
 									},
 								]}
 							>
-								<Bar
-									dataKey="steps"
-									fill="var(--color-steps)"
-									radius={2}
-									fillOpacity={0.2}
-								/>
+								<Bar dataKey="steps" fill="var(--color-steps)" radius={2} fillOpacity={0.2} />
 								<XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={4} hide />
 							</BarChart>
 						</ChartContainer>
@@ -705,12 +700,7 @@ export default function Charts() {
 									},
 								]}
 							>
-								<Bar
-									dataKey="calories"
-									fill="var(--color-calories)"
-									radius={2}
-									fillOpacity={0.2}
-								/>
+								<Bar dataKey="calories" fill="var(--color-calories)" radius={2} fillOpacity={0.2} />
 								<XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={4} hide />
 							</BarChart>
 						</ChartContainer>

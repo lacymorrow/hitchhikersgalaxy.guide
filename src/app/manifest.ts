@@ -125,27 +125,27 @@ export default function manifest(): MetadataRoute.Manifest {
 		 * Allows the app to receive shared content from other apps
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/share_target
 		 */
-		share_target: {
-			action: "/share",
-			method: "POST", // Changed from GET to POST
-			enctype: "application/x-www-form-urlencoded", // Added enctype for POST
-			params: {
-				title: "title",
-				text: "text",
-				url: "url",
-			},
-		},
+		// share_target: {
+		// 	action: "/share",
+		// 	method: "POST", // Changed from GET to POST
+		// 	enctype: "application/x-www-form-urlencoded", // Added enctype for POST
+		// 	params: {
+		// 		title: "title",
+		// 		text: "text",
+		// 		url: "url",
+		// 	},
+		// },
 
 		/* Custom Protocol Handlers
 		 * Allows the app to handle custom URL schemes
 		 * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/protocol_handlers
 		 */
-		protocol_handlers: [
-			{
-				protocol: siteConfig.branding.protocol, // Custom protocol scheme
-				url: "/protocol?type=%s", // URL that handles the protocol
-			},
-		],
+		// protocol_handlers: [
+		// 	{
+		// 		protocol: siteConfig.branding.protocol, // Custom protocol scheme
+		// 		url: "/protocol?type=%s", // URL that handles the protocol
+		// 	},
+		// ],
 
 		/* Related Applications
 		 * Links to related native applications

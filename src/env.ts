@@ -28,29 +28,20 @@ export const env = createEnv({
 	 * - fly.io
 	 * - netlify
 	 */
-	extends: [vercel()], // !TODO
+	extends: [vercel()],
 
 	/**
 	 * Server-side environment variables schema
 	 * These variables are only available on the server and not exposed to the client
 	 */
 	server: {
-		// ======== Core Environment ========
-		NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
-
-		// ======== Original Feature Flags (Disable flags etc.) ========
-		DISABLE_LOGGING: z.string().optional(),
-		DISABLE_ERROR_LOGGING: z.string().optional(),
-		DISABLE_BUILDER: z.string().optional(), // Disable Builder CMS
-
-		// ======== Content Management ========
-		// Payload CMS
-		ENABLE_PAYLOAD: z.string().optional(), // Enable Payload CMS
-		PAYLOAD_SECRET: z.string().optional(),
-
 		// ======== Database ========
 		DATABASE_URL: z.string().url().optional(),
 		DB_PREFIX: z.string().default("db"),
+
+		// ======== Content Management ========
+		// Payload CMS
+		PAYLOAD_SECRET: z.string().optional(),
 
 		// ======== Authentication ========
 		AUTH_SECRET: z.string().optional(),
@@ -58,8 +49,6 @@ export const env = createEnv({
 			(str) => BASE_URL ?? str,
 			BASE_URL ? z.string().optional() : z.string().url().optional()
 		),
-		// ======== Credentials (requires DB) ========
-		AUTH_CREDENTIALS_ENABLED: z.string().optional(),
 
 		// ======== Better Auth Configuration ========
 		BETTER_AUTH_BASE_URL: z.string().url().optional(),
@@ -103,6 +92,27 @@ export const env = createEnv({
 		// AI Services
 		OPENAI_API_KEY: z.string().optional(),
 		ANTHROPIC_API_KEY: z.string().optional(),
+		DEEPSEEK_API_KEY: z.string().optional(),
+		ELEVENLABS_API_KEY: z.string().optional(),
+		FAL_API_KEY: z.string().optional(),
+		FIRECRAWL_API_KEY: z.string().optional(),
+		GOOGLE_GEMINI_API_KEY: z.string().optional(),
+		HUGGINGFACE_API_KEY: z.string().optional(),
+		PERPLEXITY_API_KEY: z.string().optional(),
+		REPLICATE_API_KEY: z.string().optional(),
+
+		// Trading APIs
+		ALPACA_API_KEY: z.string().optional(),
+		ALPACA_SECRET_KEY: z.string().optional(),
+		ALPACA_BASE_URL: z.string().url().optional(),
+		ALPHA_VANTAGE_API_KEY: z.string().optional(),
+		STOCKTWITS_ACCESS_TOKEN: z.string().optional(),
+
+		// Social Media
+		TWITTER_API_KEY: z.string().optional(),
+		TWITTER_API_SECRET: z.string().optional(),
+		TWITTER_ACCESS_TOKEN: z.string().optional(),
+		TWITTER_ACCESS_TOKEN_SECRET: z.string().optional(),
 
 		// Payments
 		LEMONSQUEEZY_API_KEY: z.string().optional(),
@@ -143,6 +153,9 @@ export const env = createEnv({
 	client: {
 		// Consent Manager
 		NEXT_PUBLIC_C15T_URL: z.string().optional(),
+
+		// Shipkit Repo
+		NEXT_PUBLIC_SHIPKIT_REPO: z.string().optional().default("lacymorrow/shipkit"),
 
 		// Content Management
 		NEXT_PUBLIC_BUILDER_API_KEY: z.string().optional(),
@@ -222,15 +235,6 @@ export const env = createEnv({
 	 * middlewares) or client-side so we need to destruct manually.
 	 */
 	runtimeEnv: {
-		// Core Environment
-		NODE_ENV: process.env.NODE_ENV,
-
-		// Original Feature Flags
-		DISABLE_LOGGING: process.env.DISABLE_LOGGING,
-		DISABLE_ERROR_LOGGING: process.env.DISABLE_ERROR_LOGGING,
-		DISABLE_BUILDER: process.env.DISABLE_BUILDER,
-		ENABLE_PAYLOAD: process.env.ENABLE_PAYLOAD,
-
 		// Database
 		DATABASE_URL: process.env.DATABASE_URL,
 		DB_PREFIX: process.env.DB_PREFIX,
@@ -238,7 +242,6 @@ export const env = createEnv({
 		// Authentication
 		AUTH_SECRET: process.env.AUTH_SECRET,
 		AUTH_URL: process.env.AUTH_URL,
-		AUTH_CREDENTIALS_ENABLED: process.env.AUTH_CREDENTIALS_ENABLED,
 
 		// Better Auth
 		BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET,
@@ -280,6 +283,28 @@ export const env = createEnv({
 		GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY,
 		OPENAI_API_KEY: process.env.OPENAI_API_KEY,
 		ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
+		DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,
+		ELEVENLABS_API_KEY: process.env.ELEVENLABS_API_KEY,
+		FAL_API_KEY: process.env.FAL_API_KEY,
+		FIRECRAWL_API_KEY: process.env.FIRECRAWL_API_KEY,
+		GOOGLE_GEMINI_API_KEY: process.env.GOOGLE_GEMINI_API_KEY,
+		HUGGINGFACE_API_KEY: process.env.HUGGINGFACE_API_KEY,
+		PERPLEXITY_API_KEY: process.env.PERPLEXITY_API_KEY,
+		REPLICATE_API_KEY: process.env.REPLICATE_API_KEY,
+
+		// Trading APIs
+		ALPACA_API_KEY: process.env.ALPACA_API_KEY,
+		ALPACA_SECRET_KEY: process.env.ALPACA_SECRET_KEY,
+		ALPACA_BASE_URL: process.env.ALPACA_BASE_URL,
+		ALPHA_VANTAGE_API_KEY: process.env.ALPHA_VANTAGE_API_KEY,
+		STOCKTWITS_ACCESS_TOKEN: process.env.STOCKTWITS_ACCESS_TOKEN,
+
+		// Social Media
+		TWITTER_API_KEY: process.env.TWITTER_API_KEY,
+		TWITTER_API_SECRET: process.env.TWITTER_API_SECRET,
+		TWITTER_ACCESS_TOKEN: process.env.TWITTER_ACCESS_TOKEN,
+		TWITTER_ACCESS_TOKEN_SECRET: process.env.TWITTER_ACCESS_TOKEN_SECRET,
+
 		LEMONSQUEEZY_API_KEY: process.env.LEMONSQUEEZY_API_KEY,
 		LEMONSQUEEZY_STORE_ID: process.env.LEMONSQUEEZY_STORE_ID,
 		LEMONSQUEEZY_WEBHOOK_SECRET: process.env.LEMONSQUEEZY_WEBHOOK_SECRET,
@@ -302,6 +327,9 @@ export const env = createEnv({
 
 		// Consent Manager
 		NEXT_PUBLIC_C15T_URL: process.env.NEXT_PUBLIC_C15T_URL,
+
+		// Shipkit Repo
+		NEXT_PUBLIC_SHIPKIT_REPO: process.env.NEXT_PUBLIC_SHIPKIT_REPO,
 
 		NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
 
@@ -366,7 +394,8 @@ export const env = createEnv({
 
 		// Consent Manager
 		NEXT_PUBLIC_FEATURE_C15T_ENABLED: process.env.NEXT_PUBLIC_FEATURE_C15T_ENABLED,
-		NEXT_PUBLIC_FEATURE_CONSENT_MANAGER_ENABLED: process.env.NEXT_PUBLIC_FEATURE_CONSENT_MANAGER_ENABLED,
+		NEXT_PUBLIC_FEATURE_CONSENT_MANAGER_ENABLED:
+			process.env.NEXT_PUBLIC_FEATURE_CONSENT_MANAGER_ENABLED,
 		NEXT_PUBLIC_FEATURE_FILE_UPLOAD_ENABLED: process.env.NEXT_PUBLIC_FEATURE_FILE_UPLOAD_ENABLED,
 	},
 
@@ -380,4 +409,5 @@ export const env = createEnv({
 	 * `SOME_VAR=''` will throw an error.
 	 */
 	emptyStringAsUndefined: true,
+
 });

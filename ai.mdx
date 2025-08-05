@@ -397,4 +397,70 @@ _Use this section to track completion of each phase with date and summary_
 
 ---
 
+### Phase 7: Keyboard Shortcuts Audit & Conflict Resolution
+
+#### ✅ 7.1 Keyboard Shortcut Conflicts Audit
+
+**Status: Completed - December 28, 2024**
+**Priority: High**
+**Estimated Time: 2-3 hours**
+
+**Objective**: Audit keyboard shortcuts across the application to identify and resolve conflicts, overlapping shortcuts, and misleading UI indicators.
+
+**Issues Found**:
+
+- **Multiple Search Conflict**: Both `SearchMenu` and `DocsSearch` components used same `OPEN_SEARCH_MENU` action
+- **Misleading UI**: DocsSearch displayed `⌘K` but actually used `⌘⇧K` shortcut
+- **Shortcut Overlap**: Same shortcuts triggered multiple search modals on docs pages
+- **Inconsistent UX**: Users confused by multiple search types with conflicting shortcuts
+
+**Completed Tasks**:
+
+- [x] Identified all keyboard shortcut implementations across codebase
+- [x] Mapped current shortcut assignments and conflicts
+- [x] Removed keyboard shortcut from DocsSearch component
+- [x] Removed misleading `⌘K` display from DocsSearch UI
+- [x] Consolidated all search shortcuts to single `OPEN_SEARCH` action
+- [x] Updated all search components to use unified shortcut
+- [x] Documented final keyboard shortcut mapping
+
+**Technical Changes**:
+
+- **Removed from DocsSearch**: `useKeyboardShortcut` hook integration and visual indicator
+- **Consolidated Actions**: Replaced `OPEN_COMMAND_MENU`, `OPEN_SEARCH_MENU`, and `OPEN_AI_SEARCH` with single `OPEN_SEARCH`
+- **Updated Components**: SearchMenu, SearchAi, and CommandMenu all use `OPEN_SEARCH`
+- **Simplified Config**: Reduced from 4 search shortcuts to 1 universal shortcut
+- **Result**: One search shortcut works with whatever search component is visible
+
+**Final Keyboard Shortcut Mapping**:
+
+- `mod+K` → **Universal Search** (opens whatever search is visible on page)
+- `/` → **Universal Search** (alternative shortcut)
+- All other app shortcuts remain unchanged
+
+**Files Modified**:
+
+- `src/config/keyboard-shortcuts.ts` - Consolidated search actions to single `OPEN_SEARCH`
+- `src/components/search/search-menu.tsx` - Updated to use `OPEN_SEARCH`
+- `src/components/search/search-ai.tsx` - Updated to use `OPEN_SEARCH`
+- `src/components/blocks/command-menu.tsx` - Updated to use `OPEN_SEARCH`
+- `src/app/(app)/docs/_components/docs-search.tsx` - Removed keyboard shortcut integration
+
+**Expected Impact**:
+
+- ✅ Eliminated keyboard shortcut conflicts on all pages
+- ✅ Simplified UX with single, predictable search shortcut
+- ✅ Universal `⌘K` works regardless of which search component is visible
+- ✅ Reduced cognitive load - users only need to remember one shortcut
+
+**Results Achieved**:
+
+- ✅ Consolidated 4 different search shortcuts into 1 universal shortcut
+- ✅ `⌘K` now works with any search component visible on page
+- ✅ Eliminated all keyboard shortcut conflicts across entire application
+- ✅ Simplified user experience - one shortcut to rule them all
+- ✅ Reduced codebase complexity with unified search action
+
+---
+
 **Next Steps**: Begin with Client Components Audit (Phase 1.1) - Review use of `"use client"` directive across the codebase.

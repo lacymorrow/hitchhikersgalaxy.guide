@@ -42,7 +42,7 @@ pnpm db:seed        # Seed database with test data
 ### Build & Deployment
 ```bash
 pnpm build          # Build for production
-pnpm build:memory-optimized  # Build with increased memory
+pnpm build:memory-optimized  # Build with increased memory (8GB heap)
 pnpm start          # Start production server
 pnpm analyze        # Analyze bundle size
 ```
@@ -228,6 +228,7 @@ RESEND_API_KEY=             # For email
 - **Linting failures** - Run `pnpm lint:fix` to auto-fix issues
 - **Database connection** - Check `DATABASE_URL` and run `pnpm db:push`
 - **Build failures** - Try `pnpm clean` then `pnpm build`
+- **Out of Memory (OOM) errors** - Use `pnpm build:memory-optimized` for larger builds
 
 ### Debug Commands
 ```bash

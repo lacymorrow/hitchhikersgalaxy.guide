@@ -1,7 +1,7 @@
 import { Suspense } from "react";
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { NextStepsSection } from "./_components/next-steps-section";
 import { OnboardingHeader } from "./_components/onboarding-header";
-import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 
 export default function ShipkitOnboardingPage() {
 	return (

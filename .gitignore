@@ -69,3 +69,6 @@ env/*
 public/sw.js
 public/sw.js.map
 public/workbox*
+
+# AI development configs
+.hive-mind/

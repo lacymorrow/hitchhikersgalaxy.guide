@@ -5,7 +5,7 @@ import { isValidElementType } from "react-is";
 import { Card } from "@/components/mdx/card";
 import { CardGroup } from "@/components/mdx/card-group";
 import { SecretGenerator } from "@/components/mdx/secret-generator";
-import { TypographyProvider } from "@/components/providers/typography-provider";
+import { Prose } from "@/components/primitives/prose";
 import * as AlertComponents from "@/components/ui/alert";
 import { FileTree } from "@/components/ui/file-tree";
 import { siteConfig } from "@/config/site-config";
@@ -21,9 +21,9 @@ function filterForMDXComponents(module: Record<string, any>): MDXComponents {
 }
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
-	<TypographyProvider id="sk-mdx-wrapper" className="container mx-auto py-10">
+	<Prose id="sk-mdx-wrapper" className="container mx-auto py-10">
 		{children}
-	</TypographyProvider>
+	</Prose>
 );
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {

@@ -8,11 +8,11 @@ import {
 	Database,
 	ExternalLink,
 	FileText,
+	type LucideIcon,
 	Mail,
 	Settings,
 	Shield,
 	X,
-	type LucideIcon
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -155,10 +155,7 @@ export function FeatureGrid() {
 								<div className="flex items-start justify-between">
 									<Icon />
 									<div className="flex items-center gap-2">
-										<Badge
-											variant="outline"
-											className={categoryColors[feature.category]}
-										>
+										<Badge variant="outline" className={categoryColors[feature.category]}>
 											{feature.category}
 										</Badge>
 										{feature.isEnabled ? (
@@ -196,9 +193,7 @@ export function FeatureGrid() {
 											<span className="text-sm font-medium">Required Variables:</span>
 											{feature.dependencies.map((dep) => (
 												<div key={dep} className="flex items-center justify-between">
-													<code className="text-xs bg-muted px-2 py-1 rounded">
-														{dep}
-													</code>
+													<code className="text-xs bg-muted px-2 py-1 rounded">{dep}</code>
 													<TooltipProvider>
 														<Tooltip>
 															<TooltipTrigger asChild>

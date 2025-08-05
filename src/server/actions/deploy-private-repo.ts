@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 import { createGitHubTemplateService } from "@/lib/github-template";
 import { COMMON_ENV_VARIABLES, createVercelAPIService } from "@/lib/vercel-api";
 import { auth } from "@/server/auth";
+import { createDeployment, updateDeployment } from "@/server/actions/deployment-actions";
+import { getGitHubAccessToken } from "@/server/services/github/github-token-service";
 import { getVercelAccessToken } from "@/server/services/vercel/vercel-service";
 
 /**
@@ -27,7 +29,8 @@ export interface DeploymentConfig {
 	}>;
 	domains?: string[];
 	includeAllBranches?: boolean;
-	githubToken: string;
+	githubToken?: string; // Optional - will use OAuth token if not provided
+	deploymentId?: string; // Optional - for tracking deployment status
 }
 
 export interface DeploymentResult {
@@ -48,6 +51,7 @@ export interface DeploymentResult {
 		};
 		step?: string;
 		details?: any;
+		requiresManualImport?: boolean;
 	};
 }
 
@@ -72,15 +76,32 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		};
 	}
 
-	// Get user's GitHub token from the config (still needed for private template access)
+	// Get user's GitHub token - prefer OAuth token over provided token
 	const {
 		templateRepo,
 		newRepoName,
 		projectName,
 		description,
 		environmentVariables = [],
-		githubToken,
+		githubToken: providedGithubToken,
+		deploymentId,
 	} = config;
+
+	// Try to get GitHub token from OAuth connection first
+	let githubToken = await getGitHubAccessToken(session.user.id);
+
+	// Fall back to provided token if OAuth token not available
+	if (!githubToken && providedGithubToken) {
+		githubToken = providedGithubToken;
+	}
+
+	if (!githubToken) {
+		return {
+			success: false,
+			error:
+				"GitHub account not connected. Please connect your GitHub account first or provide an access token.",
+		};
+	}
 
 	// Get user's Vercel access token using the service
 	const vercelToken = await getVercelAccessToken(session.user.id);
@@ -92,7 +113,19 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		};
 	}
 
+	let currentDeploymentId = deploymentId;
+
 	try {
+		// If no deploymentId is provided, create a new deployment record
+		if (!currentDeploymentId) {
+			const newDeployment = await createDeployment({
+				projectName,
+				description: description || `Deployment of ${projectName}`,
+				status: "deploying",
+			});
+			currentDeploymentId = newDeployment.id;
+		}
+
 		// Validate configuration
 		const validation = await validateDeploymentConfig({
 			templateRepo,
@@ -102,9 +135,13 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		});
 
 		if (!validation.success) {
+			const error = validation.error || "Configuration validation failed";
+			if (currentDeploymentId) {
+				await updateDeployment(currentDeploymentId, { status: "failed", error });
+			}
 			return {
 				success: false,
-				error: validation.error || "Configuration validation failed",
+				error,
 			};
 		}
 
@@ -113,9 +150,13 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		// Parse templateRepo to get owner and repo name
 		const [templateOwner, templateRepoName] = templateRepo.split("/");
 		if (!templateOwner || !templateRepoName) {
+			const error = "Template repository must be in format 'owner/repo-name'";
+			if (currentDeploymentId) {
+				await updateDeployment(currentDeploymentId, { status: "failed", error });
+			}
 			return {
 				success: false,
-				error: "Template repository must be in format 'owner/repo-name'",
+				error,
 			};
 		}
 
@@ -125,11 +166,15 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		// Get the authenticated GitHub user to get their username
 		const userInfo = await githubService.getCurrentUserInfo();
 		if (!userInfo.success || !userInfo.username) {
+			const error =
+				userInfo.error ||
+				"Failed to get GitHub user information. Please check your access token.";
+			if (currentDeploymentId) {
+				await updateDeployment(currentDeploymentId, { status: "failed", error });
+			}
 			return {
 				success: false,
-				error:
-					userInfo.error ||
-					"Failed to get GitHub user information. Please check your access token.",
+				error,
 			};
 		}
 
@@ -145,9 +190,13 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		});
 
 		if (!repoResult.success) {
+			const error = repoResult.error || "Failed to create GitHub repository";
+			if (currentDeploymentId) {
+				await updateDeployment(currentDeploymentId, { status: "failed", error });
+			}
 			return {
 				success: false,
-				error: repoResult.error || "Failed to create GitHub repository",
+				error,
 				data: {
 					step: "github-repo-creation",
 					details: repoResult.error,
@@ -164,51 +213,119 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			cloneUrl: repoResult.details?.cloneUrl || repoResult.repoUrl!,
 		};
 
+		// Update deployment record with GitHub info
+		if (currentDeploymentId) {
+			await updateDeployment(currentDeploymentId, {
+				githubRepoUrl: repoInfo.url,
+				githubRepoName: repoInfo.name,
+			});
+		}
+
 		// Step 2: Create Vercel project
 		const vercelService = createVercelAPIService(vercelToken);
 
-		const projectResult = await vercelService.createProject({
+		// First try to create project with git repository
+		let projectResult = await vercelService.createProject({
 			name: projectName,
 			gitRepository: {
 				type: "github" as const,
 				repo: `${githubUsername}/${projectName}`,
 			},
 			framework: "nextjs",
-			environmentVariables: [
-				...COMMON_ENV_VARIABLES.nextjs,
-				...COMMON_ENV_VARIABLES.shipkit,
-				...environmentVariables,
-			],
+			// Don't send empty environment variables initially
+			environmentVariables: environmentVariables.length > 0 ? environmentVariables : undefined,
 		});
 
+		// If that fails, try creating without git repository (manual setup)
+		if (!projectResult.success) {
+			console.log("Failed to create project with git repo, trying without...");
+			console.log("Error details:", projectResult.error);
+
+			projectResult = await vercelService.createProject({
+				name: projectName,
+				framework: "nextjs",
+				// Don't send empty environment variables initially
+				environmentVariables: environmentVariables.length > 0 ? environmentVariables : undefined,
+			});
+
+			// If project creation succeeded without git, try to connect the repository
+			if (projectResult.success && projectResult.projectId) {
+				console.log("Project created without git repo, attempting to connect repository...");
+				const gitConnectResult = await vercelService.connectGitRepository(projectResult.projectId, {
+					type: "github" as const,
+					repo: `${githubUsername}/${projectName}`,
+				});
+
+				if (!gitConnectResult.success) {
+					console.warn("Failed to connect git repository:", gitConnectResult.error);
+					// Don't fail the deployment, just warn
+				}
+			}
+		}
+
 		if (!projectResult.success || !projectResult.projectId) {
+			// If Vercel project creation failed but GitHub repo was created,
+			// return a special response indicating manual import is needed
+			const error =
+				projectResult.error || "Failed to create Vercel project. You can manually import the repository.";
+			if (currentDeploymentId) {
+				await updateDeployment(currentDeploymentId, { status: "failed", error });
+			}
 			return {
 				success: false,
-				error: projectResult.error || "Failed to create Vercel project",
+				error,
 				data: {
 					step: "vercel-project-creation",
 					details: projectResult.error,
 					githubRepo: repoInfo,
+					requiresManualImport: true,
 				},
 			};
 		}
 
 		console.log(`✅ Vercel project created: ${projectResult.projectUrl}`);
 
-		// Step 3: Trigger initial deployment
-		const deploymentResult = await vercelService.createDeployment(projectResult.projectId!);
+		// Step 3: Wait a moment for Vercel to process the GitHub connection
+		// Then check if we can get deployment status
+		console.log("Waiting for Vercel to process the GitHub repository...");
 
-		// Return success with complete deployment information
+		// Wait 2 seconds to give Vercel time to detect the repository
+		await new Promise((resolve) => setTimeout(resolve, 2000));
+
+		// Try to get project details to see if deployment has started
+		let deploymentUrl = `https://${projectName}.vercel.app`;
+		try {
+			const projectInfo = await vercelService.getProject(projectResult.projectId!);
+			if (projectInfo.success && projectInfo.data?.latestDeployments?.[0]) {
+				const latestDeployment = projectInfo.data.latestDeployments[0];
+				if (latestDeployment.url) {
+					deploymentUrl = `https://${latestDeployment.url}`;
+					console.log(`Deployment detected: ${deploymentUrl}`);
+				}
+			}
+		} catch (error) {
+			console.log("Could not fetch deployment status, using default URL");
+		}
+
+		// Update deployment record with Vercel info and status
+		if (currentDeploymentId) {
+			await updateDeployment(currentDeploymentId, {
+				status: "completed",
+				vercelProjectUrl: projectResult.projectUrl!,
+				vercelDeploymentUrl: deploymentUrl,
+			});
+		}
+
+		// Return success - Vercel should automatically deploy the GitHub repo
 		return {
 			success: true,
-			message: `Successfully deployed ${templateRepo} as ${projectName}`,
+			message: `Successfully created project ${projectName} on Vercel. The initial deployment will begin shortly.`,
 			data: {
 				githubRepo: repoInfo,
 				vercelProject: {
 					projectId: projectResult.projectId!,
 					projectUrl: projectResult.projectUrl!,
-					deploymentId: deploymentResult.success ? deploymentResult.deploymentId : undefined,
-					deploymentUrl: deploymentResult.success ? deploymentResult.deploymentUrl : undefined,
+					deploymentUrl,
 				},
 			},
 		};
@@ -216,6 +333,10 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		console.error("❌ Deployment failed:", error);
 
 		const errorMessage = error instanceof Error ? error.message : "Unknown deployment error";
+
+		if (currentDeploymentId) {
+			await updateDeployment(currentDeploymentId, { status: "failed", error: errorMessage });
+		}
 
 		return {
 			success: false,
@@ -234,7 +355,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 export async function validateDeploymentConfig(config: {
 	templateRepo: string;
 	projectName: string;
-	githubToken: string;
+	githubToken?: string;
 	vercelToken: string;
 }): Promise<{ success: boolean; error?: string }> {
 	const { templateRepo, projectName, githubToken, vercelToken } = config;
@@ -263,12 +384,7 @@ export async function validateDeploymentConfig(config: {
 		};
 	}
 
-	if (!githubToken) {
-		return {
-			success: false,
-			error: "GitHub access token is required",
-		};
-	}
+	// GitHub token is now optional - will be fetched from OAuth if not provided
 
 	if (!vercelToken) {
 		return {

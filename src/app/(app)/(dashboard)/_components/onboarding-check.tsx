@@ -3,10 +3,10 @@
 import { ResetIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { env } from "@/env";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import type { User } from "@/types/user";
 import { OnboardingWizard } from "./onboarding-wizard";
-import { env } from "@/env";
 
 interface OnboardingCheckProps {
 	user?: User | null;

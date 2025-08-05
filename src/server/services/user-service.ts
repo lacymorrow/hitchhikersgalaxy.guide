@@ -1,27 +1,27 @@
 /**
  * @fileoverview User management service for Shipkit
  * @module server/services/user-service
- * 
+ *
  * This service handles all user-related operations including:
  * - User creation and management
  * - Team membership and personal team creation
  * - Payment linking and user access control
  * - File management and cleanup
  * - API key management for users
- * 
+ *
  * Key responsibilities:
  * - Ensure users exist after authentication
  * - Create personal teams for new users
  * - Link existing payments to new user accounts
  * - Manage user data updates and deletions
  * - Handle user file cleanup on account deletion
- * 
+ *
  * Dependencies:
  * - BaseService: Provides CRUD operations with soft delete
  * - TeamService: For managing user teams
  * - PaymentService: For linking payments to users
  * - ApiKeyService: For managing user API keys
- * 
+ *
  * @security All operations respect user ownership and team membership
  * @performance Uses database transactions for consistency
  */
@@ -39,9 +39,9 @@ import { teamService } from "./team-service";
 
 /**
  * Service for managing users, their teams, and associated data
- * 
+ *
  * @extends BaseService<typeof users>
- * 
+ *
  * @example
  * ```typescript
  * const user = await userService.ensureUserExists({

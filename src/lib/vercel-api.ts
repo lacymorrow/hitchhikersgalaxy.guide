@@ -10,7 +10,7 @@ export interface VercelConfig {
 
 export interface VercelProjectConfig {
 	name: string;
-	gitRepository: {
+	gitRepository?: {
 		type: "github" | "gitlab" | "bitbucket";
 		repo: string; // e.g., "username/repo-name"
 	};
@@ -61,24 +61,37 @@ export class VercelAPIService {
 		try {
 			console.log(`Creating Vercel project: ${config.name}`);
 
-			const projectData = {
+			const projectData: any = {
 				name: config.name,
-				gitRepository: {
+				framework: this.detectFramework(config.framework),
+			};
+
+			// Only add gitRepository if provided
+			if (config.gitRepository) {
+				projectData.gitRepository = {
 					type: config.gitRepository.type,
 					repo: config.gitRepository.repo,
-				},
-				framework: this.detectFramework(config.framework),
-				buildCommand: config.buildCommand,
-				outputDirectory: config.outputDirectory,
-				installCommand: config.installCommand,
-				devCommand: config.devCommand,
-				environmentVariables: config.environmentVariables?.map((env) => ({
+				};
+			}
+
+			// Only add optional fields if they are provided
+			if (config.buildCommand) projectData.buildCommand = config.buildCommand;
+			if (config.outputDirectory) projectData.outputDirectory = config.outputDirectory;
+			if (config.installCommand) projectData.installCommand = config.installCommand;
+			if (config.devCommand) projectData.devCommand = config.devCommand;
+
+			// Handle environment variables
+			if (config.environmentVariables && config.environmentVariables.length > 0) {
+				projectData.environmentVariables = config.environmentVariables.map((env) => ({
 					key: env.key,
 					value: env.value,
 					type: "encrypted" as const,
-					target: env.target,
-				})),
-			};
+					target: Array.isArray(env.target) ? env.target : [env.target],
+				}));
+			}
+
+			// Log the request payload for debugging
+			console.log("Vercel API Request Payload:", JSON.stringify(projectData, null, 2));
 
 			const response = await this.makeRequest("/v10/projects", {
 				method: "POST",
@@ -100,6 +113,10 @@ export class VercelAPIService {
 			};
 		} catch (error: any) {
 			console.error("Failed to create Vercel project:", error);
+			// Log the full error details for debugging
+			if (error.response?.data) {
+				console.error("Vercel API Error Details:", JSON.stringify(error.response.data, null, 2));
+			}
 
 			return {
 				success: false,
@@ -112,20 +129,30 @@ export class VercelAPIService {
 	/**
 	 * Trigger a new deployment for a project
 	 */
-	async createDeployment(projectId: string, gitRef?: string): Promise<VercelDeploymentResult> {
+	async createDeployment(
+		projectId: string,
+		projectName?: string,
+		gitRef?: string
+	): Promise<VercelDeploymentResult> {
 		try {
 			console.log(`Creating deployment for project: ${projectId}`);
 
-			const deploymentData = {
-				name: projectId,
-				gitSource: gitRef
-					? {
-						type: "github" as const,
-						ref: gitRef,
-					}
-					: undefined,
+			// Try using project name instead of ID, as the API might expect that
+			const deploymentData: any = {
+				name: projectName || projectId,
 				target: "production" as const,
 			};
+
+			// Only add gitSource if provided
+			if (gitRef) {
+				deploymentData.gitSource = {
+					type: "github" as const,
+					ref: gitRef,
+				};
+			}
+
+			// Log the deployment request for debugging
+			console.log("Vercel Deployment Request:", JSON.stringify(deploymentData, null, 2));
 
 			const response = await this.makeRequest("/v13/deployments", {
 				method: "POST",
@@ -142,6 +169,13 @@ export class VercelAPIService {
 			};
 		} catch (error: any) {
 			console.error("Failed to create deployment:", error);
+			// Log the full error details for debugging
+			if (error.response?.data) {
+				console.error(
+					"Vercel Deployment Error Details:",
+					JSON.stringify(error.response.data, null, 2)
+				);
+			}
 
 			return {
 				success: false,
@@ -248,6 +282,32 @@ export class VercelAPIService {
 			return {
 				success: false,
 				error: this.formatErrorMessage(error),
+			};
+		}
+	}
+
+	/**
+	 * Connect a Git repository to an existing project
+	 */
+	async connectGitRepository(
+		projectId: string,
+		gitRepo: { type: "github" | "gitlab" | "bitbucket"; repo: string }
+	) {
+		try {
+			const response = await this.makeRequest(`/v10/projects/${projectId}/git-repository`, {
+				method: "POST",
+				body: JSON.stringify(gitRepo),
+			});
+
+			return {
+				success: true,
+				details: response,
+			};
+		} catch (error: any) {
+			return {
+				success: false,
+				error: this.formatErrorMessage(error),
+				details: error.response?.data,
 			};
 		}
 	}
@@ -419,6 +479,20 @@ export class VercelAPIService {
 	 * Format error messages for user-friendly display
 	 */
 	private formatErrorMessage(error: any): string {
+		if (error.status === 400) {
+			// Handle specific 400 errors
+			const errorData = error.response?.data;
+			if (errorData?.error?.code === "missing_github_integration") {
+				return "GitHub integration not connected to your Vercel account. Please connect GitHub in your Vercel dashboard first.";
+			}
+			if (errorData?.error?.code === "bad_request") {
+				return `Vercel Error: ${errorData?.error?.message || "Invalid request"}`;
+			}
+			if (errorData?.error?.message) {
+				return `Vercel API Error: ${errorData.error.message}`;
+			}
+			return "Invalid request to Vercel API. Please check your configuration.";
+		}
 		if (error.status === 401) {
 			return "Vercel authentication failed. Please check your access token.";
 		}

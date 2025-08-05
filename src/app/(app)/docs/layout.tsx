@@ -38,11 +38,6 @@ export default async function DocsLayout({ children }: DocsLayoutProps) {
 					{/* Content */}
 					{children}
 				</main>
-
-				{/* Search */}
-				<aside className="p-2 mx-auto">
-					<DocsSearch />
-				</aside>
 			</div>
 		</>
 	);

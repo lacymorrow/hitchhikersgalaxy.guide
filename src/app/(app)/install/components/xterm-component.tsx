@@ -1,10 +1,10 @@
 "use client";
 
+import { FitAddon } from "@xterm/addon-fit";
+import { Terminal } from "@xterm/xterm";
 import { forwardRef, useEffect, useImperativeHandle, useRef } from "react";
-import { Terminal } from "xterm";
-import { FitAddon } from "xterm-addon-fit";
 import { cn } from "@/lib/utils";
-import "xterm/css/xterm.css";
+import "@xterm/xterm/css/xterm.css";
 
 interface XTermComponentProps {
 	initialText?: string;

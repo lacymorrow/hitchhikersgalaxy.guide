@@ -100,7 +100,8 @@ async function authWithOptions(props?: AuthProps) {
 	const { errorCode, redirect, nextUrl } = props ?? {};
 
 	// Route protected
-	const protect = props?.protect ?? props?.redirectTo !== undefined ?? redirect ?? false;
+	// Use clear boolean logic without nullish coalescing on non-nullish expressions
+	const protect = (props?.protect ?? false) || (props?.redirectTo !== undefined) || (redirect ?? false);
 	const redirectTo = props?.redirectTo ?? routes.auth.signOutIn;
 
 	const handleRedirect = (code: string) => {

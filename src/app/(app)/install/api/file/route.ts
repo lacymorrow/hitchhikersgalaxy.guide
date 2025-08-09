@@ -27,7 +27,8 @@ export async function GET(request: NextRequest) {
 		if (fileContentCache.has(filePath)) {
 			console.log(`Using cached file content for: ${filePath}`);
 			const { content, contentType } = fileContentCache.get(filePath)!;
-			return new NextResponse(content, {
+			const body: BodyInit = typeof content === "string" ? content : new Uint8Array(content);
+			return new NextResponse(body, {
 				headers: {
 					"Content-Type": contentType,
 				},
@@ -76,7 +77,8 @@ export async function GET(request: NextRequest) {
 		fileContentCache.set(filePath, { content, contentType });
 
 		// Return file content
-		return new NextResponse(content, {
+		const body: BodyInit = typeof content === "string" ? content : new Uint8Array(content);
+		return new NextResponse(body, {
 			headers: {
 				"Content-Type": contentType,
 			},

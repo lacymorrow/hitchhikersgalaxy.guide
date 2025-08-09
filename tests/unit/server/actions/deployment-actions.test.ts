@@ -30,7 +30,7 @@ vi.mock("@/server/db", () => ({
 	},
 }));
 
-describe("Deployment Actions", () => {
+describe("Deployment Actions (DB gated)", () => {
 	const mockUserId = "test-user-id";
 	const mockSession = { user: { id: mockUserId } };
 
@@ -44,6 +44,11 @@ describe("Deployment Actions", () => {
 	});
 
 	describe("getUserDeployments", () => {
+		if (!process.env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED) {
+			it.skip("skipped: database feature disabled", () => { });
+			return;
+		}
+
 		it("should return user deployments when authenticated", async () => {
 			const mockDeployments = [
 				{

@@ -152,8 +152,7 @@ export { buildTimeFeatures };
  * @internal
  */
 export const buildTimeFeatureFlags = Object.fromEntries(
-	Object.entries(buildTimeFeatures).map(([key, enabled]) => [
-		`NEXT_PUBLIC_FEATURE_${key}`,
-		String(enabled),
-	])
+	Object.entries(buildTimeFeatures)
+		.filter(([, enabled]) => enabled)
+		.map(([key]) => [`NEXT_PUBLIC_FEATURE_${key}`, "true"])
 ) as Record<`NEXT_PUBLIC_FEATURE_${string}`, string>;

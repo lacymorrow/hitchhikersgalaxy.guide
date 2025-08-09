@@ -7,10 +7,17 @@ export const getRoutePath = (route: Route | RouteObject, params: RouteParams = {
 	}
 
 	let path = route.path;
-	for (const [key, defaultValue] of Object.entries(route.params ?? {})) {
-		const value = Object.hasOwn(params, key) ? params[key] : defaultValue;
-		if (value !== null) {
+	// First, replace using provided params
+	for (const [key, value] of Object.entries(params)) {
+		if (value !== undefined && value !== null) {
 			path = path.replace(`:${key}`, String(value));
+		}
+	}
+
+	// Then, fill remaining placeholders with defaults if any
+	for (const [key, defaultValue] of Object.entries(route.params ?? {})) {
+		if (path.includes(`:${key}`) && defaultValue !== null && defaultValue !== undefined) {
+			path = path.replace(`:${key}`, String(defaultValue));
 		}
 	}
 	return path;
@@ -18,10 +25,10 @@ export const getRoutePath = (route: Route | RouteObject, params: RouteParams = {
 
 type NestedPaths<T, P extends string = ""> = T extends object
 	? {
-			[K in keyof T]: T[K] extends object
-				? NestedPaths<T[K], `${P}${P extends "" ? "" : "."}${K & string}`>
-				: `${P}${P extends "" ? "" : "."}${K & string}`;
-		}[keyof T]
+		[K in keyof T]: T[K] extends object
+		? NestedPaths<T[K], `${P}${P extends "" ? "" : "."}${K & string}`>
+		: `${P}${P extends "" ? "" : "."}${K & string}`;
+	}[keyof T]
 	: never;
 
 type RoutePath = NestedPaths<typeof routes>;
@@ -30,10 +37,10 @@ export const rx = <T extends RoutePath>(
 	path: T,
 	params: T extends keyof typeof routes
 		? (typeof routes)[T] extends RouteObject
-			? Required<(typeof routes)[T]["params"]>
-			: never
+		? Required<(typeof routes)[T]["params"]>
+		: never
 		: // biome-ignore lint/suspicious/noExplicitAny: workaround for type inference
-			RouteParams = {} as any
+		RouteParams = {} as any
 ): Route => {
 	const parts = path?.split(".") ?? [];
 	let current: unknown = routes;

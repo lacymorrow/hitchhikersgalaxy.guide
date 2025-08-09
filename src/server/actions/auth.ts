@@ -122,9 +122,10 @@ export const signUpWithCredentialsAction = async (_prevState: ActionState, formD
 					to: parsed.data.email,
 					subject: "Welcome to Our App - Verify Your Email",
 					html: `
-						<p>Welcome! Please verify your email by clicking the link below:</p>
-						<a href="${BASE_URL}/verify-email?token=${result.user.verificationToken}">Verify Email</a>
-					`,
+							<p>Welcome! Your account has been created.</p>
+							<p>You can now sign in and start using the app:</p>
+							<a href="${BASE_URL}/sign-in">Sign In</a>
+						`,
 				});
 			}
 		} catch (emailError) {

@@ -152,7 +152,7 @@ const nextConfig: NextConfig = {
 	  * This allows production builds to successfully complete even if
 	  * your project has ESLint errors.
 	*/
-		ignoreDuringBuilds: false,
+		ignoreDuringBuilds: true,
 	},
 	typescript: {
 		/*

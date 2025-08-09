@@ -18,8 +18,12 @@ export const Link = ({ children, ...props }: React.ComponentProps<typeof NextLin
 	}
 
 	if (siteConfig?.behavior?.pageTransitions) {
+		const { prefetch: incomingPrefetch, ...restRaw } = props;
+		const rest = restRaw as Omit<React.ComponentProps<typeof NextLink>, "prefetch">;
+		const normalizedPrefetch: boolean | undefined =
+			typeof incomingPrefetch === "boolean" ? incomingPrefetch : undefined;
 		return (
-			<TransitionsLink prefetch={props?.prefetch ?? true} {...props}>
+			<TransitionsLink prefetch={normalizedPrefetch} {...rest}>
 				{children}
 			</TransitionsLink>
 		);

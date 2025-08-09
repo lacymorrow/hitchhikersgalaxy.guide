@@ -27,11 +27,20 @@ export const GuestForm = () => {
 			try {
 				const result = await signIn("guest", {
 					name: name.trim(),
-					redirectTo: nextUrl || "/dashboard",
+					redirect: false,
+					redirectTo: nextUrl || "/dashboard"
 				});
 
-				if (result?.error) {
-					toast.error("Failed to continue as guest");
+				// When redirect is false, NextAuth returns an object we can inspect
+				if (result && typeof result === "object") {
+					if ("error" in result && result.error) {
+						toast.error("Failed to continue as guest");
+						return;
+					}
+					if ("url" in result && result.url) {
+						window.location.href = result.url;
+						return;
+					}
 				}
 			} catch (error) {
 				console.error("Guest sign in error:", error);

@@ -3,7 +3,7 @@ import type { NextAuthConfig } from "next-auth";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { logger } from "@/lib/logger";
-import { providers } from "@/server/auth-providers.config";
+import { providers } from "@/server/auth-js/auth-providers.config";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { grantGitHubAccess } from "@/server/services/github/github-service";

@@ -43,7 +43,10 @@ export const GuestForm = () => {
 					}
 				}
 			} catch (error) {
-				console.error("Guest sign in error:", error);
+				// Avoid leaking sensitive details in logs; log minimal info in development only.
+				if (process.env.NODE_ENV !== "production") {
+					console.error("Guest sign in error");
+				}
 				toast.error("Failed to continue as guest");
 			}
 		});

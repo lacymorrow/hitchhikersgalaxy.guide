@@ -1,0 +1,86 @@
+---
+title: 'Authentication'
+description: 'Authentication configuration using Auth.js (NextAuth) in Shipkit'
+---
+
+# Authentication
+
+Shipkit provides flexible authentication that adapts to your needs using [Auth.js](https://authjs.dev) (NextAuth.js v5) and Better Auth as alternative providers.
+
+## Authentication Methods
+
+### OAuth Providers
+- **Google** - Sign in with Google account
+- **GitHub** - Developer-friendly authentication  
+- **Discord** - Gaming and community apps
+- **Twitter** - Social login
+- **GitLab** - Alternative to GitHub
+- **Bitbucket** - Atlassian ecosystem
+
+### Other Methods
+- **Magic Link** - Passwordless email authentication via Resend
+- **Credentials** - Username/password with Payload CMS integration
+- **Guest Access** - Automatic fallback when no auth methods configured
+
+## Guest Authentication
+
+When no authentication providers are configured (no `NEXT_PUBLIC_FEATURE_AUTH_*_ENABLED` variables set), Shipkit automatically enables guest authentication. Users can simply enter their name to access the application.
+
+Perfect for:
+- Development and testing environments
+- Demo applications  
+- Apps that don't require user accounts
+- Gradual authentication rollout
+
+## Feature Flags
+
+Enable specific auth providers using environment variables:
+
+```env
+# Enable specific providers
+NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED=true
+NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED=true
+NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED=true
+NEXT_PUBLIC_FEATURE_AUTH_MAGICLINK_ENABLED=true
+NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED=true
+```
+
+## Configuration
+
+Add these environment variables to enable authentication:
+
+```env
+# Required - Generate with `openssl rand -base64 32`
+AUTH_SECRET=your_auth_secret
+
+# Optional - Only needed in production
+AUTH_URL=https://your-production-url.com
+
+# Discord OAuth
+AUTH_DISCORD_ID=your_discord_client_id
+AUTH_DISCORD_SECRET=your_discord_client_secret
+
+# GitHub OAuth
+AUTH_GITHUB_ID=your_github_client_id
+AUTH_GITHUB_SECRET=your_github_client_secret
+
+# Google OAuth
+AUTH_GOOGLE_ID=your_google_client_id
+AUTH_GOOGLE_SECRET=your_google_client_secret
+
+# Email (Resend)
+RESEND_API_KEY=your_resend_api_key
+```
+
+## Provider Setup
+
+1. **Discord**: Create an application at [Discord Developer Portal](https://discord.com/developers/applications)
+2. **GitHub**: Create an OAuth app at [GitHub Developer Settings](https://github.com/settings/developers)
+3. **Google**: Create credentials at [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+4. **Email**: Get API key from [Resend Dashboard](https://resend.com/dashboard)
+
+## Resources
+
+- [Auth.js Documentation](https://authjs.dev/getting-started/introduction)
+- [OAuth Provider Setup Guide](https://authjs.dev/getting-started/providers)
+- [Email Provider Guide](https://authjs.dev/getting-started/providers/email)

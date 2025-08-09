@@ -20,7 +20,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { env } from "@/env";
-import { isGuestOnlyMode } from "@/server/auth-providers-utils";
+import { isGuestOnlyMode } from "@/server/auth-js/auth-providers-utils";
 
 interface FeatureConfig {
 	name: string;

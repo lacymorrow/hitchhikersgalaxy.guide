@@ -1,0 +1,236 @@
+---
+title: 'Development Guide'
+description: 'Comprehensive guide for developing with Shipkit'
+---
+
+# Development Guide
+
+This guide covers everything you need to know about developing applications with Shipkit.
+
+## Quick Start
+
+1. Clone the repository
+2. Install dependencies:
+```bash
+pnpm install
+```
+
+3. Set up environment variables:
+```bash
+cp .env.example .env.local
+```
+
+4. Start the development server:
+```bash
+pnpm dev
+```
+
+## Development Environment
+
+### Required Tools
+
+- [Node.js](https://nodejs.org) (v18 or later)
+- [PNPM](https://pnpm.io) (v8 or later)
+- [PostgreSQL](https://www.postgresql.org) (v15 or later)
+- [VS Code](https://code.visualstudio.com) (recommended)
+
+### VS Code Extensions
+
+<CardGroup cols={2}>
+  <Card title="Biome" icon="code">
+    [Biome](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) for formatting and linting
+  </Card>
+  <Card title="Tailwind CSS" icon="paintbrush">
+    [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
+  </Card>
+  <Card title="MDX" icon="file-text">
+    [MDX](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-mdx)
+  </Card>
+  <Card title="TypeScript" icon="code">
+    [TypeScript](https://marketplace.visualstudio.com/items?itemName=ms-typescript.vscode-typescript-next)
+  </Card>
+</CardGroup>
+
+### VS Code Settings
+
+```json
+{
+  "editor.formatOnSave": true,
+  "editor.defaultFormatter": "biomejs.biome",
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "typescript.preferences.importModuleSpecifier": "non-relative",
+  "typescript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.preferences.preferTypeOnlyAutoImports": true
+}
+```
+
+### Code Style
+
+We use [Biome](https://biomejs.dev) for formatting and linting. Our configuration:
+
+```json
+{
+  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+  "organizeImports": {
+    "enabled": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "noUnusedVariables": "warn",
+        "noUndeclaredVariables": "error"
+      },
+      "suspicious": {
+        "noExplicitAny": "warn",
+        "noConsoleLog": "warn"
+      },
+      "style": {
+        "noNonNullAssertion": "warn",
+        "useNodejsImportProtocol": "warn",
+        "useTemplate": "error"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "tab",
+    "indentWidth": 2,
+    "lineWidth": 80
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "double",
+      "semicolons": "always"
+    }
+  }
+}
+```
+
+## Project Structure
+
+```
+src/
+├── app/                 # Next.js app directory
+│   ├── (app)/          # App routes
+│   ├── (auth)/         # Auth routes
+│   └── api/            # API routes
+├── components/         # React components
+│   ├── ui/            # UI components
+│   └── blocks/        # Page blocks
+├── lib/               # Utility functions
+├── server/            # Server-side code
+│   ├── actions/       # Server actions
+│   ├── auth/          # Auth configuration
+│   └── services/      # Server services
+└── styles/            # Global styles
+```
+
+## Development Workflow
+
+### 1. Component Development
+
+- Use server components by default
+- Create client components only when needed (interactivity)
+- Place components in appropriate directories:
+  - `ui/` for reusable UI components
+  - `blocks/` for page-specific components
+  - `app/(app)/` for route-specific components
+
+### 2. API Development
+
+- Use server actions for form submissions
+- Place API routes in `app/api/`
+- Use Zod for request validation
+- Follow REST principles
+- Handle errors consistently
+
+### 3. Database Operations
+
+- Use Drizzle ORM for database queries
+- Place migrations in `drizzle/migrations/`
+- Run migrations:
+```bash
+pnpm db:migrate
+```
+
+### 4. Authentication
+
+- Use Auth.js (v5) for authentication
+- Configure providers in `server/auth/`
+- Test with different providers locally
+
+### 5. Testing
+
+- Write tests in `__tests__` directories
+- Run tests:
+```bash
+pnpm test
+```
+
+## Common Tasks
+
+### Adding a New Page
+
+1. Create route directory in `app/(app)/`
+2. Add `page.tsx` for the route
+3. Create components in `blocks/` if needed
+4. Update navigation if required
+
+### Creating an API Endpoint
+
+1. Add route in `app/api/`
+2. Create request validation schema
+3. Implement error handling
+4. Add documentation
+
+### Adding a Database Table
+
+1. Create migration:
+```bash
+pnpm db:migration:create add_table_name
+```
+
+2. Define schema in migration file
+3. Run migration:
+```bash
+pnpm db:migrate
+```
+
+## Deployment
+
+### Production Checks
+
+1. Run type checking:
+```bash
+pnpm typecheck
+```
+
+2. Run linting:
+```bash
+pnpm lint
+```
+
+3. Run tests:
+```bash
+pnpm test
+```
+
+### Deployment Commands
+
+```bash
+# Build for production
+pnpm build
+
+# Start production server
+pnpm start
+```

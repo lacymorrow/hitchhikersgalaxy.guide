@@ -14,7 +14,7 @@ import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { env } from "@/env";
 import { cn } from "@/lib/utils";
 import { signInWithOAuthAction } from "@/server/actions/auth";
-import { enabledAuthProviders, isGuestOnlyMode } from "@/server/auth-providers-utils";
+import { enabledAuthProviders, isGuestOnlyMode } from "@/server/auth-js/auth-providers-utils";
 import { MagicLinkForm } from "./magic-link-form";
 
 const oauthButtonVariants = cva("flex items-center justify-center gap-sm", {

@@ -1,0 +1,63 @@
+---
+title: 'Builder.io'
+description: 'Using Builder.io with Shipkit'
+---
+
+# Builder.io
+
+[Builder.io](https://builder.io) is a visual CMS for building and optimizing digital experiences. Shipkit integrates Builder.io for visual page building with a drag-and-drop interface.
+
+## Configuration
+
+<Alert variant="destructive" className="my-8">
+  <AlertTriangleIcon className="h-5 w-5" />
+  <AlertTitle>Important: Builder.io DevTools Compatibility</AlertTitle>
+  <AlertDescription>
+    Builder.io DevTools do not work with Turbopack. To use the visual editor, you must run the development server in legacy mode:
+    ```bash
+    npm run dev:legacy
+    ```
+  </AlertDescription>
+</Alert>
+
+Add this environment variable to enable Builder.io:
+
+```env
+NEXT_PUBLIC_BUILDER_API_KEY=your_builder_api_key
+
+Get your API key from the [Builder.io Dashboard](https://builder.io/account/space).
+
+## Setting Up Builder.io
+
+1. Create an account at [Builder.io](https://builder.io)
+2. Create a new space or use an existing one
+3. Get your API key from Space Settings
+4. Add the API key to your environment variables
+
+## Creating Content
+
+1. Log in to your Builder.io account
+2. Navigate to the Content tab
+3. Create a new page with a URL path (e.g., `/about`)
+4. Use the visual editor to build your page
+5. Publish when ready
+
+## Preview Mode
+
+Builder.io provides a preview mode directly in its interface. You can preview your changes before publishing.
+
+## Visual Editing
+
+Builder.io offers a visual editing experience with:
+
+- Drag-and-drop interface
+- Rich component library
+- A/B testing capabilities
+- Targeting and personalization
+- Analytics integration
+
+## Resources
+
+- [Builder.io Documentation](https://www.builder.io/c/docs/developers)
+- [Next.js Integration Guide](https://www.builder.io/c/docs/quickstart-nextjs)
+- [Visual Editing Guide](https://www.builder.io/c/docs/guides/visual-editing)

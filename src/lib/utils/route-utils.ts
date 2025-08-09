@@ -35,12 +35,7 @@ type RoutePath = NestedPaths<typeof routes>;
 
 export const rx = <T extends RoutePath>(
 	path: T,
-	params: T extends keyof typeof routes
-		? (typeof routes)[T] extends RouteObject
-		? Required<(typeof routes)[T]["params"]>
-		: never
-		: // biome-ignore lint/suspicious/noExplicitAny: workaround for type inference
-		RouteParams = {} as any
+	params?: RouteParams
 ): Route => {
 	const parts = path?.split(".") ?? [];
 	let current: unknown = routes;
@@ -59,8 +54,8 @@ export const rx = <T extends RoutePath>(
 	}
 
 	if (current && typeof current === "object" && "index" in current) {
-		return getRoutePath(current.index as RouteObject | string, params);
+		return getRoutePath(current.index as RouteObject | string, params ?? {});
 	}
 
-	return getRoutePath(current as RouteObject | string, params);
+	return getRoutePath(current as RouteObject | string, params ?? {});
 };

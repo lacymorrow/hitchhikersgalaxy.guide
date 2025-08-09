@@ -1,0 +1,257 @@
+---
+title: 'Payments'
+description: 'Payment processing configuration using Lemon Squeezy in Shipkit'
+---
+
+# Payments
+
+Shipkit uses [Lemon Squeezy](https://lemonsqueezy.com) for payment processing and subscription management.
+
+## Features
+
+- One-time payments
+- Subscriptions
+- Usage-based billing
+- Checkout pages
+- Webhooks
+- Analytics
+
+## Configuration
+
+Add these environment variables to enable payments:
+
+```env
+# Required
+LEMONSQUEEZY_API_KEY=your_api_key
+LEMONSQUEEZY_STORE_ID=your_store_id
+LEMONSQUEEZY_WEBHOOK_SECRET=your_webhook_secret
+
+# Feature Flag
+NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED=true
+```
+
+Get your credentials from the [Lemon Squeezy Dashboard](https://app.lemonsqueezy.com/settings/api).
+
+## Setup Steps
+
+1. Create a Lemon Squeezy account
+2. Set up your store
+3. Create products/variants
+4. Configure webhooks (see security guide below)
+5. Set up API keys
+
+## Products vs Variants
+
+**Important:** Lemon Squeezy uses a hierarchical structure:
+- **Products** are the main items (e.g., "Shipkit Pro")
+- **Variants** are specific versions of products with pricing (e.g., "Shipkit Pro - Monthly", "Shipkit Pro - Yearly")
+
+For checkout and payment verification, you must use **Variant IDs**, not Product IDs.
+
+## Products Configuration
+
+Configure your product variants in `config/site-config.ts`:
+
+```typescript
+store: {
+  products: {
+    // Use Variant IDs (not Product IDs) for checkout URLs
+    // Get these from your Lemon Squeezy dashboard
+    basic: "eb159dba-96a3-40f2-a97b-7b9117e635a1",     // variant ID
+    pro: "4d259175-0a79-486a-b0f8-b77404ee68df",       // variant ID
+    enterprise: "7935a386-7cd0-47fe-83c8-cab101323591", // variant ID
+    shipkit: "20b5b59e-b4c4-43b0-9979-545f90c76f28"    // variant ID
+  }
+}
+```
+
+### How to Find Variant IDs
+
+1. Go to your [Lemon Squeezy Dashboard](https://app.lemonsqueezy.com/products)
+2. Click on a product
+3. Click on a variant (pricing option)
+4. Copy the UUID from the URL: `/variants/{variant-id}`
+
+## Payment Verification
+
+Our payment system correctly handles variant-based verification:
+
+```typescript
+// Check if user purchased a specific variant
+await checkUserPurchasedVariant(variantId);
+
+// Check if user purchased any configured product
+await hasUserPurchasedAnyConfiguredProduct(userId);
+
+// Get all purchased products for a user
+await getUserPurchasedConfiguredProducts(userId);
+```
+
+## Checkout Flow
+
+The checkout flow is now properly configured:
+
+1. **BuyButton** uses `routes.external.buy`
+2. **Site config** generates URLs with correct variant IDs
+3. **LemonSqueezy Pricing** displays only configured variants
+4. **Payment verification** checks against variant IDs
+
+## Webhooks Security & Best Practices
+
+### Security Requirements
+
+**CRITICAL:** Always verify webhook signatures to prevent malicious actors from sending fake webhooks:
+
+```typescript
+function verifyWebhookSignature(rawBody: string, signature: string): boolean {
+  const hmac = crypto.createHmac("sha256", env.LEMONSQUEEZY_WEBHOOK_SECRET);
+  const digest = Buffer.from(hmac.update(rawBody, "utf8").digest("hex"), "hex");
+  const signatureBuffer = Buffer.from(signature, "hex");
+  
+  // Use timing-safe comparison
+  return crypto.timingSafeEqual(digest, signatureBuffer);
+}
+```
+
+### Webhook Configuration
+
+1. Set webhook URL in Lemon Squeezy dashboard: `https://yourdomain.com/api/webhooks/lemonsqueezy`
+2. Generate a secure webhook secret
+3. Subscribe to required events:
+   - `order_created` - New purchases
+   - `order_refunded` - Handle refunds
+   - `subscription_created` - New subscriptions
+   - `subscription_updated` - Plan changes
+   - `subscription_cancelled` - Cancellations
+   - `subscription_resumed` - Reactivations
+   - `subscription_expired` - Expirations
+   - `subscription_payment_*` - Payment events
+
+### Implementation Best Practices
+
+- **Process asynchronously** - Return 200 immediately, process in background
+- **Implement idempotency** - Handle duplicate webhooks gracefully
+- **Log everything** - Track all webhook events for debugging
+- **Handle all event types** - Even if you don't process them yet
+- **Test thoroughly** - Use Lemon Squeezy's webhook testing tools
+
+## Multiple Payment Providers
+
+Shipkit also supports:
+- **Stripe** - Enterprise-grade payments
+- **Polar** - Creator-focused platform
+
+Enable with feature flags:
+```env
+NEXT_PUBLIC_FEATURE_PAYMENTS_STRIPE_ENABLED=true
+NEXT_PUBLIC_FEATURE_PAYMENTS_POLAR_ENABLED=true
+```
+
+See provider-specific documentation in `/docs/integrations/`
+
+**⚠️ CRITICAL:** Webhooks are essential for secure payment processing. Our implementation includes:
+
+- ✅ **Signature verification** (prevents fake webhooks)
+- ✅ **Idempotency protection** (prevents duplicate processing)
+- ✅ **Database transactions** (ensures data consistency)
+- ✅ **Comprehensive event handling** (orders, subscriptions, payments)
+- ✅ **Error handling & retries** (reliable processing)
+- ✅ **Variant ID tracking** (proper product verification)
+
+### Quick Security Check
+
+Run through this checklist immediately:
+
+- [ ] `LEMONSQUEEZY_WEBHOOK_SECRET` is set in your environment
+- [ ] Webhook signature verification is enabled (not commented out)
+- [ ] HTTPS is used for webhook endpoints
+- [ ] Database transactions are used for consistency
+- [ ] Variant IDs are configured correctly in site config
+
+### Resources
+
+- 📖 **[Complete Webhook Best Practices Guide](../integrations/lemonsqueezy-webhooks-best-practices.md)** - Comprehensive implementation guide
+- 🔐 **[Security Audit Checklist](../LEMONSQUEEZY_WEBHOOK_SECURITY_AUDIT.md)** - Quick security verification
+
+## Webhook Endpoint
+
+Your webhook endpoint is available at:
+```
+https://yourdomain.com/webhooks/lemonsqueezy
+```
+
+Configure this URL in your Lemon Squeezy dashboard with the following events:
+- `order_created`
+- `order_refunded`
+- `subscription_created`
+- `subscription_updated`
+- `subscription_cancelled`
+- `subscription_resumed`
+- `subscription_expired`
+- `subscription_payment_success`
+- `subscription_payment_failed`
+
+## Testing
+
+### Local Development
+```bash
+# Install ngrok for local testing
+npm install -g ngrok
+
+# Start your dev server
+npm run dev
+
+# Expose localhost
+ngrok http 3000
+
+# Use ngrok URL in Lemon Squeezy webhook settings
+# Example: https://abc123.ngrok.io/webhooks/lemonsqueezy
+```
+
+### Test Mode
+Always test with Lemon Squeezy test mode before going live:
+1. Enable test mode in your Lemon Squeezy dashboard
+2. Create test products and variants
+3. Use test credit card numbers
+4. Verify webhook events are processed correctly
+5. Confirm variant IDs match between test and production
+
+## Troubleshooting
+
+### Common Issues
+
+**"Checkout button not working"**
+- Verify variant IDs in `site-config.ts` are correct
+- Check that `NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED=true`
+- Ensure the buy URL is generating correctly
+
+**"Payment verification failing"**
+- Confirm webhook is processing `order_created` events
+- Check that variant IDs are being saved in payment metadata
+- Verify database transactions are completing
+
+**"Products not displaying"**
+- Make sure variant IDs in config match actual variants in Lemon Squeezy
+- Check API key permissions
+- Verify feature flag is enabled
+
+### Debug Commands
+
+```typescript
+// Check if user has paid
+const hasPaid = await PaymentService.getUserPaymentStatus(userId);
+
+// Check specific variant purchase
+const hasPurchased = await checkUserPurchasedVariant(variantId);
+
+// Get configured variant IDs
+const variantIds = await getConfiguredVariantIds();
+```
+
+## Resources
+
+- [Lemon Squeezy Documentation](https://docs.lemonsqueezy.com)
+- [API Reference](https://docs.lemonsqueezy.com/api)
+- [Webhooks Guide](https://docs.lemonsqueezy.com/guides/webhooks)
+- [Next.js Billing Tutorial](https://docs.lemonsqueezy.com/guides/tutorials/nextjs-saas-billing)
+- [Products vs Variants Guide](https://docs.lemonsqueezy.com/guides/products-variants)

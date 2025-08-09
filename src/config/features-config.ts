@@ -55,6 +55,8 @@ buildTimeFeatures.AUTH_STACK_ENABLED =
 buildTimeFeatures.AUTH_CREDENTIALS_ENABLED =
 	buildTimeFeatures.PAYLOAD_ENABLED && !envIsTrue("DISABLE_AUTH_CREDENTIALS");
 buildTimeFeatures.AUTH_RESEND_ENABLED =
+	// Resend-based auth is development-only to avoid accidental email abuse in production.
+	// Enable locally when `RESEND_API_KEY` is set, unless explicitly disabled.
 	process.env.NODE_ENV !== "production" &&
 	hasEnv("RESEND_API_KEY") &&
 	!envIsTrue("DISABLE_AUTH_RESEND");

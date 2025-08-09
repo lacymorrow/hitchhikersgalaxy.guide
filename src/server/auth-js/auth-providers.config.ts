@@ -10,7 +10,7 @@ import Twitter from "next-auth/providers/twitter";
 import { RESEND_FROM_EMAIL } from "@/config/constants";
 import { STATUS_CODES } from "@/config/status-codes";
 // Import the list of enabled provider IDs from the single source of truth
-import { availableProviderIds } from "@/server/auth-providers-utils";
+import { availableProviderIds } from "@/server/auth-js/auth-providers-utils";
 import { AuthService } from "@/server/services/auth-service";
 import { env } from "@/env";
 

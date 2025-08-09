@@ -1,0 +1,111 @@
+---
+title: 'Payload CMS'
+description: 'Using Payload CMS with Shipkit'
+---
+
+# Payload CMS
+
+[Payload CMS](https://payloadcms.com) is a self-hosted headless CMS with a powerful admin interface and API. Shipkit integrates Payload CMS for structured content management.
+
+## Configuration
+
+To enable Payload CMS, follow these steps:
+
+1. Make sure you have a Postgres database set up
+2. Add the following environment variables to your `.env.local` file:
+
+```env
+DATABASE_URL=postgres://username:password@localhost:5432/database
+ENABLE_PAYLOAD=true
+PAYLOAD_SECRET=randomsecretkey # Used for encrypting passwords and sessions
+```
+
+If you need to disable Payload CMS (for example, during development when you don't need it), you can omit the `ENABLE_PAYLOAD` variable or set it to any value other than "true".
+
+### Generate a Secure Secret
+
+You can use the tool below to generate a secure random string for your `PAYLOAD_SECRET`:
+
+<SecretGenerator label="Generate Payload Secret" />
+
+## Content Structure
+
+Payload CMS in Shipkit is configured with the following collections:
+
+- **Pages**: For creating dynamic pages with flexible layouts
+- **Media**: For managing images and other media files
+- **Users**: For managing admin users
+
+## Creating Content
+
+1. Access the Payload admin at `/cms`
+2. Log in with your admin credentials
+3. Navigate to the Pages collection
+4. Create a new page with a unique slug
+5. Add content blocks to build your page
+6. Publish the page when ready
+
+## Automatic Data Seeding
+
+Shipkit is configured to automatically seed Payload CMS with initial data when it initializes. This happens only if the collections are empty, ensuring that your existing data is never overwritten.
+
+The seeding process includes:
+- RBAC (Roles and Permissions)
+- Features
+- FAQs
+- Testimonials
+
+### Controlling Automatic Seeding
+
+You can control the automatic seeding behavior with the `PAYLOAD_AUTO_SEED` environment variable:
+
+```env
+# Disable automatic seeding
+PAYLOAD_AUTO_SEED=false
+```
+
+By default, automatic seeding is enabled. Set this to `false` if you want to manually control when seeding occurs, such as in production environments.
+
+### Manual Seeding
+
+You can also manually trigger seeding through the admin interface or by using the server action:
+
+```typescript
+import { seedCMSAction } from "@/app/(app)/(admin)/admin/cms/actions";
+
+// Seed the CMS with initial data
+await seedCMSAction(process.env.PAYLOAD_SECRET);
+```
+
+## Accessing Content
+
+Content created in Payload CMS is automatically available at the URL matching its slug:
+
+- A page with slug `about` will be available at `/about`
+- A page with slug `products/featured` will be available at `/products/featured`
+
+## Preview Mode
+
+You can preview unpublished content by appending `?preview=true` to the URL when logged into the admin.
+
+## API Access
+
+Payload provides a REST API for programmatic access to your content:
+
+```typescript
+// Example: Fetch a page by slug
+const page = await payload.find({
+  collection: 'pages',
+  where: {
+    slug: {
+      equals: 'about',
+    },
+  },
+});
+```
+
+## Resources
+
+- [Payload Documentation](https://payloadcms.com/docs)
+- [Database Setup Guide](https://payloadcms.com/docs/database/overview)
+- [Content Modeling Guide](https://payloadcms.com/docs/fields/overview)

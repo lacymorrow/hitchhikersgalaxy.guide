@@ -2,7 +2,7 @@
 // You could alternatively use src/app/[...page]/page.tsx
 import { builder } from "@builder.io/sdk";
 import { env } from "@/env";
-import { RenderBuilderContent } from "@/lib/builder-io/builder-content";
+import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import "@/styles/builder-io.css";
 import { notFound } from "next/navigation";
 

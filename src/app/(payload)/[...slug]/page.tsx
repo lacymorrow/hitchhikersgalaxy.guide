@@ -6,7 +6,7 @@
  * ? Builder.io
  */
 
-import { RenderBuilderContent } from "@/lib/builder-io/builder-content";
+import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { env } from "@/env";
 import { getPayloadClient } from "@/lib/payload/payload";

@@ -16,7 +16,7 @@ Shipkit conditionally initializes Payload CMS based on environment variables. Th
 Payload CMS only initializes when a database is available:
 
 ```typescript
-const isPayloadEnabled = !!process.env.DATABASE_URL && process.env.ENABLE_PAYLOAD === "true";
+const isPayloadEnabled = !!process.env.DATABASE_URL && !!process.env.PAYLOAD_SECRET && !envIsTrue("DISABLE_PAYLOAD");
 ```
 
 ### Plugin Array Pattern
@@ -114,7 +114,8 @@ if (isPayloadEnabled) {
 ### Required for Payload
 
 - `DATABASE_URL` - PostgreSQL connection string
-- `ENABLE_PAYLOAD` - Must be "true" to enable Payload CMS
+- `PAYLOAD_SECRET` - Secret key for Payload CMS
+- `DISABLE_PAYLOAD` - Set to "true" to disable Payload (optional)
 
 ### Optional Features
 
@@ -293,7 +294,8 @@ try {
 ```typescript
 console.log("Payload enabled:", isPayloadEnabled);
 console.log("Database URL set:", !!process.env.DATABASE_URL);
-console.log("Enable flag:", process.env.ENABLE_PAYLOAD);
+console.log("Payload secret set:", !!process.env.PAYLOAD_SECRET);
+console.log("Disable flag:", process.env.DISABLE_PAYLOAD);
 ```
 
 ### Plugin Loading
@@ -309,7 +311,7 @@ console.log("Blob enabled:", process.env.NEXT_PUBLIC_FEATURE_VERCEL_BLOB_ENABLED
 When transitioning from local storage to Payload:
 
 1. Set `DATABASE_URL` environment variable
-2. Set `ENABLE_PAYLOAD=true`
+2. Set `PAYLOAD_SECRET` to a secure value
 3. Run database migrations
 4. Enable Payload features incrementally
 5. Import existing local storage data if needed

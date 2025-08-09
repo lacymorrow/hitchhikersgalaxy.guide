@@ -52,16 +52,16 @@ export function ResetPasswordForm({ token }: { token?: string }) {
 					toast.error("Error resetting password", {
 						description: error.message || "The password reset link is invalid or has expired.",
 					});
-				} else if (data && typeof data === "object" && "success" in data && data.success) {
+				} else if (data && typeof data === "object" && "ok" in data && (data as { ok: boolean }).ok) {
 					toast.success("Password reset successful", {
 						description: "You can now sign in with your new password.",
 					});
 					router.push(routes.auth.signIn);
 				}
-			} else if (result && typeof result === "object" && "success" in result) {
-				// If result is a direct object with success property
-				const typedResult = result as { success: boolean; error?: string };
-				if (typedResult.success) {
+			} else if (result && typeof result === "object" && "ok" in result) {
+				// If result is a direct object with ok property
+				const typedResult = result as { ok: boolean; error?: string };
+				if (typedResult.ok) {
 					toast.success("Password reset successful", {
 						description: "You can now sign in with your new password.",
 					});

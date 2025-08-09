@@ -57,6 +57,7 @@ export function CredentialsForm({ className }: CredentialsFormProps) {
 			});
 
 			// Check if the result is an error object from our server action
+			// todo: maybe could just be !result?.ok
 			if (result && typeof result === "object" && "error" in result && !result.ok) {
 				// Handle the error returned by the server action
 				let errorMessage = result.error;
@@ -72,6 +73,7 @@ export function CredentialsForm({ className }: CredentialsFormProps) {
 				return;
 			}
 
+			// todo: gemini is trying to remove this if {}
 			if (result?.error) {
 				// Handle specific error codes from NextAuth
 				if (result.error === "CredentialsSignin") {

@@ -121,7 +121,7 @@ interface LocalTeam {
 
 ### Required for Database Mode
 - `DATABASE_URL` - PostgreSQL connection string
-- `ENABLE_PAYLOAD` - Set to "true" to enable Payload CMS
+- `PAYLOAD_SECRET` - Secret key to enable Payload CMS (optional, can use `DISABLE_PAYLOAD=true` to disable)
 
 ### Optional Feature Flags
 - `NEXT_PUBLIC_FEATURE_S3_ENABLED` - Enable S3 storage

@@ -47,8 +47,8 @@ export const SignUpForm = () => {
 
 			const result = await signUpWithCredentialsAction({}, formData);
 
-			// Check if the sign-up was successful
-			if (result?.success) {
+			// Check if the sign-up was okful
+			if (result?.ok) {
 				toast.success("Account created successfully");
 				// Update the session before redirecting
 				await updateSession();

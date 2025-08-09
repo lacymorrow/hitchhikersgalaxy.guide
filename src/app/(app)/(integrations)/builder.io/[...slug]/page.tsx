@@ -2,8 +2,9 @@
 // You could alternatively use src/app/[...page]/page.tsx
 import { builder } from "@builder.io/sdk";
 import { env } from "@/env";
-import { RenderBuilderContent } from "./builder-io";
+import { RenderBuilderContent } from "@/lib/builder-io/builder-content";
 import "@/styles/builder-io.css";
+import { notFound } from "next/navigation";
 
 // Revalidate this page every 60 seconds
 export const revalidate = 60;
@@ -20,7 +21,7 @@ if (env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED && env.NEXT_PUBLIC_BUILDER_API_KEY) 
 
 export default async function Page(props: PageProps) {
 	if (!builder || !env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED || !env.NEXT_PUBLIC_BUILDER_API_KEY) {
-		return <div>Builder is not initialized</div>;
+		return notFound();
 	}
 
 	const model = "page";

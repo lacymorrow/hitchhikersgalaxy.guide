@@ -38,16 +38,16 @@ export function ForgotPasswordForm() {
 					toast.error("Error sending password reset email", {
 						description: error.message || "Please try again.",
 					});
-				} else if (data && typeof data === "object" && "success" in data && data.success) {
+				} else if (data && typeof data === "object" && "ok" in data && (data as { ok: boolean }).ok) {
 					toast.success("Email sent", {
 						description: "Please check your email for a link to reset your password.",
 					});
 					form.reset();
 				}
-			} else if (result && typeof result === "object" && "success" in result) {
-				// If result is a direct object with success property
-				const typedResult = result as { success: boolean; error?: string };
-				if (typedResult.success) {
+			} else if (result && typeof result === "object" && "ok" in result) {
+				// If result is a direct object with ok property
+				const typedResult = result as { ok: boolean; error?: string };
+				if (typedResult.ok) {
 					toast.success("Email sent", {
 						description: "Please check your email for a link to reset your password.",
 					});

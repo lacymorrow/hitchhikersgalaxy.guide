@@ -62,5 +62,6 @@
   },
   "[ignore]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
-  }
+  },
+  "kiroAgent.configureMCP": "Disabled"
 }

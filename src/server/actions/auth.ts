@@ -7,7 +7,11 @@ import { RESEND_FROM_EMAIL } from "@/config/constants";
 import { STATUS_CODES } from "@/config/status-codes";
 import { env } from "@/env";
 import { resend } from "@/lib/resend";
-import { forgotPasswordSchema, resetPasswordSchema, signInActionSchema } from "@/lib/schemas/auth";
+import {
+	forgotPasswordSchema,
+	resetPasswordSchema,
+	signInActionSchema,
+} from "@/lib/schemas/auth";
 import type { ActionState } from "@/lib/utils/validated-action";
 import { AuthService } from "@/server/services/auth-service";
 import type { UserRole } from "@/types/user";
@@ -58,7 +62,7 @@ export const signInWithCredentialsAction = async (input: SignInCredentialsInput)
 	const parsed = CredentialsSchema.safeParse(input);
 	if (!parsed.success) {
 		console.error("Invalid input to signInWithCredentialsAction:", parsed.error);
-		return { success: false, error: "Invalid input data" };
+		return { ok: false, error: "Invalid input data" };
 	}
 
 	const { email, password, redirect, redirectTo } = parsed.data;
@@ -70,16 +74,24 @@ export const signInWithCredentialsAction = async (input: SignInCredentialsInput)
 			redirect: redirect ?? false, // Use provided redirect, default to false
 			redirectTo,
 		});
-		return result;
+
+		if (!result.ok) {
+			return { ok: false, error: result.error ?? "Unknown sign-in error" };
+		}
+
+		return { ok: true, url: result.url };
 	} catch (error: any) {
 		console.error("Error in signInWithCredentialsAction:", error);
 
 		// Check if it's an AuthError from next-auth
-		if (error.type === "CredentialsSignin" || error.code === "CredentialsSignin") {
-			return { success: false, error: STATUS_CODES.CREDENTIALS.message };
+		if (
+			error.type === "CredentialsSignin" ||
+			error.code === "CredentialsSignin"
+		) {
+			return { ok: false, error: STATUS_CODES.CREDENTIALS.message };
 		}
 
-		return { success: false, error: error.message || "Sign in failed" };
+		return { ok: false, error: error.message || "Sign in failed" };
 	}
 };
 
@@ -87,29 +99,32 @@ export const signUpWithCredentialsAction = async (_prevState: ActionState, formD
 	const parsed = CredentialsSchema.safeParse(Object.fromEntries(formData));
 
 	if (!parsed.success) {
-		return { success: false, error: "Invalid form data" };
+		return { ok: false, error: "Invalid form data" };
 	}
 	try {
 		const result = await AuthService.signUpWithCredentials(parsed.data);
 
-		if (!result.success || !result.user) {
-			return { success: false, error: result.error || "Sign up failed" };
+		if (!result.ok || !result.user) {
+			return { ok: false, error: result.error || "Sign up failed" };
 		}
 
 		// Send verification email (moved from auth service for clarity)
 		try {
 			if (!resend) {
-				console.warn("Resend client not initialized - skipping verification email");
+				console.warn(
+					"Resend client not initialized - skipping verification email",
+				);
 			} else {
-				const RESEND_FROM_EMAIL = env.RESEND_FROM_EMAIL || "noreply@example.com";
+				const RESEND_FROM_EMAIL =
+					env.RESEND_FROM_EMAIL || "noreply@example.com";
 				await resend.emails.send({
 					from: RESEND_FROM_EMAIL,
 					to: parsed.data.email,
 					subject: "Welcome to Our App - Verify Your Email",
 					html: `
-            <p>Welcome! Please verify your email by clicking the link below:</p>
-            <a href="${BASE_URL}/verify-email?token=${result.user.verificationToken}">Verify Email</a>
-          `,
+						<p>Welcome! Please verify your email by clicking the link below:</p>
+						<a href="${BASE_URL}/verify-email?token=${result.user.verificationToken}">Verify Email</a>
+					`,
 				});
 			}
 		} catch (emailError) {
@@ -117,10 +132,10 @@ export const signUpWithCredentialsAction = async (_prevState: ActionState, formD
 			// Proceed with sign-up even if email fails, but log the error
 		}
 
-		return { success: true, user: result.user }; // Only return necessary info
+		return { ok: true, user: result.user }; // Only return necessary info
 	} catch (error: any) {
 		console.error("Error in signUpWithCredentialsAction:", error);
-		return { success: false, error: error.message || "Sign up failed" };
+		return { ok: false, error: error.message || "Sign up failed" };
 	}
 };
 
@@ -133,12 +148,15 @@ export const forgotPasswordAction = createServerAction()
 	.handler(async ({ input }) => {
 		try {
 			await AuthService.forgotPassword(input.email);
-			return { success: true };
+			return { ok: true };
 		} catch (error) {
 			console.error("Error in forgotPasswordAction:", error);
 			return {
-				success: false,
-				error: error instanceof Error ? error.message : STATUS_CODES.AUTH_ERROR.message,
+				ok: false,
+				error:
+					error instanceof Error
+						? error.message
+						: STATUS_CODES.AUTH_ERROR.message,
 			};
 		}
 	});
@@ -148,12 +166,15 @@ export const resetPasswordAction = createServerAction()
 	.handler(async ({ input }) => {
 		try {
 			await AuthService.resetPassword(input.token, input.password);
-			return { success: true };
+			return { ok: true };
 		} catch (error) {
 			console.error("Error in resetPasswordAction:", error);
 			return {
-				success: false,
-				error: error instanceof Error ? error.message : STATUS_CODES.AUTH_ERROR.message,
+				ok: false,
+				error:
+					error instanceof Error
+						? error.message
+						: STATUS_CODES.AUTH_ERROR.message,
 			};
 		}
 	});

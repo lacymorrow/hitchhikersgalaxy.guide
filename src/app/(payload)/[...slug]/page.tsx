@@ -6,7 +6,7 @@
  * ? Builder.io
  */
 
-import { RenderBuilderContent } from "@/app/(app)/(integrations)/builder.io/[...slug]/builder-io";
+import { RenderBuilderContent } from "@/lib/builder-io/builder-content";
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { env } from "@/env";
 import { getPayloadClient } from "@/lib/payload/payload";
@@ -168,14 +168,14 @@ export async function generateMetadata({
 			openGraph:
 				meta?.image && isMedia(meta.image) && meta.image.url
 					? {
-							images: [
-								{
-									url: meta.image.url,
-									width: 1200,
-									height: 630,
-								},
-							],
-						}
+						images: [
+							{
+								url: meta.image.url,
+								width: 1200,
+								height: 630,
+							},
+						],
+					}
 					: undefined,
 		};
 	}

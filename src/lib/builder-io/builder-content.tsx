@@ -1,4 +1,3 @@
-// components/builder.tsx
 "use client";
 import { BuilderComponent, useIsPreviewing } from "@builder.io/react";
 import { builder } from "@builder.io/sdk";

@@ -222,6 +222,12 @@ This document outlines a comprehensive audit plan for the Shipkit codebase to id
 4. **Test Thoroughly** - Ensure no regressions with each optimization
 
 ## 📝 Progress Log
+### Cleanup: Vercel deploy example consolidation
+
+- [x] Removed example route and page `src/app/(app)/examples/vercel-deploy/page.tsx` now that deployment is integrated into the dashboard.
+- [x] Removed unused buttons: `src/components/deploy/private-repo-deploy-button.tsx` and `src/components/buttons/vercel-deploy-button.tsx`.
+- [x] Removed `routes.examples.vercelDeploy` and updated navigation `src/components/search/example.ts` to point to `routes.app.deployments`.
+- Result: Single source of truth for deployment via dashboard components (`DashboardVercelDeploy`, `VercelDeployButton`).
 
 _Use this section to track completion of each phase with date and summary_
 

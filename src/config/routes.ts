@@ -120,7 +120,6 @@ export const routes = {
 		authentication: "/examples/authentication",
 		notifications: "/examples/forms/notifications",
 		profile: "/examples/forms/profile",
-		vercelDeploy: "/examples/vercel-deploy",
 	},
 
 	// Pages Router demo routes

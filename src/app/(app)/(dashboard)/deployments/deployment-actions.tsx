@@ -59,6 +59,7 @@ export function DeploymentActions({ deployment }: DeploymentActionsProps) {
 						target="_blank"
 						rel="noopener noreferrer"
 						className="flex items-center gap-1"
+						data-testid="deployment-actions-vercel-project"
 					>
 						<ExternalLink className="h-3 w-3" />
 						View on Vercel
@@ -68,7 +69,12 @@ export function DeploymentActions({ deployment }: DeploymentActionsProps) {
 
 			<DropdownMenu>
 				<DropdownMenuTrigger asChild>
-					<Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+					<Button
+						variant="ghost"
+						size="sm"
+						className="h-8 w-8 p-0"
+						data-testid="deployment-actions-trigger"
+					>
 						<span className="sr-only">Open menu</span>
 						<MoreHorizontal className="h-4 w-4" />
 					</Button>
@@ -78,7 +84,7 @@ export function DeploymentActions({ deployment }: DeploymentActionsProps) {
 					<DropdownMenuSeparator />
 
 					{deployment.vercelDeploymentUrl && (
-						<DropdownMenuItem asChild>
+						<DropdownMenuItem asChild data-testid="deployment-actions-view-deployment">
 							<a
 								href={deployment.vercelDeploymentUrl}
 								target="_blank"
@@ -86,13 +92,13 @@ export function DeploymentActions({ deployment }: DeploymentActionsProps) {
 								className="flex items-center gap-2"
 							>
 								<ExternalLink className="h-3 w-3" />
-								Visit Site
+								View Deployment
 							</a>
 						</DropdownMenuItem>
 					)}
 
 					{deployment.githubRepoUrl && (
-						<DropdownMenuItem asChild>
+						<DropdownMenuItem asChild data-testid="deployment-actions-view-github">
 							<a
 								href={deployment.githubRepoUrl}
 								target="_blank"
@@ -112,9 +118,10 @@ export function DeploymentActions({ deployment }: DeploymentActionsProps) {
 					<DropdownMenuItem
 						onClick={() => setDeleteDialogOpen(true)}
 						className="text-red-600 focus:text-red-600"
+						data-testid="deployment-actions-delete"
 					>
 						<Trash2 className="h-3 w-3 mr-2" />
-						Delete Record
+						Delete
 					</DropdownMenuItem>
 				</DropdownMenuContent>
 			</DropdownMenu>
@@ -134,6 +141,7 @@ export function DeploymentActions({ deployment }: DeploymentActionsProps) {
 							onClick={handleDeleteDeployment}
 							disabled={isDeleting}
 							className="bg-red-600 hover:bg-red-700"
+							data-testid="deployment-actions-confirm-delete"
 						>
 							{isDeleting ? "Deleting..." : "Delete"}
 						</AlertDialogAction>

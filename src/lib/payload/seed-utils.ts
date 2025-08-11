@@ -63,7 +63,7 @@ const defaultRoles = [
 ] as const;
 
 // Helper function to create rich text content
-const createRichText = (text: string) => ({
+export const createRichText = (text: string) => ({
 	root: {
 		type: "root" as const,
 		children: [

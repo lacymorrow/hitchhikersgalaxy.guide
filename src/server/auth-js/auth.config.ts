@@ -251,15 +251,24 @@ export const authOptions: NextAuthConfig = {
 				session.user.id = token.id as string;
 				session.user.name = token.name as string | null;
 				session.user.email = token.email ?? "";
-				session.user.emailVerified = token.emailVerified as Date | null;
+				// Normalize dates coming from JWT (which serializes Dates to ISO strings)
+				session.user.emailVerified = token.emailVerified
+					? new Date(token.emailVerified as unknown as string | number | Date)
+					: null;
 				session.user.image = (token.image as string | null) ?? session.user.image ?? null;
 				session.user.role = token.role as import("@/types/user").UserRole;
 				session.user.theme = token.theme as "light" | "dark" | "system" | undefined;
 				session.user.bio = token.bio as string | null;
 				session.user.githubUsername = token.githubUsername as string | null;
-				session.user.vercelConnectionAttemptedAt = token.vercelConnectionAttemptedAt as Date | null;
-				session.user.createdAt = token.createdAt as Date | undefined;
-				session.user.updatedAt = token.updatedAt as Date | undefined;
+				session.user.vercelConnectionAttemptedAt = token.vercelConnectionAttemptedAt
+					? new Date(token.vercelConnectionAttemptedAt as unknown as string | number | Date)
+					: null;
+				session.user.createdAt = token.createdAt
+					? new Date(token.createdAt as unknown as string | number | Date)
+					: undefined;
+				session.user.updatedAt = token.updatedAt
+					? new Date(token.updatedAt as unknown as string | number | Date)
+					: undefined;
 				session.user.metadata = token.metadata as string | null;
 				session.user.isGuest = token.isGuest as boolean | undefined;
 				session.user.accounts = token.accounts as {

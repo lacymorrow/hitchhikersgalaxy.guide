@@ -120,6 +120,11 @@ export const authOptions: NextAuthConfig = {
 				token.id = user.id;
 				token.name = user.name;
 				token.email = user.email;
+				// Ensure avatar and other optional properties are persisted on JWT sessions
+				if ("image" in user) token.image = (user as any).image as string | null;
+				if ("role" in user) token.role = (user as any).role as any;
+				if ("createdAt" in user) token.createdAt = (user as any).createdAt as Date | undefined;
+				if ("updatedAt" in user) token.updatedAt = (user as any).updatedAt as Date | undefined;
 
 				// Mark as guest user if the account provider is guest
 				if (account?.provider === "guest") {
@@ -241,12 +246,13 @@ export const authOptions: NextAuthConfig = {
 			return token;
 		},
 		async session({ session, token, user }) {
-			if (token) {
+			// Map from JWT token when present (JWT strategy)
+			if (token && (token as any).id) {
 				session.user.id = token.id as string;
 				session.user.name = token.name as string | null;
 				session.user.email = token.email ?? "";
 				session.user.emailVerified = token.emailVerified as Date | null;
-				session.user.image = token.image as string | null;
+				session.user.image = (token.image as string | null) ?? session.user.image ?? null;
 				session.user.role = token.role as import("@/types/user").UserRole;
 				session.user.theme = token.theme as "light" | "dark" | "system" | undefined;
 				session.user.bio = token.bio as string | null;
@@ -263,6 +269,22 @@ export const authOptions: NextAuthConfig = {
 				if (token.payloadToken && typeof token.payloadToken === "string" && !token.isGuest) {
 					session.user.payloadToken = token.payloadToken;
 				}
+			}
+
+			// When using database session strategy, populate from the database user
+			if ((!token || !(token as any).id) && user) {
+				session.user.id = (user as any).id as string;
+				session.user.name = (user as any).name as string | null;
+				session.user.email = ((user as any).email as string | null) ?? "";
+				session.user.emailVerified = ((user as any).emailVerified as Date | null) ?? null;
+				session.user.image = ((user as any).image as string | null) ?? null;
+				session.user.role = ((user as any).role as import("@/types/user").UserRole) ?? session.user.role;
+				session.user.theme = ((user as any).theme as "light" | "dark" | "system" | undefined) ?? session.user.theme;
+				session.user.bio = ((user as any).bio as string | null) ?? session.user.bio;
+				session.user.githubUsername = ((user as any).githubUsername as string | null) ?? session.user.githubUsername;
+				session.user.createdAt = ((user as any).createdAt as Date | undefined) ?? session.user.createdAt;
+				session.user.updatedAt = ((user as any).updatedAt as Date | undefined) ?? session.user.updatedAt;
+				// Accounts will be fetched below
 			}
 
 			// If token didn't have accounts and we have a user from database, fetch accounts

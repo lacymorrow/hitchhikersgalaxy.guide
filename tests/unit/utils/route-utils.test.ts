@@ -117,9 +117,9 @@ describe("route-utils", () => {
 			expect(() => rx("home.invalidPart" as any)).toThrow(); // Adjust error message based on actual behavior
 		});
 
-    it.skip("should handle deeply nested paths", () => {
-      expect(rx("examples.forms.notifications")).toBe("/examples/forms/notifications");
-    });
+		it.skip("should handle deeply nested paths", () => {
+			expect(rx("examples.forms.notifications")).toBe("/examples/forms/notifications");
+		});
 	});
 
 	// Add tests for `rx` function later if needed

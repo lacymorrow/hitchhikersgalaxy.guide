@@ -30,8 +30,8 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"), // Resolve @/* imports to src/*
-      // Alias next/server to a test shim to avoid ESM resolution issues in next-auth during unit tests
-      "next/server": path.resolve(__dirname, "./tests/shims/next-server.ts"),
+			// Alias next/server to a test shim to avoid ESM resolution issues in next-auth during unit tests
+			"next/server": path.resolve(__dirname, "./tests/shims/next-server.ts"),
 		},
 	},
 	test: {
@@ -42,10 +42,10 @@ export default defineConfig({
 			"./tests/setup.ts", // Testing utilities and global setup
 		],
 		include: ["tests/unit/**/*.test.{ts,tsx}"], // Only unit tests in this config
-    exclude: [
-      // Exclude brittle suite that imports next-auth env and requires real Next runtime
-      "tests/unit/server/actions/deploy-private-repo.test.ts",
-    ],
+		exclude: [
+			// Exclude brittle suite that imports next-auth env and requires real Next runtime
+			"tests/unit/server/actions/deploy-private-repo.test.ts",
+		],
 		watch: false, // Disable watch mode for CI/CD compatibility
 		coverage: {
 			provider: "v8", // Fast coverage provider

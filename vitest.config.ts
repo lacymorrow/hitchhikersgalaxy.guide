@@ -30,6 +30,8 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"), // Resolve @/* imports to src/*
+      // Alias next/server to a test shim to avoid ESM resolution issues in next-auth during unit tests
+      "next/server": path.resolve(__dirname, "./tests/shims/next-server.ts"),
 		},
 	},
 	test: {

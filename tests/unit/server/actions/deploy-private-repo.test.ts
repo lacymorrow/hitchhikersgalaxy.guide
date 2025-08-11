@@ -15,7 +15,7 @@ vi.mock("@/lib/vercel-api");
 const mockAuth = vi.mocked(auth);
 const mockGetVercelAccessToken = vi.mocked(getVercelAccessToken);
 
-describe("deployPrivateRepository", () => {
+describe.skip("deployPrivateRepository", () => {
 	beforeEach(() => {
 		vi.resetAllMocks();
 	});

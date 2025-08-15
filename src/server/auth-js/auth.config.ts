@@ -123,8 +123,15 @@ export const authOptions: NextAuthConfig = {
 				// Ensure avatar and other optional properties are persisted on JWT sessions
 				if ("image" in user) token.image = (user as any).image as string | null;
 				if ("role" in user) token.role = (user as any).role as any;
-				if ("createdAt" in user) token.createdAt = (user as any).createdAt as Date | undefined;
-				if ("updatedAt" in user) token.updatedAt = (user as any).updatedAt as Date | undefined;
+				// Store dates in JWT as ISO strings to avoid Date type mismatch after serialization
+if ("createdAt" in user)
+	token.createdAt = (user as any).createdAt
+		? new Date((user as any).createdAt as any).toISOString()
+		: undefined;
+				if ("updatedAt" in user)
+	token.updatedAt = (user as any).updatedAt
+		? new Date((user as any).updatedAt as any).toISOString()
+		: undefined;
 
 				// Mark as guest user if the account provider is guest
 				if (account?.provider === "guest") {
@@ -135,9 +142,14 @@ export const authOptions: NextAuthConfig = {
 				if ("bio" in user) token.bio = user.bio as string | null;
 				if ("githubUsername" in user) token.githubUsername = user.githubUsername as string | null;
 				if ("theme" in user) token.theme = user.theme as "light" | "dark" | "system" | undefined;
-				if ("emailVerified" in user) token.emailVerified = user.emailVerified as Date | null;
+				if ("emailVerified" in user)
+	token.emailVerified = user.emailVerified
+		? new Date(user.emailVerified as any).toISOString()
+		: null;
 				if ("vercelConnectionAttemptedAt" in user)
-					token.vercelConnectionAttemptedAt = user.vercelConnectionAttemptedAt as Date | null;
+					token.vercelConnectionAttemptedAt = (user as any).vercelConnectionAttemptedAt
+						? new Date((user as any).vercelConnectionAttemptedAt as any).toISOString()
+						: null;
 
 				// Store Payload CMS token if available (not for guest users)
 				if ("payloadToken" in user && typeof user.payloadToken === "string" && !token.isGuest) {
@@ -241,7 +253,9 @@ export const authOptions: NextAuthConfig = {
 				if (session.payloadToken && typeof session.payloadToken === "string")
 					token.payloadToken = session.payloadToken;
 				if (session.vercelConnectionAttemptedAt)
-					token.vercelConnectionAttemptedAt = session.vercelConnectionAttemptedAt;
+					token.vercelConnectionAttemptedAt = new Date(
+						session.vercelConnectionAttemptedAt as any,
+					).toISOString();
 			}
 			return token;
 		},

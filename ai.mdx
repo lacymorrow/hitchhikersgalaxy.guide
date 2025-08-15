@@ -234,6 +234,12 @@ _Use this section to track completion of each phase with date and summary_
   - For `redirect: false`, evaluate the result object (`ok`, `error`, `url`) and report failures correctly.
   - Ensures failed authentication/sign-up attempts are not reported as successful.
 
+### Bugfix: Graceful auth fallback when providers/DB are disabled
+
+- [x] Implemented safe JSON responses when authentication is not configured.
+  - Updated `src/server/auth.ts` to return a structured JSON error (`503 Service Unavailable`) from `GET` and `POST` handlers when `AUTH_ENABLED` is false.
+  - Prevents "Unexpected end of JSON input" errors by avoiding empty handler responses.
+
 ## 🚀 Current Implementation: Blog/TOC System Improvements
 
 ### Phase 5: Blog & Table of Contents Enhancements
@@ -471,3 +477,13 @@ _Use this section to track completion of each phase with date and summary_
 ---
 
 **Next Steps**: Begin with Client Components Audit (Phase 1.1) - Review use of `"use client"` directive across the codebase.
+
+### Task: Refactor Onboarding Flow to IntroDisclosure
+
+- [x] Done — Replaced custom onboarding modal with `IntroDisclosure`-based flow.
+  - Integrated steps for GitHub connect, Vercel connect, and Deploy.
+  - Kept localStorage key `onboarding-<userId>` with `completed`, `currentStep`, and `steps` map.
+  - Added `render` to `IntroDisclosure` steps API plus `initialStep` and `onStepChange` to sync state.
+  - Updated `src/app/(app)/(dashboard)/_components/onboarding-wizard.tsx` to compose steps via `IntroDisclosure`.
+  - Left `OnboardingCheck` API as-is; it now renders the new wizard implementation.
+  - No breaking changes to dashboard page usage.

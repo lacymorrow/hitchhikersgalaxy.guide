@@ -3,6 +3,8 @@
 import Link from "next/link";
 import { type ComponentPropsWithoutRef, type ReactNode, Suspense } from "react";
 import { OAuthButtons } from "@/app/(app)/(authentication)/_components/oauth-buttons";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { env } from "@/env";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import {
 	CardContent,
@@ -14,7 +16,7 @@ import {
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { isGuestOnlyMode } from "@/server/auth-js/auth-providers-utils";
+// Compute guest-only mode on the client using build-time flags to avoid importing server code
 
 interface AuthFormProps extends ComponentPropsWithoutRef<"div"> {
 	mode: "sign-in" | "sign-up";
@@ -56,22 +58,35 @@ export function AuthForm({
 	 * Hide the sign-up link when in guest-only mode since users can create their own names
 	 * without traditional authentication methods
 	 */
-	const shouldShowAlternateLink = !isGuestOnlyMode;
+	const isGuestOnlyMode = !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
+	const shouldShowAlternateLink = !isGuestOnlyMode && !!env.NEXT_PUBLIC_FEATURE_AUTH_ENABLED;
+	const hasAnyAuthEnabled = env.NEXT_PUBLIC_FEATURE_AUTH_ENABLED;
+	const showAuthUnavailable = !isGuestOnlyMode && !hasAnyAuthEnabled;
 
 	return (
 		<div className={cn("flex flex-col gap-6 overflow-y-auto", className)} {...props}>
 			{withHeader && (
 				<CardHeader className="text-center">
 					<CardTitle className="text-xl">{cardTitle}</CardTitle>
-					<CardDescription>{cardDescription}</CardDescription>
+					{!showAuthUnavailable && <CardDescription>{cardDescription}</CardDescription>}
 				</CardHeader>
 			)}
 			<CardContent className="pb-0">
 				<div className="grid gap-6 relative">
-					<OAuthButtons collapsible variant="icons" />
+					{showAuthUnavailable && (
+						<div className="text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
+							<span aria-hidden="true">&gt;</span>
+							<span>Login and sign-up are not available at this time.</span>
+						</div>
+					)}
 
-					<Suspense fallback={<SuspenseFallback />}>{children}</Suspense>
-					{shouldShowAlternateLink && (
+					{!showAuthUnavailable && (
+						<>
+							<OAuthButtons collapsible variant="icons" />
+							<Suspense fallback={<SuspenseFallback />}>{children}</Suspense>
+						</>
+					)}
+					{shouldShowAlternateLink && !showAuthUnavailable && (
 						<div className="text-center text-sm">
 							{alternateLink.text}{" "}
 							<Link href={alternateLink.href} className="underline underline-offset-4">

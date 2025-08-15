@@ -77,7 +77,37 @@ const {
 		})
 		: {
 			auth: () => Promise.resolve(null),
-			handlers: { GET: () => { }, POST: () => { } },
+			handlers: {
+				GET: async (request: Request) => {
+					const url = new URL(request.url);
+					const path = url.pathname;
+					if (path.includes("/auth/session")) {
+						// Gracefully indicate no active session when auth is disabled
+						return Response.json(null, { status: 200 });
+					}
+					return Response.json(
+						{
+							ok: false,
+							error: "AUTH_DISABLED",
+							message:
+								"Authentication is not configured. Add database and/or auth provider environment variables to enable sign-in.",
+							docs: "https://errors.authjs.dev#autherror",
+						},
+						{ status: 503 },
+					);
+				},
+				POST: async () =>
+					Response.json(
+						{
+							ok: false,
+							error: "AUTH_DISABLED",
+							message:
+								"Authentication is not configured. Add database and/or auth provider environment variables to enable sign-in.",
+							docs: "https://errors.authjs.dev#autherror",
+						},
+						{ status: 503 },
+					),
+			},
 			signIn: () => Promise.resolve(),
 			signOut: () => Promise.resolve(),
 			unstable_update: () => Promise.resolve({} as any),

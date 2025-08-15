@@ -20,7 +20,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Separator } from "@/components/ui/separator";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { env } from "@/env";
-import { isGuestOnlyMode } from "@/server/auth-js/auth-providers-utils";
 
 interface FeatureConfig {
 	name: string;
@@ -46,13 +45,13 @@ const features: FeatureConfig[] = [
 	},
 	{
 		name: "Authentication",
-		description: "Multi-provider authentication with NextAuth.js",
+		description: "Multi-provider authentication",
 		icon: Shield,
 		category: "auth",
 		envVar: "NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED",
-		isEnabled: !isGuestOnlyMode,
+		isEnabled: !!env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED,
 		setupGuide: "/docs/auth",
-		dependencies: ["NEXTAUTH_SECRET", "GITHUB_ID", "GITHUB_SECRET"],
+		dependencies: ["AUTH_SECRET", "AUTH_GITHUB_ID", "AUTH_GITHUB_SECRET"],
 	},
 	{
 		name: "Payload CMS",

@@ -74,6 +74,8 @@ buildTimeFeatures.AUTH_TWITTER_ENABLED =
 	hasEnv("AUTH_TWITTER_ID", "AUTH_TWITTER_SECRET") && !envIsTrue("DISABLE_AUTH_TWITTER");
 buildTimeFeatures.AUTH_VERCEL_ENABLED =
 	hasEnv("VERCEL_CLIENT_ID", "VERCEL_CLIENT_SECRET") && !envIsTrue("DISABLE_AUTH_VERCEL");
+// Explicit Guest Auth toggle (no secrets required)
+buildTimeFeatures.AUTH_GUEST_ENABLED = envIsTrue("ENABLE_AUTH_GUEST");
 buildTimeFeatures.SUPABASE_AUTH_ENABLED =
 	hasEnv("NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_ANON_KEY") &&
 	!envIsTrue("DISABLE_SUPABASE_AUTH");
@@ -89,6 +91,22 @@ buildTimeFeatures.AUTH_JS_ENABLED =
 	buildTimeFeatures.AUTH_VERCEL_ENABLED;
 buildTimeFeatures.AUTH_ENABLED =
 	buildTimeFeatures.AUTH_JS_ENABLED ||
+	buildTimeFeatures.BETTER_AUTH_ENABLED ||
+	buildTimeFeatures.AUTH_CLERK_ENABLED ||
+	buildTimeFeatures.AUTH_STACK_ENABLED ||
+	buildTimeFeatures.SUPABASE_AUTH_ENABLED ||
+	buildTimeFeatures.AUTH_GUEST_ENABLED;
+
+// Any real auth methods available (excludes guest and vercel account linking)
+buildTimeFeatures.AUTH_METHODS_ENABLED =
+	buildTimeFeatures.AUTH_CREDENTIALS_ENABLED ||
+	buildTimeFeatures.AUTH_RESEND_ENABLED ||
+	buildTimeFeatures.AUTH_BITBUCKET_ENABLED ||
+	buildTimeFeatures.AUTH_DISCORD_ENABLED ||
+	buildTimeFeatures.AUTH_GITHUB_ENABLED ||
+	buildTimeFeatures.AUTH_GITLAB_ENABLED ||
+	buildTimeFeatures.AUTH_GOOGLE_ENABLED ||
+	buildTimeFeatures.AUTH_TWITTER_ENABLED ||
 	buildTimeFeatures.BETTER_AUTH_ENABLED ||
 	buildTimeFeatures.AUTH_CLERK_ENABLED ||
 	buildTimeFeatures.AUTH_STACK_ENABLED ||
@@ -158,3 +176,13 @@ export const buildTimeFeatureFlags = Object.fromEntries(
 		.filter(([, enabled]) => enabled)
 		.map(([key]) => [`NEXT_PUBLIC_FEATURE_${key}`, "true"])
 ) as Record<`NEXT_PUBLIC_FEATURE_${string}`, string>;
+
+// Always export AUTH_ENABLED regardless of its value for client-side checks
+if (!buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_ENABLED) {
+	buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_ENABLED = buildTimeFeatures.AUTH_ENABLED ? "true" : "false";
+}
+
+// Always export AUTH_METHODS_ENABLED regardless of its value (used client-side)
+if (!buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED) {
+	buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED = buildTimeFeatures.AUTH_METHODS_ENABLED ? "true" : "false";
+}

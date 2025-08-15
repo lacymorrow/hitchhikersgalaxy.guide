@@ -14,7 +14,7 @@ import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { env } from "@/env";
 import { cn } from "@/lib/utils";
 import { signInWithOAuthAction } from "@/server/actions/auth";
-import { enabledAuthProviders, isGuestOnlyMode } from "@/server/auth-js/auth-providers-utils";
+// Compute enabled providers client-side from build-time flags
 import { MagicLinkForm } from "./magic-link-form";
 
 const oauthButtonVariants = cva("flex items-center justify-center gap-sm", {
@@ -60,8 +60,17 @@ export function OAuthButtons({
 		setCurrentVariant(currentVariant === "default" ? "icons" : "default");
 	};
 
-	// Filter out guest provider as it needs special handling
-	const oauthProviders = enabledAuthProviders.filter((provider) => provider.id !== "guest");
+	// Guest-only mode when guest is allowed but no other methods are enabled
+	const isGuestOnlyMode = !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
+
+	// Build list of enabled OAuth providers (exclude guest, vercel, credentials, resend)
+	const oauthProviders: Provider[] = [];
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED) oauthProviders.push({ id: "google", name: "Google" });
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED) oauthProviders.push({ id: "twitter", name: "Twitter" });
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED) oauthProviders.push({ id: "discord", name: "Discord" });
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED) oauthProviders.push({ id: "github", name: "GitHub" });
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_GITLAB_ENABLED) oauthProviders.push({ id: "gitlab", name: "GitLab" });
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_BITBUCKET_ENABLED) oauthProviders.push({ id: "bitbucket", name: "Bitbucket" });
 
 	// Don't render OAuth buttons if in guest-only mode
 	if (isGuestOnlyMode) {
@@ -100,11 +109,7 @@ export function OAuthButtons({
 				)}
 
 				{oauthProviders.map((provider) => {
-					const { id, name, isExcluded } = provider;
-
-					if (isExcluded) {
-						return null;
-					}
+					const { id, name } = provider;
 
 					const button = (
 						<Button

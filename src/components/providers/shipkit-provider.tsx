@@ -10,6 +10,7 @@ import { TRPCReactProvider } from "@/lib/trpc/react";
 
 import HolyLoader from "holy-loader";
 import { SessionProvider } from "next-auth/react";
+import { isAuthenticationAvailable } from "@/lib/auth/auth-strategy";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
 
@@ -32,6 +33,17 @@ interface ShipkitProviderProps {
  * Can be used in both App Router and Pages Router
  */
 export function ShipkitProvider({ children, session, pageProps }: ShipkitProviderProps) {
+	const authEnabled = isAuthenticationAvailable();
+	const sessionProviderProps = authEnabled
+		? { session }
+		: {
+			session: null,
+			refetchOnWindowFocus: false,
+			refetchInterval: 0,
+			refetchWhenOffline: false,
+			refetchOnMount: false,
+		};
+
 	return (
 		<>
 			<JsonLd organization website />
@@ -40,7 +52,7 @@ export function ShipkitProvider({ children, session, pageProps }: ShipkitProvide
 				height={"4px"}
 				color={"linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8)"}
 			/>
-			<SessionProvider session={session}>
+			<SessionProvider {...(sessionProviderProps as any)}>
 				<TRPCReactProvider {...pageProps}>
 					<TooltipProvider delayDuration={100}>
 						<AnalyticsProvider>

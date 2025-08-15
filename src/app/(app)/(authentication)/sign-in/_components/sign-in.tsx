@@ -3,10 +3,11 @@ import { CredentialsForm } from "@/app/(app)/(authentication)/_components/creden
 import { GuestForm } from "@/app/(app)/(authentication)/_components/guest-form";
 import { Divider } from "@/components/primitives/divider";
 import { env } from "@/env";
-import { isGuestOnlyMode } from "@/server/auth-js/auth-providers-utils";
+// Compute guest-only on server component via build flags
 
 export const SignIn = async () => {
 	// Special handling for guest-only mode
+	const isGuestOnlyMode = !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
 	if (isGuestOnlyMode) {
 		return (
 			<AuthForm

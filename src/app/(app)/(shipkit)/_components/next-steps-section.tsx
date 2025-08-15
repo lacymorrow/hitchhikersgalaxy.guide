@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { env } from "@/env";
-import { isGuestOnlyMode } from "@/server/auth-js/auth-providers-utils";
 
 interface NextStep {
 	title: string;
@@ -40,10 +39,10 @@ const nextSteps: NextStep[] = [
 	},
 	{
 		title: "Configure authentication",
-		description: "Set up OAuth providers for user sign-in",
+		description: "Set up authentication providers",
 		icon: Shield,
 		href: "/docs/auth",
-		isComplete: !isGuestOnlyMode,
+		isComplete: !!env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED,
 		estimatedTime: "10 min",
 		isOptional: true,
 	},
@@ -111,8 +110,8 @@ export function NextStepsSection() {
 					<Card
 						key={step.title}
 						className={`transition-all ${step.isComplete
-								? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
-								: "hover:shadow-md"
+							? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
+							: "hover:shadow-md"
 							}`}
 					>
 						<CardHeader className="pb-3">

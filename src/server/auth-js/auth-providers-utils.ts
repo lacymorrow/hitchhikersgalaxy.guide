@@ -37,9 +37,9 @@ const flagToProviderId: { [K in FeatureFlagKey]?: string } = {
 
 // Filter the details based on enabled features, preserving the order from allProviderDetails
 const enabledProviders = allProviderDetails.filter((provider) => {
-    // Guest provider is special - it's enabled when no other auth methods are available
+    // Guest provider is controlled by its own explicit flag
     if (provider.id === "guest") {
-        return false; // We'll handle this separately
+        return env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED;
     }
 
     // Find the flag corresponding to this provider ID
@@ -47,17 +47,17 @@ const enabledProviders = allProviderDetails.filter((provider) => {
         (key) => flagToProviderId[key as FeatureFlagKey] === provider.id
     ) as FeatureFlagKey | undefined;
 
-    // If a flag exists for this provider, check if it's true in the env
-    return flagName ? env[flagName] === true : false;
+    // If a flag exists for this provider, check if it's enabled in the env
+    return flagName ? !!env[flagName] : false;
 });
 
 // Check if any authentication methods are enabled (excluding vercel which is for account linking only)
-export const hasAuthMethods = enabledProviders.some((p) => p.id !== "vercel");
+export const hasAuthMethods = enabledProviders.some(
+    (p) => p.id !== "vercel" && p.id !== "guest",
+);
 
-// Add guest provider if no authentication methods are enabled
-export const availableProviderDetails = hasAuthMethods
-    ? enabledProviders
-    : [...enabledProviders, allProviderDetails.find((p) => p.id === "guest")!];
+// Available providers reflect explicit flags only
+export const availableProviderDetails = enabledProviders;
 
 // Export just the IDs of available providers for use in server/auth.providers.ts
 export const availableProviderIds = availableProviderDetails.map((p) => p.id);
@@ -84,5 +84,5 @@ export const enabledAuthProviders = availableProviderDetails.map((provider) => {
 }>;
 
 // Helper to check if only guest authentication is available
-// Guest-only mode means no actual authentication methods are available (vercel is for account linking only)
-export const isGuestOnlyMode = !hasAuthMethods;
+// Requires explicit guest flag AND no other authentication methods
+export const isGuestOnlyMode = env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !hasAuthMethods;

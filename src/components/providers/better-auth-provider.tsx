@@ -40,15 +40,15 @@ export function useBetterAuthProviders() {
 
 	const providers = [];
 
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED === true) {
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED) {
 		providers.push("google");
 	}
 
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED === true) {
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED) {
 		providers.push("github");
 	}
 
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED === true) {
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED) {
 		providers.push("discord");
 	}
 

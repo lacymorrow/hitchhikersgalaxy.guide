@@ -203,8 +203,8 @@ export const docsConfig: DocsConfig = {
 					items: [],
 				},
 				{
-					title: "Vercel Deploy",
-					href: routes.examples.vercelDeploy,
+					title: "Deployments",
+					href: routes.app.deployments,
 					items: [],
 				},
 			],

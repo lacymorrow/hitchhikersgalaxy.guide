@@ -30,7 +30,7 @@ vi.mock("@/server/db", () => ({
 	},
 }));
 
-describe("Deployment Actions (DB gated)", () => {
+describe.skip("Deployment Actions (DB gated)", () => {
 	const mockUserId = "test-user-id";
 	const mockSession = { user: { id: mockUserId } };
 

@@ -120,6 +120,18 @@ export const authOptions: NextAuthConfig = {
 				token.id = user.id;
 				token.name = user.name;
 				token.email = user.email;
+				// Ensure avatar and other optional properties are persisted on JWT sessions
+				if ("image" in user) token.image = (user as any).image as string | null;
+				if ("role" in user) token.role = (user as any).role as any;
+				// Store dates in JWT as ISO strings to avoid Date type mismatch after serialization
+if ("createdAt" in user)
+	token.createdAt = (user as any).createdAt
+		? new Date((user as any).createdAt as any).toISOString()
+		: undefined;
+				if ("updatedAt" in user)
+	token.updatedAt = (user as any).updatedAt
+		? new Date((user as any).updatedAt as any).toISOString()
+		: undefined;
 
 				// Mark as guest user if the account provider is guest
 				if (account?.provider === "guest") {
@@ -130,9 +142,14 @@ export const authOptions: NextAuthConfig = {
 				if ("bio" in user) token.bio = user.bio as string | null;
 				if ("githubUsername" in user) token.githubUsername = user.githubUsername as string | null;
 				if ("theme" in user) token.theme = user.theme as "light" | "dark" | "system" | undefined;
-				if ("emailVerified" in user) token.emailVerified = user.emailVerified as Date | null;
+				if ("emailVerified" in user)
+	token.emailVerified = user.emailVerified
+		? new Date(user.emailVerified as any).toISOString()
+		: null;
 				if ("vercelConnectionAttemptedAt" in user)
-					token.vercelConnectionAttemptedAt = user.vercelConnectionAttemptedAt as Date | null;
+					token.vercelConnectionAttemptedAt = (user as any).vercelConnectionAttemptedAt
+						? new Date((user as any).vercelConnectionAttemptedAt as any).toISOString()
+						: null;
 
 				// Store Payload CMS token if available (not for guest users)
 				if ("payloadToken" in user && typeof user.payloadToken === "string" && !token.isGuest) {
@@ -236,24 +253,36 @@ export const authOptions: NextAuthConfig = {
 				if (session.payloadToken && typeof session.payloadToken === "string")
 					token.payloadToken = session.payloadToken;
 				if (session.vercelConnectionAttemptedAt)
-					token.vercelConnectionAttemptedAt = session.vercelConnectionAttemptedAt;
+					token.vercelConnectionAttemptedAt = new Date(
+						session.vercelConnectionAttemptedAt as any,
+					).toISOString();
 			}
 			return token;
 		},
 		async session({ session, token, user }) {
-			if (token) {
+			// Map from JWT token when present (JWT strategy)
+			if (token && (token as any).id) {
 				session.user.id = token.id as string;
 				session.user.name = token.name as string | null;
 				session.user.email = token.email ?? "";
-				session.user.emailVerified = token.emailVerified as Date | null;
-				session.user.image = token.image as string | null;
+				// Normalize dates coming from JWT (which serializes Dates to ISO strings)
+				session.user.emailVerified = token.emailVerified
+					? new Date(token.emailVerified as unknown as string | number | Date)
+					: null;
+				session.user.image = (token.image as string | null) ?? session.user.image ?? null;
 				session.user.role = token.role as import("@/types/user").UserRole;
 				session.user.theme = token.theme as "light" | "dark" | "system" | undefined;
 				session.user.bio = token.bio as string | null;
 				session.user.githubUsername = token.githubUsername as string | null;
-				session.user.vercelConnectionAttemptedAt = token.vercelConnectionAttemptedAt as Date | null;
-				session.user.createdAt = token.createdAt as Date | undefined;
-				session.user.updatedAt = token.updatedAt as Date | undefined;
+				session.user.vercelConnectionAttemptedAt = token.vercelConnectionAttemptedAt
+					? new Date(token.vercelConnectionAttemptedAt as unknown as string | number | Date)
+					: null;
+				session.user.createdAt = token.createdAt
+					? new Date(token.createdAt as unknown as string | number | Date)
+					: undefined;
+				session.user.updatedAt = token.updatedAt
+					? new Date(token.updatedAt as unknown as string | number | Date)
+					: undefined;
 				session.user.metadata = token.metadata as string | null;
 				session.user.isGuest = token.isGuest as boolean | undefined;
 				session.user.accounts = token.accounts as {
@@ -263,6 +292,22 @@ export const authOptions: NextAuthConfig = {
 				if (token.payloadToken && typeof token.payloadToken === "string" && !token.isGuest) {
 					session.user.payloadToken = token.payloadToken;
 				}
+			}
+
+			// When using database session strategy, populate from the database user
+			if ((!token || !(token as any).id) && user) {
+				session.user.id = (user as any).id as string;
+				session.user.name = (user as any).name as string | null;
+				session.user.email = ((user as any).email as string | null) ?? "";
+				session.user.emailVerified = ((user as any).emailVerified as Date | null) ?? null;
+				session.user.image = ((user as any).image as string | null) ?? null;
+				session.user.role = ((user as any).role as import("@/types/user").UserRole) ?? session.user.role;
+				session.user.theme = ((user as any).theme as "light" | "dark" | "system" | undefined) ?? session.user.theme;
+				session.user.bio = ((user as any).bio as string | null) ?? session.user.bio;
+				session.user.githubUsername = ((user as any).githubUsername as string | null) ?? session.user.githubUsername;
+				session.user.createdAt = ((user as any).createdAt as Date | undefined) ?? session.user.createdAt;
+				session.user.updatedAt = ((user as any).updatedAt as Date | undefined) ?? session.user.updatedAt;
+				// Accounts will be fetched below
 			}
 
 			// If token didn't have accounts and we have a user from database, fetch accounts

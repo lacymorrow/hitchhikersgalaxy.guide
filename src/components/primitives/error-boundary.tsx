@@ -11,10 +11,10 @@ import { redirectWithCode } from "@/lib/utils/redirect-with-code";
 
 export default function ErrorBoundary({
 	error,
-	resetAction,
+	reset,
 }: {
 	error: Error & { digest?: string };
-	resetAction: () => void;
+	reset: () => void;
 }) {
 	const signInRedirectUrl = useSignInRedirectUrl();
 
@@ -33,7 +33,7 @@ export default function ErrorBoundary({
 
 	return (
 		<Boundary title="Something went wrong." description={error.message}>
-			<Button type="button" onClick={resetAction}>
+			<Button type="button" onClick={reset}>
 				Try again
 			</Button>
 		</Boundary>

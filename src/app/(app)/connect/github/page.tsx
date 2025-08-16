@@ -5,7 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { Icons } from "@/components/assets/icons";
-import { GitHubConnectDialog } from "@/components/buttons/github-connect-dialog";
+import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
 import { buttonVariants } from "@/components/ui/button";
 import {
 	Card,
@@ -154,7 +154,7 @@ export default function GitHubConnectPage() {
 							<div className="flex flex-col items-center justify-center space-y-4">
 								<Icons.github className="h-16 w-16" />
 								<p className="text-center">Connect your GitHub account to get started</p>
-								<GitHubConnectDialog className="w-full" />
+								<GitHubConnectButton className="w-full" />
 							</div>
 						)}
 					</CardContent>

@@ -227,6 +227,15 @@ _Use this section to track completion of each phase with date and summary_
 
 ---
 
+### UX Consistency: Unified Error Pages UI
+
+- [x] Standardized all error pages to reuse the shared `Boundary` component for cohesive design and maintainability.
+  - Updated `src/app/(app)/(authentication)/error/page.tsx` to use `Boundary` with consistent title, description, and primary action.
+  - Ensured `src/app/(app)/error.tsx` reuses the shared error boundary via re-export.
+  - Simplified `src/app/(app)/global-error.tsx` to use `Boundary` with the standard action and copy, aligning with app error UI.
+
+---
+
 ### Bugfix: NextAuth credential flows
 
 - [x] Fixed logic in `src/server/services/auth-service.ts` for `signInWithCredentials` and `signUpWithCredentials` to properly handle NextAuth `signIn` behavior.
@@ -487,3 +496,11 @@ _Use this section to track completion of each phase with date and summary_
   - Updated `src/app/(app)/(dashboard)/_components/onboarding-wizard.tsx` to compose steps via `IntroDisclosure`.
   - Left `OnboardingCheck` API as-is; it now renders the new wizard implementation.
   - No breaking changes to dashboard page usage.
+
+### Task: GitHub Connect UX — Unify Button with Dialog Logic
+
+- [x] Updated `src/components/buttons/github-connect-button.tsx` to embed the same dialog flow as `GitHubConnectDialog`.
+  - Replaced OAuth `signIn("github")` flow with manual username-based connect via `updateGitHubUsername`.
+  - Added dialog UI with input, validation, loading states, and success/error toasts.
+  - Preserved connected state UI (View Repository + Disconnect) and wired `disconnectGitHub` with session refresh.
+  - Prefills username on open; disables when unauthenticated or loading.

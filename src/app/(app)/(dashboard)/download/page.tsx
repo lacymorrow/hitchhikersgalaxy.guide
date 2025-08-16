@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import type { Session } from "next-auth";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
-import { GitHubConnectDialog } from "@/components/buttons/github-connect-dialog";
+// Removed GitHubConnectDialog in favor of GitHubConnectButton
 import { Link } from "@/components/primitives/link-with-transition";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -157,9 +157,9 @@ function StatusCard({ downloadState }: { downloadState: DownloadState }) {
 			className={cn(
 				"border-2",
 				status === "success" &&
-					"border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950",
+				"border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950",
 				status === "warning" &&
-					"border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950",
+				"border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950",
 				status === "error" && "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950"
 			)}
 		>
@@ -279,7 +279,7 @@ function GitHubAccessCard({ downloadState }: { downloadState: DownloadState }) {
 			<CardFooter>
 				<div className="w-full space-y-3">
 					{isEnabled ? (
-						<GitHubConnectDialog size="lg" />
+						<GitHubConnectButton />
 					) : (
 						<Button disabled className="w-full">
 							<GitBranchIcon className="mr-2 h-4 w-4" />

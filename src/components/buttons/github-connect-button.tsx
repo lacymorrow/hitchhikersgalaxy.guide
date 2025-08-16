@@ -1,19 +1,28 @@
 "use client";
 
-import { usePathname } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Icons } from "@/components/assets/icons";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { routes } from "@/config/routes";
-import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { siteConfig } from "@/config/site-config";
-import { STATUS_CODES } from "@/config/status-codes";
 import { cn } from "@/lib/utils";
-import { disconnectGitHub } from "@/server/actions/github";
+import { disconnectGitHub, updateGitHubUsername } from "@/server/actions/github";
 
 interface GitHubSession {
 	user: {
@@ -24,27 +33,51 @@ interface GitHubSession {
 }
 
 export const GitHubConnectButton = ({ className }: { className?: string }) => {
-	const pathname = usePathname();
-	const { data: session, update: updateSession } = useSession();
+	const router = useRouter();
+	const { data: session, update: updateSession, status } = useSession();
 	const [isLoading, setIsLoading] = useState(false);
+	const [dialogOpen, setDialogOpen] = useState(false);
+	const [usernameInput, setUsernameInput] = useState("");
 	const user = (session as GitHubSession)?.user;
 	const githubUsername = user?.githubUsername;
 	const isConnected = !!githubUsername;
+	const isAuthenticated = status === "authenticated";
+
+	// Prefill input with current username when opening dialog
+	useEffect(() => {
+		if (dialogOpen) {
+			setUsernameInput(githubUsername || "");
+		}
+	}, [dialogOpen, githubUsername]);
 
 	const handleConnect = async () => {
+		if (!user?.id || !usernameInput.trim()) return;
+		if (isConnected && usernameInput.trim() === githubUsername) {
+			toast.info("GitHub username is already set to this value.");
+			setDialogOpen(false);
+			return;
+		}
+
+		setIsLoading(true);
 		try {
-			setIsLoading(true);
-			// Use GitHub OAuth to connect account
-			await signIn("github", {
-				callbackUrl: `${routes.githubConnect}?${SEARCH_PARAM_KEYS.nextUrl}=${pathname}&${SEARCH_PARAM_KEYS.statusCode}=${STATUS_CODES.CONNECT_GITHUB.code}`,
-				redirect: true,
-				// The connection status will be determined from the callback URL
-				// since custom parameters can't be reliably passed through OAuth flow
-			});
-			// Note: The OAuth flow will redirect, so we won't reach this point until after the user returns
+			const result = await updateGitHubUsername(usernameInput.trim());
+			if (result.success) {
+				toast.success(
+					`GitHub username ${isConnected ? "updated to" : "set to"}: ${result.githubUsername}`
+				);
+				// Refresh client session and current route to update both client and server components
+				await updateSession({ force: true });
+				router.refresh();
+				setDialogOpen(false);
+			} else {
+				toast.error("Failed to update GitHub username. Please try again.");
+			}
 		} catch (error) {
 			console.error("GitHub connect error:", error);
-			toast.error(error instanceof Error ? error.message : "Failed to connect GitHub account");
+			toast.error(
+				error instanceof Error ? error.message : "Failed to update GitHub username. Please try again."
+			);
+		} finally {
 			setIsLoading(false);
 		}
 	};
@@ -57,6 +90,7 @@ export const GitHubConnectButton = ({ className }: { className?: string }) => {
 			await disconnectGitHub();
 			// Force a full session update to ensure the UI reflects the change
 			await updateSession({ force: true });
+			router.refresh();
 			toast.success("GitHub account disconnected successfully");
 		} catch (error) {
 			console.error("GitHub disconnect error:", error);
@@ -88,7 +122,7 @@ export const GitHubConnectButton = ({ className }: { className?: string }) => {
 								disabled={isLoading}
 								className="text-muted-foreground"
 							>
-								Not {githubUsername}? Click to disconnect.
+								{isLoading ? "Disconnecting..." : `Not ${githubUsername}? Click to disconnect.`}
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent>
@@ -101,14 +135,65 @@ export const GitHubConnectButton = ({ className }: { className?: string }) => {
 					</Tooltip>
 				</div>
 			) : (
-				<Button
-					onClick={() => void handleConnect()}
-					disabled={isLoading}
-					className={cn("w-full", className)}
-				>
-					<Icons.github className="mr-2 h-4 w-4" />
-					{isLoading ? "Connecting..." : "Connect GitHub"}
-				</Button>
+				<Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+					<DialogTrigger asChild>
+						<Button
+							disabled={status === "loading" || !isAuthenticated}
+							className={cn("w-full", className)}
+						>
+							<Icons.github className="mr-2 h-4 w-4" />
+							{status === "loading"
+								? "Loading..."
+								: !isAuthenticated
+									? "Login to Connect GitHub"
+									: "Connect GitHub"}
+						</Button>
+					</DialogTrigger>
+					<DialogContent className="sm:max-w-[425px]">
+						<DialogHeader>
+							<DialogTitle>Connect GitHub Account</DialogTitle>
+							<DialogDescription>
+								Enter your GitHub username to connect your account manually.
+							</DialogDescription>
+						</DialogHeader>
+						<form
+							onSubmit={(e) => {
+								e.preventDefault();
+								void handleConnect();
+							}}
+						>
+							<div className="grid gap-4 py-4">
+								<div className="grid grid-cols-4 items-center gap-4">
+									<Label htmlFor="github-username" className="text-right">
+										Username
+									</Label>
+									<Input
+										id="github-username"
+										value={usernameInput}
+										onChange={(e) => setUsernameInput(e.target.value)}
+										className="col-span-3"
+										placeholder="Your GitHub Username"
+										disabled={isLoading}
+									/>
+								</div>
+							</div>
+							<DialogFooter className="sm:justify-between">
+								<DialogClose asChild>
+									<Button type="button" variant="secondary" disabled={isLoading}>
+										Cancel
+									</Button>
+								</DialogClose>
+								<Button
+									type="submit"
+									disabled={isLoading || !usernameInput.trim()}
+								>
+									{isLoading ? <Icons.spinner className="mr-2 h-4 w-4 animate-spin" /> : null}
+									Connect Account
+								</Button>
+							</DialogFooter>
+						</form>
+					</DialogContent>
+				</Dialog>
 			)}
 		</>
 	);

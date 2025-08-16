@@ -8,6 +8,7 @@ import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { grantGitHubAccess } from "@/server/services/github/github-service";
 import { userService } from "@/server/services/user-service";
+import type { User } from "@/types/user";
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -121,16 +122,17 @@ export const authOptions: NextAuthConfig = {
 				token.name = user.name;
 				token.email = user.email;
 				// Ensure avatar and other optional properties are persisted on JWT sessions
-				if ("image" in user) token.image = (user as any).image as string | null;
-				if ("role" in user) token.role = (user as any).role as any;
+				const typedUser = user as User;
+				if ("image" in typedUser) token.image = typedUser.image;
+				if ("role" in typedUser) token.role = typedUser.role;
 				// Store dates in JWT as ISO strings to avoid Date type mismatch after serialization
-if ("createdAt" in user)
-	token.createdAt = (user as any).createdAt
-		? new Date((user as any).createdAt as any).toISOString()
+if ("createdAt" in typedUser)
+	token.createdAt = typedUser.createdAt
+		? new Date(typedUser.createdAt).toISOString()
 		: undefined;
-				if ("updatedAt" in user)
-	token.updatedAt = (user as any).updatedAt
-		? new Date((user as any).updatedAt as any).toISOString()
+				if ("updatedAt" in typedUser)
+	token.updatedAt = typedUser.updatedAt
+		? new Date(typedUser.updatedAt).toISOString()
 		: undefined;
 
 				// Mark as guest user if the account provider is guest
@@ -139,21 +141,21 @@ if ("createdAt" in user)
 				}
 
 				// Safely access optional properties
-				if ("bio" in user) token.bio = user.bio as string | null;
-				if ("githubUsername" in user) token.githubUsername = user.githubUsername as string | null;
-				if ("theme" in user) token.theme = user.theme as "light" | "dark" | "system" | undefined;
-				if ("emailVerified" in user)
-	token.emailVerified = user.emailVerified
-		? new Date(user.emailVerified as any).toISOString()
+				if ("bio" in typedUser) token.bio = typedUser.bio;
+				if ("githubUsername" in typedUser) token.githubUsername = typedUser.githubUsername;
+				if ("theme" in typedUser) token.theme = typedUser.theme;
+				if ("emailVerified" in typedUser)
+	token.emailVerified = typedUser.emailVerified
+		? new Date(typedUser.emailVerified).toISOString()
 		: null;
-				if ("vercelConnectionAttemptedAt" in user)
-					token.vercelConnectionAttemptedAt = (user as any).vercelConnectionAttemptedAt
-						? new Date((user as any).vercelConnectionAttemptedAt as any).toISOString()
+				if ("vercelConnectionAttemptedAt" in typedUser)
+					token.vercelConnectionAttemptedAt = typedUser.vercelConnectionAttemptedAt
+						? new Date(typedUser.vercelConnectionAttemptedAt).toISOString()
 						: null;
 
 				// Store Payload CMS token if available (not for guest users)
-				if ("payloadToken" in user && typeof user.payloadToken === "string" && !token.isGuest) {
-					token.payloadToken = user.payloadToken;
+				if ("payloadToken" in typedUser && typeof typedUser.payloadToken === "string" && !token.isGuest) {
+					token.payloadToken = typedUser.payloadToken;
 				}
 			}
 
@@ -163,8 +165,9 @@ if ("createdAt" in user)
 
 				// If we have a GitHub username from the profile, store it directly
 				// This is important for handling first-time GitHub OAuth logins
-				if (user && (user as any).githubUsername) {
-					token.githubUsername = (user as any).githubUsername;
+				const githubUser = user as User;
+				if (user && githubUser.githubUsername) {
+					token.githubUsername = githubUser.githubUsername;
 				}
 
 				// Update the database with GitHub connection information
@@ -198,17 +201,18 @@ if ("createdAt" in user)
 							};
 
 							// Update user record with GitHub connection
+							const githubUser = user as User;
 							await db
 								?.update(users)
 								.set({
-									githubUsername: (user as any).githubUsername || null,
+									githubUsername: githubUser.githubUsername || null,
 									metadata: JSON.stringify(newMetadata),
 									updatedAt: new Date(),
 								})
 								.where(eq(users.id, user.id));
 
 							// If we have a username, try to grant access to the repository
-							const githubUsername = (user as any).githubUsername;
+							const githubUsername = githubUser.githubUsername;
 							if (githubUsername) {
 								try {
 									await grantGitHubAccess({ githubUsername });
@@ -254,14 +258,14 @@ if ("createdAt" in user)
 					token.payloadToken = session.payloadToken;
 				if (session.vercelConnectionAttemptedAt)
 					token.vercelConnectionAttemptedAt = new Date(
-						session.vercelConnectionAttemptedAt as any,
+						session.vercelConnectionAttemptedAt,
 					).toISOString();
 			}
 			return token;
 		},
 		async session({ session, token, user }) {
 			// Map from JWT token when present (JWT strategy)
-			if (token && (token as any).id) {
+			if (token && token.id) {
 				session.user.id = token.id as string;
 				session.user.name = token.name as string | null;
 				session.user.email = token.email ?? "";
@@ -295,18 +299,19 @@ if ("createdAt" in user)
 			}
 
 			// When using database session strategy, populate from the database user
-			if ((!token || !(token as any).id) && user) {
-				session.user.id = (user as any).id as string;
-				session.user.name = (user as any).name as string | null;
-				session.user.email = ((user as any).email as string | null) ?? "";
-				session.user.emailVerified = ((user as any).emailVerified as Date | null) ?? null;
-				session.user.image = ((user as any).image as string | null) ?? null;
-				session.user.role = ((user as any).role as import("@/types/user").UserRole) ?? session.user.role;
-				session.user.theme = ((user as any).theme as "light" | "dark" | "system" | undefined) ?? session.user.theme;
-				session.user.bio = ((user as any).bio as string | null) ?? session.user.bio;
-				session.user.githubUsername = ((user as any).githubUsername as string | null) ?? session.user.githubUsername;
-				session.user.createdAt = ((user as any).createdAt as Date | undefined) ?? session.user.createdAt;
-				session.user.updatedAt = ((user as any).updatedAt as Date | undefined) ?? session.user.updatedAt;
+			if ((!token || !token.id) && user) {
+				const typedUser = user as User;
+				session.user.id = typedUser.id;
+				session.user.name = typedUser.name;
+				session.user.email = typedUser.email ?? "";
+				session.user.emailVerified = typedUser.emailVerified ?? null;
+				session.user.image = typedUser.image ?? null;
+				session.user.role = typedUser.role ?? session.user.role;
+				session.user.theme = typedUser.theme ?? session.user.theme;
+				session.user.bio = typedUser.bio ?? session.user.bio;
+				session.user.githubUsername = typedUser.githubUsername ?? session.user.githubUsername;
+				session.user.createdAt = typedUser.createdAt ?? session.user.createdAt;
+				session.user.updatedAt = typedUser.updatedAt ?? session.user.updatedAt;
 				// Accounts will be fetched below
 			}
 

@@ -415,5 +415,4 @@ export const env = createEnv({
 	 * `SOME_VAR=''` will throw an error.
 	 */
 	emptyStringAsUndefined: true,
-
 });

@@ -3,9 +3,8 @@
 import Link from "next/link";
 import { type ComponentPropsWithoutRef, type ReactNode, Suspense } from "react";
 import { OAuthButtons } from "@/app/(app)/(authentication)/_components/oauth-buttons";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { env } from "@/env";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 import {
 	CardContent,
 	CardDescription,
@@ -15,7 +14,9 @@ import {
 } from "@/components/ui/card";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
+import { env } from "@/env";
 import { cn } from "@/lib/utils";
+
 // Compute guest-only mode on the client using build-time flags to avoid importing server code
 
 interface AuthFormProps extends ComponentPropsWithoutRef<"div"> {
@@ -58,7 +59,8 @@ export function AuthForm({
 	 * Hide the sign-up link when in guest-only mode since users can create their own names
 	 * without traditional authentication methods
 	 */
-	const isGuestOnlyMode = !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
+	const isGuestOnlyMode =
+		!!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
 	const shouldShowAlternateLink = !isGuestOnlyMode && !!env.NEXT_PUBLIC_FEATURE_AUTH_ENABLED;
 	const hasAnyAuthEnabled = env.NEXT_PUBLIC_FEATURE_AUTH_ENABLED;
 	const showAuthUnavailable = !isGuestOnlyMode && !hasAnyAuthEnabled;

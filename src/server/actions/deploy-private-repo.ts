@@ -3,8 +3,8 @@
 import { redirect } from "next/navigation";
 import { createGitHubTemplateService } from "@/lib/github-template";
 import { COMMON_ENV_VARIABLES, createVercelAPIService } from "@/lib/vercel-api";
-import { auth } from "@/server/auth";
 import { createDeployment, updateDeployment } from "@/server/actions/deployment-actions";
+import { auth } from "@/server/auth";
 import { getGitHubAccessToken } from "@/server/services/github/github-token-service";
 import { getVercelAccessToken } from "@/server/services/vercel/vercel-service";
 
@@ -167,8 +167,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		const userInfo = await githubService.getCurrentUserInfo();
 		if (!userInfo.success || !userInfo.username) {
 			const error =
-				userInfo.error ||
-				"Failed to get GitHub user information. Please check your access token.";
+				userInfo.error || "Failed to get GitHub user information. Please check your access token.";
 			if (currentDeploymentId) {
 				await updateDeployment(currentDeploymentId, { status: "failed", error });
 			}
@@ -267,7 +266,8 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			// If Vercel project creation failed but GitHub repo was created,
 			// return a special response indicating manual import is needed
 			const error =
-				projectResult.error || "Failed to create Vercel project. You can manually import the repository.";
+				projectResult.error ||
+				"Failed to create Vercel project. You can manually import the repository.";
 			if (currentDeploymentId) {
 				await updateDeployment(currentDeploymentId, { status: "failed", error });
 			}

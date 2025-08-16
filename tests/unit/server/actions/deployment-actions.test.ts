@@ -45,7 +45,7 @@ describe.skip("Deployment Actions (DB gated)", () => {
 
 	describe("getUserDeployments", () => {
 		if (!process.env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED) {
-			it.skip("skipped: database feature disabled", () => { });
+			it.skip("skipped: database feature disabled", () => {});
 			return;
 		}
 

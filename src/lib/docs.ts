@@ -83,10 +83,10 @@ function extractTitleFromH1(content: string): string | null {
 	// Remove code blocks to avoid matching # inside them
 	const contentWithoutCodeBlocks = content
 		// Remove fenced code blocks (```...```)
-		.replace(/```[\s\S]*?```/g, '')
+		.replace(/```[\s\S]*?```/g, "")
 		// Remove inline code blocks (`...`)
-		.replace(/`[^`]+`/g, '');
-	
+		.replace(/`[^`]+`/g, "");
+
 	// Look for the first H1 tag in the cleaned content
 	const h1Match = contentWithoutCodeBlocks.match(/^#\s+(.+)$/m);
 	if (h1Match && h1Match[1]) {
@@ -216,7 +216,9 @@ export async function getAllDocs(): Promise<Doc[]> {
 		// Dynamically discover all docs from the filesystem
 		const slugs = await getAllDocSlugsFromFileSystem();
 		// Use environment variable for limit, default to 100
-		const docsLimit = process.env.DOCS_PROCESSING_LIMIT ? parseInt(process.env.DOCS_PROCESSING_LIMIT, 10) : 100;
+		const docsLimit = process.env.DOCS_PROCESSING_LIMIT
+			? Number.parseInt(process.env.DOCS_PROCESSING_LIMIT, 10)
+			: 100;
 		const docs = await Promise.all(
 			slugs.slice(0, docsLimit).map(async (slug) => {
 				// Limit to prevent DoS

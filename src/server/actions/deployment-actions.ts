@@ -2,11 +2,11 @@
 
 import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { siteConfig } from "@/config/site-config";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { type Deployment, deployments, type NewDeployment } from "@/server/db/schema";
-import { siteConfig } from "@/config/site-config";
-import { deployPrivateRepository, type DeploymentResult } from "./deploy-private-repo";
+import { type DeploymentResult, deployPrivateRepository } from "./deploy-private-repo";
 
 const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
 

@@ -34,9 +34,7 @@ const buildTimeFeatures = {} as Record<string, boolean>;
 // Core Features
 buildTimeFeatures.DATABASE_ENABLED = hasEnv("DATABASE_URL");
 buildTimeFeatures.PAYLOAD_ENABLED =
-	buildTimeFeatures.DATABASE_ENABLED &&
-	hasEnv("PAYLOAD_SECRET") &&
-	!envIsTrue("DISABLE_PAYLOAD");
+	buildTimeFeatures.DATABASE_ENABLED && hasEnv("PAYLOAD_SECRET") && !envIsTrue("DISABLE_PAYLOAD");
 buildTimeFeatures.BUILDER_ENABLED =
 	hasEnv("NEXT_PUBLIC_BUILDER_API_KEY") && !envIsTrue("DISABLE_BUILDER");
 buildTimeFeatures.MDX_ENABLED = !envIsTrue("DISABLE_MDX");
@@ -119,16 +117,15 @@ buildTimeFeatures.GOOGLE_SERVICE_ACCOUNT_ENABLED =
 	hasEnv("GOOGLE_CLIENT_EMAIL", "GOOGLE_PRIVATE_KEY") &&
 	!envIsTrue("DISABLE_GOOGLE_SERVICE_ACCOUNT");
 buildTimeFeatures.OPENAI_ENABLED = hasEnv("OPENAI_API_KEY") && !envIsTrue("DISABLE_OPENAI");
-buildTimeFeatures.ANTHROPIC_ENABLED = hasEnv("ANTHROPIC_API_KEY") && !envIsTrue("DISABLE_ANTHROPIC");
+buildTimeFeatures.ANTHROPIC_ENABLED =
+	hasEnv("ANTHROPIC_API_KEY") && !envIsTrue("DISABLE_ANTHROPIC");
 
 // Payment Providers
 buildTimeFeatures.LEMONSQUEEZY_ENABLED =
-	hasEnv("LEMONSQUEEZY_API_KEY", "LEMONSQUEEZY_STORE_ID") &&
-	!envIsTrue("DISABLE_LEMONSQUEEZY");
+	hasEnv("LEMONSQUEEZY_API_KEY", "LEMONSQUEEZY_STORE_ID") && !envIsTrue("DISABLE_LEMONSQUEEZY");
 buildTimeFeatures.POLAR_ENABLED = hasEnv("POLAR_ACCESS_TOKEN") && !envIsTrue("DISABLE_POLAR");
 buildTimeFeatures.STRIPE_ENABLED =
-	hasEnv("STRIPE_SECRET_KEY", "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY") &&
-	!envIsTrue("DISABLE_STRIPE");
+	hasEnv("STRIPE_SECRET_KEY", "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY") && !envIsTrue("DISABLE_STRIPE");
 
 // Storage
 buildTimeFeatures.S3_ENABLED =
@@ -145,14 +142,12 @@ buildTimeFeatures.VERCEL_API_ENABLED =
 
 // Analytics
 buildTimeFeatures.POSTHOG_ENABLED =
-	hasEnv("NEXT_PUBLIC_POSTHOG_KEY", "NEXT_PUBLIC_POSTHOG_HOST") &&
-	!envIsTrue("DISABLE_POSTHOG");
+	hasEnv("NEXT_PUBLIC_POSTHOG_KEY", "NEXT_PUBLIC_POSTHOG_HOST") && !envIsTrue("DISABLE_POSTHOG");
 buildTimeFeatures.UMAMI_ENABLED =
 	hasEnv("NEXT_PUBLIC_UMAMI_WEBSITE_ID") && !envIsTrue("DISABLE_UMAMI");
 
 // Consent Manager
-buildTimeFeatures.C15T_ENABLED =
-	hasEnv("NEXT_PUBLIC_C15T_URL") && !envIsTrue("DISABLE_C15T");
+buildTimeFeatures.C15T_ENABLED = hasEnv("NEXT_PUBLIC_C15T_URL") && !envIsTrue("DISABLE_C15T");
 buildTimeFeatures.CONSENT_MANAGER_ENABLED =
 	(buildTimeFeatures.C15T_ENABLED || envIsTrue("ENABLE_CONSENT_MANAGER")) &&
 	!envIsTrue("DISABLE_CONSENT_MANAGER");
@@ -179,10 +174,13 @@ export const buildTimeFeatureFlags = Object.fromEntries(
 
 // Always export AUTH_ENABLED regardless of its value for client-side checks
 if (!buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_ENABLED) {
-	buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_ENABLED = buildTimeFeatures.AUTH_ENABLED ? "true" : "false";
+	buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_ENABLED = buildTimeFeatures.AUTH_ENABLED
+		? "true"
+		: "false";
 }
 
 // Always export AUTH_METHODS_ENABLED regardless of its value (used client-side)
 if (!buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED) {
-	buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED = buildTimeFeatures.AUTH_METHODS_ENABLED ? "true" : "false";
+	buildTimeFeatureFlags.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED =
+		buildTimeFeatures.AUTH_METHODS_ENABLED ? "true" : "false";
 }

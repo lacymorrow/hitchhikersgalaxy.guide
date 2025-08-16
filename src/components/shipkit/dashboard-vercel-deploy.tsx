@@ -154,12 +154,7 @@ export const DashboardVercelDeploy = ({
 						<Button type="submit" disabled={isDeploying || !projectName} className="flex-1">
 							{isDeploying ? "Deploying..." : "Deploy Now"}
 						</Button>
-						<Button
-							type="button"
-							onClick={resetForm}
-							variant="outline"
-							disabled={isDeploying}
-						>
+						<Button type="button" onClick={resetForm} variant="outline" disabled={isDeploying}>
 							Cancel
 						</Button>
 					</div>

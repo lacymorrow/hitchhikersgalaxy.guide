@@ -61,16 +61,23 @@ export function OAuthButtons({
 	};
 
 	// Guest-only mode when guest is allowed but no other methods are enabled
-	const isGuestOnlyMode = !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
+	const isGuestOnlyMode =
+		!!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
 
 	// Build list of enabled OAuth providers (exclude guest, vercel, credentials, resend)
 	const oauthProviders: Provider[] = [];
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED) oauthProviders.push({ id: "google", name: "Google" });
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED) oauthProviders.push({ id: "twitter", name: "Twitter" });
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED) oauthProviders.push({ id: "discord", name: "Discord" });
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED) oauthProviders.push({ id: "github", name: "GitHub" });
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_GITLAB_ENABLED) oauthProviders.push({ id: "gitlab", name: "GitLab" });
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_BITBUCKET_ENABLED) oauthProviders.push({ id: "bitbucket", name: "Bitbucket" });
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED)
+		oauthProviders.push({ id: "google", name: "Google" });
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED)
+		oauthProviders.push({ id: "twitter", name: "Twitter" });
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED)
+		oauthProviders.push({ id: "discord", name: "Discord" });
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED)
+		oauthProviders.push({ id: "github", name: "GitHub" });
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_GITLAB_ENABLED)
+		oauthProviders.push({ id: "gitlab", name: "GitLab" });
+	if (env.NEXT_PUBLIC_FEATURE_AUTH_BITBUCKET_ENABLED)
+		oauthProviders.push({ id: "bitbucket", name: "Bitbucket" });
 
 	// Don't render OAuth buttons if in guest-only mode
 	if (isGuestOnlyMode) {

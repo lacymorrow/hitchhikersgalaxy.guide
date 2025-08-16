@@ -7,11 +7,7 @@ import { RESEND_FROM_EMAIL } from "@/config/constants";
 import { STATUS_CODES } from "@/config/status-codes";
 import { env } from "@/env";
 import { resend } from "@/lib/resend";
-import {
-	forgotPasswordSchema,
-	resetPasswordSchema,
-	signInActionSchema,
-} from "@/lib/schemas/auth";
+import { forgotPasswordSchema, resetPasswordSchema, signInActionSchema } from "@/lib/schemas/auth";
 import type { ActionState } from "@/lib/utils/validated-action";
 import { AuthService } from "@/server/services/auth-service";
 import type { UserRole } from "@/types/user";
@@ -84,10 +80,7 @@ export const signInWithCredentialsAction = async (input: SignInCredentialsInput)
 		console.error("Error in signInWithCredentialsAction:", error);
 
 		// Check if it's an AuthError from next-auth
-		if (
-			error.type === "CredentialsSignin" ||
-			error.code === "CredentialsSignin"
-		) {
+		if (error.type === "CredentialsSignin" || error.code === "CredentialsSignin") {
 			return { ok: false, error: STATUS_CODES.CREDENTIALS.message };
 		}
 
@@ -111,12 +104,9 @@ export const signUpWithCredentialsAction = async (_prevState: ActionState, formD
 		// Send verification email (moved from auth service for clarity)
 		try {
 			if (!resend) {
-				console.warn(
-					"Resend client not initialized - skipping verification email",
-				);
+				console.warn("Resend client not initialized - skipping verification email");
 			} else {
-				const RESEND_FROM_EMAIL =
-					env.RESEND_FROM_EMAIL || "noreply@example.com";
+				const RESEND_FROM_EMAIL = env.RESEND_FROM_EMAIL || "noreply@example.com";
 				await resend.emails.send({
 					from: RESEND_FROM_EMAIL,
 					to: parsed.data.email,
@@ -154,10 +144,7 @@ export const forgotPasswordAction = createServerAction()
 			console.error("Error in forgotPasswordAction:", error);
 			return {
 				ok: false,
-				error:
-					error instanceof Error
-						? error.message
-						: STATUS_CODES.AUTH_ERROR.message,
+				error: error instanceof Error ? error.message : STATUS_CODES.AUTH_ERROR.message,
 			};
 		}
 	});
@@ -172,10 +159,7 @@ export const resetPasswordAction = createServerAction()
 			console.error("Error in resetPasswordAction:", error);
 			return {
 				ok: false,
-				error:
-					error instanceof Error
-						? error.message
-						: STATUS_CODES.AUTH_ERROR.message,
+				error: error instanceof Error ? error.message : STATUS_CODES.AUTH_ERROR.message,
 			};
 		}
 	});

@@ -34,7 +34,12 @@ if (typeof window === "undefined") {
 			const path = require("path");
 			const originalResolve = Module._resolveFilename;
 			const shimPath = path.resolve(__dirname, "./shims/next-server.js");
-			Module._resolveFilename = function (request: string, parent: unknown, isMain: boolean, options: any) {
+			Module._resolveFilename = function (
+				request: string,
+				parent: unknown,
+				isMain: boolean,
+				options: any
+			) {
 				if (request === "next/server") {
 					return shimPath;
 				}

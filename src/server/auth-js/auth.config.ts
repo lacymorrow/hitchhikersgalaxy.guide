@@ -126,14 +126,14 @@ export const authOptions: NextAuthConfig = {
 				if ("image" in typedUser) token.image = typedUser.image;
 				if ("role" in typedUser) token.role = typedUser.role;
 				// Store dates in JWT as ISO strings to avoid Date type mismatch after serialization
-if ("createdAt" in typedUser)
-	token.createdAt = typedUser.createdAt
-		? new Date(typedUser.createdAt).toISOString()
-		: undefined;
+				if ("createdAt" in typedUser)
+					token.createdAt = typedUser.createdAt
+						? new Date(typedUser.createdAt).toISOString()
+						: undefined;
 				if ("updatedAt" in typedUser)
-	token.updatedAt = typedUser.updatedAt
-		? new Date(typedUser.updatedAt).toISOString()
-		: undefined;
+					token.updatedAt = typedUser.updatedAt
+						? new Date(typedUser.updatedAt).toISOString()
+						: undefined;
 
 				// Mark as guest user if the account provider is guest
 				if (account?.provider === "guest") {
@@ -145,16 +145,20 @@ if ("createdAt" in typedUser)
 				if ("githubUsername" in typedUser) token.githubUsername = typedUser.githubUsername;
 				if ("theme" in typedUser) token.theme = typedUser.theme;
 				if ("emailVerified" in typedUser)
-	token.emailVerified = typedUser.emailVerified
-		? new Date(typedUser.emailVerified).toISOString()
-		: null;
+					token.emailVerified = typedUser.emailVerified
+						? new Date(typedUser.emailVerified).toISOString()
+						: null;
 				if ("vercelConnectionAttemptedAt" in typedUser)
 					token.vercelConnectionAttemptedAt = typedUser.vercelConnectionAttemptedAt
 						? new Date(typedUser.vercelConnectionAttemptedAt).toISOString()
 						: null;
 
 				// Store Payload CMS token if available (not for guest users)
-				if ("payloadToken" in typedUser && typeof typedUser.payloadToken === "string" && !token.isGuest) {
+				if (
+					"payloadToken" in typedUser &&
+					typeof typedUser.payloadToken === "string" &&
+					!token.isGuest
+				) {
 					token.payloadToken = typedUser.payloadToken;
 				}
 			}
@@ -258,7 +262,7 @@ if ("createdAt" in typedUser)
 					token.payloadToken = session.payloadToken;
 				if (session.vercelConnectionAttemptedAt)
 					token.vercelConnectionAttemptedAt = new Date(
-						session.vercelConnectionAttemptedAt,
+						session.vercelConnectionAttemptedAt
 					).toISOString();
 			}
 			return token;

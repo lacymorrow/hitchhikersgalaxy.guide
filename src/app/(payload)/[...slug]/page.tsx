@@ -6,9 +6,9 @@
  * ? Builder.io
  */
 
-import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { env } from "@/env";
+import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import { getPayloadClient } from "@/lib/payload/payload";
 import type { Media, Page as PayloadPage } from "@/payload-types";
 import "@/styles/builder-io.css";
@@ -168,14 +168,14 @@ export async function generateMetadata({
 			openGraph:
 				meta?.image && isMedia(meta.image) && meta.image.url
 					? {
-						images: [
-							{
-								url: meta.image.url,
-								width: 1200,
-								height: 630,
-							},
-						],
-					}
+							images: [
+								{
+									url: meta.image.url,
+									width: 1200,
+									height: 630,
+								},
+							],
+						}
 					: undefined,
 		};
 	}

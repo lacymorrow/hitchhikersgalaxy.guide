@@ -7,7 +7,8 @@ import { env } from "@/env";
 
 export const SignIn = async () => {
 	// Special handling for guest-only mode
-	const isGuestOnlyMode = !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
+	const isGuestOnlyMode =
+		!!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
 	if (isGuestOnlyMode) {
 		return (
 			<AuthForm

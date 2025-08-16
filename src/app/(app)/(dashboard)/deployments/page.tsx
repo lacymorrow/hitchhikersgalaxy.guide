@@ -1,11 +1,11 @@
-import { DashboardVercelDeploy } from "@/components/shipkit/dashboard-vercel-deploy";
-import { getUserDeployments, initializeDemoDeployments } from "@/server/actions/deployment-actions";
-import type { Deployment } from "@/server/db/schema";
-import { DeploymentsList } from "./deployments-list";
-import { auth } from "@/server/auth";
 import { redirect } from "next/navigation";
+import { DashboardVercelDeploy } from "@/components/shipkit/dashboard-vercel-deploy";
 import { routes } from "@/config/routes";
 import { createSignInRedirectUrl } from "@/lib/utils/create-auth-redirect";
+import { getUserDeployments, initializeDemoDeployments } from "@/server/actions/deployment-actions";
+import { auth } from "@/server/auth";
+import type { Deployment } from "@/server/db/schema";
+import { DeploymentsList } from "./deployments-list";
 
 export default async function DeploymentsPage() {
 	const session = await auth({ protect: true });

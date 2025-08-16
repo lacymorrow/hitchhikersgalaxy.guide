@@ -12,7 +12,8 @@ import { SignUpForm } from "./_components/sign-up-form";
 
 export default async function SignUpPage() {
 	const hasAuth = env.NEXT_PUBLIC_FEATURE_AUTH_ENABLED;
-	const isGuestOnlyMode = !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
+	const isGuestOnlyMode =
+		!!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
 
 	/*
 	 * Redirect to sign-in page when no authentication methods are available

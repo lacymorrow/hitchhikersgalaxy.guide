@@ -27,8 +27,7 @@ export const OnboardingWizard = ({
 
 	if (!user) return null;
 
-	const hasVercelConnectionAttempt =
-		!!user.vercelConnectionAttemptedAt || hasVercelConnection;
+	const hasVercelConnectionAttempt = !!user.vercelConnectionAttemptedAt || hasVercelConnection;
 
 	const initialStep = hasGitHubConnection ? (hasVercelConnectionAttempt ? 2 : 1) : 0;
 
@@ -123,13 +122,16 @@ export const OnboardingWizard = ({
 						<div className="rounded-lg bg-primary/10 p-3 text-center">
 							<h3 className="font-semibold">Almost there!</h3>
 							<p className="text-sm text-muted-foreground mt-1">
-								Once deployed, your site will be available at your custom domain or a Vercel-provided URL.
+								Once deployed, your site will be available at your custom domain or a
+								Vercel-provided URL.
 							</p>
 						</div>
 					</div>
 				),
 			},
-		], [hasGitHubConnection, hasVercelConnection, user]);
+		],
+		[hasGitHubConnection, hasVercelConnection, user]
+	);
 
 	const handleComplete = () => {
 		setOnboardingState((prev) => ({ ...prev, completed: true }));

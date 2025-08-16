@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { Icons } from "@/components/assets/icons";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import {
 	Dialog,
 	DialogClose,
@@ -20,6 +19,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import { disconnectGitHub, updateGitHubUsername } from "@/server/actions/github";
@@ -75,7 +75,9 @@ export const GitHubConnectButton = ({ className }: { className?: string }) => {
 		} catch (error) {
 			console.error("GitHub connect error:", error);
 			toast.error(
-				error instanceof Error ? error.message : "Failed to update GitHub username. Please try again."
+				error instanceof Error
+					? error.message
+					: "Failed to update GitHub username. Please try again."
 			);
 		} finally {
 			setIsLoading(false);
@@ -183,10 +185,7 @@ export const GitHubConnectButton = ({ className }: { className?: string }) => {
 										Cancel
 									</Button>
 								</DialogClose>
-								<Button
-									type="submit"
-									disabled={isLoading || !usernameInput.trim()}
-								>
+								<Button type="submit" disabled={isLoading || !usernameInput.trim()}>
 									{isLoading ? <Icons.spinner className="mr-2 h-4 w-4 animate-spin" /> : null}
 									Connect Account
 								</Button>

@@ -52,7 +52,12 @@ export function ResetPasswordForm({ token }: { token?: string }) {
 					toast.error("Error resetting password", {
 						description: error.message || "The password reset link is invalid or has expired.",
 					});
-				} else if (data && typeof data === "object" && "ok" in data && (data as { ok: boolean }).ok) {
+				} else if (
+					data &&
+					typeof data === "object" &&
+					"ok" in data &&
+					(data as { ok: boolean }).ok
+				) {
 					toast.success("Password reset successful", {
 						description: "You can now sign in with your new password.",
 					});

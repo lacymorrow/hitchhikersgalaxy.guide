@@ -2,6 +2,7 @@ import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import type { Session } from "next-auth";
 import NextAuth from "next-auth";
 import { cache } from "react";
+import { buildTimeFeatures } from "@/config/features-config";
 import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { env } from "@/env";
@@ -12,7 +13,6 @@ import { isGuestOnlyMode } from "@/server/auth-js/auth-providers-utils";
 import { db } from "@/server/db";
 import { accounts, sessions, users, verificationTokens } from "@/server/db/schema";
 import type { UserRole } from "@/types/user";
-import { buildTimeFeatures } from "@/config/features-config";
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -46,7 +46,7 @@ const {
 	signOut,
 	unstable_update: update,
 } = buildTimeFeatures.AUTH_ENABLED
-		? NextAuth({
+	? NextAuth({
 			...authOptions,
 			secret: env.AUTH_SECRET ?? "supersecretshipkit",
 			// Override session strategy based on adapter usage
@@ -57,11 +57,11 @@ const {
 			// Use database adapter only when not in guest-only mode and database is available
 			adapter: shouldUseDatabaseAdapter
 				? DrizzleAdapter(db as any, {
-					usersTable: users,
-					accountsTable: accounts,
-					sessionsTable: sessions,
-					verificationTokensTable: verificationTokens,
-				})
+						usersTable: users,
+						accountsTable: accounts,
+						sessionsTable: sessions,
+						verificationTokensTable: verificationTokens,
+					})
 				: undefined,
 			logger: {
 				error: (code: Error, ...message: unknown[]) => {
@@ -75,7 +75,7 @@ const {
 				},
 			},
 		})
-		: {
+	: {
 			auth: () => Promise.resolve(null),
 			handlers: {
 				GET: async (request: Request) => {
@@ -93,7 +93,7 @@ const {
 								"Authentication is not configured. Add database and/or auth provider environment variables to enable sign-in.",
 							docs: "https://errors.authjs.dev#autherror",
 						},
-						{ status: 503 },
+						{ status: 503 }
 					);
 				},
 				POST: async () =>
@@ -105,7 +105,7 @@ const {
 								"Authentication is not configured. Add database and/or auth provider environment variables to enable sign-in.",
 							docs: "https://errors.authjs.dev#autherror",
 						},
-						{ status: 503 },
+						{ status: 503 }
 					),
 			},
 			signIn: () => Promise.resolve(),
@@ -131,7 +131,8 @@ async function authWithOptions(props?: AuthProps) {
 
 	// Route protected
 	// Use clear boolean logic without nullish coalescing on non-nullish expressions
-	const protect = (props?.protect ?? false) || (props?.redirectTo !== undefined) || (redirect ?? false);
+	const protect =
+		(props?.protect ?? false) || props?.redirectTo !== undefined || (redirect ?? false);
 	const redirectTo = props?.redirectTo ?? routes.auth.signOutIn;
 
 	const handleRedirect = (code: string) => {

@@ -10,9 +10,9 @@ import { TRPCReactProvider } from "@/lib/trpc/react";
 
 import HolyLoader from "holy-loader";
 import { SessionProvider } from "next-auth/react";
-import { isAuthenticationAvailable } from "@/lib/auth/auth-strategy";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
+import { isAuthenticationAvailable } from "@/lib/auth/auth-strategy";
 
 import "@/styles/globals.css";
 
@@ -37,12 +37,12 @@ export function ShipkitProvider({ children, session, pageProps }: ShipkitProvide
 	const sessionProviderProps = authEnabled
 		? { session }
 		: {
-			session: null,
-			refetchOnWindowFocus: false,
-			refetchInterval: 0,
-			refetchWhenOffline: false,
-			refetchOnMount: false,
-		};
+				session: null,
+				refetchOnWindowFocus: false,
+				refetchInterval: 0,
+				refetchWhenOffline: false,
+				refetchOnMount: false,
+			};
 
 	return (
 		<>

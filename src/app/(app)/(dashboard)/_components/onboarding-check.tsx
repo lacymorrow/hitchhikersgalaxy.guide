@@ -26,7 +26,7 @@ export function OnboardingCheck({
 	}
 
 	const userId = user?.id ?? "";
-	const [showOnboarding, setShowOnboarding] = useState(false);
+	const [showOnboarding, setShowOnboarding] = useState(true);
 	const [onboardingState, setOnboardingState] = useLocalStorage<{
 		completed: boolean;
 		currentStep: number;

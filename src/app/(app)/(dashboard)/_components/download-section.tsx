@@ -1,7 +1,6 @@
 import { DownloadIcon } from "lucide-react";
 import type { Session } from "next-auth";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
-import { GitHubConnectDialog } from "@/components/buttons/github-connect-dialog";
 import { BuyButton } from "@/components/buttons/lemonsqueezy-buy-button";
 import { LoginButton } from "@/components/buttons/sign-in-button";
 import { DashboardVercelDeploy } from "@/components/shipkit/dashboard-vercel-deploy";
@@ -26,6 +25,7 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
 				<LoginButton size="lg" className="w-full">
 					Sign in to download {siteConfig.title}
 				</LoginButton>
+				<DashboardVercelDeploy className="w-full mt-3" isVercelConnected={false} />
 			</div>
 		);
 	}
@@ -40,6 +40,7 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
 				<p className="w-full text-sm text-muted-foreground mt-2">
 					Purchase required to download {siteConfig.title}
 				</p>
+				<DashboardVercelDeploy className="w-full mt-3" isVercelConnected={false} />
 			</div>
 		);
 	}
@@ -66,11 +67,7 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
 				<DashboardVercelDeploy className="grow" isVercelConnected={isVercelConnected} />
 			</div>
 			{/* GitHub connection section */}
-			{isGitHubConnected ? (
-				<GitHubConnectButton className="w-full" />
-			) : (
-				<GitHubConnectDialog className="w-full" />
-			)}
+			<GitHubConnectButton className="w-full" />
 		</div>
 	);
 };

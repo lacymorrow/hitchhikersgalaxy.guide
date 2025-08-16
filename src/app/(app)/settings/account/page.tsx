@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { DeleteAccountCard } from "@/app/(app)/settings/_components/delete-account-card";
-import { GitHubConnectDialog } from "@/components/buttons/github-connect-dialog";
+import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
 import { VercelConnectButton } from "@/components/shipkit/vercel-connect-button";
 import {
 	Card,
@@ -79,7 +79,7 @@ export default async function AccountPage() {
 					<CardDescription>Connect your GitHub account to access the repository.</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<GitHubConnectDialog />
+					<GitHubConnectButton />
 				</CardContent>
 			</Card>
 

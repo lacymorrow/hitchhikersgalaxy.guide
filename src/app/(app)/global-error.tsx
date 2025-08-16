@@ -10,14 +10,14 @@ import { Boundary } from "@/components/primitives/boundary";
 /* GlobalError Component Props
  * @param {Error} error - The error object containing details about what went wrong
  * @param {string} error.digest - A unique hash of the error (useful for error tracking)
- * @param {() => void} resetAction - Function provided by Next.js to attempt recovery
+ * @param {() => void} reset - Function provided by Next.js to attempt recovery
  */
 export default function GlobalError({
 	error,
-	resetAction,
+	reset,
 }: {
 	error: Error & { digest?: string };
-	resetAction: () => void;
+	reset: () => void;
 }) {
 	/* Log error to console for development/debugging
 	 * TODO: Replace with proper error tracking in production
@@ -32,9 +32,9 @@ export default function GlobalError({
 		<html lang="en" suppressHydrationWarning>
 			<body className="bg-background">
 				<Boundary
-					title="Something went wrong!"
+					title="Something went wrong."
 					actionText="Try again"
-					onAction={resetAction}
+					onAction={reset}
 					className="h-screen w-screen"
 				>
 					{process.env.NODE_ENV === "development" && (

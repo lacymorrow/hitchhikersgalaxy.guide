@@ -40,6 +40,10 @@ buildTimeFeatures.BUILDER_ENABLED =
 buildTimeFeatures.MDX_ENABLED = !envIsTrue("DISABLE_MDX");
 buildTimeFeatures.PWA_ENABLED = !envIsTrue("DISABLE_PWA");
 
+// UI / Theme
+buildTimeFeatures.LIGHT_MODE_ENABLED = !envIsTrue("DISABLE_LIGHT_MODE");
+buildTimeFeatures.DARK_MODE_ENABLED = !envIsTrue("DISABLE_DARK_MODE");
+
 // Authentication
 buildTimeFeatures.BETTER_AUTH_ENABLED =
 	hasEnv("BETTER_AUTH_SECRET") && !envIsTrue("DISABLE_BETTER_AUTH");

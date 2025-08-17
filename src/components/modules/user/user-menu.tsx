@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 import * as React from "react";
 import { Link } from "@/components/primitives/link-with-transition";
 import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
-import { UserMenuDropdown } from "@/components/shipkit/user-menu-dropdown";
+import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button, buttonVariants } from "@/components/ui/button";

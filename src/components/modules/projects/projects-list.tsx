@@ -1,6 +1,6 @@
 import { FileIcon, PlusIcon } from "@radix-ui/react-icons";
-import { ProjectDialog } from "@/app/(app)/(dashboard)/projects/_components/project-dialog";
-import { ProjectMenu } from "@/app/(app)/(dashboard)/projects/_components/project-menu";
+import { ProjectDialog } from "@/components/modules/projects/project-dialog";
+import { ProjectMenu } from "@/components/modules/projects/project-menu";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {

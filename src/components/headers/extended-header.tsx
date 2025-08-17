@@ -11,7 +11,7 @@ import { Icon } from "@/components/assets/icon";
 import { LoginButton } from "@/components/buttons/sign-in-button";
 import { Link } from "@/components/primitives/link-with-transition";
 import { SearchAi } from "@/components/search/search-ai";
-import { UserMenu } from "@/components/shipkit/user-menu";
+import { UserMenu } from "@/components/modules/user/user-menu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme";
@@ -83,8 +83,8 @@ export const Header: React.FC<HeaderProps> = ({
 					variant === "floating" && styles.header,
 					variant === "floating" && isOpaque && styles.opaque,
 					variant === "floating" &&
-						isOpaque &&
-						"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]",
+					isOpaque &&
+					"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]",
 					className
 				)}
 			>

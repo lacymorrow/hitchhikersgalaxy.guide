@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { env } from "@/env";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import type { User } from "@/types/user";
-import { OnboardingWizard } from "./onboarding-wizard";
+import { OnboardingWizard } from "@/components/modules/onboarding/onboarding-wizard";
 
 interface OnboardingCheckProps {
 	user?: User | null;

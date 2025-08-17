@@ -3,7 +3,7 @@
 import { CaretSortIcon } from "@radix-ui/react-icons";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { UserMenuDropdown } from "@/components/shipkit/user-menu-dropdown";
+import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
 	SidebarMenu,

@@ -7,7 +7,7 @@ import type React from "react";
 import { Icon } from "@/components/assets/icon";
 import { Link } from "@/components/primitives/link-with-transition";
 import { SearchMenu } from "@/components/search/search-menu";
-import { UserMenu } from "@/components/shipkit/user-menu";
+import { UserMenu } from "@/components/modules/user/user-menu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme";

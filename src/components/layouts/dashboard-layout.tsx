@@ -1,6 +1,6 @@
 import { SidebarCloseIcon } from "lucide-react";
 import type { ReactNode } from "react";
-import { AppSidebar } from "@/components/blocks/app-sidebar";
+import { AppSidebar } from "@/components/modules/sidebar/app-sidebar";
 import { SidebarLayout } from "@/components/layouts/sidebar-layout";
 import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav";
 import { Separator } from "@/components/ui/separator";

@@ -34,8 +34,8 @@ import { isAdmin } from "@/server/services/admin-service";
 import { checkGitHubConnection } from "@/server/services/github/github-service";
 import { PaymentService } from "@/server/services/payment-service";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
-import { DownloadSection } from "../_components/download-section";
-import { OnboardingCheck } from "../_components/onboarding-check";
+import { DownloadSection } from "@/app/(app)/(dashboard)/_components/download-section";
+import { OnboardingCheck } from "@/components/modules/onboarding/onboarding-check";
 
 // Recent activity type
 interface Activity {

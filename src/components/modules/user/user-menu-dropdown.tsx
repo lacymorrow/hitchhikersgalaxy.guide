@@ -12,7 +12,7 @@ import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
 import type * as React from "react";
-import { RestartOnboardingButton } from "@/app/(app)/(dashboard)/_components/onboarding-check";
+import { RestartOnboardingButton } from "@/components/modules/onboarding/onboarding-check";
 import {
 	DropdownMenu,
 	DropdownMenuContent,

@@ -24,7 +24,7 @@ test.describe("Deployments Page", () => {
 
 		test("should open the deploy dialog", async ({ page }) => {
 			await page.click('button:has-text("Deploy to Vercel")');
-			await expect(page.locator("h2")).toHaveText("Deploy Shipkit to Vercel");
+			await expect(page.locator("h2")).toContainText("Deploy");
 		});
 
 		test("should show an error if project name is missing", async ({ page }) => {

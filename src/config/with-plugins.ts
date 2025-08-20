@@ -1,7 +1,8 @@
 import fs from "fs";
 import type { NextConfig } from "next";
 import path from "path";
-import { NEXTJS_PLUGINS_DIR_RELATIVE } from "./constants";
+import { fileURLToPath } from "node:url";
+import { PLUGINS_DIR_URL } from "./nextjs";
 
 /**
  * Applies configuration plugins found in a specified directory to a Next.js config object.
@@ -12,16 +13,27 @@ import { NEXTJS_PLUGINS_DIR_RELATIVE } from "./constants";
  */
 export function withPlugins(
 	initialConfig: NextConfig,
-	pluginsRelativeDir = NEXTJS_PLUGINS_DIR_RELATIVE
+	pluginsRelativeDir?: string
 ): NextConfig {
 	let config = { ...initialConfig };
-	const pluginsDir = path.join(process.cwd(), pluginsRelativeDir);
+	const pluginsDir = pluginsRelativeDir
+		? path.join(process.cwd(), pluginsRelativeDir)
+		: fileURLToPath(PLUGINS_DIR_URL);
 
 	try {
 		if (fs.existsSync(pluginsDir)) {
 			const pluginFiles = fs
 				.readdirSync(pluginsDir)
-				.filter((file) => /\.(t|j|mj|mt)s$/.test(file))
+				.filter((file) =>
+					/\.(t|j|mj|mt)s$/.test(file) &&
+					![
+						"index.ts",
+						"index.js",
+						"index.mts",
+						"index.mjs",
+						"index.cjs",
+					].includes(file)
+				)
 				.sort(); // Apply plugins in alphabetical order
 
 			// Logging moved to instrumentation.ts

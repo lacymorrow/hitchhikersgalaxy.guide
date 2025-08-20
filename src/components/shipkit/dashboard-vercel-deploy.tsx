@@ -20,6 +20,7 @@ import { Label } from "@/components/ui/label";
 import { ConfettiSideCannons } from "@/components/ui/magicui/confetti/confetti-side-cannons";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { env } from "@/env";
+import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import { initiateDeployment } from "@/server/actions/deployment-actions";
 
@@ -128,10 +129,10 @@ export const DashboardVercelDeploy = ({
 				<DialogHeader>
 					<DialogTitle className="flex items-center gap-2">
 						<VercelIcon className="h-5 w-5" />
-						Deploy Shipkit to Vercel
+						Deploy to Vercel
 					</DialogTitle>
 					<DialogDescription>
-						Create your own instance of Shipkit on GitHub and deploy it to Vercel instantly.
+						Create your own instance on GitHub and deploy it to Vercel instantly.
 					</DialogDescription>
 				</DialogHeader>
 
@@ -140,7 +141,7 @@ export const DashboardVercelDeploy = ({
 						<Label htmlFor="projectName">Project Name</Label>
 						<Input
 							id="projectName"
-							placeholder="my-shipkit-app"
+							placeholder={`my-${siteConfig.branding.projectSlug}-app`}
 							value={projectName}
 							onChange={(e) => setProjectName(e.target.value)}
 							disabled={isDeploying}

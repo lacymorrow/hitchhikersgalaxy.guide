@@ -97,7 +97,7 @@ const installationCode = `# Clone the repository
 git clone ${siteConfig.repo.url}
 
 # Change directory
-cd shipkit
+cd ${siteConfig.branding.projectSlug}
 
 # Install dependencies
 pnpm install
@@ -109,13 +109,13 @@ const dockerCode = `# Clone the repository
 git clone ${siteConfig.repo.url}
 
 # Change directory
-cd shipkit
+cd ${siteConfig.branding.projectSlug}
 
 # Build the Docker image
-docker build -t shipkit .
+docker build -t ${siteConfig.branding.projectSlug} .
 
 # Run the container
-docker run -p 3000:3000 shipkit`;
+docker run -p 3000:3000 ${siteConfig.branding.projectSlug}`;
 
 export default async function DashboardPage() {
 	const session = await auth({ protect: true });
@@ -148,7 +148,8 @@ export default async function DashboardPage() {
 				user={session.user}
 				hasGitHubConnection={hasGitHubConnection}
 				hasVercelConnection={hasVercelConnection}
-				hasPurchased={isCustomer}
+				hasPurchased={isCustomer || isUserAdmin}
+				forceEnabled={isUserAdmin}
 			/>
 
 			<PageHeader>

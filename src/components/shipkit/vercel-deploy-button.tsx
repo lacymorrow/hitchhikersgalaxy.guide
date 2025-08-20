@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { FC } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
+import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 
 interface VercelDeployButtonProps {
@@ -9,14 +10,19 @@ interface VercelDeployButtonProps {
 	className?: string;
 }
 
-export const VercelDeployButton: FC<VercelDeployButtonProps> = ({
-	href = routes.external.vercelDeployShipkit,
-	className,
-}) => {
+export const VercelDeployButton: FC<VercelDeployButtonProps> = ({ href, className }) => {
+	const deployUrl =
+		href ||
+		(routes.external as any)?.vercelDeploy?.({
+			repositoryUrl: `https://github.com/${siteConfig.repo.owner}/${siteConfig.repo.name}`,
+			projectName: siteConfig.branding.vercelProjectName,
+			repositoryName: siteConfig.branding.vercelProjectName,
+			env: ["ADMIN_EMAIL"],
+		});
 	return (
 		<Link
 			target="_blank"
-			href={href}
+			href={deployUrl}
 			className={cn(
 				buttonVariants({ variant: "default", size: "lg" }),
 				"group relative overflow-hidden transition-all duration-300 ease-out hover:bg-primary-foreground hover:text-primary",

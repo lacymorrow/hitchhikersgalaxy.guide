@@ -4,6 +4,7 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import { Suspense } from "react";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { constructMetadata } from "@/config/metadata";
+import { siteConfig } from "@/config/site-config";
 import { getAllDocSlugsFromFileSystem, getDocFromParams } from "@/lib/docs";
 import { useMDXComponents } from "@/mdx-components";
 
@@ -28,12 +29,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
 	const defaultMetadata = constructMetadata({
-		title: "Documentation - Build Better Apps Faster | Shipkit",
-		description:
-			"Master app development with Shipkit's comprehensive documentation. Step-by-step guides, API references, and best practices for building production-ready applications.",
+		title: `Documentation - Build Better Apps Faster | ${siteConfig.title}`,
+		description: `Master app development with ${siteConfig.title}'s comprehensive documentation. Step-by-step guides, API references, and best practices for building production-ready applications.`,
 		openGraph: {
 			type: "article",
-			siteName: "Shipkit Documentation",
+			siteName: `${siteConfig.title} Documentation`,
 			locale: "en_US",
 		},
 	});
@@ -46,13 +46,13 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 		}
 
 		return constructMetadata({
-			title: `${doc.title} - Shipkit Documentation`,
+			title: `${doc.title} - ${siteConfig.title} Documentation`,
 			description:
 				doc.description ||
-				"Learn how to implement Shipkit features and best practices in your app development workflow. Detailed guides and examples included.",
+				`Learn how to implement ${siteConfig.title} features and best practices in your app development workflow. Detailed guides and examples included.`,
 			openGraph: {
 				type: "article",
-				siteName: "Shipkit Documentation",
+				siteName: `${siteConfig.title} Documentation`,
 				title: doc.title,
 				description: doc.description,
 				locale: "en_US",

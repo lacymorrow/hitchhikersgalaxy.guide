@@ -158,7 +158,7 @@ export const Header: React.FC<HeaderProps> = ({
 												"w-full justify-center"
 											)}
 										>
-											Get Shipkit
+											{`Get ${siteConfig.title}`}
 										</Link>
 										<LoginButton
 											className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-center")}

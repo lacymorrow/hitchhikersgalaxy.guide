@@ -201,8 +201,50 @@ export const routes = {
 		docs: "/docs",
 		email: `mailto:${siteConfig.creator.email}`,
 		github: siteConfig.repo.url,
-		vercelDeployShipkit:
-			"https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Flacymorrow%2Fshipkit&env=ADMIN_EMAIL&envDescription=Required%20environment%20variables%20for%20Shipkit&envLink=https%3A%2F%2Fshipkit.io%2Fdocs%2Fenv&project-name=shipkit-app&repository-name=shipkit-app&redirect-url=https://shipkit.io/connect/vercel/deploy&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy&demo-title=Shipkit%20Preview&demo-description=The%20official%20Shipkit%20Preview.%20A%20full%20featured%20demo%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=//assets.vercel.com%2Fimage%2Fupload%2Fcontentful%2Fimage%2Fe5382hct74si%2F4JmubmYDJnFtstwHbaZPev%2F0c3576832aae5b1a4d98c8c9f98863c3%2FVercel_Home_OG.png",
+		vercelDeploy: ({
+			repositoryUrl,
+			projectName,
+			repositoryName,
+			env = ["ADMIN_EMAIL"],
+			redirectUrl = `${siteConfig.url}/connect/vercel/deploy`,
+			developerId = "oac_KkY2TcPxIWTDtL46WGqwZ4BF",
+			productionDeployHook = `${siteConfig.title} Deploy`,
+			demoTitle = `${siteConfig.title} Preview`,
+			demoDescription = `The official ${siteConfig.title} Preview. A full featured demo with dashboards, AI tools, and integrations with Docs, Payload, and Builder.io`,
+			demoUrl = `${siteConfig.url}/demo`,
+			demoImage = "//assets.vercel.com/image/upload/contentful/image/e5382hct74si/4JmubmYDJnFtstwHbaZPev/0c3576832aae5b1a4d98c8c9f98863c3/Vercel_Home_OG.png",
+		}: {
+			repositoryUrl: string;
+			projectName: string;
+			repositoryName: string;
+			env?: string[];
+			redirectUrl?: string;
+			developerId?: string;
+			productionDeployHook?: string;
+			demoTitle?: string;
+			demoDescription?: string;
+			demoUrl?: string;
+			demoImage?: string;
+		}) => {
+			const url = new URL("https://vercel.com/new/clone");
+			url.searchParams.set("repository-url", repositoryUrl);
+			url.searchParams.set("project-name", projectName);
+			url.searchParams.set("repository-name", repositoryName);
+			url.searchParams.set("redirect-url", redirectUrl);
+			url.searchParams.set("developer-id", developerId);
+			url.searchParams.set("production-deploy-hook", productionDeployHook);
+			url.searchParams.set("demo-title", demoTitle);
+			url.searchParams.set("demo-description", demoDescription);
+			url.searchParams.set("demo-url", demoUrl);
+			url.searchParams.set("demo-image", demoImage);
+			url.searchParams.set("env", env.join(","));
+			url.searchParams.set(
+				"envDescription",
+				`Required environment variables for ${siteConfig.title}`
+			);
+			url.searchParams.set("envLink", `${siteConfig.url}/docs/env`);
+			return url.toString();
+		},
 		// &integration-ids=oac_KkY2TcPxIWTDtL46WGqwZ4BF
 		vercelImportShipkit:
 			"https://vercel.com/new/import?s=https%3A%2F%2Fgithub.com%2Flacymorrow%2Fshipkit&hasTrialAvailable=1&project-name=shipkit&framework=nextjs&buildCommand=pnpm%20run%20build&installCommand=pnpm%20install&env=ADMIN_EMAIL&integration-ids=oac_KkY2TcPxIWTDtL46WGqwZ4BF&envDescription=Set%20administrator%20access%20for%20your%20deployment&envLink=https%3A%2F%2Fshipkit.io%2Fdocs%2Fenv&redirect-url=https://shipkit.io/connect/vercel/deploy&demo-title=Shipkit&demo-description=Shipkit.%20The%20complete%20site%20building%20toolkit%20with%20dashboards%2C%20AI%20tools%2C%20and%20integrations%20with%20Docs%2C%20Payload%2C%20and%20Builder.io&demo-url=https%3A%2F%2Fshipkit.io%2Fdemo&demo-image=//assets.vercel.com%2Fimage%2Fupload%2Fcontentful%2Fimage%2Fe5382hct74si%2F4JmubmYDJnFtstwHbaZPev%2F0c3576832aae5b1a4d98c8c9f98863c3%2FVercel_Home_OG.png&developer-id=oac_KkY2TcPxIWTDtL46WGqwZ4BF&production-deploy-hook=Shipkit%20Deploy",

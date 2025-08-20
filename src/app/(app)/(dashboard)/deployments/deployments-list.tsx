@@ -10,6 +10,7 @@ import { DataTable } from "@/components/ui/data-table/data-table";
 import { cn } from "@/lib/utils";
 import type { Deployment } from "@/server/db/schema";
 import { DeploymentActions } from "./deployment-actions";
+import { siteConfig } from "@/config/site-config";
 
 interface DeploymentsListProps {
 	deployments: Deployment[];
@@ -106,7 +107,7 @@ export function DeploymentsList({ deployments }: DeploymentsListProps) {
 					<Rocket className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
 					<h3 className="text-lg font-semibold mb-2">No deployments yet</h3>
 					<p className="text-muted-foreground mb-6">
-						Deploy your first Shipkit instance to get started
+						Deploy your first {siteConfig.title} instance to get started
 					</p>
 					<DashboardVercelDeploy />
 				</div>

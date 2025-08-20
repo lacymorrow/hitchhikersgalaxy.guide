@@ -13,6 +13,11 @@ interface OnboardingCheckProps {
 	hasGitHubConnection?: boolean;
 	hasVercelConnection?: boolean;
 	hasPurchased?: boolean;
+	/**
+	 * Force enable the onboarding wizard even if feature flags are disabled.
+	 * Useful for administrators or internal testing.
+	 */
+	forceEnabled?: boolean;
 }
 
 export function OnboardingCheck({
@@ -20,8 +25,13 @@ export function OnboardingCheck({
 	hasGitHubConnection = false,
 	hasVercelConnection = false,
 	hasPurchased = false,
+	forceEnabled = false,
 }: OnboardingCheckProps) {
-	if (!env.NEXT_PUBLIC_FEATURE_VERCEL_API_ENABLED || !env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED) {
+	// Allow admins (or forced contexts) to bypass feature-flag gating so they can run onboarding.
+	if (
+		!forceEnabled &&
+		(!env.NEXT_PUBLIC_FEATURE_VERCEL_API_ENABLED || !env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED)
+	) {
 		return null;
 	}
 
@@ -67,7 +77,11 @@ export function RestartOnboardingButton({
 	hasGitHubConnection = false,
 	hasVercelConnection = false,
 	className = "",
-}: OnboardingCheckProps & { className?: string }) {
+	/**
+	 * When true, always render the button (e.g., for admins), even if onboarding was not completed.
+	 */
+	forceVisible = false,
+}: OnboardingCheckProps & { className?: string; forceVisible?: boolean }) {
 	const [onboardingState, setOnboardingState] = useLocalStorage<{
 		completed: boolean;
 		currentStep: number;
@@ -88,15 +102,16 @@ export function RestartOnboardingButton({
 		window?.location?.reload();
 	};
 
-	// Only show the button if onboarding has been completed before
-	if (!onboardingState?.completed) {
+	// Only show the button if onboarding has been completed before,
+	// unless forceVisible is enabled (e.g., for admins to start onboarding).
+	if (!forceVisible && !onboardingState?.completed) {
 		return null;
 	}
 
 	return (
 		<Button type="button" variant="ghost" onClick={restartOnboarding} className={className}>
 			<ResetIcon className="mr-2 size-4" />
-			Restart Onboarding
+			{onboardingState?.completed ? "Restart Onboarding" : "Start Onboarding"}
 		</Button>
 	);
 }

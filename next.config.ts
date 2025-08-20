@@ -231,7 +231,7 @@ const nextConfig: NextConfig = {
 		// Use DISABLE_ERROR_LOGGING to disable error logging too
 		removeConsole:
 			process.env.DISABLE_LOGGING === "true" ||
-			(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+				(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
 				? process.env.DISABLE_ERROR_LOGGING === "true" ||
 					(process.env.NODE_ENV === "production" && !process.env.DISABLE_ERROR_LOGGING)
 					? true

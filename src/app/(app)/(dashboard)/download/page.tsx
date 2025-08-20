@@ -37,7 +37,7 @@ const installationCode = `# Clone the repository
 git clone ${siteConfig.repo.url}
 
 # Change directory
-cd shipkit
+cd ${siteConfig.branding.projectSlug}
 
 # Install dependencies
 npm install --global pnpm && pnpm install
@@ -49,13 +49,13 @@ const dockerCode = `# Clone the repository
 git clone ${siteConfig.repo.url}
 
 # Change directory
-cd shipkit
+cd ${siteConfig.branding.projectSlug}
 
 # Build the Docker image
-docker build -t shipkit .
+docker build -t ${siteConfig.branding.projectSlug} .
 
 # Run the container
-docker run -p 3000:3000 shipkit`;
+docker run -p 3000:3000 ${siteConfig.branding.projectSlug}`;
 
 interface DownloadState {
 	isAuthenticated: boolean;
@@ -157,9 +157,9 @@ function StatusCard({ downloadState }: { downloadState: DownloadState }) {
 			className={cn(
 				"border-2",
 				status === "success" &&
-					"border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950",
+				"border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950",
 				status === "warning" &&
-					"border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950",
+				"border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950",
 				status === "error" && "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950"
 			)}
 		>

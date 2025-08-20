@@ -145,10 +145,10 @@ export function UserMenuDropdown({
 							<DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
 						</Link>
 					</DropdownMenuItem>
-					<RestartOnboardingButton user={user} className="w-full justify-start" />
+					<RestartOnboardingButton user={user} className="w-full justify-start" forceVisible={isAdmin} />
 					{showOnboarding && (
 						<DropdownMenuItem asChild>
-							<RestartOnboardingButton user={user} className="w-full justify-start" />
+							<RestartOnboardingButton user={user} className="w-full justify-start" forceVisible={isAdmin} />
 						</DropdownMenuItem>
 					)}
 

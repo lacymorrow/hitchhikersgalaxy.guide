@@ -8,6 +8,7 @@ import { VercelDeployButton } from "@/components/shipkit/vercel-deploy-button";
 import { IntroDisclosure } from "@/components/ui/intro-disclosure";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
+import { siteConfig } from "@/config/site-config";
 import type { User } from "@/types/user";
 
 interface OnboardingWizardProps {
@@ -137,7 +138,7 @@ export const OnboardingWizard = ({
 		setOnboardingState((prev) => ({ ...prev, completed: true }));
 		toast({
 			title: "Onboarding completed!",
-			description: "You're all set to start building with Shipkit.",
+			description: `You're all set to start building with ${siteConfig.title}.`,
 		});
 		onComplete?.();
 	};

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 export function useLocalStorage<T>(
 	key: string,
@@ -27,24 +27,14 @@ export function useLocalStorage<T>(
 	// Pass initial state function to useState so logic is only executed once
 	const [storedValue, setStoredValue] = useState<T>(readValue);
 
-	// Return a wrapped version of useState's setter function that ...
-	// ... persists the new value to localStorage.
-	const setValue = (value: T | ((val: T) => T)) => {
+	// Stable setter that updates state; localStorage sync happens in an effect
+	const setValue = useCallback((value: T | ((val: T) => T)) => {
 		try {
-			// Allow value to be a function so we have the same API as useState
-			const valueToStore = value instanceof Function ? value(storedValue) : value;
-
-			// Save to state
-			setStoredValue(valueToStore);
-
-			// Save to local storage
-			if (typeof window !== "undefined") {
-				window.localStorage.setItem(key, JSON.stringify(valueToStore));
-			}
+			setStoredValue((prev) => (value instanceof Function ? (value as (val: T) => T)(prev) : value));
 		} catch (error) {
 			console.warn(`Error setting localStorage key "${key}":`, error);
 		}
-	};
+	}, [key]);
 
 	useEffect(() => {
 		setStoredValue(readValue());
@@ -64,6 +54,17 @@ export function useLocalStorage<T>(
 			window.removeEventListener("storage", handleStorageChange);
 		};
 	}, [key]);
+
+	// Persist to localStorage whenever value or key changes
+	useEffect(() => {
+		try {
+			if (typeof window !== "undefined") {
+				window.localStorage.setItem(key, JSON.stringify(storedValue));
+			}
+		} catch (error) {
+			console.warn(`Error persisting localStorage key "${key}":`, error);
+		}
+	}, [key, storedValue]);
 
 	return [storedValue, setValue];
 }

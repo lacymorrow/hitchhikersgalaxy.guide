@@ -125,7 +125,7 @@ function StepPreview({ step, direction }: { step: Step; direction: 1 | -1 }) {
 				<div className="flex h-full items-center justify-center p-6">
 					<motion.div initial={{ opacity: 0, y: 20 }} animate={controls} className="text-center">
 						<h3 className="mb-2 text-2xl font-semibold text-primary">{step.title}</h3>
-						<p className="text-muted-foreground">{step.full_description}</p>
+						<div className="text-muted-foreground">{step.full_description}</div>
 					</motion.div>
 				</div>
 			)}

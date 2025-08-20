@@ -3,7 +3,7 @@ import type { Session } from "next-auth";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
 import { BuyButton } from "@/components/buttons/lemonsqueezy-buy-button";
 import { LoginButton } from "@/components/buttons/sign-in-button";
-import { DashboardVercelDeploy } from "@/components/shipkit/dashboard-vercel-deploy";
+import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site-config";
 import { downloadRepo } from "@/server/actions/github/download-repo";

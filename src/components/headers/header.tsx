@@ -1,23 +1,29 @@
 "use client";
 
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
+import { useWindowScroll } from "@uidotdev/usehooks";
 import { cva } from "class-variance-authority";
+import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import type React from "react";
 import { Icon } from "@/components/assets/icon";
 import { Link } from "@/components/primitives/link-with-transition";
 import { SearchMenu } from "@/components/search/search-menu";
+import { SearchAi } from "@/components/search/search-ai";
 import { UserMenu } from "@/components/modules/user/user-menu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/theme";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { NavLink } from "@/config/navigation";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
 import { cn } from "@/lib/utils";
 import styles from "@/styles/header.module.css";
+import { LoginButton } from "@/components/buttons/sign-in-button";
 import { BuyButton } from "../buttons/lemonsqueezy-buy-button";
+import type { User } from "@/types/user";
 
 interface HeaderProps {
 	navLinks?: NavLink[];
@@ -25,7 +31,27 @@ interface HeaderProps {
 	logoIcon?: React.ReactNode;
 	logoText?: string;
 	searchPlaceholder?: string;
+	/**
+	 * Controls which search control is rendered.
+	 * - "menu": renders the standard command menu search (default)
+	 * - "ai": renders the AI search input on the right side
+	 * - "none": renders no search control
+	 */
+	searchVariant?: "ai" | "menu" | "none";
 	variant?: "default" | "sticky" | "floating" | "logo-only";
+	/**
+	 * When set, shows an animated CTA that switches after the given scroll threshold (in px).
+	 * If undefined, shows the default static CTA.
+	 */
+	animatedCTAOnScroll?: number;
+	/**
+	 * When set and variant is "floating", toggles opaque style after the given scroll threshold (in px).
+	 */
+	opaqueOnScroll?: number;
+	/**
+	 * Optional authenticated user to pass into the user menu.
+	 */
+	user?: User | null;
 	className?: string;
 }
 
@@ -57,12 +83,19 @@ export const Header: React.FC<HeaderProps> = ({
 	navLinks = defaultNavLinks,
 	variant = "default",
 	searchPlaceholder = `Search ${siteConfig.title}...`,
+	searchVariant = "menu",
+	animatedCTAOnScroll,
+	opaqueOnScroll,
+	user,
 	className,
 }) => {
+	const [{ y }] = useWindowScroll();
 	const signInRedirectUrl = useSignInRedirectUrl();
 	const { data: session } = useSession();
 
 	const isLogoOnly = variant === "logo-only";
+	const scrollY = typeof y === "number" ? y : 0;
+	const isOpaque = variant === "floating" && typeof opaqueOnScroll === "number" && scrollY > opaqueOnScroll;
 
 	return (
 		<>
@@ -70,6 +103,7 @@ export const Header: React.FC<HeaderProps> = ({
 				className={cn(
 					headerVariants({ variant }),
 					variant === "floating" && styles.header,
+					isOpaque && styles.opaque,
 					"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]",
 					className
 				)}
@@ -94,7 +128,7 @@ export const Header: React.FC<HeaderProps> = ({
 							{logoIcon}
 							<span className="block whitespace-nowrap">{logoText}</span>
 						</Link>
-						{!isLogoOnly && (
+						{!isLogoOnly && searchVariant === "menu" && (
 							<SearchMenu
 								buttonText={
 									<>
@@ -180,6 +214,7 @@ export const Header: React.FC<HeaderProps> = ({
 								</SheetContent>
 							</Sheet>
 							<div className="flex items-center gap-2 md:ml-auto lg:gap-4">
+								{searchVariant === "ai" && <SearchAi className="hidden md:block" />}
 								<div className="hidden items-center justify-between gap-md text-sm md:flex">
 									{session && (
 										<Link
@@ -210,9 +245,54 @@ export const Header: React.FC<HeaderProps> = ({
 								<div className="flex items-center gap-2">
 									{!session && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
 
-									<UserMenu />
+									<UserMenu user={user} />
 
-									{!session && <BuyButton />}
+									{!session && (
+										animatedCTAOnScroll ? (
+											<AnimatePresence mode="wait">
+												{scrollY > animatedCTAOnScroll ? (
+													<motion.div
+														key="compact"
+														initial={{ opacity: 0, scale: 0.9 }}
+														animate={{ opacity: 1, scale: 1 }}
+														exit={{ opacity: 0, scale: 0.9 }}
+														transition={{ duration: 0.1 }}
+													>
+														<TooltipProvider delayDuration={0}>
+															<Tooltip>
+																<TooltipTrigger asChild>
+																	<div className="relative -m-1 p-1">
+																		<BuyButton />
+																	</div>
+																</TooltipTrigger>
+																<TooltipContent
+																	side="bottom"
+																	sideOffset={3}
+																	className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
+																>
+																	<LoginButton className="hover:text-foreground">or Login</LoginButton>
+																</TooltipContent>
+															</Tooltip>
+														</TooltipProvider>
+													</motion.div>
+												) : (
+													<motion.div
+														key="full"
+														initial={{ opacity: 0, scale: 0.9 }}
+														animate={{ opacity: 1, scale: 1 }}
+														exit={{ opacity: 0, scale: 0.9 }}
+														transition={{ duration: 0.1 }}
+													>
+														<LoginButton variant="outline" nextUrl={routes.app.dashboard}>
+															Dashboard
+														</LoginButton>
+													</motion.div>
+												)}
+											</AnimatePresence>
+										) : (
+											<BuyButton />
+										)
+									)}
 								</div>
 							</div>
 						</>

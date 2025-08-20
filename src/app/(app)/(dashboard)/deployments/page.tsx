@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { DashboardVercelDeploy } from "@/components/shipkit/dashboard-vercel-deploy";
+import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { routes } from "@/config/routes";
 import { createSignInRedirectUrl } from "@/lib/utils/create-auth-redirect";
 import { getUserDeployments, initializeDemoDeployments } from "@/server/actions/deployment-actions";

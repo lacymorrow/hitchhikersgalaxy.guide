@@ -1,5 +1,5 @@
 import type React from "react";
-import { Header } from "@/components/headers/extended-header";
+import { Header } from "@/components/headers/header";
 import MainLayout from "@/components/layouts/main-layout";
 import { auth } from "@/server/auth";
 

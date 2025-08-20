@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { DeleteAccountCard } from "@/app/(app)/settings/_components/delete-account-card";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
-import { VercelConnectButton } from "@/components/shipkit/vercel-connect-button";
+import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
 import {
 	Card,
 	CardContent,

@@ -10,11 +10,15 @@ import { mkdir, readFile, stat, writeFile } from "fs/promises";
 import https from "https";
 import { join } from "path";
 import { pipeline } from "stream/promises";
+import { tmpdir } from "os";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 
-const CACHE_DIR = join(process.cwd(), ".cache", "downloads");
+// Use a writable cache directory on serverless (e.g. Vercel) and a local dir in dev
+const DEFAULT_CACHE_DIR = join(process.cwd(), ".cache", "downloads");
+const RUNTIME_CACHE_DIR = join(tmpdir(), "shipkit", "downloads");
+const CACHE_DIR = process.env.VERCEL ? RUNTIME_CACHE_DIR : DEFAULT_CACHE_DIR;
 const CACHE_DURATION = 1000 * 60 * 60; // 1 hour
 
 interface DownloadMetadata {
@@ -31,27 +35,18 @@ async function makeGitHubRequest(url: string): Promise<{
 	headers: Record<string, string | string[] | undefined>;
 	data: any;
 }> {
-	if (!env?.GITHUB_ACCESS_TOKEN) {
-		logger.warn("GITHUB_ACCESS_TOKEN is not set in the environment.");
-		return {
-			statusCode: 401,
-			headers: {},
-			data: null,
-		};
-	}
-
 	return new Promise((resolve, reject) => {
 		const makeRequest = (requestUrl: string) => {
-			const options = {
-				headers: {
-					"User-Agent": "Shipkit-Downloader",
-					Authorization: `Bearer ${env.GITHUB_ACCESS_TOKEN}`,
-					Accept: "application/vnd.github.v3+json",
-				},
+			const headers: Record<string, string> = {
+				"User-Agent": "Shipkit-Downloader",
+				Accept: "application/vnd.github.v3+json",
 			};
+			if (env?.GITHUB_ACCESS_TOKEN) {
+				headers.Authorization = `Bearer ${env.GITHUB_ACCESS_TOKEN}`;
+			}
 
 			https
-				.get(requestUrl, options, (response) => {
+				.get(requestUrl, { headers }, (response) => {
 					if (
 						response.statusCode === 301 ||
 						response.statusCode === 302 ||
@@ -104,13 +99,16 @@ async function verifyTokenPermissions(): Promise<{
 
 		// Check OAuth scopes
 		const scopes = headers["x-oauth-scopes"]?.toString().split(", ");
-		logger.info("GitHub token scopes", { scopes });
+		if (env?.GITHUB_ACCESS_TOKEN) {
+			logger.info("GitHub token scopes", { scopes });
+		}
 
+		// Public repos will return 200 without a token
 		if (statusCode === 200) {
 			return { isValid: true, scopes };
 		}
 
-		logger.error("GitHub token verification failed", {
+		logger.error("GitHub repository accessibility check failed", {
 			statusCode,
 			headers,
 			data,
@@ -122,7 +120,7 @@ async function verifyTokenPermissions(): Promise<{
 			error: data?.message || "Unknown error",
 		};
 	} catch (error) {
-		logger.error("GitHub token verification request failed", { error });
+		logger.error("GitHub repository accessibility request failed", { error });
 		return {
 			isValid: false,
 			error: error instanceof Error ? error.message : "Unknown error",
@@ -180,23 +178,18 @@ async function writeMetadata(metadata: DownloadMetadata) {
  * Downloads a file from a URL to a local path
  */
 async function downloadFile(url: string, filePath: string): Promise<void> {
-	if (!env?.GITHUB_ACCESS_TOKEN) {
-		logger.warn("GITHUB_ACCESS_TOKEN is not set in the environment.");
-		return;
-	}
-
 	return new Promise((resolve, reject) => {
 		const makeRequest = (requestUrl: string) => {
-			const options = {
-				headers: {
-					"User-Agent": "Shipkit-Downloader",
-					Authorization: `Bearer ${env.GITHUB_ACCESS_TOKEN}`,
-					Accept: "application/vnd.github.v3+json",
-				},
+			const headers: Record<string, string> = {
+				"User-Agent": "Shipkit-Downloader",
+				Accept: "application/vnd.github.v3+json",
 			};
+			if (env?.GITHUB_ACCESS_TOKEN) {
+				headers.Authorization = `Bearer ${env.GITHUB_ACCESS_TOKEN}`;
+			}
 
 			https
-				.get(requestUrl, options, (response) => {
+				.get(requestUrl, { headers }, (response) => {
 					if (
 						response.statusCode === 301 ||
 						response.statusCode === 302 ||
@@ -266,8 +259,7 @@ async function downloadLatestRelease(): Promise<{
 	const { isValid, scopes, error } = await verifyTokenPermissions();
 	if (!isValid) {
 		throw new Error(
-			`GitHub token verification failed: ${error}. Required scopes: repo. Current scopes: ${
-				scopes?.join(", ") || "none"
+			`GitHub token verification failed: ${error}. Required scopes: repo. Current scopes: ${scopes?.join(", ") || "none"
 			}`
 		);
 	}

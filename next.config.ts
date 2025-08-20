@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 import path from "path";
 import { buildTimeFeatureFlags, buildTimeFeatures } from "@/config/features-config";
+import { getDerivedSecrets } from "@/config/secrets";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
 import { withPlugins } from "@/config/with-plugins";
@@ -9,6 +10,10 @@ const nextConfig: NextConfig = {
 	env: {
 		// Add client-side feature flags
 		...buildTimeFeatureFlags,
+
+		// Server-only secrets injected at build time. They will not be exposed to the client
+		// unless prefixed with NEXT_PUBLIC_. Consumers should read via process.env on server.
+		...getDerivedSecrets(),
 
 		// You can add other build-time env variables here if needed
 	},

@@ -3,8 +3,8 @@
 import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
-import { VercelConnectButton } from "@/components/shipkit/vercel-connect-button";
-import { VercelDeployButton } from "@/components/shipkit/vercel-deploy-button";
+import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
+import { VercelDeployButton } from "@/components/buttons/vercel-deploy-button";
 import { IntroDisclosure } from "@/components/ui/intro-disclosure";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
@@ -72,8 +72,6 @@ export const OnboardingWizard = ({
 				title: "Connect GitHub",
 				short_description: "Link your GitHub account to manage your codebase",
 				full_description:
-					"Connecting GitHub allows you to manage your codebase, track changes, and deploy directly from your repository.",
-				render: (
 					<div className="space-y-4">
 						{hasGitHubConnection && (
 							<div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-500">
@@ -85,14 +83,11 @@ export const OnboardingWizard = ({
 							<GitHubConnectButton className="mt-2" />
 						</div>
 					</div>
-				),
 			},
 			{
 				title: "Connect Vercel",
 				short_description: "Link your Vercel account for deployment",
 				full_description:
-					"Link your Vercel account to enable one-click deployments, preview environments, and continuous integration.",
-				render: (
 					<div className="space-y-4">
 						{hasVercelConnection && (
 							<div className="flex items-center gap-2 text-sm text-green-600 dark:text-green-500">
@@ -107,15 +102,12 @@ export const OnboardingWizard = ({
 							</div>
 						)}
 						<VercelConnectButton className="mt-2 w-full" user={user} />
-					</div>
-				),
+					</div>,
 			},
 			{
 				title: "Deploy Your Project",
 				short_description: "Launch your site with one-click deployment",
 				full_description:
-					"Deploy your Next.js application to Vercel. Your project will be live and accessible instantly.",
-				render: (
 					<div className="space-y-4">
 						<div className="mx-auto">
 							<VercelDeployButton />
@@ -127,8 +119,7 @@ export const OnboardingWizard = ({
 								Vercel-provided URL.
 							</p>
 						</div>
-					</div>
-				),
+					</div>,
 			},
 		],
 		[hasGitHubConnection, hasVercelConnection, user]

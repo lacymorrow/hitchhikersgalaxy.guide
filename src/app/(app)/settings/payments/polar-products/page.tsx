@@ -1,4 +1,4 @@
-import { PolarProductStatus } from "@/components/shipkit/polar-product-status";
+import { PolarProductStatus } from "@/components/modules/payments/polar-product-status";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { env } from "@/env";
 import { getUserPurchasedProducts } from "@/server/actions/payments";

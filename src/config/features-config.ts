@@ -31,10 +31,19 @@ export function envIsTrue(name: string): boolean {
 
 const buildTimeFeatures = {} as Record<string, boolean>;
 
+// Secrets can be derived from a single APP_SECRET. If APP_SECRET exists,
+// treat dependent secrets as satisfied for feature detection.
+function secretProvidedOrDerivable(name: string): boolean {
+	return hasEnv(name) || hasEnv("APP_SECRET");
+}
+
 // Core Features
 buildTimeFeatures.DATABASE_ENABLED = hasEnv("DATABASE_URL");
+// Payload can derive its secret from APP_SECRET when not explicitly set
 buildTimeFeatures.PAYLOAD_ENABLED =
-	buildTimeFeatures.DATABASE_ENABLED && hasEnv("PAYLOAD_SECRET") && !envIsTrue("DISABLE_PAYLOAD");
+	buildTimeFeatures.DATABASE_ENABLED &&
+	secretProvidedOrDerivable("PAYLOAD_SECRET") &&
+	!envIsTrue("DISABLE_PAYLOAD");
 buildTimeFeatures.BUILDER_ENABLED =
 	hasEnv("NEXT_PUBLIC_BUILDER_API_KEY") && !envIsTrue("DISABLE_BUILDER");
 buildTimeFeatures.MDX_ENABLED = !envIsTrue("DISABLE_MDX");
@@ -45,8 +54,9 @@ buildTimeFeatures.LIGHT_MODE_ENABLED = !envIsTrue("DISABLE_LIGHT_MODE");
 buildTimeFeatures.DARK_MODE_ENABLED = !envIsTrue("DISABLE_DARK_MODE");
 
 // Authentication
+// Better Auth can also derive its secret from APP_SECRET
 buildTimeFeatures.BETTER_AUTH_ENABLED =
-	hasEnv("BETTER_AUTH_SECRET") && !envIsTrue("DISABLE_BETTER_AUTH");
+	secretProvidedOrDerivable("BETTER_AUTH_SECRET") && !envIsTrue("DISABLE_BETTER_AUTH");
 buildTimeFeatures.AUTH_CLERK_ENABLED =
 	hasEnv("NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY", "CLERK_SECRET_KEY") &&
 	!envIsTrue("DISABLE_AUTH_CLERK");

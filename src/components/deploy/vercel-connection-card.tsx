@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertCircle, CheckCircle, Zap } from "lucide-react";
-import { VercelConnectButton } from "@/components/shipkit/vercel-connect-button";
+import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { User } from "@/types/user";

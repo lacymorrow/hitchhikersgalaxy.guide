@@ -4,12 +4,12 @@ import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
-import { VercelDeployButton } from "@/components/buttons/vercel-deploy-button";
 import { IntroDisclosure } from "@/components/ui/intro-disclosure";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
 import { siteConfig } from "@/config/site-config";
 import type { User } from "@/types/user";
+import { VercelDeployButton } from "@/components/buttons/vercel-deploy-button";
 
 interface OnboardingWizardProps {
 	user: User | null;

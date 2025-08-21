@@ -23,6 +23,8 @@ import { env } from "@/env";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import { initiateDeployment } from "@/server/actions/deployment-actions";
+import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
+import { User } from "@/types/user";
 
 interface DeploymentStatus {
     step: "idle" | "deploying" | "completed" | "error";
@@ -43,11 +45,13 @@ const SHIPKIT_REPO = env.NEXT_PUBLIC_SHIPKIT_REPO;
 interface DashboardVercelDeployProps {
     className?: string;
     isVercelConnected?: boolean;
+    user?: User;
 }
 
 export const DashboardVercelDeploy = ({
     className,
     isVercelConnected = true,
+    user,
 }: DashboardVercelDeployProps) => {
     const [open, setOpen] = useState(false);
     const [projectName, setProjectName] = useState("");
@@ -88,10 +92,10 @@ export const DashboardVercelDeploy = ({
         setOpen(false);
     };
 
-    const triggerButton = (
+    const triggerButton = isVercelConnected ? (
         <Button
             size="lg"
-            disabled={!isVercelConnected}
+            // disabled={!isVercelConnected}
             className={cn(
                 "group relative overflow-hidden transition-all duration-300 ease-out",
                 isVercelConnected && "hover:bg-primary-foreground hover:text-primary",
@@ -103,6 +107,8 @@ export const DashboardVercelDeploy = ({
                 Deploy to Vercel
             </span>
         </Button>
+    ) : (
+        <VercelConnectButton className="w-full mt-3" user={user} />
     );
 
     return (

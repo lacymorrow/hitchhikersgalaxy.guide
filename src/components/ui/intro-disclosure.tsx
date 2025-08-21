@@ -176,7 +176,7 @@ function StepTab({ step, isActive, onClick, isCompleted }: StepTabProps) {
 interface Step {
 	title: string;
 	short_description: string;
-	full_description: string;
+	full_description: string | React.ReactNode;
 	action?: {
 		label: string;
 		onClick?: () => void;

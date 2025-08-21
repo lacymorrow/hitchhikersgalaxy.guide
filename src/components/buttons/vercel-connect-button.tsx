@@ -1,7 +1,6 @@
 "use client";
 
 import { IconBrandVercelFilled } from "@tabler/icons-react";
-import crypto from "crypto";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -46,8 +45,9 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
             const client_slug = process.env.NEXT_PUBLIC_VERCEL_INTEGRATION_SLUG;
 
             // create a CSRF token and store it locally
-            const state = crypto.randomBytes(16).toString("hex");
-            localStorage.setItem("latestCSRFToken", state);
+            const state = Array.from(crypto.getRandomValues(new Uint8Array(16)))
+                .map(b => b.toString(16).padStart(2, '0')).join('');
+            sessionStorage.setItem("latestCSRFToken", state);
 
             // Get the origin for the callback URL
             const origin = window.location.origin;

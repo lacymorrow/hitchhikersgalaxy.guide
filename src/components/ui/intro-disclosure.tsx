@@ -40,11 +40,16 @@ function useFeatureVisibility(featureId: string) {
 		setIsVisible(false);
 	};
 
-	return { isVisible: isVisible === null ? false : isVisible, hideFeature };
+	const resetFeature = () => {
+		localStorage.removeItem(`feature_${featureId}`);
+		setIsVisible(true);
+	};
+
+	return { isVisible: isVisible === null ? false : isVisible, hideFeature, resetFeature };
 }
 
 function useSwipe(onSwipe: (direction: "left" | "right") => void) {
-	const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+	const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
 		if (info.offset.x > 100) {
 			onSwipe("right");
 		} else if (info.offset.x < -100) {
@@ -610,7 +615,7 @@ export function IntroDisclosure({
 							<div className="flex items-center space-x-2">
 								<Checkbox
 									id="skipNextTime"
-									onCheckedChange={(checked) => {
+									onCheckedChange={() => {
 										hideFeature();
 									}}
 								/>

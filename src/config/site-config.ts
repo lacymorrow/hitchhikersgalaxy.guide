@@ -57,7 +57,6 @@ interface SiteConfig {
 		productNames: {
 			// TODO: Remove these once we have a proper product name
 			bones: string;
-			muscles: string;
 			brains: string;
 			main: string;
 		};
@@ -183,7 +182,6 @@ export const siteConfig: SiteConfig = {
 		projectSlug: "shipkit",
 		productNames: {
 			bones: "Bones",
-			muscles: "Muscles",
 			brains: "Brains",
 			main: "Shipkit",
 		},
@@ -247,7 +245,6 @@ export const siteConfig: SiteConfig = {
 			shipkit: "411883",
 			// Examples:
 			bones: "411883",
-			muscles: "411883",
 			brains: "411883",
 		},
 	},

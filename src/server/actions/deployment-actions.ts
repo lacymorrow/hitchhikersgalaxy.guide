@@ -239,7 +239,10 @@ export async function initializeDemoDeployments(): Promise<void> {
 		];
 
 		await db.insert(deployments).values(demoDeployments);
-		revalidatePath("/deployments");
+		// Avoid calling revalidatePath here because this function can be executed during
+		// a Server Component render (e.g., first-visit demo data). Revalidation during
+		// render is unsupported in Next.js and triggers runtime errors. The page
+		// explicitly refetches deployments after this runs, so no revalidation is needed.
 	} catch (error) {
 		console.error("Failed to initialize demo deployments:", error);
 		// Don't throw - this is not critical

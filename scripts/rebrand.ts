@@ -87,10 +87,9 @@ async function main() {
 	const databaseName = projectSlug;
 	const vercelProjectName = `${projectSlug}-app`;
 
-	// Product names - keep the same structure but use the project name
-	const bonesName = "Core";
-	const musclesName = "Pro";
-	const brainsName = "Enterprise";
+	// Product names - consolidated tiers: Bones (free) and Brains (paid)
+	const bonesName = "Bones";
+	const brainsName = "Brains";
 
 	// Update site-config.ts
 	console.log("\nUpdating site configuration...");
@@ -134,7 +133,6 @@ async function main() {
 \t\tprojectSlug: "${projectSlug}",
 \t\tproductNames: {
 \t\t\tbones: "${bonesName}",
-\t\t\tmuscles: "${musclesName}",
 \t\t\tbrains: "${brainsName}",
 \t\t\tmain: "${projectName}",
 \t\t},

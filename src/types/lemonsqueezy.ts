@@ -162,7 +162,7 @@ export interface PaymentVerificationResult {
 /**
  * Product key type - these are the keys defined in site config
  */
-export type ProductKey = "shipkit" | "bones" | "muscles" | "brains";
+export type ProductKey = "shipkit" | "bones" | "brains";
 
 /**
  * Variant ID type - UUID strings from Lemon Squeezy

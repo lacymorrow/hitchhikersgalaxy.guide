@@ -61,9 +61,8 @@ branding: {
     projectName: "Shipkit", // Change this to your project name
     projectSlug: "shipkit", // Change this to your project slug
     productNames: {
-        bones: "Core", // Product tiers
-        muscles: "Pro",
-        brains: "Enterprise",
+        bones: "Bones", // Product tiers
+        brains: "Brains",
         main: "Shipkit",
     },
     domain: "shipkit.io", // Change this to your domain

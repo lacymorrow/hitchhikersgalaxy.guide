@@ -52,13 +52,14 @@ export const oneTimePlans: PricingPlan[] = [
 		],
 		noCardRequired: true,
 	},
+	// Removed Muscles tier; consolidating to Bones (free) and Brains (paid)
 	{
-		title: "Shipkit Muscles",
+		title: "Shipkit",
 		description: "Production-ready, for teams that need advanced features",
-		price: { oneTime: 99 },
+		price: { oneTime: 149 },
 		href: routes.external.buy,
 		features: [
-			// "Everything in Bones +",
+			"Everything in Bones +",
 			"Database Integration (Postgres)",
 			"Email Service (Resend)",
 			"Payment Processing",
@@ -68,14 +69,6 @@ export const oneTimePlans: PricingPlan[] = [
 			"Advanced Components",
 		],
 		isBestValue: true,
-	},
-	{
-		title: "Brains",
-		description: "Enterprise-grade with custom features",
-		price: { oneTime: 149 },
-		href: routes.external.buy,
-		features: ["Everything in Muscles +", "Custom Integrations", "Advanced AI Tools"],
-		isComingSoon: true,
 	},
 ];
 

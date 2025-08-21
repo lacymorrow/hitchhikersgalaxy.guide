@@ -188,6 +188,13 @@ This document outlines a comprehensive audit plan for the Shipkit codebase to id
 
 ### Critical Issues
 
+### Bugfix: Deployments page/process
+
+- [x] Removed render-time revalidation in demo initialization
+  - Updated `src/server/actions/deployment-actions.ts` to avoid calling `revalidatePath("/deployments")` inside `initializeDemoDeployments` which was executed during RSC render. The page already refetches after initialization.
+- [x] Fixed Payload enum migration failure
+  - Added `src/migrations/0002_fix_features_plans_enum.sql` to remap deprecated value `muscles` → `bones` before Payload alters `payload.enum_features_plans`, preventing `22P02` errors.
+
 1. **Hydration Issues**: `use-toast.ts` has client-side hydration checks that could cause layout shifts
 2. **Complex Database Logic**: Payment service has intricate fallback logic that might impact performance
 3. **Large Components**: Several components exceed recommended size limits

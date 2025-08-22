@@ -1,12 +1,9 @@
 "use client";
 
-import { AlertCircle, CheckCircle, Clock, ExternalLink } from "lucide-react";
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Link as LinkWithTransition } from "@/components/primitives/link";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -17,30 +14,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ConfettiSideCannons } from "@/components/ui/magicui/confetti/confetti-side-cannons";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { env } from "@/env";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import { initiateDeployment } from "@/server/actions/deployment-actions";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
 import { User } from "@/types/user";
 
-interface DeploymentStatus {
-    step: "idle" | "deploying" | "completed" | "error";
-    message?: string;
-    githubRepo?: {
-        url: string;
-        name: string;
-    };
-    vercelProject?: {
-        projectUrl: string;
-        deploymentUrl?: string;
-    };
-    error?: string;
-}
-
-const SHIPKIT_REPO = env.NEXT_PUBLIC_SHIPKIT_REPO;
 
 interface DashboardVercelDeployProps {
     className?: string;
@@ -121,11 +101,8 @@ export const DashboardVercelDeploy = ({
                         <TooltipTrigger asChild>{triggerButton}</TooltipTrigger>
                         <TooltipContent className="flex flex-col gap-2">
                             <p>Connect your Vercel account to deploy</p>
-                            <LinkWithTransition
-                                href="/settings/accounts"
-                                className="text-xs text-primary hover:underline"
-                            >
-                                Go to Settings →
+                            <LinkWithTransition href="/settings/accounts">
+                                <span className="text-xs text-primary hover:underline">Go to Settings →</span>
                             </LinkWithTransition>
                         </TooltipContent>
                     </Tooltip>
@@ -168,12 +145,8 @@ export const DashboardVercelDeploy = ({
 
                     <p className="text-xs text-center text-muted-foreground">
                         Ensure you've connected GitHub and Vercel in{" "}
-                        <LinkWithTransition
-                            href="/settings/accounts"
-                            className="text-primary hover:underline"
-                            onClick={() => setOpen(false)}
-                        >
-                            Settings
+                        <LinkWithTransition href="/settings/accounts" onClick={() => setOpen(false)}>
+                            <span className="text-primary hover:underline">Settings</span>
                         </LinkWithTransition>
                     </p>
                 </form>
@@ -194,5 +167,3 @@ const VercelIcon = ({ className }: { className?: string }) => (
         <path d="M37.5274 0L75.0548 65H0L37.5274 0Z" fill="currentColor" />
     </svg>
 );
-
-

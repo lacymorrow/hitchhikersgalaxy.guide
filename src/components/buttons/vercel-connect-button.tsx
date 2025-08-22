@@ -4,7 +4,6 @@ import { IconBrandVercelFilled } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
@@ -97,7 +96,7 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
         <>
             {isConnected ? (
                 <div className={cn("flex flex-col items-center justify-center gap-1", className)}>
-                    <Link
+                    <a
                         href="https://vercel.com/dashboard"
                         className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full")}
                         target="_blank"
@@ -105,7 +104,7 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
                     >
                         <IconBrandVercelFilled className="mr-2 h-4 w-4" />
                         View Vercel Dashboard
-                    </Link>
+                    </a>
                     <Tooltip delayDuration={200}>
                         <TooltipTrigger asChild>
                             <Button
@@ -132,5 +131,3 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
         </>
     );
 };
-
-

@@ -2,7 +2,7 @@
 
 import { ArrowRight, Box, Code, Zap } from "lucide-react";
 import { ShipkitLogoParticles } from "@/app/(app)/(shipkit)/_components/shipkit-logo-particles";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import {
 	PageHeader,
 	PageHeaderDescription,

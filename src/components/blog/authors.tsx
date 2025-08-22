@@ -1,6 +1,6 @@
 import Image from "next/image";
 import type React from "react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { authorUtils, type BlogAuthor } from "@/config/blog-authors";
 
 // Legacy author interface for backward compatibility

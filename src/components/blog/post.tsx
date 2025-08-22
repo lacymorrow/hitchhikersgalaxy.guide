@@ -1,6 +1,6 @@
 import type React from "react";
 import { BlogImage } from "@/components/blog/image";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { authorUtils, type BlogAuthor, getAuthorByName } from "@/config/blog-authors";
 import type { BlogPost } from "@/lib/blog";
 import { formatDateForBlog } from "@/lib/utils/format-date";

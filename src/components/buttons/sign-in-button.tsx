@@ -3,7 +3,7 @@
 import { usePathname } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import type React from "react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";

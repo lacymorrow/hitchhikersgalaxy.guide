@@ -3,7 +3,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { LinkIcon } from "lucide-react";
 import { Slot as SlotPrimitive } from "radix-ui";
 import type React from "react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { cn } from "@/lib/utils";
 
 type AnchorProps = {

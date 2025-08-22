@@ -2,7 +2,7 @@ import { DownloadIcon } from "lucide-react";
 import { AuthForm } from "@/app/(app)/(authentication)/_components/auth-form";
 import { SignIn } from "@/app/(app)/(authentication)/sign-in/_components/sign-in";
 import { LoginButton } from "@/components/buttons/sign-in-button";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfettiSideCannons } from "@/components/ui/magicui/confetti/confetti-side-cannons";

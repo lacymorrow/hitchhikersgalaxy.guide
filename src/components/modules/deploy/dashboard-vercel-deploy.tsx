@@ -4,7 +4,7 @@ import { AlertCircle, CheckCircle, Clock, ExternalLink } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Link as LinkWithTransition } from "@/components/primitives/link-with-transition";
+import { Link as LinkWithTransition } from "@/components/primitives/link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {

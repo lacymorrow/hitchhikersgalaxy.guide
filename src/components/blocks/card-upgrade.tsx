@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import { ArrowRight, type LucideIcon } from "lucide-react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

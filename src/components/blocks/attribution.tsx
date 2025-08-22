@@ -4,8 +4,7 @@ import { X } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
 import { useLocalStorage } from "usehooks-ts";
-import { LinkOrButton } from "@/components/primitives/link-or-button";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { LOCAL_STORAGE_KEYS } from "@/config/local-storage-keys";
@@ -116,13 +115,13 @@ export function Attribution({
 				<CardContent className="flex gap-2 justify-end mt-auto">{children}</CardContent>
 				<CardFooter className="mt-auto">
 					{href && (
-						<LinkOrButton
+						<Link
 							href={href}
 							className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-							variant="link"
+							variant="button"
 						>
 							More...
-						</LinkOrButton>
+						</Link>
 					)}
 				</CardFooter>
 			</Card>

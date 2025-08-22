@@ -3,6 +3,7 @@ import { Redis } from "@upstash/redis";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { ErrorService } from "./error-service";
+import { rateLimits as globalRateLimits } from "@/config/rate-limits";
 
 // Try to create Redis instance if configured
 let redis: Redis | null = null;
@@ -62,8 +63,7 @@ export class RateLimitService {
 
 	/**
 	 * Checks if a request should be rate limited
-	 */
-	async checkLimit(identifier: string, action: string, config: RateLimitConfig): Promise<void> {
+	 */	async checkLimit(identifier: string, action: string, config: RateLimitConfig): Promise<void> {
 		// Skip rate limiting if Redis is not available
 		if (!this.enabled) {
 			logger.debug("Rate limiting disabled, skipping check", {
@@ -87,8 +87,7 @@ export class RateLimitService {
 
 	/**
 	 * Gets the current rate limit status
-	 */
-	async getStatus(
+	 */	async getStatus(
 		identifier: string,
 		action: string
 	): Promise<{
@@ -122,8 +121,7 @@ export class RateLimitService {
 
 	/**
 	 * Resets rate limit for a specific identifier and action
-	 */
-	async resetLimit(identifier: string, action: string): Promise<void> {
+	 */	async resetLimit(identifier: string, action: string): Promise<void> {
 		if (!this.enabled) return;
 
 		const key = `ratelimit:${action}:${identifier}`;
@@ -134,30 +132,4 @@ export class RateLimitService {
 export const rateLimitService = new RateLimitService();
 
 // Common rate limit configurations
-export const rateLimits = {
-	api: {
-		default: {
-			requests: 100,
-			duration: 60, // 100 requests per minute
-		},
-		auth: {
-			requests: 5,
-			duration: 60, // 5 login attempts per minute
-			blockDuration: 300, // 5 minutes block after exceeding
-		},
-		search: {
-			requests: 30,
-			duration: 60, // 30 searches per minute
-		},
-	},
-	web: {
-		default: {
-			requests: 1000,
-			duration: 60, // 1000 requests per minute
-		},
-		forms: {
-			requests: 10,
-			duration: 60, // 10 form submissions per minute
-		},
-	},
-} as const;
+export const rateLimits = globalRateLimits;

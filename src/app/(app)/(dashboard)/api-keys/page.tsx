@@ -2,7 +2,7 @@ import { AlertCircleIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { routes } from "@/config/routes";
-import { createSignInRedirectUrl } from "@/lib/utils/create-auth-redirect";
+import { createRedirectUrl } from "@/lib/utils/redirect";
 import { auth } from "@/server/auth";
 import { apiKeyService } from "@/server/services/api-key-service";
 import { cacheConfigs, cacheService } from "@/server/services/cache-service";
@@ -12,7 +12,7 @@ import { ApiKeysTable } from "./_components/api-keys-table";
 export default async function ApiKeysPage() {
 	const session = await auth({ protect: true });
 	if (!session) {
-		redirect(createSignInRedirectUrl(routes.app.apiKeys));
+		redirect(createRedirectUrl(routes.auth.signIn, { nextUrl: routes.app.apiKeys }));
 	}
 	const user = session?.user;
 

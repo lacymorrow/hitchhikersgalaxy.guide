@@ -9,7 +9,7 @@ import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { STATUS_CODES } from "@/config/status-codes";
 import { logger } from "@/lib/logger";
-import { routeRedirectWithCode } from "@/lib/utils/redirect-with-code";
+import { routeRedirect } from "@/lib/utils/redirect";
 import { signOut } from "@/server/auth";
 
 const querySchema = z.object({
@@ -36,7 +36,7 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
 
 	// If the parameters are not valid, redirect to the sign in page
 	if (!result.success) {
-		return routeRedirectWithCode(routes.auth.signIn, {
+		return routeRedirect(routes.auth.signIn, {
 			code: STATUS_CODES.AUTH_REFRESH.code,
 			request,
 		});
@@ -46,7 +46,7 @@ export const GET = async (request: NextRequest): Promise<NextResponse> => {
 
 	logger.info(`sign-out/route.ts - Signing out with code: ${code}`);
 
-	return routeRedirectWithCode(nextUrl ?? routes.auth.signIn, {
+	return routeRedirect(nextUrl ?? routes.auth.signIn, {
 		code,
 		request,
 	});

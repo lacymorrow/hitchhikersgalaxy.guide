@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { routes } from "@/config/routes";
-import { createSignInRedirectUrl } from "@/lib/utils/create-auth-redirect";
+import { createRedirectUrl } from "@/lib/utils/redirect";
 import { getUserDeployments, initializeDemoDeployments } from "@/server/actions/deployment-actions";
 import { auth } from "@/server/auth";
 import type { Deployment } from "@/server/db/schema";
@@ -12,7 +12,7 @@ export default async function DeploymentsPage() {
 
 	// Defensive check: even with protect: true, ensure user exists
 	if (!session?.user?.id) {
-		redirect(createSignInRedirectUrl(routes.app.dashboard));
+		redirect(createRedirectUrl(routes.auth.signIn, { nextUrl: routes.app.dashboard }));
 	}
 
 	let deployments: Deployment[] = [];

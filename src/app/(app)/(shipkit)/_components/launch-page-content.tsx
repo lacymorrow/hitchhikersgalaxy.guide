@@ -1,5 +1,5 @@
 import { RocketIcon } from "lucide-react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Section } from "@/components/primitives/section";
 import { buttonVariants } from "@/components/ui/button";
 import { CodeWindow } from "@/components/ui/code-window";

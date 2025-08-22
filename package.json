@@ -163,6 +163,7 @@
     "next-view-transitions": "0.3.4",
     "nuqs": "^2.4.3",
     "openai": "^5.10.2",
+    "picocolors": "1.0.1",
     "postgres": "3.4.7",
     "posthog-js": "^1.258.2",
     "radix-ui": "^1.4.2",

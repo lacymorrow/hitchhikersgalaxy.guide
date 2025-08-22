@@ -6,9 +6,9 @@
  *
  * @example
  * <ThemeProvider>
- *   <ThemeToggle />
+ *   <ThemeSwitcher type="toggle" />
  *   // or
- *   <ThemeChooser />
+ *   <ThemeSwitcher type="chooser" />
  * </ThemeProvider>
  *
  * @props {object} ThemeProvider.props
@@ -17,11 +17,8 @@
  * - enableSystem=true - Enable system theme detection
  * - disableTransitionOnChange=false - Disable transitions when changing theme
  *
- * @props {object} ThemeToggle.props
- * - variant="ghost" - Button variant
- * - size="icon" - Button size
- *
- * @props {object} ThemeChooser.props
+ * @props {object} ThemeSwitcher.props
+ * - type="toggle" | "chooser" - Type of switcher to render
  * - variant="ghost" - Button variant
  * - size="icon" - Button size
  *
@@ -51,49 +48,48 @@ const ThemeButton = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref
 ));
 ThemeButton.displayName = "ThemeButton";
 
-const ThemeToggle = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-	const { theme, setTheme } = useTheme();
+interface ThemeSwitcherProps extends ButtonProps {
+	type?: "toggle" | "chooser";
+}
 
-	const lightEnabled = !!env.NEXT_PUBLIC_FEATURE_LIGHT_MODE_ENABLED;
-	const darkEnabled = !!env.NEXT_PUBLIC_FEATURE_DARK_MODE_ENABLED;
-	const canToggle = lightEnabled && darkEnabled;
+const ThemeSwitcher = React.forwardRef<HTMLButtonElement, ThemeSwitcherProps>(
+	({ type = "toggle", ...props }, ref) => {
+		const { theme, setTheme } = useTheme();
 
-	function handleClick() {
-		if (!canToggle) return;
-		setTheme(theme === "light" ? "dark" : "light");
+		const lightEnabled = !!env.NEXT_PUBLIC_FEATURE_LIGHT_MODE_ENABLED;
+		const darkEnabled = !!env.NEXT_PUBLIC_FEATURE_DARK_MODE_ENABLED;
+		const bothEnabled = lightEnabled && darkEnabled;
+
+		if (type === "toggle") {
+			const canToggle = lightEnabled && darkEnabled;
+			function handleClick() {
+				if (!canToggle) return;
+				setTheme(theme === "light" ? "dark" : "light");
+			}
+			return <ThemeButton onClick={handleClick} disabled={!canToggle} {...props} ref={ref} />;
+		}
+
+		return (
+			<DropdownMenu>
+				<DropdownMenuTrigger asChild>
+					<ThemeButton {...props} ref={ref} />
+				</DropdownMenuTrigger>
+				<DropdownMenuContent align="end">
+					{lightEnabled && (
+						<DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
+					)}
+					{darkEnabled && (
+						<DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
+					)}
+					{bothEnabled && (
+						<DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
+					)}
+				</DropdownMenuContent>
+			</DropdownMenu>
+		);
 	}
-
-	return <ThemeButton onClick={handleClick} disabled={!canToggle} {...props} ref={ref} />;
-});
-ThemeToggle.displayName = "ThemeToggle";
-
-const ThemeChooser = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
-	const { setTheme } = useTheme();
-
-	const lightEnabled = !!env.NEXT_PUBLIC_FEATURE_LIGHT_MODE_ENABLED;
-	const darkEnabled = !!env.NEXT_PUBLIC_FEATURE_DARK_MODE_ENABLED;
-	const bothEnabled = lightEnabled && darkEnabled;
-
-	return (
-		<DropdownMenu>
-			<DropdownMenuTrigger asChild>
-				<ThemeButton {...props} ref={ref} />
-			</DropdownMenuTrigger>
-			<DropdownMenuContent align="end">
-				{lightEnabled && (
-					<DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
-				)}
-				{darkEnabled && (
-					<DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
-				)}
-				{bothEnabled && (
-					<DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
-				)}
-			</DropdownMenuContent>
-		</DropdownMenu>
-	);
-});
-ThemeChooser.displayName = "ThemeChooser";
+);
+ThemeSwitcher.displayName = "ThemeSwitcher";
 
 // Wrapper ThemeProvider that enforces allowed themes based on build-time flags
 // while preserving a compatible interface with next-themes' ThemeProvider
@@ -121,4 +117,4 @@ const ThemeProvider = ({ children, ...props }: React.ComponentProps<typeof NextT
 	);
 };
 
-export { ThemeChooser, ThemeProvider, ThemeToggle };
+export { ThemeProvider, ThemeSwitcher };

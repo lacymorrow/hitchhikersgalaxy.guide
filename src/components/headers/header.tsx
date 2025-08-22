@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import type React from "react";
 import { Icon } from "@/components/assets/icon";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { SearchMenu } from "@/components/search/search-menu";
 import { SearchAi } from "@/components/search/search-ai";
 import { UserMenu } from "@/components/modules/user/user-menu";

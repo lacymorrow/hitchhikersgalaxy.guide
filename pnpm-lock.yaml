@@ -210,6 +210,9 @@ importers:
       ansi-to-react:
         specifier: ^6.1.6
         version: 6.1.6(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+      aspect-ratio:
+        specifier: ^2.1.6
+        version: 2.1.6
       better-auth:
         specifier: ^1.3.4
         version: 1.3.4(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
@@ -219,6 +222,9 @@ importers:
       blurhash:
         specifier: ^2.0.5
         version: 2.0.5
+      button:
+        specifier: ^1.1.1
+        version: 1.1.1
       canvas-confetti:
         specifier: ^1.9.3
         version: 1.9.3
@@ -250,8 +256,8 @@ importers:
         specifier: ^2.0.5
         version: 2.0.5
       framer-motion:
-        specifier: 12.23.11
-        version: 12.23.11(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
+        specifier: ^12.23.12
+        version: 12.23.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1)
       fumadocs-mdx:
         specifier: 11.7.1
         version: 11.7.1(acorn@8.15.0)(fumadocs-core@15.6.6(@types/react@19.1.8)(next@15.4.4(@babel/core@7.28.0)(@opentelemetry/api@1.8.0)(@playwright/test@1.54.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.77.4))(react-dom@19.1.1(react@19.1.1))(react@19.1.1))(next@15.4.4(@babel/core@7.28.0)(@opentelemetry/api@1.8.0)(@playwright/test@1.54.2)(react-dom@19.1.1(react@19.1.1))(react@19.1.1)(sass@1.77.4))(react@19.1.1)(vite@7.1.1(@types/node@24.1.0)(jiti@1.21.7)(sass@1.77.4)(terser@5.43.1)(tsx@4.20.3)(yaml@2.8.1))
@@ -324,6 +330,9 @@ importers:
       openai:
         specifier: ^5.10.2
         version: 5.12.2(ws@8.18.3(bufferutil@4.0.9)(utf-8-validate@6.0.5))(zod@3.25.74)
+      picocolors:
+        specifier: 1.0.1
+        version: 1.0.1
       postgres:
         specifier: 3.4.7
         version: 3.4.7
@@ -6136,6 +6145,11 @@ packages:
     resolution: {integrity: sha512-UOCGPYbl0tv8+006qks/dTgV9ajs97X2p0FAbyS2iyCRrmLSRolDaHdp+v/CLgnzHc3fVB+CwYiUmei7ndFcgA==}
     engines: {node: '>=12.0.0'}
 
+  aspect-ratio@2.1.6:
+    resolution: {integrity: sha512-LmFSMYNVOYwtjzmouhm5d2JhhXgZBwp2r9R+lK76MjmKVMDen7Z/VccTEoan5Fu/KpoxBwAbK6JPYQNHLzifvg==}
+    engines: {node: '>=8'}
+    hasBin: true
+
   assertion-error@2.0.1:
     resolution: {integrity: sha512-Izi8RQcffqCeNVgFigKli1ssklIbpHnCYc6AknXGYoB6grJqyeby7jv12JUQgmTAnIDnbck1uxksT4dzN3PWBA==}
     engines: {node: '>=12'}
@@ -6444,6 +6458,9 @@ packages:
   busboy@1.6.0:
     resolution: {integrity: sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==}
     engines: {node: '>=10.16.0'}
+
+  button@1.1.1:
+    resolution: {integrity: sha512-/eICyCdXkem6L3i02jNfo7CgY0lDtELov2IhiTAUkkl3kTnnr/Jee0Fjnj4TuLwl8wkdtplZaWWXMCeowmkmpA==}
 
   bytes@3.1.0:
     resolution: {integrity: sha512-zauLjrfCG+xvoyaqLoV8bLVXXNGC4JqlxFCutSDWA6fJrTo2ZuvLYTqZ7aHBLZSMOopbzwv8f+wZcVzfVTI2Dg==}
@@ -8163,20 +8180,6 @@ packages:
 
   fraction.js@4.3.7:
     resolution: {integrity: sha512-ZsDfxO51wGAXREY55a7la9LScWpwv9RxIrYABrlvOFBlH/ShPnrtsXeuUIfXKKOVicNxQ+o8JTbJvjS4M89yew==}
-
-  framer-motion@12.23.11:
-    resolution: {integrity: sha512-VzNi+exyI3bn7Pzvz1Fjap1VO9gQu8mxrsSsNamMidsZ8AA8W2kQsR+YQOciEUbMtkKAWIbPHPttfn5e9jqqJQ==}
-    peerDependencies:
-      '@emotion/is-prop-valid': '*'
-      react: 19.1.1
-      react-dom: 19.1.1
-    peerDependenciesMeta:
-      '@emotion/is-prop-valid':
-        optional: true
-      react:
-        optional: true
-      react-dom:
-        optional: true
 
   framer-motion@12.23.12:
     resolution: {integrity: sha512-6e78rdVtnBvlEVgu6eFEAgG9v3wLnYEboM8I5O5EXvfKC8gxGQB8wXJdhkMy10iVcn05jl6CNw7/HTsTCfwcWg==}
@@ -10361,6 +10364,9 @@ packages:
 
   picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==}
+
+  picocolors@1.0.1:
+    resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
@@ -14523,24 +14529,24 @@ snapshots:
 
   '@clack/core@0.3.5':
     dependencies:
-      picocolors: 1.1.1
+      picocolors: 1.0.1
       sisteransi: 1.0.5
 
   '@clack/core@0.4.2':
     dependencies:
-      picocolors: 1.1.1
+      picocolors: 1.0.1
       sisteransi: 1.0.5
 
   '@clack/prompts@0.10.1':
     dependencies:
       '@clack/core': 0.4.2
-      picocolors: 1.1.1
+      picocolors: 1.0.1
       sisteransi: 1.0.5
 
   '@clack/prompts@0.8.2':
     dependencies:
       '@clack/core': 0.3.5
-      picocolors: 1.1.1
+      picocolors: 1.0.1
       sisteransi: 1.0.5
 
   '@clerk/backend@2.7.0(react-dom@19.1.1(react@19.1.1))(react@19.1.1)':
@@ -19864,6 +19870,10 @@ snapshots:
       pvutils: 1.1.3
       tslib: 2.8.1
 
+  aspect-ratio@2.1.6:
+    dependencies:
+      mri: 1.2.0
+
   assertion-error@2.0.1: {}
 
   ast-types-flow@0.0.8: {}
@@ -20184,6 +20194,8 @@ snapshots:
   busboy@1.6.0:
     dependencies:
       streamsearch: 1.1.0
+
+  button@1.1.1: {}
 
   bytes@3.1.0: {}
 
@@ -21839,15 +21851,6 @@ snapshots:
   forwarded@0.2.0: {}
 
   fraction.js@4.3.7: {}
-
-  framer-motion@12.23.11(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
-    dependencies:
-      motion-dom: 12.23.12
-      motion-utils: 12.23.6
-      tslib: 2.8.1
-    optionalDependencies:
-      react: 19.1.1
-      react-dom: 19.1.1(react@19.1.1)
 
   framer-motion@12.23.12(react-dom@19.1.1(react@19.1.1))(react@19.1.1):
     dependencies:
@@ -24440,6 +24443,8 @@ snapshots:
 
   picocolors@1.0.0: {}
 
+  picocolors@1.0.1: {}
+
   picocolors@1.1.1: {}
 
   picomatch@2.3.1: {}
@@ -24561,7 +24566,7 @@ snapshots:
   postcss@8.4.31:
     dependencies:
       nanoid: 3.3.11
-      picocolors: 1.1.1
+      picocolors: 1.0.1
       source-map-js: 1.2.1
 
   postcss@8.5.6:
@@ -27046,7 +27051,7 @@ snapshots:
       html-escaper: 2.0.2
       is-plain-object: 5.0.0
       opener: 1.5.2
-      picocolors: 1.1.1
+      picocolors: 1.0.1
       sirv: 2.0.4
       ws: 7.5.10(bufferutil@4.0.9)(utf-8-validate@6.0.5)
     transitivePeerDependencies:

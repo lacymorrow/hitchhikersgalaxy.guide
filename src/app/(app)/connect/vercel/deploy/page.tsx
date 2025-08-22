@@ -1,5 +1,5 @@
 import { ArrowUpRight, CheckCircle } from "lucide-react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
 	Card,

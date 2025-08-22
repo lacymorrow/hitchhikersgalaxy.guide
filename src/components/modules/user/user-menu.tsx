@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import * as React from "react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
 import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

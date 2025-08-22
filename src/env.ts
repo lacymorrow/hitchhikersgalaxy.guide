@@ -35,6 +35,8 @@ export const env = createEnv({
 	 * These variables are only available on the server and not exposed to the client
 	 */
 	server: {
+		// ======== App Secret (Master) ========
+		APP_SECRET: z.string().optional(),
 		// ======== Database ========
 		DATABASE_URL: z.string().url().optional(),
 		DB_PREFIX: z.string().default("db"),
@@ -240,6 +242,7 @@ export const env = createEnv({
 	 * middlewares) or client-side so we need to destruct manually.
 	 */
 	runtimeEnv: {
+		APP_SECRET: process.env.APP_SECRET,
 		// Database
 		DATABASE_URL: process.env.DATABASE_URL,
 		DB_PREFIX: process.env.DB_PREFIX,

@@ -40,11 +40,16 @@ function useFeatureVisibility(featureId: string) {
 		setIsVisible(false);
 	};
 
-	return { isVisible: isVisible === null ? false : isVisible, hideFeature };
+	const resetFeature = () => {
+		localStorage.removeItem(`feature_${featureId}`);
+		setIsVisible(true);
+	};
+
+	return { isVisible: isVisible === null ? false : isVisible, hideFeature, resetFeature };
 }
 
 function useSwipe(onSwipe: (direction: "left" | "right") => void) {
-	const handleDragEnd = (event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
+	const handleDragEnd = (_event: MouseEvent | TouchEvent | PointerEvent, info: PanInfo) => {
 		if (info.offset.x > 100) {
 			onSwipe("right");
 		} else if (info.offset.x < -100) {
@@ -125,7 +130,7 @@ function StepPreview({ step, direction }: { step: Step; direction: 1 | -1 }) {
 				<div className="flex h-full items-center justify-center p-6">
 					<motion.div initial={{ opacity: 0, y: 20 }} animate={controls} className="text-center">
 						<h3 className="mb-2 text-2xl font-semibold text-primary">{step.title}</h3>
-						<p className="text-muted-foreground">{step.full_description}</p>
+						<div className="text-muted-foreground">{step.full_description}</div>
 					</motion.div>
 				</div>
 			)}
@@ -171,7 +176,7 @@ function StepTab({ step, isActive, onClick, isCompleted }: StepTabProps) {
 interface Step {
 	title: string;
 	short_description: string;
-	full_description: string;
+	full_description: string | React.ReactNode;
 	action?: {
 		label: string;
 		onClick?: () => void;
@@ -610,7 +615,7 @@ export function IntroDisclosure({
 							<div className="flex items-center space-x-2">
 								<Checkbox
 									id="skipNextTime"
-									onCheckedChange={(checked) => {
+									onCheckedChange={() => {
 										hideFeature();
 									}}
 								/>

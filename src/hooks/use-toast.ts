@@ -33,21 +33,21 @@ type ActionType = typeof actionTypes;
 
 type Action =
 	| {
-			type: ActionType["ADD_TOAST"];
-			toast: ToasterToast;
-	  }
+		type: ActionType["ADD_TOAST"];
+		toast: ToasterToast;
+	}
 	| {
-			type: ActionType["UPDATE_TOAST"];
-			toast: Partial<ToasterToast>;
-	  }
+		type: ActionType["UPDATE_TOAST"];
+		toast: Partial<ToasterToast>;
+	}
 	| {
-			type: ActionType["DISMISS_TOAST"];
-			toastId?: ToasterToast["id"];
-	  }
+		type: ActionType["DISMISS_TOAST"];
+		toastId?: ToasterToast["id"];
+	}
 	| {
-			type: ActionType["REMOVE_TOAST"];
-			toastId?: ToasterToast["id"];
-	  };
+		type: ActionType["REMOVE_TOAST"];
+		toastId?: ToasterToast["id"];
+	};
 
 interface State {
 	toasts: ToasterToast[];
@@ -103,9 +103,9 @@ export const reducer = (state: State, action: Action): State => {
 				toasts: state.toasts.map((t) =>
 					t.id === toastId || toastId === undefined
 						? {
-								...t,
-								open: false,
-							}
+							...t,
+							open: false,
+						}
 						: t
 				),
 			};
@@ -167,17 +167,18 @@ function toast({ ...props }: Toast) {
 }
 
 function useToast() {
-	// Check if we're on the client side to prevent server-side rendering issues
-	const [isClient, setIsClient] = React.useState(false);
+	// If this runs during SSR, return a safe no-op API without using React hooks.
+	if (typeof window === "undefined") {
+		return {
+			toasts: [],
+			toast: () => ({ id: "", dismiss: () => { }, update: () => { } }),
+			dismiss: () => { },
+		};
+	}
+
 	const [state, setState] = React.useState<State>(memoryState);
 
 	React.useEffect(() => {
-		setIsClient(true);
-	}, []);
-
-	React.useEffect(() => {
-		if (!isClient) return;
-
 		listeners.push(setState);
 		return () => {
 			const index = listeners.indexOf(setState);
@@ -185,16 +186,7 @@ function useToast() {
 				listeners.splice(index, 1);
 			}
 		};
-	}, [isClient, state]);
-
-	// Return empty state if not on client yet
-	if (!isClient) {
-		return {
-			toasts: [],
-			toast: () => ({ id: "", dismiss: () => {}, update: () => {} }),
-			dismiss: () => {},
-		};
-	}
+	}, []);
 
 	return {
 		...state,

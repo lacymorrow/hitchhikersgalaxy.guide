@@ -1,8 +1,9 @@
 import { and, eq } from "drizzle-orm";
 import { LocalProjectStorage } from "@/lib/local-storage/project-storage";
 import { db } from "@/server/db";
-import { projectMembers, projects } from "@/server/db/schema";
+import { projectMembers, projects, teams } from "@/server/db/schema";
 import { BaseService } from "./base-service";
+import { teamService } from "./team-service";
 
 export class ProjectService extends BaseService<typeof projects> {
 	constructor() {
@@ -26,12 +27,36 @@ export class ProjectService extends BaseService<typeof projects> {
 		}
 		const projectId = crypto.randomUUID();
 
+		// Resolve placeholder or invalid team identifiers to a real team id
+		let effectiveTeamId = teamId;
+		try {
+			// If the incoming teamId is a placeholder (e.g., "personal") or empty, map to user's personal team
+			if (!effectiveTeamId || effectiveTeamId === "personal") {
+				const personalTeam = await teamService.getPersonalTeam(creatorUserId);
+				effectiveTeamId = personalTeam?.id ?? effectiveTeamId;
+			}
+
+			// If still not resolvable, or the team does not exist, attempt to ensure a personal team
+			if (effectiveTeamId) {
+				const existingTeam = await db.query.teams.findFirst({ where: eq(teams.id, effectiveTeamId) });
+				if (!existingTeam) {
+					const ensuredPersonalTeam = await teamService.ensureOnePersonalTeam(creatorUserId);
+					effectiveTeamId = (ensuredPersonalTeam as any)?.id ?? effectiveTeamId;
+				}
+			} else {
+				const ensuredPersonalTeam = await teamService.ensureOnePersonalTeam(creatorUserId);
+				effectiveTeamId = (ensuredPersonalTeam as any)?.id ?? effectiveTeamId;
+			}
+		} catch {
+			// Best-effort mapping; fall through with original value if anything fails
+		}
+
 		// Use optional chaining for the transaction
 		const transactionResult = await db?.transaction(async (tx) => {
 			await tx.insert(projects).values({
 				id: projectId,
 				name: projectName,
-				teamId: teamId,
+				teamId: effectiveTeamId,
 				createdAt: new Date(),
 				updatedAt: new Date(),
 			});

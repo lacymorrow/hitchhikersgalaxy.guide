@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 import { AlertCircle, CheckCircle2, Clock, Rocket } from "lucide-react";
 
-import { DashboardVercelDeploy } from "@/components/shipkit/dashboard-vercel-deploy";
+import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { cn } from "@/lib/utils";

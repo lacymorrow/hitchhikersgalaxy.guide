@@ -89,6 +89,15 @@ export function RestartOnboardingButton({
 	} | null>(`onboarding-${user?.id}`, null);
 
 	const restartOnboarding = () => {
+		// Ensure IntroDisclosure (feature tour) is reset as well
+		// Matches key used in `IntroDisclosure` via useFeatureVisibility: `feature_${featureId}`
+		// We pass `featureId` as `onboarding-${user?.id}` in the wizard, so full key becomes `feature_onboarding-${user?.id}`
+		if (user?.id) {
+			try {
+				localStorage.removeItem(`feature_onboarding-${user.id}`);
+			} catch { }
+		}
+
 		// Reset the onboarding state to initial values
 		setOnboardingState({
 			completed: false,

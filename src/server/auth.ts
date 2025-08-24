@@ -127,12 +127,12 @@ function authWithOptions(props: { protect: true } & AuthProps): Promise<Protecte
 function authWithOptions(props?: AuthProps): Promise<Session | null>;
 async function authWithOptions(props?: AuthProps) {
 	const session = await nextAuthAuth();
-	const { errorCode, redirect, nextUrl } = props ?? {};
+	const { errorCode, redirect: shouldRedirect, nextUrl } = props ?? {};
 
 	// Route protected
 	// Use clear boolean logic without nullish coalescing on non-nullish expressions
 	const protect =
-		(props?.protect ?? false) || props?.redirectTo !== undefined || (redirect ?? false);
+		(props?.protect ?? false) || props?.redirectTo !== undefined || (shouldRedirect ?? false);
 	const redirectTo = props?.redirectTo ?? routes.auth.signOutIn;
 
 	const handleRedirect = (code: string) => {

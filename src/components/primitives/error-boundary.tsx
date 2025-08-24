@@ -9,7 +9,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AuthenticationError } from "@/lib/errors/authentication-error";
 import { logger } from "@/lib/logger";
-import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
 import { redirect } from "@/lib/utils/redirect";
 import { STATUS_CODES } from "@/config/status-codes";
 
@@ -224,9 +223,12 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 
 		if (error instanceof AuthenticationError) {
 			logger.info("ErrorBoundary: Authentication error, redirecting to sign in");
-			const signInRedirectUrl = useSignInRedirectUrl();
-			redirect(signInRedirectUrl, {
+			// Cannot use hooks in class components - use direct redirect with hardcoded path
+			// Get current path from window.location for nextUrl parameter
+			const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
+			redirect("/sign-in", {
 				code: STATUS_CODES.AUTH.code,
+				nextUrl: currentPath,
 			});
 		}
 

@@ -1,4 +1,4 @@
-import { Download, Star, GitBranch, AlertCircle, GitPullRequest, Box } from "lucide-react";
+import { Download, Star, GitBranch, AlertCircle, GitPullRequest, Box, type LucideIcon } from "lucide-react";
 
 export const recentActivity = [
 	{
@@ -33,7 +33,7 @@ export const recentActivity = [
 	},
 ];
 
-export const activityIcons = {
+export const activityIcons: { [key: string]: LucideIcon } = {
 	download: Download,
 	star: Star,
 	fork: GitBranch,

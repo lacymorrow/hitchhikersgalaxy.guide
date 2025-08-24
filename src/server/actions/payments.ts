@@ -29,8 +29,6 @@
 
 import { eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
-import { eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
 import { routes } from "@/config/routes";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
@@ -49,6 +47,7 @@ import { redirect } from "@/lib/utils/redirect";
 const rateLimitService = new RateLimitService();
 
 async function findOrCreateUser(email: string) {
+	if (!db) throw new Error("Database not initialized");
 	let user = await db.query.users.findFirst({
 		where: eq(users.email, email.toLowerCase()),
 	});
@@ -227,6 +226,7 @@ export async function checkUserPurchasedVariant(
 ): Promise<{ success: boolean; purchased: boolean; message?: string }> {
 	try {
 		const session = await getSession();
+		if (!session?.user?.id) throw new Error("User not authenticated");
 		const userId = session.user.id;
 
 		const purchased = await PaymentService.hasUserPurchasedVariant({
@@ -255,6 +255,7 @@ export async function checkUserPurchasedProduct(
 ): Promise<{ success: boolean; purchased: boolean; message?: string }> {
 	try {
 		const session = await getSession();
+		if (!session?.user?.id) throw new Error("User not authenticated");
 		const userId = session.user.id;
 
 		const purchased = await PaymentService.hasUserPurchasedProduct({
@@ -282,6 +283,7 @@ export async function checkUserSubscription(
 ): Promise<{ success: boolean; hasSubscription: boolean; message?: string }> {
 	try {
 		const session = await getSession();
+		if (!session?.user?.id) throw new Error("User not authenticated");
 
 		const hasSubscription = await PaymentService.hasUserActiveSubscription({
 			userId: session.user.id,
@@ -309,6 +311,7 @@ export async function getUserPurchasedProducts(provider?: "lemonsqueezy" | "pola
 }> {
 	try {
 		const session = await getSession();
+		if (!session?.user?.id) throw new Error("User not authenticated");
 
 		const products = await PaymentService.getUserPurchasedProducts(session.user.id, provider);
 
@@ -337,6 +340,7 @@ export async function createPolarCheckoutUrl(
 ): Promise<{ success: boolean; url?: string; message?: string }> {
 	try {
 		const session = await getSession();
+		if (!session?.user?.id) throw new Error("User not authenticated");
 
 		const { createCheckoutUrl } = await import("@/lib/polar");
 
@@ -426,7 +430,7 @@ export async function importPayments(
 			const stats: ImportStats = await specificProvider.importPayments();
 
 			// Revalidate the admin users page to reflect the new imported data
-				revalidatePath("/admin/users");
+			revalidatePath("/admin/users");
 
 			return stats;
 		};
@@ -484,6 +488,7 @@ export async function debugPolarSubscription(): Promise<{
 }> {
 	try {
 		const session = await getSession();
+		if (!session?.user?.id) throw new Error("User not authenticated");
 
 		// Import required modules
 		const polarModule = await import("@/lib/polar");
@@ -552,9 +557,10 @@ export async function deleteAllPayments(): Promise<{
 	deletedCount: number;
 	message?: string;
 }> {
+	let userId: string | undefined;
 	try {
 		const session = await requireAdmin();
-		const userId = session.user.id;
+		userId = session.user.id;
 
 		// Check if the database is initialized
 		if (!db) {
@@ -608,9 +614,10 @@ export async function refreshAllPayments(): Promise<{
 	importResults: Record<string, any>;
 	message?: string;
 }> {
+	let userId: string | undefined;
 	try {
 		const session = await requireAdmin();
-		const userId = session.user.id;
+		userId = session.user.id;
 
 		// Check if the database is initialized
 		if (!db) {
@@ -668,10 +675,19 @@ export async function createPayment(data: {
 }): Promise<{ success: boolean; error?: string; url?: string }> {
 	try {
 		const session = await getSession();
+		// TODO: Implement the rest of the function
+		return { success: false, error: "Not implemented" };
+	} catch (error) {
+		console.error("Error creating payment:", error);
+		throw new Error("Failed to create payment");
+	}
+}
 
 export async function getPayments() {
+	if (!db) throw new Error("Database not initialized");
 	try {
 		const session = await getSession();
+		if (!session?.user?.id) throw new Error("User not authenticated");
 		const userId = session.user.id;
 		await rateLimitService.checkLimit(userId, "getPayments", rateLimits.getPayments);
 
@@ -688,6 +704,7 @@ export async function getPayments() {
 }
 
 export async function getAllPayments() {
+	if (!db) throw new Error("Database not initialized");
 	try {
 		const session = await requireAdmin();
 		const userId = session.user.id;
@@ -726,8 +743,10 @@ export async function importPaymentsFromAllProviders() {
 }
 
 export async function getUserPayments(targetUserId?: string) {
+	if (!db) throw new Error("Database not initialized");
 	try {
 		const session = await getSession();
+		if (!session?.user?.id) throw new Error("User not authenticated");
 		const currentUserId = session.user.id;
 
 		// If no target user ID is provided, use current user
@@ -735,7 +754,7 @@ export async function getUserPayments(targetUserId?: string) {
 
 		// If requesting another user's payments, check admin permissions
 		if (targetUserId && targetUserId !== currentUserId) {
-			if (!isAdmin({ email: session.user.email })) {
+			if (!isAdmin({ email: session?.user?.email })) {
 				throw new Error("Unauthorized: Admin access required to view other users' payments");
 			}
 		}

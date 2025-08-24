@@ -1,8 +1,8 @@
-import { green, magenta, red, white, yellow } from "@/lib/utils/pico-colors";
+import pc from "@/lib/utils/pico-colors";
 import type { LogData, LogLevel } from "@/types/logger";
-import { type Span, SpanStatusCode, type Tracer, trace } from "@opentelemetry/api";
+import { type Span, SpanStatusCode, type Tracer, trace as otelTrace } from "@opentelemetry/api";
 
-const tracer: Tracer = trace.getTracer("bones-nextjs-app");
+const tracer: Tracer = otelTrace.getTracer("bones-nextjs-app");
 
 const isServer = typeof window === "undefined";
 
@@ -60,13 +60,13 @@ export const logger = {
 };
 
 const prefixes = {
-	info: white("ℹ"),
-	warn: yellow("⚠"),
-	error: red("✖"),
-	wait: magenta("○"),
-	ready: green("✓"),
-	event: magenta("◆"),
-	trace: white("›"),
+	info: pc.white("ℹ"),
+	warn: pc.yellow("⚠"),
+	error: pc.red("✖"),
+	wait: pc.magenta("○"),
+	ready: pc.green("✓"),
+	event: pc.magenta("◆"),
+	trace: pc.white("›"),
 } as const;
 
 const LOGGING_METHOD = {

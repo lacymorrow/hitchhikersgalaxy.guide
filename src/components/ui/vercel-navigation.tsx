@@ -104,7 +104,7 @@ export const VercelNavigation = ({
 							/>
 						)}
 					</AnimatePresence>
-				</LinkOrButton>
+				</Link>
 			))}
 		</nav>
 	);

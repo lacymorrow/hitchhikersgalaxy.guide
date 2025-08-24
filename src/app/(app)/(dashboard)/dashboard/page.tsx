@@ -2,10 +2,10 @@ import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { DownloadSection } from "@/app/(app)/(dashboard)/_components/download-section";
 import { OnboardingCheck } from "@/components/modules/onboarding/onboarding-check";
-import { StatsCards } from "./_components/stats-cards";
-import { RecentActivity } from "./_components/recent-activity";
-import { QuickActions } from "./_components/quick-actions";
-import { DashboardTabs } from "./_components/dashboard-tabs";
+import { StatsCards } from "@/app/(app)/(dashboard)/_components/stats-cards";
+import { RecentActivity } from "@/app/(app)/(dashboard)/_components/recent-activity";
+import { QuickActions } from "@/app/(app)/(dashboard)/_components/quick-actions";
+import { DashboardTabs } from "@/app/(app)/(dashboard)/_components/dashboard-tabs";
 import { useDashboardData } from "./_hooks/use-dashboard-data";
 
 export default async function DashboardPage() {

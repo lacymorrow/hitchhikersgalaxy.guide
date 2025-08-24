@@ -1,3 +1,4 @@
+"use client";
 import type React from "react";
 import { default as NextLink, type LinkProps as NextLinkProps } from "next/link";
 import { Link as TransitionsLink } from "next-view-transitions";
@@ -13,7 +14,7 @@ interface CustomLinkProps {
 	withTransition?: boolean;
 }
 
-type LinkProps = NextLinkProps & CustomLinkProps & { children: React.ReactNode };
+type LinkProps = NextLinkProps & CustomLinkProps & { children: React.ReactNode } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof NextLinkProps>;
 
 export const Link = ({ children, variant = "default", withRedirect = false, withTransition, ...props }: LinkProps) => {
 	const pathname = usePathname();

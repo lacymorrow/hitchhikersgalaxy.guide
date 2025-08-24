@@ -13,7 +13,7 @@ import { SearchAi } from "@/components/search/search-ai";
 import { UserMenu } from "@/components/modules/user/user-menu";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { ThemeToggle } from "@/components/ui/theme";
+import { ThemeToggle } from "@/components/ui/shipkit/theme";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { NavLink } from "@/config/navigation";
 import { routes } from "@/config/routes";

@@ -1,5 +1,4 @@
-import { Redis } from "@upstash/redis";
-import { redis } from "./rate-limit";
+import { redisClient as redis } from "@/server/services/redis-service";
 
 interface RequestLog {
 	timestamp: string;

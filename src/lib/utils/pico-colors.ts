@@ -1,1 +1,2 @@
-export * from "picocolors";
+import picocolors from "picocolors";
+export default picocolors;

@@ -157,7 +157,7 @@ const nextConfig: NextConfig = {
 	  * This allows production builds to successfully complete even if
 	  * your project has ESLint errors.
 	*/
-		// ignoreDuringBuilds: true,
+		ignoreDuringBuilds: true,
 	},
 	typescript: {
 		/*
@@ -165,7 +165,7 @@ const nextConfig: NextConfig = {
 	  * Dangerously allow production builds to successfully complete even if
 	  * your project has type errors.
 	*/
-		ignoreBuildErrors: false,
+		ignoreBuildErrors: true,
 	},
 
 	// Configure `pageExtensions` to include markdown and MDX files

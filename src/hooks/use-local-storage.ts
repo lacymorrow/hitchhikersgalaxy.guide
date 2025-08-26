@@ -43,8 +43,34 @@ export function useLocalStorage<T>(
 
 	useEffect(() => {
 		const handleStorageChange = (event: StorageEvent) => {
-			if (event.key === key && event.newValue) {
-				setStoredValue(JSON.parse(event.newValue));
+			if (event.key === key) {
+				// Handle null value (item was removed)
+				if (event.newValue === null) {
+					setStoredValue(initialValue);
+					return;
+				}
+
+				// Safely parse the new value with error handling
+				try {
+					const parsedValue = JSON.parse(event.newValue) as T;
+					setStoredValue(parsedValue);
+				} catch (error) {
+					console.warn(`Error parsing localStorage change for key "${key}":`, error);
+					// If parsing fails, try to read directly from localStorage
+					// This handles edge cases where the event data might be corrupted
+					try {
+						const item = window.localStorage.getItem(key);
+						if (item !== null) {
+							const fallbackValue = JSON.parse(item) as T;
+							setStoredValue(fallbackValue);
+						} else {
+							setStoredValue(initialValue);
+						}
+					} catch (fallbackError) {
+						console.warn(`Fallback parsing also failed for key "${key}":`, fallbackError);
+						setStoredValue(initialValue);
+					}
+				}
 			}
 		};
 
@@ -53,7 +79,7 @@ export function useLocalStorage<T>(
 		return () => {
 			window.removeEventListener("storage", handleStorageChange);
 		};
-	}, [key]);
+	}, [key, initialValue]);
 
 	// Persist to localStorage whenever value or key changes
 	useEffect(() => {

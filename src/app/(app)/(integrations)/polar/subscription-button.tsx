@@ -1,4 +1,4 @@
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 
 interface SubscriptionLinkProps {
 	tier: string;

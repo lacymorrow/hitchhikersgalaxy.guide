@@ -7,8 +7,11 @@ import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { type Deployment, deployments, type NewDeployment } from "@/server/db/schema";
 import { type DeploymentResult, deployPrivateRepository } from "./deploy-private-repo";
+import { deploymentSchema, validateProjectName } from "@/lib/schemas/deployment";
 
 const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
+
+
 
 /**
  * Initiates a deployment process by creating a deployment record and
@@ -17,47 +20,69 @@ const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
 export async function initiateDeployment(formData: FormData): Promise<DeploymentResult> {
 	const projectName = formData.get("projectName") as string;
 
-	if (!projectName) {
+	// Validate project name with comprehensive server-side validation using shared schema
+	const validation = validateProjectName(projectName);
+	if (!validation.isValid) {
 		return {
 			success: false,
-			error: "Project name is required",
+			error: validation.error,
 		};
 	}
 
-	const description = `Deployment of ${projectName}`;
+	// Sanitize the project name (trim whitespace)
+	const sanitizedProjectName = projectName.trim();
 
-	// Create a new deployment record first
-	const newDeployment = await createDeployment({
-		projectName,
-		description,
-		status: "deploying",
-	});
+	const description = `Deployment of ${sanitizedProjectName}`;
 
-	// Trigger the actual deployment in the background
-	// Do not await this, as it can be a long-running process
-	deployPrivateRepository({
-		templateRepo: SHIPKIT_REPO,
-		projectName,
-		newRepoName: projectName,
-		description,
-		deploymentId: newDeployment.id,
-	}).catch((error) => {
-		console.error(`Deployment failed for ${projectName}:`, error);
-		updateDeployment(newDeployment.id, {
-			status: "failed",
-			error: error instanceof Error ? error.message : "An unknown error occurred",
+	try {
+		// Create a new deployment record first
+		// This will throw an error if the database operation fails
+		const newDeployment = await createDeployment({
+			projectName: sanitizedProjectName,
+			description,
+			status: "deploying",
 		});
-	});
 
-	// Return a success response immediately
-	return {
-		success: true,
-		message: "Deployment initiated successfully! You can monitor the progress on this page.",
-		data: {
-			githubRepo: undefined,
-			vercelProject: undefined,
-		},
-	};
+		// Only trigger the deployment after the database record is successfully created
+		// Use setTimeout to ensure the database transaction has fully committed
+		// This prevents race conditions where the deployment starts before the DB commit
+		setTimeout(() => {
+			// Trigger the actual deployment in the background
+			// Do not await this, as it can be a long-running process
+			deployPrivateRepository({
+				templateRepo: SHIPKIT_REPO,
+				projectName: sanitizedProjectName,
+				newRepoName: sanitizedProjectName,
+				description,
+				deploymentId: newDeployment.id,
+			}).catch((error) => {
+				console.error(`Deployment failed for ${sanitizedProjectName}:`, error);
+				// Update the deployment status to failed if deployment errors occur
+				updateDeployment(newDeployment.id, {
+					status: "failed",
+					error: error instanceof Error ? error.message : "An unknown error occurred",
+				}).catch((updateError) => {
+					console.error(`Failed to update deployment status for ${sanitizedProjectName}:`, updateError);
+				});
+			});
+		}, 100); // Small delay to ensure DB transaction commits
+
+		// Return a success response immediately
+		return {
+			success: true,
+			message: "Deployment initiated successfully! You can monitor the progress on this page.",
+			data: {
+				githubRepo: undefined,
+				vercelProject: undefined,
+			},
+		};
+	} catch (error) {
+		console.error(`Failed to create deployment record for ${sanitizedProjectName}:`, error);
+		return {
+			success: false,
+			error: error instanceof Error ? error.message : "Failed to create deployment record",
+		};
+	}
 }
 
 /**
@@ -103,16 +128,22 @@ export async function createDeployment(
 	}
 
 	try {
-		const [newDeployment] = await db
-			.insert(deployments)
-			.values({
-				...data,
-				userId: session.user.id,
-			})
-			.returning();
+		// Use a transaction to ensure atomicity
+		const result = await db.transaction(async (tx) => {
+			const [newDeployment] = await tx
+				.insert(deployments)
+				.values({
+					...data,
+					userId: session.user.id,
+				})
+				.returning();
 
+			return newDeployment;
+		});
+
+		// Only revalidate after successful transaction commit
 		revalidatePath("/deployments");
-		return newDeployment;
+		return result;
 	} catch (error) {
 		console.error("Failed to create deployment:", error);
 		throw new Error("Failed to create deployment");
@@ -239,7 +270,10 @@ export async function initializeDemoDeployments(): Promise<void> {
 		];
 
 		await db.insert(deployments).values(demoDeployments);
-		revalidatePath("/deployments");
+		// Avoid calling revalidatePath here because this function can be executed during
+		// a Server Component render (e.g., first-visit demo data). Revalidation during
+		// render is unsupported in Next.js and triggers runtime errors. The page
+		// explicitly refetches deployments after this runs, so no revalidation is needed.
 	} catch (error) {
 		console.error("Failed to initialize demo deployments:", error);
 		// Don't throw - this is not critical

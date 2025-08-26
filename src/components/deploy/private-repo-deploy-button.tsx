@@ -3,7 +3,7 @@
 import { AlertCircle, CheckCircle, Clock, ExternalLink, Github } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Link as LinkWithTransition } from "@/components/primitives/link-with-transition";
+import { Link as LinkWithTransition } from "@/components/primitives/link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";

@@ -9,7 +9,7 @@ export const content: FeatureContent[] = [
 		description:
 			"Ship in days, not months with our pre-built Next.js 15 stack. Zero runtime errors with end-to-end type safety and instant hot reload.",
 		category: "core",
-		plans: ["bones", "muscles", "brains"],
+		plans: ["bones", "brains"],
 		icon: "Zap",
 	},
 	{
@@ -17,7 +17,7 @@ export const content: FeatureContent[] = [
 		description:
 			"Built with Next.js 15, TypeScript, Tailwind CSS, and Shadcn/UI - the same stack used by industry leaders. Never worry about tech debt again.",
 		category: "core",
-		plans: ["bones", "muscles", "brains"],
+		plans: ["bones", "brains"],
 		icon: "Layers",
 	},
 	{
@@ -35,7 +35,7 @@ export const content: FeatureContent[] = [
 		description:
 			"Launch with stunning, professional designs using our pre-built Shadcn/UI components and marketing tools. Built-in SEO optimization included.",
 		category: "core",
-		plans: ["bones", "muscles", "brains"],
+		plans: ["bones", "brains"],
 		icon: "Paintbrush",
 	},
 
@@ -45,7 +45,7 @@ export const content: FeatureContent[] = [
 		description:
 			"Scale confidently with PostgreSQL + Drizzle ORM. Includes automatic backups, type-safe queries, and zero-downtime deployment pipeline.",
 		category: "backend",
-		plans: ["muscles", "brains"],
+		plans: ["brains"],
 		icon: "Database",
 	},
 	{
@@ -53,7 +53,7 @@ export const content: FeatureContent[] = [
 		description:
 			"Empower your team with Payload CMS and Builder.io integration. Beautiful transactional emails with Resend for reliable delivery.",
 		category: "core",
-		plans: ["muscles", "brains"],
+		plans: ["brains"],
 		icon: "FileText",
 	},
 
@@ -63,7 +63,7 @@ export const content: FeatureContent[] = [
 		description:
 			"A development environment your team will love with VS Code integration, instant hot reload, and tools that make coding feel magical.",
 		category: "dx",
-		plans: ["bones", "muscles", "brains"],
+		plans: ["bones", "brains"],
 		icon: "Code",
 	},
 	{
@@ -89,7 +89,7 @@ export const content: FeatureContent[] = [
 		description:
 			"Production-ready DevOps with Docker support and CI/CD workflows. Includes automatic backups and zero-downtime deployments.",
 		category: "devops",
-		plans: ["muscles", "brains"],
+		plans: ["brains"],
 		icon: "Rocket",
 	},
 
@@ -107,7 +107,7 @@ export const content: FeatureContent[] = [
 		description:
 			"Beautiful transactional emails that actually reach inboxes. Built-in templates and Resend integration for reliable delivery.",
 		category: "core",
-		plans: ["muscles", "brains"],
+		plans: ["brains"],
 		icon: "Mail",
 	},
 ];

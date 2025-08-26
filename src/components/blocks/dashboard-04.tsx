@@ -1,5 +1,5 @@
 import { CircleUser, Menu, Package2, Search } from "lucide-react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 
 import { Button } from "@/components/ui/button";
 import {

@@ -2,7 +2,7 @@
 
 import { useLinkStatus } from "next/link";
 import { usePathname } from "next/navigation";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { cn } from "@/lib/utils";
 
 interface NavItem {

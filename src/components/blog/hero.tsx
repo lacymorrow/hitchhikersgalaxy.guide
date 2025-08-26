@@ -1,7 +1,7 @@
 import Image from "next/image";
 import type React from "react";
 import { Icon } from "@/components/assets/icon";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { siteConfig } from "@/config/site-config";
 import logoImage from "@/public/logo.png";
 export const BlogHero = () => {

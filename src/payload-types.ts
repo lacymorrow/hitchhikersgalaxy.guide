@@ -320,7 +320,7 @@ export interface Feature {
   name: string;
   description: string;
   category: 'core' | 'dx' | 'backend' | 'advanced' | 'security' | 'devops' | 'support';
-  plans: ('bones' | 'muscles' | 'brains')[];
+  plans: ('bones' | 'brains')[];
   badge?: ('new' | 'popular' | 'pro') | null;
   /**
    * Lucide icon name

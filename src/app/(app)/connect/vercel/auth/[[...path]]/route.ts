@@ -62,6 +62,17 @@ export async function GET(request: NextRequest, context: RouteContext) {
 			return NextResponse.redirect(constructRedirectUrl({ error: "vercel_auth_error" }));
 		}
 
+		// CRITICAL: Validate CSRF token
+		// Since sessionStorage is client-side only, we need to pass the state through cookies
+		// Get the stored state from cookie instead
+		const cookieStore = request.cookies;
+		const storedState = cookieStore.get("vercel_oauth_state")?.value;
+		
+		if (!state || !storedState || state !== storedState) {
+			console.error("CSRF validation failed: state mismatch");
+			return NextResponse.redirect(constructRedirectUrl({ error: "invalid_state" }));
+		}
+
 		if (!code) {
 			console.error("No code provided in Vercel OAuth callback");
 			// Use dynamic redirect path for error
@@ -213,8 +224,10 @@ export async function GET(request: NextRequest, context: RouteContext) {
 			// This is non-fatal, the UI will handle updating via updateSession
 		}
 
-		// Redirect back using the dynamic path with success message
-		return NextResponse.redirect(constructRedirectUrl({ success: "vercel_connected" }));
+		// Redirect back using the dynamic path with success message and clear CSRF cookie
+		const successResponse = NextResponse.redirect(constructRedirectUrl({ success: "vercel_connected" }));
+		successResponse.cookies.delete("vercel_oauth_state");
+		return successResponse;
 	} catch (error) {
 		console.error("Error in Vercel OAuth callback:", error);
 		// Await the params Promise in catch block as well

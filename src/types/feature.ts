@@ -7,7 +7,7 @@ export type FeatureCategory =
 	| "devops"
 	| "support";
 
-export type FeaturePlan = "bones" | "muscles" | "brains";
+export type FeaturePlan = "bones" | "brains";
 
 export interface Feature {
 	id: number;

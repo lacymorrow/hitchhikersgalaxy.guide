@@ -1,7 +1,7 @@
 import { Redis } from "@upstash/redis";
 import { nanoid } from "nanoid";
 
-import { redis } from "./rate-limit";
+import { redisClient as redis } from "@/server/services/redis-service";
 
 interface ApiKeyInfo {
 	id: string;

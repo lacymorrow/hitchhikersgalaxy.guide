@@ -12,7 +12,7 @@ import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { userService } from "@/server/services/user-service";
 import type { User, UserRole } from "@/types/user";
-import "server-only";
+// This service can be imported by Node scripts; avoid importing "server-only" here
 import { env } from "@/env";
 
 // Define a simplified type for Payload User to avoid import issues

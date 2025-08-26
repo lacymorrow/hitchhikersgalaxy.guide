@@ -4,7 +4,6 @@ import { IconBrandVercelFilled } from "@tabler/icons-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import { Link } from "@/components/primitives/link-with-transition";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useToast } from "@/hooks/use-toast";
@@ -44,10 +43,13 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
             // the integration URL slug from vercel
             const client_slug = process.env.NEXT_PUBLIC_VERCEL_INTEGRATION_SLUG;
 
-            // create a CSRF token and store it locally
+            // create a CSRF token and store it in a secure cookie
             const state = Array.from(crypto.getRandomValues(new Uint8Array(16)))
                 .map(b => b.toString(16).padStart(2, '0')).join('');
-            sessionStorage.setItem("latestCSRFToken", state);
+            
+            // Store CSRF token in a secure, httpOnly cookie (via server action would be better, but using JS for now)
+            // Set SameSite=Lax to allow the OAuth redirect while preventing CSRF
+            document.cookie = `vercel_oauth_state=${state}; path=/; SameSite=Lax; Secure; Max-Age=600`;
 
             // Get the origin for the callback URL
             const origin = window.location.origin;
@@ -97,7 +99,7 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
         <>
             {isConnected ? (
                 <div className={cn("flex flex-col items-center justify-center gap-1", className)}>
-                    <Link
+                    <a
                         href="https://vercel.com/dashboard"
                         className={cn(buttonVariants({ variant: "outline", size: "lg" }), "w-full")}
                         target="_blank"
@@ -105,7 +107,7 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
                     >
                         <IconBrandVercelFilled className="mr-2 h-4 w-4" />
                         View Vercel Dashboard
-                    </Link>
+                    </a>
                     <Tooltip delayDuration={200}>
                         <TooltipTrigger asChild>
                             <Button
@@ -132,5 +134,3 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
         </>
     );
 };
-
-

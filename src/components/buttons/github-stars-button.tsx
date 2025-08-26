@@ -1,6 +1,6 @@
 import NumberFlow from "@number-flow/react";
 import type { ComponentProps } from "react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { cn } from "@/lib/utils";
 export const GithubStarsButton = ({
 	starNumber,

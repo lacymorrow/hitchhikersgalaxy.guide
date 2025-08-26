@@ -6,7 +6,7 @@ import { ArrowUpRight } from "lucide-react";
 import type { KeyboardEvent } from "react";
 import { useEffect, useRef, useState } from "react";
 import { BuyButton } from "@/components/buttons/lemonsqueezy-buy-button";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 

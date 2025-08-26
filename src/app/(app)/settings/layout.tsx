@@ -17,15 +17,6 @@ const sidebarNavItems = [
 		href: routes.settings.appearance,
 	},
 	{
-		title: "Security",
-		href: routes.settings.security,
-	},
-	// Todo: Add notifications
-	// {
-	// 	title: "Notifications",
-	// 	href: routes.settings.notifications,
-	// },
-	{
 		title: "Account",
 		href: routes.settings.account,
 	},

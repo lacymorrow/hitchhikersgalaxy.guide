@@ -11,7 +11,7 @@ import {
 import type { Session } from "next-auth";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
 // Removed GitHubConnectDialog in favor of GitHubConnectButton
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";

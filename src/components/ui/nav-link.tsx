@@ -1,5 +1,5 @@
 import type { ComponentProps } from "react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { cn } from "@/lib/utils";
 
 interface NavLinkProps extends ComponentProps<typeof Link> {

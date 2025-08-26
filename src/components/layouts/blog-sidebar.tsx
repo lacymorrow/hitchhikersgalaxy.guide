@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

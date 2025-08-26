@@ -1,6 +1,6 @@
 import { RocketIcon } from "lucide-react";
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import {
 	PageHeader,
 	PageHeaderDescription,

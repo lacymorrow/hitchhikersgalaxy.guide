@@ -2,7 +2,7 @@
 
 import { LifeBuoy, type LucideIcon, Send, Settings2 } from "lucide-react";
 import type React from "react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { FeedbackDialog } from "@/components/forms/feedback-dialog";
 import { Button } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";

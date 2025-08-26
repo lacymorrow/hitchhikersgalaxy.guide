@@ -4,7 +4,7 @@ import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { AuthenticationError } from "@/lib/errors/authentication-error";
 import { logger } from "@/lib/logger";
-import { redirectWithCode } from "@/lib/utils/redirect-with-code";
+import { redirect } from "@/lib/utils/redirect";
 
 /**
  * A hook that handles redirection after sign-in attempts, particularly for authentication errors
@@ -24,7 +24,7 @@ export const useRedirectAfterSignIn = (error?: Error) => {
 
 	useEffect(() => {
 		const redirectToSignIn = () => {
-			redirectWithCode(routes.auth.signIn, {
+			redirect(routes.auth.signIn, {
 				code: STATUS_CODES.AUTH.code,
 				nextUrl: pathname ?? undefined,
 			});

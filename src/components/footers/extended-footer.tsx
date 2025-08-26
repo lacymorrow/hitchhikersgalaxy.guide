@@ -3,7 +3,7 @@ import React from "react";
 import { v4 as uuid } from "uuid";
 import { FeedbackPopover } from "@/components/forms/feedback-popover";
 import { SubscribeForm } from "@/components/forms/subscribe-form";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import {
 	Accordion,
 	AccordionContent,

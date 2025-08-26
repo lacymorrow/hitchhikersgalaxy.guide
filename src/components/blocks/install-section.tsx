@@ -4,7 +4,7 @@ import { motion, useAnimation } from "framer-motion";
 import { Check, Copy, Terminal } from "lucide-react";
 import { Bungee_Shade as FontBungee } from "next/font/google";
 import { useEffect, useRef, useState } from "react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";

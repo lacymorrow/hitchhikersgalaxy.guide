@@ -1,5 +1,5 @@
 import { getPayloadClient } from "@/lib/payload/payload";
-import "server-only";
+// Do not import "server-only" here; this module must be runnable in Node scripts (db:sync)
 
 // Define common resources and actions
 const resources = ["team", "project", "user", "api_key", "billing", "settings"] as const;

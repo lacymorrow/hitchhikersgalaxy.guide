@@ -7,7 +7,7 @@ import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
-import { redirectWithCode, routeRedirectWithCode } from "@/lib/utils/redirect-with-code";
+import { redirect, routeRedirect } from "@/lib/utils/redirect";
 import { authOptions } from "@/server/auth-js/auth.config";
 import { isGuestOnlyMode } from "@/server/auth-js/auth-providers-utils";
 import { db } from "@/server/db";
@@ -127,12 +127,12 @@ function authWithOptions(props: { protect: true } & AuthProps): Promise<Protecte
 function authWithOptions(props?: AuthProps): Promise<Session | null>;
 async function authWithOptions(props?: AuthProps) {
 	const session = await nextAuthAuth();
-	const { errorCode, redirect, nextUrl } = props ?? {};
+	const { errorCode, redirect: shouldRedirect, nextUrl } = props ?? {};
 
 	// Route protected
 	// Use clear boolean logic without nullish coalescing on non-nullish expressions
 	const protect =
-		(props?.protect ?? false) || props?.redirectTo !== undefined || (redirect ?? false);
+		(props?.protect ?? false) || props?.redirectTo !== undefined || (shouldRedirect ?? false);
 	const redirectTo = props?.redirectTo ?? routes.auth.signOutIn;
 
 	const handleRedirect = (code: string) => {
@@ -142,13 +142,13 @@ async function authWithOptions(props?: AuthProps) {
 		const isFromRouteHandler = typeof Response !== "undefined" && typeof window === "undefined";
 
 		if (isFromRouteHandler) {
-			return routeRedirectWithCode(redirectTo, {
+			return routeRedirect(redirectTo, {
 				code,
 				nextUrl,
 			});
 		}
 
-		return redirectWithCode(redirectTo, {
+		return redirect(redirectTo, {
 			code,
 			nextUrl,
 		});

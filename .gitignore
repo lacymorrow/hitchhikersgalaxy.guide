@@ -73,3 +73,6 @@ public/workbox*
 # AI development configs
 .hive-mind/
 .vercel
+
+.gemini/
+gha-creds-*.json

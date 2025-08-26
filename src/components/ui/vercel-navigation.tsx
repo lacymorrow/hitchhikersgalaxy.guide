@@ -6,7 +6,7 @@ import type React from "react";
 import { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 import { cn } from "@/lib/utils";
-import { LinkOrButton } from "../primitives/link-or-button";
+import { Link } from "../primitives/link";
 
 interface NavLink {
 	label: string | React.ReactNode;
@@ -78,14 +78,14 @@ export const VercelNavigation = ({
 			})}
 		>
 			{navLinks.map((link, index) => (
-				<LinkOrButton
+				<Link
 					href={link.href}
 					className={cn(buttonVariants({ variant }), "items-center justify-center")}
 					key={uuidv4()}
 					{...(variant === "hover"
 						? { onMouseEnter: () => handleInteraction(index) }
 						: { onClick: () => handleInteraction(index) })}
-					type="button"
+					variant="button"
 				>
 					{link.label}
 					<AnimatePresence>
@@ -104,7 +104,7 @@ export const VercelNavigation = ({
 							/>
 						)}
 					</AnimatePresence>
-				</LinkOrButton>
+				</Link>
 			))}
 		</nav>
 	);

@@ -1,5 +1,5 @@
 import { ArrowRight, PieChart } from "lucide-react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Separator } from "@/components/ui/separator";
 import { routes } from "@/config/routes";
 

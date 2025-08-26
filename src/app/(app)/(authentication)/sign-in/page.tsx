@@ -1,7 +1,7 @@
 import { AuthenticationCard } from "@/app/(app)/(authentication)/_components/authentication-card";
 import { SignIn } from "@/app/(app)/(authentication)/sign-in/_components/sign-in";
 import { Icon } from "@/components/assets/icon";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";

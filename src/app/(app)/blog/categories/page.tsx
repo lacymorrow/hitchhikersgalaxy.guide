@@ -1,4 +1,4 @@
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Badge } from "@/components/ui/badge";
 import { getBlogCategories, getBlogPosts } from "@/lib/blog";
 import { cn } from "@/lib/utils";

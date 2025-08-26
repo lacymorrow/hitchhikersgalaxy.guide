@@ -1,5 +1,5 @@
 import { ArrowRight, Check, Sparkles } from "lucide-react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { routes } from "@/config/routes";

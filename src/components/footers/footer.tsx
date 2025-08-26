@@ -1,7 +1,7 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import React, { type FC, type HTMLAttributes, type ReactNode } from "react";
 import { v4 as uuid } from "uuid";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import {
 	Accordion,
 	AccordionContent,

@@ -4,10 +4,7 @@ import { useEffect } from "react";
 import { BASE_URL } from "@/config/base-url";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
-import {
-	createSignInRedirectUrl,
-	createSignOutRedirectUrl,
-} from "@/lib/utils/create-auth-redirect";
+import { createRedirectUrl } from "@/lib/utils/redirect";
 
 export function useRequireAuth(redirectTo: string = routes.auth.signIn) {
 	const { data: session, status } = useSession();
@@ -18,9 +15,8 @@ export function useRequireAuth(redirectTo: string = routes.auth.signIn) {
 		if (status === "loading") return; // Still loading
 
 		if (!session) {
-			const url = new URL(redirectTo, window.location.origin);
-			url.searchParams.set(SEARCH_PARAM_KEYS.nextUrl, pathname || "/");
-			router.push(url.toString());
+			const url = createRedirectUrl(redirectTo, { nextUrl: pathname ?? "/" });
+			router.push(url);
 		}
 	}, [session, status, router, pathname, redirectTo]);
 
@@ -33,7 +29,7 @@ export function useRequireAuth(redirectTo: string = routes.auth.signIn) {
  */
 export function useSignInRedirectUrl(): string {
 	const pathname = usePathname();
-	return createSignInRedirectUrl(pathname ?? "/");
+	return createRedirectUrl(routes.auth.signIn, { nextUrl: pathname ?? "/" });
 }
 
 /**
@@ -42,5 +38,5 @@ export function useSignInRedirectUrl(): string {
  */
 export function useSignOutRedirectUrl(): string {
 	const pathname = usePathname();
-	return createSignOutRedirectUrl(pathname ?? "/");
+	return createRedirectUrl(routes.auth.signOut, { nextUrl: pathname ?? "/" });
 }

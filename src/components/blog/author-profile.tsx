@@ -3,7 +3,7 @@
 import { ExternalLink, Globe, Mail, MapPin } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";

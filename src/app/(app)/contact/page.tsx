@@ -1,6 +1,6 @@
 import { MailIcon } from "lucide-react";
 import { ContactForm } from "@/components/forms/contact-form";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 import { Boxes } from "@/components/ui/background-boxes";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

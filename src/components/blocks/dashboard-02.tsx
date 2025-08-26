@@ -10,7 +10,7 @@ import {
 	ShoppingCart,
 	Users,
 } from "lucide-react";
-import { Link } from "@/components/primitives/link-with-transition";
+import { Link } from "@/components/primitives/link";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

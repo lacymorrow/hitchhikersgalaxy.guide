@@ -103,7 +103,7 @@ const filesToRemove = [
 	"src/app/webhooks",
 
 	// Components and UI
-	"src/components/builder",
+	"src/components/modules/builder",
 	"src/components/footers/extended-footer.tsx",
 	"src/components/forms/contact-form.tsx",
 	"src/components/forms/feedback-popover.tsx",
@@ -162,7 +162,7 @@ const dirsToRemove = [
 	"src/app/mdx",
 	"src/app/ui",
 	"src/app/webhooks",
-	"src/components/builder",
+	"src/components/modules/builder",
 	"src/components/ui",
 	"src/content",
 	"src/registry",

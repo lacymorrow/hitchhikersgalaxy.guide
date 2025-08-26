@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { siteConfig } from "@/config/site-config";
-import { Button, type ButtonProps } from "@/components/ui/button";
+import type { ButtonProps } from "@/components/ui/button";
 
 interface CustomLinkProps {
 	variant?: "default" | ButtonProps["variant"];
@@ -36,14 +36,6 @@ export const Link = ({ children, variant = "default", withRedirect = false, with
 	const useTransition = withTransition ?? siteConfig?.behavior?.pageTransitions;
 
 	const LinkComponent = useTransition ? TransitionsLink : NextLink;
-
-	if (variant === "button") {
-		return (
-			<LinkComponent {...props} href={href}>
-				<Button>{children}</Button>
-			</LinkComponent>
-		);
-	}
 
 	return (
 		<LinkComponent {...props} href={href}>

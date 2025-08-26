@@ -85,7 +85,6 @@ export const VercelNavigation = ({
 					{...(variant === "hover"
 						? { onMouseEnter: () => handleInteraction(index) }
 						: { onClick: () => handleInteraction(index) })}
-					variant="button"
 				>
 					{link.label}
 					<AnimatePresence>

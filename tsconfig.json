@@ -54,6 +54,7 @@
     "src/workers/**/*"
   ],
   "exclude": [
+    ".next",
     "node_modules",
     "tests",
     "public",

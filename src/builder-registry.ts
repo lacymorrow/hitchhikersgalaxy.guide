@@ -1,8 +1,8 @@
 "use client";
 import { Builder, builder } from "@builder.io/react";
-import { CTA } from "./components/builder/cta";
-import { Hero } from "./components/builder/hero";
-import { Stats } from "./components/builder/stats";
+import { CTA } from "./components/modules/builder/cta";
+import { Hero } from "./components/modules/builder/hero";
+import { Stats } from "./components/modules/builder/stats";
 
 builder.init(process.env.NEXT_PUBLIC_BUILDER_API_KEY!);
 

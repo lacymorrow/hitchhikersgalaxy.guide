@@ -46,15 +46,15 @@
 
 **🟢 CONVERSION CANDIDATES (Can become Server Components):**
 
-- `src/components/builder/stats.tsx` - Only needs Builder.io registration
-- `src/components/builder/hero.tsx` - Static content rendering, Builder.io registration only
+- `src/components/modules/builder/stats.tsx` - Only needs Builder.io registration
+- `src/components/modules/builder/hero.tsx` - Static content rendering, Builder.io registration only
 - `src/components/loaders/loader-atoms.tsx` - Pure CSS animations, no JS interactivity
 - `src/components/mdx/card.tsx` - Just conditional rendering, no hooks/browser APIs
 
 **🔴 MUST REMAIN CLIENT (Legitimate client-side needs):**
 
 - `src/components/share.tsx` - Uses usePathname, useToast, navigator APIs, click handlers
-- `src/components/builder/testimonials.tsx` - Uses carousel hooks, useState, useEffect, click handlers
+- `src/components/modules/builder/testimonials.tsx` - Uses carousel hooks, useState, useEffect, click handlers
 - `src/builder-registry.ts` - Builder.io client-side registration required
 
 **📋 PATTERN IDENTIFIED:**
@@ -71,8 +71,8 @@
 
 - [x] `src/components/loaders/loader-atoms.tsx` - Removed unnecessary "use client" (pure CSS animations)
 - [x] `src/components/mdx/card.tsx` - Removed unnecessary "use client" (static rendering only)
-- [x] `src/components/builder/stats.tsx` - Converted to server component + moved Builder.io registration
-- [x] `src/components/builder/hero.tsx` - Converted to server component + moved Builder.io registration
+- [x] `src/components/modules/builder/stats.tsx` - Converted to server component + moved Builder.io registration
+- [x] `src/components/modules/builder/hero.tsx` - Converted to server component + moved Builder.io registration
 
 **Builder.io Pattern Fix:**
 

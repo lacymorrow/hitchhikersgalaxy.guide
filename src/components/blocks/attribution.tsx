@@ -118,7 +118,6 @@ export function Attribution({
 						<Link
 							href={href}
 							className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-							variant="button"
 						>
 							More...
 						</Link>

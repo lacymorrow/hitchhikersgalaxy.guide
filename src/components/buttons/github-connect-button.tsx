@@ -67,7 +67,14 @@ export const GitHubConnectButton = ({ className }: { className?: string }) => {
 				);
 				// Refresh client session and current route to update both client and server components
 				await updateSession({ force: true });
-				router.refresh();
+				// If we're on the settings page, add highlight parameter
+				if (window.location.pathname.includes("/settings")) {
+					const url = new URL(window.location.href);
+					url.searchParams.set("success", "github_connected");
+					router.push(url.pathname + url.search);
+				} else {
+					router.refresh();
+				}
 				setDialogOpen(false);
 			} else {
 				toast.error("Failed to update GitHub username. Please try again.");

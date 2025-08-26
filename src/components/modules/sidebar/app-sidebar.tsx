@@ -44,37 +44,38 @@ interface AppSidebarProps
 export const AppSidebar = React.forwardRef<HTMLDivElement, AppSidebarProps>(
 	({ className, variant = "sidebar", size = "default", ...props }, ref) => {
 		return (
-			<>
-				<Sidebar
-					id="app-sidebar"
-					ref={ref}
-					variant={variant}
-					collapsible="icon"
-					className={cn(appSidebarVariants({ variant, size }), className)}
-					{...props}
-				>
-					<SidebarHeader>
-						<TeamSwitcher />
-					</SidebarHeader>
-					<SidebarContent>
-						<ScrollArea className="[&>div>div]:!block">
-							<NavMain />
-							<ProjectsList />
-						</ScrollArea>
-					</SidebarContent>
-					<SidebarFooter className="p-2">
+			<Sidebar
+				id="app-sidebar"
+				ref={ref}
+				variant={variant}
+				collapsible="icon"
+				className={cn(appSidebarVariants({ variant, size }), className)}
+				{...props}
+			>
+				<SidebarHeader>
+					<TeamSwitcher />
+				</SidebarHeader>
+				<SidebarContent>
+					<ScrollArea className="[&>div>div]:!block">
+						<NavMain />
+						<ProjectsList />
+					</ScrollArea>
+				</SidebarContent>
+				<SidebarFooter className="p-2">
+					<div>
+
 						<NavSecondary />
 
 						{/*
 						<div className="overflow-hidden group-data-[collapsible=icon]:hidden flex flex-col gap-2">
 							<SidebarOptInForm />
 							<CardUpgrade />
-						</div> */}
+							</div> */}
 						<NavUser />
-					</SidebarFooter>
-					<SidebarRail />
-				</Sidebar>
-			</>
+					</div>
+				</SidebarFooter>
+				<SidebarRail />
+			</Sidebar>
 		);
 	}
 );

@@ -23,7 +23,7 @@ export async function AppRouterLayout({
 	// Fetch user teams if authenticated
 	const session = await auth();
 	let userTeams = [{ id: "personal", name: "Personal" }];
-	
+
 	if (session?.user?.id) {
 		try {
 			const teams = await teamService.getUserTeams(session.user.id);

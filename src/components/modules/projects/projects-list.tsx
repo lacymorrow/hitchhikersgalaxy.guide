@@ -72,7 +72,7 @@ export async function ProjectsList() {
 				))}
 
 				{/* Collapsible section for additional projects */}
-				{hasCollapsedProjects && (
+				{/* {hasCollapsedProjects && (
 					<Collapsible className="group/collapsible">
 						<CollapsibleContent>
 							{collapsedProjects.map((project) => (
@@ -103,7 +103,7 @@ export async function ProjectsList() {
 							</SidebarMenuItem>
 						</CollapsibleTrigger>
 					</Collapsible>
-				)}
+				)} */}
 			</SidebarMenu>
 		</SidebarGroup>
 	);

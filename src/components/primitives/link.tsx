@@ -6,10 +6,10 @@ import { usePathname } from "next/navigation";
 import { useMemo } from "react";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { siteConfig } from "@/config/site-config";
-import { Button } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 
 interface CustomLinkProps {
-	variant?: "default" | "button";
+	variant?: "default" | ButtonProps["variant"];
 	withRedirect?: boolean;
 	withTransition?: boolean;
 }

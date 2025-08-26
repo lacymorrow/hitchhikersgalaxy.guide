@@ -28,7 +28,7 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
         setIsConnected(!!hasVercelAccount);
     }, [user]);
 
-    if (!process.env.NEXT_PUBLIC_VERCEL_INTEGRATION_SLUG) {
+    if (!process.env.NEXT_PUBLIC_VERCEL_INTEGRATION_SLUG && process.env.NODE_ENV === "production") {
         console.warn("Vercel integration slug is not set");
         return null;
     }
@@ -111,7 +111,7 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
                     <Tooltip delayDuration={200}>
                         <TooltipTrigger asChild>
                             <Button
-                                onClick={() => void handleDisconnect()}
+                                onClick={handleDisconnect}
                                 variant="link"
                                 size="sm"
                                 disabled={isLoading}
@@ -126,7 +126,7 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
                     </Tooltip>
                 </div>
             ) : (
-                <Button onClick={handleConnect} disabled={isLoading} className={cn("", className)}>
+                <Button size="lg" onClick={() => void handleConnect()} disabled={isLoading} className={cn("", className)}>
                     <IconBrandVercelFilled className="mr-2 h-4 w-4" />
                     {isLoading ? "Connecting..." : "Connect Vercel"}
                 </Button>

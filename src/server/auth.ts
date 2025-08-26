@@ -133,7 +133,7 @@ async function authWithOptions(props?: AuthProps) {
 	// Use clear boolean logic without nullish coalescing on non-nullish expressions
 	const protect =
 		(props?.protect ?? false) || props?.redirectTo !== undefined || (shouldRedirect ?? false);
-	const redirectTo = props?.redirectTo ?? routes.auth.signOutIn;
+	const redirectTo = props?.redirectTo ?? routes.auth.signIn;
 
 	const handleRedirect = (code: string) => {
 		logger.warn(`[authWithOptions] Redirecting to ${redirectTo} with code ${code}`);

@@ -56,7 +56,6 @@ export const routes = {
 		resetPassword: "/reset-password",
 		signInPage: "/api/auth/signin",
 		signOutPage: "/api/auth/signout",
-		signOutIn: "/sign-out-in",
 		error: "/error",
 	},
 

@@ -26,9 +26,7 @@ export const OnboardingWizard = ({
 }: OnboardingWizardProps) => {
 	const { toast } = useToast();
 
-	if (!user) return null;
-
-	const hasVercelConnectionAttempt = !!user.vercelConnectionAttemptedAt || hasVercelConnection;
+	const hasVercelConnectionAttempt = !!user?.vercelConnectionAttemptedAt || hasVercelConnection;
 
 	const initialStep = hasGitHubConnection ? (hasVercelConnectionAttempt ? 2 : 1) : 0;
 
@@ -36,7 +34,7 @@ export const OnboardingWizard = ({
 		completed: boolean;
 		currentStep: number;
 		steps: Record<string, boolean>;
-	}>(`onboarding-${user.id}`, {
+	}>(`onboarding-${user?.id ?? 'guest'}`, {
 		completed: false,
 		currentStep: initialStep,
 		steps: {
@@ -95,13 +93,7 @@ export const OnboardingWizard = ({
 								<span>Vercel account connected</span>
 							</div>
 						)}
-						{user.vercelConnectionAttemptedAt && !hasVercelConnection && (
-							<div className="flex items-center gap-2 text-sm text-yellow-600 dark:text-yellow-500">
-								<CheckIcon className="h-4 w-4" />
-								<span>Connection attempted - you can proceed to the next step</span>
-							</div>
-						)}
-						<VercelConnectButton className="mt-2 w-full" user={user} />
+						{user && <VercelConnectButton className="mt-2" user={user} />}
 					</div>,
 			},
 			{
@@ -110,7 +102,7 @@ export const OnboardingWizard = ({
 				full_description:
 					<div className="space-y-4">
 						<div className="mx-auto">
-							<VercelDeployButton />
+							<VercelDeployButton className="mt-2" />
 						</div>
 						<div className="rounded-lg bg-primary/10 p-3 text-center">
 							<h3 className="font-semibold">Almost there!</h3>
@@ -139,7 +131,7 @@ export const OnboardingWizard = ({
 		onComplete?.();
 	};
 
-	if (onboardingState.completed) return null;
+	if (!user || onboardingState.completed) return null;
 
 	return (
 		<IntroDisclosure

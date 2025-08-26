@@ -1,5 +1,5 @@
 import { ExternalLink, Globe, Shield, Zap } from "lucide-react";
-import { PrivateRepoDeployButton } from "@/components/deploy/private-repo-deploy-button";
+import { PrivateRepoDeployButton } from "@/components/modules/deploy/private-repo-deploy-button";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

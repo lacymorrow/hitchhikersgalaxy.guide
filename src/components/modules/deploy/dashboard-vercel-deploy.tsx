@@ -51,19 +51,22 @@ export const DashboardVercelDeploy = ({
         if (value.trim()) {
             const validation = validateProjectName(value);
             if (!validation.isValid) {
-                setValidationError(validation.error || "Invalid project name");
+                setValidationError(validation.error ?? "Invalid project name");
             }
         }
     };
 
-    const handleDeploy = async (event: React.FormEvent<HTMLFormElement>) => {
+    const handleDeploy = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        handleDeployAsync();
+    };
 
+    const handleDeployAsync = async () => {
         // Validate project name before submission
         const validation = validateProjectName(projectName);
         if (!validation.isValid) {
-            setValidationError(validation.error || "Invalid project name");
-            toast.error(validation.error || "Please enter a valid project name");
+            setValidationError(validation.error ?? "Invalid project name");
+            toast.error(validation.error ?? "Please enter a valid project name");
             return;
         }
 
@@ -80,7 +83,7 @@ export const DashboardVercelDeploy = ({
                 toast.success(result.message);
                 resetForm();
             } else {
-                toast.error(result.error || "Deployment failed to start");
+                toast.error(result.error ?? "Deployment failed to start");
             }
         } catch (error) {
             const errorMessage = error instanceof Error ? error.message : "An unexpected error occurred";
@@ -112,7 +115,7 @@ export const DashboardVercelDeploy = ({
             </span>
         </Button>
     ) : (
-        <VercelConnectButton className="w-full mt-3" user={user} />
+        <VercelConnectButton user={user} />
     );
 
     return (
@@ -173,7 +176,7 @@ export const DashboardVercelDeploy = ({
                     </div>
 
                     <p className="text-xs text-center text-muted-foreground">
-                        Ensure you've connected GitHub and Vercel in{" "}
+                        Ensure you&apos;ve connected GitHub and Vercel in{" "}
                         <LinkWithTransition href="/settings/accounts" onClick={() => setOpen(false)}>
                             <span className="text-primary hover:underline">Settings</span>
                         </LinkWithTransition>

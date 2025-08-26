@@ -46,9 +46,10 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
             // create a CSRF token and store it in a secure cookie
             const state = Array.from(crypto.getRandomValues(new Uint8Array(16)))
                 .map(b => b.toString(16).padStart(2, '0')).join('');
-            
-            // Store CSRF token in a secure, httpOnly cookie (via server action would be better, but using JS for now)
-            // Set SameSite=Lax to allow the OAuth redirect while preventing CSRF
+
+            // Store CSRF token in a secure cookie
+            // Note: This cookie is strictly necessary for OAuth security (CSRF protection)
+            // and may not require explicit consent under GDPR as it's essential functionality
             document.cookie = `vercel_oauth_state=${state}; path=/; SameSite=Lax; Secure; Max-Age=600`;
 
             // Get the origin for the callback URL

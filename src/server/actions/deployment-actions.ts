@@ -7,71 +7,11 @@ import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { type Deployment, deployments, type NewDeployment } from "@/server/db/schema";
 import { type DeploymentResult, deployPrivateRepository } from "./deploy-private-repo";
+import { deploymentSchema, validateProjectName } from "@/lib/schemas/deployment";
 
 const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
 
-/**
- * Validates a project name for use as a GitHub repository name
- * @param projectName - The project name to validate
- * @returns An error message if invalid, or null if valid
- */
-function validateProjectName(projectName: string): string | null {
-	// Check if project name is provided
-	if (!projectName || projectName.trim() === "") {
-		return "Project name is required";
-	}
 
-	// Trim the project name
-	const trimmedName = projectName.trim();
-
-	// Check length constraints (GitHub limits: 1-100 chars)
-	if (trimmedName.length < 1 || trimmedName.length > 100) {
-		return "Project name must be between 1 and 100 characters";
-	}
-
-	// GitHub repository name rules:
-	// - Can only contain alphanumeric characters, hyphens, underscores, and dots
-	// - Cannot start or end with a dot
-	// - Cannot have consecutive dots
-	// - Cannot be a reserved name
-	const validNamePattern = /^[a-zA-Z0-9]([a-zA-Z0-9\-_.])*[a-zA-Z0-9]$|^[a-zA-Z0-9]$/;
-	if (!validNamePattern.test(trimmedName)) {
-		return "Project name can only contain letters, numbers, hyphens, underscores, and dots. It cannot start or end with a dot.";
-	}
-
-	// Check for consecutive dots
-	if (trimmedName.includes("..")) {
-		return "Project name cannot contain consecutive dots";
-	}
-
-	// Check for reserved names (common Git/GitHub reserved names)
-	const reservedNames = [
-		".git", ".github", "api", "www", "admin", "root", "master", "main",
-		"undefined", "null", "con", "prn", "aux", "nul", "com1", "com2", 
-		"com3", "com4", "com5", "com6", "com7", "com8", "com9", "lpt1", 
-		"lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9"
-	];
-	if (reservedNames.includes(trimmedName.toLowerCase())) {
-		return "This project name is reserved and cannot be used";
-	}
-
-	// Additional security checks for potential injection attempts
-	const dangerousPatterns = [
-		/[<>:"\/\\|?*]/, // Characters not allowed in filenames
-		/\$\{.*\}/, // Template literals
-		/\$\(.*\)/, // Command substitution
-		/`.*`/, // Backticks
-		/;|&&|\|\|/, // Command chaining
-	];
-	
-	for (const pattern of dangerousPatterns) {
-		if (pattern.test(trimmedName)) {
-			return "Project name contains invalid characters";
-		}
-	}
-
-	return null; // Valid project name
-}
 
 /**
  * Initiates a deployment process by creating a deployment record and
@@ -80,12 +20,12 @@ function validateProjectName(projectName: string): string | null {
 export async function initiateDeployment(formData: FormData): Promise<DeploymentResult> {
 	const projectName = formData.get("projectName") as string;
 
-	// Validate project name with comprehensive server-side validation
-	const validationError = validateProjectName(projectName);
-	if (validationError) {
+	// Validate project name with comprehensive server-side validation using shared schema
+	const validation = validateProjectName(projectName);
+	if (!validation.isValid) {
 		return {
 			success: false,
-			error: validationError,
+			error: validation.error,
 		};
 	}
 

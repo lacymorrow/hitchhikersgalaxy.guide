@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { initiateDeployment } from "@/server/actions/deployment-actions";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
 import { User } from "@/types/user";
+import { validateProjectName } from "@/lib/schemas/deployment";
 
 
 interface DashboardVercelDeployProps {
@@ -36,11 +37,33 @@ export const DashboardVercelDeploy = ({
     const [open, setOpen] = useState(false);
     const [projectName, setProjectName] = useState("");
     const [isDeploying, setIsDeploying] = useState(false);
+    const [validationError, setValidationError] = useState<string | null>(null);
+
+    const handleProjectNameChange = (value: string) => {
+        setProjectName(value);
+
+        // Clear validation error when user starts typing
+        if (validationError) {
+            setValidationError(null);
+        }
+
+        // Validate in real-time if there's input
+        if (value.trim()) {
+            const validation = validateProjectName(value);
+            if (!validation.isValid) {
+                setValidationError(validation.error || "Invalid project name");
+            }
+        }
+    };
 
     const handleDeploy = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (!projectName) {
-            toast.error("Please enter a project name");
+
+        // Validate project name before submission
+        const validation = validateProjectName(projectName);
+        if (!validation.isValid) {
+            setValidationError(validation.error || "Invalid project name");
+            toast.error(validation.error || "Please enter a valid project name");
             return;
         }
 
@@ -69,6 +92,7 @@ export const DashboardVercelDeploy = ({
 
     const resetForm = () => {
         setProjectName("");
+        setValidationError(null);
         setOpen(false);
     };
 
@@ -126,16 +150,21 @@ export const DashboardVercelDeploy = ({
                             id="projectName"
                             placeholder={`my-${siteConfig.branding.projectSlug}-app`}
                             value={projectName}
-                            onChange={(e) => setProjectName(e.target.value)}
+                            onChange={(e) => handleProjectNameChange(e.target.value)}
                             disabled={isDeploying}
+                            className={validationError ? "border-red-500" : ""}
                         />
-                        <p className="text-xs text-muted-foreground">
-                            Lowercase letters, numbers, and hyphens only
-                        </p>
+                        {validationError ? (
+                            <p className="text-xs text-red-500">{validationError}</p>
+                        ) : (
+                            <p className="text-xs text-muted-foreground">
+                                Lowercase letters, numbers, hyphens, underscores, and dots only
+                            </p>
+                        )}
                     </div>
 
                     <div className="flex gap-2">
-                        <Button type="submit" disabled={isDeploying || !projectName} className="flex-1">
+                        <Button type="submit" disabled={isDeploying || !projectName || !!validationError} className="flex-1">
                             {isDeploying ? "Deploying..." : "Deploy Now"}
                         </Button>
                         <Button type="button" onClick={resetForm} variant="outline" disabled={isDeploying}>

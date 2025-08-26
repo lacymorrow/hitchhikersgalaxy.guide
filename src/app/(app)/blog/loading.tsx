@@ -1,4 +1,4 @@
-import { BlogPostListSkeleton } from "@/components/blog/skeleton";
+import { BlogPostListSkeleton } from "@/components/modules/blog/skeleton";
 
 export default function Loading() {
 	return <BlogPostListSkeleton count={5} />;

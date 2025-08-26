@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { AuthorByline, AuthorProfile } from "@/components/blog/author-profile";
-import { BlogAuthors } from "@/components/blog/authors";
-import { BlogAuthorSkeleton } from "@/components/blog/skeleton";
+import { AuthorByline, AuthorProfile } from "@/components/modules/blog/author-profile";
+import { BlogAuthors } from "@/components/modules/blog/authors";
+import { BlogAuthorSkeleton } from "@/components/modules/blog/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";

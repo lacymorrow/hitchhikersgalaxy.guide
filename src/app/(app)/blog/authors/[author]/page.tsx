@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { AuthorProfile } from "@/components/blog/author-profile";
+import { AuthorProfile } from "@/components/modules/blog/author-profile";
 import { Link } from "@/components/primitives/link";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

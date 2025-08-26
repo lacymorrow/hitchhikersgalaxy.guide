@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { BlogPostComponent } from "@/components/blog/post";
-import { BlogPostListSkeleton } from "@/components/blog/skeleton";
+import { BlogPostComponent } from "@/components/modules/blog/post";
+import { BlogPostListSkeleton } from "@/components/modules/blog/skeleton";
 import { constructMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
 import { type BlogPost, getBlogPosts } from "@/lib/blog";

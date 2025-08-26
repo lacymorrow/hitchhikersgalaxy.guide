@@ -92,8 +92,8 @@ const profileUrl = authorUtils.getAuthorUrl(author);
 The TOC components now include error boundaries with fallback UI:
 
 ```typescript
-import { TableOfContents } from "@/components/blog/table-of-contents";
-import { MobileToc } from "@/components/blog/mobile-toc";
+import { TableOfContents } from "@/components/modules/blog/table-of-contents";
+import { MobileToc } from "@/components/modules/blog/mobile-toc";
 
 // Error boundaries are automatically included
 <TableOfContents headings={headings} />
@@ -166,7 +166,7 @@ import {
   MobileTOCSkeleton,
   BlogPostListSkeleton,
   BlogAuthorSkeleton,
-} from "@/components/blog/skeleton";
+} from "@/components/modules/blog/skeleton";
 
 // Individual post loading
 <BlogPostSkeleton />
@@ -207,7 +207,7 @@ import { Suspense } from "react";
 New components for displaying author information:
 
 ```typescript
-import { AuthorProfile, AuthorByline } from "@/components/blog/author-profile";
+import { AuthorProfile, AuthorByline } from "@/components/modules/blog/author-profile";
 
 // Full author profile (for author pages)
 <AuthorProfile
@@ -267,11 +267,11 @@ import { AuthorProfile, AuthorByline } from "@/components/blog/author-profile";
 
 ```typescript
 // Before
-import { BlogAuthors } from "@/components/blog/authors";
+import { BlogAuthors } from "@/components/modules/blog/authors";
 <BlogAuthors authors={post.authors} />
 
 // After
-import { BlogAuthors } from "@/components/blog/authors";
+import { BlogAuthors } from "@/components/modules/blog/authors";
 <BlogAuthors authors={post.authorObjects || post.authors} />
 ```
 
@@ -279,7 +279,7 @@ import { BlogAuthors } from "@/components/blog/authors";
 
 ```typescript
 // Add to your pages
-import { BlogPostSkeleton } from "@/components/blog/skeleton";
+import { BlogPostSkeleton } from "@/components/modules/blog/skeleton";
 
 // Create loading.tsx files
 export default function Loading() {
@@ -311,7 +311,7 @@ describe("Author Configuration", () => {
 
 ```typescript
 import { render, screen } from "@testing-library/react";
-import { TableOfContents } from "@/components/blog/table-of-contents";
+import { TableOfContents } from "@/components/modules/blog/table-of-contents";
 
 describe("Table of Contents", () => {
   it("should render headings with accessibility attributes", () => {

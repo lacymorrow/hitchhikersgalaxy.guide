@@ -49,8 +49,8 @@ importers:
         specifier: 7.0.0
         version: 7.0.0
       '@fortawesome/react-fontawesome':
-        specifier: 3.0.0
-        version: 3.0.0(@fortawesome/fontawesome-svg-core@7.0.0)(react@19.1.1)
+        specifier: 0.2.3
+        version: 0.2.3(@fortawesome/fontawesome-svg-core@7.0.0)(react@19.1.1)
       '@hookform/resolvers':
         specifier: 5.2.1
         version: 5.2.1(react-hook-form@7.62.0(react@19.1.1))
@@ -2238,10 +2238,10 @@ packages:
     resolution: {integrity: sha512-njSLAllkOddYDCXgTFboXn54Oe5FcvpkWq+FoetOHR64PbN0608kM02Lze0xtISGpXgP+i26VyXRQA0Irh3Obw==}
     engines: {node: '>=6'}
 
-  '@fortawesome/react-fontawesome@3.0.0':
-    resolution: {integrity: sha512-x6boc1RLEjf/QPrMS20VJcabTZeGCb1hbwNybPPLjJohGPowXfjOpwQlVK6aH6MVKfCq2JXeHRIlx+tYpS18FA==}
+  '@fortawesome/react-fontawesome@0.2.3':
+    resolution: {integrity: sha512-HlJco8RDY8NrzFVjy23b/7mNS4g9NegcrBG3n7jinwpc2x/AmSVk53IhWniLYM4szYLxRAFTAGwGn0EIlclDeQ==}
     peerDependencies:
-      '@fortawesome/fontawesome-svg-core': ~6 || ~7
+      '@fortawesome/fontawesome-svg-core': ~1 || ~6 || ~7
       react: 19.1.1
 
   '@grpc/grpc-js@1.13.4':
@@ -15338,11 +15338,11 @@ snapshots:
     dependencies:
       '@fortawesome/fontawesome-common-types': 7.0.0
 
-  '@fortawesome/react-fontawesome@3.0.0(@fortawesome/fontawesome-svg-core@7.0.0)(react@19.1.1)':
+  '@fortawesome/react-fontawesome@0.2.3(@fortawesome/fontawesome-svg-core@7.0.0)(react@19.1.1)':
     dependencies:
       '@fortawesome/fontawesome-svg-core': 7.0.0
+      prop-types: 15.8.1
       react: 19.1.1
-      semver: 7.7.2
 
   '@grpc/grpc-js@1.13.4':
     dependencies:

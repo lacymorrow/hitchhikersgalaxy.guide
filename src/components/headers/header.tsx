@@ -8,9 +8,9 @@ import { useSession } from "next-auth/react";
 import type React from "react";
 import { Icon } from "@/components/assets/icon";
 import { Link } from "@/components/primitives/link";
-import { SearchMenu } from "@/components/search/search-menu";
-import { SearchAi } from "@/components/search/search-ai";
-import { UserMenu } from "@/components/modules/user/user-menu";
+import { SearchMenu } from "@/components/modules/search/search-menu";
+import { SearchAi } from "@/components/modules/search/search-ai";
+import { UserMenuCombined } from "@/components/modules/user/user-menu-combined";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/shipkit/theme";
@@ -52,6 +52,8 @@ interface HeaderProps {
 	 * Optional authenticated user to pass into the user menu.
 	 */
 	user?: User | null;
+	/** Whether we're currently on an auth page (sign-in or sign-up) */
+	isOnAuthPage?: boolean;
 	className?: string;
 }
 
@@ -87,6 +89,7 @@ export const Header: React.FC<HeaderProps> = ({
 	animatedCTAOnScroll,
 	opaqueOnScroll,
 	user,
+	isOnAuthPage = false,
 	className,
 }) => {
 	const [{ y }] = useWindowScroll();
@@ -245,7 +248,7 @@ export const Header: React.FC<HeaderProps> = ({
 								<div className="flex items-center gap-2">
 									{!session && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
 
-									<UserMenu user={user} />
+									<UserMenuCombined user={user} isOnAuthPage={isOnAuthPage} />
 
 									{!session && (
 										animatedCTAOnScroll ? (

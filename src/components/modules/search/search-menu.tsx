@@ -7,7 +7,7 @@ import { useTheme } from "next-themes";
 import * as React from "react";
 import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
 import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
-import { docsConfig } from "@/components/search/example";
+import { docsConfig } from "@/components/modules/search/example";
 import { Button } from "@/components/ui/button";
 import {
 	CommandDialog,

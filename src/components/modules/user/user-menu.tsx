@@ -58,7 +58,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 					if (!result.success) {
 						toast({
 							title: "Failed to save theme preference",
-							description: result.error || "Your theme preference will reset on next visit.",
+							description: result.error ?? "Your theme preference will reset on next visit.",
 							variant: "destructive",
 						});
 						return;
@@ -179,11 +179,11 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 					>
 						<Avatar className={cn(size === "sm" ? "size-6" : "size-8")}>
 							<AvatarImage
-								src={currentUser?.image || ""}
-								alt={currentUser?.name || "User avatar"}
+								src={currentUser?.image ?? ""}
+								alt={currentUser?.name ?? "User avatar"}
 								draggable={false}
 							/>
-							<AvatarFallback>{currentUser?.name?.[0]?.toUpperCase() || "?"}</AvatarFallback>
+							<AvatarFallback>{currentUser?.name?.[0]?.toUpperCase() ?? "?"}</AvatarFallback>
 						</Avatar>
 					</Button>
 				</UserMenuDropdown>

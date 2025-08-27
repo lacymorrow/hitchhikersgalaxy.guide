@@ -1,5 +1,7 @@
 "use server";
 
+import { generateProjectNameSuggestions } from "@/lib/utils";
+
 import { createGitHubTemplateService } from "@/lib/github-template";
 import { createVercelAPIService } from "@/lib/vercel-api";
 import { createDeployment, updateDeployment } from "@/server/actions/deployment-actions";
@@ -321,8 +323,9 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 							break;
 						}
 					}
-				} catch {
+				} catch (error) {
 					// Poll attempt failed, will retry
+					console.warn(`Deployment poll attempt ${attempts} failed:`, error);
 				}
 			}
 			
@@ -336,12 +339,15 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		};
 
 		// Start polling in the background
-		pollDeploymentStatus().catch(() => {
+		pollDeploymentStatus().catch((error) => {
 			// Failed to poll deployment status
+			console.error("Failed to poll deployment status:", error);
 			if (currentDeploymentId) {
 				updateDeployment(currentDeploymentId, {
 					status: "completed", // Mark as completed even if polling fails
-				}).catch(() => { /* ignore errors */ });
+				}).catch((updateError) => {
+					console.error("Failed to update deployment status:", updateError);
+				});
 			}
 		});
 
@@ -525,29 +531,7 @@ export async function getTemplateRepositories(
 	}
 }
 
-/**
- * Generate suggested project names based on repository name
- */
-export function generateProjectNameSuggestions(repoName: string): string[] {
-	const sanitized = repoName.toLowerCase().replace(/[^a-z0-9]/g, "-");
-	const suggestions = [
-		sanitized,
-		`${sanitized}-app`,
-		`${sanitized}-web`,
-		`${sanitized}-site`,
-		`my-${sanitized}`,
-	];
 
-	// Remove duplicates and invalid names
-	return [...new Set(suggestions)].filter(
-		(name) =>
-			name.length <= 52 &&
-			/^[a-z0-9-]+$/.test(name) &&
-			!name.startsWith("-") &&
-			!name.endsWith("-") &&
-			!name.includes("--")
-	);
-}
 
 /**
  * Get deployment status by checking both GitHub and Vercel

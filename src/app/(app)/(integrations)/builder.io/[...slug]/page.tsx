@@ -5,6 +5,7 @@ import { env } from "@/env";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
 import "@/styles/builder-io.css";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 
 // Revalidate this page every 60 seconds
 export const revalidate = 60;
@@ -17,6 +18,10 @@ interface PageProps {
 
 if (env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED && env.NEXT_PUBLIC_BUILDER_API_KEY) {
 	builder.init(env.NEXT_PUBLIC_BUILDER_API_KEY);
+}
+
+function Loading() {
+	return <h2>🌀 Loading...</h2>;
 }
 
 export default async function Page(props: PageProps) {
@@ -42,7 +47,9 @@ export default async function Page(props: PageProps) {
 		<>
 			<div className="mx-auto w-full py-header">
 				{/* Render the Builder page */}
-				<RenderBuilderContent content={content} model={model} />
+				<Suspense fallback={<Loading />}>
+					<RenderBuilderContent content={content} model={model} />
+				</Suspense>
 			</div>
 		</>
 	);

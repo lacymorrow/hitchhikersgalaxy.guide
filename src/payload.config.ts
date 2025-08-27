@@ -7,10 +7,10 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 // storage-adapter-import-placeholder
 import { s3Storage } from "@payloadcms/storage-s3";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
-import path from "path";
-import { buildConfig } from "payload";
+import path from "node:path";
+import { buildConfig, type Payload } from "payload";
 import sharp from "sharp";
-import { fileURLToPath } from "url";
+import { fileURLToPath } from "node:url";
 
 import { RESEND_FROM_EMAIL } from "@/config/constants";
 import { buildTimeFeatures } from "@/config/features-config";
@@ -160,18 +160,18 @@ const config = {
 	}),
 	sharp,
 	// Add onInit hook to seed data when Payload initializes
-	async onInit(payload: any) {
-		console.info("⏭️  Payload CMS initialized");
+	async onInit(payload: Payload) {
+		// console.info("⏭️  Payload CMS initialized");
 		try {
 			// Skip seeding if PAYLOAD_AUTO_SEED is explicitly set to "false"
 			if (process.env.PAYLOAD_AUTO_SEED === "false") {
-				console.info("⏭️ Automatic Payload CMS seeding is disabled");
+				// console.info("⏭️ Automatic Payload CMS seeding is disabled");
 				return;
 			}
 
 			// If Payload is not enabled, skip seeding and return
 			if (!isPayloadEnabled) {
-				console.info("⏭️ Payload CMS is disabled, skipping seeding");
+				// console.info("⏭️ Payload CMS is disabled, skipping seeding");
 				return;
 			}
 
@@ -181,12 +181,12 @@ const config = {
 
 			// If force seeding is enabled, override the check
 			if (process.env.PAYLOAD_SEED_FORCE === "true") {
-				console.info("🔄 Force seeding is enabled, proceeding with seed");
+				// console.info("🔄 Force seeding is enabled, proceeding with seed");
 			}
 
 			// Only seed if needed or forced
 			if (shouldSeed || process.env.PAYLOAD_SEED_FORCE === "true") {
-				console.info("🌱 Seeding Payload CMS with initial data...");
+				// console.info("🌱 Seeding Payload CMS with initial data...");
 
 				// Import the seedAllDirect function from seed-utils
 				// This avoids circular dependencies by not importing from files that import payload
@@ -196,10 +196,10 @@ const config = {
 				// Mark seeding as completed by setting a flag in the database
 				await markSeedingCompleted(payload);
 
-				console.info("✅ Seeding completed and flag set");
+				// console.info("✅ Seeding completed and flag set");
 			}
 		} catch (error) {
-			console.error("❌ Error in Payload CMS onInit hook:", error);
+			// console.error("❌ Error in Payload CMS onInit hook:", error);
 		}
 	},
 	plugins: [
@@ -254,7 +254,7 @@ export default buildConfig(config);
  * Check if seeding is needed by looking for a marker in the database
  * We'll use the settings global as a marker for seed status
  */
-async function checkIfSeedingNeeded(payload: any): Promise<boolean> {
+async function checkIfSeedingNeeded(payload: Payload): Promise<boolean> {
 	try {
 		// Check if the settings global has the seedCompleted flag
 		const settings = await payload.findGlobal({
@@ -269,7 +269,7 @@ async function checkIfSeedingNeeded(payload: any): Promise<boolean> {
 		// No data exists or seedCompleted is false, seeding is needed
 		return true;
 	} catch (error) {
-		console.error("Error checking if seeding is needed:", error);
+		// console.error("Error checking if seeding is needed:", error);
 		// If there's an error, assume seeding is needed
 		return true;
 	}
@@ -278,7 +278,7 @@ async function checkIfSeedingNeeded(payload: any): Promise<boolean> {
 /**
  * Mark seeding as completed by setting a flag in the database
  */
-async function markSeedingCompleted(payload: any): Promise<void> {
+async function markSeedingCompleted(payload: Payload): Promise<void> {
 	try {
 		// Update the settings global to mark seeding as completed
 		await payload.updateGlobal({
@@ -289,6 +289,6 @@ async function markSeedingCompleted(payload: any): Promise<void> {
 			},
 		});
 	} catch (error) {
-		console.error("Error marking seeding as completed:", error);
+		// console.error("Error marking seeding as completed:", error);
 	}
 }

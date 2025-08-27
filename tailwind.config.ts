@@ -1,7 +1,7 @@
 import typography from "@tailwindcss/typography";
 import type { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
-// @ts-ignore
+// @ts-expect-error
 import flattenColorPalette from "tailwindcss/lib/util/flattenColorPalette";
 import tailwindcssAnimate from "tailwindcss-animate";
 

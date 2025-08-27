@@ -1,11 +1,3 @@
-// TODO: This file is a mess, we need to clean it up.
-
-/***
- * ! CMS - Include both Payload CMS and Builder.io CMS and configured to work together
- * ? Payload CMS
- * ? Builder.io
- */
-
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { env } from "@/env";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";
@@ -17,6 +9,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import type { PageBlock } from "@/types/blocks";
 import { BlockRenderer } from "../payload-blocks";
+import { Suspense } from "react";
 
 if (env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED && env.NEXT_PUBLIC_BUILDER_API_KEY) {
 	builder.init(env.NEXT_PUBLIC_BUILDER_API_KEY);
@@ -29,6 +22,10 @@ interface PageProps {
 	searchParams: Promise<{
 		preview?: string;
 	}>;
+}
+
+function Loading() {
+	return <h2>🌀 Loading...</h2>;
 }
 
 const shouldSkip = (slugString: string) => {
@@ -79,7 +76,6 @@ async function getPageData(
 	if (env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED) {
 		try {
 			const payload = await getPayloadClient();
-			const slugString = slug.join("/");
 
 			// First try with the joined slug
 			let pageQuery = await payload?.find({
@@ -195,7 +191,7 @@ export default async function Page({ params: paramsPromise }: PageProps) {
 
 	if (pageData.source === "payload" || pageData.source === "builder") {
 		return (
-			<>
+			<Suspense fallback={<Loading />}>
 				{pageData.source === "payload" && (
 					<BlockRenderer blocks={(pageData.data.layout as PageBlock[]) ?? []} />
 				)}
@@ -203,7 +199,7 @@ export default async function Page({ params: paramsPromise }: PageProps) {
 				{pageData.source === "builder" && (
 					<RenderBuilderContent content={pageData.data} model="page" />
 				)}
-			</>
+			</Suspense>
 		);
 	}
 

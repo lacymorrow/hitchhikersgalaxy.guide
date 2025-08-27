@@ -20,7 +20,7 @@ import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import { initiateDeployment } from "@/server/actions/deployment-actions";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
-import { User } from "@/types/user";
+import type { User } from "@/types/user";
 import { validateProjectName } from "@/lib/schemas/deployment";
 import { Loader2 } from "lucide-react";
 

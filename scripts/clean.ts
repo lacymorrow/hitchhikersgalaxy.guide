@@ -1,25 +1,21 @@
 #!/usr/bin/env ts-node
 
-import { execSync } from "child_process";
-import fs from "fs";
-import path from "path";
+import { execSync } from "node:child_process";
+import fs from "node:fs";
+import path from "node:path";
 
 const rootDir = process.cwd();
 
 function runCommand(command: string) {
-	console.log(`Running: ${command}`);
 	try {
 		execSync(command, { stdio: "inherit" });
 	} catch (error) {
-		console.error(`Error executing command: ${command}`);
-		console.error(error);
 	}
 }
 
 function removeDirectory(dir: string) {
 	const fullPath = path.join(rootDir, dir);
 	if (fs.existsSync(fullPath)) {
-		console.log(`Removing directory: ${fullPath}`);
 		fs.rmSync(fullPath, { recursive: true, force: true });
 	}
 }
@@ -27,7 +23,6 @@ function removeDirectory(dir: string) {
 function removeFile(file: string) {
 	const fullPath = path.join(rootDir, file);
 	if (fs.existsSync(fullPath)) {
-		console.log(`Removing file: ${fullPath}`);
 		fs.unlinkSync(fullPath);
 	}
 }
@@ -174,20 +169,9 @@ const dirsToRemove = [
 	"public/workers",
 ];
 
-console.log("Starting cleanup process...");
-
 // Handle different cleanup modes
 if (process.argv.includes("--bones")) {
 	// Clean to match bones branch
-	console.log("\nDirectories to be removed:");
-	for (const dir of dirsToRemove) {
-		console.log(`- ${dir}`);
-	}
-
-	console.log("\nFiles to be removed:");
-	for (const file of filesToRemove) {
-		console.log(`- ${file}`);
-	}
 
 	// Remove directories first, then individual files
 	for (const dir of dirsToRemove) {
@@ -213,7 +197,5 @@ if (process.argv.includes("--bones")) {
 		removeFile(file);
 	}
 
-	runCommand("npm cache clean --force");
+	runCommand("pnpm store prune");
 }
-
-console.log("Cleanup process completed.");

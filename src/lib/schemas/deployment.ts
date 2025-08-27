@@ -42,7 +42,7 @@ const GITHUB_RESERVED_NAMES = [
  * Dangerous patterns that could indicate injection attempts
  */
 const DANGEROUS_PATTERNS = [
-    /[<>:"\/\\|?*]/, // Characters not allowed in filenames
+    /[<>:"/\\|?*]/, // Characters not allowed in filenames
     /\$\{.*\}/, // Template literals
     /\$\(.*\)/, // Command substitution
     /`.*`/, // Backticks

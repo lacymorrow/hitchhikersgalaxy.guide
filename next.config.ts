@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
-import path from "path";
+import type { Configuration as WebpackConfiguration } from "webpack";
+import path from "node:path";
 import { buildTimeFeatureFlags, buildTimeFeatures } from "@/config/features-config";
 import { getDerivedSecrets } from "@/config/secrets";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
@@ -317,38 +318,40 @@ const nextConfig: NextConfig = {
 	/*
 	 * Webpack configuration
 	 */
-	webpack: (config: any, { dev, isServer }: { dev: boolean; isServer: boolean }) => {
+	webpack: (config: WebpackConfiguration, { dev, isServer }: { dev: boolean; isServer: boolean }) => {
 		// Enable top-level await
 		config.experiments = { ...config.experiments, topLevelAwait: true };
 
-		// Add support for async/await in web workers
-		config.module.rules.push({
-			test: /\.worker\.(js|ts)$/,
-			use: {
-				loader: "worker-loader",
-				options: {
-					filename: "static/[hash].worker.js",
-					publicPath: "/_next/",
-				},
-			},
-		});
-
-		if (isServer) {
-			// Ensure docs directory is included in the bundle for dynamic imports
+		if (config.module && config.module.rules) {
+			// Add support for async/await in web workers
 			config.module.rules.push({
-				test: /\.(md|mdx)$/,
-				include: [
-					path.join(process.cwd(), "docs"),
-					// require("path").join(process.cwd(), "src/content/docs"),
-				],
-				use: "raw-loader",
+				test: /\.worker\.(js|ts)$/,
+				use: {
+					loader: "worker-loader",
+					options: {
+						filename: "static/[hash].worker.js",
+						publicPath: "/_next/",
+					},
+				},
 			});
+
+			if (isServer) {
+				// Ensure docs directory is included in the bundle for dynamic imports
+				config.module.rules.push({
+					test: /\.(md|mdx)$/,
+					include: [
+						path.join(process.cwd(), "docs"),
+						// require("path").join(process.cwd(), "src/content/docs"),
+					],
+					use: "raw-loader",
+				});
+			}
 		}
 
 		// External heavy dependencies that are not used in most pages
 		if (!dev && isServer) {
 			config.externals = [
-				...config.externals,
+				...(config.externals || []),
 				{
 					"@huggingface/transformers": "commonjs @huggingface/transformers",
 					googleapis: "commonjs googleapis",
@@ -357,12 +360,13 @@ const nextConfig: NextConfig = {
 			];
 		}
 
-		// Completely ignore ONNX runtime packages
-		config.resolve.alias = {
-			...config.resolve.alias,
-			// "onnxruntime-node": false,
-			// "onnxruntime-common": false,
-		};
+		if (config.resolve && config.resolve.alias) {
+			config.resolve.alias = {
+				...config.resolve.alias,
+				// "onnxruntime-node": false,
+				// "onnxruntime-common": false,
+			};
+		}
 
 		return config;
 	},

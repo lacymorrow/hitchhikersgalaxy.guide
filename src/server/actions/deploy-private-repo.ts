@@ -381,12 +381,12 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 /**
  * Validate deployment configuration before attempting deployment
  */
-export function validateDeploymentConfig(config: {
+export async function validateDeploymentConfig(config: {
 	templateRepo: string;
 	projectName: string;
 	githubToken?: string;
 	vercelToken: string;
-}): { success: boolean; error?: string } {
+}): Promise<{ success: boolean; error?: string }> {
 	const { templateRepo, projectName, vercelToken } = config;
 
 	// Validate template repo format

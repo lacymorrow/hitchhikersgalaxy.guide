@@ -93,6 +93,7 @@
     "@polar-sh/nextjs": "^0.4.4",
     "@polar-sh/sdk": "^0.34.13",
     "@radix-ui/react-icons": "1.3.2",
+    "@radix-ui/react-scroll-area": "^1.2.10",
     "@radix-ui/react-slot": "^1.2.3",
     "@react-email/render": "^1.2.1",
     "@react-three/drei": "^10.7.4",

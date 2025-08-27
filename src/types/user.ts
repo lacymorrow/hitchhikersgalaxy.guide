@@ -19,6 +19,9 @@ export interface User {
 	bio?: string | null;
 	githubUsername?: string | null;
 	vercelConnectionAttemptedAt?: Date | null;
+	githubConnectionCompletedAt?: Date | null;
+	vercelConnectionCompletedAt?: Date | null;
+	deploymentCompletedAt?: Date | null;
 	createdAt?: Date;
 	updatedAt?: Date;
 	metadata?: string | null;
@@ -32,13 +35,14 @@ export interface User {
 
 // Import NextAuth Session type
 import type { Session as NextAuthSession } from "next-auth";
+import type { NextResponse } from "next/server";
 
 // Type guard to check if auth() returned a Session vs NextResponse
 export function isSession(
 	sessionOrResponse:
 		| NextAuthSession
 		| { user: null; expires: string }
-		| import("next/server").NextResponse<unknown>
+		| NextResponse<unknown>
 		| null
 ): sessionOrResponse is NextAuthSession {
 	return (

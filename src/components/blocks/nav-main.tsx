@@ -33,11 +33,6 @@ const data = [
 		url: routes.app.dashboard,
 		icon: SquareTerminal,
 	},
-	{
-		title: "Deploy",
-		url: routes.app.deploy,
-		icon: Rocket,
-	},
 	// {
 	// 	title: `Download ${siteConfig.title}`,
 	// 	url: routes.download,

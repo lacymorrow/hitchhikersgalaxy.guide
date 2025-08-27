@@ -62,7 +62,6 @@ export const routes = {
 	// App routes
 	app: {
 		dashboard: "/dashboard",
-		deploy: "/deploy",
 		deployments: "/deployments",
 		apiKeys: "/api-keys",
 		logs: "/logs",

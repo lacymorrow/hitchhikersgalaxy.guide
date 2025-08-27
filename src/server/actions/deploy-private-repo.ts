@@ -1,8 +1,7 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { createGitHubTemplateService } from "@/lib/github-template";
-import { COMMON_ENV_VARIABLES, createVercelAPIService } from "@/lib/vercel-api";
+import { createVercelAPIService } from "@/lib/vercel-api";
 import { createDeployment, updateDeployment } from "@/server/actions/deployment-actions";
 import { auth } from "@/server/auth";
 import { getGitHubAccessToken } from "@/server/services/github/github-token-service";
@@ -13,20 +12,18 @@ import { getVercelAccessToken } from "@/server/services/vercel/vercel-service";
  */
 
 // Define a common type for environment variable targets
-type EnvVarTarget =
-	| ReadonlyArray<"production" | "preview" | "development">
-	| ("production" | "preview" | "development")[];
+type EnvVarTarget = readonly ("production" | "preview" | "development")[];
 
 export interface DeploymentConfig {
 	templateRepo: string; // e.g., "shipkit/private-template"
 	newRepoName: string;
 	projectName: string;
 	description?: string;
-	environmentVariables?: Array<{
+	environmentVariables?: {
 		key: string;
 		value: string;
 		target: EnvVarTarget;
-	}>;
+	}[];
 	domains?: string[];
 	includeAllBranches?: boolean;
 	githubToken?: string; // Optional - will use OAuth token if not provided
@@ -50,7 +47,7 @@ export interface DeploymentResult {
 			deploymentUrl?: string;
 		};
 		step?: string;
-		details?: any;
+		details?: unknown;
 		requiresManualImport?: boolean;
 	};
 }
@@ -79,7 +76,6 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 	// Get user's GitHub token - prefer OAuth token over provided token
 	const {
 		templateRepo,
-		newRepoName,
 		projectName,
 		description,
 		environmentVariables = [],
@@ -145,7 +141,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			};
 		}
 
-		console.log(`🚀 Starting deployment: ${templateRepo} → ${projectName}`);
+		// Starting deployment
 
 		// Parse templateRepo to get owner and repo name
 		const [templateOwner, templateRepoName] = templateRepo.split("/");
@@ -203,13 +199,13 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			};
 		}
 
-		console.log(`✅ GitHub repository created: ${repoResult.repoUrl}`);
+		// GitHub repository created successfully
 
 		// Extract repo info from the result
 		const repoInfo = {
-			url: repoResult.repoUrl!,
+			url: repoResult.repoUrl ?? '',
 			name: projectName,
-			cloneUrl: repoResult.details?.cloneUrl || repoResult.repoUrl!,
+			cloneUrl: repoResult.details?.cloneUrl ?? repoResult.repoUrl ?? '',
 		};
 
 		// Update deployment record with GitHub info
@@ -237,8 +233,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 
 		// If that fails, try creating without git repository (manual setup)
 		if (!projectResult.success) {
-			console.log("Failed to create project with git repo, trying without...");
-			console.log("Error details:", projectResult.error);
+			// Failed to create project with git repo, trying without...
 
 			projectResult = await vercelService.createProject({
 				name: projectName,
@@ -249,14 +244,14 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 
 			// If project creation succeeded without git, try to connect the repository
 			if (projectResult.success && projectResult.projectId) {
-				console.log("Project created without git repo, attempting to connect repository...");
+				// Project created without git repo, attempting to connect repository
 				const gitConnectResult = await vercelService.connectGitRepository(projectResult.projectId, {
 					type: "github" as const,
 					repo: `${githubUsername}/${projectName}`,
 				});
 
 				if (!gitConnectResult.success) {
-					console.warn("Failed to connect git repository:", gitConnectResult.error);
+					// Failed to connect git repository but continuing
 					// Don't fail the deployment, just warn
 				}
 			}
@@ -266,7 +261,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			// If Vercel project creation failed but GitHub repo was created,
 			// return a special response indicating manual import is needed
 			const error =
-				projectResult.error ||
+				projectResult.error ??
 				"Failed to create Vercel project. You can manually import the repository.";
 			if (currentDeploymentId) {
 				await updateDeployment(currentDeploymentId, { status: "failed", error });
@@ -283,38 +278,72 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			};
 		}
 
-		console.log(`✅ Vercel project created: ${projectResult.projectUrl}`);
+		// Vercel project created successfully
 
-		// Step 3: Wait a moment for Vercel to process the GitHub connection
-		// Then check if we can get deployment status
-		console.log("Waiting for Vercel to process the GitHub repository...");
-
-		// Wait 2 seconds to give Vercel time to detect the repository
-		await new Promise((resolve) => setTimeout(resolve, 2000));
-
-		// Try to get project details to see if deployment has started
-		let deploymentUrl = `https://${projectName}.vercel.app`;
-		try {
-			const projectInfo = await vercelService.getProject(projectResult.projectId!);
-			if (projectInfo.success && projectInfo.data?.latestDeployments?.[0]) {
-				const latestDeployment = projectInfo.data.latestDeployments[0];
-				if (latestDeployment.url) {
-					deploymentUrl = `https://${latestDeployment.url}`;
-					console.log(`Deployment detected: ${deploymentUrl}`);
-				}
-			}
-		} catch (error) {
-			console.log("Could not fetch deployment status, using default URL");
-		}
-
-		// Update deployment record with Vercel info and status
+		// Step 3: Update deployment record with Vercel project info
 		if (currentDeploymentId) {
 			await updateDeployment(currentDeploymentId, {
-				status: "completed",
-				vercelProjectUrl: projectResult.projectUrl!,
-				vercelDeploymentUrl: deploymentUrl,
+				vercelProjectUrl: projectResult.projectUrl ?? '',
+				vercelDeploymentUrl: `https://${projectName}.vercel.app`,
 			});
 		}
+
+		// Step 4: Poll for actual deployment status in the background
+		// This ensures we don't block the response but still update the status
+		const pollDeploymentStatus = async () => {
+			let attempts = 0;
+			const maxAttempts = 20; // Poll for up to ~60 seconds
+			
+			while (attempts < maxAttempts) {
+				attempts++;
+				await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait 3 seconds between polls
+				
+				try {
+					const projectInfo = await vercelService.getProject(projectResult.projectId ?? '');
+					if (projectInfo.success && projectInfo.data?.latestDeployments?.[0]) {
+						const latestDeployment = projectInfo.data.latestDeployments[0];
+						
+						// Check deployment state
+						if (latestDeployment.state === "READY" || latestDeployment.state === "ERROR" || latestDeployment.state === "CANCELED") {
+							const status = latestDeployment.state === "READY" ? "completed" : "failed";
+							const deploymentUrl = latestDeployment.url ? `https://${latestDeployment.url}` : `https://${projectName}.vercel.app`;
+							
+							// Deployment status updated
+							
+							// Update deployment record with final status
+							if (currentDeploymentId) {
+								await updateDeployment(currentDeploymentId, {
+									status,
+									vercelDeploymentUrl: deploymentUrl,
+									error: latestDeployment.state === "ERROR" ? "Vercel deployment failed" : undefined,
+								});
+							}
+							break;
+						}
+					}
+				} catch {
+					// Poll attempt failed, will retry
+				}
+			}
+			
+			// If we exhausted all attempts, mark as completed anyway (Vercel will continue in background)
+			if (attempts >= maxAttempts && currentDeploymentId) {
+				// Polling timed out, marking as completed
+				await updateDeployment(currentDeploymentId, {
+					status: "completed",
+				});
+			}
+		};
+
+		// Start polling in the background
+		pollDeploymentStatus().catch(() => {
+			// Failed to poll deployment status
+			if (currentDeploymentId) {
+				updateDeployment(currentDeploymentId, {
+					status: "completed", // Mark as completed even if polling fails
+				}).catch(() => { /* ignore errors */ });
+			}
+		});
 
 		// Return success - Vercel should automatically deploy the GitHub repo
 		return {
@@ -323,14 +352,14 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			data: {
 				githubRepo: repoInfo,
 				vercelProject: {
-					projectId: projectResult.projectId!,
-					projectUrl: projectResult.projectUrl!,
-					deploymentUrl,
+					projectId: projectResult.projectId ?? '',
+					projectUrl: projectResult.projectUrl ?? '',
+					deploymentUrl: `https://${projectName}.vercel.app`,
 				},
 			},
 		};
 	} catch (error) {
-		console.error("❌ Deployment failed:", error);
+		// Deployment failed
 
 		const errorMessage = error instanceof Error ? error.message : "Unknown deployment error";
 
@@ -352,16 +381,16 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 /**
  * Validate deployment configuration before attempting deployment
  */
-export async function validateDeploymentConfig(config: {
+export function validateDeploymentConfig(config: {
 	templateRepo: string;
 	projectName: string;
 	githubToken?: string;
 	vercelToken: string;
-}): Promise<{ success: boolean; error?: string }> {
-	const { templateRepo, projectName, githubToken, vercelToken } = config;
+}): { success: boolean; error?: string } {
+	const { templateRepo, projectName, vercelToken } = config;
 
 	// Validate template repo format
-	if (!templateRepo || !templateRepo.includes("/")) {
+	if (!templateRepo?.includes("/")) {
 		return {
 			success: false,
 			error: "Template repository must be in format 'owner/repo-name'",
@@ -435,20 +464,21 @@ export async function checkNameAvailability(
 				session.user.email,
 				repoName
 			);
-		} catch (error: any) {
-			results.github.error = error.message;
+		} catch (error) {
+			results.github.error = error instanceof Error ? error.message : String(error);
 		}
 
 		// Check Vercel availability
 		try {
 			const vercelService = createVercelAPIService(vercelToken);
 			results.vercel.available = await vercelService.isProjectNameAvailable(projectName);
-		} catch (error: any) {
-			results.vercel.error = error.message;
+		} catch (error) {
+			results.vercel.error = error instanceof Error ? error.message : String(error);
 		}
-	} catch (error: any) {
-		results.github.error = error.message;
-		results.vercel.error = error.message;
+	} catch (error) {
+		const errorMessage = error instanceof Error ? error.message : String(error);
+		results.github.error = errorMessage;
+		results.vercel.error = errorMessage;
 	}
 
 	return results;
@@ -462,7 +492,7 @@ export async function getTemplateRepositories(
 	organization?: string
 ): Promise<{
 	success: boolean;
-	repositories: Array<{
+	repositories: {
 		id: number;
 		name: string;
 		fullName: string;
@@ -471,7 +501,7 @@ export async function getTemplateRepositories(
 		isPrivate: boolean;
 		updatedAt: string;
 		topics: string[];
-	}>;
+	}[];
 	error?: string;
 }> {
 	try {
@@ -482,15 +512,15 @@ export async function getTemplateRepositories(
 			success: result.success,
 			repositories: result.repositories.map((repo) => ({
 				...repo,
-				topics: repo.topics || [],
+				topics: repo.topics ?? [],
 			})),
 			error: result.error,
 		};
-	} catch (error: any) {
+	} catch (error) {
 		return {
 			success: false,
 			repositories: [],
-			error: error.message || "Failed to fetch template repositories",
+			error: error instanceof Error ? error.message : "Failed to fetch template repositories",
 		};
 	}
 }
@@ -498,7 +528,7 @@ export async function getTemplateRepositories(
 /**
  * Generate suggested project names based on repository name
  */
-export async function generateProjectNameSuggestions(repoName: string): Promise<string[]> {
+export function generateProjectNameSuggestions(repoName: string): string[] {
 	const sanitized = repoName.toLowerCase().replace(/[^a-z0-9]/g, "-");
 	const suggestions = [
 		sanitized,
@@ -522,7 +552,7 @@ export async function generateProjectNameSuggestions(repoName: string): Promise<
 /**
  * Get deployment status by checking both GitHub and Vercel
  */
-export async function getDeploymentStatus(githubRepo: string, vercelProjectId: string) {
+export async function getDeploymentStatus(_githubRepo: string, vercelProjectId: string) {
 	const session = await auth();
 
 	// Handle NextResponse type from auth function when redirecting

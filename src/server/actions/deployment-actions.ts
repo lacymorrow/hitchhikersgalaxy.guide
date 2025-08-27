@@ -43,29 +43,27 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 			status: "deploying",
 		});
 
-		// Only trigger the deployment after the database record is successfully created
-		// Use setTimeout to ensure the database transaction has fully committed
-		// This prevents race conditions where the deployment starts before the DB commit
-		setTimeout(() => {
-			// Trigger the actual deployment in the background
-			// Do not await this, as it can be a long-running process
-			deployPrivateRepository({
-				templateRepo: SHIPKIT_REPO,
-				projectName: sanitizedProjectName,
-				newRepoName: sanitizedProjectName,
-				description,
-				deploymentId: newDeployment.id,
-			}).catch((error) => {
-				console.error(`Deployment failed for ${sanitizedProjectName}:`, error);
-				// Update the deployment status to failed if deployment errors occur
-				updateDeployment(newDeployment.id, {
-					status: "failed",
-					error: error instanceof Error ? error.message : "An unknown error occurred",
-				}).catch((updateError) => {
-					console.error(`Failed to update deployment status for ${sanitizedProjectName}:`, updateError);
-				});
+		// Trigger the actual deployment in the background
+		// Use Promise to ensure the deployment starts but don't await it
+		// This allows the server action to return immediately while deployment continues
+		deployPrivateRepository({
+			templateRepo: SHIPKIT_REPO,
+			projectName: sanitizedProjectName,
+			newRepoName: sanitizedProjectName,
+			description,
+			deploymentId: newDeployment.id,
+		}).then(() => {
+			console.log(`Deployment process completed for ${sanitizedProjectName}`);
+		}).catch((error) => {
+			console.error(`Deployment failed for ${sanitizedProjectName}:`, error);
+			// Update the deployment status to failed if deployment errors occur
+			updateDeployment(newDeployment.id, {
+				status: "failed",
+				error: error instanceof Error ? error.message : "An unknown error occurred",
+			}).catch((updateError) => {
+				console.error(`Failed to update deployment status for ${sanitizedProjectName}:`, updateError);
 			});
-		}, 100); // Small delay to ensure DB transaction commits
+		});
 
 		// Return a success response immediately
 		return {

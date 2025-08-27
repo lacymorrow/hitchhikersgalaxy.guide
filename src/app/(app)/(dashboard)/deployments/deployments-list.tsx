@@ -3,6 +3,8 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 import { AlertCircle, CheckCircle2, Clock, Rocket } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { Badge } from "@/components/ui/badge";
@@ -17,6 +19,27 @@ interface DeploymentsListProps {
 }
 
 export function DeploymentsList({ deployments }: DeploymentsListProps) {
+	const router = useRouter();
+	const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
+
+	useEffect(() => {
+		// Check if any deployments are in "deploying" status
+		const hasDeployingItems = deployments.some(d => d.status === "deploying");
+
+		if (hasDeployingItems) {
+			// Poll every 3 seconds for status updates
+			intervalRef.current = setInterval(() => {
+				router.refresh();
+			}, 3000);
+		}
+
+		// Cleanup interval on unmount or when dependencies change
+		return () => {
+			if (intervalRef.current) {
+				clearInterval(intervalRef.current);
+			}
+		};
+	}, [deployments, router]);
 	const getStatusIcon = (status: string) => {
 		switch (status) {
 			case "completed":
@@ -73,7 +96,7 @@ export function DeploymentsList({ deployments }: DeploymentsListProps) {
 			cell: ({ row }) => (
 				<div>
 					<span className="text-muted-foreground">
-						{row.original.description || "No description"}
+						{row.original.description ?? "No description"}
 					</span>
 					{row.original.status === "failed" && row.original.error && (
 						<div className="mt-1">

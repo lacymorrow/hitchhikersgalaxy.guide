@@ -8,7 +8,7 @@ import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 
-export const DashboardLayout = async ({ children }: { children: ReactNode }) => {
+export const DashboardLayout = ({ children }: { children: ReactNode }) => {
 	return (
 		<SidebarLayout>
 			<AppSidebar />
@@ -23,7 +23,7 @@ export const DashboardLayout = async ({ children }: { children: ReactNode }) => 
 							homeLabel={`${siteConfig.name} Dashboard`}
 							pathLabels={{
 								[routes.app.dashboard]: "Dashboard",
-								[routes.app.deploy]: "Deploy",
+								[routes.app.deployments]: "Deployments",
 								[routes.app.apiKeys]: "API Keys",
 								[routes.settings.index]: "Settings",
 								[routes.app.tools]: "Tools",

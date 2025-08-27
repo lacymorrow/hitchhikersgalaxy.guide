@@ -1,5 +1,6 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
+import { useId } from "react";
 import { ProjectsList } from "@/components/modules/projects/projects-list";
 import { NavUser } from "@/components/blocks/nav-user";
 import { TeamSwitcher } from "@/components/blocks/team-switcher";
@@ -43,13 +44,15 @@ interface AppSidebarProps
 
 export const AppSidebar = React.forwardRef<HTMLDivElement, AppSidebarProps>(
 	({ className, variant = "sidebar", size = "default", ...props }, ref) => {
+		const sidebarId = useId();
+
 		return (
 			<Sidebar
-				id="app-sidebar"
+				id={sidebarId}
 				ref={ref}
 				variant={variant}
 				collapsible="icon"
-				className={cn(appSidebarVariants({ variant, size }), className)}
+				className={cn(appSidebarVariants({ variant, size }), "select-none", className)}
 				{...props}
 			>
 				<SidebarHeader>

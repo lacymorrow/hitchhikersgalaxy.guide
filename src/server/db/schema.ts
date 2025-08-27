@@ -657,7 +657,7 @@ export const deployments = createTable(
 		vercelProjectUrl: text("vercel_project_url"),
 		vercelDeploymentUrl: text("vercel_deployment_url"),
 		status: text("status", {
-			enum: ["deploying", "completed", "failed"],
+			enum: ["deploying", "completed", "failed", "timeout"],
 		})
 			.notNull()
 			.default("deploying"),

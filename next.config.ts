@@ -350,8 +350,9 @@ const nextConfig: NextConfig = {
 
 		// External heavy dependencies that are not used in most pages
 		if (!dev && isServer) {
+			const existingExternals = Array.isArray(config.externals) ? config.externals : [];
 			config.externals = [
-				...(config.externals || []),
+				...existingExternals,
 				{
 					"@huggingface/transformers": "commonjs @huggingface/transformers",
 					googleapis: "commonjs googleapis",

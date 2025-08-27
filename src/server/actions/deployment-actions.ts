@@ -43,27 +43,30 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 			status: "deploying",
 		});
 
-		// Trigger the actual deployment in the background
-		// Use Promise to ensure the deployment starts but don't await it
+		// Trigger the actual deployment in the background with proper error handling
 		// This allows the server action to return immediately while deployment continues
-		deployPrivateRepository({
-			templateRepo: SHIPKIT_REPO,
-			projectName: sanitizedProjectName,
-			newRepoName: sanitizedProjectName,
-			description,
-			deploymentId: newDeployment.id,
-		}).then(() => {
-			console.log(`Deployment process completed for ${sanitizedProjectName}`);
-		}).catch((error) => {
-			console.error(`Deployment failed for ${sanitizedProjectName}:`, error);
-			// Update the deployment status to failed if deployment errors occur
-			updateDeployment(newDeployment.id, {
-				status: "failed",
-				error: error instanceof Error ? error.message : "An unknown error occurred",
-			}).catch((updateError) => {
-				console.error(`Failed to update deployment status for ${sanitizedProjectName}:`, updateError);
-			});
-		});
+		void (async () => {
+			try {
+				await deployPrivateRepository({
+					templateRepo: SHIPKIT_REPO,
+					projectName: sanitizedProjectName,
+					description,
+					deploymentId: newDeployment.id,
+				});
+				console.log(`Deployment process completed for ${sanitizedProjectName}`);
+			} catch (error) {
+				console.error(`Deployment failed for ${sanitizedProjectName}:`, error);
+				// Update the deployment status to failed if deployment errors occur
+				try {
+					await updateDeployment(newDeployment.id, {
+						status: "failed",
+						error: error instanceof Error ? error.message : "An unknown error occurred",
+					});
+				} catch (updateError) {
+					console.error(`Failed to update deployment status for ${sanitizedProjectName}:`, updateError);
+				}
+			}
+		})();
 
 		// Return a success response immediately
 		return {

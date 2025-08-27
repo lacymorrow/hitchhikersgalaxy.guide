@@ -1,6 +1,6 @@
 
 
-import { Avatar as AvatarPrimitive } from "radix-ui";
+import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import * as React from "react";
 
 import { cn } from "@/lib/utils";
@@ -20,14 +20,23 @@ Avatar.displayName = AvatarPrimitive.Root.displayName;
 const AvatarImage = React.forwardRef<
 	React.ElementRef<typeof AvatarPrimitive.Image>,
 	React.ComponentPropsWithoutRef<typeof AvatarPrimitive.Image>
->(({ className, src, ...props }, ref) => (
-	<AvatarPrimitive.Image
-		ref={ref}
-		className={cn("aspect-square h-full w-full", className)}
-		src={src || undefined}
-		{...props}
-	/>
-));
+>(({ className, src, ...props }, ref) => {
+	const sanitizedSrc = React.useMemo(() => {
+		if (!src) return undefined;
+		if (typeof src !== 'string') return undefined;
+		const isValidUrl = src.startsWith('http://') || src.startsWith('https://') || src.startsWith('/') || src.startsWith('data:');
+		return isValidUrl ? src : undefined;
+	}, [src]);
+
+	return (
+		<AvatarPrimitive.Image
+			ref={ref}
+			className={cn("aspect-square h-full w-full", className)}
+			src={sanitizedSrc}
+			{...props}
+		/>
+	);
+});
 AvatarImage.displayName = AvatarPrimitive.Image.displayName;
 
 const AvatarFallback = React.forwardRef<

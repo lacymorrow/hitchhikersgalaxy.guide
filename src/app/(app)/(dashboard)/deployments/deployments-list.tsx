@@ -1,10 +1,10 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
+import { useQuery } from "@tanstack/react-query";
 import { formatDistanceToNow } from "date-fns";
 import { AlertCircle, CheckCircle2, Clock, Rocket } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
 
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { Badge } from "@/components/ui/badge";
@@ -14,32 +14,42 @@ import type { Deployment } from "@/server/db/schema";
 import { DeploymentActions } from "./deployment-actions";
 import { siteConfig } from "@/config/site-config";
 
+// Constants for polling configuration
+const POLLING_INTERVAL_MS = 3000; // 3 seconds
+
 interface DeploymentsListProps {
 	deployments: Deployment[];
 }
 
-export function DeploymentsList({ deployments }: DeploymentsListProps) {
-	const router = useRouter();
-	const intervalRef = useRef<NodeJS.Timeout | undefined>(undefined);
+async function fetchDeployments(): Promise<Deployment[]> {
+	const response = await fetch("/api/deployments");
+	if (!response.ok) {
+		throw new Error("Failed to fetch deployments");
+	}
+	const data = await response.json();
+	return data.deployments;
+}
 
+export function DeploymentsList({ deployments: initialDeployments }: DeploymentsListProps) {
+	const [hasDeployingItems, setHasDeployingItems] = useState(
+		initialDeployments.some(d => d.status === "deploying")
+	);
+
+	// Use React Query for efficient polling
+	const { data: deployments = initialDeployments } = useQuery({
+		queryKey: ["deployments"],
+		queryFn: fetchDeployments,
+		initialData: initialDeployments,
+		refetchInterval: hasDeployingItems ? POLLING_INTERVAL_MS : false,
+		refetchIntervalInBackground: true,
+		staleTime: 1000, // Consider data stale after 1 second
+	});
+
+	// Update polling state when deployments change
 	useEffect(() => {
-		// Check if any deployments are in "deploying" status
-		const hasDeployingItems = deployments.some(d => d.status === "deploying");
-
-		if (hasDeployingItems) {
-			// Poll every 3 seconds for status updates
-			intervalRef.current = setInterval(() => {
-				router.refresh();
-			}, 3000);
-		}
-
-		// Cleanup interval on unmount or when dependencies change
-		return () => {
-			if (intervalRef.current) {
-				clearInterval(intervalRef.current);
-			}
-		};
-	}, [deployments, router]);
+		const shouldPoll = deployments.some(d => d.status === "deploying");
+		setHasDeployingItems(shouldPoll);
+	}, [deployments]);
 	const getStatusIcon = (status: string) => {
 		switch (status) {
 			case "completed":
@@ -48,6 +58,8 @@ export function DeploymentsList({ deployments }: DeploymentsListProps) {
 				return <AlertCircle className="h-4 w-4 text-red-500" />;
 			case "deploying":
 				return <Clock className="h-4 w-4 text-blue-500 animate-spin" />;
+			case "timeout":
+				return <Clock className="h-4 w-4 text-yellow-500" />;
 			default:
 				return null;
 		}
@@ -61,6 +73,8 @@ export function DeploymentsList({ deployments }: DeploymentsListProps) {
 				return "destructive" as const;
 			case "deploying":
 				return "secondary" as const;
+			case "timeout":
+				return "outline" as const;
 			default:
 				return "outline" as const;
 		}

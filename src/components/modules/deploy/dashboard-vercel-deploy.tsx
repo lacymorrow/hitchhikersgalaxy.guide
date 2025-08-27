@@ -24,6 +24,11 @@ import type { User } from "@/types/user";
 import { validateProjectName } from "@/lib/schemas/deployment";
 import { Loader2 } from "lucide-react";
 
+// Constants for validation and timing
+const VALIDATION_DEBOUNCE_MS = 300; // 300ms debounce for validation
+const VALIDATION_TIMEOUT_MS = 2000; // 2 seconds max wait for validation
+const VALIDATION_CHECK_INTERVAL_MS = 100; // Check validation status every 100ms
+
 
 interface DashboardVercelDeployProps {
     className?: string;
@@ -77,7 +82,7 @@ export const DashboardVercelDeploy = ({
                 setValidationError(null);
             }
             setIsValidating(false);
-        }, 300); // 300ms debounce delay
+        }, VALIDATION_DEBOUNCE_MS);
     }, []);
 
     const handleProjectNameChange = (value: string) => {
@@ -98,9 +103,9 @@ export const DashboardVercelDeploy = ({
     };
 
     const handleDeployAsync = async () => {
-        // Don't submit if validation is in progress
+        // Don't submit if validation is in progress - disable submit button instead
         if (isValidating) {
-            toast.warning("Please wait for validation to complete");
+            toast.info("Please wait for validation to complete.");
             return;
         }
 

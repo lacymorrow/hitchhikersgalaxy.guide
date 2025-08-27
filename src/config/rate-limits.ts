@@ -19,6 +19,18 @@ export const rateLimits = {
 			duration: 60 * 2,
 		},
 	},
+	deployments: {
+		// Allow 5 deployments per hour per user
+		create: {
+			requests: 5,
+			duration: 60 * 60, // 1 hour
+		},
+		// Allow 30 status checks per minute
+		status: {
+			requests: 30,
+			duration: 60, // 1 minute
+		},
+	},
 	importPayments: {
 		requests: 5,
 		duration: 60 * 30,

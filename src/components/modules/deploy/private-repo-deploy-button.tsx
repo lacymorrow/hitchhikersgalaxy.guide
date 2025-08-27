@@ -69,7 +69,6 @@ export const PrivateRepoDeployButton = () => {
 				templateRepo: SHIPKIT_REPO,
 				projectName: formData.projectName,
 				description: formData.description || `Deployed from ${SHIPKIT_REPO}`,
-				newRepoName: formData.projectName,
 			});
 
 			if (result.success && result.data) {

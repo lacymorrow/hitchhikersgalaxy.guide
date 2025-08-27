@@ -8,6 +8,7 @@ import { createDeployment, updateDeployment } from "@/server/actions/deployment-
 import { auth } from "@/server/auth";
 import { getGitHubAccessToken } from "@/server/services/github/github-token-service";
 import { getVercelAccessToken } from "@/server/services/vercel/vercel-service";
+import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
 
 /**
  * Server actions for private repository deployment
@@ -18,7 +19,6 @@ type EnvVarTarget = readonly ("production" | "preview" | "development")[];
 
 export interface DeploymentConfig {
 	templateRepo: string; // e.g., "shipkit/private-template"
-	newRepoName: string;
 	projectName: string;
 	description?: string;
 	environmentVariables?: {
@@ -75,6 +75,21 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		};
 	}
 
+	// Apply rate limiting for deployment attempts
+	try {
+		await rateLimitService.checkLimit(
+			session.user.id,
+			"deployment:create",
+			rateLimits.deployments.create
+		);
+	} catch (error) {
+		console.warn(`Rate limit exceeded for user ${session.user.id}`, error);
+		return {
+			success: false,
+			error: "Too many deployment attempts. Please wait before trying again.",
+		};
+	}
+
 	// Get user's GitHub token - prefer OAuth token over provided token
 	const {
 		templateRepo,
@@ -90,6 +105,14 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 
 	// Fall back to provided token if OAuth token not available
 	if (!githubToken && providedGithubToken) {
+		// Validate token format (basic check for GitHub personal access tokens)
+		const tokenRegex = /^(ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9]{22}_[a-zA-Z0-9]{59})$/;
+		if (!tokenRegex.test(providedGithubToken)) {
+			return {
+				success: false,
+				error: "Invalid GitHub token format. Please provide a valid personal access token.",
+			};
+		}
 		githubToken = providedGithubToken;
 	}
 
@@ -99,6 +122,22 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			error:
 				"GitHub account not connected. Please connect your GitHub account first or provide an access token.",
 		};
+	}
+
+	// Validate GitHub token scopes
+	try {
+		const scopeValidation = await validateGitHubTokenScopes(githubToken);
+		
+		if (!scopeValidation.valid) {
+			console.error(`GitHub token missing required scopes for user ${session.user.id}:`, scopeValidation.missingScopes);
+			return {
+				success: false,
+				error: `GitHub token missing required permissions: ${scopeValidation.missingScopes?.join(", ")}. Please ensure your token has 'repo' and 'workflow' scopes.`,
+			};
+		}
+	} catch (error) {
+		console.error("Failed to validate GitHub token scopes:", error);
+		// Continue anyway - the actual operations will fail if permissions are insufficient
 	}
 
 	// Get user's Vercel access token using the service
@@ -133,13 +172,14 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		});
 
 		if (!validation.success) {
-			const error = validation.error || "Configuration validation failed";
+			const userError = "Configuration validation failed. Please check your settings.";
+			console.error("[Validation Error] Details:", validation.error);
 			if (currentDeploymentId) {
-				await updateDeployment(currentDeploymentId, { status: "failed", error });
+				await updateDeployment(currentDeploymentId, { status: "failed", error: userError });
 			}
 			return {
 				success: false,
-				error,
+				error: userError,
 			};
 		}
 
@@ -290,15 +330,18 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			});
 		}
 
+		// Constants for polling configuration
+		const POLLING_INTERVAL_MS = 3000; // 3 seconds
+		const MAX_DEPLOYMENT_POLL_ATTEMPTS = 20; // Poll for up to ~60 seconds
+
 		// Step 4: Poll for actual deployment status in the background
 		// This ensures we don't block the response but still update the status
 		const pollDeploymentStatus = async () => {
 			let attempts = 0;
-			const maxAttempts = 20; // Poll for up to ~60 seconds
 			
-			while (attempts < maxAttempts) {
+			while (attempts < MAX_DEPLOYMENT_POLL_ATTEMPTS) {
 				attempts++;
-				await new Promise((resolve) => setTimeout(resolve, 3000)); // Wait 3 seconds between polls
+				await new Promise((resolve) => setTimeout(resolve, POLLING_INTERVAL_MS));
 				
 				try {
 					const projectInfo = await vercelService.getProject(projectResult.projectId ?? '');
@@ -329,22 +372,24 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 				}
 			}
 			
-			// If we exhausted all attempts, mark as completed anyway (Vercel will continue in background)
-			if (attempts >= maxAttempts && currentDeploymentId) {
-				// Polling timed out, marking as completed
+			// If we exhausted all attempts, use a more appropriate status
+			if (attempts >= MAX_DEPLOYMENT_POLL_ATTEMPTS && currentDeploymentId) {
+				// Polling timed out, mark with timeout status
 				await updateDeployment(currentDeploymentId, {
-					status: "completed",
+					status: "timeout", // Use timeout status to clearly indicate polling timed out
+					error: "Deployment status check timed out. The deployment may still be running in Vercel.",
 				});
 			}
 		};
 
 		// Start polling in the background
 		pollDeploymentStatus().catch((error) => {
-			// Failed to poll deployment status
+			// Failed to poll deployment status - mark as timeout since we couldn't verify status
 			console.error("Failed to poll deployment status:", error);
 			if (currentDeploymentId) {
 				updateDeployment(currentDeploymentId, {
-					status: "completed", // Mark as completed even if polling fails
+					status: "timeout", // Mark as timeout when polling fails completely
+					error: "Unable to verify deployment status. Please check Vercel dashboard."
 				}).catch((updateError) => {
 					console.error("Failed to update deployment status:", updateError);
 				});
@@ -366,19 +411,42 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		};
 	} catch (error) {
 		// Deployment failed
-
 		const errorMessage = error instanceof Error ? error.message : "Unknown deployment error";
+		
+		// Log detailed error information server-side for debugging
+		console.error("[Deployment Error] Full details:", {
+			errorMessage,
+			projectName: config.projectName,
+			templateRepo: config.templateRepo,
+			deploymentId: currentDeploymentId,
+			timestamp: new Date().toISOString(),
+		});
+
+		// Determine user-friendly error message based on error type
+		let userFriendlyError = "Deployment failed. Please try again or contact support.";
+		
+		if (errorMessage.includes("rate limit")) {
+			userFriendlyError = "Rate limit exceeded. Please wait a few minutes and try again.";
+		} else if (errorMessage.includes("authentication") || errorMessage.includes("unauthorized")) {
+			userFriendlyError = "Authentication failed. Please check your account connections.";
+		} else if (errorMessage.includes("already exists")) {
+			userFriendlyError = "A project with this name already exists. Please choose a different name.";
+		} else if (errorMessage.includes("network") || errorMessage.includes("timeout")) {
+			userFriendlyError = "Network error occurred. Please check your connection and try again.";
+		}
 
 		if (currentDeploymentId) {
-			await updateDeployment(currentDeploymentId, { status: "failed", error: errorMessage });
+			await updateDeployment(currentDeploymentId, { 
+				status: "failed", 
+				error: userFriendlyError 
+			});
 		}
 
 		return {
 			success: false,
-			error: `Deployment failed: ${errorMessage}`,
+			error: userFriendlyError,
 			data: {
 				step: "deployment-error",
-				details: errorMessage,
 			},
 		};
 	}
@@ -532,6 +600,55 @@ export async function getTemplateRepositories(
 }
 
 
+
+/**
+ * Validate GitHub token has required scopes for deployment
+ */
+async function validateGitHubTokenScopes(token: string): Promise<{
+	valid: boolean;
+	scopes?: string[];
+	missingScopes?: string[];
+}> {
+	const requiredScopes = ["repo", "workflow"];
+	
+	try {
+		// Make a request to GitHub API to check token scopes
+		const response = await fetch("https://api.github.com/user", {
+			headers: {
+				Authorization: `token ${token}`,
+				Accept: "application/vnd.github.v3+json",
+			},
+		});
+		
+		if (!response.ok) {
+			return {
+				valid: false,
+				missingScopes: requiredScopes,
+			};
+		}
+		
+		// GitHub returns scopes in the X-OAuth-Scopes header
+		const scopesHeader = response.headers.get("x-oauth-scopes");
+		const scopes = scopesHeader ? scopesHeader.split(",").map(s => s.trim()) : [];
+		
+		// Check if all required scopes are present
+		const missingScopes = requiredScopes.filter(required => !scopes.includes(required));
+		
+		return {
+			valid: missingScopes.length === 0,
+			scopes,
+			missingScopes: missingScopes.length > 0 ? missingScopes : undefined,
+		};
+	} catch (error) {
+		console.error("Failed to check GitHub token scopes:", error);
+		// If we can't verify scopes, allow the operation to proceed
+		// The actual API calls will fail if permissions are insufficient
+		return {
+			valid: true,
+			scopes: [],
+		};
+	}
+}
 
 /**
  * Get deployment status by checking both GitHub and Vercel

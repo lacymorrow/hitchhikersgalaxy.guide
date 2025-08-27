@@ -20,7 +20,7 @@ export interface PricingPlan {
 export const singlePlan: PricingPlan = {
 	title: "Shipkit",
 	description: "Production-ready, for teams that need advanced features",
-	price: { oneTime: 49 },
+	price: { oneTime: 249 },
 	href: routes.external.buy,
 	features: [
 		"Next.js 15 App Router",
@@ -56,7 +56,7 @@ export const oneTimePlans: PricingPlan[] = [
 	{
 		title: "Shipkit",
 		description: "Production-ready, for teams that need advanced features",
-		price: { oneTime: 149 },
+		price: { oneTime: 249 },
 		href: routes.external.buy,
 		features: [
 			"Everything in Bones +",

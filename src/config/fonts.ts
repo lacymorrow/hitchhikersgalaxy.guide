@@ -5,6 +5,7 @@ export const fontSerif = FontSerif({
 	style: ["normal", "italic"],
 	subsets: ["latin"],
 	variable: "--font-serif",
+	display: "swap",
 });
 
 export const fontSans = FontSans({
@@ -12,6 +13,7 @@ export const fontSans = FontSans({
 	style: ["normal", "italic"],
 	subsets: ["latin"],
 	variable: "--font-sans",
+	display: "swap",
 });
 
 export interface GoogleFont {

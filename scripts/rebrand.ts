@@ -113,14 +113,14 @@ async function main() {
 
 	// Handle replacement of individual keys in the object
 	// Name
-	afterConfig = afterConfig.replace(/\n\tname: "([^"]+)"/, `\n\tname: "${projectName}"`);
+	afterConfig = afterConfig.replace(/\n\tname: \"([^\"]+)\"/, `\n\tname: "${projectName}"`);
 
 	// URL
-	afterConfig = afterConfig.replace(/\n\turl: "([^"]+)"/, `\n\turl: "https://${domain}"`);
+	afterConfig = afterConfig.replace(/\n\turl: \"([^\"]+)\"/, `\n\turl: "https://${domain}"`);
 
 	// OG Image
 	afterConfig = afterConfig.replace(
-		/\n\togImage: "([^"]+)"/,
+		/\n\togImage: \"([^\"]+)\"/,
 		`\n\togImage: "https://${domain}/og"`
 	);
 
@@ -128,81 +128,31 @@ async function main() {
 
 	// Branding section
 	const brandingPattern = /\n\tbranding: \{[\s\S]*?\n\t\},/;
-	const newBranding = `\n\tbranding: {
-\t\tprojectName: "${projectName}",
-\t\tprojectSlug: "${projectSlug}",
-\t\tproductNames: {
-\t\t\tbones: "${bonesName}",
-\t\t\tbrains: "${brainsName}",
-\t\t\tmain: "${projectName}",
-\t\t},
-\t\tdomain: "${domain}",
-\t\tprotocol: "web+${projectSlug}",
-\t\tgithubOrg: "${githubOrg}",
-\t\tgithubRepo: "${githubRepo}",
-\t\tvercelProjectName: "${vercelProjectName}",
-\t\tdatabaseName: "${databaseName}",
-\t},`;
+	const newBranding = `\n\tbranding: {\n\t\tprojectName: "${projectName}",\n\t\tprojectSlug: "${projectSlug}",\n\t\tproductNames: {\n\t\t\tbones: "${bonesName}",\n\t\t\tbrains: "${brainsName}",\n\t\t\tmain: "${projectName}",\n\t	},\n\t\tdomain: "${domain}",\n\t\tprotocol: "web+${projectSlug}",\n\t\tgithubOrg: "${githubOrg}",\n\t\tgithubRepo: "${githubRepo}",\n\t\tvercelProjectName: "${vercelProjectName}",\n\t\tdatabaseName: "${databaseName}",\n	},`;
 
 	afterConfig = afterConfig.replace(brandingPattern, newBranding);
 
 	// Repository section
 	const repoPattern = /\n\trepo: \{[\s\S]*?\n\t\},/;
-	const newRepo = `\n\trepo: {
-\t\towner: "${githubOrg}",
-\t\tname: "${githubRepo}",
-\t\turl: "https://github.com/${githubOrg}/${githubRepo}",
-\t\tformat: {
-\t\t\tclone: () => "https://github.com/${githubOrg}/${githubRepo}.git",
-\t\t\tssh: () => "git@github.com:${githubOrg}/${githubRepo}.git",
-\t\t},
-\t},`;
+	const newRepo = `\n\trepo: {\n\t\towner: "${githubOrg}",\n\t\tname: "${githubRepo}",\n\t\turl: "https://github.com/${githubOrg}/${githubRepo}",\n\t\tformat: {\n\t\t\tclone: () => "https://github.com/${githubOrg}/${githubRepo}.git",\n\t\t\tssh: () => "git@github.com:${githubOrg}/${githubRepo}.git",\n\t	},\n	},`;
 
 	afterConfig = afterConfig.replace(repoPattern, newRepo);
 
 	// Email section
 	const emailPattern = /\n\temail: \{[\s\S]*?\n\t\},/;
-	const newEmail = `\n\temail: {
-\t\tsupport: "support@${domain}",
-\t\tteam: "team@${domain}",
-\t\tnoreply: "noreply@${domain}",
-\t\tdomain: "${domain}",
-\t\tlegal: "legal@${domain}",
-\t\tprivacy: "privacy@${domain}",
-\t\tformat: (type) => siteConfig.email[type],
-\t},`;
+	const newEmail = `\n\temail: {\n\t\tsupport: "support@${domain}",\n\t\tteam: "team@${domain}",\n\t\tnoreply: "noreply@${domain}",\n\t\tdomain: "${domain}",\n\t\tlegal: "legal@${domain}",\n\t\tprivacy: "privacy@${domain}",\n\t\tformat: (type) => siteConfig.email[type],\n	},`;
 
 	afterConfig = afterConfig.replace(emailPattern, newEmail);
 
 	// Creator section
 	const creatorPattern = /\n\tcreator: \{[\s\S]*?\n\t\},/;
-	const newCreator = `\n\tcreator: {
-\t\tname: "${creatorUsername}",
-\t\temail: "${creatorEmail}",
-\t\turl: "https://${creatorDomain}",
-\t\ttwitter: "@${creatorTwitter}",
-\t\ttwitter_handle: "${creatorTwitter}",
-\t\tdomain: "${creatorDomain}",
-\t\tfullName: "${creatorName || `${projectName} Team`}",
-\t\trole: "Developer",
-\t\tavatar: "https://avatars.githubusercontent.com/u/1311301?v=4",
-\t\tlocation: "San Francisco, CA",
-\t\tbio: "Creator and developer.",
-\t},`;
+	const newCreator = `\n\tcreator: {\n\t\tname: "${creatorUsername}",\n\t\temail: "${creatorEmail}",\n\t\turl: "https://${creatorDomain}",\n\t\ttwitter: "@${creatorTwitter}",\n\t\ttwitter_handle: "${creatorTwitter}",\n\t\tdomain: "${creatorDomain}",\n\t\tfullName: "${creatorName || `${projectName} Team`}",\n\t\trole: "Developer",\n\t\tavatar: "https://avatars.githubusercontent.com/u/1311301?v=4",\n\t\tlocation: "San Francisco, CA",\n\t\tbio: "Creator and developer.",\n	},`;
 
 	afterConfig = afterConfig.replace(creatorPattern, newCreator);
 
 	// Metadata keywords
-	const keywordsPattern = /\n\t\tkeywords: \[[\s\S]*?\n\t\t\],/;
-	const newKeywords = `\n\t\tkeywords: [
-\t\t\t"Next.js",
-\t\t\t"React",
-\t\t\t"Tailwind CSS",
-\t\t\t"Server Components",
-\t\t\t"${projectName}",
-\t\t\t"Shadcn",
-\t\t\t"UI Components",
-\t\t],`;
+	const keywordsPattern = /\n\t\tkeywords: \[["\s\S]*?\n\t\t\],/;
+	const newKeywords = `\n\t\tkeywords: [\n\t\t\t"Next.js",\n\t\t\t"React",\n\t\t\t"Tailwind CSS",\n\t\t\t"Server Components",\n\t\t\t"${projectName}",\n\t\t\t"Shadcn",\n\t\t\t"UI Components",\n\t\t],`;
 
 	afterConfig = afterConfig.replace(keywordsPattern, newKeywords);
 
@@ -214,14 +164,14 @@ async function main() {
 	let envExample = fs.readFileSync(envExamplePath, "utf8");
 
 	envExample = envExample.replace(
-		/DATABASE_URL="postgresql:\/\/postgres:password@localhost:5432\/([^"]+)"/,
-		`DATABASE_URL="postgresql://postgres:password@localhost:5432/${databaseName}"`
+		/DATABASE_URL=\"postgresql:\/\/postgres:password@localhost:5432\/([^\"]+)\"/,
+		`DATABASE_URL=\"postgresql://postgres:password@localhost:5432/${databaseName}"`
 	);
 
 	const packageJsonPath = path.join(process.cwd(), "package.json");
 	let packageJson = fs.readFileSync(packageJsonPath, "utf8");
 
-	packageJson = packageJson.replace(/"name": "([^"]+)"/, `"name": "${projectSlug}"`);
+	packageJson = packageJson.replace(/"name": \"([^\"]+)\"/, `"name": "${projectSlug}"`);
 
 	// If dry run, just show what would be changed
 	if (isDryRun) {

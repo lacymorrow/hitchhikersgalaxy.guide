@@ -36,6 +36,16 @@ export default async function Layout({
 
 	return (
 		<html lang="en" suppressHydrationWarning>
+			<head>
+				{/* Preconnect to Google Fonts for better font loading performance */}
+				<link rel="preconnect" href="https://fonts.googleapis.com" />
+				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+				
+				{/* DNS prefetch for common external resources */}
+				<link rel="dns-prefetch" href="https://vercel.com" />
+				<link rel="dns-prefetch" href="https://api.github.com" />
+				<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+			</head>
 			<Body>
 				<AppRouterLayout>
 					<main>{children}</main>

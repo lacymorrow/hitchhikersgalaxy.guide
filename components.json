@@ -17,5 +17,9 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "iconLibrary": "radix"
+  "iconLibrary": "radix",
+  "registries": {
+    "@paceui-ui": "https://ui.paceui.com/r/{name}.json",
+	  "@tailark": "https://tailark.com/r/{name}.json"
+  }
 }

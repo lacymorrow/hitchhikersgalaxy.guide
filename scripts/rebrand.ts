@@ -113,46 +113,61 @@ async function main() {
 
 	// Handle replacement of individual keys in the object
 	// Name
-	afterConfig = afterConfig.replace(/\n\tname: \"([^\"]+)\"/, `\n\tname: "${projectName}"`);
+	afterConfig = afterConfig.replace(/\n\s*name: \"([^\"]+)\"/, `\n\tname: "${projectName}"`);
 
 	// URL
-	afterConfig = afterConfig.replace(/\n\turl: \"([^\"]+)\"/, `\n\turl: "https://${domain}"`);
+	afterConfig = afterConfig.replace(/\n\s*url: \"([^\"]+)\"/, `\n\turl: "https://${domain}"`);
 
 	// OG Image
 	afterConfig = afterConfig.replace(
-		/\n\togImage: \"([^\"]+)\"/,
+		/\n\s*ogImage: \"([^\"]+)\"/,
 		`\n\togImage: "https://${domain}/og"`
 	);
 
 	// Description - keep original but update if needed
 
 	// Branding section
-	const brandingPattern = /\n\tbranding: \{[\s\S]*?\n\t\},/;
-	const newBranding = `\n\tbranding: {\n\t\tprojectName: "${projectName}",\n\t\tprojectSlug: "${projectSlug}",\n\t\tproductNames: {\n\t\t\tbones: "${bonesName}",\n\t\t\tbrains: "${brainsName}",\n\t\t\tmain: "${projectName}",\n\t	},\n\t\tdomain: "${domain}",\n\t\tprotocol: "web+${projectSlug}",\n\t\tgithubOrg: "${githubOrg}",\n\t\tgithubRepo: "${githubRepo}",\n\t\tvercelProjectName: "${vercelProjectName}",\n\t\tdatabaseName: "${databaseName}",\n	},`;
+	const brandingPattern = /\n\s*branding: \{[\s\S]*?\n\s*\},/;
+	const newBranding = `
+	branding: {\n\t\tprojectName: "${projectName}",\n\t\tprojectSlug: "${projectSlug}",\n\t\tproductNames: {\n\t\t\tbones: "${bonesName}",\n\t\t\tbrains: "${brainsName}",\n\t\t\tmain: "${projectName}",\n\t\t},\n\t\tdomain: "${domain}",\n\t\tprotocol: "web+${projectSlug}",\n\t\tgithubOrg: "${githubOrg}",\n\t\tgithubRepo: "${githubRepo}",\n\t\tvercelProjectName: "${vercelProjectName}",\n\t\tdatabaseName: "${databaseName}",\n	},`;
 
 	afterConfig = afterConfig.replace(brandingPattern, newBranding);
 
 	// Repository section
-	const repoPattern = /\n\trepo: \{[\s\S]*?\n\t\},/;
-	const newRepo = `\n\trepo: {\n\t\towner: "${githubOrg}",\n\t\tname: "${githubRepo}",\n\t\turl: "https://github.com/${githubOrg}/${githubRepo}",\n\t\tformat: {\n\t\t\tclone: () => "https://github.com/${githubOrg}/${githubRepo}.git",\n\t\t\tssh: () => "git@github.com:${githubOrg}/${githubRepo}.git",\n\t	},\n	},`;
+	const repoPattern = /\n\s*repo: \{[\s\S]*?\n\s*\},/;
+	const newRepo = `
+	repo: {\n\t\towner: "${githubOrg}",\n\t\tname: "${githubRepo}",\n\t\turl: "https://github.com/${githubOrg}/${githubRepo}",\n\t\tformat: {\n\t\t\tclone: () => acktickhttps://github.com/${githubOrg}/${githubRepo}.gitacktick,\n\t\t\tssh: () => acktickgit@github.com:${githubOrg}/${githubRepo}.gitacktick,\n\t\t\t\n\t\t}
+	},`;
 
 	afterConfig = afterConfig.replace(repoPattern, newRepo);
 
 	// Email section
-	const emailPattern = /\n\temail: \{[\s\S]*?\n\t\},/;
-	const newEmail = `\n\temail: {\n\t\tsupport: "support@${domain}",\n\t\tteam: "team@${domain}",\n\t\tnoreply: "noreply@${domain}",\n\t\tdomain: "${domain}",\n\t\tlegal: "legal@${domain}",\n\t\tprivacy: "privacy@${domain}",\n\t\tformat: (type) => siteConfig.email[type],\n	},`;
+	const emailPattern = /\n\s*email: \{[\s\S]*?\n\s*\},/;
+	const newEmail = `
+	email: {\n\t\tsupport: "support@${domain}",\n\t\tteam: "team@${domain}",\n\t\tnoreply: "noreply@${domain}",\n\t\tdomain: "${domain}",\n\t\tlegal: "legal@${domain}",\n\t\tprivacy: "privacy@${domain}",\n\t\tformat: (type) => siteConfig.email[type],
+	},`;
 
 	afterConfig = afterConfig.replace(emailPattern, newEmail);
 
 	// Creator section
-	const creatorPattern = /\n\tcreator: \{[\s\S]*?\n\t\},/;
-	const newCreator = `\n\tcreator: {\n\t\tname: "${creatorUsername}",\n\t\temail: "${creatorEmail}",\n\t\turl: "https://${creatorDomain}",\n\t\ttwitter: "@${creatorTwitter}",\n\t\ttwitter_handle: "${creatorTwitter}",\n\t\tdomain: "${creatorDomain}",\n\t\tfullName: "${creatorName || `${projectName} Team`}",\n\t\trole: "Developer",\n\t\tavatar: "https://avatars.githubusercontent.com/u/1311301?v=4",\n\t\tlocation: "San Francisco, CA",\n\t\tbio: "Creator and developer.",\n	},`;
+	const creatorPattern = /\n\s*creator: \{[\s\S]*?\n\s*\},/;
+	const newCreator = `
+	creator: {\n\t\tname: "${creatorUsername}",\n\t\temail: "${creatorEmail}",\n\t\turl: "https://${creatorDomain}",\n\t\ttwitter: "@${creatorTwitter}",\n\t\ttwitter_handle: "${creatorTwitter}",\n\t\tdomain: "${creatorDomain}",\n\t\tfullName: "${creatorName || `${projectName} Team`}",\n\t\trole: "Developer",\n\t\tavatar: "https://avatars.githubusercontent.com/u/1311301?v=4",\n\t\tlocation: "San Francisco, CA",\n\t\tbio: "Creator and developer.",\n	},`;
 
 	afterConfig = afterConfig.replace(creatorPattern, newCreator);
 
 	// Metadata keywords
-	const keywordsPattern = /\n\t\tkeywords: \[["\s\S]*?\n\t\t\],/;
-	const newKeywords = `\n\t\tkeywords: [\n\t\t\t"Next.js",\n\t\t\t"React",\n\t\t\t"Tailwind CSS",\n\t\t\t"Server Components",\n\t\t\t"${projectName}",\n\t\t\t"Shadcn",\n\t\t\t"UI Components",\n\t\t],`;
+	const keywordsPattern = /\n\s*keywords: \[\s*["\s\S]*?\n\s*\]/; 
+	const newKeywords = `
+		keywords: [
+			"Next.js",
+			"React",
+			"Tailwind CSS",
+			"Server Components",
+			"${projectName}",
+			"Shadcn",
+			"UI Components",
+		],`;
 
 	afterConfig = afterConfig.replace(keywordsPattern, newKeywords);
 
@@ -171,7 +186,7 @@ async function main() {
 	const packageJsonPath = path.join(process.cwd(), "package.json");
 	let packageJson = fs.readFileSync(packageJsonPath, "utf8");
 
-	packageJson = packageJson.replace(/"name": \"([^\"]+)\"/, `"name": "${projectSlug}"`);
+	packageJson = packageJson.replace(/\"name\":\s*\"([^\"]+)\"/, `\"name\": "${projectSlug}"`);
 
 	// If dry run, just show what would be changed
 	if (isDryRun) {

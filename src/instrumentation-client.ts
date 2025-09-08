@@ -1,7 +1,7 @@
 "use client";
 
 import { buildTimeFeatures } from "@/config/features-config";
-import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/config-posthog";
+import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/posthog-config";
 
 /*
  * Client Instrumentation (Next.js 15.3+)

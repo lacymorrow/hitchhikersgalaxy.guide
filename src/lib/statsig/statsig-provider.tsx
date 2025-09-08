@@ -11,8 +11,8 @@ interface ProviderProps {
     children: React.ReactNode;
 }
 
-// Lightweight wrapper to lazily initialize client only when enabled and key present
-export function ShipkitStatsigProvider({ children }: ProviderProps) {
+// Inner component that contains hooks - only rendered when Statsig is properly configured
+function StatsigProviderInner({ children }: ProviderProps) {
     const clientKey = env.NEXT_PUBLIC_STATSIG_CLIENT_KEY;
     const user = { userID: undefined as string | undefined };
 
@@ -22,15 +22,6 @@ export function ShipkitStatsigProvider({ children }: ProviderProps) {
         { plugins: [new StatsigAutoCapturePlugin(), new StatsigSessionReplayPlugin()] },
     );
 
-    if (!env.NEXT_PUBLIC_FEATURE_STATSIG_ENABLED) {
-        return children;
-    }
-
-    if (!clientKey) {
-        // Feature flag enabled by build-time detection, but key missing at runtime
-        return children;
-    }
-
     if (!client) {
         return children;
     }
@@ -39,7 +30,21 @@ export function ShipkitStatsigProvider({ children }: ProviderProps) {
         <StatsigProvider client={client}>
             <PageViewTracker />
             {children}
-
         </StatsigProvider>
     );
+}
+
+// Lightweight wrapper to conditionally render Statsig only when enabled and key present
+export function ShipkitStatsigProvider({ children }: ProviderProps) {
+    // Check conditions before rendering any hooks
+    if (!env.NEXT_PUBLIC_FEATURE_STATSIG_ENABLED) {
+        return <>{children}</>;
+    }
+
+    if (!env.NEXT_PUBLIC_STATSIG_CLIENT_KEY) {
+        // Feature flag enabled by build-time detection, but key missing at runtime
+        return <>{children}</>;
+    }
+
+    return <StatsigProviderInner>{children}</StatsigProviderInner>;
 }

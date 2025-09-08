@@ -6,7 +6,7 @@ import { getDerivedSecrets } from "@/config/secrets";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
 import { withPlugins } from "@/config/with-plugins";
-import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/config-posthog";
+import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/posthog-config";
 
 const nextConfig: NextConfig = {
 	env: {

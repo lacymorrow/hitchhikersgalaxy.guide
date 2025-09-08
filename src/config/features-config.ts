@@ -138,11 +138,8 @@ buildTimeFeatures.ANTHROPIC_ENABLED =
 buildTimeFeatures.LEMONSQUEEZY_ENABLED =
 	hasEnv("LEMONSQUEEZY_API_KEY", "LEMONSQUEEZY_STORE_ID") && !envIsTrue("DISABLE_LEMONSQUEEZY");
 buildTimeFeatures.POLAR_ENABLED = hasEnv("POLAR_ACCESS_TOKEN") && !envIsTrue("DISABLE_POLAR");
-// Stripe is considered enabled if a server secret exists. We intentionally
-// do NOT require the client publishable key at build time to avoid cases where
-// users accidentally paste a secret key into a public var, or vice versa.
-// Client code that needs a publishable key should gate at runtime.
-buildTimeFeatures.STRIPE_ENABLED = hasEnv("STRIPE_SECRET_KEY") && !envIsTrue("DISABLE_STRIPE");
+buildTimeFeatures.STRIPE_ENABLED =
+	hasEnv("STRIPE_SECRET_KEY", "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY") && !envIsTrue("DISABLE_STRIPE");
 
 // Storage
 buildTimeFeatures.S3_ENABLED =

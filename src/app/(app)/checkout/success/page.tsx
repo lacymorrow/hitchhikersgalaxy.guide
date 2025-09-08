@@ -1,16 +1,10 @@
 import { DownloadIcon } from "lucide-react";
-import dynamic from "next/dynamic";
 import { LoginButton } from "@/components/buttons/sign-in-button";
 import { Link } from "@/components/primitives/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfettiSideCannons } from "@/components/ui/magicui/confetti/confetti-side-cannons";
-
-// Dynamically import SparklesCore for better performance
-const SparklesCore = dynamic(
-	() => import("@/components/ui/sparkles").then((mod) => mod.SparklesCore),
-	{ ssr: false }
-);
+import { SparklesCore } from "@/components/ui/sparkles";
 
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
@@ -190,7 +184,6 @@ export default async function CheckoutSuccessPage({
 				{/* Sparkles background */}
 				<div className="absolute inset-0 h-full w-full">
 					<SparklesCore
-						id="tsparticles"
 						background="transparent"
 						minSize={0.6}
 						maxSize={1.4}

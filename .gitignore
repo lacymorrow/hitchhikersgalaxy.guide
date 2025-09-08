@@ -76,3 +76,7 @@ public/workbox*
 
 .gemini/
 gha-creds-*.json
+
+# Tooling output
+.lighthouse/
+.tmp/

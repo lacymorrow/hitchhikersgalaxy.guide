@@ -229,6 +229,13 @@ This document outlines a comprehensive audit plan for the Shipkit codebase to id
 4. **Test Thoroughly** - Ensure no regressions with each optimization
 
 ## 📝 Progress Log
+### Feature: Centralized Social Media Links System
+
+- [x] Added typed `social` config to `src/config/site-config.ts` with optional URLs for common platforms. Empty string disables a platform.
+- [x] Exposed normalized social links in `routes.external` for convenient app-wide usage.
+- [x] Implemented reusable `SocialLinks` component (`src/components/ui/social-links.tsx`) that renders only enabled platforms with accessible labels.
+- [x] Integrated `SocialLinks` into primary footer (`src/components/footers/footer.tsx`) beneath the brand, with labelled icons.
+- Summary: One source of truth for social profiles, simple toggling via config, and a reusable UI component for consistent rendering.
 ### Cleanup: Vercel deploy example consolidation
 
 - [x] Removed example route and page `src/app/(app)/examples/vercel-deploy/page.tsx` now that deployment is integrated into the dashboard.
@@ -239,6 +246,40 @@ This document outlines a comprehensive audit plan for the Shipkit codebase to id
 _Use this section to track completion of each phase with date and summary_
 
 ---
+
+## Lighthouse-driven audit loop
+
+- [x] Added Lighthouse runner `scripts/lighthouse/run.ts` with JSON/HTML outputs to `.lighthouse/`
+- [x] Added analyzer `scripts/lighthouse/analyze.ts` to normalize issues into fix types
+- [x] Added fix orchestrator `scripts/lighthouse/loop.ts` with thresholds and retries
+- [x] Added Axe runner `scripts/a11y/axe.ts` for a11y checks
+- [x] NPM scripts: `audit:lh`, `audit:lh:mobile`, `audit:lh:loop`, `audit:axe`
+- [x] GitHub Action `.github/workflows/lighthouse.yml` to run loop on PRs
+
+Usage:
+
+```bash
+pnpm build && pnpm start &
+pnpm audit:lh -- http://localhost:3000/
+pnpm audit:lh:mobile -- http://localhost:3000/
+pnpm audit:lh:loop -- http://localhost:3000/
+pnpm audit:axe -- http://localhost:3000/ http://localhost:3000/docs
+```
+
+Environment variables:
+
+```bash
+LH_URLS="http://localhost:3000,http://localhost:3000/docs" # optional
+LH_PRESET=desktop|mobile # default desktop
+LH_OUT_DIR=.lighthouse     # default
+LH_T_PERF=90 LH_T_A11Y=95 LH_T_SEO=95 LH_T_BP=95 # thresholds
+LH_MAX_ITERS=2
+```
+
+Notes:
+
+- Initial fixers are conservative, focusing on configuration checks. Expand with deterministic codemods (img→next/image, font preloads, sizes) next.
+- Stagehand browser debugging available via `pnpm browser:open` and `browser:act` scripts.
 
 ### UX Consistency: Unified Error Pages UI
 

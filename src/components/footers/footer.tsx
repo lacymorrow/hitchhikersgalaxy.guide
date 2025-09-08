@@ -12,6 +12,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
+import { SocialLinks } from "@/components/ui/social-links";
 
 interface LinkItem {
 	label: string;
@@ -134,6 +135,7 @@ export const Footer: FC<FooterProps> = ({
 						<Link href={routes.home}>
 							<h1 className="text-4xl font-bold">{siteConfig.title}</h1>
 						</Link>
+						<SocialLinks labelled className="mt-2" />
 					</div>
 					{/* Desktop Layout */}
 					<div className="hidden md:flex flex-col flex-wrap md:flex-row lg:gap-20">

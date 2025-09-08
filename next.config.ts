@@ -6,6 +6,7 @@ import { getDerivedSecrets } from "@/config/secrets";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
 import { withPlugins } from "@/config/with-plugins";
+import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/config-posthog";
 
 const nextConfig: NextConfig = {
 	env: {
@@ -69,15 +70,15 @@ const nextConfig: NextConfig = {
 	async rewrites() {
 		return [
 			{
-				source: "/relay-64tM/static/:path*",
+				source: `/${POSTHOG_RELAY_SLUG}/static/:path*`,
 				destination: "https://us-assets.i.posthog.com/static/:path*",
 			},
 			{
-				source: "/relay-64tM/:path*",
+				source: `/${POSTHOG_RELAY_SLUG}/:path*`,
 				destination: "https://us.i.posthog.com/:path*",
 			},
 			{
-				source: "/relay-64tM/flags",
+				source: `/${POSTHOG_RELAY_SLUG}/flags`,
 				destination: "https://us.i.posthog.com/flags",
 			},
 		];

@@ -16,6 +16,7 @@ import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/shipkit/theme";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { NavLink } from "@/config/navigation";
+import { defaultNavLinks as navigationDefaultNavLinks } from "@/config/navigation";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
@@ -55,11 +56,7 @@ interface HeaderProps {
 	className?: string;
 }
 
-const defaultNavLinks = [
-	{ href: routes.faq, label: "Faqs", isCurrent: false },
-	{ href: routes.features, label: "Features", isCurrent: false },
-	{ href: routes.pricing, label: "Pricing", isCurrent: false },
-];
+// Deprecated local defaultNavLinks; use navigationDefaultNavLinks from config instead.
 
 const headerVariants = cva("translate-z-0 z-50 p-md", {
 	variants: {
@@ -80,7 +77,7 @@ export const Header: React.FC<HeaderProps> = ({
 	logoHref = routes.home,
 	logoIcon = <Icon />,
 	logoText = siteConfig.title,
-	navLinks = defaultNavLinks,
+	navLinks = navigationDefaultNavLinks,
 	variant = "default",
 	searchPlaceholder = `Search ${siteConfig.title}...`,
 	searchVariant = "menu",
@@ -111,35 +108,76 @@ export const Header: React.FC<HeaderProps> = ({
 				{variant === "floating" && <div className="h-[12px] w-full" />}
 				<nav
 					className={cn(
-						"container flex items-center gap-md",
-						isLogoOnly ? "justify-center" : "justify-between"
+						"container",
+						isLogoOnly ? "flex items-center justify-center gap-md" : "grid grid-cols-3 items-center gap-md"
 					)}
 				>
 					<div
 						className={cn(
-							"flex-col gap-md md:flex md:flex-row md:items-center",
-							isLogoOnly ? "flex" : "hidden"
+							"flex items-center gap-2 md:gap-4",
+							isLogoOnly ? "justify-center" : "justify-start"
 						)}
 					>
+						<Sheet>
+							<SheetTrigger asChild>
+								<Button variant="outline" size="icon" className="shrink-0 md:hidden">
+									<HamburgerMenuIcon className="h-5 w-5" />
+									<span className="sr-only">Toggle navigation menu</span>
+								</Button>
+							</SheetTrigger>
+							<SheetContent side="left">
+								<nav className="grid gap-6 font-medium">
+									<Link href={logoHref} className="flex items-center gap-2 text-lg font-semibold">
+										{logoIcon}
+										<span className="sr-only">{logoText}</span>
+									</Link>
+									{navLinks.map((link) => (
+										<Link
+											key={`${link.href}-${link.label}`}
+											href={link.href}
+											className={cn(
+												"text-muted-foreground hover:text-foreground",
+												link.isCurrent ? "text-foreground" : ""
+											)}
+										>
+											{link.label}
+										</Link>
+									))}
+								</nav>
+							</SheetContent>
+						</Sheet>
+
 						<Link
 							href={logoHref}
-							className="flex grow items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
+							className="flex items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
 						>
 							{logoIcon}
 							<span className="block whitespace-nowrap">{logoText}</span>
 						</Link>
-						{!isLogoOnly && searchVariant === "menu" && (
-							<SearchMenu
-								buttonText={
-									<>
-										<span className="hidden md:block">{searchPlaceholder}</span>
-										<span className="block md:hidden">Search</span>
-									</>
-								}
-								minimal={true}
-								buttonClassName="w-full md:w-auto"
-							/>
-						)}
+
+						<div className="hidden items-center gap-md text-sm md:flex">
+							{session && (
+								<Link
+									key={routes.docs}
+									href={routes.docs}
+									className={cn("text-muted-foreground transition-colors hover:text-foreground")}
+								>
+									Documentation
+								</Link>
+							)}
+							{navLinks.map((link) => (
+								<Link
+									key={`${link.href}-${link.label}`}
+									href={link.href}
+									className={cn(
+										"transition-colors hover:text-foreground",
+										link.isCurrent ? "text-foreground" : "text-muted-foreground"
+									)}
+								>
+									{link.label}
+								</Link>
+							))}
+						</div>
 					</div>
 
 					{!isLogoOnly && (
@@ -213,34 +251,27 @@ export const Header: React.FC<HeaderProps> = ({
 									</nav>
 								</SheetContent>
 							</Sheet>
+
+							{/* Center column: search */}
+							<div className="hidden md:flex justify-center">
+								{searchVariant === "menu" && (
+									<SearchMenu
+										buttonText={
+											<>
+												<span className="hidden md:block">{searchPlaceholder}</span>
+												<span className="block md:hidden">Search</span>
+											</>
+										}
+										minimal={true}
+										buttonClassName="w-full md:w-auto"
+									/>
+								)}
+								{searchVariant === "ai" && <SearchAi className="hidden md:block" />}
+							</div>
+
 							<div className="flex items-center gap-2 md:ml-auto lg:gap-4">
 								{searchVariant === "ai" && <SearchAi className="hidden md:block" />}
 								<div className="hidden items-center justify-between gap-md text-sm md:flex">
-									{session && (
-										<Link
-											key={routes.docs}
-											href={routes.docs}
-											className={cn(
-												"text-muted-foreground transition-colors hover:text-foreground"
-											)}
-										>
-											Documentation
-										</Link>
-									)}
-									{navLinks.map((link) => {
-										return (
-											<Link
-												key={`${link.href}-${link.label}`}
-												href={link.href}
-												className={cn(
-													"transition-colors hover:text-foreground",
-													link.isCurrent ? "text-foreground" : "text-muted-foreground"
-												)}
-											>
-												{link.label}
-											</Link>
-										);
-									})}
 								</div>
 								<div className="flex items-center gap-2">
 									{!session && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}

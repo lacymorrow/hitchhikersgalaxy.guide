@@ -46,7 +46,7 @@ export const NotFoundPage = ({ containerClassName, descriptionClassName, statusC
 									"relative w-full overflow-hidden sm:w-auto"
 								)}
 							>
-								<span className="relative z-10">Launch me back to earth</span>
+								<span className="relative z-10">Take me home</span>
 								<div className="absolute inset-0 bg-gradient-to-r from-primary/50 to-primary opacity-50 blur-xl transition-all duration-500 hover:opacity-75" />
 							</Link>
 							<p className="text-center text-sm text-muted-foreground">

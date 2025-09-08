@@ -68,7 +68,7 @@ export const DeleteAccountCard = () => {
 			<CardFooter>
 				<AlertDialog open={isOpen} onOpenChange={setIsOpen}>
 					<AlertDialogTrigger asChild>
-						<Button variant="destructive">Delete Account</Button>
+						<Button variant="destructive" size="lg">Delete Account</Button>
 					</AlertDialogTrigger>
 					<AlertDialogContent>
 						<AlertDialogHeader>

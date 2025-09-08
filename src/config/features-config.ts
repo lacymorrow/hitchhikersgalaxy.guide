@@ -24,7 +24,7 @@ function hasEnv(...names: string[]): boolean {
  */
 export function envIsTrue(name: string): boolean {
 	const value = process.env[name]?.toLowerCase().trim();
-	return ["true", "1", "yes", "on", "enable", "enabled"].includes(value || "");
+	return ["true", "1", "yes", "on", "enable", "enabled"].includes(value ?? "");
 }
 
 // ======== Feature Detection =========
@@ -156,9 +156,19 @@ buildTimeFeatures.VERCEL_API_ENABLED =
 
 // Analytics
 buildTimeFeatures.POSTHOG_ENABLED =
-	hasEnv("NEXT_PUBLIC_POSTHOG_KEY", "NEXT_PUBLIC_POSTHOG_HOST") && !envIsTrue("DISABLE_POSTHOG");
+	hasEnv("NEXT_PUBLIC_POSTHOG_KEY") && !envIsTrue("DISABLE_POSTHOG");
+
 buildTimeFeatures.UMAMI_ENABLED =
 	hasEnv("NEXT_PUBLIC_UMAMI_WEBSITE_ID") && !envIsTrue("DISABLE_UMAMI");
+buildTimeFeatures.STATSIG_ENABLED =
+	hasEnv("NEXT_PUBLIC_STATSIG_CLIENT_KEY") && !envIsTrue("DISABLE_STATSIG");
+console.log("buildTimeFeatures.STATSIG_ENABLED", buildTimeFeatures.STATSIG_ENABLED);
+
+// Google Analytics and Tag Manager
+buildTimeFeatures.GOOGLE_ANALYTICS_ENABLED =
+	hasEnv("NEXT_PUBLIC_GOOGLE_ANALYTICS_ID") && !envIsTrue("DISABLE_GOOGLE_ANALYTICS");
+buildTimeFeatures.GOOGLE_TAG_MANAGER_ENABLED =
+	hasEnv("NEXT_PUBLIC_GOOGLE_GTM_ID") && !envIsTrue("DISABLE_GOOGLE_TAG_MANAGER");
 
 // Consent Manager
 buildTimeFeatures.C15T_ENABLED = hasEnv("NEXT_PUBLIC_C15T_URL") && !envIsTrue("DISABLE_C15T");

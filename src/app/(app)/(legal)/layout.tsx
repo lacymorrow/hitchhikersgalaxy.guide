@@ -4,8 +4,8 @@ import { routes } from "@/config/routes";
 
 const navLinks = [
 	{ href: routes.home, label: "Home" },
-	{ href: routes.privacy, label: "Privacy Policy" },
-	{ href: routes.terms, label: "Terms of Service" },
+	{ href: routes.privacy, label: "Privacy" },
+	{ href: routes.terms, label: "Terms" },
 	{ href: routes.eula, label: "EULA" },
 	{ href: routes.legal, label: "Legal" },
 ];

@@ -77,6 +77,25 @@ interface SiteConfig {
 		github: string;
 	};
 
+	// Social profiles (single source of truth for top networks)
+	/**
+	 * Centralized social links for the project/org. Empty strings mean "disabled".
+	 * Use helper utilities to get an enabled list for rendering.
+	 */
+	social: {
+		github?: string;
+		twitter?: string;
+		x?: string;
+		linkedin?: string;
+		instagram?: string;
+		facebook?: string;
+		youtube?: string;
+		tiktok?: string;
+		discord?: string;
+		dribbble?: string;
+		threads?: string;
+	};
+
 	// Repository information
 	repo: {
 		owner: string;
@@ -201,6 +220,21 @@ export const siteConfig: SiteConfig = {
 		github: "https://github.com/lacymorrow/shipkit",
 	},
 
+	// Configure social profiles here. Leave any you don't use as empty strings.
+	social: {
+		github: "https://github.com/shipkit-io",
+		twitter: "https://twitter.com/lacybuilds",
+		x: "https://x.com/lacybuilds",
+		linkedin: "https://www.linkedin.com/company/shipkit-io/",
+		instagram: "",
+		facebook: "",
+		youtube: "",
+		tiktok: "",
+		discord: "https://discord.gg/XxKrKNvEje",
+		dribbble: "",
+		threads: "",
+	},
+
 	repo: {
 		owner: "lacymorrow",
 		name: "shipkit",
@@ -220,7 +254,7 @@ export const siteConfig: SiteConfig = {
 		legal: "legal@shipkit.io",
 		privacy: "privacy@shipkit.io",
 		// Placeholder format function - assigned below
-		format: (type) => "",
+		format: (_type) => "",
 	},
 
 	creator: {

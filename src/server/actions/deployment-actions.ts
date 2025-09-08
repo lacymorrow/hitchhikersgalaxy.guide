@@ -3,15 +3,13 @@
 import { and, desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { siteConfig } from "@/config/site-config";
+import { deploymentSchema, validateProjectName } from "@/lib/schemas/deployment";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { type Deployment, deployments, type NewDeployment } from "@/server/db/schema";
 import { type DeploymentResult, deployPrivateRepository } from "./deploy-private-repo";
-import { deploymentSchema, validateProjectName } from "@/lib/schemas/deployment";
 
 const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
-
-
 
 /**
  * Initiates a deployment process by creating a deployment record and
@@ -63,7 +61,10 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 						error: error instanceof Error ? error.message : "An unknown error occurred",
 					});
 				} catch (updateError) {
-					console.error(`Failed to update deployment status for ${sanitizedProjectName}:`, updateError);
+					console.error(
+						`Failed to update deployment status for ${sanitizedProjectName}:`,
+						updateError
+					);
 				}
 			}
 		})();

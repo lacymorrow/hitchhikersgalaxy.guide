@@ -1,17 +1,17 @@
-import { constructMetadata } from "@/config/metadata";
-import { siteConfig } from "@/config/site-config";
 import type { Metadata } from "next";
 import { FAQ } from "@/components/pages/faq/section-faq";
 import { FeaturesTable } from "@/components/pages/features/features-table";
-
-
+import { constructMetadata } from "@/config/metadata";
+import { siteConfig } from "@/config/site-config";
 
 export const metadata: Metadata = constructMetadata({
 	title: `${siteConfig.title} Features & Capabilities`,
-	description: "Explore Shipkit's powerful features: Next.js 14, TypeScript, Payload CMS, Auth.js, Builder.io, and more. Everything you need to build modern, scalable applications.",
+	description:
+		"Explore Shipkit's powerful features: Next.js 14, TypeScript, Payload CMS, Auth.js, Builder.io, and more. Everything you need to build modern, scalable applications.",
 	openGraph: {
 		title: `${siteConfig.title} Features & Capabilities`,
-		description: "Explore Shipkit's powerful features: Next.js 14, TypeScript, Payload CMS, Auth.js, Builder.io, and more. Everything you need to build modern, scalable applications.",
+		description:
+			"Explore Shipkit's powerful features: Next.js 14, TypeScript, Payload CMS, Auth.js, Builder.io, and more. Everything you need to build modern, scalable applications.",
 		type: "website",
 		siteName: siteConfig.title,
 		locale: "en_US",
@@ -26,7 +26,7 @@ export const metadata: Metadata = constructMetadata({
 		"Web Development",
 		"Full Stack Framework",
 		"Developer Tools",
-		"Application Builder"
+		"Application Builder",
 	],
 });
 
@@ -42,9 +42,7 @@ export default async function Features() {
 
 			{/* Feature Comparison Table */}
 			<section className="mx-auto">
-				<h2 className="mb-8 text-center text-2xl font-semibold">
-					Feature Comparison
-				</h2>
+				<h2 className="mb-8 text-center text-2xl font-semibold">Feature Comparison</h2>
 
 				<div className="mx-auto max-w-screen-lg">
 					<FeaturesTable />
@@ -53,9 +51,7 @@ export default async function Features() {
 
 			{/* FAQ Section */}
 			<section className="mx-auto max-w-3xl">
-				<h2 className="mb-8 text-center text-2xl font-semibold">
-					Frequently Asked Questions
-				</h2>
+				<h2 className="mb-8 text-center text-2xl font-semibold">Frequently Asked Questions</h2>
 				<FAQ />
 			</section>
 		</div>

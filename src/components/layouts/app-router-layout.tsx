@@ -1,10 +1,10 @@
-import { ThemeProvider as ShipkitThemeProvider } from "@/components/ui/shipkit/theme";
 import { ViewTransitions } from "next-view-transitions";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
 import { PageTracker } from "react-page-tracker";
 import { ShipkitProvider } from "@/components/providers/shipkit-provider";
 import { TeamProvider } from "@/components/providers/team-provider";
+import { ThemeProvider as ShipkitThemeProvider } from "@/components/ui/shipkit/theme";
 import { auth } from "@/server/auth";
 import { teamService } from "@/server/services/team-service";
 
@@ -27,18 +27,20 @@ export async function AppRouterLayout({
 		try {
 			const teams = await teamService.getUserTeams(session.user.id);
 			if (teams && teams.length > 0) {
-				userTeams = teams.map(tm => ({
+				userTeams = teams.map((tm) => ({
 					id: tm.team.id,
-					name: tm.team.name
+					name: tm.team.name,
 				}));
 			} else {
 				// Ensure at least one personal team exists
 				const personalTeam = await teamService.ensureOnePersonalTeam(session.user.id);
 				if (personalTeam) {
-					userTeams = [{
-						id: personalTeam.id,
-						name: personalTeam.name
-					}];
+					userTeams = [
+						{
+							id: personalTeam.id,
+							name: personalTeam.name,
+						},
+					];
 				}
 			}
 		} catch (error) {

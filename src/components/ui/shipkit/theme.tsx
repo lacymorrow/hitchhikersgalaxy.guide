@@ -34,13 +34,13 @@ import { MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { ThemeProvider as NextThemesProvider, useTheme } from "next-themes";
 import React from "react";
 import { Button, type ButtonProps } from "@/components/ui/button";
-import { env } from "@/env";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { env } from "@/env";
 
 const ThemeButton = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
 	<Button variant="ghost" size="icon" {...props} ref={ref}>
@@ -83,9 +83,7 @@ const ThemeChooser = React.forwardRef<HTMLButtonElement, ButtonProps>((props, re
 				{lightEnabled && (
 					<DropdownMenuItem onClick={() => setTheme("light")}>Light</DropdownMenuItem>
 				)}
-				{darkEnabled && (
-					<DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>
-				)}
+				{darkEnabled && <DropdownMenuItem onClick={() => setTheme("dark")}>Dark</DropdownMenuItem>}
 				{bothEnabled && (
 					<DropdownMenuItem onClick={() => setTheme("system")}>System</DropdownMenuItem>
 				)}
@@ -101,10 +99,12 @@ const ThemeProvider = ({ children, ...props }: React.ComponentProps<typeof NextT
 	const lightEnabled = !!env.NEXT_PUBLIC_FEATURE_LIGHT_MODE_ENABLED;
 	const darkEnabled = !!env.NEXT_PUBLIC_FEATURE_DARK_MODE_ENABLED;
 	const bothEnabled = lightEnabled && darkEnabled;
-	const computedThemes = [lightEnabled && "light", darkEnabled && "dark"].filter(Boolean) as string[];
+	const computedThemes = [lightEnabled && "light", darkEnabled && "dark"].filter(
+		Boolean
+	) as string[];
 	const themes = computedThemes.length ? computedThemes : ["light"];
 	const defaultTheme = bothEnabled ? "system" : lightEnabled ? "light" : "dark";
-	const forcedTheme = bothEnabled ? undefined : (lightEnabled ? "light" : "dark");
+	const forcedTheme = bothEnabled ? undefined : lightEnabled ? "light" : "dark";
 
 	return (
 		<NextThemesProvider

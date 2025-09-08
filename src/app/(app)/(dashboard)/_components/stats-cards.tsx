@@ -1,5 +1,5 @@
+import { ActivityIcon, Download, Globe, Users } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Download, Users, Globe, ActivityIcon } from "lucide-react";
 
 export function StatsCards() {
 	return (

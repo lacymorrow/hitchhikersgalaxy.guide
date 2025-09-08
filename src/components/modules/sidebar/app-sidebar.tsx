@@ -1,9 +1,9 @@
 import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { useId } from "react";
-import { ProjectsList } from "@/components/modules/projects/projects-list";
 import { NavUser } from "@/components/blocks/nav-user";
 import { TeamSwitcher } from "@/components/blocks/team-switcher";
+import { ProjectsList } from "@/components/modules/projects/projects-list";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
 	Sidebar,
@@ -37,7 +37,7 @@ const appSidebarVariants = cva("", {
 
 interface AppSidebarProps
 	extends Omit<React.ComponentProps<typeof Sidebar>, "variant">,
-	VariantProps<typeof appSidebarVariants> {
+		VariantProps<typeof appSidebarVariants> {
 	variant?: "inset" | "floating" | "sidebar";
 	size?: "default" | "sm" | "lg";
 }
@@ -66,7 +66,6 @@ export const AppSidebar = React.forwardRef<HTMLDivElement, AppSidebarProps>(
 				</SidebarContent>
 				<SidebarFooter className="p-2">
 					<div>
-
 						<NavSecondary />
 
 						{/*

@@ -4,6 +4,8 @@ import { eq } from "drizzle-orm";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { STATUS_CODES } from "@/config/status-codes";
+// This service can be imported by Node scripts; avoid importing "server-only" here
+import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { getPayloadClient, payload } from "@/lib/payload/payload";
 import { signInSchema } from "@/lib/schemas/auth";
@@ -12,8 +14,6 @@ import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { userService } from "@/server/services/user-service";
 import type { User, UserRole } from "@/types/user";
-// This service can be imported by Node scripts; avoid importing "server-only" here
-import { env } from "@/env";
 
 // Define a simplified type for Payload User to avoid import issues
 interface PayloadUser {

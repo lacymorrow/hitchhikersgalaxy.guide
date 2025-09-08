@@ -15,8 +15,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { env } from "@/env";
 import { siteConfig } from "@/config/site-config";
+import { env } from "@/env";
 
 interface NextStep {
 	title: string;
@@ -110,10 +110,11 @@ export function NextStepsSection() {
 				{nextSteps.map((step, index) => (
 					<Card
 						key={step.title}
-						className={`transition-all ${step.isComplete
-							? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
-							: "hover:shadow-md"
-							}`}
+						className={`transition-all ${
+							step.isComplete
+								? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
+								: "hover:shadow-md"
+						}`}
 					>
 						<CardHeader className="pb-3">
 							<div className="flex items-start gap-4">

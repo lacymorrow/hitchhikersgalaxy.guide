@@ -7,8 +7,8 @@ import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useAuthForm } from "../_hooks/use-auth-form";
-import { AuthHeader } from "./auth-header";
 import { AuthFooter } from "./auth-footer";
+import { AuthHeader } from "./auth-header";
 
 interface AuthFormProps extends ComponentPropsWithoutRef<"div"> {
 	mode: "sign-in" | "sign-up";
@@ -29,16 +29,22 @@ export function AuthForm({
 	withFooter = true,
 	...props
 }: AuthFormProps) {
-	const { cardTitle, cardDescription, alternateLink, shouldShowAlternateLink, showAuthUnavailable } = useAuthForm(
-		mode,
-		title,
-		description
-	);
+	const {
+		cardTitle,
+		cardDescription,
+		alternateLink,
+		shouldShowAlternateLink,
+		showAuthUnavailable,
+	} = useAuthForm(mode, title, description);
 
 	return (
 		<div className={cn("flex flex-col gap-6 overflow-y-auto", className)} {...props}>
 			{withHeader && (
-				<AuthHeader title={cardTitle} description={cardDescription} showAuthUnavailable={showAuthUnavailable} />
+				<AuthHeader
+					title={cardTitle}
+					description={cardDescription}
+					showAuthUnavailable={showAuthUnavailable}
+				/>
 			)}
 			<CardContent className="pb-0">
 				<div className="grid gap-6 relative">

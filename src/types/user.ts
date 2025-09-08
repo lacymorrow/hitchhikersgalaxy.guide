@@ -33,9 +33,9 @@ export interface User {
 	payloadToken?: string;
 }
 
+import type { NextResponse } from "next/server";
 // Import NextAuth Session type
 import type { Session as NextAuthSession } from "next-auth";
-import type { NextResponse } from "next/server";
 
 // Type guard to check if auth() returned a Session vs NextResponse
 export function isSession(

@@ -28,13 +28,18 @@ export function useLocalStorage<T>(
 	const [storedValue, setStoredValue] = useState<T>(readValue);
 
 	// Stable setter that updates state; localStorage sync happens in an effect
-	const setValue = useCallback((value: T | ((val: T) => T)) => {
-		try {
-			setStoredValue((prev) => (value instanceof Function ? (value as (val: T) => T)(prev) : value));
-		} catch (error) {
-			console.warn(`Error setting localStorage key "${key}":`, error);
-		}
-	}, [key]);
+	const setValue = useCallback(
+		(value: T | ((val: T) => T)) => {
+			try {
+				setStoredValue((prev) =>
+					value instanceof Function ? (value as (val: T) => T)(prev) : value
+				);
+			} catch (error) {
+				console.warn(`Error setting localStorage key "${key}":`, error);
+			}
+		},
+		[key]
+	);
 
 	useEffect(() => {
 		setStoredValue(readValue());

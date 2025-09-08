@@ -8,9 +8,9 @@
 import { createWriteStream } from "fs";
 import { mkdir, readFile, stat, writeFile } from "fs/promises";
 import https from "https";
+import { tmpdir } from "os";
 import { join } from "path";
 import { pipeline } from "stream/promises";
-import { tmpdir } from "os";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
@@ -259,7 +259,8 @@ async function downloadLatestRelease(): Promise<{
 	const { isValid, scopes, error } = await verifyTokenPermissions();
 	if (!isValid) {
 		throw new Error(
-			`GitHub token verification failed: ${error}. Required scopes: repo. Current scopes: ${scopes?.join(", ") || "none"
+			`GitHub token verification failed: ${error}. Required scopes: repo. Current scopes: ${
+				scopes?.join(", ") || "none"
 			}`
 		);
 	}

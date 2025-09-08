@@ -23,8 +23,7 @@ export const ConnectionHighlightWrapper = ({
 
 		// Check if this section should be highlighted
 		const shouldHighlight =
-			(success === `${connectionType}_connected`) ||
-			(highlight === connectionType);
+			success === `${connectionType}_connected` || highlight === connectionType;
 
 		if (shouldHighlight && wrapperRef.current) {
 			// Scroll into view
@@ -39,7 +38,7 @@ export const ConnectionHighlightWrapper = ({
 			// Remove animation class after animation completes
 			const timeout = setTimeout(() => {
 				wrapperRef.current?.classList.remove("animate-connection-highlight");
-				
+
 				// Clean up URL after animation
 				const url = new URL(window.location.href);
 				url.searchParams.delete("success");
@@ -55,10 +54,7 @@ export const ConnectionHighlightWrapper = ({
 	}, [searchParams, connectionType, router]);
 
 	return (
-		<div
-			ref={wrapperRef}
-			className="rounded-lg"
-		>
+		<div ref={wrapperRef} className="rounded-lg">
 			{children}
 		</div>
 	);

@@ -9,10 +9,10 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { buttonVariants } from "@/components/ui/button";
+import { SocialLinks } from "@/components/ui/social-links";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { SocialLinks } from "@/components/ui/social-links";
 
 interface LinkItem {
 	label: string;

@@ -1,12 +1,12 @@
+import { redirect } from "next/navigation";
+import { routes } from "@/config/routes";
+import { siteConfig } from "@/config/site-config";
+import { createRedirectUrl } from "@/lib/utils/redirect";
 import { auth } from "@/server/auth";
 import { isAdmin } from "@/server/services/admin-service";
 import { checkGitHubConnection } from "@/server/services/github/github-service";
 import { PaymentService } from "@/server/services/payment-service";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
-import { siteConfig } from "@/config/site-config";
-import { redirect } from "next/navigation";
-import { routes } from "@/config/routes";
-import { createRedirectUrl } from "@/lib/utils/redirect";
 
 export async function useDashboardData() {
 	const session = await auth({ protect: true });

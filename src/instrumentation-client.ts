@@ -16,19 +16,19 @@ const posthogKey = process.env.NEXT_PUBLIC_POSTHOG_KEY;
 const posthogHost = process.env.NEXT_PUBLIC_POSTHOG_HOST ?? POSTHOG_RELAY_SLUG;
 
 if (posthogEnabled && posthogKey && posthogHost) {
-    void import("posthog-js")
-        .then(({ default: posthog }) => {
-            posthog.init(posthogKey, {
-                api_host: posthogHost,
-                ui_host: 'https://us.posthog.com',
-                defaults: '2025-05-24'
-            });
+	void import("posthog-js")
+		.then(({ default: posthog }) => {
+			posthog.init(posthogKey, {
+				api_host: posthogHost,
+				ui_host: "https://us.posthog.com",
+				defaults: "2025-05-24",
+			});
 
-            if (process.env.NODE_ENV !== "production") {
-                (globalThis as unknown as { posthog?: typeof posthog }).posthog = posthog;
-            }
-        })
-        .catch(() => {
-            // Silently ignore analytics init failures in client instrumentation
-        });
+			if (process.env.NODE_ENV !== "production") {
+				(globalThis as unknown as { posthog?: typeof posthog }).posthog = posthog;
+			}
+		})
+		.catch(() => {
+			// Silently ignore analytics init failures in client instrumentation
+		});
 }

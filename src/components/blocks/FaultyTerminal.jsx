@@ -1,7 +1,7 @@
 "use client";
 
-import { Renderer, Program, Mesh, Color, Triangle } from "ogl";
-import { useEffect, useRef, useMemo, useCallback } from "react";
+import { Color, Mesh, Program, Renderer, Triangle } from "ogl";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import "./FaultyTerminal.css";
 
 const vertexShader = `

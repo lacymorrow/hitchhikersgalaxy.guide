@@ -2,11 +2,11 @@
 
 import { ResetIcon } from "@radix-ui/react-icons";
 import { useEffect, useState } from "react";
+import { OnboardingWizard } from "@/components/modules/onboarding/onboarding-wizard";
 import { Button } from "@/components/ui/button";
 import { env } from "@/env";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import type { User } from "@/types/user";
-import { OnboardingWizard } from "@/components/modules/onboarding/onboarding-wizard";
 
 interface OnboardingCheckProps {
 	user?: User | null;
@@ -95,7 +95,7 @@ export function RestartOnboardingButton({
 		if (user?.id) {
 			try {
 				localStorage.removeItem(`feature_onboarding-${user.id}`);
-			} catch { }
+			} catch {}
 		}
 
 		// Reset the onboarding state to initial values

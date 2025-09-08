@@ -104,14 +104,18 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 	const stripeSecretKey = !!process.env.STRIPE_SECRET_KEY;
 	const stripePublishableKey = !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
 	const stripeWebhookSecret = !!process.env.STRIPE_WEBHOOK_SECRET;
-	const stripeConfigured = stripeSecretKey && stripePublishableKey;
+	// Consider Stripe configured if server secret exists; publishable key is optional and
+	// only required for client-side Stripe usage.
+	const stripeConfigured = stripeSecretKey;
 	addStatus("Payments", {
 		name: "Stripe",
 		enabled: stripeConfigured,
 		configured: stripeConfigured,
 		message: stripeConfigured
-			? `Configured (Secret & Publishable Keys set)${stripeWebhookSecret ? ", Webhook Secret set." : ", Webhook Secret recommended."}`
-			: "Disabled (Missing STRIPE_SECRET_KEY or NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY).",
+			? `Configured (Secret key set${stripePublishableKey ? ", Publishable key set" : ""})${
+					stripeWebhookSecret ? ", Webhook Secret set." : ", Webhook Secret recommended."
+				}`
+			: "Disabled (Missing STRIPE_SECRET_KEY).",
 		adminUrl: stripeConfigured ? "https://dashboard.stripe.com/" : undefined,
 	});
 

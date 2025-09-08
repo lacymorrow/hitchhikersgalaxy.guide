@@ -17,8 +17,8 @@
  * @see vitest.config.node.ts - For Node.js-specific testing
  */
 
-import react from "@vitejs/plugin-react";
 import path from "node:path";
+import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 

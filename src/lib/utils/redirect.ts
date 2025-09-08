@@ -25,7 +25,10 @@ export function redirect(pathname: string, options?: RedirectOptions) {
 	return nextRedirect(url);
 }
 
-export function routeRedirect(destination: string, options?: string | { code?: string; nextUrl?: string; request?: Request }) {
+export function routeRedirect(
+	destination: string,
+	options?: string | { code?: string; nextUrl?: string; request?: Request }
+) {
 	if (!options) {
 		return NextResponse.redirect(destination);
 	}

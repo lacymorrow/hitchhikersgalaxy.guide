@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import {
 	Accordion,
 	AccordionContent,
@@ -7,7 +8,6 @@ import {
 import { siteConfig } from "@/config/site-config";
 import { getPayloadContent } from "@/lib/utils/get-payload-content";
 import type { Faq } from "@/payload-types";
-import { notFound } from "next/navigation";
 
 // Define types for static content structure
 type StaticFaq = {
@@ -22,15 +22,12 @@ const getAnswerText = (answer: unknown): string => {
 	if (typeof answer === "string") return answer;
 	if (typeof answer === "object" && answer && "root" in answer) {
 		const richText = answer as { root: { children: { children?: { text: string }[] }[] } };
-		return richText.root.children
-			.map(child => child.children?.[0]?.text || "")
-			.join("\n");
+		return richText.root.children.map((child) => child.children?.[0]?.text || "").join("\n");
 	}
 	return "";
 };
 
 export default async function FaqPage() {
-
 	let faqs: (Faq | StaticFaq)[] = [];
 
 	try {
@@ -60,8 +57,8 @@ export default async function FaqPage() {
 						Frequently Asked Questions
 					</h2>
 					<p className="mb-8 text-neutral-600 dark:text-neutral-300">
-						Here are some common questions about {siteConfig.title}. If you have
-						any other questions, feel free to reach out to us.
+						Here are some common questions about {siteConfig.title}. If you have any other
+						questions, feel free to reach out to us.
 					</p>
 				</div>
 				<div className="col-span-3 space-y-8 border-t border-neutral-400/15 bg-white px-20 py-12 dark:bg-neutral-950 md:border-l md:border-t-0">

@@ -1,5 +1,3 @@
-
-
 import * as AvatarPrimitive from "@radix-ui/react-avatar";
 import * as React from "react";
 
@@ -23,8 +21,12 @@ const AvatarImage = React.forwardRef<
 >(({ className, src, ...props }, ref) => {
 	const sanitizedSrc = React.useMemo(() => {
 		if (!src) return undefined;
-		if (typeof src !== 'string') return undefined;
-		const isValidUrl = src.startsWith('http://') || src.startsWith('https://') || src.startsWith('/') || src.startsWith('data:');
+		if (typeof src !== "string") return undefined;
+		const isValidUrl =
+			src.startsWith("http://") ||
+			src.startsWith("https://") ||
+			src.startsWith("/") ||
+			src.startsWith("data:");
 		return isValidUrl ? src : undefined;
 	}, [src]);
 

@@ -7,102 +7,108 @@
  *   LH_PRESET=desktop|mobile (default: desktop)
  *   LH_OUT_DIR=.lighthouse (default)
  */
-import lighthouse from "lighthouse";
-import { launch } from "chrome-launcher";
+
 import fs from "node:fs/promises";
 import path from "node:path";
+import { launch } from "chrome-launcher";
+import lighthouse from "lighthouse";
 
 interface LighthouseRunResultSummary {
-    url: string;
-    outputDir: string;
-    categories: Record<string, number | null>;
-    reportJsonPath: string;
-    reportHtmlPath: string;
+	url: string;
+	outputDir: string;
+	categories: Record<string, number | null>;
+	reportJsonPath: string;
+	reportHtmlPath: string;
 }
 
 function getUrlsFromArgsOrEnv(): string[] {
-    const argvUrls = process.argv.slice(2).filter((arg) => !arg.startsWith("-"));
-    if (argvUrls.length > 0) return argvUrls;
-    const envList = process.env.LH_URLS?.split(",").map((u) => u.trim()).filter(Boolean) ?? [];
-    if (envList.length > 0) return envList;
-    return ["http://localhost:3000/"];
+	const argvUrls = process.argv.slice(2).filter((arg) => !arg.startsWith("-"));
+	if (argvUrls.length > 0) return argvUrls;
+	const envList =
+		process.env.LH_URLS?.split(",")
+			.map((u) => u.trim())
+			.filter(Boolean) ?? [];
+	if (envList.length > 0) return envList;
+	return ["http://localhost:3000/"];
 }
 
 function getPreset(): "desktop" | "mobile" {
-    const value = (process.env.LH_PRESET ?? "desktop").toLowerCase();
-    return value === "mobile" ? "mobile" : "desktop";
+	const value = (process.env.LH_PRESET ?? "desktop").toLowerCase();
+	return value === "mobile" ? "mobile" : "desktop";
 }
 
 function safeSlug(input: string): string {
-    return input
-        .replace(/^https?:\/\//, "")
-        .replace(/[^a-zA-Z0-9]+/g, "-")
-        .replace(/-+/g, "-")
-        .replace(/(^-|-$)/g, "")
-        .slice(0, 120);
+	return input
+		.replace(/^https?:\/\//, "")
+		.replace(/[^a-zA-Z0-9]+/g, "-")
+		.replace(/-+/g, "-")
+		.replace(/(^-|-$)/g, "")
+		.slice(0, 120);
 }
 
 async function ensureDir(dir: string): Promise<void> {
-    await fs.mkdir(dir, { recursive: true });
+	await fs.mkdir(dir, { recursive: true });
 }
 
-async function runSingle(url: string, outBaseDir: string, preset: "desktop" | "mobile"): Promise<LighthouseRunResultSummary> {
-    const slug = safeSlug(url);
-    const outputDir = path.join(outBaseDir, `${slug}-${preset}`);
-    await ensureDir(outputDir);
+async function runSingle(
+	url: string,
+	outBaseDir: string,
+	preset: "desktop" | "mobile"
+): Promise<LighthouseRunResultSummary> {
+	const slug = safeSlug(url);
+	const outputDir = path.join(outBaseDir, `${slug}-${preset}`);
+	await ensureDir(outputDir);
 
-    const chrome = await launch({ chromeFlags: ["--headless", "--no-sandbox"] });
-    try {
-        const { lhr, report } = await lighthouse(url, {
-            port: chrome.port,
-            logLevel: "error",
-            output: ["json", "html"],
-            preset,
-        });
+	const chrome = await launch({ chromeFlags: ["--headless", "--no-sandbox"] });
+	try {
+		const { lhr, report } = await lighthouse(url, {
+			port: chrome.port,
+			logLevel: "error",
+			output: ["json", "html"],
+			preset,
+		});
 
-        // report[0] json, report[1] html
-        const jsonPath = path.join(outputDir, "lighthouse.json");
-        const htmlPath = path.join(outputDir, "lighthouse.html");
-        await fs.writeFile(jsonPath, String(report?.[0] ?? ""), "utf8");
-        await fs.writeFile(htmlPath, String(report?.[1] ?? ""), "utf8");
+		// report[0] json, report[1] html
+		const jsonPath = path.join(outputDir, "lighthouse.json");
+		const htmlPath = path.join(outputDir, "lighthouse.html");
+		await fs.writeFile(jsonPath, String(report?.[0] ?? ""), "utf8");
+		await fs.writeFile(htmlPath, String(report?.[1] ?? ""), "utf8");
 
-        const categories: Record<string, number | null> = {};
-        for (const [key, cat] of Object.entries(lhr.categories ?? {})) {
-            categories[key] = typeof cat.score === "number" ? Math.round(cat.score * 100) : null;
-        }
+		const categories: Record<string, number | null> = {};
+		for (const [key, cat] of Object.entries(lhr.categories ?? {})) {
+			categories[key] = typeof cat.score === "number" ? Math.round(cat.score * 100) : null;
+		}
 
-        return { url, outputDir, categories, reportJsonPath: jsonPath, reportHtmlPath: htmlPath };
-    } finally {
-        await chrome.kill();
-    }
+		return { url, outputDir, categories, reportJsonPath: jsonPath, reportHtmlPath: htmlPath };
+	} finally {
+		await chrome.kill();
+	}
 }
 
 async function main(): Promise<void> {
-    const urls = getUrlsFromArgsOrEnv();
-    const preset = getPreset();
-    const outDir = process.env.LH_OUT_DIR ?? ".lighthouse";
-    await ensureDir(outDir);
+	const urls = getUrlsFromArgsOrEnv();
+	const preset = getPreset();
+	const outDir = process.env.LH_OUT_DIR ?? ".lighthouse";
+	await ensureDir(outDir);
 
-    const results: LighthouseRunResultSummary[] = [];
-    for (const url of urls) {
-        // eslint-disable-next-line no-console
-        console.log(`[lighthouse] Running on ${url} (${preset})`);
-        const summary = await runSingle(url, outDir, preset);
-        results.push(summary);
-        // eslint-disable-next-line no-console
-        console.log(`[lighthouse] Done ${url} →`, summary.categories);
-    }
+	const results: LighthouseRunResultSummary[] = [];
+	for (const url of urls) {
+		// eslint-disable-next-line no-console
+		console.log(`[lighthouse] Running on ${url} (${preset})`);
+		const summary = await runSingle(url, outDir, preset);
+		results.push(summary);
+		// eslint-disable-next-line no-console
+		console.log(`[lighthouse] Done ${url} →`, summary.categories);
+	}
 
-    const indexPath = path.join(outDir, `index-${Date.now()}.json`);
-    await fs.writeFile(indexPath, JSON.stringify(results, null, 2), "utf8");
-    // eslint-disable-next-line no-console
-    console.log(`[lighthouse] Wrote summary index → ${indexPath}`);
+	const indexPath = path.join(outDir, `index-${Date.now()}.json`);
+	await fs.writeFile(indexPath, JSON.stringify(results, null, 2), "utf8");
+	// eslint-disable-next-line no-console
+	console.log(`[lighthouse] Wrote summary index → ${indexPath}`);
 }
 
 main().catch((error) => {
-    // eslint-disable-next-line no-console
-    console.error("[lighthouse] Failed:", error);
-    process.exit(1);
+	// eslint-disable-next-line no-console
+	console.error("[lighthouse] Failed:", error);
+	process.exit(1);
 });
-
-

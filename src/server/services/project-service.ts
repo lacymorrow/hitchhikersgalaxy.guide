@@ -38,7 +38,9 @@ export class ProjectService extends BaseService<typeof projects> {
 
 			// If still not resolvable, or the team does not exist, attempt to ensure a personal team
 			if (effectiveTeamId) {
-				const existingTeam = await db.query.teams.findFirst({ where: eq(teams.id, effectiveTeamId) });
+				const existingTeam = await db.query.teams.findFirst({
+					where: eq(teams.id, effectiveTeamId),
+				});
 				if (!existingTeam) {
 					const ensuredPersonalTeam = await teamService.ensureOnePersonalTeam(creatorUserId);
 					effectiveTeamId = (ensuredPersonalTeam as any)?.id ?? effectiveTeamId;

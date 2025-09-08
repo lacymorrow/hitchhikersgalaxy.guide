@@ -1,9 +1,9 @@
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { CodeWindow } from "@/components/ui/code-window";
-import { siteConfig } from "@/config/site-config";
 import { Link } from "@/components/primitives/link";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { CodeWindow } from "@/components/ui/code-window";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { routes } from "@/config/routes";
+import { siteConfig } from "@/config/site-config";
 
 const installationCode = `# Clone the repository
 git clone ${siteConfig.repo.url}

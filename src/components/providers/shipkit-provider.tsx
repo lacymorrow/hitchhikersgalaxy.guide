@@ -37,12 +37,12 @@ export function ShipkitProvider({ children, session, pageProps }: ShipkitProvide
 	const sessionProviderProps = authEnabled
 		? { session }
 		: {
-			session: null,
-			refetchOnWindowFocus: false,
-			refetchInterval: 0,
-			refetchWhenOffline: false,
-			refetchOnMount: false,
-		};
+				session: null,
+				refetchOnWindowFocus: false,
+				refetchInterval: 0,
+				refetchWhenOffline: false,
+				refetchOnMount: false,
+			};
 
 	return (
 		<>

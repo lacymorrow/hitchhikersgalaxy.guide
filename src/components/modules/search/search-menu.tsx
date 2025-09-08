@@ -5,9 +5,9 @@ import { FileIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import * as React from "react";
+import { docsConfig } from "@/components/modules/search/example";
 import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
 import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
-import { docsConfig } from "@/components/modules/search/example";
 import { Button } from "@/components/ui/button";
 import {
 	CommandDialog,

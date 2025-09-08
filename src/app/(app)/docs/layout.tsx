@@ -6,7 +6,6 @@ import { DocsSidebar } from "./_components/docs-sidebar";
 import "./styles.css";
 import { routes } from "@/config/routes";
 
-
 interface DocsLayoutProps {
 	children: ReactNode;
 }

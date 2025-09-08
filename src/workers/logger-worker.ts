@@ -38,7 +38,6 @@ const flushLogs = async (): Promise<void> => {
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
-
 	} catch (error) {
 		// Re-add failed logs to the front of the queue
 		logQueue.unshift(...logsToSend);

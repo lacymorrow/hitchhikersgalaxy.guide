@@ -7,10 +7,10 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { STATUS_CODES } from "@/config/status-codes";
 import { AuthenticationError } from "@/lib/errors/authentication-error";
 import { logger } from "@/lib/logger";
 import { redirect } from "@/lib/utils/redirect";
-import { STATUS_CODES } from "@/config/status-codes";
 
 interface ErrorBoundaryProps {
 	children: React.ReactNode;

@@ -248,7 +248,6 @@ export const env = createEnv({
 	 * middlewares) or client-side so we need to destruct manually.
 	 */
 
-
 	runtimeEnv: {
 		APP_SECRET: process.env.APP_SECRET,
 		// Database

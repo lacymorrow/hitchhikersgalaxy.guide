@@ -1,7 +1,7 @@
 "use client";
 
-import type { ColumnDef } from "@tanstack/react-table";
 import { useQuery } from "@tanstack/react-query";
+import type { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 import { AlertCircle, CheckCircle2, Clock, Rocket } from "lucide-react";
 import { useEffect, useState } from "react";
@@ -9,10 +9,10 @@ import { useEffect, useState } from "react";
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/ui/data-table/data-table";
+import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import type { Deployment } from "@/server/db/schema";
 import { DeploymentActions } from "./deployment-actions";
-import { siteConfig } from "@/config/site-config";
 
 // Constants for polling configuration
 const POLLING_INTERVAL_MS = 3000; // 3 seconds
@@ -32,7 +32,7 @@ async function fetchDeployments(): Promise<Deployment[]> {
 
 export function DeploymentsList({ deployments: initialDeployments }: DeploymentsListProps) {
 	const [hasDeployingItems, setHasDeployingItems] = useState(
-		initialDeployments.some(d => d.status === "deploying")
+		initialDeployments.some((d) => d.status === "deploying")
 	);
 
 	// Use React Query for efficient polling
@@ -47,7 +47,7 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 
 	// Update polling state when deployments change
 	useEffect(() => {
-		const shouldPoll = deployments.some(d => d.status === "deploying");
+		const shouldPoll = deployments.some((d) => d.status === "deploying");
 		setHasDeployingItems(shouldPoll);
 	}, [deployments]);
 	const getStatusIcon = (status: string) => {

@@ -1,5 +1,7 @@
 // ! Don't use @/env here, it will break the build
 
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { postgresAdapter } from "@payloadcms/db-postgres";
 import { resendAdapter } from "@payloadcms/email-resend";
 import { payloadCloudPlugin } from "@payloadcms/payload-cloud";
@@ -7,10 +9,8 @@ import { lexicalEditor } from "@payloadcms/richtext-lexical";
 // storage-adapter-import-placeholder
 import { s3Storage } from "@payloadcms/storage-s3";
 import { vercelBlobStorage } from "@payloadcms/storage-vercel-blob";
-import path from "node:path";
 import { buildConfig, type Payload } from "payload";
 import sharp from "sharp";
-import { fileURLToPath } from "node:url";
 
 import { RESEND_FROM_EMAIL } from "@/config/constants";
 import { buildTimeFeatures } from "@/config/features-config";

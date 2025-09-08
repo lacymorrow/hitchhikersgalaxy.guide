@@ -1,12 +1,12 @@
 "use client";
-import type React from "react";
 import { default as NextLink, type LinkProps as NextLinkProps } from "next/link";
-import { Link as TransitionsLink } from "next-view-transitions";
 import { usePathname } from "next/navigation";
+import { Link as TransitionsLink } from "next-view-transitions";
+import type React from "react";
 import { useMemo } from "react";
+import type { ButtonProps } from "@/components/ui/button";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { siteConfig } from "@/config/site-config";
-import type { ButtonProps } from "@/components/ui/button";
 
 interface CustomLinkProps {
 	variant?: "default" | ButtonProps["variant"];
@@ -14,13 +14,23 @@ interface CustomLinkProps {
 	withTransition?: boolean;
 }
 
-type LinkProps = NextLinkProps & CustomLinkProps & { children: React.ReactNode } & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof NextLinkProps>;
+type LinkProps = NextLinkProps &
+	CustomLinkProps & { children: React.ReactNode } & Omit<
+		React.AnchorHTMLAttributes<HTMLAnchorElement>,
+		keyof NextLinkProps
+	>;
 
-export const Link = ({ children, variant = "default", withRedirect = false, withTransition, ...props }: LinkProps) => {
+export const Link = ({
+	children,
+	variant = "default",
+	withRedirect = false,
+	withTransition,
+	...props
+}: LinkProps) => {
 	const pathname = usePathname();
 
 	const href = useMemo(() => {
-		let newHref = typeof props.href === "string" ? props.href : props.href.href ?? "";
+		let newHref = typeof props.href === "string" ? props.href : (props.href.href ?? "");
 		if (withRedirect) {
 			const redirectTo = pathname;
 			if (redirectTo && typeof window !== "undefined") {

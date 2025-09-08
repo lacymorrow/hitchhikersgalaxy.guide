@@ -7,9 +7,9 @@ import "@/styles/builder-io.css";
 import { type BuilderContent, builder } from "@builder.io/sdk";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import type { PageBlock } from "@/types/blocks";
 import { BlockRenderer } from "../payload-blocks";
-import { Suspense } from "react";
 
 if (env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED && env.NEXT_PUBLIC_BUILDER_API_KEY) {
 	builder.init(env.NEXT_PUBLIC_BUILDER_API_KEY);

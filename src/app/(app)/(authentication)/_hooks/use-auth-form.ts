@@ -1,7 +1,7 @@
 import { useMemo } from "react";
-import { env } from "@/env";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
+import { env } from "@/env";
 
 export function useAuthForm(mode: "sign-in" | "sign-up", title?: string, description?: string) {
 	const isSignIn = mode === "sign-in";

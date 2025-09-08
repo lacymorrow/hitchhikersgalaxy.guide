@@ -1,5 +1,7 @@
 "use client";
 
+import { Check, HelpCircle, Minus } from "lucide-react";
+import { Fragment, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,15 +21,9 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
-import { Check, HelpCircle, Minus } from "lucide-react";
-import { Fragment, useState } from "react";
 
 const comparisonData = [
 	{
@@ -35,8 +31,7 @@ const comparisonData = [
 		features: [
 			{
 				name: "Next.js 15 App Router",
-				description:
-					"Latest Next.js features including server components, streaming, and more",
+				description: "Latest Next.js features including server components, streaming, and more",
 				bones: true,
 				muscles: true,
 				brains: true,
@@ -44,8 +39,7 @@ const comparisonData = [
 			},
 			{
 				name: "Authentication (NextAuth v5)",
-				description:
-					"Secure authentication with support for multiple providers and custom flows",
+				description: "Secure authentication with support for multiple providers and custom flows",
 				bones: true,
 				muscles: true,
 				brains: true,
@@ -60,8 +54,7 @@ const comparisonData = [
 			},
 			{
 				name: "Basic UI Components",
-				description:
-					"Pre-built, accessible components using Shadcn/UI and Radix",
+				description: "Pre-built, accessible components using Shadcn/UI and Radix",
 				bones: true,
 				muscles: true,
 				brains: true,
@@ -115,8 +108,7 @@ const comparisonData = [
 			},
 			{
 				name: "Payment Processing",
-				description:
-					"Lemon Squeezy integration with webhooks and subscription management",
+				description: "Lemon Squeezy integration with webhooks and subscription management",
 				bones: false,
 				muscles: true,
 				brains: true,
@@ -135,16 +127,14 @@ const comparisonData = [
 		features: [
 			{
 				name: "AI Workflows",
-				description:
-					"OpenAI integration with streaming responses and rate limiting",
+				description: "OpenAI integration with streaming responses and rate limiting",
 				bones: false,
 				muscles: true,
 				brains: true,
 			},
 			{
 				name: "Advanced Components",
-				description:
-					"Complex UI patterns, animations, and interactive elements",
+				description: "Complex UI patterns, animations, and interactive elements",
 				bones: false,
 				muscles: true,
 				brains: true,
@@ -274,26 +264,17 @@ const FeatureName = ({ name, description, badge }: FeatureNameProps) => (
 				<span>{name}</span>
 				{badge && (
 					<Badge
-						variant={
-							badge === "New"
-								? "default"
-								: badge === "Popular"
-									? "secondary"
-									: "outline"
-						}
+						variant={badge === "New" ? "default" : badge === "Popular" ? "secondary" : "outline"}
 						className={cn(
 							"h-5 text-xs",
-							badge === "Pro" &&
-							"bg-gradient-to-r from-indigo-500 to-purple-500",
+							badge === "Pro" && "bg-gradient-to-r from-indigo-500 to-purple-500"
 						)}
 					>
 						{badge}
 					</Badge>
 				)}
 			</div>
-			<span className="text-xs text-muted-foreground md:hidden">
-				{description}
-			</span>
+			<span className="text-xs text-muted-foreground md:hidden">{description}</span>
 		</div>
 		<Tooltip>
 			<TooltipTrigger className="hidden md:inline-flex">
@@ -317,18 +298,11 @@ export const FeaturesTable = () => {
 	const [selectedCategory, setSelectedCategory] = useState<CategoryType>("all");
 	const [filterType, setFilterType] = useState<FilterType>("all");
 	const [highlightType, setHighlightType] = useState<HighlightType>("none");
-	const [comparePlans, setComparePlans] = useState<PlanType[]>([
-		"bones",
-		"muscles",
-		"brains",
-	]);
+	const [comparePlans, setComparePlans] = useState<PlanType[]>(["bones", "muscles", "brains"]);
 
 	// Filter features based on search, category, and filter type
 	const filteredData = comparisonData
-		.filter(
-			(category) =>
-				selectedCategory === "all" || category.category === selectedCategory,
-		)
+		.filter((category) => selectedCategory === "all" || category.category === selectedCategory)
 		.map((category) => ({
 			...category,
 			features: category.features.filter((feature) => {
@@ -356,9 +330,7 @@ export const FeaturesTable = () => {
 		}))
 		.filter((category) => category.features.length > 0);
 
-	const shouldHighlight = (
-		feature: (typeof comparisonData)[0]["features"][0],
-	) => {
+	const shouldHighlight = (feature: (typeof comparisonData)[0]["features"][0]) => {
 		switch (highlightType) {
 			case "differences":
 				return !feature.bones || !feature.muscles || !feature.brains;
@@ -375,9 +347,7 @@ export const FeaturesTable = () => {
 
 	const togglePlanComparison = (plan: PlanType) => {
 		setComparePlans((current) =>
-			current.includes(plan)
-				? current.filter((p) => p !== plan)
-				: [...current, plan],
+			current.includes(plan) ? current.filter((p) => p !== plan) : [...current, plan]
 		);
 	};
 
@@ -434,9 +404,7 @@ export const FeaturesTable = () => {
 					{["bones", "muscles", "brains"].map((plan) => (
 						<Button
 							key={plan}
-							variant={
-								comparePlans.includes(plan as PlanType) ? "default" : "outline"
-							}
+							variant={comparePlans.includes(plan as PlanType) ? "default" : "outline"}
 							size="sm"
 							onClick={() => togglePlanComparison(plan as PlanType)}
 							className="capitalize"
@@ -459,9 +427,7 @@ export const FeaturesTable = () => {
 										{plan}
 									</TableHead>
 								))}
-							{isMobile && (
-								<TableHead className="text-center">Available</TableHead>
-							)}
+							{isMobile && <TableHead className="text-center">Available</TableHead>}
 						</TableRow>
 					</TableHeader>
 					<TableBody>
@@ -478,10 +444,7 @@ export const FeaturesTable = () => {
 								{category.features.map((feature) => (
 									<TableRow
 										key={feature.name}
-										className={cn(
-											shouldHighlight(feature) &&
-											"bg-primary/5 dark:bg-primary/10",
-										)}
+										className={cn(shouldHighlight(feature) && "bg-primary/5 dark:bg-primary/10")}
 									>
 										<TableCell>
 											<FeatureName
@@ -498,9 +461,7 @@ export const FeaturesTable = () => {
 															<Check
 																className={cn(
 																	"mx-auto h-4 w-4",
-																	shouldHighlight(feature)
-																		? "text-primary"
-																		: "text-green-500",
+																	shouldHighlight(feature) ? "text-primary" : "text-green-500"
 																)}
 															/>
 														) : (
@@ -513,18 +474,10 @@ export const FeaturesTable = () => {
 											<TableCell className="text-center">
 												<Badge
 													variant={
-														feature.brains
-															? "default"
-															: feature.muscles
-																? "secondary"
-																: "outline"
+														feature.brains ? "default" : feature.muscles ? "secondary" : "outline"
 													}
 												>
-													{feature.brains
-														? "All Plans"
-														: feature.muscles
-															? "Muscles+"
-															: "Bones+"}
+													{feature.brains ? "All Plans" : feature.muscles ? "Muscles+" : "Bones+"}
 												</Badge>
 											</TableCell>
 										)}

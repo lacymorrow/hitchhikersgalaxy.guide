@@ -115,10 +115,7 @@ export function Attribution({
 				<CardContent className="flex gap-2 justify-end mt-auto">{children}</CardContent>
 				<CardFooter className="mt-auto">
 					{href && (
-						<Link
-							href={href}
-							className={cn(buttonVariants({ variant: "outline" }), "w-full")}
-						>
+						<Link href={href} className={cn(buttonVariants({ variant: "outline" }), "w-full")}>
 							More...
 						</Link>
 					)}

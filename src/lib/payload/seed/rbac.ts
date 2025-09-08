@@ -1,4 +1,5 @@
 import { getPayloadClient } from "@/lib/payload/payload";
+
 // Do not import "server-only" here; this module must be runnable in Node scripts (db:sync)
 
 // Define common resources and actions

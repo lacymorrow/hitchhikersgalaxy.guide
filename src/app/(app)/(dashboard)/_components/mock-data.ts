@@ -1,4 +1,12 @@
-import { Download, Star, GitBranch, AlertCircle, GitPullRequest, Box, type LucideIcon } from "lucide-react";
+import {
+	AlertCircle,
+	Box,
+	Download,
+	GitBranch,
+	GitPullRequest,
+	type LucideIcon,
+	Star,
+} from "lucide-react";
 
 export const recentActivity = [
 	{

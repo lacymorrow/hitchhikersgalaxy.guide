@@ -1,11 +1,11 @@
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { Analytics as VercelAnalytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { ReactNode } from "react";
 import { WebVitals } from "@/components/primitives/web-vitals";
-import { UmamiAnalytics } from "@/lib/umami/umami-analytics";
-import { ShipkitStatsigProvider } from "@/lib/statsig/statsig-provider";
-import { GoogleTagManager, GoogleAnalytics } from '@next/third-parties/google'
 import { env } from "@/env";
+import { ShipkitStatsigProvider } from "@/lib/statsig/statsig-provider";
+import { UmamiAnalytics } from "@/lib/umami/umami-analytics";
 
 export const AnalyticsProvider = ({ children }: { children: ReactNode }) => {
 	return (

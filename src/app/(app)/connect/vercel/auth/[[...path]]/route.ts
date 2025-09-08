@@ -67,7 +67,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 		// Get the stored state from cookie instead
 		const cookieStore = request.cookies;
 		const storedState = cookieStore.get("vercel_oauth_state")?.value;
-		
+
 		if (!state || !storedState || state !== storedState) {
 			console.error("CSRF validation failed: state mismatch");
 			return NextResponse.redirect(constructRedirectUrl({ error: "invalid_state" }));
@@ -225,7 +225,9 @@ export async function GET(request: NextRequest, context: RouteContext) {
 		}
 
 		// Redirect back using the dynamic path with success message and clear CSRF cookie
-		const successResponse = NextResponse.redirect(constructRedirectUrl({ success: "vercel_connected" }));
+		const successResponse = NextResponse.redirect(
+			constructRedirectUrl({ success: "vercel_connected" })
+		);
 		successResponse.cookies.delete("vercel_oauth_state");
 		return successResponse;
 	} catch (error) {

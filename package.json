@@ -57,8 +57,6 @@
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build",
     "analyze:both": "cross-env BUNDLE_ANALYZE=both next build",
     "audit:lh": "tsx scripts/lighthouse/run.ts",
-    "audit:lh:mobile": "LH_PRESET=mobile tsx scripts/lighthouse/run.ts",
-    "audit:lh:loop": "tsx scripts/lighthouse/loop.ts",
     "audit:axe": "tsx scripts/a11y/axe.ts",
     "browser:open": "vibe-tools browser open \"http://localhost:3000\" --html --network --screenshot=.tmp/home.png",
     "browser:act": "URL=\"http://localhost:3000\" ACTION=\"interactive elements\" vibe-tools browser act \"$ACTION\" --url=$URL --html --network --screenshot=.tmp/act.png"

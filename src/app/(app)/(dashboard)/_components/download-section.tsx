@@ -3,15 +3,15 @@ import type { Session } from "next-auth";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
 import { BuyButton } from "@/components/buttons/lemonsqueezy-buy-button";
 import { LoginButton } from "@/components/buttons/sign-in-button";
+import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
+import { VercelConnectionCard } from "@/components/modules/deploy/vercel-connection-card";
 import { Button } from "@/components/ui/button";
 import { siteConfig } from "@/config/site-config";
 import { downloadRepo } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
 import { checkGitHubConnection } from "@/server/services/github/github-service";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
-import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
-import { VercelConnectionCard } from "@/components/modules/deploy/vercel-connection-card";
 
 interface DownloadSectionProps {
 	isCustomer: boolean;
@@ -67,8 +67,6 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
 				</form>
 
 				<DashboardVercelDeploy className="grow" isVercelConnected={isVercelConnected} />
-
-
 			</div>
 			{/* GitHub connection section */}
 			<GitHubConnectButton className="w-full" />

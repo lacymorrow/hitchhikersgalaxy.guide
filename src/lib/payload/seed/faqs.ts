@@ -1,6 +1,7 @@
 import { content } from "@/content/faq/faq-content.tsx";
 import { getPayloadClient } from "@/lib/payload/payload";
 import type { Faq } from "@/payload-types";
+
 // Do not import "server-only" here; this module must be runnable in Node scripts (db:sync)
 
 // Helper function to create rich text content

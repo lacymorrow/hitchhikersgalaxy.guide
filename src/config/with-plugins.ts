@@ -1,7 +1,7 @@
+import { fileURLToPath } from "node:url";
 import fs from "fs";
 import type { NextConfig } from "next";
 import path from "path";
-import { fileURLToPath } from "node:url";
 import { PLUGINS_DIR_URL } from "./nextjs";
 
 /**
@@ -11,10 +11,7 @@ import { PLUGINS_DIR_URL } from "./nextjs";
  * @param pluginsRelativeDir The directory path relative to the project root where plugins are located.
  * @returns The modified Next.js configuration object with plugins applied.
  */
-export function withPlugins(
-	initialConfig: NextConfig,
-	pluginsRelativeDir?: string
-): NextConfig {
+export function withPlugins(initialConfig: NextConfig, pluginsRelativeDir?: string): NextConfig {
 	let config = { ...initialConfig };
 	const pluginsDir = pluginsRelativeDir
 		? path.join(process.cwd(), pluginsRelativeDir)
@@ -24,15 +21,10 @@ export function withPlugins(
 		if (fs.existsSync(pluginsDir)) {
 			const pluginFiles = fs
 				.readdirSync(pluginsDir)
-				.filter((file) =>
-					/\.(t|j|mj|mt)s$/.test(file) &&
-					![
-						"index.ts",
-						"index.js",
-						"index.mts",
-						"index.mjs",
-						"index.cjs",
-					].includes(file)
+				.filter(
+					(file) =>
+						/\.(t|j|mj|mt)s$/.test(file) &&
+						!["index.ts", "index.js", "index.mts", "index.mjs", "index.cjs"].includes(file)
 				)
 				.sort(); // Apply plugins in alphabetical order
 

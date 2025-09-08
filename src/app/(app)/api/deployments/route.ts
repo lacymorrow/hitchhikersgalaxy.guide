@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/server/auth";
+import { type NextRequest, NextResponse } from "next/server";
 import { getUserDeployments } from "@/server/actions/deployment-actions";
+import { auth } from "@/server/auth";
 
 export async function GET(request: NextRequest) {
 	try {

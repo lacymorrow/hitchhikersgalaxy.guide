@@ -1,7 +1,7 @@
-import { type MigrateUpArgs, type MigrateDownArgs, sql } from '@payloadcms/db-postgres'
+import { type MigrateDownArgs, type MigrateUpArgs, sql } from "@payloadcms/db-postgres";
 
 export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
-  await db.execute(sql`
+	await db.execute(sql`
    CREATE TYPE "payload"."enum_pages_blocks_hero_style" AS ENUM('default', 'centered', 'split');
   CREATE TYPE "payload"."enum_pages_blocks_content_width" AS ENUM('default', 'wide', 'narrow');
   CREATE TYPE "payload"."enum_pages_blocks_content_background" AS ENUM('none', 'gray', 'accent');
@@ -350,11 +350,11 @@ export async function up({ db, payload, req }: MigrateUpArgs): Promise<void> {
   CREATE INDEX "payload_preferences_rels_path_idx" ON "payload"."payload_preferences_rels" USING btree ("path");
   CREATE INDEX "payload_preferences_rels_users_id_idx" ON "payload"."payload_preferences_rels" USING btree ("users_id");
   CREATE INDEX "payload_migrations_updated_at_idx" ON "payload"."payload_migrations" USING btree ("updated_at");
-  CREATE INDEX "payload_migrations_created_at_idx" ON "payload"."payload_migrations" USING btree ("created_at");`)
+  CREATE INDEX "payload_migrations_created_at_idx" ON "payload"."payload_migrations" USING btree ("created_at");`);
 }
 
 export async function down({ db, payload, req }: MigrateDownArgs): Promise<void> {
-  await db.execute(sql`
+	await db.execute(sql`
    DROP TABLE "payload"."users" CASCADE;
   DROP TABLE "payload"."rbac" CASCADE;
   DROP TABLE "payload"."media" CASCADE;
@@ -390,5 +390,5 @@ export async function down({ db, payload, req }: MigrateDownArgs): Promise<void>
   DROP TYPE "payload"."enum_features_badge";
   DROP TYPE "payload"."enum_rbac_type";
   DROP TYPE "payload"."enum_rbac_resource";
-  DROP TYPE "payload"."enum_rbac_action";`)
+  DROP TYPE "payload"."enum_rbac_action";`);
 }

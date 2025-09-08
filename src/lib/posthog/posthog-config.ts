@@ -1,1 +1,1 @@
-export const POSTHOG_RELAY_SLUG = "relay-ediD"
+export const POSTHOG_RELAY_SLUG = "relay-ediD";

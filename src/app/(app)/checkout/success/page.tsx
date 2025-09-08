@@ -1,16 +1,17 @@
 import { DownloadIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import { LoginButton } from "@/components/buttons/sign-in-button";
 import { Link } from "@/components/primitives/link";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { ConfettiSideCannons } from "@/components/ui/magicui/confetti/confetti-side-cannons";
-import dynamic from "next/dynamic";
 
 // Dynamically import SparklesCore for better performance
 const SparklesCore = dynamic(
 	() => import("@/components/ui/sparkles").then((mod) => mod.SparklesCore),
 	{ ssr: false }
 );
+
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { logger } from "@/lib/logger";

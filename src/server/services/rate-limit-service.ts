@@ -1,9 +1,9 @@
 import { Ratelimit } from "@upstash/ratelimit";
 import { Redis } from "@upstash/redis";
+import { rateLimits as globalRateLimits } from "@/config/rate-limits";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { ErrorService } from "./error-service";
-import { rateLimits as globalRateLimits } from "@/config/rate-limits";
 
 // Try to create Redis instance if configured
 let redis: Redis | null = null;
@@ -63,7 +63,7 @@ export class RateLimitService {
 
 	/**
 	 * Checks if a request should be rate limited
-	 */	async checkLimit(identifier: string, action: string, config: RateLimitConfig): Promise<void> {
+	 */ async checkLimit(identifier: string, action: string, config: RateLimitConfig): Promise<void> {
 		// Skip rate limiting if Redis is not available
 		if (!this.enabled) {
 			logger.debug("Rate limiting disabled, skipping check", {
@@ -87,7 +87,7 @@ export class RateLimitService {
 
 	/**
 	 * Gets the current rate limit status
-	 */	async getStatus(
+	 */ async getStatus(
 		identifier: string,
 		action: string
 	): Promise<{
@@ -121,7 +121,7 @@ export class RateLimitService {
 
 	/**
 	 * Resets rate limit for a specific identifier and action
-	 */	async resetLimit(identifier: string, action: string): Promise<void> {
+	 */ async resetLimit(identifier: string, action: string): Promise<void> {
 		if (!this.enabled) return;
 
 		const key = `ratelimit:${action}:${identifier}`;

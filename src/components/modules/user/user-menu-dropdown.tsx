@@ -147,7 +147,11 @@ export function UserMenuDropdown({
 					</DropdownMenuItem>
 					{showOnboarding && (
 						<DropdownMenuItem asChild>
-							<RestartOnboardingButton user={user} className="w-full justify-start" forceVisible={isAdmin} />
+							<RestartOnboardingButton
+								user={user}
+								className="w-full justify-start"
+								forceVisible={isAdmin}
+							/>
 						</DropdownMenuItem>
 					)}
 

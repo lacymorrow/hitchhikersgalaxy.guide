@@ -113,14 +113,14 @@ async function main() {
 
 	// Handle replacement of individual keys in the object
 	// Name
-	afterConfig = afterConfig.replace(/\n\s*name: \"([^\"]+)\"/, `\n\tname: "${projectName}"`);
+	afterConfig = afterConfig.replace(/\n\s*name: "([^"]+)"/, `\n\tname: "${projectName}"`);
 
 	// URL
-	afterConfig = afterConfig.replace(/\n\s*url: \"([^\"]+)\"/, `\n\turl: "https://${domain}"`);
+	afterConfig = afterConfig.replace(/\n\s*url: "([^"]+)"/, `\n\turl: "https://${domain}"`);
 
 	// OG Image
 	afterConfig = afterConfig.replace(
-		/\n\s*ogImage: \"([^\"]+)\"/,
+		/\n\s*ogImage: "([^"]+)"/,
 		`\n\togImage: "https://${domain}/og"`
 	);
 
@@ -157,7 +157,7 @@ async function main() {
 	afterConfig = afterConfig.replace(creatorPattern, newCreator);
 
 	// Metadata keywords
-	const keywordsPattern = /\n\s*keywords: \[\s*["\s\S]*?\n\s*\]/; 
+	const keywordsPattern = /\n\s*keywords: \[\s*["\s\S]*?\n\s*\]/;
 	const newKeywords = `
 		keywords: [
 			"Next.js",
@@ -179,14 +179,14 @@ async function main() {
 	let envExample = fs.readFileSync(envExamplePath, "utf8");
 
 	envExample = envExample.replace(
-		/DATABASE_URL=\"postgresql:\/\/postgres:password@localhost:5432\/([^\"]+)\"/,
-		`DATABASE_URL=\"postgresql://postgres:password@localhost:5432/${databaseName}"`
+		/DATABASE_URL="postgresql:\/\/postgres:password@localhost:5432\/([^"]+)"/,
+		`DATABASE_URL="postgresql://postgres:password@localhost:5432/${databaseName}"`
 	);
 
 	const packageJsonPath = path.join(process.cwd(), "package.json");
 	let packageJson = fs.readFileSync(packageJsonPath, "utf8");
 
-	packageJson = packageJson.replace(/\"name\":\s*\"([^\"]+)\"/, `\"name\": "${projectSlug}"`);
+	packageJson = packageJson.replace(/"name":\s*"([^"]+)"/, `"name": "${projectSlug}"`);
 
 	// If dry run, just show what would be changed
 	if (isDryRun) {

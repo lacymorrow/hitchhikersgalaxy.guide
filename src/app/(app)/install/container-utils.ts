@@ -739,7 +739,6 @@ export class ContainerManager {
 							setTimeout(() => resolve({ done: false, value: null }), 1000);
 						});
 
-						
 						const result = await Promise.race([readPromise, timeoutPromise]);
 
 						if (result.done) {

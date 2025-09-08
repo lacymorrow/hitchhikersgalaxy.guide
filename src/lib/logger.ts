@@ -1,6 +1,6 @@
+import { trace as otelTrace, type Span, SpanStatusCode, type Tracer } from "@opentelemetry/api";
 import pc from "@/lib/utils/pico-colors";
 import type { LogData, LogLevel } from "@/types/logger";
-import { type Span, SpanStatusCode, type Tracer, trace as otelTrace } from "@opentelemetry/api";
 
 const tracer: Tracer = otelTrace.getTracer("bones-nextjs-app");
 
@@ -38,7 +38,9 @@ const _createLogger =
 			span.setStatus({ code: SpanStatusCode.ERROR });
 		}
 
-		const metadata = args.find((arg) => typeof arg === "object" && !(arg instanceof Error)) as Record<string, unknown> | undefined;
+		const metadata = args.find((arg) => typeof arg === "object" && !(arg instanceof Error)) as
+			| Record<string, unknown>
+			| undefined;
 		if (metadata) {
 			Object.entries(metadata).forEach(([key, value]) => {
 				span.setAttribute(`log.metadata.${key}`, JSON.stringify(value));

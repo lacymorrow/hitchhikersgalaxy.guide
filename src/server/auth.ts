@@ -46,7 +46,7 @@ const {
 	signOut,
 	unstable_update: update,
 } = buildTimeFeatures.AUTH_ENABLED
-		? NextAuth({
+	? NextAuth({
 			...authOptions,
 			secret: env.AUTH_SECRET ?? "supersecretshipkit",
 			// Override session strategy based on adapter usage
@@ -57,11 +57,11 @@ const {
 			// Use database adapter only when not in guest-only mode and database is available
 			adapter: shouldUseDatabaseAdapter
 				? DrizzleAdapter(db as any, {
-					usersTable: users,
-					accountsTable: accounts,
-					sessionsTable: sessions,
-					verificationTokensTable: verificationTokens,
-				})
+						usersTable: users,
+						accountsTable: accounts,
+						sessionsTable: sessions,
+						verificationTokensTable: verificationTokens,
+					})
 				: undefined,
 			logger: {
 				error: (code: Error, ...message: unknown[]) => {
@@ -75,7 +75,7 @@ const {
 				},
 			},
 		})
-		: {
+	: {
 			auth: () => Promise.resolve(null),
 			handlers: {
 				GET: async (request: Request) => {

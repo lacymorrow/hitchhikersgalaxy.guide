@@ -1,15 +1,26 @@
-import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/primitives/page-header";
-import { Badge } from "@/components/ui/badge";
-import { DownloadSection } from "@/app/(app)/(dashboard)/_components/download-section";
-import { OnboardingCheck } from "@/components/modules/onboarding/onboarding-check";
-import { StatsCards } from "@/app/(app)/(dashboard)/_components/stats-cards";
-import { RecentActivity } from "@/app/(app)/(dashboard)/_components/recent-activity";
-import { QuickActions } from "@/app/(app)/(dashboard)/_components/quick-actions";
 import { DashboardTabs } from "@/app/(app)/(dashboard)/_components/dashboard-tabs";
+import { DownloadSection } from "@/app/(app)/(dashboard)/_components/download-section";
+import { QuickActions } from "@/app/(app)/(dashboard)/_components/quick-actions";
+import { RecentActivity } from "@/app/(app)/(dashboard)/_components/recent-activity";
+import { StatsCards } from "@/app/(app)/(dashboard)/_components/stats-cards";
+import { OnboardingCheck } from "@/components/modules/onboarding/onboarding-check";
+import {
+	PageHeader,
+	PageHeaderDescription,
+	PageHeaderHeading,
+} from "@/components/primitives/page-header";
+import { Badge } from "@/components/ui/badge";
 import { useDashboardData } from "./_hooks/use-dashboard-data";
 
 export default async function DashboardPage() {
-	const { session, isUserAdmin, hasGitHubConnection, hasVercelConnection, isCustomer, isSubscribed } = await useDashboardData();
+	const {
+		session,
+		isUserAdmin,
+		hasGitHubConnection,
+		hasVercelConnection,
+		isCustomer,
+		isSubscribed,
+	} = await useDashboardData();
 
 	return (
 		<div className="container mx-auto py-6 space-y-4">

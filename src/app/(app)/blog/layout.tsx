@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
-import { BlogHero } from "@/components/modules/blog/hero";
 import { BlogSidebar } from "@/components/layouts/blog-sidebar";
+import { BlogHero } from "@/components/modules/blog/hero";
 import { getBlogPosts } from "@/lib/blog";
 import "@/styles/blog.css";
 

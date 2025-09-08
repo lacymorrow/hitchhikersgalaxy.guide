@@ -23,7 +23,7 @@ const allProviderDetails = [
 type FeatureFlagKey = Extract<keyof typeof env, `NEXT_PUBLIC_FEATURE_AUTH_${string}_ENABLED`>;
 
 // Helper object to map feature flag names to provider IDs
-const flagToProviderId: { [K in FeatureFlagKey]?: string } = {
+const flagToProviderId: Partial<Record<FeatureFlagKey, string>> = {
 	NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED: "google",
 	NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED: "twitter",
 	NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED: "discord",
@@ -75,11 +75,11 @@ export const enabledAuthProviders = availableProviderDetails.map((provider) => {
 	// Add the exclusion flag for UI purposes
 	const isExcluded = EXCLUDED_PROVIDERS_UI.includes(provider.id);
 	return { ...provider, isExcluded };
-}) as Array<{
+}) as {
 	id: string;
 	name: string;
 	isExcluded: boolean;
-}>;
+}[];
 
 // Helper to check if only guest authentication is available
 // Requires explicit guest flag AND no other authentication methods

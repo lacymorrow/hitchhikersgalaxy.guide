@@ -14,10 +14,7 @@ export interface IntegrationStatus {
 }
 
 // Define the structure for the categorized result
-export interface CategorizedIntegrationStatuses {
-	// Export interface
-	[category: string]: IntegrationStatus[];
-}
+export type CategorizedIntegrationStatuses = Record<string, IntegrationStatus[]>;
 
 /**
  * Service function to check the configuration status of various integrations,

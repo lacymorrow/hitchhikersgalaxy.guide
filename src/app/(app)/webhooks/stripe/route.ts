@@ -57,7 +57,7 @@ export async function POST(request: Request) {
 		// Handle different webhook events
 		switch (event.type) {
 			case "checkout.session.completed": {
-				const session = event.data.object as Stripe.Checkout.Session;
+				const session = event.data.object;
 				logger.debug("Processing checkout session completed", { sessionId: session.id });
 
 				if (session.payment_status === "paid" && session.customer) {
@@ -111,7 +111,7 @@ export async function POST(request: Request) {
 			}
 
 			case "payment_intent.succeeded": {
-				const paymentIntent = event.data.object as Stripe.PaymentIntent;
+				const paymentIntent = event.data.object;
 				logger.debug("Processing payment intent succeeded", {
 					paymentIntentId: paymentIntent.id,
 				});
@@ -179,7 +179,7 @@ export async function POST(request: Request) {
 
 			case "customer.subscription.created":
 			case "customer.subscription.updated": {
-				const subscription = event.data.object as Stripe.Subscription;
+				const subscription = event.data.object;
 				logger.debug("Processing subscription event", {
 					subscriptionId: subscription.id,
 					status: subscription.status,
@@ -267,7 +267,7 @@ export async function POST(request: Request) {
 			}
 
 			case "invoice.payment_succeeded": {
-				const invoice = event.data.object as Stripe.Invoice;
+				const invoice = event.data.object;
 				logger.debug("Processing invoice payment succeeded", { invoiceId: invoice.id });
 
 				if (invoice.customer) {

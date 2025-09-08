@@ -10,9 +10,7 @@ export interface ProjectStructure {
 		server: string[];
 		config: string[];
 	};
-	keyFiles: {
-		[key: string]: string;
-	};
+	keyFiles: Record<string, string>;
 }
 
 export interface TechnologyStack {

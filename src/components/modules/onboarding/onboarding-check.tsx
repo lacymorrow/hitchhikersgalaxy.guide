@@ -48,7 +48,7 @@ export function OnboardingCheck({
 		// 1. User has purchased the starter kit
 		// 2. Onboarding hasn't been completed yet
 		// 3. We have a valid userId
-		if (hasPurchased && userId && (!onboardingState || !onboardingState.completed)) {
+		if (hasPurchased && userId && !onboardingState?.completed) {
 			setShowOnboarding(true);
 		}
 	}, [hasPurchased, userId, onboardingState]);

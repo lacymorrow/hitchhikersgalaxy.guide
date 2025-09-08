@@ -65,10 +65,10 @@ export class ContainerManager {
 	private isReady = false;
 
 	/** File system snapshot taken before operations to track changes */
-	private fileSystemSnapshotBefore: Map<string, string> = new Map();
+	private fileSystemSnapshotBefore = new Map<string, string>();
 
 	/** File system snapshot taken after operations to track changes */
-	private fileSystemSnapshotAfter: Map<string, string> = new Map();
+	private fileSystemSnapshotAfter = new Map<string, string>();
 
 	/** List of files that have been modified during container operations */
 	private changedFiles: ContainerFile[] = [];
@@ -544,7 +544,7 @@ export class ContainerManager {
 
 				// Skip spinner animations which are often used for "Installing dependencies"
 				// The ora spinner package uses these characters: ⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏
-				if (text.match(/[⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏]/) && lowerText.includes("installing")) {
+				if (/[⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏]/.exec(text) && lowerText.includes("installing")) {
 					// This is most likely a spinner animation - not a completion indicator
 					// Update the last activity time to prevent timeout
 					lastOutputTime = Date.now();
@@ -552,7 +552,7 @@ export class ContainerManager {
 				}
 
 				// Skip ANSI color/cursor control sequences (used by spinners and progress indicators)
-				if (text.includes("\u001b[") || text.match(/\[\d+[A-Z]/)) {
+				if (text.includes("\u001b[") || /\[\d+[A-Z]/.exec(text)) {
 					// These are terminal control sequences, not actual completion indicators
 					return false;
 				}
@@ -561,7 +561,7 @@ export class ContainerManager {
 				if (
 					lowerText.trim() === "installing dependencies." ||
 					lowerText.includes("installing dependencies...") ||
-					lowerText.match(/installing dependencies/i)
+					/installing dependencies/i.exec(lowerText)
 				) {
 					// Update the last activity time to prevent timeout since we know work is happening
 					lastOutputTime = Date.now();
@@ -939,7 +939,7 @@ export class ContainerManager {
 
 				for (const entry of entries) {
 					// Skip if entry is null or undefined
-					if (!entry || !entry.name) {
+					if (!entry?.name) {
 						logInfo(`Skipping invalid entry in ${dirPath}`);
 						continue;
 					}
@@ -1066,7 +1066,7 @@ export function cn(...inputs: ClassValue[]) {
 	private async takeFileSystemSnapshot(): Promise<Map<string, string>> {
 		const snapshot = new Map<string, string>();
 
-		if (!this.container || !this.container.fs) {
+		if (!this.container?.fs) {
 			logInfo("Container or filesystem not available for snapshot");
 			return snapshot;
 		}

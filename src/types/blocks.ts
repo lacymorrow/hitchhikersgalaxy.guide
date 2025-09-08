@@ -1,6 +1,6 @@
 import type { Media } from "@/payload-types";
 
-export type HeroBlock = {
+export interface HeroBlock {
 	blockType: "hero";
 	heading: string;
 	subheading?: string;
@@ -8,16 +8,16 @@ export type HeroBlock = {
 	ctaText?: string;
 	ctaLink?: string;
 	style?: "default" | "centered" | "split";
-};
+}
 
-export type ContentBlock = {
+export interface ContentBlock {
 	blockType: "content";
 	content: any; // Lexical editor content
 	width?: "default" | "wide" | "narrow";
 	background?: "none" | "gray" | "accent";
-};
+}
 
-export type FeaturesBlock = {
+export interface FeaturesBlock {
 	blockType: "features";
 	heading?: string;
 	features: {
@@ -26,9 +26,9 @@ export type FeaturesBlock = {
 	}[];
 	layout?: "grid" | "list" | "carousel";
 	columns?: "2" | "3" | "4";
-};
+}
 
-export type TestimonialsBlock = {
+export interface TestimonialsBlock {
 	blockType: "testimonials";
 	heading?: string;
 	testimonials: {
@@ -37,7 +37,7 @@ export type TestimonialsBlock = {
 	}[];
 	layout?: "grid" | "slider" | "single";
 	background?: "none" | "light" | "dark";
-};
+}
 
 export type PageBlock = HeroBlock | ContentBlock | FeaturesBlock | TestimonialsBlock;
 

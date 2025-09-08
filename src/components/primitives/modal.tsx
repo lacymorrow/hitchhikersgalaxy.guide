@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
 import { useEffect, useMemo } from "react";
 import { Button } from "@/components/ui/button";
@@ -32,6 +32,7 @@ interface DrawerDialogProps {
 	dialogDescription?: string;
 	open?: boolean;
 	onOpenChange?: (open: boolean) => void;
+	autoCloseOnRouteChange?: boolean;
 	children: React.ReactNode;
 	className?: string;
 }
@@ -45,12 +46,15 @@ export function Modal({
 	open,
 	children,
 	onOpenChange,
+	autoCloseOnRouteChange = true,
 	className,
 	...props
 }: DrawerDialogProps) {
 	const router = useRouter();
+	const pathname = usePathname();
 	const [isMobile, setIsMobile] = React.useState(true);
 	const [isOpen, setIsOpen] = React.useState(typeof open === "undefined" ? true : open);
+	const closingDueToRouteChange = React.useRef(false);
 
 	// Responsive breakpoint for mobile
 	useEffect(() => {
@@ -61,6 +65,19 @@ export function Modal({
 	// @see https://nextjs.org/docs/app/building-your-application/routing/parallel-routes#modals
 	const debouncedRouteBack = useMemo(() => debounce(() => router.back(), 300), [router]);
 
+	// When the route path changes (e.g., navigating from one intercepted modal to another),
+	// close the current modal without triggering router.back(). This prevents canceling
+	// the forward navigation initiated by the new link.
+	useEffect(() => {
+		if (!autoCloseOnRouteChange) return;
+		closingDueToRouteChange.current = true;
+		setIsOpen(false);
+		const timeoutId = setTimeout(() => {
+			closingDueToRouteChange.current = false;
+		}, 400);
+		return () => clearTimeout(timeoutId);
+	}, [pathname, autoCloseOnRouteChange]);
+
 	const handleOpenChange = (open: boolean) => {
 		setIsOpen(open);
 
@@ -68,7 +85,7 @@ export function Modal({
 			return onOpenChange(open);
 		}
 
-		if (!open && routeBack) {
+		if (!open && routeBack && !closingDueToRouteChange.current) {
 			debouncedRouteBack();
 		}
 	};

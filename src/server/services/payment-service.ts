@@ -672,7 +672,7 @@ const PaymentService = {
 						// Fallback to metadata extraction for legacy payments
 						try {
 							if (payment.metadata) {
-								const metadata = JSON.parse(payment.metadata as string);
+								const metadata = JSON.parse(payment.metadata);
 
 								// Enhanced product name extraction from multiple possible fields
 								productName =
@@ -968,7 +968,7 @@ const PaymentService = {
 					await Promise.all(statusPromises);
 
 					const hadSubscription = user.metadata
-						? JSON.parse(user.metadata as string)?.hadSubscription || false
+						? JSON.parse(user.metadata)?.hadSubscription || false
 						: false;
 
 					// Get the last purchase date

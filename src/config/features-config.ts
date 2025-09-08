@@ -27,6 +27,69 @@ export function envIsTrue(name: string): boolean {
 	return ["true", "1", "yes", "on", "enable", "enabled"].includes(value ?? "");
 }
 
+// ======== Public Env Mirrors =========
+/**
+ * Mirror server-side public keys to NEXT_PUBLIC_ variants at build time.
+ * This allows users to set e.g. STRIPE_PUBLISHABLE_KEY and have
+ * NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY generated automatically for the client bundle.
+ *
+ * Security: Only whitelisted keys that are intended to be public are mirrored.
+ */
+const PUBLIC_ENV_BASE_KEYS = [
+	// Core integrations that expect public keys
+	"BUILDER_API_KEY",
+	"CLERK_PUBLISHABLE_KEY",
+	"SUPABASE_URL",
+	"SUPABASE_ANON_KEY",
+	"STRIPE_PUBLISHABLE_KEY",
+	// Analytics / Telemetry
+	"POSTHOG_KEY",
+	"UMAMI_WEBSITE_ID",
+	"STATSIG_CLIENT_KEY",
+	"GOOGLE_ANALYTICS_ID",
+	"GOOGLE_GTM_ID",
+	// Consent / Privacy
+	"C15T_URL",
+];
+
+function getEnvValue(name: string): string | undefined {
+	const value = process.env[name];
+	if (typeof value !== "string") return undefined;
+	const trimmed = value.trim();
+	return trimmed.length > 0 ? trimmed : undefined;
+}
+
+function mirrorPublicEnvVariables(): Record<`NEXT_PUBLIC_${string}`, string> {
+	const mirrored: Record<`NEXT_PUBLIC_${string}`, string> = {} as Record<
+		`NEXT_PUBLIC_${string}`,
+		string
+	>;
+
+	for (const base of PUBLIC_ENV_BASE_KEYS) {
+		const publicKey = `NEXT_PUBLIC_${base}` as const;
+
+		// Prefer explicitly provided NEXT_PUBLIC_ value if present
+		const explicitPublic = getEnvValue(publicKey);
+		if (explicitPublic) {
+			mirrored[publicKey] = explicitPublic;
+			continue;
+		}
+
+		// Otherwise, mirror from server-side base key if present
+		const serverValue = getEnvValue(base);
+		if (serverValue) {
+			// Make it available during this build process
+			process.env[publicKey] = serverValue;
+			mirrored[publicKey] = serverValue;
+		}
+	}
+
+	return mirrored;
+}
+
+// Execute mirroring immediately so feature detection below can see NEXT_PUBLIC_* keys
+export const buildTimePublicEnv = mirrorPublicEnvVariables();
+
 // ======== Feature Detection =========
 
 const buildTimeFeatures = {} as Record<string, boolean>;

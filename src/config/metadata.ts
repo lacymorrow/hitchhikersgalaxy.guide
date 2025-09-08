@@ -97,6 +97,21 @@ export const viewport: Viewport = {
 	],
 };
 
+export interface HeadLinkHint {
+	rel: string;
+	href: string;
+	crossOrigin?: "anonymous" | "use-credentials";
+}
+
+// Shared head link hints used by both App and Pages routers
+export const headLinkHints: readonly HeadLinkHint[] = [
+	{ rel: "preconnect", href: "https://fonts.googleapis.com" },
+	{ rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+	{ rel: "dns-prefetch", href: "https://vercel.com" },
+	{ rel: "dns-prefetch", href: "https://api.github.com" },
+	{ rel: "dns-prefetch", href: "https://cdn.jsdelivr.net" },
+] as const;
+
 type ConstructMetadataProps = Metadata & {
 	images?: { url: string; width: number; height: number; alt: string }[];
 	noIndex?: boolean;
@@ -119,7 +134,7 @@ export const constructMetadata = ({
 			// Assign the extracted title string or fallback
 			title: metaTitleString ?? defaultMetaTitleString,
 			// Ensure description is not null
-			description: (metadata.description ?? defaultMetadata.description) || undefined,
+			description: (metadata.description ?? defaultMetadata.description) ?? undefined,
 			images: images.length > 0 ? images : defaultOpenGraph.images,
 		},
 		twitter: {
@@ -127,7 +142,7 @@ export const constructMetadata = ({
 			// Assign the extracted title string or fallback
 			title: metaTitleString ?? defaultMetaTitleString,
 			// Ensure description is not null
-			description: (metadata.description ?? defaultMetadata.description) || undefined,
+			description: (metadata.description ?? defaultMetadata.description) ?? undefined,
 			images: images.length > 0 ? images : defaultTwitter.images,
 		},
 		robots: noIndex ? { index: false, follow: true } : defaultMetadata.robots,

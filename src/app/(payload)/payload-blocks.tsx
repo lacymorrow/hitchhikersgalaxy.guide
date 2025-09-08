@@ -19,13 +19,13 @@ interface BlockRendererProps {
 const renderBlock = (block: PageBlock) => {
 	switch (block.blockType) {
 		case "hero":
-			return <Hero key={uuidv4()} block={block as HeroBlock} />;
+			return <Hero key={uuidv4()} block={block} />;
 		case "content":
-			return <Content key={uuidv4()} block={block as ContentBlock} />;
+			return <Content key={uuidv4()} block={block} />;
 		case "features":
-			return <Features key={uuidv4()} block={block as FeaturesBlock} />;
+			return <Features key={uuidv4()} block={block} />;
 		case "testimonials":
-			return <Testimonials key={uuidv4()} block={block as TestimonialsBlock} />;
+			return <Testimonials key={uuidv4()} block={block} />;
 		default:
 			return null;
 	}

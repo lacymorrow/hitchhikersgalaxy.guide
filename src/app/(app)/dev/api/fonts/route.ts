@@ -6,7 +6,7 @@ interface GoogleFontApiItem {
 	subsets: string[];
 	version: string;
 	lastModified: string;
-	files: { [key: string]: string };
+	files: Record<string, string>;
 	category: string;
 	kind: string;
 }

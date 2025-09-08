@@ -264,7 +264,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 				// Filter subscriptions for this user
 				const userSubscriptions =
 					response?.data?.data?.filter((subscription: any) => {
-						const attributes = subscription.attributes as any;
+						const attributes = subscription.attributes;
 						const customData = attributes.custom_data || {};
 
 						// Check if either the user ID matches or the email matches
@@ -276,7 +276,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 
 				// Check if any subscription is active
 				const hasActiveSubscription = userSubscriptions.some((subscription: any) => {
-					const attributes = subscription.attributes as any;
+					const attributes = subscription.attributes;
 					return attributes.status === "active";
 				});
 
@@ -734,7 +734,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 		}
 
 		// Extract product information
-		const orderAttributes = order.attributes as any;
+		const orderAttributes = order.attributes;
 		const firstOrderItem = orderAttributes.first_order_item;
 
 		// Create payment metadata

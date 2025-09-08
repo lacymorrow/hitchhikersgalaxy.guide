@@ -9,22 +9,22 @@ import { getFileStats, getFileTree } from "./actions";
 import { FileStats } from "./file-stats";
 import { File, Folder, Tree } from "./file-tree";
 
-export type FileNode = {
+export interface FileNode {
 	name: string;
 	path: string;
 	type: "file" | "directory";
 	children?: FileNode[];
 	size?: number;
 	modifiedAt?: string;
-};
+}
 
-type TreeElement = {
+interface TreeElement {
 	id: string;
 	isSelectable: true;
 	name: string;
 	path: string;
 	children?: TreeElement[];
-};
+}
 
 const convertToTreeElements = (nodes: FileNode[], parentPath = ""): TreeElement[] => {
 	return nodes.map((node, index) => {

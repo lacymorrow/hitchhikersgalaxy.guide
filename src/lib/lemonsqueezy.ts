@@ -403,7 +403,7 @@ export const hasUserActiveSubscription = async (userId: string): Promise<boolean
 			// Filter subscriptions for this user
 			const userSubscriptions =
 				response?.data?.data?.filter((subscription: any) => {
-					const attributes = subscription.attributes as any;
+					const attributes = subscription.attributes;
 					const customData = attributes.custom_data || {};
 
 					// Check if either the user ID matches or the email matches
@@ -415,7 +415,7 @@ export const hasUserActiveSubscription = async (userId: string): Promise<boolean
 
 			// Check if any subscription is active
 			const hasActiveSubscription = userSubscriptions.some((subscription: any) => {
-				const attributes = subscription.attributes as any;
+				const attributes = subscription.attributes;
 				return attributes.status === "active";
 			});
 

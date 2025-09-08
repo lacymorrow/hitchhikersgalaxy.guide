@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
 	}
 
 	if (email && orderId) {
-		const orders = await getOrdersByEmail(email as string);
+		const orders = await getOrdersByEmail(email);
 		const order = orders?.find((order) => order.attributes.identifier === orderId);
 
 		if (!order) {

@@ -30,7 +30,7 @@ export async function getGitHubAccessToken(userId?: string): Promise<string | nu
 
 		// Fallback: check user metadata
 		const user = await db?.query.users.findFirst({
-			where: eq(users.id, userId!),
+			where: eq(users.id, userId),
 		});
 
 		if (user?.metadata) {
@@ -77,7 +77,7 @@ export async function getGitHubUsername(userId?: string): Promise<string | null>
 
 		// Get the user's GitHub username
 		const user = await db?.query.users.findFirst({
-			where: eq(users.id, userId!),
+			where: eq(users.id, userId),
 		});
 
 		return user?.githubUsername || null;

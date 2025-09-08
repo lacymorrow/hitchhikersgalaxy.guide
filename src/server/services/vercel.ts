@@ -52,7 +52,7 @@ export async function saveVercelDeployment(deploymentInfo: DeploymentInfo) {
 		});
 
 		if (existing.docs.length > 0) {
-			return existing.docs[0] as VercelDeployment; // Return the existing one
+			return existing.docs[0]; // Return the existing one
 		}
 
 		// Create new deployment record
@@ -71,7 +71,7 @@ export async function saveVercelDeployment(deploymentInfo: DeploymentInfo) {
 			},
 		});
 
-		return newDeployment as VercelDeployment;
+		return newDeployment;
 	} catch (error) {
 		console.error("Error saving Vercel deployment info:", error);
 		return null;

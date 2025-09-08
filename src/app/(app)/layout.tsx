@@ -1,13 +1,14 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import React from "react";
 
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { Body } from "@/components/primitives/body";
-import { metadata as defaultMetadata } from "@/config/metadata";
+import { headLinkHints, type HeadLinkHint, metadata as defaultMetadata, viewport as sharedViewport } from "@/config/metadata";
 import { initializePaymentProviders } from "@/server/providers";
 
 export const metadata: Metadata = defaultMetadata;
 export const fetchCache = "default-cache";
+export const viewport: Viewport = sharedViewport;
 
 await initializePaymentProviders();
 
@@ -35,16 +36,11 @@ export default async function Layout({
 	).filter((item): item is [string, React.ReactNode] => item !== null);
 
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
 			<head>
-				{/* Preconnect to Google Fonts for better font loading performance */}
-				<link rel="preconnect" href="https://fonts.googleapis.com" />
-				<link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-
-				{/* DNS prefetch for common external resources */}
-				<link rel="dns-prefetch" href="https://vercel.com" />
-				<link rel="dns-prefetch" href="https://api.github.com" />
-				<link rel="dns-prefetch" href="https://cdn.jsdelivr.net" />
+				{headLinkHints.map((l: HeadLinkHint) => (
+					<link key={`${l.rel}-${l.href}`} rel={l.rel} href={l.href} crossOrigin={l.crossOrigin} />
+				))}
 			</head>
 			<Body>
 				<AppRouterLayout>

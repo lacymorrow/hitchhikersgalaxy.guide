@@ -15,9 +15,7 @@ interface IntegrationStatus {
 }
 
 // Type for the categorized data structure
-interface CategorizedIntegrationStatuses {
-	[category: string]: IntegrationStatus[];
-}
+type CategorizedIntegrationStatuses = Record<string, IntegrationStatus[]>;
 
 // Make the page component async
 export default async function IntegrationsPage() {

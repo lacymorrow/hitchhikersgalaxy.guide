@@ -455,7 +455,7 @@ async function handleSubscriptionPayment(
 ): Promise<void> {
 	const { data, meta } = payload;
 	// subscription_payment_* events have subscription_invoice data type
-	const attributes = data.attributes as any;
+	const attributes = data.attributes;
 
 	logger.info(`Processing ${eventName} webhook`, {
 		subscriptionId: attributes.subscription_id,

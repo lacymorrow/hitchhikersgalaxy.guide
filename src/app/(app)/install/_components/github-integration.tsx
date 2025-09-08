@@ -10,7 +10,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
 interface GitHubIntegrationProps {
-	changedFiles: Array<{ path: string; content: string }>;
+	changedFiles: { path: string; content: string }[];
 	disabled?: boolean;
 	command?: string; // The shadcn command being executed
 }
@@ -19,7 +19,7 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
 	// Extract component name from command once
 	const extractComponentInfo = () => {
 		if (!command) return null;
-		const match = command.match(/add\s+(\w+)/);
+		const match = /add\s+(\w+)/.exec(command);
 		return match ? match[1] : null;
 	};
 

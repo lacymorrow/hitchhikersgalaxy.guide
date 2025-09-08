@@ -157,7 +157,7 @@ export const authorUtils = {
 	 * Get author's social links
 	 */
 	getSocialLinks: (author: BlogAuthor) => {
-		const links: Array<{ platform: string; url: string; handle: string }> = [];
+		const links: { platform: string; url: string; handle: string }[] = [];
 
 		if (author.twitter) {
 			links.push({

@@ -1,6 +1,6 @@
 import { fetchConfiguredLemonSqueezyProducts } from "@/lib/lemonsqueezy";
 
-type LemonProduct = {
+interface LemonProduct {
 	id: string;
 	productKey?: string;
 	attributes: {
@@ -9,7 +9,7 @@ type LemonProduct = {
 		description: string;
 		buy_now_url: string;
 	};
-};
+}
 
 export const LemonSqueezyProductPricing = async () => {
 	try {

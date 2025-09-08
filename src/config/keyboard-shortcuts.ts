@@ -25,7 +25,7 @@ export type ShortcutActionType = (typeof ShortcutAction)[keyof typeof ShortcutAc
  *
  * Remember to update this map when adding new shortcuts or changing keybindings.
  */
-export const shortcutConfig: ReadonlyArray<readonly [string, ShortcutActionType]> = [
+export const shortcutConfig: readonly (readonly [string, ShortcutActionType])[] = [
 	// Universal search - works with whatever search component is visible
 	["mod+K", ShortcutAction.OPEN_SEARCH],
 	["/", ShortcutAction.OPEN_SEARCH],

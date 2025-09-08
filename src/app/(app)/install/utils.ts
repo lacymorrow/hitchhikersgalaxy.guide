@@ -8,7 +8,7 @@ export function extractComponentId(input: string): string | null {
 	}
 
 	// If input is a URL, extract the ID
-	const urlMatch = input.match(/https?:\/\/v0\.dev\/(?:chat\/)?b\/([a-zA-Z0-9_]+)/);
+	const urlMatch = /https?:\/\/v0\.dev\/(?:chat\/)?b\/([a-zA-Z0-9_]+)/.exec(input);
 	// Using optional chaining to fix linter error
 	return urlMatch?.[1] || null;
 }

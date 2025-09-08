@@ -112,7 +112,7 @@ export async function seedRbac() {
 					const rolePerms = roleData.permissions.find((p) => p.resource === permission?.resource);
 					return (
 						rolePerms &&
-						(rolePerms.actions.includes(permission?.action as Action) ||
+						(rolePerms.actions.includes(permission?.action!) ||
 							(rolePerms.actions.includes("manage" as Action) && permission?.action === "manage"))
 					);
 				});

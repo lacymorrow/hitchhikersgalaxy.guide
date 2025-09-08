@@ -1,236 +1,158 @@
 ---
 title: 'Development Guide'
-description: 'Comprehensive guide for developing with Shipkit'
+description: 'Get started developing with Shipkit'
 ---
 
 # Development Guide
 
-This guide covers everything you need to know about developing applications with Shipkit.
+Shipkit is built for developers who want to ship fast. Let's get you set up and building.
 
 ## Quick Start
 
-1. Clone the repository
-2. Install dependencies:
-```bash
-pnpm install
-```
+Get Shipkit running in 4 steps:
 
-3. Set up environment variables:
-```bash
-cp .env.example .env.local
-```
+1. **Clone the repo:**
+   ```bash
+   git clone https://github.com/your-repo/shipkit.git
+   cd shipkit
+   ```
 
-4. Start the development server:
-```bash
-pnpm dev
-```
+2. **Install dependencies:**
+   ```bash
+   pnpm install
+   ```
 
-## Development Environment
+3. **Set up environment:**
+   ```bash
+   cp .env.example .env.local
+   # Edit .env.local with your values
+   ```
+
+4. **Start developing:**
+   ```bash
+   pnpm dev
+   ```
+
+That's it! You're ready to build.
+
+## What You Need
 
 ### Required Tools
+- **Node.js** v18+ ([download](https://nodejs.org))
+- **PNPM** v8+ ([install](https://pnpm.io/installation))
+- **PostgreSQL** v15+ (for database features)
+- **VS Code** (recommended)
 
-- [Node.js](https://nodejs.org) (v18 or later)
-- [PNPM](https://pnpm.io) (v8 or later)
-- [PostgreSQL](https://www.postgresql.org) (v15 or later)
-- [VS Code](https://code.visualstudio.com) (recommended)
+### VS Code Setup
 
-### VS Code Extensions
+Install these extensions for the best experience:
 
-<CardGroup cols={2}>
-  <Card title="Biome" icon="code">
-    [Biome](https://marketplace.visualstudio.com/items?itemName=biomejs.biome) for formatting and linting
-  </Card>
-  <Card title="Tailwind CSS" icon="paintbrush">
-    [Tailwind CSS IntelliSense](https://marketplace.visualstudio.com/items?itemName=bradlc.vscode-tailwindcss)
-  </Card>
-  <Card title="MDX" icon="file-text">
-    [MDX](https://marketplace.visualstudio.com/items?itemName=unifiedjs.vscode-mdx)
-  </Card>
-  <Card title="TypeScript" icon="code">
-    [TypeScript](https://marketplace.visualstudio.com/items?itemName=ms-typescript.vscode-typescript-next)
-  </Card>
-</CardGroup>
-
-### VS Code Settings
-
-```json
-{
-  "editor.formatOnSave": true,
-  "editor.defaultFormatter": "biomejs.biome",
-  "[javascript]": {
-    "editor.defaultFormatter": "biomejs.biome"
-  },
-  "[typescript]": {
-    "editor.defaultFormatter": "biomejs.biome"
-  },
-  "[typescriptreact]": {
-    "editor.defaultFormatter": "biomejs.biome"
-  },
-  "typescript.preferences.importModuleSpecifier": "non-relative",
-  "typescript.preferences.importModuleSpecifierEnding": "minimal",
-  "typescript.preferences.preferTypeOnlyAutoImports": true
-}
-```
-
-### Code Style
-
-We use [Biome](https://biomejs.dev) for formatting and linting. Our configuration:
-
-```json
-{
-  "$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
-  "organizeImports": {
-    "enabled": true
-  },
-  "linter": {
-    "enabled": true,
-    "rules": {
-      "recommended": true,
-      "correctness": {
-        "noUnusedVariables": "warn",
-        "noUndeclaredVariables": "error"
-      },
-      "suspicious": {
-        "noExplicitAny": "warn",
-        "noConsoleLog": "warn"
-      },
-      "style": {
-        "noNonNullAssertion": "warn",
-        "useNodejsImportProtocol": "warn",
-        "useTemplate": "error"
-      }
-    }
-  },
-  "formatter": {
-    "enabled": true,
-    "indentStyle": "tab",
-    "indentWidth": 2,
-    "lineWidth": 80
-  },
-  "javascript": {
-    "formatter": {
-      "quoteStyle": "double",
-      "semicolons": "always"
-    }
-  }
-}
-```
+- **Biome** - Code formatting and linting
+- **Tailwind CSS IntelliSense** - CSS autocompletion
+- **TypeScript Importer** - Smart imports
+- **MDX** - Markdown with JSX support
 
 ## Project Structure
 
+Shipkit follows a clean, logical structure:
+
 ```
 src/
-├── app/                 # Next.js app directory
-│   ├── (app)/          # App routes
-│   ├── (auth)/         # Auth routes
-│   └── api/            # API routes
-├── components/         # React components
-│   ├── ui/            # UI components
-│   └── blocks/        # Page blocks
-├── lib/               # Utility functions
-├── server/            # Server-side code
-│   ├── actions/       # Server actions
-│   ├── auth/          # Auth configuration
-│   └── services/      # Server services
-└── styles/            # Global styles
+├── app/                 # Next.js App Router pages
+├── components/          # React components
+│   ├── ui/             # Reusable UI components
+│   └── blocks/         # Page-specific components
+├── lib/                # Utility functions
+├── server/             # Backend code
+│   ├── actions/        # Server actions
+│   ├── auth/          # Authentication config
+│   └── services/      # Business logic
+└── styles/             # Global styles
 ```
 
 ## Development Workflow
 
-### 1. Component Development
+### Components
+- **Server components first** - Better performance, fewer bugs
+- **Client components only when needed** - For interactivity (forms, animations)
+- **Organize by purpose** - UI components in `ui/`, page blocks in `blocks/`
 
-- Use server components by default
-- Create client components only when needed (interactivity)
-- Place components in appropriate directories:
-  - `ui/` for reusable UI components
-  - `blocks/` for page-specific components
-  - `app/(app)/` for route-specific components
+### API Routes
+- **Server actions** for forms and mutations
+- **API routes** for external integrations
+- **Zod validation** on all inputs
+- **Consistent error handling**
 
-### 2. API Development
+### Database
+- **Drizzle ORM** for type-safe queries
+- **Migrations** for schema changes
+- **Transactions** for data consistency
 
-- Use server actions for form submissions
-- Place API routes in `app/api/`
-- Use Zod for request validation
-- Follow REST principles
-- Handle errors consistently
-
-### 3. Database Operations
-
-- Use Drizzle ORM for database queries
-- Place migrations in `drizzle/migrations/`
-- Run migrations:
-```bash
-pnpm db:migrate
-```
-
-### 4. Authentication
-
-- Use Auth.js (v5) for authentication
-- Configure providers in `server/auth/`
-- Test with different providers locally
-
-### 5. Testing
-
-- Write tests in `__tests__` directories
-- Run tests:
-```bash
-pnpm test
-```
+### Authentication
+- **Auth.js v5** for all auth needs
+- **Multiple providers** supported
+- **Server-side sessions** preferred
 
 ## Common Tasks
 
-### Adding a New Page
-
-1. Create route directory in `app/(app)/`
-2. Add `page.tsx` for the route
-3. Create components in `blocks/` if needed
-4. Update navigation if required
-
-### Creating an API Endpoint
-
-1. Add route in `app/api/`
-2. Create request validation schema
-3. Implement error handling
-4. Add documentation
-
-### Adding a Database Table
-
-1. Create migration:
+### Add a New Page
 ```bash
-pnpm db:migration:create add_table_name
+# Create app/(app)/my-page/page.tsx
+export default function MyPage() {
+  return <div>Hello World</div>;
+}
 ```
 
-2. Define schema in migration file
-3. Run migration:
+### Add a Component
+```typescript
+// src/components/ui/my-component.tsx
+export function MyComponent() {
+  return <div>My Component</div>;
+}
+```
+
+### Add Database Schema
 ```bash
+pnpm db:migration:create add_users_table
+# Edit the migration file
 pnpm db:migrate
 ```
 
-## Deployment
+## Feature Flags
 
-### Production Checks
+Control features with environment variables:
 
-1. Run type checking:
 ```bash
+# Enable Stripe payments
+NEXT_PUBLIC_FEATURE_STRIPE_ENABLED=true
+
+# Enable GitHub auth
+NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED=true
+```
+
+Features auto-enable when you add the required env vars.
+
+## Before Production
+
+Run these checks:
+
+```bash
+# Type checking
 pnpm typecheck
-```
 
-2. Run linting:
-```bash
+# Code quality
 pnpm lint
-```
 
-3. Run tests:
-```bash
+# Tests (if you have them)
 pnpm test
-```
 
-### Deployment Commands
-
-```bash
-# Build for production
+# Build test
 pnpm build
-
-# Start production server
-pnpm start
 ```
+
+## Need Help?
+
+- [Feature Flags Guide](/docs/development/feature-flags)
+- [Web Workers Guide](/docs/development/web-workers)
+- [Component Snippets](/docs/snippets/components)
+- [API Examples](/docs/snippets/api)

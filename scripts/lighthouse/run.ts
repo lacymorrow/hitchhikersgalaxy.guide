@@ -93,22 +93,20 @@ async function main(): Promise<void> {
 
 	const results: LighthouseRunResultSummary[] = [];
 	for (const url of urls) {
-		// eslint-disable-next-line no-console
 		console.log(`[lighthouse] Running on ${url} (${preset})`);
 		const summary = await runSingle(url, outDir, preset);
 		results.push(summary);
-		// eslint-disable-next-line no-console
+
 		console.log(`[lighthouse] Done ${url} →`, summary.categories);
 	}
 
 	const indexPath = path.join(outDir, `index-${Date.now()}.json`);
 	await fs.writeFile(indexPath, JSON.stringify(results, null, 2), "utf8");
-	// eslint-disable-next-line no-console
+
 	console.log(`[lighthouse] Wrote summary index → ${indexPath}`);
 }
 
 main().catch((error) => {
-	// eslint-disable-next-line no-console
 	console.error("[lighthouse] Failed:", error);
 	process.exit(1);
 });

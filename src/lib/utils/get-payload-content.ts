@@ -4,7 +4,7 @@ import { getPayloadCollection } from "./get-payload-collection";
 type Collections = Config["collections"];
 type CollectionKey = keyof Collections;
 
-type PayloadRichText = {
+interface PayloadRichText {
 	[key: string]: unknown;
 	root: {
 		type: string;
@@ -19,7 +19,7 @@ type PayloadRichText = {
 		indent: number;
 		version: number;
 	};
-};
+}
 
 /**
  * Check if a value is a Payload rich text field

@@ -25,7 +25,7 @@ export const ContainerProcessor = ({
 	const [error, setError] = useState<string | null>(null);
 	const processingRef = useRef(false);
 	const [logs, setLogs] = useState<
-		Array<{ type: string; message: string; data?: any; timestamp: string }>
+		{ type: string; message: string; data?: any; timestamp: string }[]
 	>([]);
 	const [showLogs, setShowLogs] = useState(false);
 	const logsRef = useRef<HTMLDivElement>(null);

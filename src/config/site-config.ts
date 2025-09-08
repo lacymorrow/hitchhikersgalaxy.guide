@@ -136,9 +136,7 @@ interface SiteConfig {
 	// E-commerce store configuration
 	store: {
 		id: string;
-		products: {
-			[key: string]: string;
-		};
+		products: Record<string, string>;
 	};
 
 	// SEO and metadata

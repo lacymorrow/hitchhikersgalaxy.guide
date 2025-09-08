@@ -490,7 +490,7 @@ export const AuthService = {
 			logger.error("Sign up error:", error);
 			// If we have a userId, attempt cleanup
 			if (error instanceof Error && error.message.includes("ID")) {
-				const match = error.message.match(/ID\s+(\S+)/);
+				const match = /ID\s+(\S+)/.exec(error.message);
 				if (match?.[1]) {
 					// Use optional chaining
 					await this.cleanupPartialUserCreation(match[1]);

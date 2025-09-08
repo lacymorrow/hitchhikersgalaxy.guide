@@ -100,16 +100,16 @@ async function main() {
 	// We need to identify the export declaration and handle the branding info correctly
 	// Find where the actual siteConfig object starts
 	const siteConfigStartPattern = /export const siteConfig: SiteConfig = \{/;
-	const siteConfigMatch = siteConfig.match(siteConfigStartPattern);
+	const siteConfigMatch = siteConfigStartPattern.exec(siteConfig);
 
 	if (!siteConfigMatch) {
 		console.error("Could not find siteConfig export in site-config.ts");
 		process.exit(1);
 	}
 
-	const siteConfigStart = siteConfigMatch.index!;
-	const beforeConfig = siteConfig.substring(0, siteConfigStart + siteConfigMatch[0]!.length);
-	let afterConfig = siteConfig.substring(siteConfigStart + siteConfigMatch[0]!.length);
+	const siteConfigStart = siteConfigMatch.index;
+	const beforeConfig = siteConfig.substring(0, siteConfigStart + siteConfigMatch[0].length);
+	let afterConfig = siteConfig.substring(siteConfigStart + siteConfigMatch[0].length);
 
 	// Handle replacement of individual keys in the object
 	// Name

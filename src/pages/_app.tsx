@@ -1,20 +1,23 @@
 import type { AppProps } from "next/app";
-import { ThemeProvider } from "next-themes";
+import { ThemeProvider as ShipkitThemeProvider } from "@/components/ui/shipkit/theme";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
-import { Prose } from "@/components/primitives/prose";
 import { ShipkitProvider } from "@/components/providers/shipkit-provider";
+import { TeamProvider } from "@/components/providers/team-provider";
+import { FontProvider } from "@/components/providers/font-provider";
 
 export default function PagesApp({ Component, pageProps }: AppProps) {
 	return (
-		<ThemeProvider attribute="class" defaultTheme="system">
+		<ShipkitThemeProvider>
 			<ShipkitProvider session={pageProps.session} pageProps={pageProps}>
 				<NuqsAdapter>
-					{/* Needed to get fonts working for the pages router */}
-					<Prose>
-						<Component {...pageProps} />
-					</Prose>
+					<TeamProvider initialTeams={[{ id: "personal", name: "Personal" }]}>
+						<FontProvider>
+
+							<Component {...pageProps} />
+						</FontProvider>
+					</TeamProvider>
 				</NuqsAdapter>
 			</ShipkitProvider>
-		</ThemeProvider>
+		</ShipkitThemeProvider>
 	);
 }

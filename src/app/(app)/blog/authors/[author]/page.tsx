@@ -72,7 +72,7 @@ export default async function AuthorPage({ params }: Props) {
 		if (post.authorObject && post.authorObject.id === authorId) {
 			return true;
 		}
-		if (post.authorObjects && post.authorObjects.some((a) => a.id === authorId)) {
+		if (post.authorObjects?.some((a) => a.id === authorId)) {
 			return true;
 		}
 		// Check legacy author system

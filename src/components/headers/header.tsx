@@ -274,7 +274,7 @@ export const Header: React.FC<HeaderProps> = ({
 
 							<div className="flex items-center gap-2 md:ml-auto lg:gap-4">
 								{searchVariant === "ai" && <SearchAi className="hidden md:block" />}
-								<div className="hidden items-center justify-between gap-md text-sm md:flex"></div>
+								<div className="hidden items-center justify-between gap-md text-sm md:flex" />
 								<div className="flex items-center gap-2">
 									{!session && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
 

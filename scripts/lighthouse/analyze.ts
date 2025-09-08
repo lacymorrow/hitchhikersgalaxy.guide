@@ -88,12 +88,11 @@ async function main(): Promise<void> {
 	}
 	const out = path.join(baseDir, "normalized.json");
 	await fs.writeFile(out, JSON.stringify(allIssues, null, 2), "utf8");
-	// eslint-disable-next-line no-console
+
 	console.log(`[analyze] Wrote normalized issues → ${out} (${allIssues.length})`);
 }
 
 main().catch((err) => {
-	// eslint-disable-next-line no-console
 	console.error("[analyze] Failed:", err);
 	process.exit(1);
 });

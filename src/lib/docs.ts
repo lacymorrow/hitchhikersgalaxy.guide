@@ -88,7 +88,7 @@ function extractTitleFromH1(content: string): string | null {
 		.replace(/`[^`]+`/g, "");
 
 	// Look for the first H1 tag in the cleaned content
-	const h1Match = contentWithoutCodeBlocks.match(/^#\s+(.+)$/m);
+	const h1Match = /^#\s+(.+)$/m.exec(contentWithoutCodeBlocks);
 	if (h1Match && h1Match[1]) {
 		// Clean up the title (remove extra whitespace, emoji, etc.)
 		return h1Match[1]

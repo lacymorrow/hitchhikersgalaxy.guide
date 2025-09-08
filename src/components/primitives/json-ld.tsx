@@ -4,10 +4,10 @@ import { siteConfig } from "@/config/site-config";
 interface JsonLdProps {
 	organization?: boolean;
 	website?: boolean;
-	breadcrumbs?: Array<{
+	breadcrumbs?: {
 		name: string;
 		item: string;
-	}>;
+	}[];
 	article?: {
 		headline: string;
 		description: string;
@@ -24,10 +24,10 @@ interface JsonLdProps {
 		priceCurrency: string;
 	};
 	faq?: {
-		questions: Array<{
+		questions: {
 			question: string;
 			answer: string;
-		}>;
+		}[];
 	};
 	localBusiness?: {
 		type: string;

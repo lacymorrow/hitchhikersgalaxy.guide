@@ -139,7 +139,7 @@ export default async function CheckoutSuccessPage({
 		if (orderId && (session?.user?.id || customData.user_id)) {
 			try {
 				await PaymentService.createPayment({
-					userId: session?.user?.id || (customData.user_id as string),
+					userId: session?.user?.id || customData.user_id!,
 					orderId: orderId,
 					status: status,
 					amount: 0,

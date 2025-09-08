@@ -16,7 +16,7 @@ export const metadata: Metadata = constructMetadata({
 // Enhanced BlogPost type with LogSpot-style fields
 interface EnhancedBlogPost extends BlogPost {
 	badge?: string;
-	authors?: Array<{ name: string; avatar: string }>;
+	authors?: { name: string; avatar: string }[];
 }
 
 const BlogPage = async () => {

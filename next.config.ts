@@ -1,10 +1,14 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 import type { Configuration as WebpackConfiguration } from "webpack";
-import path from "node:path";
-import { buildTimeFeatureFlags, buildTimeFeatures } from "@/config/features-config";
-import { getDerivedSecrets } from "@/config/secrets";
+import {
+	buildTimeFeatureFlags,
+	buildTimeFeatures,
+	buildTimePublicEnv,
+} from "@/config/features-config";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
 import { redirects } from "@/config/routes";
+import { getDerivedSecrets } from "@/config/secrets";
 import { withPlugins } from "@/config/with-plugins";
 import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/posthog-config";
 
@@ -12,6 +16,10 @@ const nextConfig: NextConfig = {
 	env: {
 		// Add client-side feature flags
 		...buildTimeFeatureFlags,
+
+		// Auto-mirrored public env vars from their non-prefixed counterparts
+		// e.g. STRIPE_PUBLISHABLE_KEY -> NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+		...buildTimePublicEnv,
 
 		// Server-only secrets injected at build time. They will not be exposed to the client
 		// unless prefixed with NEXT_PUBLIC_. Consumers should read via process.env on server.
@@ -67,8 +75,8 @@ const nextConfig: NextConfig = {
 	/*
 	 * PostHog reverse proxy configuration
 	 */
-	async rewrites() {
-		return [
+	rewrites() {
+		return Promise.resolve([
 			{
 				source: `/${POSTHOG_RELAY_SLUG}/static/:path*`,
 				destination: "https://us-assets.i.posthog.com/static/:path*",
@@ -81,7 +89,7 @@ const nextConfig: NextConfig = {
 				source: `/${POSTHOG_RELAY_SLUG}/flags`,
 				destination: "https://us.i.posthog.com/flags",
 			},
-		];
+		]);
 	},
 	// This is required to support PostHog trailing slash API requests
 	skipTrailingSlashRedirect: true,
@@ -221,6 +229,8 @@ const nextConfig: NextConfig = {
 		position: "bottom-left" as const,
 	},
 
+	typedRoutes: true,
+
 	/*
 	 * Logging configuration
 	 * @see https://nextjs.org/docs/app/api-reference/next-config-js/logging
@@ -238,7 +248,7 @@ const nextConfig: NextConfig = {
 		// Use DISABLE_ERROR_LOGGING to disable error logging too
 		removeConsole:
 			process.env.DISABLE_LOGGING === "true" ||
-				(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+			(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
 				? process.env.DISABLE_ERROR_LOGGING === "true" ||
 					(process.env.NODE_ENV === "production" && !process.env.DISABLE_ERROR_LOGGING)
 					? true
@@ -319,11 +329,14 @@ const nextConfig: NextConfig = {
 	/*
 	 * Webpack configuration
 	 */
-	webpack: (config: WebpackConfiguration, { dev, isServer }: { dev: boolean; isServer: boolean }) => {
+	webpack: (
+		config: WebpackConfiguration,
+		{ dev, isServer }: { dev: boolean; isServer: boolean }
+	) => {
 		// Enable top-level await
 		config.experiments = { ...config.experiments, topLevelAwait: true };
 
-		if (config.module && config.module.rules) {
+		if (config.module?.rules) {
 			// Add support for async/await in web workers
 			config.module.rules.push({
 				test: /\.worker\.(js|ts)$/,
@@ -362,7 +375,7 @@ const nextConfig: NextConfig = {
 			];
 		}
 
-		if (config.resolve && config.resolve.alias) {
+		if (config.resolve?.alias) {
 			config.resolve.alias = {
 				...config.resolve.alias,
 				// "onnxruntime-node": false,

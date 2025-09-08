@@ -30,8 +30,8 @@ let containerInitializing = false;
 export class ContainerManager {
 	private container: WebContainer | null = null;
 	private isReady = false;
-	private fileSystemSnapshotBefore: Map<string, string> = new Map();
-	private fileSystemSnapshotAfter: Map<string, string> = new Map();
+	private fileSystemSnapshotBefore = new Map<string, string>();
+	private fileSystemSnapshotAfter = new Map<string, string>();
 	private changedFiles: ContainerFile[] = [];
 
 	/**

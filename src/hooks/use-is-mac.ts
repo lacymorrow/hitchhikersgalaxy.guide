@@ -7,7 +7,7 @@ import { is } from "@/lib/utils/is";
 interface NavigatorWithUAData extends Navigator {
 	userAgentData?: {
 		platform: string;
-		brands: Array<{ brand: string; version: string }>;
+		brands: { brand: string; version: string }[];
 		mobile: boolean;
 	};
 }

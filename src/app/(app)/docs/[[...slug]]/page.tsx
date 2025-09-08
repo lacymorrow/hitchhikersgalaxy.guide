@@ -66,7 +66,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function DocsPage({ params }: PageProps) {
 	const doc = await getDocFromParams(params);
 
-	if (!doc || !doc.content) {
+	if (!doc?.content) {
 		notFound();
 	}
 

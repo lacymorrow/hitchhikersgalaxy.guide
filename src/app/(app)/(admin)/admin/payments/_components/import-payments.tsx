@@ -26,9 +26,7 @@ interface SingleProviderResult {
 	usersCreated: number;
 }
 
-interface AllProvidersResult {
-	[key: string]: SingleProviderResult;
-}
+type AllProvidersResult = Record<string, SingleProviderResult>;
 
 /**
  * Formats the import result message based on the provider and result data
@@ -45,7 +43,7 @@ const formatImportMessage = (provider: PaymentProvider, result: unknown): string
 		// Format each provider's results
 		for (const [providerId, stats] of Object.entries(allResult)) {
 			if (stats && typeof stats === "object" && !("error" in stats)) {
-				const providerStats = stats as SingleProviderResult;
+				const providerStats = stats;
 				const providerName = providerId.charAt(0).toUpperCase() + providerId.slice(1);
 				messages.push(
 					`${providerName}: ${providerStats.imported} imported, ${providerStats.skipped} skipped, ${providerStats.errors} errors, ${providerStats.usersCreated} users created`
@@ -60,7 +58,7 @@ const formatImportMessage = (provider: PaymentProvider, result: unknown): string
 	}
 
 	const singleResult = result as SingleProviderResult;
-	if (!singleResult || typeof singleResult.imported === "undefined") {
+	if (typeof singleResult?.imported === "undefined") {
 		return "Invalid result structure for single provider import";
 	}
 	return `${singleResult.imported} imported, ${singleResult.skipped} skipped, ${singleResult.errors} errors, ${singleResult.usersCreated} users created.`;

@@ -9,14 +9,14 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { cn } from "@/lib/utils";
 
-type TreeViewElement = {
+interface TreeViewElement {
 	id: string;
 	name: string;
 	isSelectable?: boolean;
 	children?: TreeViewElement[];
-};
+}
 
-type TreeContextProps = {
+interface TreeContextProps {
 	selectedId: string | undefined;
 	expandedItems: string[];
 	indicator: boolean;
@@ -26,7 +26,7 @@ type TreeContextProps = {
 	openIcon?: ReactNode;
 	closeIcon?: ReactNode;
 	direction: "rtl" | "ltr";
-};
+}
 
 const TreeContext = React.createContext<TreeContextProps | null>(null);
 

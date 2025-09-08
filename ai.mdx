@@ -553,6 +553,13 @@ Notes:
 - ✅ Simplified user experience - one shortcut to rule them all
 - ✅ Reduced codebase complexity with unified search action
 
+### Build: Generate NEXT_PUBLIC_* from server-side public keys
+
+- [x] Added build-time mirroring of known public env keys so setting `STRIPE_PUBLISHABLE_KEY` (and similar) automatically provides `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` to the client.
+  - Implemented in `src/config/features-config.ts` via `buildTimePublicEnv` with an allowlist (Builder, Clerk publishable, Supabase URL/anon, Stripe publishable, analytics keys, C15T URL).
+  - Wired into `next.config.ts` under `env: { ...buildTimePublicEnv }` alongside existing `buildTimeFeatureFlags`.
+  - Ensures server-only names (without `NEXT_PUBLIC_`) are not directly readable in client code.
+
 ---
 
 **Next Steps**: Begin with Client Components Audit (Phase 1.1) - Review use of `"use client"` directive across the codebase.

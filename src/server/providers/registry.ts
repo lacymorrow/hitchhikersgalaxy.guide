@@ -6,7 +6,7 @@ import type { PaymentProvider } from "./types";
  * Manages the registration and retrieval of payment providers
  */
 export class PaymentProviderRegistry {
-	private providers: Map<string, PaymentProvider> = new Map();
+	private providers = new Map<string, PaymentProvider>();
 	private enabledProviders: string[] = [];
 
 	/**

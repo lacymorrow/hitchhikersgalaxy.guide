@@ -26,7 +26,7 @@ export const DefaultLayout = async ({
 	).filter((item): item is [string, React.ReactNode] => item !== null);
 
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
 			<Body>
 				<AppRouterLayout>
 					<main>{children}</main>

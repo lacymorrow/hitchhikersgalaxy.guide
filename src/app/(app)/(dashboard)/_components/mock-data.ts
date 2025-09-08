@@ -41,7 +41,7 @@ export const recentActivity = [
 	},
 ];
 
-export const activityIcons: { [key: string]: LucideIcon } = {
+export const activityIcons: Record<string, LucideIcon> = {
 	download: Download,
 	star: Star,
 	fork: GitBranch,

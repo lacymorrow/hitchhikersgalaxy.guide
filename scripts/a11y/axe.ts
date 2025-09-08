@@ -16,7 +16,7 @@ interface AxeIssue {
 	description: string;
 	help: string;
 	helpUrl: string;
-	nodes: Array<{ html: string; target: string[]; failureSummary?: string }>;
+	nodes: { html: string; target: string[]; failureSummary?: string }[];
 }
 
 interface AxeReportSummary {
@@ -88,21 +88,19 @@ async function main(): Promise<void> {
 	await ensureDir(outDir);
 	const summaries: AxeReportSummary[] = [];
 	for (const url of urls) {
-		// eslint-disable-next-line no-console
 		console.log(`[axe] Running on ${url}`);
 		const summary = await runAxeOnUrl(url, outDir);
 		summaries.push(summary);
-		// eslint-disable-next-line no-console
+
 		console.log(`[axe] Violations: ${summary.violations.length}`);
 	}
 	const indexPath = path.join(outDir, `index-${Date.now()}.json`);
 	await fs.writeFile(indexPath, JSON.stringify(summaries, null, 2), "utf8");
-	// eslint-disable-next-line no-console
+
 	console.log(`[axe] Wrote summary index → ${indexPath}`);
 }
 
 main().catch((err) => {
-	// eslint-disable-next-line no-console
 	console.error("[axe] Failed:", err);
 	process.exit(1);
 });

@@ -4,7 +4,7 @@ import { getBlogCategories, getBlogPosts } from "@/lib/blog";
 import { cn } from "@/lib/utils";
 
 interface Props {
-	searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+	searchParams: Promise<Record<string, string | string[] | undefined>>;
 }
 
 export default async function CategoriesPage({ searchParams }: Props) {

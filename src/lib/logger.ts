@@ -32,7 +32,7 @@ const _createLogger =
 		span.setAttribute("log.message", message);
 		span.setAttribute("log.level", level);
 
-		const error = args.find((arg) => arg instanceof Error) as Error | undefined;
+		const error = args.find((arg) => arg instanceof Error);
 		if (error) {
 			span.recordException(error);
 			span.setStatus({ code: SpanStatusCode.ERROR });
@@ -49,7 +49,7 @@ const _createLogger =
 
 		span.end();
 
-		const consoleMethod = (console[level] as Console[LogLevel]) ?? console.log;
+		const consoleMethod = console[level] ?? console.log;
 		consoleMethod(...args);
 	};
 

@@ -514,7 +514,7 @@ export const getOrderById = async (orderId: string): Promise<PolarOrder | null> 
 		// Extract order from response
 		const order = response as any;
 
-		if (!order || !order.id) {
+		if (!order?.id) {
 			return null;
 		}
 

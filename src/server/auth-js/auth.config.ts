@@ -72,7 +72,7 @@ export const authOptions: NextAuthConfig = {
 				try {
 					await userService.ensureUserExists({
 						id: user.id,
-						email: user.email as string,
+						email: user.email!,
 						name: profile.name || user.name, // Use profile name if available
 						image: profile.image || profile.picture || user.image, // Use profile image if available
 					});
@@ -85,7 +85,7 @@ export const authOptions: NextAuthConfig = {
 				try {
 					await userService.ensureUserExists({
 						id: user.id,
-						email: user.email as string,
+						email: user.email!,
 						name: user.name,
 						image: user.image,
 					});
@@ -269,7 +269,7 @@ export const authOptions: NextAuthConfig = {
 		},
 		async session({ session, token, user }) {
 			// Map from JWT token when present (JWT strategy)
-			if (token && token.id) {
+			if (token?.id) {
 				session.user.id = token.id as string;
 				session.user.name = token.name as string | null;
 				session.user.email = token.email ?? "";
@@ -303,7 +303,7 @@ export const authOptions: NextAuthConfig = {
 			}
 
 			// When using database session strategy, populate from the database user
-			if ((!token || !token.id) && user) {
+			if (!token?.id && user) {
 				const typedUser = user as User;
 				session.user.id = typedUser.id;
 				session.user.name = typedUser.name;

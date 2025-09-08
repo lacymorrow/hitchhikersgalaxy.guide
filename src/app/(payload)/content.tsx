@@ -6,11 +6,11 @@ interface ContentProps {
 	className?: string;
 }
 
-type LexicalNode = {
+interface LexicalNode {
 	type: string;
 	tag?: string;
-	children?: Array<{ text?: string }>;
-};
+	children?: { text?: string }[];
+}
 
 function renderLexicalNode(node: LexicalNode, index: string) {
 	switch (node.type) {

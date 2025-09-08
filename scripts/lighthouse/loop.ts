@@ -58,10 +58,10 @@ async function readIssues(baseDir: string): Promise<NormalizedIssue[]> {
 }
 
 function categoriesMeetThresholds(categories: Record<string, number>, t: Thresholds): boolean {
-	const performance = categories.performance ?? categories["performance"];
-	const accessibility = categories.accessibility ?? categories["accessibility"];
-	const seo = categories.seo ?? categories["seo"];
-	const bestPractices = categories["best-practices"] ?? categories["bestPractices"];
+	const performance = categories.performance ?? categories.performance;
+	const accessibility = categories.accessibility ?? categories.accessibility;
+	const seo = categories.seo ?? categories.seo;
+	const bestPractices = categories["best-practices"] ?? categories.bestPractices;
 	return (
 		(performance ?? 0) >= t.performance &&
 		(accessibility ?? 0) >= t.accessibility &&
@@ -82,7 +82,6 @@ async function main(): Promise<void> {
 	const maxIters = Number(process.env.LH_MAX_ITERS ?? 2);
 
 	for (let i = 0; i < maxIters; i++) {
-		// eslint-disable-next-line no-console
 		console.log(`\n[loop] Iteration ${i + 1}/${maxIters}`);
 
 		const runArgs = ["scripts/lighthouse/run.ts", ...urls];
@@ -93,34 +92,30 @@ async function main(): Promise<void> {
 		if (analyzeRes.code !== 0) throw new Error("analyze failed");
 
 		const categories = await readLatestSummary(LH_OUT_DIR);
-		// eslint-disable-next-line no-console
+
 		console.log("[loop] Categories:", categories);
 		if (categoriesMeetThresholds(categories, thresholds)) {
-			// eslint-disable-next-line no-console
 			console.log("[loop] Thresholds met. Exiting.");
 			return;
 		}
 
 		const issues = await readIssues(LH_OUT_DIR);
-		// eslint-disable-next-line no-console
+
 		console.log(`[loop] ${issues.length} normalized issues`);
 		const { changedFiles, notes } = await runFixers();
 		if (notes.length) {
-			// eslint-disable-next-line no-console
 			console.log(`[loop] Fixer notes:\n - ${notes.join("\n - ")}`);
 		}
 		if (changedFiles.length === 0) {
-			// eslint-disable-next-line no-console
 			console.log("[loop] No changes from fixers; stopping.");
 			break;
 		}
-		// eslint-disable-next-line no-console
+
 		console.log(`[loop] Applied changes to ${changedFiles.length} files. Re-running audits...`);
 	}
 }
 
 main().catch((err) => {
-	// eslint-disable-next-line no-console
 	console.error("[loop] Failed:", err);
 	process.exit(1);
 });

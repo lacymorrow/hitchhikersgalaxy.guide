@@ -78,8 +78,8 @@ describe("Routes Configuration", () => {
 			type AiRouteKey = (typeof requiredAiRoutes)[number];
 
 			for (const route of requiredAiRoutes) {
-				expect(routes.ai[route as AiRouteKey]).toBeDefined();
-				expect(routes.ai[route as AiRouteKey]).toMatch(/^\/ai\//);
+				expect(routes.ai[route]).toBeDefined();
+				expect(routes.ai[route]).toMatch(/^\/ai\//);
 			}
 		});
 	});

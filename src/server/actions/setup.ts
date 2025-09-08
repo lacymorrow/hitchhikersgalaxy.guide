@@ -126,8 +126,8 @@ export async function deploy(formData: FormData) {
 
 		// Extract repo details from GitHub URL
 		// Example: https://github.com/owner/repo -> owner/repo
-		const repoUrlParts = parsed.data.repoUrl.match(/github\.com\/([^/]+)\/([^/]+)/);
-		if (!repoUrlParts || !repoUrlParts[1] || !repoUrlParts[2]) {
+		const repoUrlParts = /github\.com\/([^/]+)\/([^/]+)/.exec(parsed.data.repoUrl);
+		if (!repoUrlParts?.[1] || !repoUrlParts[2]) {
 			throw new Error("Invalid GitHub repository URL format");
 		}
 

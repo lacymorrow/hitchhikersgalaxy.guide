@@ -9,7 +9,7 @@ import { CreateApiKeyDialog } from "./create-api-key-dialog";
 import { DeleteApiKeyDialog } from "./delete-api-key-dialog";
 
 // Define the type for our API key data
-type ApiKey = {
+interface ApiKey {
 	id: string;
 	key: string;
 	name: string;
@@ -18,7 +18,7 @@ type ApiKey = {
 	lastUsedAt?: Date | null;
 	expiresAt?: Date | null;
 	deletedAt?: Date | null;
-};
+}
 
 interface ApiKeysTableProps {
 	apiKeys: ApiKey[];
@@ -31,7 +31,7 @@ const columns: ColumnDef<ApiKey>[] = [
 		accessorKey: "key",
 		header: "Key",
 		cell: ({ row }) => {
-			const key = row.getValue("key") as string;
+			const key = row.getValue("key");
 			return (
 				<div className="flex items-center space-x-2">
 					<code className="rounded bg-muted px-2 py-1">
@@ -69,7 +69,7 @@ const columns: ColumnDef<ApiKey>[] = [
 		accessorKey: "lastUsedAt",
 		header: "Last Used",
 		cell: ({ row }) => {
-			const date = row.getValue("lastUsedAt") as Date | null;
+			const date = row.getValue("lastUsedAt");
 			return (
 				<div className="text-muted-foreground">{date ? format(date, "MMM d, yyyy") : "Never"}</div>
 			);
@@ -79,7 +79,7 @@ const columns: ColumnDef<ApiKey>[] = [
 		accessorKey: "expiresAt",
 		header: "Expires",
 		cell: ({ row }) => {
-			const date = row.getValue("expiresAt") as Date | null;
+			const date = row.getValue("expiresAt");
 			return (
 				<div className="text-muted-foreground">{date ? format(date, "MMM d, yyyy") : "Never"}</div>
 			);

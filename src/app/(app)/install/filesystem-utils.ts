@@ -62,7 +62,7 @@ export { ensureComponentsJsonExists };
 export async function takeFileSystemSnapshot(container: any): Promise<Map<string, string>> {
 	const snapshot = new Map<string, string>();
 
-	if (!container || !container.fs) {
+	if (!container?.fs) {
 		logInfo("Container or filesystem not available for snapshot");
 		return snapshot;
 	}

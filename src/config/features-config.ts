@@ -157,12 +157,10 @@ buildTimeFeatures.VERCEL_API_ENABLED =
 // Analytics
 buildTimeFeatures.POSTHOG_ENABLED =
 	hasEnv("NEXT_PUBLIC_POSTHOG_KEY") && !envIsTrue("DISABLE_POSTHOG");
-
 buildTimeFeatures.UMAMI_ENABLED =
 	hasEnv("NEXT_PUBLIC_UMAMI_WEBSITE_ID") && !envIsTrue("DISABLE_UMAMI");
 buildTimeFeatures.STATSIG_ENABLED =
 	hasEnv("NEXT_PUBLIC_STATSIG_CLIENT_KEY") && !envIsTrue("DISABLE_STATSIG");
-console.log("buildTimeFeatures.STATSIG_ENABLED", buildTimeFeatures.STATSIG_ENABLED);
 
 // Google Analytics and Tag Manager
 buildTimeFeatures.GOOGLE_ANALYTICS_ENABLED =

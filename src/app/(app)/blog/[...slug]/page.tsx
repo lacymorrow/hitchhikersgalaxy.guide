@@ -11,6 +11,7 @@ import { TableOfContents } from "@/components/modules/blog/table-of-contents";
 import { H1, H2, H3, H4, H5, H6 } from "@/components/modules/mdx/heading";
 import { buttonVariants } from "@/components/ui/button";
 import { constructMetadata } from "@/config/metadata";
+import { siteConfig } from "@/config/site-config";
 import { getBlogPosts } from "@/lib/blog";
 import { cn } from "@/lib/utils";
 import { extractHeadings, filterHeadingsByLevel } from "@/lib/utils/extract-headings";
@@ -45,11 +46,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 		});
 	}
 
+	// Build dynamic OG image URL using the existing /og route
+	const ogUrl = new URL("/og", siteConfig.url);
+	ogUrl.searchParams.set("title", post.title);
+	if (post.description) ogUrl.searchParams.set("description", post.description);
+	ogUrl.searchParams.set("url", siteConfig.url.replace(/https?:\/\//, ""));
+
 	return constructMetadata({
 		title: `${post.title} | Shipkit Blog`,
 		description:
 			post.description ||
 			"Read this comprehensive guide on app development best practices, tips, and insights from the Shipkit team.",
+		images: [
+			{
+				url: ogUrl.toString(),
+				width: siteConfig.metadata.openGraph.imageWidth,
+				height: siteConfig.metadata.openGraph.imageHeight,
+				alt: post.title,
+			},
+		],
 		openGraph: {
 			title: post.title,
 			description: post.description,

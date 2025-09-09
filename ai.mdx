@@ -611,3 +611,9 @@ Notes:
 - [x] Redirect all docs 404s to `/docs` with temporary 307
   - Added route `src/app/(app)/docs/not-found.tsx` using Next.js `redirect(routes.docs)` to ensure missing docs pages forward to the docs home instead of rendering a 404 UI.
   - Scope: Only affects routes under `\n` `src/app/(app)/docs/**` so the rest of the app retains its existing 404 behavior.
+
+### Enhancement: Dynamic OG images for Blog Posts
+
+- [x] Added dynamic Open Graph/Twitter images for blog posts by pointing metadata to existing `/og` generator with post-specific title/description and site URL.
+  - Implemented in `src/app/(app)/blog/[...slug]/page.tsx` by constructing the image URL via `new URL('/og', siteConfig.url)` and passing as `images` to `constructMetadata`.
+  - This ensures social shares reflect the current post context with no duplication of OG rendering logic.

@@ -140,7 +140,7 @@ const PaymentService = {
 		// For LemonSqueezy specifically, also check our configured products
 		if (hasProvider("lemonsqueezy") && isProviderEnabled("lemonsqueezy")) {
 			try {
-				const { hasUserPurchasedAnyConfiguredProduct } = await import("@/lib/lemonsqueezy");
+				const { hasUserPurchasedAnyConfiguredProduct } = await import("@/lib/lemonsqueezy/lemonsqueezy");
 				const hasConfiguredProducts = await hasUserPurchasedAnyConfiguredProduct(userId);
 				if (hasConfiguredProducts) {
 					status = true;

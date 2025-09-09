@@ -1,4 +1,4 @@
-import { fetchConfiguredLemonSqueezyProducts } from "@/lib/lemonsqueezy";
+import { fetchConfiguredLemonSqueezyProducts } from "@/lib/lemonsqueezy/lemonsqueezy";
 
 interface LemonProduct {
 	id: string;

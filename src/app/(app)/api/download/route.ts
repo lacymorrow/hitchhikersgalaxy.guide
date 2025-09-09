@@ -3,7 +3,7 @@ import { stat } from "fs/promises";
 import { type NextRequest, NextResponse } from "next/server";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
-import { getOrdersByEmail } from "@/lib/lemonsqueezy";
+import { getOrdersByEmail } from "@/lib/lemonsqueezy/lemonsqueezy";
 import { logger } from "@/lib/logger";
 import { auth } from "@/server/auth";
 import { getLatestReleaseFile } from "@/server/services/github/github-download-service";

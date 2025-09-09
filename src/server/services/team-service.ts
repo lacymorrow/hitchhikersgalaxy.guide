@@ -223,7 +223,7 @@ export class TeamService extends BaseService<typeof teams> {
 
 			// Get the full team details with members
 			return db.query.teams.findFirst({
-				where: eq(teams.id, personalTeam.id),
+				where: personalTeam.id ? eq(teams.id, personalTeam.id) : undefined,
 				with: {
 					members: {
 						with: {

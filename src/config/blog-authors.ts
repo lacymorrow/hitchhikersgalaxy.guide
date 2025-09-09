@@ -73,7 +73,7 @@ export const blogAuthors: Record<string, BlogAuthor> = {
 /**
  * Default/fallback author for posts without a specified author
  */
-export const defaultAuthor: BlogAuthor = blogAuthors["lacy-morrow"];
+export const defaultAuthor: BlogAuthor = blogAuthors["lacy-morrow"] || (Object.values(blogAuthors)[0] as BlogAuthor);
 
 /**
  * Get author by ID/slug

@@ -145,6 +145,9 @@ export async function createDeployment(
 
 		// Only revalidate after successful transaction commit
 		revalidatePath("/deployments");
+		if (!result) {
+			throw new Error("Failed to create deployment: no result returned");
+		}
 		return result;
 	} catch (error) {
 		console.error("Failed to create deployment:", error);

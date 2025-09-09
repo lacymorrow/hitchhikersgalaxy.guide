@@ -54,8 +54,8 @@ export function AttractButton({
 	const handleInteractionEnd = useCallback(async () => {
 		setIsAttracting(false);
 		await particlesControl.start((i) => ({
-			x: particles[i].x,
-			y: particles[i].y,
+			x: particles[i]?.x || 0,
+			y: particles[i]?.y || 0,
 			transition: {
 				type: "spring",
 				stiffness: 100,
@@ -85,7 +85,7 @@ export function AttractButton({
 				<motion.div
 					key={index}
 					custom={index}
-					initial={{ x: particles[index].x, y: particles[index].y }}
+					initial={{ x: particles[index]?.x || 0, y: particles[index]?.y || 0 }}
 					animate={particlesControl}
 					className={cn(
 						"absolute h-1.5 w-1.5 rounded-full",

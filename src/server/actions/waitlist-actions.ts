@@ -120,9 +120,11 @@ export const addToWaitlist = async (formData: WaitlistFormData) => {
  * @returns A promise that resolves with success status
  */
 export const addToWaitlistSimple = async (email: string) => {
+	const emailParts = email.split("@");
+	const name = emailParts.length > 0 ? emailParts[0]! : email;
 	return addToWaitlist({
 		email,
-		name: email.split("@")[0], // Use email prefix as fallback name
+		name, // Use email prefix as fallback name
 	});
 };
 

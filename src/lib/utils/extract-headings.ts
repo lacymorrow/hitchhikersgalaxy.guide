@@ -92,8 +92,8 @@ export function extractHeadings(content: string): Heading[] {
 	let match;
 
 	while ((match = headingRegex.exec(content)) !== null) {
-		const level = match[1].length;
-		const text = match[2].trim();
+		const level = match[1]?.length ?? 0;
+		const text = match[2]?.trim() ?? "";
 		const id = slugify(text);
 
 		headings.push({

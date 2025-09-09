@@ -13,7 +13,7 @@ export const generateTemporaryLink = async ({
 	userId: string;
 }) => {
 	const link = await createTemporaryLink({ data, userId, type: "download" });
-	if (!link || link.length === 0) {
+	if (!link || link.length === 0 || !link[0]) {
 		throw new Error("Failed to create temporary link");
 	}
 	return link[0].id;

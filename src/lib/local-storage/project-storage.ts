@@ -136,18 +136,31 @@ export class LocalProjectStorage {
 
 		if (projectIndex === -1) return null;
 
+		const existingProject = projects[projectIndex];
+		if (!existingProject) return null;
+
 		projects[projectIndex] = {
-			...projects[projectIndex],
+			...existingProject,
 			name: projectName,
 			updatedAt: new Date(),
+			id: existingProject.id || "",
+			teamId: existingProject.teamId || "",
+			createdAt: existingProject.createdAt || new Date(),
+			members: existingProject.members || [],
 		};
 
 		saveToStorage(STORAGE_KEYS.projects, projects);
 
 		// Return with members
 		const projectMembers = getFromStorage<LocalProjectMember>(STORAGE_KEYS.projectMembers);
+		const updatedProject = projects[projectIndex];
 		return {
-			...projects[projectIndex],
+			...updatedProject,
+			id: updatedProject.id || "",
+			name: updatedProject.name || "",
+			teamId: updatedProject.teamId || "",
+			createdAt: updatedProject.createdAt || new Date(),
+			updatedAt: updatedProject.updatedAt || new Date(),
 			members: projectMembers.filter((m) => m.projectId === projectId),
 		};
 	}
@@ -220,10 +233,18 @@ export class LocalProjectStorage {
 
 		if (memberIndex === -1) return null;
 
+		const existingMember = projectMembers[memberIndex];
+		if (!existingMember) return null;
+
 		projectMembers[memberIndex] = {
-			...projectMembers[memberIndex],
+			...existingMember,
 			role,
 			updatedAt: new Date(),
+			id: existingMember.id || "",
+			projectId: existingMember.projectId || "",
+			userId: existingMember.userId || "",
+			createdAt: existingMember.createdAt || new Date(),
+			user: existingMember.user || undefined,
 		};
 
 		saveToStorage(STORAGE_KEYS.projectMembers, projectMembers);

@@ -69,8 +69,8 @@ async function verifyPassword(password: string, storedHash: string): Promise<boo
 		if (parts.length !== 2) return false;
 
 		// Explicitly type the parts to ensure they are strings
-		const saltHex: string = parts[0];
-		const hashHex: string = parts[1];
+		const saltHex: string = parts[0] ?? "";
+		const hashHex: string = parts[1] ?? "";
 
 		// Create buffers from the hex strings
 		const salt = Buffer.from(saltHex, "hex");

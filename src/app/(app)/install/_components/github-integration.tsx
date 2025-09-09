@@ -24,8 +24,12 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
 	};
 
 	const componentName = extractComponentInfo();
-	const timestamp = new Date().toISOString().split("T")[0]; // YYYY-MM-DD
-	const timeComponent = new Date().toISOString().split("T")[1].split(".")[0].replace(/:/g, "-"); // HH-MM-SS
+	const isoString = new Date().toISOString();
+	const isoParts = isoString.split("T");
+	const timestamp = isoParts[0] || ""; // YYYY-MM-DD
+
+	const timePart = isoParts[1];
+	const timeComponent = timePart ? timePart.split(".")[0]?.replace(/:/g, "-") || "" : ""; // HH-MM-SS
 
 	// Generate default values once
 	const defaultValues = {

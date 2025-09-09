@@ -139,7 +139,9 @@ export async function createLemonSqueezyPayment(data: {
 
 		if (!actualUserId && userEmail) {
 			const user = await findOrCreateUser(userEmail);
-			actualUserId = user.id;
+			if (user) {
+				actualUserId = user.id;
+			}
 		}
 
 		if (!actualUserId) {

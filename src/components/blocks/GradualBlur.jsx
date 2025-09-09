@@ -38,15 +38,15 @@ const PRESETS = {
 };
 
 const CURVE_FUNCTIONS = {
-	linear: (p) => p,
-	bezier: (p) => p * p * (3 - 2 * p),
-	"ease-in": (p) => p * p,
-	"ease-out": (p) => 1 - (1 - p) ** 2,
-	"ease-in-out": (p) => (p < 0.5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2),
+	linear: (p: number) => p,
+	bezier: (p: number) => p * p * (3 - 2 * p),
+	"ease-in": (p: number) => p * p,
+	"ease-out": (p: number) => 1 - (1 - p) ** 2,
+	"ease-in-out": (p: number) => (p < 0.5 ? 2 * p * p : 1 - (-2 * p + 2) ** 2 / 2),
 };
 
-const mergeConfigs = (...configs) => configs.reduce((acc, c) => ({ ...acc, ...c }), {});
-const getGradientDirection = (position) =>
+const mergeConfigs = (...configs: any[]) => configs.reduce((acc, c) => ({ ...acc, ...c }), {});
+const getGradientDirection = (position: string) =>
 	({
 		top: "to top",
 		bottom: "to bottom",

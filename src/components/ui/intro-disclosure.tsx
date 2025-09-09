@@ -504,7 +504,7 @@ export function IntroDisclosure({
 							/>
 						</div>
 						<AnimatePresence mode="wait" initial={false}>
-							<StepPreview key={currentStep} step={steps[currentStep]} direction={direction} />
+							{steps[currentStep] && <StepPreview key={currentStep} step={steps[currentStep]} direction={direction} />}
 						</AnimatePresence>
 					</div>
 				</DialogContent>
@@ -545,7 +545,7 @@ export function IntroDisclosure({
 							</div>
 							{/* Preview */}
 							<div className="relative aspect-[16/9] ring-2 ring-border ring-offset-8 ring-offset-background rounded-lg overflow-hidden">
-								<StepPreview step={steps[currentStep]} direction={direction} />
+								{steps[currentStep] && <StepPreview step={steps[currentStep]} direction={direction} />}
 							</div>
 
 							{/* Step content */}

@@ -151,7 +151,7 @@ export const OnboardingWizard = ({
 					currentStep: index,
 					steps: {
 						...prev.steps,
-						[stepIds[Math.max(0, Math.min(stepIds.length - 1, index))]]: true,
+						[stepIds[Math.max(0, Math.min(stepIds.length - 1, index))] || ""]: true,
 					},
 				}))
 			}

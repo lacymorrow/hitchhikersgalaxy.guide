@@ -110,7 +110,7 @@ export function TeamSwitcher({
 
 			// Select the newly created team
 			const newTeam = userTeams.find((t) => t.team.id === team.id);
-			if (newTeam) {
+			if (newTeam && team.id) {
 				setActiveTeam(newTeam);
 				onTeamChange?.(team.id);
 			}

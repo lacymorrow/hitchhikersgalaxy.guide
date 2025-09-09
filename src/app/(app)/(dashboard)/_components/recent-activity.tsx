@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { AlertCircle } from "lucide-react";
 import { activityIcons, recentActivity } from "./mock-data";
 
 export function RecentActivity() {
@@ -14,7 +15,7 @@ export function RecentActivity() {
 				<ScrollArea className="h-[300px]">
 					<div className="space-y-4">
 						{recentActivity.map((activity) => {
-							const Icon = activityIcons[activity.type];
+							const Icon = activityIcons[activity.type] || AlertCircle;
 							return (
 								<div key={activity.id} className="flex items-center">
 									<Avatar className="h-9 w-9">

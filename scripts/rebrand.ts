@@ -43,13 +43,13 @@ const argMap: Record<string, string> = {};
 const flags: Record<string, boolean> = {};
 
 for (let i = 0; i < args.length; i++) {
-	if (args[i].startsWith("--")) {
-		const arg = args[i].substring(2);
+	if (args[i] && args[i]!.startsWith("--")) {
+		const arg = args[i]!.substring(2);
 		// Check if it's a flag (no value)
-		if (i + 1 >= args.length || args[i + 1].startsWith("--")) {
+		if (i + 1 >= args.length || (args[i + 1] && args[i + 1]!.startsWith("--"))) {
 			flags[arg] = true;
-		} else {
-			argMap[arg] = args[i + 1];
+		} else if (args[i + 1]) {
+			argMap[arg] = args[i + 1]!;
 			i++;
 		}
 	}

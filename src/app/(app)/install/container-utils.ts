@@ -79,7 +79,7 @@ export class ContainerManager {
 	 * @param templateBaseDir - Base directory path containing template files
 	 *                         used for initializing the container file system
 	 */
-	constructor(private templateBaseDir: string) {}
+	constructor(private templateBaseDir: string) { }
 
 	/**
 	 * Initialize and boot the WebContainer instance
@@ -1201,7 +1201,7 @@ export function cn(...inputs: ClassValue[]) {
 
 			// Check if command starts with a package manager
 			const packageManagers = ["npx", "pnpx", "pnpm", "bunx", "yarn"];
-			if (packageManagers.includes(command[0])) {
+			if (command.length > 0 && command[0] && packageManagers.includes(command[0])) {
 				packageManager = command[0];
 				actualCommand = command.slice(1);
 			}

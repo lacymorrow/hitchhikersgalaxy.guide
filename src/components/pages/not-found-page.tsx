@@ -15,7 +15,7 @@ interface NotFoundPageProps {
 	statusCode?: number;
 }
 
-const NoOpProvider = ({ children }: { children: React.ReactNode }) => <>{children}</>;
+const NoOpProvider = ({ children, ...props }: { children: React.ReactNode;[key: string]: any }) => <>{children}</>;
 
 export const NotFoundPage = ({
 	containerClassName,

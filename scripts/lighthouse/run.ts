@@ -61,12 +61,14 @@ async function runSingle(
 
 	const chrome = await launch({ chromeFlags: ["--headless", "--no-sandbox"] });
 	try {
-		const { lhr, report } = await lighthouse(url, {
+		const result = await lighthouse(url, {
 			port: chrome.port,
 			logLevel: "error",
 			output: ["json", "html"],
-			preset,
 		});
+
+		const lhr = result?.lhr;
+		const report = result?.report;
 
 		// report[0] json, report[1] html
 		const jsonPath = path.join(outputDir, "lighthouse.json");
@@ -75,8 +77,11 @@ async function runSingle(
 		await fs.writeFile(htmlPath, String(report?.[1] ?? ""), "utf8");
 
 		const categories: Record<string, number | null> = {};
-		for (const [key, cat] of Object.entries(lhr.categories ?? {})) {
-			categories[key] = typeof cat.score === "number" ? Math.round(cat.score * 100) : null;
+		if (lhr?.categories) {
+			for (const [key, cat] of Object.entries(lhr.categories)) {
+				const score = (cat as any)?.score;
+				categories[key] = typeof score === "number" ? Math.round(score * 100) : null;
+			}
 		}
 
 		return { url, outputDir, categories, reportJsonPath: jsonPath, reportHtmlPath: htmlPath };

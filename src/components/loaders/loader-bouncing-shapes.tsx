@@ -28,7 +28,8 @@ export const LoaderBouncingShapes = () => {
 				shape.className = "shape";
 
 				// Assign styles
-				classList.add(TYPES[Math.floor(Math.random() * TYPES.length)]);
+				const randomType = TYPES[Math.floor(Math.random() * TYPES.length)];
+				if (randomType) classList.add(randomType);
 				const offset = Math.random() * 4 - 2;
 				const opp = offset >= 0 ? "+ " : "- ";
 				const styles = [
@@ -36,11 +37,11 @@ export const LoaderBouncingShapes = () => {
 					["--bounce-variance", `${Math.random() * 20 - 10}vh`],
 					["--base_scale", `${Math.random() * 6 + 4}vh`],
 					["--rotation", `${Math.random() * 180 - 90}deg`],
-					["--color", COLORS[Math.floor(Math.random() * COLORS.length)]],
+					["--color", COLORS[Math.floor(Math.random() * COLORS.length)] || ""],
 				];
 
 				styles.forEach(([property, value]) => {
-					shape.style.setProperty(property, value);
+					if (value && property) shape.style.setProperty(property, value);
 				});
 
 				// Animate

@@ -267,6 +267,8 @@ export class PolarProvider extends BasePaymentProvider {
 			// Process batches sequentially to control database load
 			for (let i = 0; i < batches.length; i++) {
 				const batch = batches[i];
+				if (!batch) continue;
+
 				logger.debug(`Processing batch ${i + 1}/${batches.length} (${batch.length} orders)`);
 
 				// Process each order in the batch

@@ -79,7 +79,7 @@ function Slider() {
 							clientX.jump(e.clientX);
 						}
 					}}
-					onValueChange={([v]) => setVolume(Math.floor(v))}
+					onValueChange={([v]) => setVolume(Math.floor(v || 0))}
 					ref={ref}
 					step={0.01}
 					value={[volume]}

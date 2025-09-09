@@ -973,7 +973,7 @@ const PaymentService = {
 
 					// Get the last purchase date
 					const lastPurchaseDate =
-						userPayments.length > 0 ? new Date(userPayments[0].createdAt) : null;
+						userPayments.length > 0 && userPayments[0]?.createdAt ? new Date(userPayments[0].createdAt) : null;
 
 					// Create user data object
 					userData.push({

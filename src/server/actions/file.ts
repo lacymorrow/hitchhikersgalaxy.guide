@@ -32,6 +32,9 @@ export const uploadFileAction = async (
 		location: url,
 	});
 	revalidateTag("files");
+	if (!userFile) {
+		throw new Error("Failed to create user file");
+	}
 	return { fileName, fileId: userFile.id };
 };
 

@@ -100,7 +100,8 @@ export const ShipkitLogoParticles = () => {
 				const x = Math.floor(Math.random() * canvas.width);
 				const y = Math.floor(Math.random() * canvas.height);
 
-				if (data[(y * canvas.width + x) * 4 + 3] > 128) {
+				const dataIndex = (y * canvas.width + x) * 4 + 3;
+				if (dataIndex < data.length && data[dataIndex] && data[dataIndex] > 128) {
 					const burstAngle = Math.random() * Math.PI * 2;
 					const burstMaxRadius = Math.random() * 100 + 100;
 
@@ -205,6 +206,8 @@ export const ShipkitLogoParticles = () => {
 
 			for (let i = 0; i < particles.length; i++) {
 				const p = particles[i];
+				if (!p) continue;
+
 				let currentX = p.x;
 				let currentY = p.y;
 				let particleColor = particleBaseColor; // Default to theme base color
@@ -338,7 +341,7 @@ export const ShipkitLogoParticles = () => {
 		};
 
 		const handleTouchMove = (e: TouchEvent) => {
-			if (e.touches.length > 0) {
+			if (e.touches.length > 0 && e.touches[0]) {
 				e.preventDefault();
 				handleMove(e.touches[0].clientX, e.touches[0].clientY);
 			}

@@ -19,12 +19,12 @@ export async function useDashboardData() {
 
 	const [isUserAdmin, hasGitHubConnection, hasVercelConnection, isCustomer, isSubscribed] =
 		await Promise.all([
-			isAdmin({ email: session.user.email }),
+			isAdmin({ email: session.user.email || "" }),
 			checkGitHubConnection(userId),
 			checkVercelConnection(userId),
 			PaymentService.hasUserPurchasedVariant({
 				userId,
-				variantId: siteConfig.store.products.shipkit,
+				variantId: siteConfig.store.products.shipkit || "",
 				provider: "lemonsqueezy",
 			}),
 			PaymentService.hasUserActiveSubscription({ userId }),

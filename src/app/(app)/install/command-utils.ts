@@ -35,8 +35,8 @@ export async function runInstallCommand(
 	displayCommand?: string
 ): Promise<number> {
 	try {
-		let packageManager: string;
-		let command: string[];
+		let packageManager: string = "npx";
+		let command: string[] = [];
 		let fullCommand: string;
 
 		// Check which overload is being used
@@ -51,8 +51,10 @@ export async function runInstallCommand(
 
 			// Parse the command string
 			const parts = fullCommand.split(" ");
-			packageManager = parts[0];
-			command = parts.slice(1);
+			if (parts.length > 0 && parts[0]) {
+				packageManager = parts[0];
+				command = parts.slice(1);
+			}
 		}
 
 		logInfo(`Running command: ${fullCommand}`);

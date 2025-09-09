@@ -171,7 +171,7 @@ export function DocsSearch() {
 					let currentIndex = 0;
 
 					// Check search results
-					if (selectedIndex < currentItems.length) {
+					if (selectedIndex < currentItems.length && currentItems[selectedIndex]) {
 						handleResultSelect(currentItems[selectedIndex]);
 						return;
 					}
@@ -180,16 +180,20 @@ export function DocsSearch() {
 					// Check popular docs
 					if (showPopularDocs && selectedIndex < currentIndex + POPULAR_DOCS.length) {
 						const docIndex = selectedIndex - currentIndex;
-						handlePopularDocSelect(POPULAR_DOCS[docIndex]);
-						return;
+						if (POPULAR_DOCS[docIndex]) {
+							handlePopularDocSelect(POPULAR_DOCS[docIndex]);
+							return;
+						}
 					}
 					currentIndex += showPopularDocs ? POPULAR_DOCS.length : 0;
 
 					// Check recent searches
 					if (showRecentSearches && selectedIndex < currentIndex + recentSearches.length) {
 						const recentIndex = selectedIndex - currentIndex;
-						handleRecentSearchSelect(recentSearches[recentIndex]);
-						return;
+						if (recentSearches[recentIndex]) {
+							handleRecentSearchSelect(recentSearches[recentIndex]);
+							return;
+						}
 					}
 					break;
 				}

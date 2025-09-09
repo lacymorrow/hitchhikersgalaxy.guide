@@ -227,29 +227,30 @@ export function levenshteinDistance(a: string, b: string): number {
 
 	// Initializing matrix
 	for (let i = 0; i <= b.length; i++) {
-		matrix[i] = [i];
+		matrix[i] = new Array(a.length + 1);
+		matrix[i]![0] = i;
 	}
 
 	for (let i = 0; i <= a.length; i++) {
-		matrix[0][i] = i;
+		matrix[0]![i] = i;
 	}
 
 	// Calculate Levenshtein distance
 	for (let i = 1; i <= b.length; i++) {
 		for (let j = 1; j <= a.length; j++) {
 			if (b.charAt(i - 1) === a.charAt(j - 1)) {
-				matrix[i][j] = matrix[i - 1][j - 1];
+				matrix[i]![j] = matrix[i - 1]![j - 1]!;
 			} else {
-				matrix[i][j] = Math.min(
-					matrix[i - 1][j - 1] + 1, // substitution
-					matrix[i][j - 1] + 1, // insertion
-					matrix[i - 1][j] + 1 // deletion
+				matrix[i]![j] = Math.min(
+					matrix[i - 1]![j - 1]! + 1, // substitution
+					matrix[i]![j - 1]! + 1, // insertion
+					matrix[i - 1]![j]! + 1 // deletion
 				);
 			}
 		}
 	}
 
-	return matrix[b.length][a.length];
+	return matrix[b.length]![a.length]!;
 }
 
 /**

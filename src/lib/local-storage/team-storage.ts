@@ -216,12 +216,12 @@ export class LocalTeamStorage {
 
 		if (personalTeams.length === 1) {
 			// Already has exactly one
-			return personalTeams[0];
+			return personalTeams[0] || null;
 		}
 
 		// Multiple personal teams - keep oldest, soft delete rest
 		const sortedTeams = personalTeams.sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
-		const keepTeam = sortedTeams[0];
+		const keepTeam = sortedTeams[0] || null;
 		const teamsToDelete = sortedTeams.slice(1);
 
 		// Soft delete extra teams
@@ -245,10 +245,18 @@ export class LocalTeamStorage {
 
 		if (teamIndex === -1) return null;
 
+		const existingTeam = teams[teamIndex];
+		if (!existingTeam) return null;
+
 		teams[teamIndex] = {
-			...teams[teamIndex],
+			...existingTeam,
 			...data,
 			updatedAt: new Date(),
+			id: existingTeam.id || "",
+			name: existingTeam.name || "",
+			type: existingTeam.type || "personal",
+			createdAt: existingTeam.createdAt || new Date(),
+			deletedAt: existingTeam.deletedAt || null,
 		};
 
 		saveToStorage(STORAGE_KEYS.teams, teams);
@@ -326,10 +334,16 @@ export class LocalTeamStorage {
 
 		if (memberIndex === -1) return null;
 
+		const existingMember = teamMembers[memberIndex];
 		teamMembers[memberIndex] = {
-			...teamMembers[memberIndex],
+			...existingMember,
 			role,
 			updatedAt: new Date(),
+			id: existingMember.id || "",
+			teamId: existingMember.teamId || "",
+			userId: existingMember.userId || "",
+			createdAt: existingMember.createdAt || new Date(),
+			user: existingMember.user || undefined,
 		};
 
 		saveToStorage(STORAGE_KEYS.teamMembers, teamMembers);

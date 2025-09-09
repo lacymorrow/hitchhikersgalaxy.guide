@@ -34,7 +34,7 @@ export async function AppRouterLayout({
 			} else {
 				// Ensure at least one personal team exists
 				const personalTeam = await teamService.ensureOnePersonalTeam(session.user.id);
-				if (personalTeam) {
+				if (personalTeam && personalTeam.id && personalTeam.name) {
 					userTeams = [
 						{
 							id: personalTeam.id,

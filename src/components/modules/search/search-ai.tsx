@@ -234,6 +234,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 	const getSearchResultsPreview = (results: SearchResult[]) => {
 		if (results.length === 0) return "";
 		const firstResult = results[0];
+		if (!firstResult) return "";
 		return `${firstResult.title} - ${firstResult.content.slice(0, 100)}${firstResult.content.length > 100 ? "..." : ""}`;
 	};
 

@@ -138,7 +138,7 @@ export function ProjectDialog({
 				setTeams(userTeams);
 
 				// Set default team ID if teams are available
-				if (userTeams.length > 0) {
+				if (userTeams.length > 0 && userTeams[0]?.team?.id) {
 					const firstTeamId = userTeams[0].team.id;
 					setDefaultTeamId(firstTeamId);
 
@@ -172,7 +172,7 @@ export function ProjectDialog({
 			if (!team) {
 				throw new Error("Failed to create team");
 			}
-			form.setValue("teamId", team.id);
+			form.setValue("teamId", team.id || "");
 			setShowNewTeamInput(false);
 			setNewTeamName("");
 
@@ -305,7 +305,7 @@ export function ProjectDialog({
 									render={({ field }) => (
 										<FormItem>
 											<FormLabel>Team</FormLabel>
-											{teams.length === 1 ? (
+											{teams.length === 1 && teams[0]?.team?.name ? (
 												<div className="text-sm text-muted-foreground">{teams[0].team.name}</div>
 											) : (
 												<Select onValueChange={field.onChange} defaultValue={field.value}>

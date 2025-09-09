@@ -215,7 +215,7 @@ export const getStripePaymentStatus = async (userId: string): Promise<boolean> =
 
 		// Check for successful payments
 		const paymentIntents = await stripe.paymentIntents.list({
-			customer: customer.id,
+			customer: customer?.id,
 			limit: 10,
 		});
 
@@ -225,7 +225,7 @@ export const getStripePaymentStatus = async (userId: string): Promise<boolean> =
 
 		// Check for active subscriptions
 		const subscriptions = await stripe.subscriptions.list({
-			customer: customer.id,
+			customer: customer?.id,
 			status: "active",
 			limit: 10,
 		});
@@ -299,7 +299,7 @@ export const hasUserPurchasedStripeProduct = async (
 
 		// Check payment intents for the specific price
 		const paymentIntents = await stripe.paymentIntents.list({
-			customer: customer.id,
+			customer: customer?.id,
 			limit: 100,
 		});
 
@@ -316,7 +316,7 @@ export const hasUserPurchasedStripeProduct = async (
 
 		// Check subscriptions for the specific price
 		const subscriptions = await stripe.subscriptions.list({
-			customer: customer.id,
+			customer: customer?.id,
 			limit: 100,
 		});
 
@@ -717,6 +717,9 @@ export const getStripeCustomerByEmail = async (email: string): Promise<StripeCus
 		}
 
 		const customer = customers.data[0];
+		if (!customer) {
+			return null;
+		}
 
 		return {
 			id: customer.id,

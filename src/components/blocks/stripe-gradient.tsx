@@ -22,12 +22,12 @@ const defaultProps: GradientBackgroundProps = {
 
 function hexToRgb(hex: string): [number, number, number] {
 	const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-	return result
+	return result && result[1] && result[2] && result[3]
 		? [
-				Number.parseInt(result[1], 16) / 255,
-				Number.parseInt(result[2], 16) / 255,
-				Number.parseInt(result[3], 16) / 255,
-			]
+			Number.parseInt(result[1], 16) / 255,
+			Number.parseInt(result[2], 16) / 255,
+			Number.parseInt(result[3], 16) / 255,
+		]
 		: [0, 0, 0];
 }
 

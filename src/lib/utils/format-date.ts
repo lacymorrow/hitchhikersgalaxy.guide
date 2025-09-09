@@ -62,7 +62,8 @@ export function formatDateForBlog(date: string | Date | null | undefined): strin
 			return "";
 		}
 
-		return dateObj.toISOString().split("T")[0];
+		const isoString = dateObj.toISOString();
+		return isoString?.split("T")[0] ?? "";
 	} catch {
 		return "";
 	}

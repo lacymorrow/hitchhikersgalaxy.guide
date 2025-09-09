@@ -133,9 +133,10 @@ export function FontSelector() {
 		const getInitialFont = () => {
 			const currentStyle = document.body.style.fontFamily;
 			if (currentStyle) {
-				const firstFont = currentStyle.split(",")[0].trim().replace(/['"]/g, "");
-				if (GOOGLE_FONTS.some((f) => f.family === firstFont)) return firstFont;
-				if (browsedFonts.includes(firstFont)) return firstFont;
+				const fontParts = currentStyle.split(",");
+				const firstFont = fontParts[0]?.trim().replace(/['"]/g, "");
+				if (firstFont && GOOGLE_FONTS.some((f) => f.family === firstFont)) return firstFont;
+				if (firstFont && browsedFonts.includes(firstFont)) return firstFont;
 			}
 			const defaultFont = GOOGLE_FONTS.find((f) => f.family === "Inter")?.family || "";
 			if (!currentStyle && defaultFont) {
@@ -328,21 +329,21 @@ export function FontSelector() {
 									<CommandGroup heading="Browse Fonts">
 										{browsedFonts.length > 0
 											? browsedFonts.map((fontFamily) => (
-													<CommandItem
-														key={`browse-${fontFamily}`}
-														value={fontFamily}
-														onSelect={handleSelectFont}
-													>
-														<Check
-															className={cn(
-																"mr-2 h-4 w-4",
-																selectedFont === fontFamily ? "opacity-100" : "opacity-0"
-															)}
-															aria-hidden="true"
-														/>
-														<span>{fontFamily}</span>
-													</CommandItem>
-												))
+												<CommandItem
+													key={`browse-${fontFamily}`}
+													value={fontFamily}
+													onSelect={handleSelectFont}
+												>
+													<Check
+														className={cn(
+															"mr-2 h-4 w-4",
+															selectedFont === fontFamily ? "opacity-100" : "opacity-0"
+														)}
+														aria-hidden="true"
+													/>
+													<span>{fontFamily}</span>
+												</CommandItem>
+											))
 											: null}
 
 										{/* Loading/Error/Load More Section */}

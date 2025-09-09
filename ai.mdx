@@ -240,6 +240,17 @@ Summary: New analytics provider supported. Users add `NEXT_PUBLIC_DATAFAST_WEBSI
 4. **Test Thoroughly** - Ensure no regressions with each optimization
 
 ## 📝 Progress Log
+### Docs: Payload CMS enable/disable update
+
+- [x] Updated `docs/development/feature-flags.md` to remove `ENABLE_PAYLOAD`, add `DISABLE_PAYLOAD`, and document enablement via `DATABASE_URL` + `PAYLOAD_SECRET`.
+- [x] Updated `docs/integrations/content/payload-cms.mdx` with example:
+  ```bash
+  DATABASE_URL=postgres://username:password@localhost:5432/database
+  PAYLOAD_SECRET=randomsecretkey # Used for encrypting passwords and sessions
+  ```
+  Payload CMS is automatically enabled when both `DATABASE_URL` and `PAYLOAD_SECRET` are provided. You can explicitly disable it by setting `DISABLE_PAYLOAD=true`.
+- [x] Updated `docs/content-creation/index.mdx` snippet and note to reflect the same behavior.
+
 ### Feature: Centralized Social Media Links System
 
 - [x] Added typed `social` config to `src/config/site-config.ts` with optional URLs for common platforms. Empty string disables a platform.

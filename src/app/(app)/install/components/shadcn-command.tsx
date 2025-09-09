@@ -62,7 +62,7 @@ export const ShadcnCommand = ({
 	const makeCommand = useCallback(() => {
 		const parts = command.split(" ");
 		// If the command already contains npx shadcn@latest, just return it
-		if (parts[0] === "npx" && parts.length > 1 && parts[1].includes("shadcn")) {
+		if (parts[0] === "npx" && parts.length > 1 && parts[1] && parts[1].includes("shadcn")) {
 			return command;
 		}
 		// Otherwise, extract just the component name or command parts
@@ -424,7 +424,7 @@ export const ShadcnCommand = ({
 							</div>
 						</TabsContent>
 						<TabsContent value="files" className="mt-2 max-h-[300px] overflow-auto">
-							<FileChangeDisplay changedFiles={changedFiles} onDownloadAll={() => {}} />
+							<FileChangeDisplay changedFiles={changedFiles} onDownloadAll={() => { }} />
 						</TabsContent>
 					</Tabs>
 				)}

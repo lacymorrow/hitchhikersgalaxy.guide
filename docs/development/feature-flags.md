@@ -43,6 +43,7 @@ if (buildTimeFeatures.PAYLOAD_ENABLED) {
 Features are automatically enabled when their required environment variables are present:
 
 - **Database**: `DATABASE_URL`
+- **Payload CMS**: `DATABASE_URL` + `PAYLOAD_SECRET` (and not `DISABLE_PAYLOAD=true`)
 - **Stripe**: `STRIPE_SECRET_KEY` + `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 - **Auth providers**: Provider ID + secret (e.g., `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`)
 - **Services**: API key (e.g., `OPENAI_API_KEY`)
@@ -51,7 +52,7 @@ Features are automatically enabled when their required environment variables are
 
 Some features can be explicitly controlled:
 
-- `ENABLE_PAYLOAD=true` - Enable Payload CMS
+- `DISABLE_PAYLOAD=true` - Disable Payload CMS (by default Payload is enabled when `DATABASE_URL` and `PAYLOAD_SECRET` are set)
 - `BETTER_AUTH_ENABLED=true` - Enable Better Auth
 - `DISABLE_MDX=true` - Disable MDX support
 - `DISABLE_PWA=true` - Disable PWA

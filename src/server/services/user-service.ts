@@ -402,7 +402,7 @@ export class UserService extends BaseService<typeof users> {
 
 		logger.info("Added file to user profile", {
 			userId,
-			fileId: newFile.id,
+			fileId: newFile?.id || "",
 			title: file.title,
 		});
 
@@ -541,7 +541,7 @@ export class UserService extends BaseService<typeof users> {
 						});
 						logger.info("Created default API key for newly created user", {
 							userId: result.user.id,
-							apiKeyId: apiKey.id,
+							apiKeyId: apiKey?.id || "",
 						});
 					} catch (error) {
 						logger.error("Failed to create default API key for new user", {

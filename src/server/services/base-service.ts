@@ -246,14 +246,19 @@ export class BaseService<T extends PgTable> {
 
 		const orderByColumn = this.table[orderBy as keyof T] as Column;
 
-		const [records, [{ count }]] = await Promise.all([
-			this.db
-				.select()
-				.from(this.table as any)
-				.where(whereClause)
-				.limit(limit)
-				.offset(offset)
-				.orderBy(orderDir === "desc" ? desc(orderByColumn) : asc(orderByColumn)),
+		const [records, countResult] = await Promise.all([
+			query,
+			query.count(),
+		]);
+
+		const count = countResult?.[0]?.count || 0;
+		this.db
+			.select()
+			.from(this.table as any)
+			.where(whereClause)
+			.limit(limit)
+			.offset(offset)
+			.orderBy(orderDir === "desc" ? desc(orderByColumn) : asc(orderByColumn)),
 			this.db
 				.select({ count: sql<number>`count(*)` })
 				.from(this.table as any)

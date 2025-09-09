@@ -60,8 +60,7 @@ async function runAxeOnUrl(url: string, outBaseDir: string): Promise<AxeReportSu
 	await page.goto(url, { waitUntil: "load" });
 	await page.addScriptTag({ content: axeSource.source });
 	const results = await page.evaluate(async () => {
-		// @ts-expect-error injected by addScriptTag
-		return await window.axe.run({
+		return await (window as any).axe.run({
 			runOnly: { type: "tag", values: ["wcag2a", "wcag2aa"] },
 			resultTypes: ["violations", "passes", "incomplete", "inapplicable"],
 		});

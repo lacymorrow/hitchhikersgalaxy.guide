@@ -27,11 +27,13 @@ To get started with content management in Shipkit, configure your preferred CMS:
 
 ```bash
 # For Payload CMS
-PAYLOAD_SECRET=your_payload_secret_key
-DATABASE_URL=your_postgres_database_url
+DATABASE_URL=postgres://username:password@localhost:5432/database
+PAYLOAD_SECRET=randomsecretkey # Used for encrypting passwords and sessions
 
 # For Builder.io
 NEXT_PUBLIC_BUILDER_API_KEY=your_builder_api_key
 ```
+
+Payload CMS is automatically enabled when both `DATABASE_URL` and `PAYLOAD_SECRET` are provided. You can explicitly disable it by setting `DISABLE_PAYLOAD=true`.
 
 See the individual CMS documentation pages for detailed setup instructions.

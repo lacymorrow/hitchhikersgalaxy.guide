@@ -159,6 +159,7 @@ export class StripeProvider extends BasePaymentProvider {
 			if (customers.data.length === 0) return false;
 
 			const customer = customers.data[0];
+			if (!customer) return false;
 
 			// Check for active subscriptions
 			const subscriptions = await stripe.subscriptions.list({
@@ -203,6 +204,7 @@ export class StripeProvider extends BasePaymentProvider {
 			if (customers.data.length === 0) return products;
 
 			const customer = customers.data[0];
+			if (!customer) return products;
 
 			// Get subscriptions
 			const subscriptions = await stripe.subscriptions.list({

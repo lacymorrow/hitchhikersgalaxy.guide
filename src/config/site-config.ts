@@ -190,7 +190,7 @@ export const siteConfig: SiteConfig = {
 	title: "Shipkit",
 	tagline: "Launch your app at light speed.",
 	url: "https://shipkit.io",
-	ogImage: "https://shipkit.io/app/og-image.png",
+	ogImage: "/app/og-image.png",
 	description:
 		"Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.",
 
@@ -386,9 +386,7 @@ siteConfig.payload.adminTitleSuffix = ` - ${siteConfig.title} CMS`;
 // siteConfig.manifest.startUrl = routes.home; // Uncomment and import routes if needed
 
 // Make sure alternates exists before assigning canonical
-if (!siteConfig.metadata.alternates) {
-	siteConfig.metadata.alternates = {};
-}
+siteConfig.metadata.alternates ??= {};
 siteConfig.metadata.alternates.canonical = siteConfig.url;
 
 // Check appleWebApp is an object before assigning title
@@ -397,12 +395,8 @@ if (siteConfig.metadata.appleWebApp && typeof siteConfig.metadata.appleWebApp ==
 }
 
 // Ensure appLinks and appLinks.web are objects before assigning url
-if (!siteConfig.metadata.appLinks) {
-	siteConfig.metadata.appLinks = {};
-}
-if (!siteConfig.metadata.appLinks.web) {
-	siteConfig.metadata.appLinks.web = { url: "", should_fallback: false }; // Initialize web if needed
-}
+siteConfig.metadata.appLinks ??= {};
+siteConfig.metadata.appLinks.web ??= { url: "", should_fallback: false }; // Initialize web if needed
 // Check type again after potential initialization
 if (
 	siteConfig.metadata.appLinks?.web &&

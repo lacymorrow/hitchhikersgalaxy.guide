@@ -44,6 +44,10 @@ export class BaseService<T extends PgTable> {
 
 		const [record] = await this.db.insert(this.table).values(values).returning();
 
+		if (!record) {
+			throw new Error("Failed to create record");
+		}
+
 		return record;
 	}
 
@@ -246,24 +250,25 @@ export class BaseService<T extends PgTable> {
 
 		const orderByColumn = this.table[orderBy as keyof T] as Column;
 
-		const [records, countResult] = await Promise.all([
-			query,
-			query.count(),
-		]);
-
-		const count = countResult?.[0]?.count || 0;
-		this.db
+		const recordsQuery = this.db
 			.select()
 			.from(this.table as any)
 			.where(whereClause)
 			.limit(limit)
 			.offset(offset)
-			.orderBy(orderDir === "desc" ? desc(orderByColumn) : asc(orderByColumn)),
-			this.db
-				.select({ count: sql<number>`count(*)` })
-				.from(this.table as any)
-				.where(whereClause),
+			.orderBy(orderDir === "desc" ? desc(orderByColumn) : asc(orderByColumn));
+
+		const countQuery = this.db
+			.select({ count: sql<number>`count(*)` })
+			.from(this.table as any)
+			.where(whereClause);
+
+		const [records, countResult] = await Promise.all([
+			recordsQuery,
+			countQuery,
 		]);
+
+		const count = countResult?.[0]?.count || 0;
 
 		return {
 			data: records,

@@ -1,6 +1,5 @@
 import { Head, Html, Main, NextScript } from "next/document";
 import { headLinkHints, type HeadLinkHint } from "@/config/metadata";
-import { Body } from "@/components/primitives/body";
 
 export default function Document() {
 	return (
@@ -12,10 +11,10 @@ export default function Document() {
 					<link key={`${l.rel}-${l.href}`} rel={l.rel} href={l.href} crossOrigin={l.crossOrigin} />
 				))}
 			</Head>
-			<Body>
+			<body className="min-h-screen antialiased">
 				<Main />
 				<NextScript />
-			</Body>
+			</body>
 		</Html>
 	);
 }

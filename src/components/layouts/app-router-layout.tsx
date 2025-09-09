@@ -44,6 +44,7 @@ export async function AppRouterLayout({
 				}
 			}
 		} catch (error) {
+			// eslint-disable-next-line no-console
 			console.error("Failed to fetch user teams:", error);
 		}
 	}

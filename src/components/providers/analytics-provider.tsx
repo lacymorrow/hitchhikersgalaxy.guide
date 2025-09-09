@@ -6,6 +6,7 @@ import { WebVitals } from "@/components/primitives/web-vitals";
 import { env } from "@/env";
 import { ShipkitStatsigProvider } from "@/lib/statsig/statsig-provider";
 import { UmamiAnalytics } from "@/lib/umami/umami-analytics";
+import { DataFastAnalytics } from "@/lib/datafast/datafast-analytics";
 
 export const AnalyticsProvider = ({ children }: { children: ReactNode }) => {
 	return (
@@ -29,6 +30,7 @@ export const AnalyticsProvider = ({ children }: { children: ReactNode }) => {
 					<GoogleTagManager gtmId={env.NEXT_PUBLIC_GOOGLE_GTM_ID} />
 				) : null}
 				<UmamiAnalytics />
+				<DataFastAnalytics />
 				<VercelAnalytics />
 			</ShipkitStatsigProvider>
 		</>

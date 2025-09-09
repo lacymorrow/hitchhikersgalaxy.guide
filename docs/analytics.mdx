@@ -1,11 +1,11 @@
 ---
 title: 'Analytics Integration'
-description: 'Analytics configuration for PostHog and Umami in Shipkit'
+description: 'Analytics configuration for PostHog, Umami, and DataFast in Shipkit'
 ---
 
 # Analytics Integration
 
-Shipkit includes built-in support for PostHog and Umami analytics to help you understand user behavior and improve your application.
+Shipkit includes built-in support for PostHog, Umami, and DataFast analytics to help you understand user behavior and improve your application.
 
 ## PostHog Analytics
 
@@ -50,6 +50,24 @@ Get your Website ID from your Umami dashboard after creating a project.
 ### Resources
 
 - [Umami Documentation](https://umami.is/docs)
+
+## DataFast Analytics
+
+[DataFast](https://datafa.st) is a privacy-friendly analytics tool focused on revenue attribution and marketing analytics.
+
+### Configuration
+Add these environment variables to enable DataFast:
+```env
+NEXT_PUBLIC_DATAFAST_WEBSITE_ID=your_datafast_website_id
+# Optional: set your primary domain shown in their dashboard
+NEXT_PUBLIC_DATAFAST_DOMAIN=yourdomain.com
+```
+
+Add the tracking script is handled automatically when the above variables are present and the feature flag is generated at build time. See their App Router docs: [DataFast Next.js App Router guide](https://datafa.st/docs/nextjs-app-router).
+
+### Resources
+
+- [DataFast Documentation](https://datafa.st/docs/nextjs-app-router)
 
 ## Additional Resources
 

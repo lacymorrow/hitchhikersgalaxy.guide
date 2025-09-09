@@ -10,6 +10,17 @@ This document outlines a comprehensive audit plan for the Shipkit codebase to id
 ## 🎯 Goals
 
 - [ ] Reduce bundle size and improve loading performance
+### Task: Add DataFast Analytics Integration
+
+- [x] Mirror env keys in `src/config/features-config.ts` (DATAFAST_WEBSITE_ID, DATAFAST_DOMAIN)
+- [x] Add `DATAFAST_ENABLED` feature flag in `features-config`
+- [x] Extend `src/env.ts` with `NEXT_PUBLIC_DATAFAST_WEBSITE_ID`, `NEXT_PUBLIC_DATAFAST_DOMAIN`, and `NEXT_PUBLIC_FEATURE_DATAFAST_ENABLED`
+- [x] Create `src/lib/datafast/datafast-analytics.tsx` to inject the script
+- [x] Wire into `src/components/providers/analytics-provider.tsx`
+- [x] Docs: `docs/analytics.mdx` + `docs/integrations/analytics/datafast.mdx`
+
+Summary: New analytics provider supported. Users add `NEXT_PUBLIC_DATAFAST_WEBSITE_ID` (and optional domain) and Shipkit injects DataFast script automatically when enabled per feature flags. See DataFast App Router docs for details.
+
 - [ ] Optimize database queries and prevent N+1 patterns
 - [ ] Minimize unnecessary client-side JavaScript
 - [ ] Improve component reusability and maintainability
@@ -581,3 +592,11 @@ Notes:
   - Added dialog UI with input, validation, loading states, and success/error toasts.
   - Preserved connected state UI (View Repository + Disconnect) and wired `disconnectGitHub` with session refresh.
   - Prefills username on open; disables when unauthenticated or loading.
+
+---
+
+#### 🔁 6.2 Docs 404 Handling
+
+- [x] Redirect all docs 404s to `/docs` with temporary 307
+  - Added route `src/app/(app)/docs/not-found.tsx` using Next.js `redirect(routes.docs)` to ensure missing docs pages forward to the docs home instead of rendering a 404 UI.
+  - Scope: Only affects routes under `\n` `src/app/(app)/docs/**` so the rest of the app retains its existing 404 behavior.

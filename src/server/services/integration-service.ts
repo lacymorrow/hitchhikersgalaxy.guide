@@ -217,6 +217,17 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		adminUrl: "https://umami.is/",
 	});
 
+	const datafastId = !!process.env.NEXT_PUBLIC_DATAFAST_WEBSITE_ID;
+	addStatus("Analytics", {
+		name: "DataFast",
+		enabled: datafastId,
+		configured: datafastId,
+		message: datafastId
+			? "Configured (NEXT_PUBLIC_DATAFAST_WEBSITE_ID set)."
+			: "Disabled (Missing NEXT_PUBLIC_DATAFAST_WEBSITE_ID).",
+		adminUrl: "https://datafa.st/",
+	});
+
 	// === Developer Tools & API ===
 	const githubToken = !!process.env.GITHUB_ACCESS_TOKEN;
 	const githubOwner = !!process.env.GITHUB_REPO_OWNER;

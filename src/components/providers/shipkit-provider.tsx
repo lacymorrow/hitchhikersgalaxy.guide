@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Toaster as LegacyToaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TRPCReactProvider } from "@/lib/trpc/react";
+import { ThemeProvider as ShipkitThemeProvider } from "@/components/ui/shipkit/theme";
 // import ConsentProvider from "@/components/providers/consent-provider";
 
 import HolyLoader from "holy-loader";
@@ -13,6 +14,7 @@ import { SessionProvider } from "next-auth/react";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
 import { isAuthenticationAvailable } from "@/lib/auth/auth-strategy";
+import { FontProvider } from "@/components/providers/font-provider";
 
 import "@/styles/globals.css";
 
@@ -52,31 +54,35 @@ export function ShipkitProvider({ children, session, pageProps }: ShipkitProvide
 				height={"4px"}
 				color={"linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8)"}
 			/>
-			<SessionProvider {...(sessionProviderProps as any)}>
-				<TRPCReactProvider {...pageProps}>
-					<TooltipProvider delayDuration={100}>
-						<AnalyticsProvider>
-							{/* <ConsentProvider> */}
+			<ShipkitThemeProvider>
+				<SessionProvider {...(sessionProviderProps as any)}>
+					<TRPCReactProvider {...pageProps}>
+						<TooltipProvider delayDuration={100}>
+							<AnalyticsProvider>
+								{/* <ConsentProvider> */}
 
-							<KeyboardShortcutProvider>
-								{/* Content */}
-								{children}
+								<KeyboardShortcutProvider>
+									<FontProvider>
+										{/* Content */}
+										{children}
 
-								{/* Toast - Display messages to the user */}
-								<Toaster />
+										{/* Toast - Display messages to the user */}
+										<Toaster />
 
-								<LegacyToaster />
+										<LegacyToaster />
 
-								{/* Error Toast - Display error messages to the user based on search params */}
-								<Suspense>
-									<ErrorToast />
-								</Suspense>
-							</KeyboardShortcutProvider>
-							{/* </ConsentProvider> */}
-						</AnalyticsProvider>
-					</TooltipProvider>
-				</TRPCReactProvider>
-			</SessionProvider>
+										{/* Error Toast - Display error messages to the user based on search params */}
+										<Suspense>
+											<ErrorToast />
+										</Suspense>
+									</FontProvider>
+								</KeyboardShortcutProvider>
+								{/* </ConsentProvider> */}
+							</AnalyticsProvider>
+						</TooltipProvider>
+					</TRPCReactProvider>
+				</SessionProvider>
+			</ShipkitThemeProvider>
 		</>
 	);
 }

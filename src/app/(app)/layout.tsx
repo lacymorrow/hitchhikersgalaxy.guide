@@ -2,9 +2,10 @@ import type { Metadata, Viewport } from "next";
 import React from "react";
 
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
-import { Body } from "@/components/primitives/body";
 import { headLinkHints, type HeadLinkHint, metadata as defaultMetadata, viewport as sharedViewport } from "@/config/metadata";
 import { initializePaymentProviders } from "@/server/providers";
+import { FontSelector } from "@/app/(app)/dev/_components/font-selector";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = defaultMetadata;
 export const fetchCache = "default-cache";
@@ -42,7 +43,7 @@ export default async function Layout({
 					<link key={`${l.rel}-${l.href}`} rel={l.rel} href={l.href} crossOrigin={l.crossOrigin} />
 				))}
 			</head>
-			<Body>
+			<body className="min-h-screen antialiased">
 				<AppRouterLayout>
 					<main>{children}</main>
 
@@ -57,8 +58,8 @@ export default async function Layout({
 				</AppRouterLayout>
 
 				{/* Add FontSelector only in development */}
-				{/* {process.env.NODE_ENV === "development" && <FontSelector />} */}
-			</Body>
+				{process.env.NODE_ENV === "development" && <FontSelector />}
+			</body>
 		</html>
 	);
 }

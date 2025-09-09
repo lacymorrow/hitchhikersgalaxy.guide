@@ -1,6 +1,5 @@
 import React from "react";
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
-import { Body } from "@/components/primitives/body";
 
 export const DefaultLayout = async ({
 	children,
@@ -27,7 +26,7 @@ export const DefaultLayout = async ({
 
 	return (
 		<html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
-			<Body>
+			<body className="min-h-screen antialiased">
 				<AppRouterLayout>
 					<main>{children}</main>
 
@@ -43,7 +42,7 @@ export const DefaultLayout = async ({
 
 				{/* Add FontSelector only in development */}
 				{/* {process.env.NODE_ENV === "development" && <FontSelector />} */}
-			</Body>
+			</body>
 		</html>
 	);
 };

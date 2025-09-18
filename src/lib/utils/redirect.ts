@@ -1,5 +1,6 @@
 import { redirect as nextRedirect } from "next/navigation";
 import { NextResponse } from "next/server";
+import type { Route } from "next";
 import { BASE_URL } from "@/config/base-url";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { logger } from "@/lib/logger";
@@ -54,3 +55,24 @@ export function routeRedirect(
 	logger.info(`routeRedirect: Redirecting to ${url}`);
 	return NextResponse.redirect(url);
 }
+
+export interface Redirect {
+	source: Route;
+	destination: Route;
+	permanent: boolean;
+}
+
+export const createRedirects = (
+	sources: Route[],
+	destination: Route,
+	permanent = false
+): Redirect[] => {
+	if (!sources.length) return [];
+
+	return sources
+		.map((source) => {
+			if (source === destination) return null;
+			return { source, destination, permanent };
+		})
+		.filter((redirect): redirect is Redirect => redirect !== null);
+};

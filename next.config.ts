@@ -7,10 +7,21 @@ import {
 	buildTimePublicEnv,
 } from "@/config/features-config";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
-import { redirects } from "@/config/routes";
+import { routes } from "@/config/routes";
 import { getDerivedSecrets } from "@/config/secrets";
 import { withPlugins } from "@/config/with-plugins";
 import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/posthog-config";
+import { createRedirects, type Redirect } from "@/lib/utils/redirect";
+
+/* eslint-disable-next-line @typescript-eslint/require-await */
+const redirects = async (): Promise<Redirect[]> => {
+	return [
+		...createRedirects(["/docs", "/documentation"], routes.docs),
+		...createRedirects(["/join", "/signup", "/sign-up"], routes.auth.signUp),
+		...createRedirects(["/login", "/log-in", "/signin", "/sign-in"], routes.auth.signIn),
+		...createRedirects(["/logout", "/log-out", "/signout", "/sign-out"], routes.auth.signOut),
+	];
+};
 
 const nextConfig: NextConfig = {
 	env: {
@@ -248,7 +259,7 @@ const nextConfig: NextConfig = {
 		// Use DISABLE_ERROR_LOGGING to disable error logging too
 		removeConsole:
 			process.env.DISABLE_LOGGING === "true" ||
-			(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+				(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
 				? process.env.DISABLE_ERROR_LOGGING === "true" ||
 					(process.env.NODE_ENV === "production" && !process.env.DISABLE_ERROR_LOGGING)
 					? true

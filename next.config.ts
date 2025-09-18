@@ -219,6 +219,24 @@ const nextConfig: NextConfig = {
 		optimisticClientCache: true,
 
 		/*
+		 * Optimize Package Imports - Enhanced Bundle Optimization
+		 * Automatically optimizes imports from large libraries like Lodash, Material-UI, etc.
+		 */
+		optimizePackageImports: [
+			"@radix-ui/react-icons",
+			"@tabler/icons-react",
+			"@fortawesome/fontawesome-svg-core",
+			"@fortawesome/free-solid-svg-icons",
+			"@fortawesome/react-fontawesome",
+			"lucide-react",
+			"react-icons",
+			"date-fns",
+			"lodash-es",
+			"@mantine/hooks",
+			"framer-motion",
+		],
+
+		/*
 		 * Client-side Router Cache Configuration
 		 * Optimizes navigation performance by caching page segments
 		 */
@@ -226,6 +244,14 @@ const nextConfig: NextConfig = {
 			dynamic: buildTimeFeatures.PAYLOAD_ENABLED ? 0 : 90, // Payload needs to be re-rendered on every request
 			static: 360, // 360 seconds for static routes
 		},
+
+		/*
+		 * Server Components HMR Cache - Development Performance Boost
+		 * Caches fetch responses in Server Components across HMR refreshes
+		 * Improves development speed and reduces API costs
+		 * ⚠️  Only enable in development - can cause stale data issues
+		 */
+		// serverComponentsHmrCache: process.env.NODE_ENV === 'development',
 
 		// Memory optimization for builds
 		// webpackBuildWorker: false, // Disable for low memory
@@ -243,14 +269,16 @@ const nextConfig: NextConfig = {
 	typedRoutes: true,
 
 	/*
-	 * Logging configuration
+	 * Enhanced Logging Configuration
 	 * @see https://nextjs.org/docs/app/api-reference/next-config-js/logging
 	 */
 	logging: {
 		fetches: {
-			fullUrl: true, // This will log the full URL of the fetch request even if cached
-			// hmrRefreshes: true,
+			fullUrl: true, // Log full URLs of fetch requests even if cached
+			// hmrRefreshes: process.env.NODE_ENV === 'development', // Log HMR refreshes in development
 		},
+		// Additional performance logging options
+		// level: process.env.NODE_ENV === 'development' ? 'verbose' : 'error',
 	},
 
 	compiler: {
@@ -373,15 +401,35 @@ const nextConfig: NextConfig = {
 			}
 		}
 
-		// External heavy dependencies that are not used in most pages
+		/*
+		 * Enhanced Webpack Externals - Production Bundle Optimization
+		 * Excludes heavy dependencies from client bundle to reduce size
+		 * Only applied in production server builds to maintain functionality
+		 */
 		if (!dev && isServer) {
 			const existingExternals = Array.isArray(config.externals) ? config.externals : [];
 			config.externals = [
 				...existingExternals,
 				{
+					// AI/ML Libraries - Heavy and not needed in client
 					"@huggingface/transformers": "commonjs @huggingface/transformers",
+					"@huggingface/inference": "commonjs @huggingface/inference",
+
+					// API Clients - Server-side only
 					googleapis: "commonjs googleapis",
+					"@octokit/rest": "commonjs @octokit/rest",
+
+					// Rich Text Editors - Client-side alternatives available
 					"monaco-editor": "commonjs monaco-editor",
+
+					// Large utility libraries - Tree-shake in production
+					"jspdf": "commonjs jspdf",
+					"three": "commonjs three",
+					"@react-three/fiber": "commonjs @react-three/fiber",
+					"@react-three/drei": "commonjs @react-three/drei",
+
+					// Development tools - Not needed in production
+					"react-scan": "commonjs react-scan",
 				},
 			];
 		}

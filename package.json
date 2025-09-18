@@ -59,6 +59,7 @@
     "analyze:both": "cross-env BUNDLE_ANALYZE=both next build --turbo",
     "trace:turbopack": "NEXT_TURBOPACK_TRACING=1 next dev --turbo",
     "trace:analyze": "next internal trace .next/trace-turbopack",
+    "trace:view": "next internal turbo-trace-server .next/trace-turbopack",
     "audit:lh": "tsx scripts/lighthouse/run.ts",
     "audit:axe": "tsx scripts/a11y/axe.ts",
     "browser:open": "vibe-tools browser open \"http://localhost:3000\" --html --network --screenshot=.tmp/home.png",

@@ -229,7 +229,6 @@ const nextConfig: NextConfig = {
 			"@fortawesome/free-solid-svg-icons",
 			"@fortawesome/react-fontawesome",
 			"lucide-react",
-			"react-icons",
 			"date-fns",
 			"lodash-es",
 			"@mantine/hooks",
@@ -251,9 +250,9 @@ const nextConfig: NextConfig = {
 		 * Improves development speed and reduces API costs
 		 * ⚠️  Only enable in development - can cause stale data issues
 		 */
-		// serverComponentsHmrCache: process.env.NODE_ENV === 'development',
+		serverComponentsHmrCache: process.env.NODE_ENV === 'development',
 
-		// Memory optimization for builds
+		// Memory optimization for builds - Uncomment if experiencing memory issues
 		// webpackBuildWorker: false, // Disable for low memory
 		// cpus: 1, // Limit concurrent operations
 		// workerThreads: false, // Disable worker threads
@@ -275,10 +274,8 @@ const nextConfig: NextConfig = {
 	logging: {
 		fetches: {
 			fullUrl: true, // Log full URLs of fetch requests even if cached
-			// hmrRefreshes: process.env.NODE_ENV === 'development', // Log HMR refreshes in development
+			hmrRefreshes: process.env.NODE_ENV === 'development', // Log HMR refreshes in development
 		},
-		// Additional performance logging options
-		// level: process.env.NODE_ENV === 'development' ? 'verbose' : 'error',
 	},
 
 	compiler: {

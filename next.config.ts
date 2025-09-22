@@ -16,8 +16,8 @@ import { createRedirects, type Redirect } from "@/lib/utils/redirect";
 /* eslint-disable-next-line @typescript-eslint/require-await */
 const redirects = async (): Promise<Redirect[]> => {
 	return [
-		...createRedirects(["/docs", "/documentation"], routes.docs),
-		...createRedirects(["/join", "/signup", "/sign-up"], routes.auth.signUp),
+		...createRedirects(["/docs", "/documentation"], routes.docs, true),
+		...createRedirects(["/join", "/signup", "/sign-up"], routes.auth.signUp, true),
 		...createRedirects(["/login", "/log-in", "/signin", "/sign-in"], routes.auth.signIn),
 		...createRedirects(["/logout", "/log-out", "/signout", "/sign-out"], routes.auth.signOut),
 	];
@@ -79,7 +79,8 @@ const nextConfig: NextConfig = {
 	},
 
 	/*
-	 * Redirects are located in the `src/config/routes.ts` file
+	 * Redirects are defined in this file via `redirects()` using `createRedirects`
+	 * and the route constants from `src/config/routes.ts`.
 	 */
 	redirects,
 

@@ -240,6 +240,12 @@ Summary: New analytics provider supported. Users add `NEXT_PUBLIC_DATAFAST_WEBSI
 4. **Test Thoroughly** - Ensure no regressions with each optimization
 
 ## 📝 Progress Log
+### Redirects: config and utility improvements
+
+- [x] Corrected outdated comment in `next.config.ts` to state redirects are defined via `redirects()` in that file using `createRedirects` and route constants.
+- [x] Switched `/docs` and `/documentation` → `routes.docs` and `/join|/signup|/sign-up` → `routes.auth.signUp` to permanent redirects for improved SEO (HTTP 308).
+- [x] Refactored `createRedirects` in `src/lib/utils/redirect.ts` to filter before map, removing null creation and type guards.
+- Summary: Redirects are now clearly documented at source, key marketing redirects are permanent for SEO, and redirect utility is simpler and more efficient.
 ### Docs: Payload CMS enable/disable update
 
 - [x] Updated `docs/development/feature-flags.md` to remove `ENABLE_PAYLOAD`, add `DISABLE_PAYLOAD`, and document enablement via `DATABASE_URL` + `PAYLOAD_SECRET`.

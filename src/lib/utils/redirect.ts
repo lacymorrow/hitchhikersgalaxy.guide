@@ -70,9 +70,6 @@ export const createRedirects = (
 	if (!sources.length) return [];
 
 	return sources
-		.map((source) => {
-			if (source === destination) return null;
-			return { source, destination, permanent };
-		})
-		.filter((redirect): redirect is Redirect => redirect !== null);
+		.filter((source) => source !== destination)
+		.map((source) => ({ source, destination, permanent }));
 };

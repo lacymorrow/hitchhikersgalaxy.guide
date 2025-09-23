@@ -160,19 +160,19 @@ describe("Feature flag generation", () => {
 		// Test the basic structure and types of the imported flags
 		expect(typeof buildTimeFeatureFlags).toBe("object");
 
-  // All values should be strings. Most are "true" (enabled-only export),
-  // except the two always-exported flags which may be "false" when disabled.
-  Object.entries(buildTimeFeatureFlags).forEach(([key, value]) => {
-   expect(typeof value).toBe("string");
-   if (
-    key === "NEXT_PUBLIC_FEATURE_AUTH_ENABLED" ||
-    key === "NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED"
-   ) {
-    expect(["true", "false"]).toContain(value);
-   } else {
-    expect(value).toBe("true");
-   }
-  });
+		// All values should be strings. Most are "true" (enabled-only export),
+		// except the two always-exported flags which may be "false" when disabled.
+		Object.entries(buildTimeFeatureFlags).forEach(([key, value]) => {
+			expect(typeof value).toBe("string");
+			if (
+				key === "NEXT_PUBLIC_FEATURE_AUTH_ENABLED" ||
+				key === "NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED"
+			) {
+				expect(["true", "false"]).toContain(value);
+			} else {
+				expect(value).toBe("true");
+			}
+		});
 	});
 
 	it("should have consistent feature naming for client flags", () => {
@@ -186,17 +186,17 @@ describe("Feature flag generation", () => {
 	});
 
 	it("should only include enabled features", () => {
-  // Only enabled features should be present with value "true".
-  // Two special flags are always exported and may be "false".
-  Object.entries(buildTimeFeatureFlags).forEach(([key, value]) => {
-   if (
-    key === "NEXT_PUBLIC_FEATURE_AUTH_ENABLED" ||
-    key === "NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED"
-   ) {
-    expect(["true", "false"]).toContain(value);
-   } else {
-    expect(value).toBe("true");
-   }
-  });
+		// Only enabled features should be present with value "true".
+		// Two special flags are always exported and may be "false".
+		Object.entries(buildTimeFeatureFlags).forEach(([key, value]) => {
+			if (
+				key === "NEXT_PUBLIC_FEATURE_AUTH_ENABLED" ||
+				key === "NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED"
+			) {
+				expect(["true", "false"]).toContain(value);
+			} else {
+				expect(value).toBe("true");
+			}
+		});
 	});
 });

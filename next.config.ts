@@ -7,10 +7,21 @@ import {
 	buildTimePublicEnv,
 } from "@/config/features-config";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
-import { redirects } from "@/config/routes";
+import { routes } from "@/config/routes";
 import { getDerivedSecrets } from "@/config/secrets";
 import { withPlugins } from "@/config/with-plugins";
 import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/posthog-config";
+import { createRedirects, type Redirect } from "@/lib/utils/redirect";
+
+/* eslint-disable-next-line @typescript-eslint/require-await */
+const redirects = async (): Promise<Redirect[]> => {
+	return [
+		...createRedirects(["/docs", "/documentation"], routes.docs, true),
+		...createRedirects(["/join", "/signup", "/sign-up"], routes.auth.signUp, true),
+		...createRedirects(["/login", "/log-in", "/signin", "/sign-in"], routes.auth.signIn),
+		...createRedirects(["/logout", "/log-out", "/signout", "/sign-out"], routes.auth.signOut),
+	];
+};
 
 const nextConfig: NextConfig = {
 	env: {
@@ -68,7 +79,8 @@ const nextConfig: NextConfig = {
 	},
 
 	/*
-	 * Redirects are located in the `src/config/routes.ts` file
+	 * Redirects are defined in this file via `redirects()` using `createRedirects`
+	 * and the route constants from `src/config/routes.ts`.
 	 */
 	redirects,
 
@@ -208,6 +220,23 @@ const nextConfig: NextConfig = {
 		optimisticClientCache: true,
 
 		/*
+		 * Optimize Package Imports - Enhanced Bundle Optimization
+		 * Automatically optimizes imports from large libraries like Lodash, Material-UI, etc.
+		 */
+		optimizePackageImports: [
+			"@radix-ui/react-icons",
+			"@tabler/icons-react",
+			"@fortawesome/fontawesome-svg-core",
+			"@fortawesome/free-solid-svg-icons",
+			"@fortawesome/react-fontawesome",
+			"lucide-react",
+			"date-fns",
+			"lodash-es",
+			"@mantine/hooks",
+			"framer-motion",
+		],
+
+		/*
 		 * Client-side Router Cache Configuration
 		 * Optimizes navigation performance by caching page segments
 		 */
@@ -216,7 +245,15 @@ const nextConfig: NextConfig = {
 			static: 360, // 360 seconds for static routes
 		},
 
-		// Memory optimization for builds
+		/*
+		 * Server Components HMR Cache - Development Performance Boost
+		 * Caches fetch responses in Server Components across HMR refreshes
+		 * Improves development speed and reduces API costs
+		 * ⚠️  Only enable in development - can cause stale data issues
+		 */
+		serverComponentsHmrCache: process.env.NODE_ENV === 'development',
+
+		// Memory optimization for builds - Uncomment if experiencing memory issues
 		// webpackBuildWorker: false, // Disable for low memory
 		// cpus: 1, // Limit concurrent operations
 		// workerThreads: false, // Disable worker threads
@@ -232,13 +269,13 @@ const nextConfig: NextConfig = {
 	typedRoutes: true,
 
 	/*
-	 * Logging configuration
+	 * Enhanced Logging Configuration
 	 * @see https://nextjs.org/docs/app/api-reference/next-config-js/logging
 	 */
 	logging: {
 		fetches: {
-			fullUrl: true, // This will log the full URL of the fetch request even if cached
-			// hmrRefreshes: true,
+			fullUrl: true, // Log full URLs of fetch requests even if cached
+			hmrRefreshes: process.env.NODE_ENV === 'development', // Log HMR refreshes in development
 		},
 	},
 
@@ -248,7 +285,7 @@ const nextConfig: NextConfig = {
 		// Use DISABLE_ERROR_LOGGING to disable error logging too
 		removeConsole:
 			process.env.DISABLE_LOGGING === "true" ||
-			(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+				(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
 				? process.env.DISABLE_ERROR_LOGGING === "true" ||
 					(process.env.NODE_ENV === "production" && !process.env.DISABLE_ERROR_LOGGING)
 					? true
@@ -362,15 +399,35 @@ const nextConfig: NextConfig = {
 			}
 		}
 
-		// External heavy dependencies that are not used in most pages
+		/*
+		 * Enhanced Webpack Externals - Production Bundle Optimization
+		 * Excludes heavy dependencies from client bundle to reduce size
+		 * Only applied in production server builds to maintain functionality
+		 */
 		if (!dev && isServer) {
 			const existingExternals = Array.isArray(config.externals) ? config.externals : [];
 			config.externals = [
 				...existingExternals,
 				{
+					// AI/ML Libraries - Heavy and not needed in client
 					"@huggingface/transformers": "commonjs @huggingface/transformers",
+					"@huggingface/inference": "commonjs @huggingface/inference",
+
+					// API Clients - Server-side only
 					googleapis: "commonjs googleapis",
+					"@octokit/rest": "commonjs @octokit/rest",
+
+					// Rich Text Editors - Client-side alternatives available
 					"monaco-editor": "commonjs monaco-editor",
+
+					// Large utility libraries - Tree-shake in production
+					"jspdf": "commonjs jspdf",
+					"three": "commonjs three",
+					"@react-three/fiber": "commonjs @react-three/fiber",
+					"@react-three/drei": "commonjs @react-three/drei",
+
+					// Development tools - Not needed in production
+					"react-scan": "commonjs react-scan",
 				},
 			];
 		}

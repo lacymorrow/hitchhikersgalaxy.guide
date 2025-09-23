@@ -1,6 +1,6 @@
 import { trace as otelTrace, type Span, SpanStatusCode, type Tracer } from "@opentelemetry/api";
-import pc from "@/lib/utils/pico-colors";
-import type { LogData, LogLevel } from "@/types/logger";
+import pc from "./utils/pico-colors";
+import type { LogData, LogLevel } from "../types/logger";
 
 const tracer: Tracer = otelTrace.getTracer("bones-nextjs-app");
 
@@ -8,50 +8,50 @@ const isServer = typeof window === "undefined";
 
 const _createLogger =
 	(level: LogLevel) =>
-	(...args: unknown[]): void => {
-		const message = args
-			.map((arg) => {
-				if (arg === null) return "null";
-				if (arg === undefined) return "undefined";
-				if (typeof arg === "string") return arg;
-				if (typeof arg === "number") return arg.toString();
-				if (typeof arg === "boolean") return arg.toString();
-				if (typeof arg === "bigint") return arg.toString();
-				if (typeof arg === "symbol") return arg.toString();
-				if (typeof arg === "function") return "[Function]";
-				// Must be an object at this point
-				try {
-					return JSON.stringify(arg);
-				} catch {
-					return "[Object]";
-				}
-			})
-			.join(" ");
+		(...args: unknown[]): void => {
+			const message = args
+				.map((arg) => {
+					if (arg === null) return "null";
+					if (arg === undefined) return "undefined";
+					if (typeof arg === "string") return arg;
+					if (typeof arg === "number") return arg.toString();
+					if (typeof arg === "boolean") return arg.toString();
+					if (typeof arg === "bigint") return arg.toString();
+					if (typeof arg === "symbol") return arg.toString();
+					if (typeof arg === "function") return "[Function]";
+					// Must be an object at this point
+					try {
+						return JSON.stringify(arg);
+					} catch {
+						return "[Object]";
+					}
+				})
+				.join(" ");
 
-		const span: Span = tracer.startSpan(`log.${level}`);
-		span.setAttribute("log.message", message);
-		span.setAttribute("log.level", level);
+			const span: Span = tracer.startSpan(`log.${level}`);
+			span.setAttribute("log.message", message);
+			span.setAttribute("log.level", level);
 
-		const error = args.find((arg) => arg instanceof Error);
-		if (error) {
-			span.recordException(error);
-			span.setStatus({ code: SpanStatusCode.ERROR });
-		}
+			const error = args.find((arg) => arg instanceof Error);
+			if (error) {
+				span.recordException(error);
+				span.setStatus({ code: SpanStatusCode.ERROR });
+			}
 
-		const metadata = args.find((arg) => typeof arg === "object" && !(arg instanceof Error)) as
-			| Record<string, unknown>
-			| undefined;
-		if (metadata) {
-			Object.entries(metadata).forEach(([key, value]) => {
-				span.setAttribute(`log.metadata.${key}`, JSON.stringify(value));
-			});
-		}
+			const metadata = args.find((arg) => typeof arg === "object" && !(arg instanceof Error)) as
+				| Record<string, unknown>
+				| undefined;
+			if (metadata) {
+				Object.entries(metadata).forEach(([key, value]) => {
+					span.setAttribute(`log.metadata.${key}`, JSON.stringify(value));
+				});
+			}
 
-		span.end();
+			span.end();
 
-		const consoleMethod = console[level] ?? console.log;
-		consoleMethod(...args);
-	};
+			const consoleMethod = console[level] ?? console.log;
+			consoleMethod(...args);
+		};
 
 export const logger = {
 	info: _createLogger("info"),

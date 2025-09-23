@@ -260,33 +260,3 @@ export const routes = {
 	},
 };
 
-interface Redirect {
-	source: Route;
-	destination: Route;
-	permanent: boolean;
-}
-
-/* eslint-disable-next-line @typescript-eslint/require-await */
-export const redirects = async (): Promise<Redirect[]> => {
-	return [
-		...createRedirects(["/docs", "/documentation"], routes.docs),
-		...createRedirects(["/join", "/signup", "/sign-up"], routes.auth.signUp),
-		...createRedirects(["/login", "/log-in", "/signin", "/sign-in"], routes.auth.signIn),
-		...createRedirects(["/logout", "/log-out", "/signout", "/sign-out"], routes.auth.signOut),
-	];
-};
-
-export const createRedirects = (
-	sources: Route[],
-	destination: Route,
-	permanent = false
-): Redirect[] => {
-	if (!sources.length) return [];
-
-	return sources
-		.map((source) => {
-			if (source === destination) return null;
-			return { source, destination, permanent };
-		})
-		.filter((redirect): redirect is Redirect => redirect !== null);
-};

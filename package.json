@@ -1,6 +1,6 @@
 {
   "name": "ship-kit",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "scripts": {
@@ -283,7 +283,7 @@
     "worker-loader": "^3.0.8"
   },
   "shipkit": {
-    "bones": "0.2.0"
+    "bones": "0.2.1"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

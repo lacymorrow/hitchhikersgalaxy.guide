@@ -12,6 +12,7 @@ import { getDerivedSecrets } from "@/config/secrets";
 import { withPlugins } from "@/config/with-plugins";
 import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/posthog-config";
 
+/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
 	env: {
 		// Add client-side feature flags
@@ -246,6 +247,8 @@ const nextConfig: NextConfig = {
 		// webpackBuildWorker: false, // Disable for low memory
 		// cpus: 1, // Limit concurrent operations
 		// workerThreads: false, // Disable worker threads
+		serverComponentsExternalPackages: ["@payloadcms/db-postgres", "payload"],
+		// ppr: true,
 	},
 
 	/*

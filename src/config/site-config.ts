@@ -165,7 +165,7 @@ interface SiteConfig {
 		appLinks: Metadata["appLinks"];
 		assetsPath: string;
 		bookmarksPath: string;
-		blogPath: string;
+		blogPath?: string;
 	};
 
 	// Application settings
@@ -337,7 +337,7 @@ export const siteConfig: SiteConfig = {
 		appLinks: {},
 		assetsPath: "/assets",
 		bookmarksPath: "/",
-		blogPath: "/blog",
+		// blogPath is now conditionally added below
 	},
 
 	manifest: {
@@ -409,7 +409,10 @@ if (
 // Update paths to be absolute URLs based on siteConfig.url
 siteConfig.metadata.assetsPath = `${siteConfig.url}/assets`;
 siteConfig.metadata.bookmarksPath = `${siteConfig.url}/`;
-siteConfig.metadata.blogPath = `${siteConfig.url}/blog`;
+
+if (process.env.NEXT_PUBLIC_HAS_BLOG === "true") {
+	siteConfig.metadata.blogPath = `${siteConfig.url}/blog`;
+}
 
 // Freeze the object to prevent accidental modifications later (optional)
 // Object.freeze(siteConfig);

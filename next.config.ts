@@ -23,6 +23,7 @@ const redirects = async (): Promise<Redirect[]> => {
 	];
 };
 
+/** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
 	env: {
 		// Add client-side feature flags
@@ -257,6 +258,8 @@ const nextConfig: NextConfig = {
 		// webpackBuildWorker: false, // Disable for low memory
 		// cpus: 1, // Limit concurrent operations
 		// workerThreads: false, // Disable worker threads
+		serverComponentsExternalPackages: ["@payloadcms/db-postgres", "payload"],
+		// ppr: true,
 	},
 
 	/*

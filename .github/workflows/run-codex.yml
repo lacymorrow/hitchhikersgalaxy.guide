@@ -18,7 +18,13 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
+      - name: Skip if OpenAI not configured
+        if: env.OPENAI_API_KEY == ''
+        run: |
+          echo 'Skipping Run Codex: OPENAI_API_KEY not set'
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -28,15 +34,18 @@ jobs:
           node-version: '22'
 
       - name: Install Codex CLI
+        if: env.OPENAI_API_KEY != ''
         run: npm install -g @openai/codex
 
       - name: Run Codex
+        if: env.OPENAI_API_KEY != ''
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           CODEX_QUIET_MODE: '1'
         run: codex --approval-mode ${{ inputs.approvalMode }} --quiet "${{ inputs.prompt }}"
 
       - name: Commit changes
+        if: env.OPENAI_API_KEY != ''
         run: |
           git config user.name 'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'

@@ -14,6 +14,7 @@ concurrency:
 jobs:
   setup:
     name: Setup
+    if: vars.NEON_PROJECT_ID != ''
     outputs:
       branch: ${{ steps.branch_name.outputs.current_branch }}
     runs-on: ubuntu-latest

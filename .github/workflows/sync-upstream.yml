@@ -58,7 +58,7 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y jq
 
       - name: Resolve conflicts using AI
-        if: env.CONFLICTS_DETECTED == 'true'
+        if: env.CONFLICTS_DETECTED == 'true' && env.OPENAI_API_KEY != ''
         env:
            # Ensure this secret is set in your repository settings
            OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}

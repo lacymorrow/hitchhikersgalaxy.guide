@@ -24,13 +24,21 @@ jobs:
       pull-requests: read
       issues: read
       id-token: write
+    env:
+      CLAUDE_ACCESS_TOKEN: ${{ secrets.CLAUDE_ACCESS_TOKEN }}
+      CLAUDE_REFRESH_TOKEN: ${{ secrets.CLAUDE_REFRESH_TOKEN }}
+      CLAUDE_EXPIRES_AT: ${{ secrets.CLAUDE_EXPIRES_AT }}
     steps:
+      - name: Skip if Claude OAuth not configured
+        if: env.CLAUDE_ACCESS_TOKEN == '' || env.CLAUDE_REFRESH_TOKEN == '' || env.CLAUDE_EXPIRES_AT == ''
+        run: echo 'Skipping Claude PR Assistant: Claude OAuth secrets not set'
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
       - name: Run Claude PR Action
+        if: env.CLAUDE_ACCESS_TOKEN != '' && env.CLAUDE_REFRESH_TOKEN != '' && env.CLAUDE_EXPIRES_AT != ''
         uses: grll/claude-code-action@beta
         with:
           use_oauth: true

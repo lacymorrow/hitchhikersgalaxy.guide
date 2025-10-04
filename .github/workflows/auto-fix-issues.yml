@@ -13,7 +13,12 @@ jobs:
     permissions:
       contents: write
       issues: write
+    env:
+      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
     steps:
+      - name: Skip if OpenAI not configured
+        if: env.OPENAI_API_KEY == ''
+        run: echo 'Skipping Auto Fix Issues: OPENAI_API_KEY not set'
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -23,11 +28,13 @@ jobs:
           node-version: '22'
 
       - name: Install Codex CLI
+        if: env.OPENAI_API_KEY != ''
         run: npm install -g @openai/codex
 
       # Extract a prompt from the issue
       - name: Extract prompt
         id: extract_prompt
+        if: env.OPENAI_API_KEY != ''
         run: |
           ISSUE_BODY="${{ github.event.issue.body }}"
           ISSUE_TITLE="${{ github.event.issue.title }}"
@@ -37,6 +44,7 @@ jobs:
 
       # Run Codex with the extracted prompt
       - name: Run Codex
+        if: env.OPENAI_API_KEY != ''
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           CODEX_QUIET_MODE: '1'
@@ -45,6 +53,7 @@ jobs:
       # Commit changes, create a PR, and mention the issue
       - name: Create PR
         id: create_pr
+        if: env.OPENAI_API_KEY != ''
         uses: peter-evans/create-pull-request@v6
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -61,7 +70,7 @@ jobs:
 
       # Comment on the issue with the PR link
       - name: Comment on issue
-        if: steps.create_pr.outputs.pull-request-number
+        if: env.OPENAI_API_KEY != '' && steps.create_pr.outputs.pull-request-number
         uses: peter-evans/create-or-update-comment@v4
         with:
           issue-number: ${{ github.event.issue.number }}

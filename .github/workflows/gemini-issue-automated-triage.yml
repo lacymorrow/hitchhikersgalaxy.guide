@@ -41,7 +41,12 @@ jobs:
       )
     timeout-minutes: 5
     runs-on: 'ubuntu-latest'
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
     steps:
+      - name: 'Skip if Gemini not configured'
+        if: env.GEMINI_API_KEY == ''
+        run: echo 'Skipping Gemini Automated Issue Triage: GEMINI_API_KEY not set'
       - name: 'Checkout repository'
         uses: 'actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683' # ratchet:actions/checkout@v4
 
@@ -70,6 +75,7 @@ jobs:
             return labelNames;
 
       - name: 'Run Gemini Issue Analysis'
+        if: env.GEMINI_API_KEY != ''
         uses: 'google-github-actions/run-gemini-cli@v0'
         id: 'gemini_issue_analysis'
         env:

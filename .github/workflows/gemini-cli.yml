@@ -68,7 +68,12 @@ jobs:
       )
     timeout-minutes: 10
     runs-on: 'ubuntu-latest'
+    env:
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
     steps:
+      - name: 'Skip if Gemini not configured'
+        if: env.GEMINI_API_KEY == ''
+        run: echo 'Skipping Gemini CLI: GEMINI_API_KEY not set'
       - name: 'Generate GitHub App Token'
         id: 'generate_token'
         if: |-
@@ -197,6 +202,7 @@ jobs:
           } >> "${GITHUB_OUTPUT}"
 
       - name: 'Run Gemini'
+        if: env.GEMINI_API_KEY != ''
         id: 'run_gemini'
         uses: 'google-github-actions/run-gemini-cli@v0'
         env:

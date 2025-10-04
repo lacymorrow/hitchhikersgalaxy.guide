@@ -2,13 +2,17 @@ name: Claude Code Review
 
 on:
   pull_request:
-    types: [opened, synchronize]
+    types: [opened, reopened]
     # Optional: Only run on specific file changes
     # paths:
     #   - "src/**/*.ts"
     #   - "src/**/*.tsx"
     #   - "src/**/*.js"
     #   - "src/**/*.jsx"
+
+concurrency:
+  group: '${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}'
+  cancel-in-progress: true
 
 jobs:
   claude-review:
@@ -24,8 +28,13 @@ jobs:
       pull-requests: read
       issues: read
       id-token: write
+    env:
+      CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
     
     steps:
+      - name: Skip if Claude not configured
+        if: env.CLAUDE_CODE_OAUTH_TOKEN == ''
+        run: echo 'Skipping Claude Code Review: CLAUDE_CODE_OAUTH_TOKEN not set'
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -33,6 +42,7 @@ jobs:
 
       - name: Run Claude Code Review
         id: claude-review
+        if: env.CLAUDE_CODE_OAUTH_TOKEN != ''
         uses: anthropics/claude-code-action@beta
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}

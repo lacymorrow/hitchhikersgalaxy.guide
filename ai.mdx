@@ -7,6 +7,16 @@ _Status: Planning Phase_
 
 This document outlines a comprehensive audit plan for the Shipkit codebase to identify and fix performance issues, code smells, and optimization opportunities. The audit focuses on Next.js App Router best practices, React performance patterns, and database optimization.
 
+## CI: AI Workflows — PR Review Consolidation
+
+- [x] Limit OpenAI PR review to opened/reopened and add concurrency (`.github/workflows/ai-code-review.yml`)
+- [x] Limit Claude PR review to opened/reopened and add concurrency (`.github/workflows/claude-code-review.yml`)
+- [x] Keep Gemini PR review as single run on opened/reopened with existing concurrency (`.github/workflows/gemini-pr-review.yml`)
+- [x] Keep comment-invoked assistants on-demand only (Gemini CLI `@gemini-cli`, Claude PR Assistant `@claude`)
+- [x] Ensure issue triage workflows are issue-only (Gemini automated/scheduled triage, Claude issue triage)
+- [ ] Optional: Evaluate switching OpenAI from `pull_request_target` to `pull_request` if secrets/security allow
+
+
 ## 🎯 Goals
 
 - [ ] Reduce bundle size and improve loading performance

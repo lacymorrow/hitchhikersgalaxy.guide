@@ -12,6 +12,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+    if: github.event_name == 'workflow_dispatch'
 
     steps:
       - name: Checkout repository

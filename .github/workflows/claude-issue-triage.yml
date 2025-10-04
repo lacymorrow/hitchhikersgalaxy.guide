@@ -11,8 +11,13 @@ jobs:
     permissions:
       contents: read
       issues: write
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
 
     steps:
+      - name: Skip if Anthropic not configured
+        if: env.ANTHROPIC_API_KEY == ''
+        run: echo 'Skipping Claude Issue Triage: ANTHROPIC_API_KEY not set'
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -95,6 +100,7 @@ jobs:
           EOF
 
       - name: Run Claude Code for Issue Triage
+        if: env.ANTHROPIC_API_KEY != ''
         uses: anthropics/claude-code-base-action@beta
         with:
           prompt_file: /tmp/claude-prompts/triage-prompt.txt

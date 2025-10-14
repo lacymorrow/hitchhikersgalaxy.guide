@@ -1,5 +1,6 @@
 import { Head, Html, Main, NextScript } from "next/document";
 import { headLinkHints, type HeadLinkHint } from "@/config/metadata";
+import { env } from "@/env";
 
 export default function Document() {
 	return (
@@ -10,6 +11,15 @@ export default function Document() {
 				{headLinkHints.map((l: HeadLinkHint) => (
 					<link key={`${l.rel}-${l.href}`} rel={l.rel} href={l.href} crossOrigin={l.crossOrigin} />
 				))}
+
+				{env.NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED && (
+					<script
+						async
+						defer
+						crossOrigin="anonymous"
+						src="https://tweakcn.com/live-preview.min.js"
+					/>
+				)}
 			</Head>
 			<body className="min-h-screen antialiased">
 				<Main />

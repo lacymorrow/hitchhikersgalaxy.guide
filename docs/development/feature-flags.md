@@ -56,6 +56,7 @@ Some features can be explicitly controlled:
 - `BETTER_AUTH_ENABLED=true` - Enable Better Auth
 - `DISABLE_MDX=true` - Disable MDX support
 - `DISABLE_PWA=true` - Disable PWA
+- `ENABLE_DEVTOOLS=true` - Enable DevTools (exposes `NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED=true`)
 
 ## Adding New Features
 

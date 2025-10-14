@@ -4,8 +4,8 @@ import React from "react";
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { headLinkHints, type HeadLinkHint, metadata as defaultMetadata, viewport as sharedViewport } from "@/config/metadata";
 import { initializePaymentProviders } from "@/server/providers";
-import { FontSelector } from "@/app/(app)/dev/_components/font-selector";
-import { cn } from "@/lib/utils";
+import { FontSelector } from "@/components/modules/devtools/font-selector";
+import { env } from "@/env";
 
 export const metadata: Metadata = defaultMetadata;
 export const fetchCache = "default-cache";
@@ -42,6 +42,15 @@ export default async function Layout({
 				{headLinkHints.map((l: HeadLinkHint) => (
 					<link key={`${l.rel}-${l.href}`} rel={l.rel} href={l.href} crossOrigin={l.crossOrigin} />
 				))}
+
+				{env.NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED && (
+					<script
+						async
+						defer
+						crossOrigin="anonymous"
+						src="https://tweakcn.com/live-preview.min.js"
+					/>
+				)}
 			</head>
 			<body className="min-h-screen antialiased">
 				<AppRouterLayout>

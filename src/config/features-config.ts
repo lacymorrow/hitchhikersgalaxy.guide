@@ -114,6 +114,9 @@ buildTimeFeatures.BUILDER_ENABLED =
 buildTimeFeatures.MDX_ENABLED = !envIsTrue("DISABLE_MDX");
 buildTimeFeatures.PWA_ENABLED = !envIsTrue("DISABLE_PWA");
 
+// Developer tools (off by default; enable via ENABLE_DEVTOOLS)
+buildTimeFeatures.DEVTOOLS_ENABLED = envIsTrue("ENABLE_DEVTOOLS");
+
 // UI / Theme
 buildTimeFeatures.LIGHT_MODE_ENABLED = !envIsTrue("DISABLE_LIGHT_MODE");
 buildTimeFeatures.DARK_MODE_ENABLED = !envIsTrue("DISABLE_DARK_MODE");

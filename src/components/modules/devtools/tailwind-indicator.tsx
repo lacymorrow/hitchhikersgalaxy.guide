@@ -1,4 +1,7 @@
+import { env } from "@/env";
+
 export function TailwindIndicator() {
+	if (!env.NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED) return null;
 	if (process.env.NODE_ENV === "production") return null;
 
 	return (

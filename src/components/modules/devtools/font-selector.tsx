@@ -3,6 +3,7 @@
 import { Check, ChevronsUpDown, ListPlus, Loader2 } from "lucide-react";
 import * as React from "react";
 import { useDebounce } from "use-debounce";
+import { env } from "@/env";
 import { Button } from "@/components/ui/button";
 import {
 	Command,
@@ -32,6 +33,7 @@ const BROWSE_LIMIT = 50; // Number of fonts per browse page
  * Only intended for use in NODE_ENV=development.
  */
 export function FontSelector() {
+	const devtoolsEnabled = env.NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED;
 	const [open, setOpen] = React.useState(false);
 	const [selectedFont, setSelectedFont] = React.useState<string>("");
 	const [fallbackFonts, setFallbackFonts] = React.useState<string>("");
@@ -209,6 +211,7 @@ export function FontSelector() {
 		}
 	}, [selectedFont, fallbackFonts, mounted, applyFont]);
 
+	if (!devtoolsEnabled) return null;
 	if (!mounted) return null;
 
 	const handleSelectFont = (currentValue: string) => {

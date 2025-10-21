@@ -250,6 +250,12 @@ Summary: New analytics provider supported. Users add `NEXT_PUBLIC_DATAFAST_WEBSI
 4. **Test Thoroughly** - Ensure no regressions with each optimization
 
 ## 📝 Progress Log
+### Performance: Devtools dynamic loading
+
+- [x] Dynamically import devtools modules only in development and when the feature flag is enabled.
+  - Updated `src/app/(app)/layout.tsx` to remove static imports and use `next/dynamic` with `{ ssr: false }` and Suspense fallback.
+  - Updated `src/pages/_app.tsx` similarly to avoid shipping devtools in production bundles.
+- Summary: Devtools (`TailwindIndicator`, `FontSelector`) are excluded from production bundles, loaded only in development, reducing client JS and improving performance.
 ### Redirects: config and utility improvements
 
 - [x] Corrected outdated comment in `next.config.ts` to state redirects are defined via `redirects()` in that file using `createRedirects` and route constants.
@@ -633,3 +639,11 @@ Notes:
 - [x] Added dynamic Open Graph/Twitter images for blog posts by pointing metadata to existing `/og` generator with post-specific title/description and site URL.
   - Implemented in `src/app/(app)/blog/[...slug]/page.tsx` by constructing the image URL via `new URL('/og', siteConfig.url)` and passing as `images` to `constructMetadata`.
   - This ensures social shares reflect the current post context with no duplication of OG rendering logic.
+
+### Feature: RSS Feed for Blog
+
+- [x] Add route handler at `src/app/rss.xml/route.ts` serving `/rss.xml`
+- [x] Advertise feed via `siteConfig.metadata.alternates.types['application/rss+xml']`
+- [x] Use absolute URLs, UTC dates, caching headers, and safe CDATA
+
+Done — Implemented dynamic RSS feed listing blog posts sorted by `publishedAt`, with descriptive titles and summaries. Exposed at `/rss.xml` and linked in page metadata for SEO/feed discovery.

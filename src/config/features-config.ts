@@ -116,6 +116,7 @@ buildTimeFeatures.PWA_ENABLED = !envIsTrue("DISABLE_PWA");
 
 // Developer tools (off by default; enable via ENABLE_DEVTOOLS)
 buildTimeFeatures.DEVTOOLS_ENABLED = envIsTrue("ENABLE_DEVTOOLS");
+buildTimeFeatures.DEVTOOLS_FONT_SELECTOR_ENABLED = buildTimeFeatures.DEVTOOLS_ENABLED;
 
 // UI / Theme
 buildTimeFeatures.LIGHT_MODE_ENABLED = !envIsTrue("DISABLE_LIGHT_MODE");

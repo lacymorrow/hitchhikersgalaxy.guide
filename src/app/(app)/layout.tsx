@@ -2,7 +2,12 @@ import type { Metadata, Viewport } from "next";
 import React from "react";
 
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
-import { headLinkHints, type HeadLinkHint, metadata as defaultMetadata, viewport as sharedViewport } from "@/config/metadata";
+import {
+	headLinkHints,
+	type HeadLinkHint,
+	metadata as defaultMetadata,
+	viewport as sharedViewport,
+} from "@/config/metadata";
 import { initializePaymentProviders } from "@/server/providers";
 import { FontSelector } from "@/components/modules/devtools/font-selector";
 import { env } from "@/env";
@@ -67,7 +72,12 @@ export default async function Layout({
 				</AppRouterLayout>
 
 				{/* Add FontSelector only in development */}
-				{process.env.NODE_ENV === "development" && <FontSelector />}
+				{process.env.NODE_ENV === "development" &&
+					env.NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED && (
+						<React.Suspense fallback={null}>
+							<FontSelector />
+						</React.Suspense>
+					)}
 			</body>
 		</html>
 	);

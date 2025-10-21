@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { GOOGLE_FONTS } from "@/config/fonts";
 
 interface GoogleFontApiItem {
 	family: string;
@@ -74,11 +75,17 @@ export async function GET(request: NextRequest) {
 	const limit = Number.parseInt(searchParams.get("limit") || String(BROWSE_PAGE_LIMIT), 10);
 
 	if (!apiKey) {
-		console.error("Google Fonts API key is missing.");
-		return NextResponse.json(
-			{ families: [], fallback: DEFAULT_FALLBACK_FONTS, error: "Missing API Key", hasMore: false },
-			{ status: 500 }
+		// If no API key, return the curated list as a fallback
+		console.warn(
+			"Google Fonts API key is missing. Falling back to curated list. Add GOOGLE_FONTS_API_KEY to .env.local to enable full font search."
 		);
+		const curatedFonts = GOOGLE_FONTS.map((font) => font.family);
+		return NextResponse.json({
+			families: curatedFonts,
+			fallback: DEFAULT_FALLBACK_FONTS,
+			hasMore: false,
+			isCurated: true, // Add a flag to indicate fallback mode
+		});
 	}
 
 	try {

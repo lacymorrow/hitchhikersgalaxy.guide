@@ -22,6 +22,7 @@ interface FontsApiResponse {
 	families: string[];
 	fallback: string;
 	hasMore?: boolean; // Add hasMore for pagination
+	isCurated?: boolean;
 	error?: string;
 }
 
@@ -33,7 +34,7 @@ const BROWSE_LIMIT = 50; // Number of fonts per browse page
  * Only intended for use in NODE_ENV=development.
  */
 export function FontSelector() {
-	const devtoolsEnabled = env.NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED;
+	const fontSelectorEnabled = env.NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED;
 	const [open, setOpen] = React.useState(false);
 	const [selectedFont, setSelectedFont] = React.useState<string>("");
 	const [fallbackFonts, setFallbackFonts] = React.useState<string>("");
@@ -54,6 +55,7 @@ export function FontSelector() {
 	const [browseLoading, setBrowseLoading] = React.useState(false);
 	const [browseError, setBrowseError] = React.useState<string | null>(null);
 
+	const [isCuratedList, setIsCuratedList] = React.useState(false);
 	const [mounted, setMounted] = React.useState(false);
 
 	// Apply Font Function (Memoized)
@@ -88,7 +90,7 @@ export function FontSelector() {
 			setBrowseError(null);
 			setBrowseLoading(true);
 			try {
-				const response = await fetch(`/devtools/api/fonts?page=1&limit=${BROWSE_LIMIT}`);
+				const response = await fetch(`/dev/api/fonts?page=1&limit=${BROWSE_LIMIT}`);
 				if (!response.ok) {
 					const data: Partial<FontsApiResponse> = await response.json();
 					throw new Error(data.error || `HTTP error! status: ${response.status}`);
@@ -98,6 +100,7 @@ export function FontSelector() {
 				setBrowsedFonts(data.families);
 				setBrowseHasMore(data.hasMore ?? false);
 				setBrowsePage(1);
+				setIsCuratedList(data.isCurated ?? false);
 			} catch (e: any) {
 				console.error("Failed to fetch initial font data:", e);
 				const errorMsg = e.message || "Failed to load initial data";
@@ -157,7 +160,7 @@ export function FontSelector() {
 		setBrowseError(null);
 		const nextPage = browsePage + 1;
 		try {
-			const response = await fetch(`/devtools/api/fonts?page=${nextPage}&limit=${BROWSE_LIMIT}`);
+			const response = await fetch(`/dev/api/fonts?page=${nextPage}&limit=${BROWSE_LIMIT}`);
 			if (!response.ok) {
 				const data: Partial<FontsApiResponse> = await response.json();
 				throw new Error(data.error || `HTTP error! status: ${response.status}`);
@@ -185,7 +188,7 @@ export function FontSelector() {
 			setSearchError(null);
 			try {
 				const response = await fetch(
-					`/devtools/api/fonts?search=${encodeURIComponent(debouncedSearchQuery)}`
+					`/dev/api/fonts?search=${encodeURIComponent(debouncedSearchQuery)}`
 				);
 				if (!response.ok) {
 					const data: Partial<FontsApiResponse> = await response.json();
@@ -211,7 +214,7 @@ export function FontSelector() {
 		}
 	}, [selectedFont, fallbackFonts, mounted, applyFont]);
 
-	if (!devtoolsEnabled) return null;
+	if (!fontSelectorEnabled) return null;
 	if (!mounted) return null;
 
 	const handleSelectFont = (currentValue: string) => {
@@ -259,7 +262,9 @@ export function FontSelector() {
 				<PopoverContent className="w-[200px] p-0">
 					<Command shouldFilter={false}>
 						<CommandInput
-							placeholder="Search or Browse fonts..."
+							placeholder={
+								isCuratedList ? "Browse suggestions..." : "Search or Browse fonts..."
+							}
 							value={searchQuery}
 							onValueChange={setSearchQuery}
 							disabled={!isReady}
@@ -329,56 +334,58 @@ export function FontSelector() {
 
 									<CommandSeparator />
 
-									<CommandGroup heading="Browse Fonts">
-										{browsedFonts.length > 0
-											? browsedFonts.map((fontFamily) => (
-												<CommandItem
-													key={`browse-${fontFamily}`}
-													value={fontFamily}
-													onSelect={handleSelectFont}
-												>
-													<Check
-														className={cn(
-															"mr-2 h-4 w-4",
-															selectedFont === fontFamily ? "opacity-100" : "opacity-0"
-														)}
-														aria-hidden="true"
-													/>
-													<span>{fontFamily}</span>
-												</CommandItem>
-											))
-											: null}
+									{!isCuratedList && (
+										<CommandGroup heading="Browse Fonts">
+											{browsedFonts.length > 0
+												? browsedFonts.map((fontFamily) => (
+													<CommandItem
+														key={`browse-${fontFamily}`}
+														value={fontFamily}
+														onSelect={handleSelectFont}
+													>
+														<Check
+															className={cn(
+																"mr-2 h-4 w-4",
+																selectedFont === fontFamily ? "opacity-100" : "opacity-0"
+															)}
+															aria-hidden="true"
+														/>
+														<span>{fontFamily}</span>
+													</CommandItem>
+												))
+												: null}
 
-										{/* Loading/Error/Load More Section */}
-										{browseLoading && (
-											<div className="flex items-center justify-center p-2 text-sm text-muted-foreground">
-												<Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading more...
-											</div>
-										)}
-										{!browseLoading && browseError && (
-											<div className="p-2 text-center text-xs text-destructive">
-												Error: {browseError}
-											</div>
-										)}
-										{!browseLoading && !browseError && browseHasMore && (
-											<CommandItem
-												key="load-more"
-												onSelect={() => {
-													void loadMoreFonts();
-												}}
-												className="flex cursor-pointer items-center justify-center text-sm text-muted-foreground hover:bg-accent"
-											>
-												<ListPlus className="mr-2 h-4 w-4" /> Load More
-											</CommandItem>
-										)}
-										{!browseLoading &&
-											!browseError &&
-											!browseHasMore &&
-											browsedFonts.length === 0 && (
-												// This state means initial load succeeded (no error) but returned no fonts
-												<CommandEmpty>No fonts found to browse.</CommandEmpty>
+											{/* Loading/Error/Load More Section */}
+											{browseLoading && (
+												<div className="flex items-center justify-center p-2 text-sm text-muted-foreground">
+													<Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading more...
+												</div>
 											)}
-									</CommandGroup>
+											{!browseLoading && browseError && (
+												<div className="p-2 text-center text-xs text-destructive">
+													Error: {browseError}
+												</div>
+											)}
+											{!browseLoading && !browseError && browseHasMore && (
+												<CommandItem
+													key="load-more"
+													onSelect={() => {
+														void loadMoreFonts();
+													}}
+													className="flex cursor-pointer items-center justify-center text-sm text-muted-foreground hover:bg-accent"
+												>
+													<ListPlus className="mr-2 h-4 w-4" /> Load More
+												</CommandItem>
+											)}
+											{!browseLoading &&
+												!browseError &&
+												!browseHasMore &&
+												browsedFonts.length === 0 && (
+													// This state means initial load succeeded (no error) but returned no fonts
+													<CommandEmpty>No fonts found to browse.</CommandEmpty>
+												)}
+										</CommandGroup>
+									)}
 								</>
 							)}
 						</CommandList>

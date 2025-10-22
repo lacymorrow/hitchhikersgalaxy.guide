@@ -244,6 +244,17 @@ export const env = createEnv({
 
 		// DevTools
 		NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED: zBooleanFeatureFlag,
+		/**
+		 * Devtools Font Selector
+		 */
+		NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED: zBooleanFeatureFlag,
+
+		/**
+		 * Theme
+		 */
+		NEXT_PUBLIC_FEATURE_LIGHT_MODE_ENABLED: zBooleanFeatureFlag,
+		NEXT_PUBLIC_FEATURE_DARK_MODE_ENABLED: zBooleanFeatureFlag,
+
 		// File Upload
 		NEXT_PUBLIC_FEATURE_FILE_UPLOAD_ENABLED: zBooleanFeatureFlag,
 	},

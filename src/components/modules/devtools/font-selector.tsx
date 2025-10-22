@@ -28,6 +28,7 @@ interface FontsApiResponse {
 
 const DEBOUNCE_DELAY = 300; // milliseconds
 const BROWSE_LIMIT = 50; // Number of fonts per browse page
+const FONT_API_PATH = "/dev/api/fonts";
 
 /**
  * Font selector with suggestions, server-side search, and paginated browsing.
@@ -90,7 +91,7 @@ export function FontSelector() {
 			setBrowseError(null);
 			setBrowseLoading(true);
 			try {
-				const response = await fetch(`/dev/api/fonts?page=1&limit=${BROWSE_LIMIT}`);
+				const response = await fetch(`${FONT_API_PATH}?page=1&limit=${BROWSE_LIMIT}`);
 				if (!response.ok) {
 					const data: Partial<FontsApiResponse> = await response.json();
 					throw new Error(data.error || `HTTP error! status: ${response.status}`);
@@ -101,9 +102,9 @@ export function FontSelector() {
 				setBrowseHasMore(data.hasMore ?? false);
 				setBrowsePage(1);
 				setIsCuratedList(data.isCurated ?? false);
-			} catch (e: any) {
+			} catch (e: unknown) {
 				console.error("Failed to fetch initial font data:", e);
-				const errorMsg = e.message || "Failed to load initial data";
+				const errorMsg = e instanceof Error ? e.message : "Failed to load initial data";
 				setInitialError(errorMsg);
 				setBrowseError(errorMsg);
 				setFallbackFonts(
@@ -160,7 +161,7 @@ export function FontSelector() {
 		setBrowseError(null);
 		const nextPage = browsePage + 1;
 		try {
-			const response = await fetch(`/dev/api/fonts?page=${nextPage}&limit=${BROWSE_LIMIT}`);
+			const response = await fetch(`${FONT_API_PATH}?page=${nextPage}&limit=${BROWSE_LIMIT}`);
 			if (!response.ok) {
 				const data: Partial<FontsApiResponse> = await response.json();
 				throw new Error(data.error || `HTTP error! status: ${response.status}`);
@@ -169,9 +170,9 @@ export function FontSelector() {
 			setBrowsedFonts((prev) => [...prev, ...data.families]);
 			setBrowseHasMore(data.hasMore ?? false);
 			setBrowsePage(nextPage);
-		} catch (e: any) {
+		} catch (e: unknown) {
 			console.error("Failed to load more fonts:", e);
-			setBrowseError(e.message || "Failed to load more fonts");
+			setBrowseError(e instanceof Error ? e.message : "Failed to load more fonts");
 		} finally {
 			setBrowseLoading(false);
 		}
@@ -188,7 +189,7 @@ export function FontSelector() {
 			setSearchError(null);
 			try {
 				const response = await fetch(
-					`/dev/api/fonts?search=${encodeURIComponent(debouncedSearchQuery)}`
+					`${FONT_API_PATH}?search=${encodeURIComponent(debouncedSearchQuery)}`
 				);
 				if (!response.ok) {
 					const data: Partial<FontsApiResponse> = await response.json();
@@ -196,9 +197,9 @@ export function FontSelector() {
 				}
 				const data: FontsApiResponse = await response.json();
 				setSearchResults(data.families);
-			} catch (e: any) {
+			} catch (e: unknown) {
 				console.error("Failed to search fonts:", e);
-				setSearchError(e.message || "Failed to search fonts");
+				setSearchError(e instanceof Error ? e.message : "Failed to search fonts");
 				setSearchResults([]);
 			} finally {
 				setSearchLoading(false);

@@ -363,6 +363,17 @@ Notes:
 - [x] Updated `DeploymentActions` labels and added `data-testid`s to support reliable tests.
 - [x] Exported `createRichText` from `src/lib/payload/seed-utils.ts` to satisfy tests.
 - Result: 15 passed, 5 skipped, 0 failed in unit test run.
+
+### Bugfix: Remove tw-animate-css import
+
+- [x] Removed `@import "tw-animate-css"` from `src/styles/globals.css` to resolve missing module errors during Next.js builds.
+- [x] Updated the default Shipkit installer template in `src/app/(app)/install/client-utils.ts` so generated projects no longer reference the absent stylesheet.
+- Summary: Build succeeds without the unused `tw-animate-css` package, and installer defaults stay in sync with the main stylesheet.
+
+### Bugfix: Footer link layout
+
+- [x] Swapped the desktop footer list layout to a responsive auto-fit grid with consistent gaps so columns stay evenly spaced instead of bunching on the left edge.
+- [x] Updated each footer group wrapper to a vertical flex stack that separates headings and link lists for clearer scanning.
 ## 🚀 Current Implementation: Blog/TOC System Improvements
 
 ### Phase 5: Blog & Table of Contents Enhancements
@@ -607,6 +618,13 @@ Notes:
 ---
 
 **Next Steps**: Begin with Client Components Audit (Phase 1.1) - Review use of `"use client"` directive across the codebase.
+
+### Bugfix: Sign-in Modal Suspense Cleanup
+
+- [x] Reproduce loading error when opening sign-in modal
+- [x] Trace Suspense boundaries and async components involved
+- [x] Implement fix to prevent incorrect async cleanup
+- [ ] Verify modal opens without React instrumentation errors
 
 ### Task: Refactor Onboarding Flow to IntroDisclosure
 

@@ -98,7 +98,7 @@ export const Footer: FC<FooterProps> = ({
 		if (element.type === "group") {
 			const group = element.content;
 			return (
-				<div key={uuid()} className="mb-8 md:mb-0">
+				<div key={uuid()} className="flex flex-col gap-4">
 					{group.header.href ? (
 						<Link href={group.header.href} className="mb-2 block font-semibold">
 							{group.header.label}
@@ -141,7 +141,7 @@ export const Footer: FC<FooterProps> = ({
 						<SocialLinks labelled className="mt-2" />
 					</div>
 					{/* Desktop Layout */}
-					<div className="hidden md:flex flex-col flex-wrap md:flex-row lg:gap-20">
+					<div className="hidden md:grid w-full items-start justify-items-start md:grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] gap-xl xl:gap-2xl">
 						{groupElements}
 					</div>
 					{/* Mobile Layout */}

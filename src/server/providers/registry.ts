@@ -19,7 +19,7 @@ export class PaymentProviderRegistry {
 		}
 
 		this.providers.set(provider.id, provider);
-		logger.debug(`Registered payment provider: ${provider.id}`);
+		// logger.debug(`Registered payment provider: ${provider.id}`);
 
 		// Automatically enable the provider if it's configured
 		if (provider.isConfigured) {
@@ -47,7 +47,7 @@ export class PaymentProviderRegistry {
 
 		if (!this.enabledProviders.includes(providerId)) {
 			this.enabledProviders.push(providerId);
-			logger.info(`Enabled payment provider: ${provider.name}`);
+			// logger.debug(`Enabled payment provider: ${provider.name}`);
 		}
 
 		return true;

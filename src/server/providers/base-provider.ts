@@ -43,12 +43,12 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 		this._isEnabled = config.enabled ?? true;
 		this.validateConfig();
 
-		logger.debug(`Initialized payment provider: ${this.name}`, {
-			provider: this.id,
-			isEnabled: this.isEnabled,
-			isConfigured: this.isConfigured,
-			sandbox: config.sandbox ?? false,
-		});
+		// logger.debug(`Initialized payment provider: ${this.name}`, {
+		// 	provider: this.id,
+		// 	isEnabled: this.isEnabled,
+		// 	isConfigured: this.isConfigured,
+		// 	sandbox: config.sandbox ?? false,
+		// });
 	}
 
 	/**

@@ -41,11 +41,6 @@ if (env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED) {
 			auth: env.GITHUB_ACCESS_TOKEN,
 		});
 		if (!isInitialized) {
-			logger.info("Initialized GitHub service with admin token", {
-				hasToken: true,
-				repoOwner: siteConfig.repo.owner,
-				repoName: siteConfig.repo.name,
-			});
 			isInitialized = true;
 		}
 	}

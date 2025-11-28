@@ -8,6 +8,7 @@ import {
 	metadata as defaultMetadata,
 	viewport as sharedViewport,
 } from "@/config/metadata";
+import { fontSans, fontSerif } from "@/config/fonts";
 import { initializePaymentProviders } from "@/server/providers";
 import { FontSelector } from "@/components/modules/devtools/font-selector";
 import { env } from "@/env";
@@ -57,7 +58,10 @@ export default async function Layout({
 					/>
 				)}
 			</head>
-			<body className="min-h-screen antialiased">
+			{/* Ensure portaled UI (e.g. Radix primitives) inherits the sans-serif family */}
+			<body
+				className={`${fontSans.variable} ${fontSerif.variable} min-h-screen antialiased font-sans`}
+			>
 				<AppRouterLayout>
 					<main>{children}</main>
 

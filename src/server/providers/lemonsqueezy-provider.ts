@@ -31,12 +31,6 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 	 * Validate the provider configuration
 	 */
 	protected validateConfig(): void {
-		logger.debug("LemonSqueezy validateConfig called", {
-			featureEnabled: env.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED,
-			apiKeyExists: !!env.LEMONSQUEEZY_API_KEY,
-			apiKeyLength: env.LEMONSQUEEZY_API_KEY?.length || 0,
-		});
-
 		// Check the feature flag first
 		if (!env.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED) {
 			logger.warn("LemonSqueezy feature is disabled");
@@ -56,7 +50,6 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 			// Initialize the LemonSqueezy client
 			lemonSqueezySetup({ apiKey: this.apiKey });
 			this._isConfigured = true;
-			logger.info("✅ Lemon Squeezy provider configured successfully");
 		} catch (error) {
 			logger.error("❌ Failed to initialize Lemon Squeezy client", { error });
 			this._isConfigured = false;

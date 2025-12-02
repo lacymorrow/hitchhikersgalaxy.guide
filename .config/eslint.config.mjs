@@ -1,4 +1,4 @@
-import { dirname } from "node:path";
+import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { FlatCompat } from "@eslint/eslintrc";
 import ts from "@typescript-eslint/eslint-plugin";
@@ -17,7 +17,7 @@ const eslintConfig = [
 		languageOptions: {
 			parserOptions: {
 				project: ["./tsconfig.json"],
-				tsconfigRootDir: __dirname,
+				tsconfigRootDir: resolve(__dirname, ".."),
 			},
 		},
 		linterOptions: {
@@ -52,7 +52,7 @@ const eslintConfig = [
 			parser: tsParser,
 			parserOptions: {
 				project: ["./tsconfig.json"],
-				tsconfigRootDir: __dirname,
+				tsconfigRootDir: resolve(__dirname, ".."),
 				ecmaVersion: "latest",
 				sourceType: "module",
 				ecmaFeatures: {
@@ -98,8 +98,8 @@ const eslintConfig = [
 		languageOptions: {
 			parser: tsParser,
 			parserOptions: {
-				project: ["./tsconfig.workers.json"],
-				tsconfigRootDir: __dirname,
+				project: ["./.config/tsconfig.workers.json"],
+				tsconfigRootDir: resolve(__dirname, ".."),
 				ecmaVersion: "latest",
 				sourceType: "module",
 				ecmaFeatures: {

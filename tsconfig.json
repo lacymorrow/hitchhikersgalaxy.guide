@@ -49,7 +49,7 @@
     }
   },
   "include": [
-    "eslint.config.mjs",
+    ".config/eslint.config.mjs",
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",

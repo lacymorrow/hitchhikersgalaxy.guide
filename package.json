@@ -268,6 +268,7 @@
     "eslint-config-next": "16.0.1",
     "jsdom": "^27.1.0",
     "lighthouse": "^13.0.1",
+    "next-sitemap": "^4.2.3",
     "npm-check-updates": "^19.1.2",
     "payload": "^3.62.0",
     "playwright": "^1.56.1",

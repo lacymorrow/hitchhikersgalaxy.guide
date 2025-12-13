@@ -246,19 +246,10 @@ const nextConfig: NextConfig = {
 			static: 360, // 360 seconds for static routes
 		},
 
-		/*
-		 * Server Components HMR Cache - Development Performance Boost
-		 * Caches fetch responses in Server Components across HMR refreshes
-		 * Improves development speed and reduces API costs
-		 * ⚠️  Only enable in development - can cause stale data issues
-		 */
-		serverComponentsHmrCache: process.env.NODE_ENV === 'development',
-
 		// Memory optimization for builds - Uncomment if experiencing memory issues
 		// webpackBuildWorker: false, // Disable for low memory
 		// cpus: 1, // Limit concurrent operations
 		// workerThreads: false, // Disable worker threads
-		serverComponentsExternalPackages: ["@payloadcms/db-postgres", "payload"],
 		// ppr: true,
 	},
 

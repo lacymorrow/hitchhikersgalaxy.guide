@@ -278,12 +278,20 @@ export function FileDropzone() {
 	return (
 		<div className="h-auto w-full p-8">
 			<motion.div
-				className={`relative size-full cursor-pointer rounded-xl border-2 border-dashed p-12 text-center transition-colors ${
+				className={`relative size-full cursor-pointer rounded-xl border-2 border-dashed p-12 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
 					isDragActive
 						? "border-blue-500 bg-blue-500/5"
 						: "border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 dark:hover:border-neutral-500"
 				}`}
 				onClick={handleButtonClick}
+				onKeyDown={(e) => {
+					if (e.key === "Enter" || e.key === " ") {
+						e.preventDefault();
+						handleButtonClick();
+					}
+				}}
+				role="button"
+				tabIndex={0}
 				onDragEnter={handleDragEnter}
 				onDragLeave={handleDragLeave}
 				onDragOver={handleDragOver}
@@ -390,13 +398,17 @@ export function FileDropzone() {
 											<span className="ml-1">Delete</span>
 										</Button>
 									) : (
-										<Trash2
-											className="mr-2 size-5 cursor-pointer text-red-500 transition-colors hover:text-red-600"
+										<button
+											type="button"
+											className="mr-2 rounded-sm text-red-500 transition-colors hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
 											onClick={(e) => {
 												e.stopPropagation();
 												handleDeleteFile(file);
 											}}
-										/>
+										>
+											<Trash2 className="size-5" />
+											<span className="sr-only">Delete</span>
+										</button>
 									)}
 								</div>
 							</motion.div>

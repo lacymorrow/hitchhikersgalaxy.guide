@@ -18,12 +18,18 @@
     "skipLibCheck": true,
     "verbatimModuleSyntax": false,
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "target": "ES2022",
-    "lib": ["dom", "dom.iterable", "ES2022"],
-    "types": ["node"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "ES2022"
+    ],
+    "types": [
+      "node"
+    ],
     "plugins": [
       {
         "name": "next"
@@ -31,9 +37,15 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@payload-config": ["./src/payload.config.ts"],
-      "@/public/*": ["./public/*"],
-      "@/*": ["./src/*"]
+      "@payload-config": [
+        "./src/payload.config.ts"
+      ],
+      "@/public/*": [
+        "./public/*"
+      ],
+      "@/*": [
+        "./src/*"
+      ]
     }
   },
   "include": [
@@ -51,7 +63,8 @@
     ".next/types/**/*.ts",
     "src/types/next-auth.d.ts",
     "next.config.ts",
-    "src/workers/**/*"
+    "src/workers/**/*",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",

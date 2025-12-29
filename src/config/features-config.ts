@@ -245,6 +245,10 @@ buildTimeFeatures.CONSENT_MANAGER_ENABLED =
 	(buildTimeFeatures.C15T_ENABLED || envIsTrue("ENABLE_CONSENT_MANAGER")) &&
 	!envIsTrue("DISABLE_CONSENT_MANAGER");
 
+// Cloudflare Turnstile (CAPTCHA)
+buildTimeFeatures.TURNSTILE_ENABLED =
+	hasEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "TURNSTILE_SECRET_KEY");
+
 // Composite Features
 buildTimeFeatures.FILE_UPLOAD_ENABLED =
 	buildTimeFeatures.S3_ENABLED || buildTimeFeatures.VERCEL_BLOB_ENABLED;

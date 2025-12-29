@@ -27,14 +27,12 @@
     "check:metadata": "npx check-site-meta 3000",
     "check:performance": "next dev & npx react-scan@latest localhost:3000",
     "git:checkpoint": "tsx scripts/git-checkpoint.ts",
-    "lint": "npm run lint:biome && npm run lint:eslint && npm run lint:prettier",
+    "lint": "npm run lint:biome && npm run lint:eslint",
     "lint:biome": "biome lint . --config .config/biome.json",
     "lint:eslint": "eslint . --config .config/eslint.config.mjs",
-    "lint:prettier": "prettier --check \"**/*.{ts,tsx,md,mdx,json}\"",
     "lint:fix": "npm run lint:fix:biome && npm run lint:fix:eslint && npm run format",
     "lint:fix:biome": "biome check --write . --config .config/biome.json",
     "lint:fix:eslint": "eslint --fix . --config .config/eslint.config.mjs",
-    "lint:fix:prettier": "prettier --write \"**/*.{ts,tsx,md,mdx,json}\"",
     "start": "next start",
     "upstream:setup": "tsx scripts/setup-upstream.ts",
     "upstream:pull": "tsx scripts/git-sync-upstream.ts",
@@ -275,8 +273,6 @@
     "payload": "^3.69.0",
     "playwright": "^1.57.0",
     "postcss": "8.5.6",
-    "prettier": "3.7.4",
-    "prettier-plugin-tailwindcss": "^0.7.2",
     "raw-loader": "^4.0.2",
     "tailwindcss": "3.4.17",
     "typescript": "^5",
@@ -292,11 +288,7 @@
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,yml}": [
-      "prettier --write"
+      "eslint --fix"
     ]
   },
   "pnpm": {

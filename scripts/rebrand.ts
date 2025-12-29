@@ -218,7 +218,7 @@ async function main() {
 		// Run formatter
 		console.log("\nFormatting files...");
 		try {
-			execSync('pnpm prettier --write src/config/site-config.ts || echo "Formatting skipped"', {
+			execSync('pnpm eslint --fix src/config/site-config.ts || echo "Formatting skipped"', {
 				stdio: "inherit",
 			});
 		} catch (error) {

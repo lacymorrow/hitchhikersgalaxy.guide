@@ -141,6 +141,9 @@ export const env = createEnv({
 		UPSTASH_REDIS_REST_URL: z.string().optional(),
 		UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
 
+		// Cloudflare Turnstile (CAPTCHA)
+		TURNSTILE_SECRET_KEY: z.string().optional(),
+
 		// Deployment
 		VERCEL_ACCESS_TOKEN: z.string().optional(),
 		VERCEL_CLIENT_ID: z.string().optional(),
@@ -187,6 +190,9 @@ export const env = createEnv({
 		NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
 
 		NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: z.string().optional(),
+
+		// Cloudflare Turnstile (CAPTCHA)
+		NEXT_PUBLIC_TURNSTILE_SITE_KEY: z.string().optional(),
 
 		// ======== Build-Time Feature Flags (Derived in next.config.ts) ========
 		NEXT_PUBLIC_FEATURE_DATABASE_ENABLED: zBooleanFeatureFlag,
@@ -257,6 +263,9 @@ export const env = createEnv({
 
 		// File Upload
 		NEXT_PUBLIC_FEATURE_FILE_UPLOAD_ENABLED: zBooleanFeatureFlag,
+
+		// Cloudflare Turnstile
+		NEXT_PUBLIC_FEATURE_TURNSTILE_ENABLED: zBooleanFeatureFlag,
 	},
 
 	/**
@@ -351,6 +360,7 @@ export const env = createEnv({
 		AWS_BUCKET_NAME: process.env.AWS_BUCKET_NAME,
 		UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
 		UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
+		TURNSTILE_SECRET_KEY: process.env.TURNSTILE_SECRET_KEY,
 		VERCEL_ACCESS_TOKEN: process.env.VERCEL_ACCESS_TOKEN,
 		VERCEL_CLIENT_ID: process.env.VERCEL_CLIENT_ID,
 		VERCEL_CLIENT_SECRET: process.env.VERCEL_CLIENT_SECRET,
@@ -363,6 +373,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_SHIPKIT_REPO: process.env.NEXT_PUBLIC_SHIPKIT_REPO,
 
 		NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
+		NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
 
 		// Client-side variables (Original)
 		NEXT_PUBLIC_BUILDER_API_KEY: process.env.NEXT_PUBLIC_BUILDER_API_KEY,
@@ -445,6 +456,7 @@ export const env = createEnv({
 			process.env.NEXT_PUBLIC_FEATURE_CONSENT_MANAGER_ENABLED,
 		NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED: process.env.NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED,
 		NEXT_PUBLIC_FEATURE_FILE_UPLOAD_ENABLED: process.env.NEXT_PUBLIC_FEATURE_FILE_UPLOAD_ENABLED,
+		NEXT_PUBLIC_FEATURE_TURNSTILE_ENABLED: process.env.NEXT_PUBLIC_FEATURE_TURNSTILE_ENABLED,
 	},
 
 	/**

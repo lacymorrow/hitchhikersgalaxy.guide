@@ -1,5 +1,12 @@
 import { buildTimeFeatures } from "@/config/features-config";
 
+const TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
+
+interface TurnstileResponse {
+	success: boolean;
+	"error-codes"?: string[];
+}
+
 /**
  * Check if Cloudflare Turnstile is fully configured.
  * Only returns true if both site key and secret key are set.
@@ -23,7 +30,7 @@ export async function verifyTurnstileToken(token: string): Promise<boolean> {
 	}
 
 	try {
-		const response = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
+		const response = await fetch(TURNSTILE_VERIFY_URL, {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/x-www-form-urlencoded",
@@ -34,7 +41,19 @@ export async function verifyTurnstileToken(token: string): Promise<boolean> {
 			}),
 		});
 
-		const data = await response.json();
+		if (!response.ok) {
+			console.error(
+				`Turnstile verification request failed: ${response.status} ${response.statusText}`,
+			);
+			return false;
+		}
+
+		const data = (await response.json()) as TurnstileResponse;
+
+		if (!data.success) {
+			console.warn("Turnstile verification failed with error codes:", data["error-codes"]);
+		}
+
 		return data.success === true;
 	} catch (error) {
 		console.error("Error verifying Turnstile token:", error);

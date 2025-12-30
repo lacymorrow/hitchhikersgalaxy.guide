@@ -15,7 +15,7 @@ This is a Next.js project using:
 - Payload CMS 3
 - NextAuth/AuthJS@v5
 - TypeScript
-- PNPM
+- Bun
 
 ## Multi-Zone Architecture Support
 
@@ -167,7 +167,7 @@ src/
 - Minimize bundle size
 - Use peer dependencies appropriately
 - Document breaking changes
-- Use PNPM as package manager
+- Use Bun as package manager
 
 ## Development Workflow
 - Use feature branches for development

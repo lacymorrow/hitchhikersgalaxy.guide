@@ -6,45 +6,45 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### Development Server
 ```bash
-pnpm dev            # Start development server with Turbo
-pnpm dev:legacy     # Start development server without Turbo
-pnpm dev:https      # Start development server with HTTPS
-pnpm dev:all        # Start both dev server and workers
+bun dev             # Start development server with Turbo
+bun run dev:legacy  # Start development server without Turbo
+bun run dev:https   # Start development server with HTTPS
+bun run dev:all     # Start both dev server and workers
 ```
 
 ### Testing
 ```bash
-pnpm test           # Run all tests
-pnpm test:watch     # Run tests in watch mode
-pnpm test:coverage  # Run tests with coverage
-pnpm test:browser   # Run browser tests with Vitest
-pnpm test:node      # Run Node.js tests
-pnpm test:e2e       # Run Playwright E2E tests
+bun run test           # Run all tests
+bun run test:watch     # Run tests in watch mode
+bun run test:coverage  # Run tests with coverage
+bun run test:browser   # Run browser tests with Vitest
+bun run test:node      # Run Node.js tests
+bun run test:e2e       # Run Playwright E2E tests
 ```
 
 ### Linting & Type Checking
 ```bash
-pnpm lint           # Run all linting (Biome, ESLint, Prettier)
-pnpm lint:fix       # Fix all linting issues
-pnpm typecheck      # Run TypeScript type checking
+bun run lint           # Run all linting (Biome, ESLint, Prettier)
+bun run lint:fix       # Fix all linting issues
+bun run typecheck      # Run TypeScript type checking
 ```
 
 ### Database Operations
 ```bash
-pnpm db:generate    # Generate Drizzle schema
-pnpm db:migrate     # Run database migrations
-pnpm db:push        # Push schema to database
-pnpm db:studio      # Open Drizzle Studio
-pnpm db:reset       # Reset database (drop, generate, migrate, push)
-pnpm db:seed        # Seed database with test data
+bun run db:generate    # Generate Drizzle schema
+bun run db:migrate     # Run database migrations
+bun run db:push        # Push schema to database
+bun run db:studio      # Open Drizzle Studio
+bun run db:reset       # Reset database (drop, generate, migrate, push)
+bun run db:seed        # Seed database with test data
 ```
 
 ### Build & Deployment
 ```bash
-pnpm build          # Build for production
-pnpm build:memory-optimized  # Build with increased memory (8GB heap)
-pnpm start          # Start production server
-pnpm analyze        # Analyze bundle size
+bun run build          # Build for production
+bun run build:vercel   # Build with increased memory (8GB heap)
+bun start              # Start production server
+bun run analyze        # Analyze bundle size
 ```
 
 ## Architecture Overview
@@ -55,7 +55,7 @@ pnpm analyze        # Analyze bundle size
 - **Tailwind CSS** - Utility-first styling
 - **Shadcn/UI** - Component library built on Radix UI
 - **Drizzle ORM** - Type-safe database operations
-- **PNPM** - Package manager
+- **Bun** - Package manager
 
 ### Authentication & Authorization
 - **NextAuth.js v5** - Core authentication system
@@ -145,7 +145,7 @@ Shipkit uses environment variables for feature toggles:
 - **Minimize client components** - Use 'use client' sparingly
 - **Suspense boundaries** - Wrap client components with fallbacks
 - **Image optimization** - Use Next.js Image with proper sizing
-- **Bundle analysis** - Run `pnpm analyze` before major changes
+- **Bundle analysis** - Run `bun run analyze` before major changes
 
 ### Navigation Patterns
 - **Prefer Link over router.push** - Use `src/components/primitives/link-with-transition`
@@ -170,8 +170,8 @@ Shipkit uses environment variables for feature toggles:
 
 ### Database Schema Changes
 1. Modify schema in `src/server/db/schema.ts`
-2. Run `pnpm db:generate` to create migration
-3. Run `pnpm db:migrate` to apply changes
+2. Run `bun run db:generate` to create migration
+3. Run `bun run db:migrate` to apply changes
 4. Update TypeScript types if needed
 
 ### Adding New Routes
@@ -184,7 +184,7 @@ Shipkit uses environment variables for feature toggles:
 - **Unit tests** - Vitest for utilities and components
 - **Integration tests** - Test server actions and services
 - **E2E tests** - Playwright for critical user flows
-- **Run tests** - `pnpm test` before committing
+- **Run tests** - `bun run test` before committing
 
 ## Multi-Zone Architecture
 
@@ -224,17 +224,17 @@ RESEND_API_KEY=             # For email
 ## Troubleshooting
 
 ### Common Issues
-- **Type errors** - Run `pnpm typecheck` and fix before proceeding
-- **Linting failures** - Run `pnpm lint:fix` to auto-fix issues
-- **Database connection** - Check `DATABASE_URL` and run `pnpm db:push`
-- **Build failures** - Try `pnpm clean` then `pnpm build`
-- **Out of Memory (OOM) errors** - Use `pnpm build:memory-optimized` for larger builds
+- **Type errors** - Run `bun run typecheck` and fix before proceeding
+- **Linting failures** - Run `bun run lint:fix` to auto-fix issues
+- **Database connection** - Check `DATABASE_URL` and run `bun run db:push`
+- **Build failures** - Try `bun run clean` then `bun run build`
+- **Out of Memory (OOM) errors** - Use `bun run build:vercel` for larger builds
 
 ### Debug Commands
 ```bash
-pnpm deps:check             # Check for outdated dependencies
-pnpm check:metadata         # Validate site metadata
-pnpm check:performance      # Performance profiling
+bun run deps:check             # Check for outdated dependencies
+bun run check:metadata         # Validate site metadata
+bun run check:performance      # Performance profiling
 ```
 
-Always run `pnpm lint` and `pnpm typecheck` before committing changes.
+Always run `bun run lint` and `bun run typecheck` before committing changes.

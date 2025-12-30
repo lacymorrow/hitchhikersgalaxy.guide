@@ -13,7 +13,7 @@ A clear and concise description of what the bug is.
 **To reproduce**
 Steps to reproduce the behavior with exact commands and actions:
 
-1. Run the command `pnpm <script>` (if applicable)
+1. Run the command `bun <script>` (if applicable)
 2. Go to '...'
 3. Click on '...'
 4. See error
@@ -29,7 +29,7 @@ Please provide the following to help us debug the issue:
 
 - OS: [e.g., macOS 14.5, Windows 11]
 - Node.js: [e.g., 20.16.0]
-- PNPM: [e.g., 9.x]
+- Bun: [e.g., 1.1.x]
 - Browser: [e.g., Chrome 128, Safari 17]
 - App version/commit: [e.g., git SHA or tag]
 - Deployment target: [local, Vercel, Docker]

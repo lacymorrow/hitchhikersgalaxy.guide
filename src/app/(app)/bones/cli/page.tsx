@@ -79,9 +79,9 @@ export default function CliPage() {
 						</pre>
 					</div>
 					<div>
-						<h3 className="font-medium mb-2">pnpm</h3>
+						<h3 className="font-medium mb-2">Bun</h3>
 						<pre className="bg-muted p-3 rounded-md text-sm">
-							<code>pnpm install -g bones-cli</code>
+							<code>bun add --global bones-cli</code>
 						</pre>
 					</div>
 				</CardContent>

@@ -155,8 +155,8 @@ export async function deploy(formData: FormData) {
 				},
 				projectSettings: {
 					framework: "nextjs",
-					buildCommand: "pnpm run build",
-					installCommand: "pnpm install",
+					buildCommand: "bun run build",
+					installCommand: "bun install --frozen-lockfile",
 					outputDirectory: ".next",
 					nodeVersion: "20.x",
 				},

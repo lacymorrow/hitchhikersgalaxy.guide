@@ -129,24 +129,24 @@ export default async function Home() {
 
 							<BlurFade delay={1} duration={1}>
 								<div className="mb-8 text-balance text-lg tracking-tight md:text-xl">
-									<span className="lg:hidden">Deploy an enterprise-ready website in minutes</span>
+									<span className="lg:hidden">Join the ranks of founders launching together—deploy in minutes without code.</span>
 									<HoverInfo
 										className="hidden lg:inline-block"
 										content={
 											<>
 												<h4 className="mb-2 font-medium">The best stack for building with AI</h4>
 												<ul className="text-sm list-disc list-inside text-left">
-													<li>Next.js 15 website</li>
-													<li>AI Search from your own Documentation</li>
-													<li>RAG, Vector Search, and pre-built AI apps</li>
+													<li>Join a growing community launching production sites in minutes</li>
+													<li>Ship powerful, AI-ready experiences with zero coding grind</li>
+													<li>Share playbooks, momentum, and social proof with peers</li>
 												</ul>
 											</>
 										}
 									>
-										Deploy an enterprise-ready website in minutes<br />
+										Join founders shipping enterprise-ready sites in minutes<br />
 									</HoverInfo>{' '}
-									with zero coding knowledge.<br />
-									<b>Save 1000+ hours of development.</b> Launch a site now in 5 minutes.
+									without touching code.<br />
+									<b>Build together, succeed together.</b> Skip the grind and launch now.
 								</div>
 							</BlurFade>
 

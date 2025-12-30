@@ -30,7 +30,7 @@
     "lint": "npm run lint:biome && npm run lint:eslint",
     "lint:biome": "biome lint . --config .config/biome.json",
     "lint:eslint": "eslint . --config .config/eslint.config.mjs",
-    "lint:fix": "npm run lint:fix:biome && npm run lint:fix:eslint && npm run format",
+    "lint:fix": "npm run lint:fix:biome && npm run lint:fix:eslint",
     "lint:fix:biome": "biome check --write . --config .config/biome.json",
     "lint:fix:eslint": "eslint --fix . --config .config/eslint.config.mjs",
     "start": "next start",
@@ -51,7 +51,7 @@
     "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload",
     "build:storybook": "storybook build",
     "test:e2e": "playwright test --config=.config/playwright.config.ts",
-    "analyze": "cross-env ANALYZE=true next build",
+    "analyze": "cross-env ANALYZE=true next build --webpack",
     "analyze:server": "cross-env BUNDLE_ANALYZE=server next build --webpack",
     "analyze:browser": "cross-env BUNDLE_ANALYZE=browser next build --webpack",
     "analyze:both": "cross-env BUNDLE_ANALYZE=both next build --webpack",
@@ -273,6 +273,8 @@
     "payload": "^3.69.0",
     "playwright": "^1.57.0",
     "postcss": "8.5.6",
+    "prettier": "3.7.4",
+    "prettier-plugin-tailwindcss": "^0.7.2",
     "raw-loader": "^4.0.2",
     "tailwindcss": "3.4.17",
     "typescript": "^5",
@@ -291,36 +293,14 @@
       "eslint --fix"
     ]
   },
-  "pnpm": {
-    "overrides": {
-      "react": "19.2.3",
-      "react-dom": "19.2.3",
-      "oauth4webapi": "3.6.2",
-      "@tanstack/react-query": "5.90.12",
-      "@tanstack/query-core": "5.83.0"
-    },
-    "onlyBuiltDependencies": [
-      "@clerk/shared",
-      "@tsparticles/engine",
-      "@vercel/speed-insights",
-      "@vscode/ripgrep",
-      "better-sqlite3",
-      "bufferutil",
-      "contentlayer",
-      "core-js",
-      "edgedriver",
-      "es5-ext",
-      "esbuild",
-      "geckodriver",
-      "isolated-vm",
-      "msw",
-      "protobufjs",
-      "puppeteer",
-      "sharp",
-      "unrs-resolver",
-      "utf-8-validate"
-    ]
+  "overrides": {
+    "react": "19.2.3",
+    "react-dom": "19.2.3",
+    "oauth4webapi": "3.6.2",
+    "@tanstack/react-query": "5.90.12",
+    "@tanstack/query-core": "5.83.0"
   },
+  "packageManager": "bun@1.1.34",
   "trustedDependencies": [
     "@clerk/shared",
     "@lvce-editor/ripgrep",
@@ -339,3 +319,4 @@
     "utf-8-validate"
   ]
 }
+

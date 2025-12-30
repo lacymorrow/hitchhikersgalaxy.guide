@@ -46,7 +46,7 @@ We use GitHub issues to track public bugs. Report a bug by [opening a new issue]
 ## Use a Consistent Coding Style
 
 - Use TypeScript for all code
-- Run `pnpm format` to ensure consistent formatting
+- Run `bun run lint:fix` to ensure consistent formatting
 - Follow the existing code style patterns
 
 ## License

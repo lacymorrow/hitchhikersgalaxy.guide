@@ -15,7 +15,7 @@ This is a Next.js project using:
 - Payload CMS 3
 - NextAuth/AuthJS@v5
 - TypeScript
-- PNPM
+- Bun
 
 ## Multi-Zone Architecture
 
@@ -177,19 +177,19 @@ import Link from "next/link";
 
 ```bash
 # Terminal 1 - Main Shipkit app
-cd shipkit && pnpm dev
+cd shipkit && bun dev
 
 # Terminal 2 - Documentation Shipkit app
-cd shipkit-docs && pnpm dev -- --port 3001
+cd shipkit-docs && bun dev -- --port 3001
 
 # Terminal 3 - Blog Shipkit app
-cd shipkit-blog && pnpm dev -- --port 3002
+cd shipkit-blog && bun dev -- --port 3002
 
 # Terminal 4 - UI Library Shipkit app
-cd shipkit-ui && pnpm dev -- --port 3003
+cd shipkit-ui && bun dev -- --port 3003
 
 # Terminal 5 - Tools Shipkit app
-cd shipkit-tools && pnpm dev -- --port 3004
+cd shipkit-tools && bun dev -- --port 3004
 ```
 
 #### Deployment Strategy

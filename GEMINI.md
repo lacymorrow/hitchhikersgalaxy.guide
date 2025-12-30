@@ -24,13 +24,13 @@ The project follows a standard Next.js project structure with the `src` director
 **Installation:**
 
 ```bash
-pnpm install
+bun install --frozen-lockfile
 ```
 
 **Running in Development:**
 
 ```bash
-pnpm dev
+bun dev
 ```
 
 This will start the Next.js development server on `http://localhost:3000`.
@@ -38,7 +38,7 @@ This will start the Next.js development server on `http://localhost:3000`.
 **Building for Production:**
 
 ```bash
-pnpm build
+bun run build
 ```
 
 **Testing:**
@@ -47,19 +47,19 @@ The project uses `vitest` for unit testing and `playwright` for end-to-end testi
 
 *   Run all tests:
     ```bash
-    pnpm test
+    bun run test
     ```
 *   Run unit tests:
     ```bash
-    pnpm test:node
+    bun run test:node
     ```
 *   Run browser tests:
     ```bash
-    pnpm test:browser
+    bun run test:browser
     ```
 *   Run end-to-end tests:
     ```bash
-    pnpm test:e2e
+    bun run test:e2e
     ```
 
 ## Development Conventions
@@ -67,6 +67,6 @@ The project uses `vitest` for unit testing and `playwright` for end-to-end testi
 *   **Feature Flagging:** Features are enabled or disabled using environment variables. The configuration for this is in `src/config/features-config.ts`. To enable a feature, you typically set an environment variable like `ENABLE_FEATURE_X` to `true`.
 *   **Styling:** The project uses Tailwind CSS for styling. Custom styles are located in the `src/styles` directory.
 *   **Components:** Reusable UI components are located in the `src/components` directory.
-*   **Linting and Formatting:** The project uses ESLint, Prettier, and Biome for code linting and formatting. You can run the linters with `pnpm lint` and fix issues with `pnpm lint:fix`.
+*   **Linting and Formatting:** The project uses ESLint, Prettier, and Biome for code linting and formatting. You can run the linters with `bun run lint` and fix issues with `bun run lint:fix`.
 *   **Committing:** The project uses `lint-staged` to run linters on staged files before committing.
-*   **Database:** The project uses Drizzle ORM for database access. Database-related scripts are available in `package.json` (e.g., `pnpm db:generate`, `pnpm db:migrate`).
+*   **Database:** The project uses Drizzle ORM for database access. Database-related scripts are available in `package.json` (e.g., `bun run db:generate`, `bun run db:migrate`).

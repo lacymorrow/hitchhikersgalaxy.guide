@@ -116,7 +116,7 @@ git clone https://github.com/lacymorrow/shipkit.git shipkit-docs
 cd shipkit-docs
 
 # Install dependencies
-pnpm install
+bun install --frozen-lockfile
 
 # Customize for documentation
 # Remove unnecessary features, add docs-specific functionality
@@ -178,7 +178,7 @@ git clone https://github.com/lacymorrow/shipkit.git shipkit-blog
 cd shipkit-blog
 
 # Install dependencies
-pnpm install
+bun install --frozen-lockfile
 
 # Customize for blogging
 # Enable blog-specific features, add CMS integration
@@ -232,10 +232,10 @@ git clone https://github.com/lacymorrow/shipkit.git shipkit-ui
 cd shipkit-ui
 
 # Install dependencies
-pnpm install
+bun install --frozen-lockfile
 
 # Add component showcase dependencies
-pnpm add @storybook/nextjs @storybook/addon-docs
+bun add @storybook/nextjs @storybook/addon-docs
 ```
 
 **Configure `next.config.ts`**:
@@ -282,10 +282,10 @@ git clone https://github.com/lacymorrow/shipkit.git shipkit-tools
 cd shipkit-tools
 
 # Install dependencies
-pnpm install
+bun install --frozen-lockfile
 
 # Add tools-specific dependencies
-pnpm add @monaco-editor/react @codemirror/state @codemirror/view
+bun add @monaco-editor/react @codemirror/state @codemirror/view
 ```
 
 **Configure `next.config.ts`**:

@@ -64,7 +64,7 @@ description: "A comprehensive checklist for implementing multi-zone architecture
   ```bash
   git clone https://github.com/lacymorrow/shipkit.git shipkit-docs
   cd shipkit-docs
-  pnpm install
+  bun install --frozen-lockfile
   ```
 
 - [ ] **Configure `next.config.ts`** with basePath `/docs` and assetPrefix `/docs-static`
@@ -108,9 +108,9 @@ description: "A comprehensive checklist for implementing multi-zone architecture
   ```bash
   git clone https://github.com/lacymorrow/shipkit.git shipkit-blog
   cd shipkit-blog
-  pnpm install
+  bun install --frozen-lockfile
   # Add blog-specific dependencies
-  pnpm add @next/mdx gray-matter
+  bun add @next/mdx gray-matter
   ```
 
 - [ ] **Configure `next.config.ts`** with basePath `/blog` and assetPrefix `/blog-static`
@@ -151,9 +151,9 @@ description: "A comprehensive checklist for implementing multi-zone architecture
   ```bash
   git clone https://github.com/lacymorrow/shipkit.git shipkit-ui
   cd shipkit-ui
-  pnpm install
+  bun install --frozen-lockfile
   # Add component showcase dependencies
-  pnpm add @storybook/nextjs @storybook/addon-docs
+  bun add @storybook/nextjs @storybook/addon-docs
   ```
 
 - [ ] **Configure `next.config.ts`** with basePath `/ui` and assetPrefix `/ui-static`
@@ -191,9 +191,9 @@ description: "A comprehensive checklist for implementing multi-zone architecture
   ```bash
   git clone https://github.com/lacymorrow/shipkit.git shipkit-tools
   cd shipkit-tools
-  pnpm install
+  bun install --frozen-lockfile
   # Add tools-specific dependencies
-  pnpm add @monaco-editor/react @codemirror/state @codemirror/view
+  bun add @monaco-editor/react @codemirror/state @codemirror/view
   ```
 
 - [ ] **Configure `next.config.ts`** with basePath `/tools` and assetPrefix `/tools-static`

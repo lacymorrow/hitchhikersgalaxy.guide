@@ -11,25 +11,24 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PNPM
-        uses: pnpm/action-setup@v4
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v1
         with:
-          version: 9
+          bun-version: 1.1.34
 
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
 
       - name: Install deps
-        run: pnpm install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Build
-        run: pnpm build
+        run: bun run build
 
       - name: Start server
-        run: pnpm start & sleep 5
+        run: bun start & sleep 5
 
       - name: Run Lighthouse Loop
         env:
@@ -38,7 +37,7 @@ jobs:
           LH_T_A11Y: '95'
           LH_T_SEO: '95'
           LH_T_BP: '95'
-        run: pnpm audit:lh:loop -- http://localhost:3000/
+        run: bun run audit:lh:loop -- http://localhost:3000/
 
       - name: Upload Lighthouse Artifacts
         uses: actions/upload-artifact@v4

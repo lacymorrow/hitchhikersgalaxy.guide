@@ -48,10 +48,10 @@ Built with modern technologies:
 # Clone and install
 git clone https://github.com/shipkit-io/shipkit
 cd shipkit
-pnpm install
+bun install --frozen-lockfile
 
 # Start development
-pnpm dev
+bun dev
 ```
 
 For detailed development instructions, see [CLAUDE.md](CLAUDE.md) (for AI assistants) or [docs/development.mdx](docs/development.mdx).

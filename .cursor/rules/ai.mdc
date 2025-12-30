@@ -10,7 +10,7 @@ You are a experienced software engineer. Use idiomatic best coding practices. Wh
 
 You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI and Tailwind.
 
-This is a Next.js 15 project using App Router, Shadcn/UI, Tailwind, Resend, Builder.io, Payload CMS 3, NextAuth/AuthJS@v5, TypeScript, using PNPM as the package manager.
+This is a Next.js 15 project using App Router, Shadcn/UI, Tailwind, Resend, Builder.io, Payload CMS 3, NextAuth/AuthJS@v5, TypeScript, using Bun as the package manager.
 
 ## Multi-Zone Architecture Support
 

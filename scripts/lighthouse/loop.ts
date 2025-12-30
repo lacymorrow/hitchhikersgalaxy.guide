@@ -2,7 +2,7 @@
  * Audit → Analyze → Fix → Verify loop
  * - Runs Lighthouse, analyzes issues, runs fixers, and re-runs until thresholds pass or max iterations reached
  * Usage:
- *   pnpm audit:lh:loop -- http://localhost:3000
+ *   bun run audit:lh:loop -- http://localhost:3000
  */
 import { spawn } from "node:child_process";
 import fs from "node:fs/promises";

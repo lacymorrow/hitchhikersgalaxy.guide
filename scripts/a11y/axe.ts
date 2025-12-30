@@ -2,8 +2,8 @@
  * Axe runner using Playwright
  * - Visits URLs, injects axe-core, runs accessibility checks, writes JSON reports
  * Usage:
- *   pnpm audit:axe -- http://localhost:3000 http://localhost:3000/docs
- *   AXE_URLS="http://localhost:3000" pnpm audit:axe
+ *   bun run audit:axe -- http://localhost:3000 http://localhost:3000/docs
+ *   AXE_URLS="http://localhost:3000" bun run audit:axe
  */
 import fs from "node:fs/promises";
 import path from "node:path";

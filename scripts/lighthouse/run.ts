@@ -2,8 +2,8 @@
  * Lighthouse runner
  * - Runs Lighthouse against one or more URLs and writes JSON/HTML reports per URL
  * - Usage:
- *   pnpm audit:lh -- <url1> <url2>
- *   LH_URLS="http://localhost:3000,http://localhost:3000/docs" pnpm audit:lh
+ *   bun run audit:lh -- <url1> <url2>
+ *   LH_URLS="http://localhost:3000,http://localhost:3000/docs" bun run audit:lh
  *   LH_PRESET=desktop|mobile (default: desktop)
  *   LH_OUT_DIR=.lighthouse (default)
  */

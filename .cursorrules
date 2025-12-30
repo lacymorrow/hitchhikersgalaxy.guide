@@ -2,7 +2,7 @@
 
 You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI and Tailwind.
 
-This is a Next.js project using App Router, Shadcn/UI, Tailwind, Resend, Builder.io, Payload CMS v3, NextAuth/AuthJS v5, TypeScript, using PNPM as the package manager.
+This is a Next.js project using App Router, Shadcn/UI, Tailwind, Resend, Builder.io, Payload CMS v3, NextAuth/AuthJS v5, TypeScript, using Bun as the package manager.
 
 Be aware of the latest versions of all libraries.
 Your plans should be documented into a ai.mdx file. Check to see if it exists. If it does, pick up where you left off. Mark completed steps with a checkbox. Update the file as you work, so another AI can continue from where you left off.
@@ -92,7 +92,7 @@ Follow Next.js docs for Data Fetching, Rendering, and Routing.
 ## Don't
 
 Don't delete environment variables.
-Don't run `pnpm run dev` in the terminal, User will do that.
+Don't run the dev server (`bun dev`) in the terminal, User will do that.
 Don't nest server components in client components unless passed through props.
 Don't forget to add `use client` to the top of the file if you are using client-side code like hooks.
 Don't use `use client` in server components.

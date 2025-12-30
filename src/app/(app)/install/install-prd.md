@@ -83,6 +83,8 @@ The following file types should be filtered out of the installation process:
    - `package-lock.json`
    - `yarn.lock`
    - `pnpm-lock.yaml`
+   - `bun.lockb`
+   - `bun.lock`
    - Other package manager lock files
 
 3. **Configuration Files** (when specified by the user)

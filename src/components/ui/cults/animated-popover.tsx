@@ -115,9 +115,10 @@ export function PopoverTrigger({ children, className, ...props }: PopoverTrigger
 interface PopoverContentProps {
 	children: React.ReactNode;
 	className?: string;
+	align?: "start" | "end";
 }
 
-export function PopoverContent({ children, className }: PopoverContentProps) {
+export function PopoverContent({ children, className, align = "start" }: PopoverContentProps) {
 	const { isOpen, closePopover, uniqueId } = usePopover();
 	const formContainerRef = useRef<HTMLDivElement>(null);
 
@@ -145,7 +146,8 @@ export function PopoverContent({ children, className }: PopoverContentProps) {
 					style={{
 						borderRadius: 12,
 						top: "auto",
-						left: "auto",
+						left: align === "start" ? "auto" : undefined,
+						right: align === "end" ? 0 : undefined,
 						transform: "none",
 					}}
 				>

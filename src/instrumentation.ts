@@ -6,7 +6,7 @@
 
 import { registerOTel } from "@vercel/otel";
 import type { Instrumentation } from "next";
-import { displayLaunchMessage } from "@/lib/utils/shipkit-launch-message";
+import { displayLaunchMessage } from "@/lib/utils/kit-launch-message";
 
 /**
  * Registers OpenTelemetry for observability in the application.

@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, Box, Code, Zap } from "lucide-react";
-import { ShipkitLogoParticles } from "@/app/(app)/(shipkit)/_components/shipkit-logo-particles";
+import { KitLogoParticles } from "@/app/(app)/(kit)/_components/kit-logo-particles";
 import { Link } from "@/components/primitives/link";
 import {
 	PageHeader,
@@ -46,7 +46,7 @@ export function HeroSection() {
 						</div>
 					</div>
 					<div className="relative flex h-[400px] max-w-3xl flex-col items-center justify-center overflow-hidden rounded-lg border bg-background md:shadow-xl">
-						<ShipkitLogoParticles />
+						<KitLogoParticles />
 						<BorderBeam size={250} duration={12} delay={9} />
 					</div>
 				</div>

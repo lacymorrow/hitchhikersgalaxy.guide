@@ -2,22 +2,22 @@ import { ViewTransitions } from "next-view-transitions";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
 import { PageTracker } from "react-page-tracker";
-import { ShipkitProvider } from "@/components/providers/shipkit-provider";
+import { KitProvider } from "@/components/providers/kit-provider";
 import { TeamProvider } from "@/components/providers/team-provider";
-import { ThemeProvider as ShipkitThemeProvider } from "@/components/ui/shipkit/theme";
+import { ThemeProvider } from "@/components/ui/shipkit/theme";
 import { auth } from "@/server/auth";
 import { teamService } from "@/server/services/team-service";
 
 /**
  * Root layout component that wraps the entire application
- * Uses ShipkitProvider to manage all core providers
+ * Uses KitProvider to manage all core providers
  */
 export async function AppRouterLayout({
 	children,
-	themeProvider: ThemeProviderWrapper = ShipkitThemeProvider,
+	themeProvider: ThemeProviderWrapper = ThemeProvider,
 }: {
 	children: ReactNode;
-	themeProvider?: typeof ShipkitThemeProvider;
+	themeProvider?: typeof ThemeProvider;
 }) {
 	// Fetch user teams if authenticated
 	const session = await auth();
@@ -34,7 +34,7 @@ export async function AppRouterLayout({
 			} else {
 				// Ensure at least one personal team exists
 				const personalTeam = await teamService.ensureOnePersonalTeam(session.user.id);
-				if (personalTeam && personalTeam.id && personalTeam.name) {
+				if (personalTeam?.id && personalTeam?.name) {
 					userTeams = [
 						{
 							id: personalTeam.id,
@@ -55,12 +55,12 @@ export async function AppRouterLayout({
 
 			{/* ThemeProvider should wrap providers that might need theme context */}
 			<ThemeProviderWrapper>
-				{/* ShipkitProvider - Manage all core providers */}
-				<ShipkitProvider>
+				{/* KitProvider - Manage all core providers */}
+				<KitProvider>
 					<NuqsAdapter>
 						<TeamProvider initialTeams={userTeams}>{children}</TeamProvider>
 					</NuqsAdapter>
-				</ShipkitProvider>
+				</KitProvider>
 			</ThemeProviderWrapper>
 		</ViewTransitions>
 	);

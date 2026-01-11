@@ -1,7 +1,7 @@
 import type { AppProps } from "next/app";
 import dynamic from "next/dynamic";
 import { NuqsAdapter } from "nuqs/adapters/next/pages";
-import { ShipkitProvider } from "@/components/providers/shipkit-provider";
+import { KitProvider } from "@/components/providers/kit-provider";
 import { TeamProvider } from "@/components/providers/team-provider";
 import { env } from "@/env";
 
@@ -17,7 +17,7 @@ const FontSelector = dynamic(
 export default function PagesApp({ Component, pageProps }: AppProps) {
 	const devtoolsEnabled = env.NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED;
 	return (
-		<ShipkitProvider session={pageProps.session} pageProps={pageProps}>
+		<KitProvider session={pageProps.session} pageProps={pageProps}>
 			<NuqsAdapter>
 				<TeamProvider initialTeams={[{ id: "personal", name: "Personal" }]}>
 					<Component {...pageProps} />
@@ -29,6 +29,6 @@ export default function PagesApp({ Component, pageProps }: AppProps) {
 					)}
 				</TeamProvider>
 			</NuqsAdapter>
-		</ShipkitProvider>
+		</KitProvider>
 	);
 }

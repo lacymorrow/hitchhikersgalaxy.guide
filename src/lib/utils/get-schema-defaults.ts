@@ -1,45 +1,57 @@
 /*
  * @see: https://github.com/colinhacks/zod/discussions/1953#discussioncomment-5695528
+ * Updated for Zod v4 compatibility - uses _zod.typeName instead of instanceof
  */
 import { z } from "zod";
+
+function getTypeName(schema: z.ZodTypeAny): string | undefined {
+	return (schema as any)?._zod?.typeName;
+}
+
 export const getSchemaDefaults = <T extends z.ZodTypeAny>(
 	schema: z.AnyZodObject | z.ZodEffects<any>
 ): z.infer<T> => {
+	const typeName = getTypeName(schema as z.ZodTypeAny);
+
 	// Check if it's a ZodEffect
-	if (schema instanceof z.ZodEffects) {
+	if (typeName === "ZodEffects") {
+		const innerType = (schema as z.ZodEffects<any>).innerType();
 		// Check if it's a recursive ZodEffect
-		if (schema.innerType() instanceof z.ZodEffects) {
-			return getSchemaDefaults(schema.innerType());
+		if (getTypeName(innerType) === "ZodEffects") {
+			return getSchemaDefaults(innerType);
 		}
 		// return schema inner shape as a fresh zodObject
-		return getSchemaDefaults(z.ZodObject.create(schema.innerType().shape));
+		return getSchemaDefaults(z.object(innerType.shape));
 	}
 
 	function getDefaultValue(schema: z.ZodTypeAny): unknown {
-		if (schema instanceof z.ZodDefault) {
-			return schema._def.defaultValue();
+		const typeName = getTypeName(schema);
+
+		if (typeName === "ZodDefault") {
+			return (schema as any)._zod.def.defaultValue;
 		}
 		// return an empty array if it is
-		if (schema instanceof z.ZodArray) {
+		if (typeName === "ZodArray") {
 			return [];
 		}
 		// return an empty string if it is
-		if (schema instanceof z.ZodString) {
+		if (typeName === "ZodString") {
 			return "";
 		}
-		// return an content of object recursivly
-		if (schema instanceof z.ZodObject) {
-			return getSchemaDefaults(schema);
+		// return an content of object recursively
+		if (typeName === "ZodObject") {
+			return getSchemaDefaults(schema as z.AnyZodObject);
 		}
 
-		if (!("innerType" in schema._def)) {
+		const def = (schema as any)?._zod?.def;
+		if (!def || !("innerType" in def)) {
 			return undefined;
 		}
-		return getDefaultValue(schema._def.innerType);
+		return getDefaultValue(def.innerType);
 	}
 
 	return Object.fromEntries(
-		Object.entries(schema.shape).map(([key, value]) => {
+		Object.entries((schema as z.AnyZodObject).shape).map(([key, value]) => {
 			return [key, getDefaultValue(value as z.ZodTypeAny)];
 		})
 	);

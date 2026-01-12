@@ -65,3 +65,4 @@ env/*
 *.ntvs*
 *.njsproj
 *.sln
+.env*.local

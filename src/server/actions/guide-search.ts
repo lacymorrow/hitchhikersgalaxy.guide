@@ -5,6 +5,77 @@ import { normalizeSlug } from "@/lib/utils";
 import { guideService } from "@/server/services/guide-service";
 import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
 
+// Blocklist patterns for vulnerability probes and spam
+// Note: normalizeSlug removes dots, so "file.php" becomes "filephp"
+const BLOCKED_PATTERNS = [
+	// File extensions (with and without dot for normalized slugs)
+	/\.php/i,
+	/php$/i, // catches "configphp", "indexphp" after normalization
+	/\.asp/i,
+	/aspx?$/i,
+	/\.jsp/i,
+	/jsp$/i,
+	/\.cgi/i,
+	/cgi$/i,
+	/\.env/i,
+	/env$/i,
+	/\.git/i,
+	/\.sql/i,
+	/\.bak/i,
+	/bak$/i,
+	/\.config/i,
+	/\.ini/i,
+	/ini$/i,
+	/\.log/i,
+	/\.xml/i,
+	/\.yml/i,
+	/\.yaml/i,
+	// WordPress / CMS probes
+	/^wp-?/i, // wp- or wp at start
+	/wordpress/i,
+	/wpadmin/i,
+	/wpcontent/i,
+	/wpincludes/i,
+	/wplogin/i,
+	/xmlrpc/i,
+	/phpmyadmin/i,
+	/adminer/i,
+	// Path traversal / system files
+	/etc\/?passwd/i,
+	/etcpasswd/i,
+	/etc\/?shadow/i,
+	/etcshadow/i,
+	/\.\.\/\.\.\//i,
+	/\/root\//i,
+	/\/admin\//i,
+	// SQL injection patterns
+	/select\s+.*\s+from/i,
+	/union\s+select/i,
+	/insert\s+into/i,
+	/drop\s+table/i,
+	/--\s*$/,
+	/;\s*--/,
+	// XSS patterns
+	/<script/i,
+	/javascript:/i,
+	/onerror\s*=/i,
+	/onload\s*=/i,
+	// Shell / command injection
+	/\/bin\/bash/i,
+	/\/bin\/sh/i,
+	/cmd\.exe/i,
+	/cmdexe/i,
+	/powershell/i,
+	// Common attack tools/paths
+	/webshell/i,
+	/c99/i,
+	/r57/i,
+];
+
+const isBlockedSearchTerm = (term: string): boolean => {
+	return BLOCKED_PATTERNS.some((pattern) => pattern.test(term));
+};
+
 const generateGuideEntry = async (searchTerm: string) => {
 	if (!openai) {
 		throw new Error("OpenAI API key is not set.");
@@ -90,6 +161,15 @@ export const searchGuide = async (searchTerm: string, exactMatch = false) => {
 		return {
 			success: false,
 			error: "Search term is required after normalization",
+		};
+	}
+
+	// Block vulnerability probes and spam patterns
+	if (isBlockedSearchTerm(searchTerm) || isBlockedSearchTerm(normalizedSearchTerm)) {
+		console.log("[searchGuide] Blocked spam/vulnerability probe:", searchTerm);
+		return {
+			success: false,
+			error: "This search term is not permitted in the Guide.",
 		};
 	}
 

@@ -10,7 +10,7 @@ import { rateLimitService, rateLimits } from "@/server/services/rate-limit-servi
 const BLOCKED_PATTERNS = [
 	// File extensions (with and without dot for normalized slugs)
 	/\.php/i,
-	/php$/i, // catches "configphp", "indexphp" after normalization
+	/php\d*$/i, // catches "configphp", "indexphp", "php7" after normalization
 	/\.asp/i,
 	/aspx?$/i,
 	/\.jsp/i,
@@ -18,18 +18,35 @@ const BLOCKED_PATTERNS = [
 	/\.cgi/i,
 	/cgi$/i,
 	/\.env/i,
-	/env$/i,
+	/^env/i, // env at start: env, envlocal, envproduction, etc.
+	/env$/i, // env at end: blogenv, dockerenv, etc.
 	/\.git/i,
 	/\.sql/i,
+	/sql$/i,
 	/\.bak/i,
 	/bak$/i,
+	/backup/i,
 	/\.config/i,
+	/config$/i,
 	/\.ini/i,
 	/ini$/i,
 	/\.log/i,
+	/log$/i, // catches errorlog, debuglog, laravellog
 	/\.xml/i,
+	/xml$/i,
 	/\.yml/i,
+	/yml$/i,
 	/\.yaml/i,
+	/yaml$/i,
+	/\.json/i,
+	/json$/i, // catches configjson, secretsjson, etc.
+	/\.zip/i,
+	/zip$/i,
+	/\.tar/i,
+	/\.gz$/i,
+	// JavaScript file probes
+	/\.js$/i,
+	/js$/i, // catches configjs, appjs, serverjs - but see minimum length check below
 	// WordPress / CMS probes
 	/^wp-?/i, // wp- or wp at start
 	/wordpress/i,
@@ -40,6 +57,51 @@ const BLOCKED_PATTERNS = [
 	/xmlrpc/i,
 	/phpmyadmin/i,
 	/adminer/i,
+	// Auth/SSO probes
+	/^saml/i,
+	/^sso$/i,
+	/^idp$/i,
+	/passwordvault/i,
+	/oauth/i,
+	/openid/i,
+	// Cloud/DevOps config probes
+	/^aws/i,
+	/^azure/i,
+	/^boto$/i,
+	/^s3cfg$/i,
+	/docker/i,
+	/kubernetes/i,
+	/^k8s/i,
+	/composer/i,
+	/gitlab/i,
+	/travis/i,
+	/jenkins/i,
+	// Credential/secret probes
+	/credential/i,
+	/secret/i,
+	/apikey/i,
+	/api[_-]?key/i,
+	/token/i,
+	/password/i,
+	/^gitconfig$/i,
+	/^webconfig$/i,
+	// Sitemap/RSS/Feed probes
+	/sitemap/i,
+	/^rss/i,
+	/rss$/i,
+	/^atom$/i,
+	/atom$/i,
+	/^feed/i,
+	/feed$/i,
+	// SSRF probes
+	/^ssrf$/i,
+	/^curl$/i,
+	/^fetch$/i,
+	/^proxy$/i,
+	/^redirect$/i,
+	/^exec$/i,
+	/^load$/i,
+	/^request$/i,
 	// Path traversal / system files
 	/etc\/?passwd/i,
 	/etcpasswd/i,
@@ -48,6 +110,9 @@ const BLOCKED_PATTERNS = [
 	/\.\.\/\.\.\//i,
 	/\/root\//i,
 	/\/admin\//i,
+	/thumbsdb/i,
+	/dsstore/i,
+	/license\.?txt/i,
 	// SQL injection patterns
 	/select\s+.*\s+from/i,
 	/union\s+select/i,
@@ -70,9 +135,91 @@ const BLOCKED_PATTERNS = [
 	/webshell/i,
 	/c99/i,
 	/r57/i,
+	/alfa/i,
+	// Debug probes
+	/^debug/i,
+	/debug$/i,
+	/_debug/i,
+	// Registration/admin probes
+	/^clients-?registrations?$/i,
+	/^register$/i,
+	/^admin$/i,
+	/^login$/i,
+	/^logout$/i,
 ];
 
+// Exact match blocklist for short/common probe terms
+const BLOCKED_EXACT_TERMS = new Set([
+	"js",
+	"css",
+	"api",
+	"app",
+	"get",
+	"new",
+	"old",
+	"www",
+	"tos",
+	"co",
+	"bc",
+	"sa",
+	"template",
+	"nodesync",
+	"secure",
+]);
+
+// Check for random gibberish (8-char lowercase fuzzing strings)
+const isRandomGibberish = (term: string): boolean => {
+	// 8-character all-lowercase strings that don't form real words
+	if (/^[a-z]{8}$/.test(term)) {
+		// Allow some real 8-letter words
+		const realWords = new Set([
+			"dolphins",
+			"penguins",
+			"keyboard",
+			"universe",
+			"galactic",
+			"spaceman",
+			"starship",
+			"asteroid",
+			"magratha",
+			"betelgeu",
+			"infinite",
+			"improbab",
+			"pangalac",
+			"garglebl",
+		]);
+		return !realWords.has(term);
+	}
+	return false;
+};
+
 const isBlockedSearchTerm = (term: string): boolean => {
+	const lowerTerm = term.toLowerCase();
+
+	// Block single characters
+	if (term.length === 1) {
+		return true;
+	}
+
+	// Block very short terms (2 chars or less) unless they're meaningful
+	if (term.length <= 2) {
+		const allowedShort = new Set(["ai", "uk", "us", "tv", "pc", "42"]);
+		if (!allowedShort.has(lowerTerm)) {
+			return true;
+		}
+	}
+
+	// Check exact blocklist
+	if (BLOCKED_EXACT_TERMS.has(lowerTerm)) {
+		return true;
+	}
+
+	// Check for random gibberish
+	if (isRandomGibberish(lowerTerm)) {
+		return true;
+	}
+
+	// Check regex patterns
 	return BLOCKED_PATTERNS.some((pattern) => pattern.test(term));
 };
 
@@ -103,7 +250,7 @@ Keep the total length under 400 words. Make it entertaining and informative, wit
 			{
 				role: "system",
 				content:
-					"You are the Hitchhiker's Guide to the Galaxy, known for its witty, irreverent, and slightly absurd explanations of everything in the universe. Your entries should be both informative and entertaining, with a perfect mix of useful information and complete nonsense. Remember to maintain that distinctively British humor throughout. Always respond with valid JSON.",
+					"You are the Hitchhiker's Guide to the Galaxy, known for its witty, irreverent, and slightly absurd explanations of everything in the universe. Your entries should be both informative and entertaining, with a perfect mix of useful information and complete nonsense. Remember to maintain that distinctively British humor throughout. Avoid starting entries with 'not to be confused with' disclaimers—jump straight into the interesting bits. Always respond with valid JSON.",
 			},
 			{
 				role: "user",

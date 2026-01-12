@@ -1,0 +1,96 @@
+---
+description: Testing Best Practices and Guidelines
+globs: *.test.ts, *.test.tsx, *.spec.ts, *.spec.tsx, __tests__/*, cypress/*
+---
+
+# Testing Best Practices
+
+## Unit Testing
+- Test individual components
+- Mock external dependencies
+- Use meaningful test names
+- Follow AAA pattern (Arrange, Act, Assert)
+- Test edge cases
+- Keep tests focused
+- Maintain test isolation
+
+## Integration Testing
+- Test component interactions
+- Test API integrations
+- Test database operations
+- Test authentication flows
+- Test error scenarios
+- Use proper test data
+- Clean up after tests
+
+## E2E Testing
+- Test critical user flows
+- Test across browsers
+- Test responsive design
+- Test performance
+- Test accessibility
+- Document test scenarios
+- Maintain test data
+
+## Component Testing
+- Test component rendering
+- Test component props
+- Test component events
+- Test component states
+- Test error boundaries
+- Test loading states
+- Test accessibility
+
+## API Testing
+- Test all endpoints
+- Test request validation
+- Test response formats
+- Test error handling
+- Test rate limiting
+- Test authentication
+- Document API tests
+
+## Test Organization
+- Group related tests
+- Use proper naming
+- Maintain test hierarchy
+- Share test utilities
+- Document test helpers
+- Keep tests maintainable
+- Follow conventions
+
+## Test Data
+- Use meaningful test data
+- Maintain test fixtures
+- Clean up test data
+- Use factories/builders
+- Document data structure
+- Version control test data
+- Handle sensitive data
+
+## Test Coverage
+- Set coverage targets
+- Monitor coverage trends
+- Test critical paths
+- Document exclusions
+- Regular coverage reviews
+- Report coverage metrics
+- Address coverage gaps
+
+## Performance Testing
+- Test load times
+- Test resource usage
+- Test concurrent users
+- Test database performance
+- Test caching
+- Monitor metrics
+- Document benchmarks
+
+## Accessibility Testing
+- Test keyboard navigation
+- Test screen readers
+- Test color contrast
+- Test focus management
+- Test ARIA attributes
+- Document compliance
+- Regular audits 

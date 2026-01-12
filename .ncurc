@@ -1,0 +1,8 @@
+{
+  "reject": [
+		"tailwindcss",
+		"lexical",
+		"pg",
+		"sharp"
+	]
+}

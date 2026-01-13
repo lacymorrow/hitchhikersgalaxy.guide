@@ -250,7 +250,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 					"relative"
 				)}
 			>
-				<span className="hidden lg:inline-flex">Search docs...</span>
+				<span className="hidden lg:inline-flex">Search {siteConfig.title}...</span>
 				<span className="inline-flex lg:hidden">Search...</span>
 				<ShortcutDisplay
 					action={ShortcutAction.OPEN_SEARCH}

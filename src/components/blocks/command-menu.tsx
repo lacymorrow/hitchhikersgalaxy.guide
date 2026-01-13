@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/command";
 import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/site-config";
 
 export function CommandMenu() {
 	const router = useRouter();

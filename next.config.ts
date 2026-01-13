@@ -189,6 +189,9 @@ const nextConfig: NextConfig = {
 	 * This prevents Turbopack from trying to bundle these optional peer dependencies
 	 */
 	serverExternalPackages: [
+		// Drizzle Kit - CLI tool bundled by Payload CMS that has many optional drivers
+		"drizzle-kit",
+		// Optional Drizzle ORM database drivers
 		"@aws-sdk/client-rds-data",
 		"@electric-sql/pglite",
 		"@libsql/client",

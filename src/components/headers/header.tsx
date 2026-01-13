@@ -15,7 +15,12 @@ import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { ThemeToggle } from "@/components/ui/shipkit/theme";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 import type { NavLink } from "@/config/navigation";
 import { defaultNavLinks as navigationDefaultNavLinks } from "@/config/navigation";
 import { routes } from "@/config/routes";
@@ -91,54 +96,58 @@ export const Header: React.FC<HeaderProps> = ({
 	const { data: session } = useSession();
 
 	const isLogoOnly = variant === "logo-only";
+	const isLoggedIn = !!session?.user || !!user;
 	const scrollY = typeof y === "number" ? y : 0;
 	const isOpaque =
-		variant === "floating" && typeof opaqueOnScroll === "number" && scrollY > opaqueOnScroll;
+		variant === "floating" &&
+		typeof opaqueOnScroll === "number" &&
+		scrollY > opaqueOnScroll;
 
 	return (
-		<>
-			<motion.header
-				initial={false}
-				animate={{
-					y: variant === "floating" ? (isOpaque ? 12 : 0) : 0,
-				}}
-				transition={{
-					duration: 0.25,
-					ease: [0.4, 0, 0.2, 1],
-				}}
-				className={cn(
-					headerVariants({ variant }),
-					variant === "floating" && styles.header,
-					isOpaque && styles.opaque,
+		<header
+			className={cn(
+				headerVariants({ variant }),
+				variant === "floating" && styles.header,
+				variant === "floating" && isOpaque && styles.opaque,
+				variant === "floating" &&
+					isOpaque &&
 					"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]",
-					className
+				className,
+			)}
+		>
+			{variant === "floating" && <div className="h-[12px] w-full" />}
+			<nav
+				className={cn(
+					"container",
+					isLogoOnly
+						? "flex items-center justify-center gap-md"
+						: "grid grid-cols-3 items-center gap-md",
 				)}
 			>
-				{variant === "floating" && <div className="h-[12px] w-full" />}
-				<nav
+				<div
 					className={cn(
-						"container",
-						isLogoOnly
-							? "flex items-center justify-center gap-md"
-							: "grid grid-cols-3 items-center gap-md"
+						"flex items-center gap-2 md:gap-4",
+						isLogoOnly ? "justify-center" : "justify-start",
 					)}
 				>
-					<div
-						className={cn(
-							"flex items-center gap-2 md:gap-4",
-							isLogoOnly ? "justify-center" : "justify-start"
-						)}
-					>
+					{!isLogoOnly && (
 						<Sheet>
 							<SheetTrigger asChild>
-								<Button variant="outline" size="icon" className="shrink-0 md:hidden">
+								<Button
+									variant="outline"
+									size="icon"
+									className="shrink-0 md:hidden"
+								>
 									<HamburgerMenuIcon className="h-5 w-5" />
 									<span className="sr-only">Toggle navigation menu</span>
 								</Button>
 							</SheetTrigger>
 							<SheetContent side="left">
 								<nav className="grid gap-6 font-medium">
-									<Link href={logoHref} className="flex items-center gap-2 text-lg font-semibold">
+									<Link
+										href={logoHref}
+										className="flex items-center gap-2 text-lg font-semibold"
+									>
 										{logoIcon}
 										<span className="sr-only">{logoText}</span>
 									</Link>
@@ -148,200 +157,185 @@ export const Header: React.FC<HeaderProps> = ({
 											href={link.href}
 											className={cn(
 												"text-muted-foreground hover:text-foreground",
-												link.isCurrent ? "text-foreground" : ""
+												link.isCurrent ? "text-foreground" : "",
 											)}
 										>
 											{link.label}
 										</Link>
 									))}
+									{!isLoggedIn && (
+										<>
+											<Link
+												href={routes.launch}
+												className={cn(
+													buttonVariants({ variant: "default" }),
+													"w-full justify-center",
+												)}
+											>
+												{`Get ${siteConfig.title}`}
+											</Link>
+											<Link
+												href={signInRedirectUrl}
+												className={cn(
+													buttonVariants({ variant: "ghost" }),
+													"w-full justify-center",
+												)}
+											>
+												Login
+											</Link>
+										</>
+									)}
+									{isLoggedIn && (
+										<>
+											<Link
+												href={routes.docs}
+												className={cn(
+													"text-muted-foreground hover:text-foreground",
+												)}
+											>
+												Documentation
+											</Link>
+											<Link
+												href={routes.app.dashboard}
+												className={cn(
+													buttonVariants({ variant: "default" }),
+													"w-full justify-center",
+												)}
+											>
+												Dashboard
+											</Link>
+										</>
+									)}
 								</nav>
 							</SheetContent>
 						</Sheet>
+					)}
 
-						<Link
-							href={logoHref}
-							className="flex items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
-						>
-							{logoIcon}
-							<span className="block whitespace-nowrap">{logoText}</span>
-						</Link>
+					<Link
+						href={logoHref}
+						className="flex items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
+					>
+						{logoIcon}
+						<span className="block whitespace-nowrap">{logoText}</span>
+					</Link>
 
-						<div className="hidden items-center gap-md text-sm md:flex">
-							{session && (
-								<Link
-									key={routes.docs}
-									href={routes.docs}
-									className={cn("text-muted-foreground transition-colors hover:text-foreground")}
-								>
-									Documentation
-								</Link>
-							)}
-							{navLinks.map((link) => (
-								<Link
-									key={`${link.href}-${link.label}`}
-									href={link.href}
-									className={cn(
-										"transition-colors hover:text-foreground",
-										link.isCurrent ? "text-foreground" : "text-muted-foreground"
-									)}
-								>
-									{link.label}
-								</Link>
-							))}
-						</div>
+					<div className="hidden items-center gap-md text-sm md:flex">
+						{isLoggedIn && (
+							<Link
+								key={routes.docs}
+								href={routes.docs}
+								className={cn(
+									"text-muted-foreground transition-colors hover:text-foreground",
+								)}
+							>
+								Documentation
+							</Link>
+						)}
+						{navLinks.map((link) => (
+							<Link
+								key={`${link.href}-${link.label}`}
+								href={link.href}
+								className={cn(
+									"transition-colors hover:text-foreground",
+									link.isCurrent ? "text-foreground" : "text-muted-foreground",
+								)}
+							>
+								{link.label}
+							</Link>
+						))}
 					</div>
+				</div>
 
-					{!isLogoOnly && (
-						<>
-							<Sheet>
-								<SheetTrigger asChild>
-									<Button variant="outline" size="icon" className="shrink-0 md:hidden">
-										<HamburgerMenuIcon className="h-5 w-5" />
-										<span className="sr-only">Toggle navigation menu</span>
-									</Button>
-								</SheetTrigger>
-								<SheetContent side="left">
-									<nav className="grid gap-6 font-medium">
-										<Link href={logoHref} className="flex items-center gap-2 text-lg font-semibold">
-											{logoIcon}
-											<span className="sr-only">{logoText}</span>
-										</Link>
-										{navLinks.map((link) => (
-											<Link
-												key={`${link.href}-${link.label}`}
-												href={link.href}
-												className={cn(
-													"text-muted-foreground hover:text-foreground",
-													link.isCurrent ? "text-foreground" : ""
-												)}
-											>
-												{link.label}
-											</Link>
-										))}
-										{!session && (
-											<>
-												<Link
-													href={routes.launch}
-													className={cn(
-														buttonVariants({ variant: "default" }),
-														"w-full justify-center"
-													)}
-												>
-													{`Get ${siteConfig.title}`}
-												</Link>
-												<Link
-													href={signInRedirectUrl}
-													className={cn(
-														buttonVariants({ variant: "ghost" }),
-														"w-full justify-center"
-													)}
-												>
-													Login
-												</Link>
-											</>
-										)}
-										{session && (
-											<>
-												<Link
-													href={routes.docs}
-													className={cn("text-muted-foreground hover:text-foreground")}
-												>
-													Documentation
-												</Link>
-												<Link
-													href={routes.app.dashboard}
-													className={cn(
-														buttonVariants({ variant: "default" }),
-														"w-full justify-center"
-													)}
-												>
-													Dashboard
-												</Link>
-											</>
-										)}
-									</nav>
-								</SheetContent>
-							</Sheet>
+				{!isLogoOnly && (
+					<>
+						{/* Center column: search */}
+						<div className="hidden md:flex justify-center">
+							{searchVariant === "menu" && (
+								<SearchMenu
+									buttonText={
+										<>
+											<span className="hidden md:block">
+												{searchPlaceholder}
+											</span>
+											<span className="block md:hidden">Search</span>
+										</>
+									}
+									minimal={true}
+									buttonClassName="w-full md:w-auto"
+								/>
+							)}
+							{searchVariant === "ai" && (
+								<SearchAi className="hidden md:block" />
+							)}
+						</div>
 
-							{/* Center column: search */}
-							<div className="hidden md:flex justify-center">
-								{searchVariant === "menu" && (
-									<SearchMenu
-										buttonText={
-											<>
-												<span className="hidden md:block">{searchPlaceholder}</span>
-												<span className="block md:hidden">Search</span>
-											</>
-										}
-										minimal={true}
-										buttonClassName="w-full md:w-auto"
+						<div className="flex items-center gap-2 md:ml-auto lg:gap-4">
+							<div className="flex items-center gap-2">
+								{!isLoggedIn && (
+									<ThemeToggle
+										variant="ghost"
+										size="icon"
+										className="rounded-full"
 									/>
 								)}
-								{searchVariant === "ai" && <SearchAi className="hidden md:block" />}
-							</div>
 
-							<div className="flex items-center gap-2 md:ml-auto lg:gap-4">
-								{searchVariant === "ai" && <SearchAi className="hidden md:block" />}
-								<div className="hidden items-center justify-between gap-md text-sm md:flex" />
-								<div className="flex items-center gap-2">
-									{!session && <ThemeToggle variant="ghost" size="icon" className="rounded-full" />}
+								<UserMenu user={user} />
 
-									<UserMenu user={user} />
-
-									{!session &&
-										(animatedCTAOnScroll ? (
-											<AnimatePresence mode="wait">
-												{scrollY > animatedCTAOnScroll ? (
-													<motion.div
-														key="compact"
-														initial={{ opacity: 0, scale: 0.9 }}
-														animate={{ opacity: 1, scale: 1 }}
-														exit={{ opacity: 0, scale: 0.9 }}
-														transition={{ duration: 0.1 }}
+								{!isLoggedIn &&
+									(animatedCTAOnScroll ? (
+										<AnimatePresence mode="wait">
+											{scrollY > animatedCTAOnScroll ? (
+												<motion.div
+													key="compact"
+													initial={{ opacity: 0, scale: 0.9 }}
+													animate={{ opacity: 1, scale: 1 }}
+													exit={{ opacity: 0, scale: 0.9 }}
+													transition={{ duration: 0.1 }}
+												>
+													<TooltipProvider delayDuration={0}>
+														<Tooltip>
+															<TooltipTrigger asChild>
+																<div className="relative -m-1 p-1">
+																	<BuyButton />
+																</div>
+															</TooltipTrigger>
+															<TooltipContent
+																side="bottom"
+																sideOffset={3}
+																className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
+															>
+																<LoginButton className="hover:text-foreground">
+																	or Login
+																</LoginButton>
+															</TooltipContent>
+														</Tooltip>
+													</TooltipProvider>
+												</motion.div>
+											) : (
+												<motion.div
+													key="full"
+													initial={{ opacity: 0, scale: 0.9 }}
+													animate={{ opacity: 1, scale: 1 }}
+													exit={{ opacity: 0, scale: 0.9 }}
+													transition={{ duration: 0.1 }}
+												>
+													<LoginButton
+														variant="outline"
+														nextUrl={routes.app.dashboard}
 													>
-														<TooltipProvider delayDuration={0}>
-															<Tooltip>
-																<TooltipTrigger asChild>
-																	<div className="relative -m-1 p-1">
-																		<BuyButton />
-																	</div>
-																</TooltipTrigger>
-																<TooltipContent
-																	side="bottom"
-																	sideOffset={3}
-																	className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
-																>
-																	<LoginButton className="hover:text-foreground">
-																		or Login
-																	</LoginButton>
-																</TooltipContent>
-															</Tooltip>
-														</TooltipProvider>
-													</motion.div>
-												) : (
-													<motion.div
-														key="full"
-														initial={{ opacity: 0, scale: 0.9 }}
-														animate={{ opacity: 1, scale: 1 }}
-														exit={{ opacity: 0, scale: 0.9 }}
-														transition={{ duration: 0.1 }}
-													>
-														<LoginButton variant="outline" nextUrl={routes.app.dashboard}>
-															Dashboard
-														</LoginButton>
-													</motion.div>
-												)}
-											</AnimatePresence>
-										) : (
-											<BuyButton />
-										))}
-								</div>
+														Dashboard
+													</LoginButton>
+												</motion.div>
+											)}
+										</AnimatePresence>
+									) : (
+										<BuyButton />
+									))}
 							</div>
-						</>
-					)}
-				</nav>
-			</motion.header>
-			{variant === "floating" && <div className="-mt-24" />}
-		</>
+						</div>
+					</>
+				)}
+			</nav>
+		</header>
 	);
 };

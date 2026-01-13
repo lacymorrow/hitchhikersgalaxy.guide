@@ -3,7 +3,7 @@ import { Modal } from "@/components/primitives/modal";
 
 export default async function Page() {
 	return (
-		<Modal routeBack={true}>
+		<Modal>
 			<SignIn />
 		</Modal>
 	);

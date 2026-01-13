@@ -29,12 +29,12 @@ interface UserMenuProps {
 	user?: User | null;
 }
 
-export const UserMenu: React.FC<UserMenuProps> = ({
+export const UserMenu = ({
 	size = "default",
 	className,
 	showUpgrade = false,
 	user,
-}) => {
+}: UserMenuProps) => {
 	const pathname = usePathname();
 	const { data: session, status } = useSession();
 	const signInRedirectUrl = useSignInRedirectUrl();
@@ -46,20 +46,31 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 
 	const currentUser = user ?? session?.user;
 
-	// Persist theme to database when user is logged in
+	/*
+	 * Persist theme to the database when the user is logged in.
+	 * We do this via `useThemeToggle({ onThemeChange })` so ALL theme changes
+	 * (dropdown + keyboard shortcuts + animated transitions) follow one path.
+	 */
 	const handleThemePersist = React.useCallback(
 		async (newTheme: Theme) => {
 			if (!currentUser) return;
+
 			try {
 				const result = await updateTheme(newTheme);
 				if (!result.success) {
 					toast({
 						title: "Failed to save theme preference",
 						description:
-							result.error || "Your theme preference could not be saved.",
+							result.error || "Your theme preference will reset on next visit.",
 						variant: "destructive",
 					});
+					return;
 				}
+
+				toast({
+					title: "Theme updated",
+					description: result.message,
+				});
 			} catch (error) {
 				console.error("Failed to save theme preference:", error);
 				toast({
@@ -87,20 +98,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 		if (!currentUser.name && !currentUser.image) return true;
 		return false;
 	}, [currentUser]);
-
-	// Debug: log session state when it might be invalid
-	React.useEffect(() => {
-		if (currentUser) {
-			console.log("[UserMenu] Session state:", {
-				id: currentUser.id,
-				name: currentUser.name,
-				image: currentUser.image,
-				email: currentUser.email,
-				isInvalidSession,
-				status,
-			});
-		}
-	}, [currentUser, isInvalidSession, status]);
 
 	// Handle invalid session by logging out and showing a toast
 	React.useEffect(() => {
@@ -279,3 +276,4 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 		</div>
 	);
 };
+

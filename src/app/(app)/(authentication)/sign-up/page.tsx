@@ -8,8 +8,7 @@ import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
-// Avoid importing server utils; compute guest-only via build flags
-import { AuthenticationCard } from "../_components/authentication-card";
+import { AuthenticationCard } from "@/app/(app)/(authentication)/_components/authentication-card";
 import { SignUpForm } from "./_components/sign-up-form";
 
 export const metadata: Metadata = constructMetadata({

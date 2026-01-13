@@ -85,11 +85,15 @@ interface Animation {
 	css: string;
 }
 
+type Theme = "light" | "dark" | "system";
+
 interface UseThemeToggleOptions {
 	variant?: AnimationVariant;
 	start?: AnimationStart;
 	blur?: boolean;
 	gifUrl?: string;
+	/** Optional callback invoked after any theme change. Useful for persisting theme preference. */
+	onThemeChange?: (theme: Theme) => void | Promise<void>;
 }
 
 // ///////////////////////////////////////////////////////////////////////////
@@ -631,6 +635,7 @@ export const useThemeToggle = ({
 	start = "center",
 	blur = false,
 	gifUrl = "",
+	onThemeChange,
 }: UseThemeToggleOptions = {}) => {
 	const { theme, setTheme, resolvedTheme } = useTheme();
 
@@ -671,9 +676,12 @@ export const useThemeToggle = ({
 
 		if (typeof window === "undefined") return;
 
+		const newTheme: Theme = resolvedTheme === "light" ? "dark" : "light";
+
 		// Use resolvedTheme instead of theme to handle 'system' correctly
 		const switchTheme = () => {
-			setTheme(resolvedTheme === "light" ? "dark" : "light");
+			setTheme(newTheme);
+			void onThemeChange?.(newTheme);
 		};
 
 		if (!document.startViewTransition) {
@@ -691,6 +699,7 @@ export const useThemeToggle = ({
 		gifUrl,
 		updateStyles,
 		canToggle,
+		onThemeChange,
 	]);
 
 	const setLightTheme = useCallback(() => {
@@ -705,6 +714,7 @@ export const useThemeToggle = ({
 
 		const switchTheme = () => {
 			setTheme("light");
+			void onThemeChange?.("light");
 		};
 
 		if (!document.startViewTransition) {
@@ -713,7 +723,7 @@ export const useThemeToggle = ({
 		}
 
 		document.startViewTransition(switchTheme);
-	}, [setTheme, variant, start, blur, gifUrl, updateStyles, lightEnabled]);
+	}, [setTheme, variant, start, blur, gifUrl, updateStyles, lightEnabled, onThemeChange]);
 
 	const setDarkTheme = useCallback(() => {
 		if (!darkEnabled) return;
@@ -727,6 +737,7 @@ export const useThemeToggle = ({
 
 		const switchTheme = () => {
 			setTheme("dark");
+			void onThemeChange?.("dark");
 		};
 
 		if (!document.startViewTransition) {
@@ -735,7 +746,7 @@ export const useThemeToggle = ({
 		}
 
 		document.startViewTransition(switchTheme);
-	}, [setTheme, variant, start, blur, gifUrl, updateStyles, darkEnabled]);
+	}, [setTheme, variant, start, blur, gifUrl, updateStyles, darkEnabled, onThemeChange]);
 
 	const setSystemTheme = useCallback(() => {
 		if (!canToggle) return;
@@ -753,6 +764,7 @@ export const useThemeToggle = ({
 
 		const switchTheme = () => {
 			setTheme("system");
+			void onThemeChange?.("system");
 		};
 
 		if (!document.startViewTransition) {
@@ -761,7 +773,7 @@ export const useThemeToggle = ({
 		}
 
 		document.startViewTransition(switchTheme);
-	}, [setTheme, variant, start, blur, gifUrl, updateStyles, canToggle]);
+	}, [setTheme, variant, start, blur, gifUrl, updateStyles, canToggle, onThemeChange]);
 
 	return {
 		theme,
@@ -1257,3 +1269,5 @@ export {
 	ThemeToggleLightbulb,
 	ThemeToggleEclipse,
 };
+
+export type { Theme };

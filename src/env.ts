@@ -161,9 +161,6 @@ export const env = createEnv({
 		// Consent Manager
 		NEXT_PUBLIC_C15T_URL: z.string().optional(),
 
-		// Shipkit Repo
-		NEXT_PUBLIC_SHIPKIT_REPO: z.string().optional().default("lacymorrow/shipkit"),
-
 		// Content Management
 		NEXT_PUBLIC_BUILDER_API_KEY: z.string().optional(),
 
@@ -367,8 +364,8 @@ export const env = createEnv({
 		// Consent Manager
 		NEXT_PUBLIC_C15T_URL: process.env.NEXT_PUBLIC_C15T_URL,
 
-		// Shipkit Repo
-		NEXT_PUBLIC_SHIPKIT_REPO: process.env.NEXT_PUBLIC_SHIPKIT_REPO,
+		// Clerk Authentication (alternative to Auth.js)
+		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
 
 		NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
 		NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
@@ -403,8 +400,8 @@ export const env = createEnv({
 		// Better Auth Feature Flags
 		NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED: process.env.NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED,
 
-		// Clerk Authentication (alternative to Auth.js)
-		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+		// DevTools Font Selector
+		NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED: process.env.NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED,
 
 		// Auth.js Feature Flags
 		NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED: process.env.NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED,

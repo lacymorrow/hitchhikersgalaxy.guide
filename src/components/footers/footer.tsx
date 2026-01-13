@@ -134,7 +134,7 @@ export const Footer: FC<FooterProps> = ({
 		<footer className={cn(footerStyles({ variant }), className)} {...rest}>
 			<div className="container relative flex md:min-h-80 w-full flex-col items-stretch gap-2xl py-2xl">
 				<div className="flex flex-col lg:flex-row justify-between gap-2xl">
-					<div className="flex flex-col gap-2xl">
+					<div className="flex flex-col gap-4">
 						<Link href={routes.home}>
 							<h1 className="text-4xl font-bold">{siteConfig.title}</h1>
 						</Link>

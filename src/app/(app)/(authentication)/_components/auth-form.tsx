@@ -62,7 +62,7 @@ export function AuthForm({
 					showAuthUnavailable={showAuthUnavailable}
 				/>
 			)}
-			<CardContent className="pb-0">
+			<CardContent className={cn("pb-0", !withFooter && "pb-6")}>
 				<div className="grid gap-6 relative">
 					{showAuthUnavailable && (
 						<div className="text-center text-xs text-muted-foreground flex items-center justify-center gap-2">

@@ -3,7 +3,6 @@
 import { UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { useTheme } from "next-themes";
 import * as React from "react";
 import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";
 import { Link } from "@/components/primitives/link";
@@ -11,11 +10,9 @@ import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-pr
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { useThemeToggle, type Theme } from "@/components/ui/shipkit/theme";
 import { ToastAction } from "@/components/ui/toast";
-import {
-	ShortcutAction,
-	type ShortcutActionType,
-} from "@/config/keyboard-shortcuts";
+import { ShortcutAction, type ShortcutActionType } from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
 import { useIsAdmin } from "@/hooks/use-is-admin";
@@ -24,8 +21,6 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { updateTheme } from "@/server/actions/settings";
 import type { User } from "@/types/user";
-
-type Theme = "light" | "dark" | "system";
 
 interface UserMenuProps {
 	size?: "default" | "sm";
@@ -43,7 +38,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 	const pathname = usePathname();
 	const { data: session, status } = useSession();
 	const signInRedirectUrl = useSignInRedirectUrl();
-	const { theme, setTheme } = useTheme();
 	const { toast } = useToast();
 	const [isOpen, setIsOpen] = React.useState(false);
 	const { hasActiveSubscription } = useSubscription();
@@ -51,6 +45,36 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 	const isAdmin = useIsAdmin();
 
 	const currentUser = user ?? session?.user;
+
+	// Persist theme to database when user is logged in
+	const handleThemePersist = React.useCallback(
+		async (newTheme: Theme) => {
+			if (!currentUser) return;
+			try {
+				const result = await updateTheme(newTheme);
+				if (!result.success) {
+					toast({
+						title: "Failed to save theme preference",
+						description:
+							result.error || "Your theme preference could not be saved.",
+						variant: "destructive",
+					});
+				}
+			} catch (error) {
+				console.error("Failed to save theme preference:", error);
+				toast({
+					title: "Failed to save theme preference",
+					description: "An unexpected error occurred while saving your theme.",
+					variant: "destructive",
+				});
+			}
+		},
+		[currentUser, toast],
+	);
+
+	const { theme, setLightTheme, setDarkTheme, setSystemTheme } = useThemeToggle({
+		onThemeChange: handleThemePersist,
+	});
 
 	// Detect invalid session state: user object exists but is missing required fields
 	// This can happen after deployment or session invalidation
@@ -98,37 +122,21 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 	}, [isInvalidSession, status, toast, signInRedirectUrl]);
 
 	const handleThemeChange = React.useCallback(
-		async (value: string) => {
+		(value: string) => {
 			const newTheme = value as Theme;
-			setTheme(newTheme);
-			if (currentUser) {
-				try {
-					const result = await updateTheme(newTheme);
-					if (!result.success) {
-						toast({
-							title: "Failed to save theme preference",
-							description:
-								result.error ||
-								"Your theme preference will reset on next visit.",
-							variant: "destructive",
-						});
-						return;
-					}
-					toast({
-						title: "Theme updated",
-						description: result.message,
-					});
-				} catch (error) {
-					console.error("Failed to update theme:", error);
-					toast({
-						title: "Failed to save theme preference",
-						description: "Your theme preference will reset on next visit.",
-						variant: "destructive",
-					});
-				}
+			switch (newTheme) {
+				case "light":
+					setLightTheme();
+					break;
+				case "dark":
+					setDarkTheme();
+					break;
+				case "system":
+					setSystemTheme();
+					break;
 			}
 		},
-		[currentUser, setTheme, toast],
+		[setLightTheme, setDarkTheme, setSystemTheme],
 	);
 
 	// ---- Refactored Shortcut Handling ----
@@ -137,13 +145,13 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			event.preventDefault();
 			switch (action) {
 				case ShortcutAction.SET_THEME_LIGHT:
-					void handleThemeChange("light");
+					handleThemeChange("light");
 					break;
 				case ShortcutAction.SET_THEME_DARK:
-					void handleThemeChange("dark");
+					handleThemeChange("dark");
 					break;
 				case ShortcutAction.SET_THEME_SYSTEM:
-					void handleThemeChange("system");
+					handleThemeChange("system");
 					break;
 				case ShortcutAction.GOTO_ADMIN:
 					if (isAdmin) router.push(routes.admin.index);
@@ -247,7 +255,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			) : (
 				<>
 					{pathname !== routes.auth.signIn &&
-					pathname !== routes.auth.signUp ? (
+						pathname !== routes.auth.signUp ? (
 						<Link
 							href={signInRedirectUrl}
 							className={cn(

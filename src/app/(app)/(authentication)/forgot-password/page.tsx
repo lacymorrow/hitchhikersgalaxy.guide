@@ -1,3 +1,4 @@
+import { AuthBranding } from "@/app/(app)/(authentication)/_components/auth-branding";
 import type { Metadata } from "next";
 import { ForgotPasswordForm } from "@/app/(app)/(authentication)/forgot-password/_components/forgot-password-form";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,14 +13,17 @@ export const metadata: Metadata = constructMetadata({
 
 export default function ForgotPasswordPage() {
 	return (
-		<AuthenticationCard>
-			<CardHeader>
-				<CardTitle className="text-2xl">Forgot Password</CardTitle>
-				<CardDescription>Enter your email below to reset your password</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<ForgotPasswordForm />
-			</CardContent>
-		</AuthenticationCard>
+		<div className="flex w-full max-w-sm flex-col gap-6">
+			<AuthBranding />
+			<AuthenticationCard>
+				<CardHeader>
+					<CardTitle className="text-2xl">Forgot Password</CardTitle>
+					<CardDescription>Enter your email below to reset your password</CardDescription>
+				</CardHeader>
+				<CardContent>
+					<ForgotPasswordForm />
+				</CardContent>
+			</AuthenticationCard>
+		</div>
 	);
 }

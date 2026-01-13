@@ -61,10 +61,9 @@ export const UserMenu = ({
 					toast({
 						title: "Failed to save theme preference",
 						description:
-							result.error || "Your theme preference will reset on next visit.",
+							result.error || "Your theme preference could not be saved.",
 						variant: "destructive",
 					});
-					return;
 				}
 
 				toast({

@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
+import { constructMetadata } from "@/config/metadata";
 import { ToolsSection } from "../_components/tools-section";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Developer Tools",
+	description: "Access a collection of useful developer tools and utilities for building, testing, and debugging.",
+});
 
 export default function ToolsPage() {
 	return (

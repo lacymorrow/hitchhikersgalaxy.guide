@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { PaymentFilters } from "@/app/(app)/(admin)/admin/payments/_components/payment-filters";
 import {
 	PageHeader,
@@ -5,9 +6,16 @@ import {
 	PageHeaderHeading,
 } from "@/components/primitives/page-header";
 import { DataTable } from "@/components/ui/data-table/data-table";
+import { constructMetadata } from "@/config/metadata";
 import { PaymentService } from "@/server/services/payment-service";
 import { columns } from "./_components/columns";
 import { ImportPayments } from "./_components/import-payments";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Payment Management",
+	description: "View and manage all payments from payment processors.",
+	noIndex: true,
+});
 
 export interface PaymentsPageProps {
 	searchParams: Promise<{

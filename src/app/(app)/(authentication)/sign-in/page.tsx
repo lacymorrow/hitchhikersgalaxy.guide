@@ -1,10 +1,17 @@
+import type { Metadata } from "next";
 import { AuthenticationCard } from "@/app/(app)/(authentication)/_components/authentication-card";
 import { SignIn } from "@/app/(app)/(authentication)/sign-in/_components/sign-in";
 import { Icon } from "@/components/assets/icon";
 import { Link } from "@/components/primitives/link";
+import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Sign In",
+	description: `Sign in to your ${siteConfig.name} account to access your dashboard, projects, and settings.`,
+});
 
 export default function SignInPage() {
 	const hasAuth = env.NEXT_PUBLIC_FEATURE_AUTH_ENABLED;

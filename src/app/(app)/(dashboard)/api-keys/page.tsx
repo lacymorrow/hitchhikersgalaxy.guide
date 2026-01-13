@@ -1,6 +1,8 @@
+import type { Metadata } from "next";
 import { AlertCircleIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { createRedirectUrl } from "@/lib/utils/redirect";
 import { auth } from "@/server/auth";
@@ -8,6 +10,11 @@ import { apiKeyService } from "@/server/services/api-key-service";
 import { cacheConfigs, cacheService } from "@/server/services/cache-service";
 import { ErrorService } from "@/server/services/error-service";
 import { ApiKeysTable } from "./_components/api-keys-table";
+
+export const metadata: Metadata = constructMetadata({
+	title: "API Keys",
+	description: "Manage your API keys for programmatic access. Create, view, and revoke API keys securely.",
+});
 
 export default async function ApiKeysPage() {
 	const session = await auth({ protect: true });

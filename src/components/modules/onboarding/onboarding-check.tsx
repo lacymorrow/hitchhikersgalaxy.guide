@@ -27,17 +27,9 @@ export function OnboardingCheck({
 	hasPurchased = false,
 	forceEnabled = false,
 }: OnboardingCheckProps) {
-	// Allow admins (or forced contexts) to bypass feature-flag gating so they can run onboarding.
-	if (
-		!forceEnabled &&
-		(!env.NEXT_PUBLIC_FEATURE_VERCEL_API_ENABLED || !env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED)
-	) {
-		return null;
-	}
-
 	const userId = user?.id ?? "";
 	const [showOnboarding, setShowOnboarding] = useState(true);
-	const [onboardingState, setOnboardingState] = useLocalStorage<{
+	const [onboardingState, _setOnboardingState] = useLocalStorage<{
 		completed: boolean;
 		currentStep: number;
 		steps: Record<string, boolean>;
@@ -53,13 +45,21 @@ export function OnboardingCheck({
 		}
 	}, [hasPurchased, userId, onboardingState]);
 
-	const handleOnboardingComplete = () => {
-		setShowOnboarding(false);
-	};
+	// Allow admins (or forced contexts) to bypass feature-flag gating so they can run onboarding.
+	if (
+		!forceEnabled &&
+		(!env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED || !env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED)
+	) {
+		return null;
+	}
 
 	if (!showOnboarding || !user) {
 		return null;
 	}
+
+	const handleOnboardingComplete = () => {
+		setShowOnboarding(false);
+	};
 
 	return (
 		<OnboardingWizard
@@ -95,7 +95,7 @@ export function RestartOnboardingButton({
 		if (user?.id) {
 			try {
 				localStorage.removeItem(`feature_onboarding-${user.id}`);
-			} catch {}
+			} catch (e) { console.error("Failed to remove onboarding state from localStorage:", e); }
 		}
 
 		// Reset the onboarding state to initial values

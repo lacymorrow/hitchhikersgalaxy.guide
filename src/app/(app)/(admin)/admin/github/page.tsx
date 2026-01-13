@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { AlertCircle } from "lucide-react";
 import { Suspense } from "react";
 import {
@@ -8,12 +9,19 @@ import {
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { constructMetadata } from "@/config/metadata";
 import { safeDbExecute } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { getCollaboratorDetails } from "@/server/services/github/github-service";
 import { columns, type GitHubUserData } from "./_components/columns";
 import RepoInfo, { RepoInfoSkeleton } from "./_components/repo-info";
 import RepoMetrics, { RepoMetricsSkeleton } from "./_components/repo-metrics";
+
+export const metadata: Metadata = constructMetadata({
+	title: "GitHub Integration",
+	description: "Manage GitHub repository access and view connected users.",
+	noIndex: true,
+});
 
 function GitHubUsersTableSkeleton() {
 	return (

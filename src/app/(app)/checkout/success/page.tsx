@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { DownloadIcon } from "lucide-react";
 import { LoginButton } from "@/components/buttons/sign-in-button";
 import { Link } from "@/components/primitives/link";
@@ -6,6 +7,7 @@ import { Card } from "@/components/ui/card";
 import { ConfettiSideCannons } from "@/components/ui/magicui/confetti/confetti-side-cannons";
 import { SparklesCore } from "@/components/ui/sparkles";
 
+import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { logger } from "@/lib/logger";
@@ -13,6 +15,12 @@ import { cn } from "@/lib/utils";
 import { downloadRepoAnonymously } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
 import { PaymentService } from "@/server/services/payment-service";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Purchase Successful",
+	description: `Thank you for your purchase! Get started with ${siteConfig.name} and begin building your application.`,
+	noIndex: true,
+});
 
 interface SearchParams {
 	// Lemon Squeezy parameters

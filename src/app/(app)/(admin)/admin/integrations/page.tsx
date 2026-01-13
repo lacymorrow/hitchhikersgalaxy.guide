@@ -1,9 +1,17 @@
 export const dynamic = "force-dynamic";
 
+import type { Metadata } from "next";
 import { Settings, XCircle } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { constructMetadata } from "@/config/metadata";
 import { getIntegrationStatuses } from "@/server/services/integration-service";
 import { IntegrationsClientContent } from "./integrations-client-content";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Integrations",
+	description: "View and manage integrations with external services.",
+	noIndex: true,
+});
 
 // Define the structure for each integration's status (matching the action)
 interface IntegrationStatus {

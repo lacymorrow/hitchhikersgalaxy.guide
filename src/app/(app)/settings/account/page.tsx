@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ConnectionHighlightWrapper } from "@/app/(app)/settings/_components/connection-highlight-wrapper";
 import { DeleteAccountCard } from "@/app/(app)/settings/_components/delete-account-card";
@@ -12,8 +13,14 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { constructMetadata } from "@/config/metadata";
 import { auth } from "@/server/auth";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Account Settings",
+	description: "Manage your account connections, linked services, and account preferences.",
+});
 
 export default async function AccountPage() {
 	const session = await auth();

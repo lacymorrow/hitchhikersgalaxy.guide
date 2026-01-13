@@ -65,7 +65,7 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
                     </DownloadSubmitButton>
                 </form>
 
-                <DashboardVercelDeploy className="grow min-w-1/2" isVercelConnected={isVercelConnected} />
+                {isVercelConnected && <DashboardVercelDeploy className="grow min-w-1/2" isVercelConnected={isVercelConnected} />}
             </div>
             {/* GitHub connection section */}
             <GitHubConnectButton className="w-full" />

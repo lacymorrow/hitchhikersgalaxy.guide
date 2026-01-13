@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ImportPayments } from "@/app/(app)/(admin)/admin/payments/_components/import-payments";
 import {
@@ -7,8 +8,15 @@ import {
 } from "@/components/primitives/page-header";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
+import { constructMetadata } from "@/config/metadata";
 import { PaymentService } from "@/server/services/payment-service";
 import { columns } from "./_components/columns";
+
+export const metadata: Metadata = constructMetadata({
+	title: "User Management",
+	description: "View and manage all users and their payment status.",
+	noIndex: true,
+});
 
 function UsersTableSkeleton() {
 	// Generate skeleton row IDs

@@ -70,7 +70,7 @@ export default async function Layout({
 					{/* Dynamically render all available slots */}
 					{resolvedSlots.map(([key, slot]) => (
 						<Suspense key={`slot-${key}`} fallback={<SuspenseFallback />}>
-							<React.Fragment key={`slot-${key}`}>{slot}</React.Fragment>
+							{slot}
 						</Suspense>
 
 					))}

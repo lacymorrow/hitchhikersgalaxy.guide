@@ -222,7 +222,7 @@ export const siteConfig: SiteConfig = {
 	social: {
 		github: "https://github.com/shipkit-io",
 		x: "https://x.com/lacybuilds",
-		linkedin: "https://www.linkedin.com/company/shipkit-io/",
+		linkedin: "",
 		instagram: "",
 		facebook: "",
 		youtube: "",

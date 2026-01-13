@@ -1,11 +1,18 @@
+import type { Metadata } from "next";
 import { MailIcon } from "lucide-react";
 import { ContactForm } from "@/components/forms/contact-form";
 import { Link } from "@/components/primitives/link";
 import { Boxes } from "@/components/ui/background-boxes";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Contact Us",
+	description: `Get in touch with the ${siteConfig.name} team. We'd love to hear from you and answer any questions.`,
+});
 
 export default function ContactPage() {
 	return (

@@ -110,7 +110,7 @@ export function SearchMenu({
 			<Button
 				variant={buttonVariant}
 				className={cn(
-					"relative w-full justify-start rounded-[0.5rem] bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-36",
+					"relative w-full justify-start bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-36",
 					buttonClassName
 				)}
 				size="sm"

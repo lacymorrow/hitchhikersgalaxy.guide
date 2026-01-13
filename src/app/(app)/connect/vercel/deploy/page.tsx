@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { ArrowUpRight, CheckCircle } from "lucide-react";
 import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -11,8 +12,15 @@ import {
 } from "@/components/ui/card";
 import { CopyButton } from "@/components/ui/copy-button";
 import { ConfettiSideCannons } from "@/components/ui/magicui/confetti/confetti-side-cannons";
+import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { saveVercelDeployment } from "@/server/services/vercel";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Deployment Successful",
+	description: "Your project has been successfully deployed to Vercel.",
+	noIndex: true,
+});
 
 interface DeploymentInfo {
 	teamId: string | undefined;

@@ -1,13 +1,15 @@
+import type { Metadata } from "next";
 import { PolarProductStatus } from "@/components/modules/payments/polar-product-status";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { constructMetadata } from "@/config/metadata";
 import { env } from "@/env";
 import { getUserPurchasedProducts } from "@/server/actions/payments";
 import { auth } from "@/server/auth";
 
-export const metadata = {
+export const metadata: Metadata = constructMetadata({
 	title: "Polar Products",
-	description: "View your Polar product purchases and subscriptions.",
-};
+	description: "View and manage your Polar product purchases and subscriptions.",
+});
 
 export default async function PolarProductsPage() {
 	const session = await auth();

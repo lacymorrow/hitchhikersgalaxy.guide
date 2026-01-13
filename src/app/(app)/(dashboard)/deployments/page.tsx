@@ -1,11 +1,18 @@
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
+import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { createRedirectUrl } from "@/lib/utils/redirect";
 import { getUserDeployments, initializeDemoDeployments } from "@/server/actions/deployment-actions";
 import { auth } from "@/server/auth";
 import type { Deployment } from "@/server/db/schema";
 import { DeploymentsList } from "./deployments-list";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Deployments",
+	description: "Manage and monitor your application deployments. View deployment status, logs, and history.",
+});
 
 export default async function DeploymentsPage() {
 	const session = await auth({ protect: true });

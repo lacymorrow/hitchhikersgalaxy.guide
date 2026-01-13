@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { DashboardTabs } from "@/app/(app)/(dashboard)/_components/dashboard-tabs";
 import { DownloadSection } from "@/app/(app)/(dashboard)/_components/download-section";
 import { QuickActions } from "@/app/(app)/(dashboard)/_components/quick-actions";
@@ -10,7 +11,13 @@ import {
 	PageHeaderHeading,
 } from "@/components/primitives/page-header";
 import { Badge } from "@/components/ui/badge";
+import { constructMetadata } from "@/config/metadata";
 import { useDashboardData } from "./_hooks/use-dashboard-data";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Dashboard",
+	description: "View your project overview, recent activity, and quick actions from your personalized dashboard.",
+});
 
 export default async function DashboardPage() {
 	const {

@@ -11,7 +11,11 @@ import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-pr
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { ShortcutAction, type ShortcutActionType } from "@/config/keyboard-shortcuts";
+import { ToastAction } from "@/components/ui/toast";
+import {
+	ShortcutAction,
+	type ShortcutActionType,
+} from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
 import { useIsAdmin } from "@/hooks/use-is-admin";
@@ -48,6 +52,51 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 
 	const currentUser = user ?? session?.user;
 
+	// Detect invalid session state: user object exists but is missing required fields
+	// This can happen after deployment or session invalidation
+	const isInvalidSession = React.useMemo(() => {
+		if (!currentUser) return false;
+		// A valid user must have an id - if currentUser exists but has no id, session is invalid
+		if (!currentUser.id) return true;
+		// If user has no name AND no image, the session data is likely corrupted/stale
+		// This causes the "?" avatar fallback which indicates an invalid session
+		if (!currentUser.name && !currentUser.image) return true;
+		return false;
+	}, [currentUser]);
+
+	// Debug: log session state when it might be invalid
+	React.useEffect(() => {
+		if (currentUser) {
+			console.log("[UserMenu] Session state:", {
+				id: currentUser.id,
+				name: currentUser.name,
+				image: currentUser.image,
+				email: currentUser.email,
+				isInvalidSession,
+				status,
+			});
+		}
+	}, [currentUser, isInvalidSession, status]);
+
+	// Handle invalid session by logging out and showing a toast
+	React.useEffect(() => {
+		if (isInvalidSession && status !== "loading") {
+			// Sign out without redirect to avoid navigation loop
+			void signOut({ redirect: false }).then(() => {
+				toast({
+					title: "Session expired",
+					description:
+						"Your session has expired. Would you like to sign in again?",
+					action: (
+						<ToastAction altText="Sign in" asChild>
+							<Link href={signInRedirectUrl}>Sign in</Link>
+						</ToastAction>
+					),
+				});
+			});
+		}
+	}, [isInvalidSession, status, toast, signInRedirectUrl]);
+
 	const handleThemeChange = React.useCallback(
 		async (value: string) => {
 			const newTheme = value as Theme;
@@ -58,7 +107,9 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 					if (!result.success) {
 						toast({
 							title: "Failed to save theme preference",
-							description: result.error || "Your theme preference will reset on next visit.",
+							description:
+								result.error ||
+								"Your theme preference will reset on next visit.",
 							variant: "destructive",
 						});
 						return;
@@ -77,7 +128,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 				}
 			}
 		},
-		[currentUser, setTheme, toast]
+		[currentUser, setTheme, toast],
 	);
 
 	// ---- Refactored Shortcut Handling ----
@@ -105,7 +156,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 					break;
 			}
 		},
-		[handleThemeChange, isAdmin, router]
+		[handleThemeChange, isAdmin, router],
 	);
 
 	const isAuthenticated = status === "authenticated";
@@ -114,44 +165,44 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 		ShortcutAction.SET_THEME_LIGHT,
 		(event) => handleShortcut(event, ShortcutAction.SET_THEME_LIGHT),
 		undefined,
-		[handleShortcut]
+		[handleShortcut],
 	);
 	useKeyboardShortcut(
 		ShortcutAction.SET_THEME_DARK,
 		(event) => handleShortcut(event, ShortcutAction.SET_THEME_DARK),
 		undefined,
-		[handleShortcut]
+		[handleShortcut],
 	);
 	useKeyboardShortcut(
 		ShortcutAction.SET_THEME_SYSTEM,
 		(event) => handleShortcut(event, ShortcutAction.SET_THEME_SYSTEM),
 		undefined,
-		[handleShortcut]
+		[handleShortcut],
 	);
 	useKeyboardShortcut(
 		ShortcutAction.GOTO_ADMIN,
 		(event) => handleShortcut(event, ShortcutAction.GOTO_ADMIN),
 		() => isAuthenticated && isAdmin,
-		[handleShortcut, isAuthenticated, isAdmin]
+		[handleShortcut, isAuthenticated, isAdmin],
 	);
 	useKeyboardShortcut(
 		ShortcutAction.GOTO_SETTINGS,
 		(event) => handleShortcut(event, ShortcutAction.GOTO_SETTINGS),
 		() => isAuthenticated,
-		[handleShortcut, isAuthenticated]
+		[handleShortcut, isAuthenticated],
 	);
 	useKeyboardShortcut(
 		ShortcutAction.LOGOUT_USER,
 		(event) => handleShortcut(event, ShortcutAction.LOGOUT_USER),
 		() => isAuthenticated,
-		[handleShortcut, isAuthenticated]
+		[handleShortcut, isAuthenticated],
 	);
 
 	return (
 		<div
 			className={cn(
 				"relative rounded-full flex items-center justify-center aspect-square",
-				size === "sm" ? "size-9" : "size-9"
+				size === "sm" ? "size-9" : "size-9",
 			)}
 		>
 			{/* Loading state */}
@@ -174,7 +225,11 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 					<Button
 						variant="ghost"
 						size="icon"
-						className={cn("relative rounded-full", size === "sm" ? "size-6" : "size-8", className)}
+						className={cn(
+							"relative rounded-full",
+							size === "sm" ? "size-6" : "size-8",
+							className,
+						)}
 						aria-label="User menu"
 					>
 						<Avatar className={cn(size === "sm" ? "size-6" : "size-8")}>
@@ -183,24 +238,31 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 								alt={currentUser?.name || "User avatar"}
 								draggable={false}
 							/>
-							<AvatarFallback>{currentUser?.name?.[0]?.toUpperCase() || "?"}</AvatarFallback>
+							<AvatarFallback>
+								{currentUser?.name?.[0]?.toUpperCase() || "?"}
+							</AvatarFallback>
 						</Avatar>
 					</Button>
 				</UserMenuDropdown>
 			) : (
 				<>
-					{pathname !== routes.auth.signIn && pathname !== routes.auth.signUp ? (
+					{pathname !== routes.auth.signIn &&
+					pathname !== routes.auth.signUp ? (
 						<Link
 							href={signInRedirectUrl}
 							className={cn(
 								buttonVariants({ variant: "ghost", size: "icon" }),
-								"rounded-full cursor-pointer"
+								"rounded-full cursor-pointer",
 							)}
 						>
 							<UserIcon className="size-6" />
 						</Link>
 					) : (
-						<Button variant="ghost" size="icon" className={cn("relative rounded-full", className)}>
+						<Button
+							variant="ghost"
+							size="icon"
+							className={cn("relative rounded-full", className)}
+						>
 							<UserIcon className="size-6" />
 						</Button>
 					)}

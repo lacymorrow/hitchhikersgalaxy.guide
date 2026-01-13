@@ -184,6 +184,22 @@ const nextConfig: NextConfig = {
 	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 
 	/*
+	 * Server External Packages
+	 * Externalize optional Drizzle ORM database drivers that aren't installed
+	 * This prevents Turbopack from trying to bundle these optional peer dependencies
+	 */
+	serverExternalPackages: [
+		"@aws-sdk/client-rds-data",
+		"@electric-sql/pglite",
+		"@libsql/client",
+		"@neondatabase/serverless",
+		"@planetscale/database",
+		"@vercel/postgres",
+		"better-sqlite3",
+		"mysql2",
+	],
+
+	/*
 	 * Experimental configuration
 	 */
 	experimental: {

@@ -24,7 +24,7 @@ export const Link = ({
 	children,
 	variant = "default",
 	withRedirect = false,
-	withTransition,
+	withTransition = siteConfig?.behavior?.pageTransitions,
 	...props
 }: LinkProps) => {
 	const pathname = usePathname();
@@ -43,9 +43,7 @@ export const Link = ({
 		return newHref;
 	}, [props.href, withRedirect, pathname]);
 
-	const useTransition = withTransition ?? siteConfig?.behavior?.pageTransitions;
-
-	const LinkComponent = useTransition ? TransitionsLink : NextLink;
+	const LinkComponent = withTransition ? TransitionsLink : NextLink;
 
 	return (
 		<LinkComponent {...props} href={href}>

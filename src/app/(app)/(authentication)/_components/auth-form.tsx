@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { type ComponentPropsWithoutRef, type ReactNode, Suspense } from "react";
 import { OAuthButtons } from "@/app/(app)/(authentication)/_components/oauth-buttons";
+import { useIsModal } from "@/components/primitives/modal-context";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -29,6 +31,8 @@ export function AuthForm({
 	withFooter = true,
 	...props
 }: AuthFormProps) {
+	const router = useRouter();
+	const isModal = useIsModal();
 	const {
 		cardTitle,
 		cardDescription,
@@ -36,6 +40,18 @@ export function AuthForm({
 		shouldShowAlternateLink,
 		showAuthUnavailable,
 	} = useAuthForm(mode, title, description);
+
+	const handleAlternateLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+		if (isModal) {
+			e.preventDefault();
+			// Use replace to avoid back-loop when navigating from modal
+			router.replace(alternateLink.href);
+		} else {
+			// Signal to the modal intercepting route to not render
+			// This prevents showing a modal when navigating between auth pages
+			sessionStorage.setItem("skipAuthModal", "true");
+		}
+	};
 
 	return (
 		<div className={cn("flex flex-col gap-6 overflow-y-auto", className)} {...props}>
@@ -64,7 +80,11 @@ export function AuthForm({
 					{shouldShowAlternateLink && !showAuthUnavailable && (
 						<div className="text-center text-sm">
 							{alternateLink.text}{" "}
-							<Link href={alternateLink.href} className="underline underline-offset-4">
+							<Link
+								href={alternateLink.href}
+								className="underline underline-offset-4"
+								onClick={handleAlternateLinkClick}
+							>
 								{alternateLink.label}
 							</Link>
 						</div>

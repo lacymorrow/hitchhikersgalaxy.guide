@@ -4,6 +4,7 @@ import { Link } from "@/components/primitives/link";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { routes } from "@/config/routes";
 import { AuthenticationCard } from "../../_components/authentication-card";
+import { buttonVariants } from "@/components/ui/button";
 
 export function SignUpCard() {
 	return (
@@ -20,7 +21,7 @@ export function SignUpCard() {
 					</div>
 					<div className="mt-4 text-center text-sm">
 						Already have an account?{" "}
-						<Link href={routes.auth.signIn} className="underline">
+						<Link href={routes.auth.signIn} className={buttonVariants({ variant: "link" })}>
 							Sign in
 						</Link>
 					</div>

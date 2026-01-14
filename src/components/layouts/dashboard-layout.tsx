@@ -9,7 +9,7 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
 		<SidebarLayout>
 			<div
 				className="flex min-h-svh w-full flex-col"
-				style={{ "--sidebar-top": "4rem" } as React.CSSProperties}
+				style={{ "--sidebar-top": "var(--header-height)" } as React.CSSProperties}
 			>
 				<DashboardHeader />
 

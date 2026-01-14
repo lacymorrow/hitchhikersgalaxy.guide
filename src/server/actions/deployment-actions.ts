@@ -3,7 +3,7 @@
 import { and, desc, eq, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { siteConfig } from "@/config/site-config";
-import { deploymentSchema, validateProjectName } from "@/lib/schemas/deployment";
+import { validateProjectName } from "@/lib/schemas/deployment";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { type Deployment, deployments, type NewDeployment } from "@/server/db/schema";
@@ -19,6 +19,17 @@ const STALE_DEPLOYMENT_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes
  * then calling the main deployment action.
  */
 export async function initiateDeployment(formData: FormData): Promise<DeploymentResult> {
+	// Get user session upfront - this must happen in the request context
+	// before we start any background tasks
+	const session = await auth();
+	if (!session?.user?.id) {
+		return {
+			success: false,
+			error: "Authentication required. Please log in to continue.",
+		};
+	}
+	const userId = session.user.id;
+
 	const projectName = formData.get("projectName") as string;
 
 	// Validate project name with comprehensive server-side validation using shared schema
@@ -46,6 +57,7 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 
 		// Trigger the actual deployment in the background with proper error handling
 		// This allows the server action to return immediately while deployment continues
+		// IMPORTANT: We pass userId because auth() won't work in background tasks
 		void (async () => {
 			try {
 				await deployPrivateRepository({
@@ -53,16 +65,21 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 					projectName: sanitizedProjectName,
 					description,
 					deploymentId: newDeployment.id,
+					userId, // Pass userId for background task
 				});
 				console.log(`Deployment process completed for ${sanitizedProjectName}`);
 			} catch (error) {
 				console.error(`Deployment failed for ${sanitizedProjectName}:`, error);
 				// Update the deployment status to failed if deployment errors occur
 				try {
-					await updateDeployment(newDeployment.id, {
-						status: "failed",
-						error: error instanceof Error ? error.message : "An unknown error occurred",
-					});
+					await updateDeployment(
+						newDeployment.id,
+						{
+							status: "failed",
+							error: error instanceof Error ? error.message : "An unknown error occurred",
+						},
+						userId // Pass userId for background task
+					);
 				} catch (updateError) {
 					console.error(
 						`Failed to update deployment status for ${sanitizedProjectName}:`,
@@ -193,14 +210,24 @@ export async function createDeployment(
 
 /**
  * Update an existing deployment
+ * @param id - The deployment ID
+ * @param data - The data to update
+ * @param userId - Optional user ID for background tasks where auth() won't work
  */
 export async function updateDeployment(
 	id: string,
-	data: Partial<Omit<Deployment, "id" | "userId" | "createdAt">>
+	data: Partial<Omit<Deployment, "id" | "userId" | "createdAt">>,
+	userId?: string
 ): Promise<Deployment | null> {
-	const session = await auth();
-	if (!session?.user?.id) {
-		throw new Error("Unauthorized");
+	// Use provided userId (for background tasks) or get from auth
+	let effectiveUserId = userId;
+
+	if (!effectiveUserId) {
+		const session = await auth();
+		if (!session?.user?.id) {
+			throw new Error("Unauthorized");
+		}
+		effectiveUserId = session.user.id;
 	}
 
 	if (!db) {
@@ -214,7 +241,7 @@ export async function updateDeployment(
 				...data,
 				updatedAt: new Date(),
 			})
-			.where(and(eq(deployments.id, id), eq(deployments.userId, session.user.id)))
+			.where(and(eq(deployments.id, id), eq(deployments.userId, effectiveUserId)))
 			.returning();
 
 		if (updatedDeployment) {

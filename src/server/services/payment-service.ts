@@ -199,11 +199,13 @@ const PaymentService = {
 					try {
 						const metadata = JSON.parse(payment.metadata || "{}");
 						// Check various ways the variant might be identified
+						// Use String() conversion to handle number vs string comparison
+						const variantIdStr = String(variantId);
 						return (
-							metadata.variant_id === variantId ||
-							metadata.variantId === variantId ||
+							String(metadata.variant_id) === variantIdStr ||
+							String(metadata.variantId) === variantIdStr ||
 							// Also check if the variant ID is in the checkout URL or custom data
-							JSON.stringify(metadata).includes(variantId)
+							JSON.stringify(metadata).includes(variantIdStr)
 						);
 					} catch {
 						return false;
@@ -300,13 +302,15 @@ const PaymentService = {
 					try {
 						const metadata = JSON.parse(payment.metadata || "{}");
 						// Check various ways the product might be identified
+						// Use String() conversion to handle number vs string comparison
+						const productIdStr = String(productId);
 						return (
-							metadata.productId === productId ||
-							metadata.variant_id === productId ||
-							metadata.product_id === productId ||
-							metadata.productName?.includes(productId) ||
-							metadata.variant_name?.includes(productId) ||
-							metadata.product_name?.includes(productId)
+							String(metadata.productId) === productIdStr ||
+							String(metadata.variant_id) === productIdStr ||
+							String(metadata.product_id) === productIdStr ||
+							metadata.productName?.includes(productIdStr) ||
+							metadata.variant_name?.includes(productIdStr) ||
+							metadata.product_name?.includes(productIdStr)
 						);
 					} catch {
 						return false;

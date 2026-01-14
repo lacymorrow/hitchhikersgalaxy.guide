@@ -6,7 +6,9 @@ import { siteConfig } from "@/config/site-config";
 import { getOrdersByEmail } from "@/lib/lemonsqueezy/lemonsqueezy";
 import { logger } from "@/lib/logger";
 import { auth } from "@/server/auth";
+import { isAdmin } from "@/server/services/admin-service";
 import { getLatestReleaseFile } from "@/server/services/github/github-download-service";
+import { PaymentService } from "@/server/services/payment-service";
 
 /**
  * Route handler for file downloads.
@@ -27,6 +29,7 @@ export async function GET(request: NextRequest) {
 	}
 
 	if (email && orderId) {
+		// Verify purchase by order ID (for direct download links from emails)
 		const orders = await getOrdersByEmail(email);
 		const order = orders?.find((order) => order.attributes.identifier === orderId);
 
@@ -42,6 +45,24 @@ export async function GET(request: NextRequest) {
 	} else if (!session?.user?.id) {
 		logger.warn("Unauthorized download attempt");
 		return NextResponse.redirect(new URL(routes.auth.signIn, siteConfig.url));
+	} else {
+		// User is logged in - verify they have purchased the specific variant or are admin
+		const userId = session.user.id;
+		const userEmail = session.user.email || "";
+
+		const [isUserAdmin, hasPurchased] = await Promise.all([
+			isAdmin({ email: userEmail }),
+			PaymentService.hasUserPurchasedVariant({
+				userId,
+				variantId: siteConfig.store.products.shipkit || "",
+				provider: "lemonsqueezy",
+			}),
+		]);
+
+		if (!isUserAdmin && !hasPurchased) {
+			logger.warn("User has not purchased product", { userId, email: userEmail });
+			return NextResponse.redirect(new URL(routes.app.dashboard, siteConfig.url));
+		}
 	}
 
 	try {

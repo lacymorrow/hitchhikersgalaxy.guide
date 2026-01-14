@@ -1,6 +1,6 @@
 "use server";
 
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { siteConfig } from "@/config/site-config";
 import { deploymentSchema, validateProjectName } from "@/lib/schemas/deployment";
@@ -10,6 +10,9 @@ import { type Deployment, deployments, type NewDeployment } from "@/server/db/sc
 import { type DeploymentResult, deployPrivateRepository } from "./deploy-private-repo";
 
 const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
+
+// Deployments stuck in "deploying" for longer than this are considered stale
+const STALE_DEPLOYMENT_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes
 
 /**
  * Initiates a deployment process by creating a deployment record and
@@ -88,7 +91,8 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 }
 
 /**
- * Get all deployments for the current user
+ * Get all deployments for the current user.
+ * Automatically marks stale "deploying" deployments as timed out.
  */
 export async function getUserDeployments(): Promise<Deployment[]> {
 	const session = await auth();
@@ -101,6 +105,9 @@ export async function getUserDeployments(): Promise<Deployment[]> {
 	}
 
 	try {
+		// First, mark any stale deployments as timed out
+		await markStaleDeploymentsAsTimedOut(session.user.id);
+
 		const userDeployments = await db
 			.select()
 			.from(deployments)
@@ -111,6 +118,35 @@ export async function getUserDeployments(): Promise<Deployment[]> {
 	} catch (error) {
 		console.error("Failed to fetch deployments:", error);
 		throw new Error("Failed to fetch deployments");
+	}
+}
+
+/**
+ * Mark deployments that have been stuck in "deploying" state for too long as timed out
+ */
+async function markStaleDeploymentsAsTimedOut(userId: string): Promise<void> {
+	if (!db) return;
+
+	const staleThreshold = new Date(Date.now() - STALE_DEPLOYMENT_THRESHOLD_MS);
+
+	try {
+		const result = await db
+			.update(deployments)
+			.set({
+				status: "timeout",
+				error: "Deployment timed out - the deployment process did not complete in the expected time",
+				updatedAt: new Date(),
+			})
+			.where(
+				and(
+					eq(deployments.userId, userId),
+					eq(deployments.status, "deploying"),
+					lt(deployments.createdAt, staleThreshold)
+				)
+			);
+	} catch (error) {
+		// Log but don't fail the main request
+		console.error("Failed to mark stale deployments as timed out:", error);
 	}
 }
 
@@ -215,6 +251,56 @@ export async function deleteDeployment(id: string): Promise<boolean> {
 	} catch (error) {
 		console.error("Failed to delete deployment:", error);
 		throw new Error("Failed to delete deployment");
+	}
+}
+
+/**
+ * Cancel a deployment that is stuck in "deploying" state
+ */
+export async function cancelDeployment(id: string): Promise<Deployment | null> {
+	const session = await auth();
+	if (!session?.user?.id) {
+		throw new Error("Unauthorized");
+	}
+
+	if (!db) {
+		throw new Error("Database not available");
+	}
+
+	try {
+		// Only allow canceling deployments that are in "deploying" state
+		const [existingDeployment] = await db
+			.select()
+			.from(deployments)
+			.where(and(eq(deployments.id, id), eq(deployments.userId, session.user.id)))
+			.limit(1);
+
+		if (!existingDeployment) {
+			throw new Error("Deployment not found");
+		}
+
+		if (existingDeployment.status !== "deploying") {
+			throw new Error("Can only cancel deployments that are in progress");
+		}
+
+		const [canceledDeployment] = await db
+			.update(deployments)
+			.set({
+				status: "failed",
+				error: "Deployment was canceled by user",
+				updatedAt: new Date(),
+			})
+			.where(and(eq(deployments.id, id), eq(deployments.userId, session.user.id)))
+			.returning();
+
+		if (canceledDeployment) {
+			revalidatePath("/deployments");
+		}
+
+		return canceledDeployment || null;
+	} catch (error) {
+		console.error("Failed to cancel deployment:", error);
+		throw error instanceof Error ? error : new Error("Failed to cancel deployment");
 	}
 }
 

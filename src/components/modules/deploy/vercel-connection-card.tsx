@@ -46,7 +46,7 @@ export const VercelConnectionCard = ({ hasVercelConnection, user }: VercelConnec
 						<p className="text-xs text-muted-foreground">
 							Connect your Vercel account to enable automatic project creation.
 						</p>
-						<VercelConnectButton user={user} />
+						<VercelConnectButton user={user} isConnected={hasVercelConnection} />
 					</>
 				)}
 			</CardContent>

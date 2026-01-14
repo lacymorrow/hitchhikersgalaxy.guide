@@ -204,6 +204,8 @@ interface FeatureDisclosureProps {
 	initialStep?: number;
 	// Optional callback on step change
 	onStepChange?: (index: number) => void;
+	// Optional array of step indices that should be initially marked as completed
+	initialCompletedSteps?: number[];
 }
 
 interface StepContentProps {
@@ -377,9 +379,10 @@ export function IntroDisclosure({
 	forceVariant,
 	initialStep,
 	onStepChange,
+	initialCompletedSteps,
 }: FeatureDisclosureProps) {
 	const [currentStep, setCurrentStep] = React.useState(initialStep ?? 0);
-	const [completedSteps, setCompletedSteps] = React.useState<number[]>([0]);
+	const [completedSteps, setCompletedSteps] = React.useState<number[]>(initialCompletedSteps ?? [0]);
 	const [direction, setDirection] = React.useState<1 | -1>(1);
 	const isDesktopQuery = useMediaQuery("(min-width: 768px)");
 	const isDesktop = forceVariant ? forceVariant === "desktop" : isDesktopQuery;
@@ -406,6 +409,16 @@ export function IntroDisclosure({
 			setCurrentStep(initialStep);
 		}
 	}, [open, initialStep]);
+
+	// Keep completedSteps in sync with initialCompletedSteps
+	React.useEffect(() => {
+		if (initialCompletedSteps && initialCompletedSteps.length > 0) {
+			setCompletedSteps((prev) => {
+				const merged = new Set([...prev, ...initialCompletedSteps]);
+				return Array.from(merged);
+			});
+		}
+	}, [initialCompletedSteps]);
 
 	// Early return if feature should be hidden
 	if (!isVisible || !open) {

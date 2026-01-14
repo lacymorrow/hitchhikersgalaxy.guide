@@ -4,7 +4,7 @@ import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
-import { VercelDeployButton } from "@/components/buttons/vercel-deploy-button";
+import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { IntroDisclosure } from "@/components/ui/intro-disclosure";
 import { siteConfig } from "@/config/site-config";
 import { useLocalStorage } from "@/hooks/use-local-storage";
@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { User } from "@/types/user";
 
 interface OnboardingWizardProps {
-	user: User | null;
+	user: User | undefined;
 	hasGitHubConnection?: boolean;
 	hasVercelConnection?: boolean;
 	onComplete?: () => void;
@@ -64,6 +64,14 @@ export const OnboardingWizard = ({
 
 	const stepIds = useMemo(() => ["github", "vercel", "deploy"], []);
 
+	// Calculate which steps should be marked as completed based on connection status
+	const initialCompletedSteps = useMemo(() => {
+		const completed: number[] = [];
+		if (hasGitHubConnection) completed.push(0);
+		if (hasVercelConnection) completed.push(1);
+		return completed;
+	}, [hasGitHubConnection, hasVercelConnection]);
+
 	const steps = useMemo(
 		() => [
 			{
@@ -94,7 +102,7 @@ export const OnboardingWizard = ({
 								<span>Vercel account connected</span>
 							</div>
 						)}
-						{user && <VercelConnectButton className="mt-2" user={user} />}
+						{user && <VercelConnectButton className="mt-2" user={user} isConnected={hasVercelConnection} />}
 					</div>
 				),
 			},
@@ -104,7 +112,7 @@ export const OnboardingWizard = ({
 				full_description: (
 					<div className="space-y-4">
 						<div className="mx-auto">
-							<VercelDeployButton className="mt-2" />
+							<DashboardVercelDeploy className="mt-2" isVercelConnected={true} user={user ?? undefined} />
 						</div>
 						<div className="rounded-lg bg-primary/10 p-3 text-center">
 							<h3 className="font-semibold">Almost there!</h3>
@@ -145,6 +153,7 @@ export const OnboardingWizard = ({
 			onComplete={handleComplete}
 			onSkip={handleSkip}
 			initialStep={onboardingState.currentStep}
+			initialCompletedSteps={initialCompletedSteps}
 			onStepChange={(index) =>
 				setOnboardingState((prev) => ({
 					...prev,

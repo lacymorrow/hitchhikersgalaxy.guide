@@ -82,7 +82,7 @@ export function AuthForm({
 							{alternateLink.text}{" "}
 							<Link
 								href={alternateLink.href}
-								className="underline underline-offset-4"
+								className="underline underline-offset-4 w-80"
 								onClick={handleAlternateLinkClick}
 							>
 								{alternateLink.label}

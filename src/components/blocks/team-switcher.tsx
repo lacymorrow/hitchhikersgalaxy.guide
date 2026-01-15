@@ -28,6 +28,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useSidebar } from "@/components/ui/sidebar";
+import { useTeam } from "@/components/providers/team-provider";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { type AvatarType, getAvatarUrl } from "@/lib/utils/avatar";
@@ -38,17 +39,20 @@ interface TeamSwitcherProps {
 	userId?: string;
 	activeTeamId?: string;
 	onTeamChange?: (teamId: string) => void;
+	variant?: "sidebar" | "header";
 }
 
 export function TeamSwitcher({
 	userId: propUserId,
 	activeTeamId,
 	onTeamChange,
+	variant = "sidebar",
 }: TeamSwitcherProps = {}) {
 	const { open: sidebarOpen } = useSidebar();
 	const { data: session } = useSession();
 	const router = useRouter();
 	const { toast } = useToast();
+	const { setSelectedTeamId } = useTeam();
 
 	// Get userId from props or session
 	const userId = propUserId || session?.user?.id;
@@ -87,6 +91,7 @@ export function TeamSwitcher({
 	const handleTeamSelect = (team: Team) => {
 		setActiveTeam(team);
 		setOpen(false);
+		setSelectedTeamId(team.team.id);
 		onTeamChange?.(team.team.id);
 		toast({
 			title: "Team switched",
@@ -146,7 +151,12 @@ export function TeamSwitcher({
 					<Button
 						variant="ghost"
 						size="sm"
-						className={cn("flex w-full items-center gap-2", sidebarOpen && "justify-between py-6")}
+						className={cn(
+							"flex items-center gap-2",
+							variant === "sidebar" ? "w-full" : "w-[260px] max-w-full justify-between",
+							variant === "sidebar" && sidebarOpen && "justify-between py-6"
+						)}
+						aria-label="Select team"
 					>
 						<Avatar className="h-6 w-6">
 							<AvatarImage
@@ -159,7 +169,7 @@ export function TeamSwitcher({
 							/>
 							<AvatarFallback>{activeTeam?.team?.name?.charAt(0) || "T"}</AvatarFallback>
 						</Avatar>
-						{sidebarOpen && (
+						{(variant === "header" || sidebarOpen) && (
 							<>
 								<div className="grid flex-1 text-left text-sm leading-tight">
 									<span className="truncate font-semibold">
@@ -176,7 +186,14 @@ export function TeamSwitcher({
 					</Button>
 				</PopoverTrigger>
 				<PopoverContent
-					className={cn("p-0", sidebarOpen && "w-[var(--radix-popover-trigger-width)]")}
+					className={cn(
+						"p-0",
+						variant === "header"
+							? "w-[260px]"
+							: sidebarOpen
+								? "w-[var(--radix-popover-trigger-width)]"
+								: undefined
+					)}
 					align="start"
 				>
 					<Command>

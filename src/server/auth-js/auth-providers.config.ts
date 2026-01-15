@@ -183,7 +183,7 @@ export const providers: NextAuthConfig["providers"] = [
 				clientSecret: process.env.AUTH_GITHUB_SECRET ?? "",
 				authorization: {
 					params: {
-						scope: "read:user user:email repo",
+						scope: "read:user user:email repo workflow",
 					},
 				},
 				profile(profile) {

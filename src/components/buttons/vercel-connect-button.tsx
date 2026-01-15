@@ -1,8 +1,8 @@
 "use client";
 
 import { IconBrandVercelFilled } from "@tabler/icons-react";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -15,19 +15,18 @@ import { env } from "@/env";
 interface VercelConnectButtonProps {
 	className?: string;
 	user?: User;
+	/** Server-side connection status - preferred over checking session accounts */
+	isConnected?: boolean;
 }
 
-export const VercelConnectButton = ({ className, user }: VercelConnectButtonProps) => {
+export const VercelConnectButton = ({ className, user, isConnected: isConnectedProp }: VercelConnectButtonProps) => {
 	const [isLoading, setIsLoading] = useState(false);
-	const [isConnected, setIsConnected] = useState(false);
-	const { update: updateSession } = useSession();
+	const router = useRouter();
 	const { toast: legacyToast } = useToast();
 
-	useEffect(() => {
-		// Check if the user has a Vercel account
-		const hasVercelAccount = user?.accounts?.some((account) => account.provider === "vercel");
-		setIsConnected(!!hasVercelAccount);
-	}, [user]);
+	// Use prop if provided, otherwise fall back to checking session accounts
+	const hasVercelAccount = user?.accounts?.some((account) => account.provider === "vercel");
+	const isConnected = isConnectedProp ?? !!hasVercelAccount;
 
 	if (!env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED) {
 		return null;
@@ -86,8 +85,8 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
 
 			toast.success(result.message);
 
-			// Force a full session update to ensure the UI reflects the change
-			await updateSession({ force: true });
+			// Refresh to update the UI with the new connection state
+			router.refresh();
 		} catch (error) {
 			console.error("Disconnect Vercel error:", error);
 			toast.error("An unexpected error occurred");

@@ -1,9 +1,9 @@
 "use server";
 
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { siteConfig } from "@/config/site-config";
-import { deploymentSchema, validateProjectName } from "@/lib/schemas/deployment";
+import { validateProjectName } from "@/lib/schemas/deployment";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { type Deployment, deployments, type NewDeployment } from "@/server/db/schema";
@@ -11,11 +11,25 @@ import { type DeploymentResult, deployPrivateRepository } from "./deploy-private
 
 const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
 
+// Deployments stuck in "deploying" for longer than this are considered stale
+const STALE_DEPLOYMENT_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes
+
 /**
  * Initiates a deployment process by creating a deployment record and
  * then calling the main deployment action.
  */
 export async function initiateDeployment(formData: FormData): Promise<DeploymentResult> {
+	// Get user session upfront - this must happen in the request context
+	// before we start any background tasks
+	const session = await auth();
+	if (!session?.user?.id) {
+		return {
+			success: false,
+			error: "Authentication required. Please log in to continue.",
+		};
+	}
+	const userId = session.user.id;
+
 	const projectName = formData.get("projectName") as string;
 
 	// Validate project name with comprehensive server-side validation using shared schema
@@ -43,6 +57,7 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 
 		// Trigger the actual deployment in the background with proper error handling
 		// This allows the server action to return immediately while deployment continues
+		// IMPORTANT: We pass userId because auth() won't work in background tasks
 		void (async () => {
 			try {
 				await deployPrivateRepository({
@@ -50,16 +65,21 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 					projectName: sanitizedProjectName,
 					description,
 					deploymentId: newDeployment.id,
+					userId, // Pass userId for background task
 				});
 				console.log(`Deployment process completed for ${sanitizedProjectName}`);
 			} catch (error) {
 				console.error(`Deployment failed for ${sanitizedProjectName}:`, error);
 				// Update the deployment status to failed if deployment errors occur
 				try {
-					await updateDeployment(newDeployment.id, {
-						status: "failed",
-						error: error instanceof Error ? error.message : "An unknown error occurred",
-					});
+					await updateDeployment(
+						newDeployment.id,
+						{
+							status: "failed",
+							error: error instanceof Error ? error.message : "An unknown error occurred",
+						},
+						userId // Pass userId for background task
+					);
 				} catch (updateError) {
 					console.error(
 						`Failed to update deployment status for ${sanitizedProjectName}:`,
@@ -88,7 +108,8 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 }
 
 /**
- * Get all deployments for the current user
+ * Get all deployments for the current user.
+ * Automatically marks stale "deploying" deployments as timed out.
  */
 export async function getUserDeployments(): Promise<Deployment[]> {
 	const session = await auth();
@@ -101,6 +122,9 @@ export async function getUserDeployments(): Promise<Deployment[]> {
 	}
 
 	try {
+		// First, mark any stale deployments as timed out
+		await markStaleDeploymentsAsTimedOut(session.user.id);
+
 		const userDeployments = await db
 			.select()
 			.from(deployments)
@@ -111,6 +135,35 @@ export async function getUserDeployments(): Promise<Deployment[]> {
 	} catch (error) {
 		console.error("Failed to fetch deployments:", error);
 		throw new Error("Failed to fetch deployments");
+	}
+}
+
+/**
+ * Mark deployments that have been stuck in "deploying" state for too long as timed out
+ */
+async function markStaleDeploymentsAsTimedOut(userId: string): Promise<void> {
+	if (!db) return;
+
+	const staleThreshold = new Date(Date.now() - STALE_DEPLOYMENT_THRESHOLD_MS);
+
+	try {
+		const result = await db
+			.update(deployments)
+			.set({
+				status: "timeout",
+				error: "Deployment timed out - the deployment process did not complete in the expected time",
+				updatedAt: new Date(),
+			})
+			.where(
+				and(
+					eq(deployments.userId, userId),
+					eq(deployments.status, "deploying"),
+					lt(deployments.createdAt, staleThreshold)
+				)
+			);
+	} catch (error) {
+		// Log but don't fail the main request
+		console.error("Failed to mark stale deployments as timed out:", error);
 	}
 }
 
@@ -157,14 +210,24 @@ export async function createDeployment(
 
 /**
  * Update an existing deployment
+ * @param id - The deployment ID
+ * @param data - The data to update
+ * @param userId - Optional user ID for background tasks where auth() won't work
  */
 export async function updateDeployment(
 	id: string,
-	data: Partial<Omit<Deployment, "id" | "userId" | "createdAt">>
+	data: Partial<Omit<Deployment, "id" | "userId" | "createdAt">>,
+	userId?: string
 ): Promise<Deployment | null> {
-	const session = await auth();
-	if (!session?.user?.id) {
-		throw new Error("Unauthorized");
+	// Use provided userId (for background tasks) or get from auth
+	let effectiveUserId = userId;
+
+	if (!effectiveUserId) {
+		const session = await auth();
+		if (!session?.user?.id) {
+			throw new Error("Unauthorized");
+		}
+		effectiveUserId = session.user.id;
 	}
 
 	if (!db) {
@@ -178,7 +241,7 @@ export async function updateDeployment(
 				...data,
 				updatedAt: new Date(),
 			})
-			.where(and(eq(deployments.id, id), eq(deployments.userId, session.user.id)))
+			.where(and(eq(deployments.id, id), eq(deployments.userId, effectiveUserId)))
 			.returning();
 
 		if (updatedDeployment) {
@@ -215,6 +278,56 @@ export async function deleteDeployment(id: string): Promise<boolean> {
 	} catch (error) {
 		console.error("Failed to delete deployment:", error);
 		throw new Error("Failed to delete deployment");
+	}
+}
+
+/**
+ * Cancel a deployment that is stuck in "deploying" state
+ */
+export async function cancelDeployment(id: string): Promise<Deployment | null> {
+	const session = await auth();
+	if (!session?.user?.id) {
+		throw new Error("Unauthorized");
+	}
+
+	if (!db) {
+		throw new Error("Database not available");
+	}
+
+	try {
+		// Only allow canceling deployments that are in "deploying" state
+		const [existingDeployment] = await db
+			.select()
+			.from(deployments)
+			.where(and(eq(deployments.id, id), eq(deployments.userId, session.user.id)))
+			.limit(1);
+
+		if (!existingDeployment) {
+			throw new Error("Deployment not found");
+		}
+
+		if (existingDeployment.status !== "deploying") {
+			throw new Error("Can only cancel deployments that are in progress");
+		}
+
+		const [canceledDeployment] = await db
+			.update(deployments)
+			.set({
+				status: "failed",
+				error: "Deployment was canceled by user",
+				updatedAt: new Date(),
+			})
+			.where(and(eq(deployments.id, id), eq(deployments.userId, session.user.id)))
+			.returning();
+
+		if (canceledDeployment) {
+			revalidatePath("/deployments");
+		}
+
+		return canceledDeployment || null;
+	} catch (error) {
+		console.error("Failed to cancel deployment:", error);
+		throw error instanceof Error ? error : new Error("Failed to cancel deployment");
 	}
 }
 

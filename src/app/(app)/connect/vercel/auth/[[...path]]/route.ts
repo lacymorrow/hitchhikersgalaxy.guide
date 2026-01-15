@@ -13,12 +13,17 @@ interface RouteContext {
 }
 
 export async function GET(request: NextRequest, context: RouteContext) {
-	if (!env.NEXT_PUBLIC_FEATURE_VERCEL_API_ENABLED) {
+	console.log("[Vercel OAuth] Callback hit", { url: request.url });
+
+	if (!env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED) {
+		console.log("[Vercel OAuth] Feature flag disabled, redirecting to /");
 		return NextResponse.redirect(new URL("/", request.url));
 	}
 
 	try {
 		const session = await auth();
+		console.log("[Vercel OAuth] Session check", { hasUser: !!session?.user, userId: session?.user?.id });
+
 		if (!session?.user) {
 			return NextResponse.redirect(new URL("/login", request.url));
 		}
@@ -64,7 +69,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 		if (error) {
 			console.error("Error in Vercel OAuth callback:", error);
 			// Use dynamic redirect path for error
-			return NextResponse.redirect(constructRedirectUrl({ error: "vercel_auth_error" }));
+			return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_CONNECTION_FAILED" }));
 		}
 
 		// CRITICAL: Validate CSRF token
@@ -75,13 +80,13 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
 		if (!state || !storedState || state !== storedState) {
 			console.error("CSRF validation failed: state mismatch");
-			return NextResponse.redirect(constructRedirectUrl({ error: "invalid_state" }));
+			return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_CONNECTION_FAILED" }));
 		}
 
 		if (!code) {
 			console.error("No code provided in Vercel OAuth callback");
 			// Use dynamic redirect path for error
-			return NextResponse.redirect(constructRedirectUrl({ error: "no_code" }));
+			return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_CONNECTION_FAILED" }));
 		}
 
 		// Get the origin for the redirect_uri - this should be the fixed callback route
@@ -105,7 +110,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 			const errorText = await tokenResponse.text();
 			console.error("Failed to exchange code for token:", errorText);
 			// Use dynamic redirect path for error
-			return NextResponse.redirect(constructRedirectUrl({ error: "token_exchange_failed" }));
+			return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_CONNECTION_FAILED" }));
 		}
 
 		const tokenData = await tokenResponse.json();
@@ -123,7 +128,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 		if (!userResponse.ok) {
 			console.error("Failed to get user info from Vercel");
 			// Use dynamic redirect path for error
-			return NextResponse.redirect(constructRedirectUrl({ error: "user_info_failed" }));
+			return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_CONNECTION_FAILED" }));
 		}
 
 		const userData = await userResponse.json();
@@ -144,7 +149,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 		if (!vercelUserId) {
 			console.error("Failed to get Vercel user ID");
 			// Use dynamic redirect path for error
-			return NextResponse.redirect(constructRedirectUrl({ error: "no_user_id" }));
+			return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_CONNECTION_FAILED" }));
 		}
 
 		// Calculate token expiry date - default to 30 days if expires_in is not provided
@@ -160,9 +165,14 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
 		// Store the access token and user info in the database
 		try {
+			if (!db) {
+				console.error("Database not initialized - cannot save Vercel connection");
+				return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_ERROR" }));
+			}
+
 			// First, check if this Vercel account (by providerAccountId) already exists
 			const existingAccount = await db
-				?.select()
+				.select()
 				.from(accounts)
 				.where(and(eq(accounts.provider, "vercel"), eq(accounts.providerAccountId, vercelUserId)))
 				.limit(1);
@@ -170,7 +180,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 			if (existingAccount && existingAccount.length > 0) {
 				// If exists, update instead of insert
 				await db
-					?.update(accounts)
+					.update(accounts)
 					.set({
 						userId: session.user.id, // Update to current user if account exists but belongs to another user
 						access_token,
@@ -187,11 +197,11 @@ export async function GET(request: NextRequest, context: RouteContext) {
 			} else {
 				// Delete any existing Vercel connections for this user (different providerAccountId)
 				await db
-					?.delete(accounts)
+					.delete(accounts)
 					.where(and(eq(accounts.provider, "vercel"), eq(accounts.userId, session.user.id)));
 
 				// Insert new account
-				await db?.insert(accounts).values({
+				await db.insert(accounts).values({
 					userId: session.user.id,
 					type: "oauth",
 					provider: "vercel",
@@ -231,7 +241,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
 		// Redirect back using the dynamic path with success message and clear CSRF cookie
 		const successResponse = NextResponse.redirect(
-			constructRedirectUrl({ success: "vercel_connected" })
+			constructRedirectUrl({ code: "VERCEL_CONNECTED" })
 		);
 		successResponse.cookies.delete("vercel_oauth_state");
 		return successResponse;
@@ -247,7 +257,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 			redirectBasePath = decodedPath.startsWith("/") ? decodedPath : `/${decodedPath}`;
 		}
 		const errorUrl = new URL(redirectBasePath, request.url);
-		errorUrl.searchParams.set("error", "internal_error");
+		errorUrl.searchParams.set("code", "VERCEL_ERROR");
 		return NextResponse.redirect(errorUrl);
 	}
 }

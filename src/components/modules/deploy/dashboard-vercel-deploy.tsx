@@ -168,7 +168,7 @@ export const DashboardVercelDeploy = ({
 			</span>
 		</Button>
 	) : (
-		<VercelConnectButton user={user} />
+		<VercelConnectButton user={user} isConnected={isVercelConnected} />
 	);
 
 	return (

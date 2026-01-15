@@ -4,7 +4,7 @@ import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
-import { VercelDeployButton } from "@/components/buttons/vercel-deploy-button";
+import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { IntroDisclosure } from "@/components/ui/intro-disclosure";
 import { siteConfig } from "@/config/site-config";
 import { useLocalStorage } from "@/hooks/use-local-storage";
@@ -12,7 +12,7 @@ import { useToast } from "@/hooks/use-toast";
 import type { User } from "@/types/user";
 
 interface OnboardingWizardProps {
-	user: User | null;
+	user: User | undefined;
 	hasGitHubConnection?: boolean;
 	hasVercelConnection?: boolean;
 	onComplete?: () => void;
@@ -30,39 +30,58 @@ export const OnboardingWizard = ({
 
 	const initialStep = hasGitHubConnection ? (hasVercelConnectionAttempt ? 2 : 1) : 0;
 
+	const defaultOnboardingState = useMemo(
+		() => ({
+			completed: false,
+			currentStep: initialStep,
+			steps: {
+				github: hasGitHubConnection,
+				vercel: hasVercelConnectionAttempt,
+				deploy: false,
+			},
+		}),
+		[initialStep, hasGitHubConnection, hasVercelConnectionAttempt]
+	);
+
 	const [onboardingState, setOnboardingState] = useLocalStorage<{
 		completed: boolean;
 		currentStep: number;
 		steps: Record<string, boolean>;
-	}>(`onboarding-${user?.id ?? "guest"}`, {
-		completed: false,
-		currentStep: initialStep,
-		steps: {
-			github: hasGitHubConnection,
-			vercel: hasVercelConnectionAttempt,
-			deploy: false,
-		},
-	});
+	}>(`onboarding-${user?.id ?? "guest"}`, defaultOnboardingState);
 
-	const [open, setOpen] = useState(!onboardingState.completed);
+	// Defensive: ensure onboardingState is never null/undefined
+	const safeOnboardingState = onboardingState ?? defaultOnboardingState;
+
+	const [open, setOpen] = useState(!safeOnboardingState.completed);
 
 	useEffect(() => {
-		setOpen(!onboardingState.completed);
-	}, [onboardingState.completed]);
+		setOpen(!safeOnboardingState.completed);
+	}, [safeOnboardingState.completed]);
 
 	// Keep connection flags in sync
 	useEffect(() => {
-		setOnboardingState((prev) => ({
-			...prev,
-			steps: {
-				...prev.steps,
-				github: hasGitHubConnection,
-				vercel: hasVercelConnectionAttempt,
-			},
-		}));
-	}, [hasGitHubConnection, hasVercelConnectionAttempt, setOnboardingState]);
+		setOnboardingState((prev) => {
+			const safePrev = prev ?? defaultOnboardingState;
+			return {
+				...safePrev,
+				steps: {
+					...safePrev.steps,
+					github: hasGitHubConnection,
+					vercel: hasVercelConnectionAttempt,
+				},
+			};
+		});
+	}, [hasGitHubConnection, hasVercelConnectionAttempt, setOnboardingState, defaultOnboardingState]);
 
 	const stepIds = useMemo(() => ["github", "vercel", "deploy"], []);
+
+	// Calculate which steps should be marked as completed based on connection status
+	const initialCompletedSteps = useMemo(() => {
+		const completed: number[] = [];
+		if (hasGitHubConnection) completed.push(0);
+		if (hasVercelConnection) completed.push(1);
+		return completed;
+	}, [hasGitHubConnection, hasVercelConnection]);
 
 	const steps = useMemo(
 		() => [
@@ -94,7 +113,7 @@ export const OnboardingWizard = ({
 								<span>Vercel account connected</span>
 							</div>
 						)}
-						{user && <VercelConnectButton className="mt-2" user={user} />}
+						{user && <VercelConnectButton className="mt-2" user={user} isConnected={hasVercelConnection} />}
 					</div>
 				),
 			},
@@ -104,7 +123,7 @@ export const OnboardingWizard = ({
 				full_description: (
 					<div className="space-y-4">
 						<div className="mx-auto">
-							<VercelDeployButton className="mt-2" />
+							<DashboardVercelDeploy className="mt-2" isVercelConnected={true} user={user ?? undefined} />
 						</div>
 						<div className="rounded-lg bg-primary/10 p-3 text-center">
 							<h3 className="font-semibold">Almost there!</h3>
@@ -121,7 +140,7 @@ export const OnboardingWizard = ({
 	);
 
 	const handleComplete = () => {
-		setOnboardingState((prev) => ({ ...prev, completed: true }));
+		setOnboardingState((prev) => ({ ...(prev ?? defaultOnboardingState), completed: true }));
 		toast({
 			title: "Onboarding completed!",
 			description: `You're all set to start building with ${siteConfig.title}.`,
@@ -130,11 +149,11 @@ export const OnboardingWizard = ({
 	};
 
 	const handleSkip = () => {
-		setOnboardingState((prev) => ({ ...prev, completed: true }));
+		setOnboardingState((prev) => ({ ...(prev ?? defaultOnboardingState), completed: true }));
 		onComplete?.();
 	};
 
-	if (!user || onboardingState.completed) return null;
+	if (!user || safeOnboardingState.completed) return null;
 
 	return (
 		<IntroDisclosure
@@ -144,16 +163,20 @@ export const OnboardingWizard = ({
 			featureId={`onboarding-${user.id}`}
 			onComplete={handleComplete}
 			onSkip={handleSkip}
-			initialStep={onboardingState.currentStep}
+			initialStep={safeOnboardingState.currentStep}
+			initialCompletedSteps={initialCompletedSteps}
 			onStepChange={(index) =>
-				setOnboardingState((prev) => ({
-					...prev,
-					currentStep: index,
-					steps: {
-						...prev.steps,
-						[stepIds[Math.max(0, Math.min(stepIds.length - 1, index))] || ""]: true,
-					},
-				}))
+				setOnboardingState((prev) => {
+					const safePrev = prev ?? defaultOnboardingState;
+					return {
+						...safePrev,
+						currentStep: index,
+						steps: {
+							...safePrev.steps,
+							[stepIds[Math.max(0, Math.min(stepIds.length - 1, index))] || ""]: true,
+						},
+					};
+				})
 			}
 		/>
 	);

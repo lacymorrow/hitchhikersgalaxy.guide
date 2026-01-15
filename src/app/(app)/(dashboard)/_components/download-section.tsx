@@ -54,6 +54,8 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
     return (
         <div className="flex flex-wrap items-stretch justify-stretch max-w-md gap-3">
             <div className="flex flex-wrap items-stretch justify-stretch w-full gap-3">
+                <GitHubIntegration changedFiles={[]} />
+                <PrivateRepoDeployButton />
                 {/* Download button */}
                 <form action={downloadRepo} className="grow min-w-1/2">
                     <input type="hidden" name="email" value={session.user.email} />

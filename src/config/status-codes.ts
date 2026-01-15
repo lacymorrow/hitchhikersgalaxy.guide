@@ -59,6 +59,20 @@ export const STATUS_CODES = {
 		message: "Something went wrong. Please try again later.",
 	},
 
+	// Vercel connection status codes
+	VERCEL_CONNECTED: {
+		code: "VERCEL_CONNECTED",
+		message: "Vercel account connected successfully.",
+	},
+	VERCEL_CONNECTION_FAILED: {
+		code: "VERCEL_CONNECTION_FAILED",
+		message: "Unable to connect your Vercel account. Please try again.",
+	},
+	VERCEL_ERROR: {
+		code: "VERCEL_ERROR",
+		message: "Something went wrong. Please try again later.",
+	},
+
 	UNKNOWN: {
 		code: "UNKNOWN",
 		message: "Something went wrong, please try again.",

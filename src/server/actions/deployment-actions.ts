@@ -429,6 +429,43 @@ export async function initializeDemoDeployments(): Promise<void> {
 }
 
 /**
+ * Check if the user has a pending GitHub invitation to the template repository.
+ * Users must accept the invitation before they can deploy.
+ */
+export async function checkPendingGitHubInvitation(): Promise<{
+	hasPendingInvitation: boolean;
+	invitationUrl?: string;
+	error?: string;
+}> {
+	const session = await auth();
+	if (!session?.user?.id) {
+		return { hasPendingInvitation: false, error: "Authentication required" };
+	}
+
+	try {
+		const githubToken = await getGitHubAccessToken(session.user.id);
+		if (!githubToken) {
+			// No GitHub connection, so no invitation possible
+			return { hasPendingInvitation: false };
+		}
+
+		const githubService = createGitHubTemplateService(githubToken);
+		const result = await githubService.checkPendingInvitation(
+			siteConfig.repo.owner,
+			siteConfig.repo.name
+		);
+
+		return {
+			hasPendingInvitation: result.hasPendingInvitation,
+			invitationUrl: result.invitationUrl,
+		};
+	} catch (error) {
+		console.warn("[checkPendingGitHubInvitation] Failed:", error);
+		return { hasPendingInvitation: false };
+	}
+}
+
+/**
  * Check if a repository name is available on the user's GitHub account.
  * Used for form validation before deployment.
  */

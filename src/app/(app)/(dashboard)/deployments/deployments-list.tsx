@@ -4,7 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 import { AlertCircle, CheckCircle2, Clock, Rocket } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "sonner";
 
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { Badge } from "@/components/ui/badge";
@@ -42,12 +43,46 @@ async function fetchDeployments(): Promise<Deployment[]> {
 	return data.deployments;
 }
 
+function getStatusIcon(status: string) {
+	switch (status) {
+		case "completed":
+			return <CheckCircle2 className="h-4 w-4 text-green-500" />;
+		case "failed":
+			return <AlertCircle className="h-4 w-4 text-red-500" />;
+		case "deploying":
+			return <Clock className="h-4 w-4 text-blue-500 animate-spin" />;
+		case "timeout":
+			return <Clock className="h-4 w-4 text-yellow-500" />;
+		default:
+			return null;
+	}
+}
+
+function getStatusBadgeVariant(status: string) {
+	switch (status) {
+		case "completed":
+			return "default" as const;
+		case "failed":
+			return "destructive" as const;
+		case "deploying":
+			return "secondary" as const;
+		case "timeout":
+			return "outline" as const;
+		default:
+			return "outline" as const;
+	}
+}
+
 export function DeploymentsList({ deployments: initialDeployments }: DeploymentsListProps) {
 	const [hasActiveDeployments, setHasActiveDeployments] = useState(
 		initialDeployments.some(isActivelyDeploying)
 	);
 	// Counter to force re-renders for timestamp updates
 	const [, setTick] = useState(0);
+	// Track previous deployments to detect status changes
+	const previousDeploymentsRef = useRef<Map<string, Deployment>>(
+		new Map(initialDeployments.map((d) => [d.id, d]))
+	);
 
 	// Use React Query for efficient polling
 	// Only poll if there are actively deploying items (not stale ones)
@@ -59,6 +94,32 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 		refetchIntervalInBackground: true,
 		staleTime: 1000, // Consider data stale after 1 second
 	});
+
+	// Detect status changes and show toasts
+	useEffect(() => {
+		const previousMap = previousDeploymentsRef.current;
+
+		for (const deployment of deployments) {
+			const previous = previousMap.get(deployment.id);
+
+			// Only show toast if status changed from "deploying" to a terminal state
+			if (previous?.status === "deploying" && deployment.status !== "deploying") {
+				if (deployment.status === "completed") {
+					toast.success(`Deployment "${deployment.projectName}" completed successfully!`);
+				} else if (deployment.status === "failed") {
+					toast.error(
+						`Deployment "${deployment.projectName}" failed: ${deployment.error || "Unknown error"}`,
+						{ duration: 10000 }
+					);
+				} else if (deployment.status === "timeout") {
+					toast.warning(`Deployment "${deployment.projectName}" timed out`);
+				}
+			}
+		}
+
+		// Update the ref with current deployments
+		previousDeploymentsRef.current = new Map(deployments.map((d) => [d.id, d]));
+	}, [deployments]);
 
 	// Update polling state when deployments change
 	// Only poll for fresh deployments, not stale ones stuck for hours/days
@@ -75,37 +136,9 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 		}, 1000);
 		return () => clearInterval(interval);
 	}, [hasActiveDeployments]);
-	const getStatusIcon = (status: string) => {
-		switch (status) {
-			case "completed":
-				return <CheckCircle2 className="h-4 w-4 text-green-500" />;
-			case "failed":
-				return <AlertCircle className="h-4 w-4 text-red-500" />;
-			case "deploying":
-				return <Clock className="h-4 w-4 text-blue-500 animate-spin" />;
-			case "timeout":
-				return <Clock className="h-4 w-4 text-yellow-500" />;
-			default:
-				return null;
-		}
-	};
 
-	const getStatusBadgeVariant = (status: string) => {
-		switch (status) {
-			case "completed":
-				return "default" as const;
-			case "failed":
-				return "destructive" as const;
-			case "deploying":
-				return "secondary" as const;
-			case "timeout":
-				return "outline" as const;
-			default:
-				return "outline" as const;
-		}
-	};
-
-	const columns: ColumnDef<Deployment>[] = [
+	// Memoize columns to prevent re-renders from closing dropdown menus
+	const columns: ColumnDef<Deployment>[] = useMemo(() => [
 		{
 			accessorKey: "projectName",
 			header: "Project",
@@ -160,7 +193,7 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 			id: "actions",
 			cell: ({ row }) => <DeploymentActions deployment={row.original} />,
 		},
-	];
+	], []);
 
 	return (
 		<>

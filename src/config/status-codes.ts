@@ -23,6 +23,10 @@ export const STATUS_CODES = {
 		code: "CREDENTIALS",
 		message: "Invalid email or password.",
 	},
+	EMAIL_EXISTS_DIFFERENT_PROVIDER: {
+		code: "EMAIL_EXISTS_DIFFERENT_PROVIDER",
+		message: "An account with this email already exists. Please sign in using your original sign-in method.",
+	},
 	LOGIN: {
 		code: "LOGIN",
 		message: "Signed in successfully.",
@@ -36,18 +40,22 @@ export const STATUS_CODES = {
 		code: "CONNECT_GITHUB",
 		message: "GitHub connected successfully.",
 	},
+	GITHUB_INVITATION_PENDING: {
+		code: "GITHUB_INVITATION_PENDING",
+		message: "You have a pending GitHub repository invitation. Please accept it to continue.",
+	},
 
 	// Vercel connection status codes
-	VERCEL_CONNECTED: {
-		code: "VERCEL_CONNECTED",
+	CONNECT_VERCEL: {
+		code: "CONNECT_VERCEL",
 		message: "Vercel account connected successfully.",
 	},
-	VERCEL_CONNECTION_FAILED: {
-		code: "VERCEL_CONNECTION_FAILED",
+	CONNECT_VERCEL_FAILED: {
+		code: "CONNECT_VERCEL_FAILED",
 		message: "Unable to connect your Vercel account. Please try again.",
 	},
-	VERCEL_ERROR: {
-		code: "VERCEL_ERROR",
+	CONNECT_VERCEL_ERROR: {
+		code: "CONNECT_VERCEL_ERROR",
 		message: "Something went wrong. Please try again later.",
 	},
 

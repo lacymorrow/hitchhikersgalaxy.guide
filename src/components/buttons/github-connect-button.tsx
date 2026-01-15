@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -23,6 +23,8 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import { disconnectGitHub, updateGitHubUsername } from "@/server/actions/github";
+import { createRedirectUrl } from "@/lib/utils/redirect";
+import { routes } from "@/config/routes";
 
 interface GitHubSession {
 	user: {
@@ -34,6 +36,7 @@ interface GitHubSession {
 
 export const GitHubConnectButton = ({ className }: { className?: string }) => {
 	const router = useRouter();
+	const pathname = usePathname();
 	const { data: session, update: updateSession, status } = useSession();
 	const [isLoading, setIsLoading] = useState(false);
 	const [dialogOpen, setDialogOpen] = useState(false);
@@ -68,10 +71,9 @@ export const GitHubConnectButton = ({ className }: { className?: string }) => {
 				// Refresh client session and current route to update both client and server components
 				await updateSession({ force: true });
 				// If we're on the settings page, add highlight parameter
-				if (window.location.pathname.includes("/settings")) {
-					const url = new URL(window.location.href);
-					url.searchParams.set("success", "github_connected");
-					router.push(url.pathname + url.search);
+				if (pathname?.includes("/settings")) {
+					const redirectUrl = createRedirectUrl(routes.settings.account, { code: "GITHUB_CONNECTED" });
+					router.push(redirectUrl);
 				} else {
 					router.refresh();
 				}
@@ -131,7 +133,7 @@ export const GitHubConnectButton = ({ className }: { className?: string }) => {
 								disabled={isLoading}
 								className="text-muted-foreground"
 							>
-								{isLoading ? "Disconnecting..." : `Not ${githubUsername}? Click to disconnect.`}
+								{isLoading ? "Disconnecting..." : `Not ${githubUsername}? Disconnect from GitHub.`}
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent>

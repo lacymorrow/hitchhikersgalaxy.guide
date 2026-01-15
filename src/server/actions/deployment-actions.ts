@@ -3,10 +3,12 @@
 import { and, desc, eq, lt } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { siteConfig } from "@/config/site-config";
+import { createGitHubTemplateService } from "@/lib/github-template";
 import { validateProjectName } from "@/lib/schemas/deployment";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { type Deployment, deployments, type NewDeployment } from "@/server/db/schema";
+import { getGitHubAccessToken } from "@/server/services/github/github-token-service";
 import { type DeploymentResult, deployPrivateRepository } from "./deploy-private-repo";
 
 const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
@@ -45,6 +47,31 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 	const sanitizedProjectName = projectName.trim();
 
 	const description = `Deployment of ${sanitizedProjectName}`;
+
+	// Pre-check: Verify GitHub repository name is available before creating deployment record
+	// This provides immediate feedback for common errors like "name already exists"
+	try {
+		const githubToken = await getGitHubAccessToken(userId);
+		if (githubToken) {
+			const githubService = createGitHubTemplateService(githubToken);
+			const userInfo = await githubService.getCurrentUserInfo();
+			if (userInfo.success && userInfo.username) {
+				const isAvailable = await githubService.isRepositoryNameAvailable(
+					userInfo.username,
+					sanitizedProjectName
+				);
+				if (!isAvailable) {
+					return {
+						success: false,
+						error: `A repository named "${sanitizedProjectName}" already exists on your GitHub account. Please choose a different project name.`,
+					};
+				}
+			}
+		}
+	} catch (preCheckError) {
+		// If pre-check fails, continue anyway - the actual deployment will catch any errors
+		console.warn("Pre-check for repository name failed, continuing:", preCheckError);
+	}
 
 	try {
 		// Create a new deployment record first
@@ -92,7 +119,7 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 		// Return a success response immediately
 		return {
 			success: true,
-			message: "Deployment initiated successfully! You can monitor the progress on this page.",
+			message: "Deployment started! Monitor progress below - you'll be notified when it completes or if any errors occur.",
 			data: {
 				githubRepo: undefined,
 				vercelProject: undefined,
@@ -244,7 +271,10 @@ export async function updateDeployment(
 			.where(and(eq(deployments.id, id), eq(deployments.userId, effectiveUserId)))
 			.returning();
 
-		if (updatedDeployment) {
+		// Only revalidate when called from a request context (not from background tasks).
+		// When userId is provided directly, we're in a background task where revalidatePath
+		// is not supported and will throw an error.
+		if (updatedDeployment && !userId) {
 			revalidatePath("/deployments");
 		}
 
@@ -395,5 +425,53 @@ export async function initializeDemoDeployments(): Promise<void> {
 	} catch (error) {
 		console.error("Failed to initialize demo deployments:", error);
 		// Don't throw - this is not critical
+	}
+}
+
+/**
+ * Check if a repository name is available on the user's GitHub account.
+ * Used for form validation before deployment.
+ */
+export async function checkRepositoryNameAvailable(
+	projectName: string
+): Promise<{ available: boolean; error?: string; checked: boolean; reason?: string }> {
+	const session = await auth();
+	if (!session?.user?.id) {
+		return { available: false, error: "Authentication required", checked: true };
+	}
+
+	try {
+		const githubToken = await getGitHubAccessToken(session.user.id);
+		if (!githubToken) {
+			console.log("[checkRepositoryNameAvailable] No GitHub token available");
+			return { available: true, checked: false, reason: "no_github_connection" };
+		}
+
+		const githubService = createGitHubTemplateService(githubToken);
+		const userInfo = await githubService.getCurrentUserInfo();
+		if (!userInfo.success || !userInfo.username) {
+			console.log("[checkRepositoryNameAvailable] Could not get GitHub user info");
+			return { available: true, checked: false, reason: "github_api_error" };
+		}
+
+		console.log(`[checkRepositoryNameAvailable] Checking if ${projectName} exists for ${userInfo.username}`);
+		const isAvailable = await githubService.isRepositoryNameAvailable(
+			userInfo.username,
+			projectName
+		);
+		console.log(`[checkRepositoryNameAvailable] Result: ${isAvailable ? "available" : "taken"}`);
+
+		if (!isAvailable) {
+			return {
+				available: false,
+				error: `A repository named "${projectName}" already exists on your GitHub account`,
+				checked: true,
+			};
+		}
+
+		return { available: true, checked: true };
+	} catch (error) {
+		console.warn("[checkRepositoryNameAvailable] Failed:", error);
+		return { available: true, checked: false };
 	}
 }

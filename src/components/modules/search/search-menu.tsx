@@ -1,7 +1,7 @@
 "use client";
 
 import type { DialogProps } from "@radix-ui/react-dialog";
-import { FileIcon, LaptopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import { FileIcon, LaptopIcon, MagnifyingGlassIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import * as React from "react";
@@ -58,6 +58,12 @@ export interface SearchMenuProps extends DialogProps {
 	 * @default false
 	 */
 	minimal?: boolean;
+
+	/**
+	 * When true, the button can collapse to show only an icon when space is tight
+	 * @default false
+	 */
+	collapsible?: boolean;
 }
 
 /**
@@ -71,6 +77,7 @@ export function SearchMenu({
 	showShortcut = true,
 	buttonClassName,
 	minimal = false,
+	collapsible = false,
 	...props
 }: SearchMenuProps) {
 	const router = useRouter();
@@ -110,20 +117,34 @@ export function SearchMenu({
 			<Button
 				variant={buttonVariant}
 				className={cn(
-					"relative w-full justify-start bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:w-36",
+					"relative bg-muted/50 text-sm font-normal text-muted-foreground shadow-none",
+					collapsible
+						? "justify-center lg:justify-start lg:pr-12"
+						: "justify-start sm:pr-12",
 					buttonClassName
 				)}
 				size="sm"
 				onClick={() => setOpen(true)}
 				{...props}
 			>
-				<span className="inline-flex text-xs">{buttonText}</span>
+				{collapsible && (
+					<MagnifyingGlassIcon className="h-4 w-4 shrink-0 lg:mr-2" />
+				)}
+				<span
+					className={cn(
+						"text-xs truncate",
+						collapsible ? "hidden lg:inline-flex" : "inline-flex"
+					)}
+				>
+					{buttonText}
+				</span>
 				{showShortcut && (
 					<ShortcutDisplay
 						action={ShortcutAction.OPEN_SEARCH}
 						className={cn(
-							"pointer-events-none absolute right-[0.3rem] top-[0.3rem] hidden lg:flex text-xs",
+							"pointer-events-none absolute right-[0.3rem] top-[0.3rem] text-xs",
 							"transition-opacity duration-300",
+							collapsible ? "hidden xl:flex" : "hidden lg:flex",
 							isClient ? "opacity-100" : "opacity-0"
 						)}
 					/>

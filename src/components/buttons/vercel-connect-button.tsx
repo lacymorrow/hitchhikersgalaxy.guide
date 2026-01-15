@@ -117,11 +117,11 @@ export const VercelConnectButton = ({ className, user, isConnected: isConnectedP
 								disabled={isLoading}
 								className="text-muted-foreground"
 							>
-								Connected - Click to disconnect
+								Disconnect from Vercel
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent>
-							<p>Remove Vercel account connection</p>
+							<p>Remove Vercel account integration</p>
 						</TooltipContent>
 					</Tooltip>
 				</div>

@@ -21,7 +21,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 import { siteConfig } from "@/config/site-config";
 import { validateProjectName } from "@/lib/schemas/deployment";
 import { cn } from "@/lib/utils";
-import { initiateDeployment } from "@/server/actions/deployment-actions";
+import { checkRepositoryNameAvailable, initiateDeployment } from "@/server/actions/deployment-actions";
 import type { User } from "@/types/user";
 
 // Constants for validation and timing
@@ -46,6 +46,8 @@ export const DashboardVercelDeploy = ({
 	const [isDeploying, setIsDeploying] = useState(false);
 	const [validationError, setValidationError] = useState<string | null>(null);
 	const [isValidating, setIsValidating] = useState(false);
+	const [availabilityChecked, setAvailabilityChecked] = useState(false);
+	const [availabilityReason, setAvailabilityReason] = useState<string | undefined>(undefined);
 	const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
 	// Cleanup debounce timer on unmount
@@ -69,16 +71,34 @@ export const DashboardVercelDeploy = ({
 		}
 
 		// Set new debounce timer
-		debounceTimerRef.current = setTimeout(() => {
+		debounceTimerRef.current = setTimeout(async () => {
 			if (value.trim()) {
+				// First, validate the format
 				const validation = validateProjectName(value);
 				if (!validation.isValid) {
 					setValidationError(validation.error ?? "Invalid project name");
-				} else {
+					setAvailabilityChecked(false);
+					setIsValidating(false);
+					return;
+				}
+
+				// Then check if the name is available on GitHub
+				try {
+					const availability = await checkRepositoryNameAvailable(value.trim());
+					setAvailabilityChecked(availability.checked);
+					if (!availability.available) {
+						setValidationError(availability.error ?? "Repository name not available");
+					} else {
+						setValidationError(null);
+					}
+				} catch {
+					// If check fails, clear error and let deployment handle it
+					setAvailabilityChecked(false);
 					setValidationError(null);
 				}
 			} else {
 				setValidationError(null);
+				setAvailabilityChecked(false);
 			}
 			setIsValidating(false);
 		}, VALIDATION_DEBOUNCE_MS);
@@ -128,8 +148,8 @@ export const DashboardVercelDeploy = ({
 			if (result.success) {
 				toast.success(result.message);
 				resetForm();
-				// Refresh the page to show the new deployment
-				router.refresh();
+				// Redirect to deployments page to monitor progress and see any errors
+				router.push("/deployments");
 			} else {
 				toast.error(result.error ?? "Deployment failed to start");
 			}
@@ -145,6 +165,7 @@ export const DashboardVercelDeploy = ({
 		setProjectName("");
 		setValidationError(null);
 		setIsValidating(false);
+		setAvailabilityChecked(false);
 		setOpen(false);
 		// Clear any pending validation
 		if (debounceTimerRef.current) {
@@ -220,9 +241,11 @@ export const DashboardVercelDeploy = ({
 						{validationError ? (
 							<p className="text-xs text-red-500">{validationError}</p>
 						) : isValidating ? (
-							<p className="text-xs text-muted-foreground">Validating project name...</p>
+							<p className="text-xs text-muted-foreground">Checking availability...</p>
+						) : projectName && !validationError && availabilityChecked ? (
+							<p className="text-xs text-green-600">✓ Name available</p>
 						) : projectName && !validationError ? (
-							<p className="text-xs text-green-600">✓ Valid project name</p>
+							<p className="text-xs text-yellow-600">✓ Valid format (couldn&apos;t verify GitHub availability)</p>
 						) : (
 							<p className="text-xs text-muted-foreground">
 								Lowercase letters, numbers, hyphens, underscores, and dots only

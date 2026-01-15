@@ -1,8 +1,8 @@
 "use client";
 
 import { format } from "date-fns";
-import { Calendar, ChevronDown, ChevronUp, CreditCard, Mail, Package, User } from "lucide-react";
-import { useState } from "react";
+import { Calendar, ChevronDown, ChevronUp, CreditCard, Database, Loader2, Mail, Package, User } from "lucide-react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -27,6 +27,7 @@ import {
 	TableHeader,
 	TableRow,
 } from "@/components/ui/table";
+import { type CompleteUserData, getCompleteUserData } from "@/server/actions/admin-actions";
 import type { Purchase, UserData } from "@/server/services/payment-service";
 
 interface UserDrawerProps {
@@ -36,9 +37,27 @@ interface UserDrawerProps {
 }
 
 export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
-	if (!user) return null;
-
 	const [isJsonOpen, setIsJsonOpen] = useState(false);
+	const [completeData, setCompleteData] = useState<CompleteUserData | null>(null);
+	const [isLoadingCompleteData, setIsLoadingCompleteData] = useState(false);
+
+	useEffect(() => {
+		if (open && user?.id && isJsonOpen && !completeData) {
+			setIsLoadingCompleteData(true);
+			getCompleteUserData(user.id)
+				.then(setCompleteData)
+				.finally(() => setIsLoadingCompleteData(false));
+		}
+	}, [open, user?.id, isJsonOpen, completeData]);
+
+	useEffect(() => {
+		if (!open) {
+			setCompleteData(null);
+			setIsJsonOpen(false);
+		}
+	}, [open]);
+
+	if (!user) return null;
 
 	const getStatusBadgeVariant = (
 		status: Purchase["status"],
@@ -349,7 +368,11 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 
 							<section>
 								<Collapsible open={isJsonOpen} onOpenChange={setIsJsonOpen} className="w-full">
-									<div className="flex items-center justify-end">
+									<div className="flex items-center justify-between">
+										<div className="flex items-center gap-2 text-sm text-muted-foreground">
+											<Database className="h-4 w-4" />
+											<span>Complete Database Records</span>
+										</div>
 										<CollapsibleTrigger asChild>
 											<Button
 												variant="ghost"
@@ -359,19 +382,49 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 												{isJsonOpen ? (
 													<>
 														<ChevronUp className="h-3 w-3 mr-1" />
-														<span>Raw JSON</span>
+														<span>Hide Raw Data</span>
 													</>
 												) : (
 													<>
 														<ChevronDown className="h-3 w-3 mr-1" />
-														<span>Raw JSON</span>
+														<span>Show Raw Data</span>
 													</>
 												)}
 											</Button>
 										</CollapsibleTrigger>
 									</div>
 									<CollapsibleContent>
-										<JsonViewer data={user} className="mt-2" />
+										{isLoadingCompleteData ? (
+											<div className="flex items-center justify-center py-8">
+												<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+												<span className="ml-2 text-sm text-muted-foreground">Loading complete user data...</span>
+											</div>
+										) : completeData ? (
+											<div className="mt-4 space-y-4">
+												<div className="flex flex-wrap gap-2 text-xs">
+													<Badge variant="outline">
+														{completeData.accounts.length} Account(s)
+													</Badge>
+													<Badge variant="outline">
+														{completeData.payments.length} Payment(s)
+													</Badge>
+													<Badge variant="outline">
+														{completeData.deployments.length} Deployment(s)
+													</Badge>
+													<Badge variant="outline">
+														{completeData.apiKeys.length} API Key(s)
+													</Badge>
+													<Badge variant="outline">
+														{completeData.teamMemberships.length} Team(s)
+													</Badge>
+												</div>
+												<JsonViewer data={completeData} className="mt-2" />
+											</div>
+										) : (
+											<div className="flex items-center justify-center py-8">
+												<span className="text-sm text-muted-foreground">Click to load complete user data</span>
+											</div>
+										)}
 									</CollapsibleContent>
 								</Collapsible>
 							</section>

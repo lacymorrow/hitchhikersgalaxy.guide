@@ -2,10 +2,11 @@ import { eq } from "drizzle-orm";
 import type { NextAuthConfig } from "next-auth";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
+import { STATUS_CODES } from "@/config/status-codes";
 import { logger } from "@/lib/logger";
 import { providers } from "@/server/auth-js/auth-providers.config";
 import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
+import { accounts, users } from "@/server/db/schema";
 import { grantGitHubAccess } from "@/server/services/github/github-service";
 import { userService } from "@/server/services/user-service";
 import type { User } from "@/types/user";
@@ -53,8 +54,108 @@ export const authOptions: NextAuthConfig = {
 
 			// Handle GitHub OAuth connection
 			if (account?.provider === "github" && account.access_token) {
-				// Note: We don't call connectGitHub here because the session doesn't exist yet
-				// The GitHub connection information is handled in the JWT callback
+				// Extract GitHub username from profile
+				const githubProfile = profile as { login?: string } | undefined;
+				let githubUsername = githubProfile?.login;
+
+				logger.info("GitHub OAuth signIn callback", {
+					profileUserId: user.id,
+					userEmail: user.email,
+					githubUsername,
+				});
+
+				// If profile doesn't have login, fetch it from GitHub API using the access token
+				// This ensures we always have a username when we have an access token
+				if (!githubUsername && account.access_token) {
+					try {
+						const response = await fetch("https://api.github.com/user", {
+							headers: {
+								Authorization: `Bearer ${account.access_token}`,
+								Accept: "application/vnd.github.v3+json",
+							},
+						});
+
+						if (response.ok) {
+							const apiProfile = await response.json() as { login?: string };
+							githubUsername = apiProfile.login;
+							logger.info("Fetched GitHub username from API (missing from profile)", {
+								userEmail: user.email,
+								githubUsername,
+							});
+						}
+					} catch (fetchError) {
+						logger.error("Failed to fetch GitHub username from API", {
+							userEmail: user.email,
+							error: fetchError instanceof Error ? fetchError.message : "Unknown error",
+						});
+					}
+				}
+
+				if (githubUsername && user.email) {
+					try {
+						// When linking accounts, user.id is the GitHub profile ID, not the database user ID
+						// We need to find the existing user by email to update the correct record
+						const existingUser = await db?.query.users.findFirst({
+							where: eq(users.email, user.email),
+							columns: { id: true },
+						});
+
+						const targetUserId = existingUser?.id || user.id;
+
+						logger.info("Updating GitHub username for user", {
+							targetUserId,
+							existingUserId: existingUser?.id,
+							profileUserId: user.id,
+							githubUsername,
+						});
+
+						// Update the user record with the GitHub username
+						await db
+							?.update(users)
+							.set({
+								githubUsername,
+								updatedAt: new Date(),
+							})
+							.where(eq(users.id, targetUserId));
+
+						logger.info("Stored GitHub username from OAuth profile", {
+							userId: targetUserId,
+							githubUsername,
+						});
+
+						// Grant repository access
+						try {
+							await grantGitHubAccess({ githubUsername });
+							logger.info("Granted GitHub repository access", {
+								userId: targetUserId,
+								githubUsername,
+							});
+						} catch (grantError) {
+							logger.error("Failed to grant GitHub repository access", {
+								userId: targetUserId,
+								githubUsername,
+								error: grantError instanceof Error ? grantError.message : "Unknown error",
+							});
+							// Don't fail sign-in if repo access fails
+						}
+					} catch (error) {
+						logger.error("Failed to store GitHub username from OAuth", {
+							userEmail: user.email,
+							githubUsername,
+							error: error instanceof Error ? error.message : "Unknown error",
+						});
+						// Don't fail sign-in if this fails
+					}
+				} else {
+					// Log warning if we have an access token but couldn't get a username
+					// This creates a data inconsistency where getGitHubConnectionStatus() would show inconsistent state
+					logger.warn("GitHub OAuth connected but no username available - data inconsistency possible", {
+						userEmail: user.email,
+						hasAccessToken: !!account.access_token,
+						profileLogin: githubProfile?.login,
+					});
+				}
+
 				return true;
 			}
 
@@ -115,7 +216,7 @@ export const authOptions: NextAuthConfig = {
 			if (new URL(url).origin === baseUrl) return url;
 			return baseUrl;
 		},
-		jwt({ token, user, account, trigger, session }) {
+		async jwt({ token, user, account, trigger, session }) {
 			// Save user data to the token
 			if (user) {
 				token.id = user.id;
@@ -163,78 +264,58 @@ export const authOptions: NextAuthConfig = {
 				}
 			}
 
-			// Save GitHub access token when signing in with GitHub and update database
-			if (account?.provider === "github" && account.access_token && user?.id) {
+			// Save GitHub access token when signing in with GitHub
+			if (account?.provider === "github" && account.access_token && user?.email) {
 				token.githubAccessToken = account.access_token;
 
-				// If we have a GitHub username from the profile, store it directly
-				// This is important for handling first-time GitHub OAuth logins
-				const githubUser = user as User;
-				if (user && githubUser.githubUsername) {
-					token.githubUsername = githubUser.githubUsername;
-				}
+				// Fetch the updated user from database by email (user.id may be GitHub profile ID, not DB ID)
+				// The signIn callback already stored the username, so we just need to retrieve it
+				try {
+					const updatedUser = await db?.query.users.findFirst({
+						where: eq(users.email, user.email),
+						columns: {
+							id: true,
+							githubUsername: true,
+							metadata: true,
+						},
+					});
 
-				// Update the database with GitHub connection information
-				// This happens in the JWT callback where we have access to the user ID and account data
-				(async () => {
-					try {
-						// Get current user metadata
-						if (!user.id) {
-							return;
-						}
-
-						// Get current user metadata
-						const currentUser = await db?.query.users.findFirst({
-							where: eq(users.id, user.id),
+					if (updatedUser?.githubUsername) {
+						token.githubUsername = updatedUser.githubUsername;
+						logger.info("Retrieved GitHub username for JWT token", {
+							dbUserId: updatedUser.id,
+							githubUsername: updatedUser.githubUsername,
 						});
-
-						if (currentUser) {
-							// Parse existing metadata or create new object
-							const currentMetadata = currentUser.metadata ? JSON.parse(currentUser.metadata) : {};
-
-							// Update metadata with GitHub info
-							const newMetadata = {
-								...currentMetadata,
-								providers: {
-									...currentMetadata.providers,
-									github: {
-										id: account.providerAccountId,
-										accessToken: account.access_token,
-									},
-								},
-							};
-
-							// Update user record with GitHub connection
-							const githubUser = user as User;
-							await db
-								?.update(users)
-								.set({
-									githubUsername: githubUser.githubUsername || null,
-									metadata: JSON.stringify(newMetadata),
-									updatedAt: new Date(),
-								})
-								.where(eq(users.id, user.id));
-
-							// If we have a username, try to grant access to the repository
-							const githubUsername = githubUser.githubUsername;
-							if (githubUsername) {
-								try {
-									await grantGitHubAccess({ githubUsername });
-									logger.info("Successfully granted GitHub repository access", {
-										userId: user.id,
-										githubUsername,
-									});
-								} catch (grantError) {
-									console.error("Error granting repository access:", grantError);
-									// Don't fail the connection if repo access fails
-								}
-							}
-						}
-					} catch (error) {
-						console.error("Error updating GitHub connection in database:", error);
-						// Don't fail the JWT creation if this fails
 					}
-				})();
+
+					// Update metadata with GitHub provider info (access token for API calls)
+					if (updatedUser?.id) {
+						const currentMetadata = updatedUser.metadata ? JSON.parse(updatedUser.metadata) : {};
+						const newMetadata = {
+							...currentMetadata,
+							providers: {
+								...currentMetadata.providers,
+								github: {
+									id: account.providerAccountId,
+									accessToken: account.access_token,
+								},
+							},
+						};
+
+						await db
+							?.update(users)
+							.set({
+								metadata: JSON.stringify(newMetadata),
+								updatedAt: new Date(),
+							})
+							.where(eq(users.id, updatedUser.id));
+					}
+				} catch (error) {
+					logger.error("Error fetching updated user for JWT", {
+						userEmail: user.email,
+						error: error instanceof Error ? error.message : "Unknown error",
+					});
+				}
 			}
 
 			// Handle direct GitHub username updates passed from session update

@@ -53,6 +53,7 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { AiDemoSection } from "./_components/ai-demo-section";
 import { ComparisonTable } from "./_components/comparison-table";
 import { FAQ } from "./_components/faq";
@@ -198,7 +199,7 @@ export default async function Home() {
 					</BlurFade>
 				</Section>
 
-				<Suspense>
+				<Suspense fallback={<SuspenseFallback />}>
 					<SocialProof />
 
 					<div className="hidden lg:block">

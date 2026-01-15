@@ -71,6 +71,7 @@ export class UserService extends BaseService<typeof users> {
 
 	/**
 	 * Ensures a user exists in the database, creating them if necessary.
+	 * Users are identified by email - if a user with the email exists, that user is returned.
 	 * Also checks and links any existing payments.
 	 * @param authUser - The authenticated user object.
 	 * @returns The database user object.
@@ -85,20 +86,25 @@ export class UserService extends BaseService<typeof users> {
 			throw new Error("Database is not initialized");
 		}
 
-		let dbUser = await db?.query.users.findFirst({
-			where: eq(users.id, authUser.id),
+		if (!authUser.email) {
+			throw new Error("User does not have a primary email");
+		}
+
+		// Normalize email for consistent matching
+		const normalizedEmail = authUser.email.toLowerCase();
+
+		// First, look up by email (email is the canonical identifier)
+		let dbUser = await db.query.users.findFirst({
+			where: eq(users.email, normalizedEmail),
 		});
 
 		if (!dbUser) {
-			if (!authUser.email) {
-				throw new Error("User does not have a primary email");
-			}
-
+			// No user with this email - create new user
 			const [newUser] = await db
 				.insert(users)
 				.values({
 					id: authUser.id,
-					email: authUser.email,
+					email: normalizedEmail,
 					name: authUser.name ?? null,
 					image: authUser.image ?? null,
 					createdAt: new Date(),

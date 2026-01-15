@@ -51,6 +51,8 @@ export interface DeploymentResult {
 		step?: string;
 		details?: unknown;
 		requiresManualImport?: boolean;
+		isPendingInvitation?: boolean;
+		invitationUrl?: string;
 	};
 }
 
@@ -227,6 +229,28 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 
 		const githubUsername = userInfo.username;
 
+		// Pre-check if repository name is available to provide immediate feedback
+		try {
+			const isAvailable = await githubService.isRepositoryNameAvailable(githubUsername, projectName);
+			if (!isAvailable) {
+				const error = `A repository named "${projectName}" already exists on your GitHub account. Please choose a different project name.`;
+				if (currentDeploymentId) {
+					await updateDeployment(currentDeploymentId, { status: "failed", error }, userId);
+				}
+				return {
+					success: false,
+					error,
+					data: {
+						step: "github-name-check",
+						details: "Repository name already exists",
+					},
+				};
+			}
+		} catch (checkError) {
+			// If the check fails, continue anyway - the actual creation will fail with a clear error
+			console.warn("Failed to pre-check repository name availability:", checkError);
+		}
+
 		const repoResult = await githubService.createFromTemplate({
 			templateOwner,
 			templateRepo: templateRepoName,
@@ -241,6 +265,23 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			if (currentDeploymentId) {
 				await updateDeployment(currentDeploymentId, { status: "failed", error }, userId);
 			}
+
+			// Handle pending invitation edge case with actionable guidance
+			if (repoResult.isPendingInvitation) {
+				return {
+					success: false,
+					error: `${error} Visit: ${repoResult.invitationUrl || "https://github.com/notifications"}`,
+					data: {
+						step: "github-pending-invitation",
+						details: {
+							message: repoResult.error,
+							invitationUrl: repoResult.invitationUrl,
+							isPendingInvitation: true,
+						},
+					},
+				};
+			}
+
 			return {
 				success: false,
 				error,

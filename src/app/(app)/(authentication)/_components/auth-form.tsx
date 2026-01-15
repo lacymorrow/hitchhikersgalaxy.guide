@@ -11,6 +11,7 @@ import { cn } from "@/lib/utils";
 import { useAuthForm } from "../_hooks/use-auth-form";
 import { AuthFooter } from "./auth-footer";
 import { AuthHeader } from "./auth-header";
+import { buttonVariants } from "@/components/ui/button";
 
 interface AuthFormProps extends ComponentPropsWithoutRef<"div"> {
 	mode: "sign-in" | "sign-up";
@@ -82,7 +83,7 @@ export function AuthForm({
 							{alternateLink.text}{" "}
 							<Link
 								href={alternateLink.href}
-								className="underline underline-offset-4 w-80"
+								className={cn(buttonVariants({ variant: "link" }), "underline underline-offset-4 hover:no-underline hover:text-muted-foreground px-0")}
 								onClick={handleAlternateLinkClick}
 							>
 								{alternateLink.label}

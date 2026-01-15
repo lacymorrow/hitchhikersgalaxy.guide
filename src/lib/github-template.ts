@@ -26,6 +26,8 @@ export interface RepoCreationResult {
 	repoId?: number;
 	error?: string;
 	details?: any;
+	isPendingInvitation?: boolean;
+	invitationUrl?: string;
 }
 
 export class GitHubTemplateService {
@@ -85,11 +87,19 @@ export class GitHubTemplateService {
 		} catch (error: any) {
 			console.error("Failed to create repository from template:", error);
 
-			return {
+			const result: RepoCreationResult = {
 				success: false,
 				error: this.formatErrorMessage(error),
 				details: error.response?.data,
 			};
+
+			// Include pending invitation info if available
+			if (error.isPendingInvitation) {
+				result.isPendingInvitation = true;
+				result.invitationUrl = error.invitationUrl;
+			}
+
+			return result;
 		}
 	}
 
@@ -108,7 +118,22 @@ export class GitHubTemplateService {
 			}
 		} catch (error: any) {
 			if (error.status === 404) {
-				throw new Error(`Template repository ${owner}/${repo} not found or not accessible`);
+				// Check if the user has a pending invitation to this repository
+				const invitationCheck = await this.checkPendingInvitation(owner, repo);
+
+				if (invitationCheck.hasPendingInvitation) {
+					const invitationError = new Error(
+						`You have a pending invitation to ${owner}/${repo}. Please accept the invitation to continue.`
+					) as any;
+					invitationError.isPendingInvitation = true;
+					invitationError.invitationUrl =
+						invitationCheck.invitationUrl || `https://github.com/${owner}/${repo}/invitations`;
+					throw invitationError;
+				}
+
+				throw new Error(
+					`Template repository ${owner}/${repo} not found or not accessible. If you've been invited, please check your GitHub notifications and accept the invitation.`
+				);
 			}
 			throw error;
 		}
@@ -319,6 +344,37 @@ For more information, see the [GitHub documentation on syncing a fork](https://d
 	}
 
 	/**
+	 * Check if the user has a pending invitation to a specific repository
+	 * Returns the invitation details if found, null otherwise
+	 */
+	async checkPendingInvitation(
+		owner: string,
+		repo: string
+	): Promise<{ hasPendingInvitation: boolean; invitationUrl?: string; invitationId?: number }> {
+		try {
+			const response = await this.octokit.repos.listInvitationsForAuthenticatedUser();
+			const invitation = response.data.find(
+				(inv) =>
+					inv.repository?.owner?.login?.toLowerCase() === owner.toLowerCase() &&
+					inv.repository?.name?.toLowerCase() === repo.toLowerCase()
+			);
+
+			if (invitation) {
+				return {
+					hasPendingInvitation: true,
+					invitationUrl: invitation.html_url,
+					invitationId: invitation.id,
+				};
+			}
+
+			return { hasPendingInvitation: false };
+		} catch (error) {
+			console.warn("Failed to check pending invitations:", error);
+			return { hasPendingInvitation: false };
+		}
+	}
+
+	/**
 	 * Get the current authenticated user info
 	 */
 	async getCurrentUserInfo(): Promise<{ success: boolean; username?: string; error?: string }> {
@@ -449,7 +505,12 @@ For more information, see the [GitHub documentation on syncing a fork](https://d
 			return "Repository not found or not accessible.";
 		}
 		if (error.status === 422) {
-			return error.response?.data?.message || "Invalid repository configuration.";
+			const message = error.response?.data?.message || error.message || "";
+			// Check for "already exists" error specifically
+			if (message.toLowerCase().includes("already exists") || message.toLowerCase().includes("name already exists")) {
+				return "A repository with this name already exists on your GitHub account. Please choose a different project name.";
+			}
+			return message || "Invalid repository configuration.";
 		}
 
 		return error.message || "An unexpected error occurred.";

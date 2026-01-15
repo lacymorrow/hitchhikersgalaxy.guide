@@ -9,9 +9,7 @@ import {
 	UserIcon,
 	XCircleIcon,
 } from "lucide-react";
-import type { Session } from "next-auth";
-import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
-// Removed GitHubConnectDialog in favor of GitHubConnectButton
+import { GitHubOAuthButton } from "@/components/buttons/github-oauth-button";
 import { Link } from "@/components/primitives/link";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +30,7 @@ import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import { downloadRepo } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
-import { checkGitHubConnection } from "@/server/services/github/github-service";
+import { getGitHubConnectionStatus } from "@/server/services/github/github-token-service";
 import { PaymentService } from "@/server/services/payment-service";
 
 export const metadata: Metadata = constructMetadata({
@@ -68,6 +66,7 @@ interface DownloadState {
 	isAuthenticated: boolean;
 	hasPurchased: boolean;
 	hasGitHubConnection: boolean;
+	githubUsername?: string | null;
 	userEmail?: string;
 }
 
@@ -76,14 +75,15 @@ export default async function DownloadPage() {
 	const hasPurchased = session?.user?.id
 		? await PaymentService.getUserPaymentStatus(session.user.id)
 		: false;
-	const hasGitHubConnection = session?.user?.id
-		? await checkGitHubConnection(session.user.id)
-		: false;
+	const gitHubStatus = session?.user?.id
+		? await getGitHubConnectionStatus(session.user.id)
+		: { isConnected: false, username: null };
 
 	const downloadState: DownloadState = {
 		isAuthenticated: !!session?.user,
 		hasPurchased,
-		hasGitHubConnection,
+		hasGitHubConnection: gitHubStatus.isConnected,
+		githubUsername: gitHubStatus.username,
 		userEmail: session?.user?.email || undefined,
 	};
 
@@ -246,7 +246,7 @@ function DirectDownloadCard({ downloadState }: { downloadState: DownloadState })
 }
 
 function GitHubAccessCard({ downloadState }: { downloadState: DownloadState }) {
-	const { isAuthenticated, hasPurchased, hasGitHubConnection } = downloadState;
+	const { isAuthenticated, hasPurchased, hasGitHubConnection, githubUsername } = downloadState;
 	const isEnabled = isAuthenticated && hasPurchased;
 
 	return (
@@ -286,7 +286,10 @@ function GitHubAccessCard({ downloadState }: { downloadState: DownloadState }) {
 			<CardFooter>
 				<div className="w-full space-y-3">
 					{isEnabled ? (
-						<GitHubConnectButton />
+						<GitHubOAuthButton
+							isConnected={hasGitHubConnection}
+							githubUsername={githubUsername}
+						/>
 					) : (
 						<Button disabled className="w-full">
 							<GitBranchIcon className="mr-2 h-4 w-4" />

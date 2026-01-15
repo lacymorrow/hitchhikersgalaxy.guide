@@ -10,6 +10,7 @@ import {
 	Frown,
 	HelpCircle,
 	Loader,
+	Search,
 } from "lucide-react";
 import * as React from "react";
 import ReactMarkdown from "react-markdown";
@@ -72,7 +73,33 @@ interface SearchResult {
 	url: string;
 }
 
-export const SearchAi = ({ ...props }: ButtonProps) => {
+export interface SearchAiProps extends ButtonProps {
+	/**
+	 * Custom button text
+	 * @default "Search..."
+	 */
+	buttonText?: string | React.ReactNode;
+
+	/**
+	 * Whether to show the keyboard shortcut
+	 * @default true
+	 */
+	showShortcut?: boolean;
+
+	/**
+	 * When true, the button can collapse to show only an icon when space is tight
+	 * @default false
+	 */
+	collapsible?: boolean;
+}
+
+export const SearchAi = ({
+	buttonText,
+	showShortcut = true,
+	collapsible = false,
+	className,
+	...props
+}: SearchAiProps) => {
 	const [open, setOpen] = React.useState(false);
 	const [query, setQuery] = React.useState<string>("");
 	const [searchResults, setSearchResults] = React.useState<SearchResult[]>([]);
@@ -239,24 +266,45 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 		return `${firstResult.title} - ${firstResult.content.slice(0, 100)}${firstResult.content.length > 100 ? "..." : ""}`;
 	};
 
+	const defaultButtonText = `Search ${siteConfig.title}...`;
+
 	return (
 		<>
 			<Button
 				variant="outline"
 				onClick={handleModalToggle}
-				{...props}
+				size="sm"
 				className={cn(
-					"group relative w-full justify-start rounded-[0.5rem] bg-muted/50 text-sm font-normal text-muted-foreground shadow-none sm:pr-12 md:max-w-40 lg:max-w-64 py-0",
-					props.className,
-					"relative"
+					"relative bg-muted/50 text-sm font-normal text-muted-foreground shadow-none",
+					collapsible
+						? "justify-center lg:justify-start lg:pr-12"
+						: "justify-start sm:pr-12",
+					className
 				)}
+				{...props}
 			>
-				<span className="hidden lg:inline-flex">Search {siteConfig.title}...</span>
-				<span className="inline-flex lg:hidden">Search...</span>
-				<ShortcutDisplay
-					action={ShortcutAction.OPEN_SEARCH}
-					className="pointer-events-none absolute top-1/2 -translate-y-1/2 right-1 opacity-100 group-hover:flex"
-				/>
+				{collapsible && (
+					<Search className="h-4 w-4 shrink-0 lg:mr-2" />
+				)}
+				<span
+					className={cn(
+						"text-xs truncate",
+						collapsible ? "hidden lg:inline-flex" : "inline-flex"
+					)}
+				>
+					{buttonText ?? defaultButtonText}
+				</span>
+				{showShortcut && (
+					<ShortcutDisplay
+						action={ShortcutAction.OPEN_SEARCH}
+						className={cn(
+							"pointer-events-none absolute right-[0.3rem] top-[0.3rem] text-xs",
+							"transition-opacity duration-300",
+							collapsible ? "hidden xl:flex" : "hidden lg:flex",
+							isClient ? "opacity-100" : "opacity-0"
+						)}
+					/>
+				)}
 			</Button>
 
 			<Dialog open={open} onOpenChange={handleModalToggle}>

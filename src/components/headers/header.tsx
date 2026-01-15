@@ -121,12 +121,12 @@ export const Header: React.FC<HeaderProps> = ({
 					"container",
 					isLogoOnly
 						? "flex items-center justify-center gap-md"
-						: "grid grid-cols-3 items-center gap-md",
+						: "flex items-center justify-between gap-md",
 				)}
 			>
 				<div
 					className={cn(
-						"flex items-center gap-2 md:gap-4",
+						"flex items-center gap-2 md:gap-4 shrink-0",
 						isLogoOnly ? "justify-center" : "justify-start",
 					)}
 				>
@@ -151,6 +151,19 @@ export const Header: React.FC<HeaderProps> = ({
 										{logoIcon}
 										<span className="sr-only">{logoText}</span>
 									</Link>
+									{searchVariant === "menu" && (
+										<SearchMenu
+											buttonText={searchPlaceholder}
+											minimal={true}
+											buttonClassName="w-full justify-start"
+										/>
+									)}
+									{searchVariant === "ai" && (
+										<SearchAi
+											buttonText={searchPlaceholder}
+											className="w-full"
+										/>
+									)}
 									{navLinks.map((link) => (
 										<Link
 											key={`${link.href}-${link.label}`}
@@ -248,90 +261,84 @@ export const Header: React.FC<HeaderProps> = ({
 
 				{!isLogoOnly && (
 					<>
-						{/* Center column: search */}
-						<div className="hidden md:flex justify-center">
+						<div className="flex items-center gap-2 lg:gap-4 shrink-0">
+							{/* Search */}
 							{searchVariant === "menu" && (
 								<SearchMenu
-									buttonText={
-										<>
-											<span className="hidden md:block">
-												{searchPlaceholder}
-											</span>
-											<span className="block md:hidden">Search</span>
-										</>
-									}
+									buttonText={searchPlaceholder}
 									minimal={true}
-									buttonClassName="w-full md:w-auto"
+									buttonClassName="hidden md:flex min-w-[40px]"
+									collapsible
 								/>
 							)}
 							{searchVariant === "ai" && (
-								<SearchAi className="hidden md:block" />
+								<SearchAi
+									buttonText={searchPlaceholder}
+									className="hidden md:flex min-w-[40px]"
+									collapsible
+								/>
 							)}
-						</div>
 
-						<div className="flex items-center gap-2 md:ml-auto lg:gap-4">
-							<div className="flex items-center gap-2">
-								{!isLoggedIn && (
-									<ThemeToggle
-										variant="ghost"
-										size="icon"
-										className="rounded-full"
-									/>
-								)}
+							{!isLoggedIn && (
+								<ThemeToggle
+									variant="ghost"
+									size="icon"
+									className="rounded-full"
+								/>
+							)}
 
-								<UserMenu user={user} />
+							<UserMenu user={user} />
 
-								{!isLoggedIn &&
-									(animatedCTAOnScroll ? (
-										<AnimatePresence mode="wait">
-											{scrollY > animatedCTAOnScroll ? (
-												<motion.div
-													key="compact"
-													initial={{ opacity: 0, scale: 0.9 }}
-													animate={{ opacity: 1, scale: 1 }}
-													exit={{ opacity: 0, scale: 0.9 }}
-													transition={{ duration: 0.1 }}
+							{!isLoggedIn &&
+								(animatedCTAOnScroll ? (
+									<AnimatePresence mode="wait">
+										{scrollY > animatedCTAOnScroll ? (
+											<motion.div
+												key="compact"
+												initial={{ opacity: 0, scale: 0.9 }}
+												animate={{ opacity: 1, scale: 1 }}
+												exit={{ opacity: 0, scale: 0.9 }}
+												transition={{ duration: 0.1 }}
+											>
+												<TooltipProvider delayDuration={0}>
+													<Tooltip>
+														<TooltipTrigger asChild>
+															<div className="relative -m-1 p-1">
+																<BuyButton />
+															</div>
+														</TooltipTrigger>
+														<TooltipContent
+															side="bottom"
+															sideOffset={3}
+															className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
+														>
+															<LoginButton className="hover:text-foreground">
+																or Login
+															</LoginButton>
+														</TooltipContent>
+													</Tooltip>
+												</TooltipProvider>
+											</motion.div>
+										) : (
+											<motion.div
+												key="full"
+												initial={{ opacity: 0, scale: 0.9 }}
+												animate={{ opacity: 1, scale: 1 }}
+												exit={{ opacity: 0, scale: 0.9 }}
+												transition={{ duration: 0.1 }}
+											>
+												<LoginButton
+													variant="outline"
+													nextUrl={routes.app.dashboard}
 												>
-													<TooltipProvider delayDuration={0}>
-														<Tooltip>
-															<TooltipTrigger asChild>
-																<div className="relative -m-1 p-1">
-																	<BuyButton />
-																</div>
-															</TooltipTrigger>
-															<TooltipContent
-																side="bottom"
-																sideOffset={3}
-																className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
-															>
-																<LoginButton className="hover:text-foreground">
-																	or Login
-																</LoginButton>
-															</TooltipContent>
-														</Tooltip>
-													</TooltipProvider>
-												</motion.div>
-											) : (
-												<motion.div
-													key="full"
-													initial={{ opacity: 0, scale: 0.9 }}
-													animate={{ opacity: 1, scale: 1 }}
-													exit={{ opacity: 0, scale: 0.9 }}
-													transition={{ duration: 0.1 }}
-												>
-													<LoginButton
-														variant="outline"
-														nextUrl={routes.app.dashboard}
-													>
-														Dashboard
-													</LoginButton>
-												</motion.div>
-											)}
-										</AnimatePresence>
-									) : (
-										<BuyButton />
-									))}
-							</div>
+													Dashboard
+												</LoginButton>
+											</motion.div>
+										)}
+									</AnimatePresence>
+								) : (
+									<BuyButton />
+								))}
 						</div>
 					</>
 				)}

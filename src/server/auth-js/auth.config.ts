@@ -7,6 +7,7 @@ import { logger } from "@/lib/logger";
 import { providers } from "@/server/auth-js/auth-providers.config";
 import { db } from "@/server/db";
 import { accounts, users } from "@/server/db/schema";
+import { isAdmin } from "@/server/services/admin-service";
 import { grantGitHubAccess } from "@/server/services/github/github-service";
 import { userService } from "@/server/services/user-service";
 import type { User } from "@/types/user";
@@ -222,6 +223,10 @@ export const authOptions: NextAuthConfig = {
 				token.id = user.id;
 				token.name = user.name;
 				token.email = user.email;
+
+				// Check admin status during login and cache in token
+				token.isAdmin = await isAdmin({ email: user.email, userId: user.id });
+
 				// Ensure avatar and other optional properties are persisted on JWT sessions
 				const typedUser = user as User;
 				if ("image" in typedUser) token.image = typedUser.image;
@@ -374,6 +379,7 @@ export const authOptions: NextAuthConfig = {
 					: undefined;
 				session.user.metadata = token.metadata as string | null;
 				session.user.isGuest = token.isGuest as boolean | undefined;
+				session.user.isAdmin = token.isAdmin as boolean | undefined;
 				session.user.accounts = token.accounts as {
 					provider: string;
 					providerAccountId: string;
@@ -397,6 +403,8 @@ export const authOptions: NextAuthConfig = {
 				session.user.githubUsername = typedUser.githubUsername ?? session.user.githubUsername;
 				session.user.createdAt = typedUser.createdAt ?? session.user.createdAt;
 				session.user.updatedAt = typedUser.updatedAt ?? session.user.updatedAt;
+				// Check admin status for database sessions
+				session.user.isAdmin = await isAdmin({ email: typedUser.email, userId: typedUser.id });
 				// Accounts will be fetched below
 			}
 

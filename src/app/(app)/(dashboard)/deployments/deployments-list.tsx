@@ -11,6 +11,7 @@ import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-ver
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { siteConfig } from "@/config/site-config";
+import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import type { Deployment } from "@/server/db/schema";
 import { DeploymentActions } from "./deployment-actions";
@@ -35,7 +36,7 @@ interface DeploymentsListProps {
 }
 
 async function fetchDeployments(): Promise<Deployment[]> {
-	const response = await fetch("/api/deployments");
+	const response = await fetch(routes.api.deployments);
 	if (!response.ok) {
 		throw new Error("Failed to fetch deployments");
 	}

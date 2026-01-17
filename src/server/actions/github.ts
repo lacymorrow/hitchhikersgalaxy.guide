@@ -10,7 +10,7 @@ import {
 	revokeGitHubAccess,
 	verifyAndStoreGitHubUsername,
 } from "@/server/services/github/github-service";
-import { getUserRoles } from "./rbac";
+import { rbacService } from "@/server/services/rbac";
 
 interface GitHubConnectionData {
 	githubId: string;
@@ -116,7 +116,7 @@ export async function disconnectGitHub() {
 		}
 
 		// Check if user is an owner or has critical role
-		const userRoles = await getUserRoles(session.user.id);
+		const userRoles = await rbacService.getAllUserRoles(session.user.id);
 		// const isOwner = userRoles.includes("owner");
 		const isOwner = false;
 		const isCritical = userRoles.includes("admin") || userRoles.includes("developer");

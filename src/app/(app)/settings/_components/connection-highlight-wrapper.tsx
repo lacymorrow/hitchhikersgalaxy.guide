@@ -46,7 +46,7 @@ export const ConnectionHighlightWrapper = ({
 				url.searchParams.delete(SEARCH_PARAM_KEYS.statusCode);
 
 				// Only update URL if there were params to remove
-				if (code || highlight) {
+				if (code) {
 					router.replace(url.pathname + (url.search ? url.search : ""), { scroll: false });
 				}
 			}, 3000);

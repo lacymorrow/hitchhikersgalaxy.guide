@@ -26,10 +26,18 @@ import { LocalTeamStorage } from "@/lib/local-storage/team-storage";
 import {
 	createProject,
 	deleteProject,
-	getTeamProjects,
 	updateProject,
 } from "@/server/actions/projects";
-import { db } from "@/server/db";
+
+// Helper to fetch team projects via API
+async function fetchTeamProjects(teamId: string): Promise<any[]> {
+	const response = await fetch(`${routes.api.projects}?teamId=${encodeURIComponent(teamId)}`);
+	if (!response.ok) {
+		return [];
+	}
+	const data = await response.json();
+	return data.projects ?? [];
+}
 
 interface Project {
 	id: string;
@@ -78,7 +86,7 @@ export default function ProjectsPage() {
 			return;
 
 		try {
-			const fetchedProjects = await getTeamProjects(selectedTeamId);
+			const fetchedProjects = await fetchTeamProjects(selectedTeamId);
 			if (!fetchedProjects || fetchedProjects.length === 0) {
 				// If no projects and no db, initialize demo data
 				if (!env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED) {
@@ -89,7 +97,7 @@ export default function ProjectsPage() {
 					);
 					LocalProjectStorage.initializeDemoData(session.user.id, selectedTeamId);
 					// Reload projects after seeding demo data
-					const demoProjects = await getTeamProjects(selectedTeamId);
+					const demoProjects = await fetchTeamProjects(selectedTeamId);
 					setProjects(mapProjects(demoProjects || []));
 					return;
 				}

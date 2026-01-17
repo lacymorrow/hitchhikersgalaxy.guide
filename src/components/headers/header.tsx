@@ -5,6 +5,7 @@ import { useWindowScroll } from "@uidotdev/usehooks";
 import { cva } from "class-variance-authority";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
+import { useState, useEffect } from "react";
 import type React from "react";
 import { Icon } from "@/components/assets/icon";
 import { LoginButton } from "@/components/buttons/sign-in-button";

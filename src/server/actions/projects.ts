@@ -34,30 +34,6 @@ export async function deleteProject(projectId: string) {
 }
 
 /**
- * Gets all projects for a team.
- * @returns The team's projects with their members
- */
-export async function getTeamProjects(teamId: string) {
-	return projectService.getTeamProjects(teamId);
-}
-
-/**
- * Checks if a user has access to a project.
- * @returns True if the user has access
- */
-export async function userHasProjectAccess(userId: string, projectId: string) {
-	return projectService.userHasAccessToProject(userId, projectId);
-}
-
-/**
- * Gets all members of a project.
- * @returns The project members with their user details
- */
-export async function getProjectMembers(projectId: string) {
-	return projectService.getProjectMembers(projectId);
-}
-
-/**
  * Adds a member to a project.
  * @returns The created project member
  */

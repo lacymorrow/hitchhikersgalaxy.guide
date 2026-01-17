@@ -72,7 +72,7 @@ export const defaultMetadata: Metadata = {
 	twitter: defaultTwitter,
 	appleWebApp: siteConfig.metadata.appleWebApp,
 	appLinks: siteConfig.metadata.appLinks,
-	archives: [siteConfig.metadata.blogPath],
+	archives: siteConfig.metadata.blogPath ? [siteConfig.metadata.blogPath] : [],
 	assets: [siteConfig.metadata.assetsPath],
 	bookmarks: [siteConfig.metadata.bookmarksPath],
 	category: siteConfig.metadata.category,

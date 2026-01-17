@@ -34,10 +34,21 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { routes } from "@/config/routes";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { createProject, updateProject } from "@/server/actions/projects";
-import { createTeam, getUserTeams } from "@/server/actions/teams";
+import { createTeam } from "@/server/actions/teams";
+
+// Helper to fetch user teams via API
+async function fetchUserTeams(): Promise<Team[]> {
+	const response = await fetch(routes.api.teams);
+	if (!response.ok) {
+		return [];
+	}
+	const data = await response.json();
+	return data.teams ?? [];
+}
 
 const projectDialogVariants = cva("", {
 	variants: {
@@ -73,7 +84,8 @@ const formSchema = z.object({
 	teamId: z.string().min(1, "Team is required"),
 });
 
-interface ProjectDialogProps extends VariantProps<typeof projectDialogVariants> {
+interface ProjectDialogProps
+	extends VariantProps<typeof projectDialogVariants> {
 	userId: string;
 	children?: React.ReactNode;
 	className?: string;
@@ -116,7 +128,9 @@ export function ProjectDialog({
 		defaultValues: {
 			name: isEditMode && project ? project.name : "",
 			teamId:
-				isEditMode && project?.teamId ? project.teamId : selectedTeamId || defaultTeamId || "",
+				isEditMode && project?.teamId
+					? project.teamId
+					: selectedTeamId || defaultTeamId || "",
 		},
 	});
 
@@ -134,7 +148,7 @@ export function ProjectDialog({
 	useEffect(() => {
 		const loadTeams = async () => {
 			try {
-				const userTeams = await getUserTeams(userId);
+				const userTeams = await fetchUserTeams();
 				setTeams(userTeams);
 
 				// Set default team ID if teams are available
@@ -161,7 +175,7 @@ export function ProjectDialog({
 		if (isOpen) {
 			loadTeams();
 		}
-	}, [isOpen, userId, selectedTeamId, form, toast, isEditMode]);
+	}, [isOpen, selectedTeamId, form, toast, isEditMode]);
 
 	// Handle team creation (only for createWithTeam variant)
 	const handleCreateTeam = async () => {
@@ -177,8 +191,7 @@ export function ProjectDialog({
 			setNewTeamName("");
 
 			// Reload teams to get the updated list
-			// The server action will handle cache invalidation automatically
-			const userTeams = await getUserTeams(userId);
+			const userTeams = await fetchUserTeams();
 			setTeams(userTeams);
 
 			toast({
@@ -218,7 +231,10 @@ export function ProjectDialog({
 			form.reset();
 			router.refresh();
 		} catch (error) {
-			console.error(`Failed to ${isEditMode ? "update" : "create"} project:`, error);
+			console.error(
+				`Failed to ${isEditMode ? "update" : "create"} project:`,
+				error,
+			);
 			toast({
 				title: "Error",
 				description: `Failed to ${isEditMode ? "update" : "create"} project. Please try again.`,
@@ -254,7 +270,9 @@ export function ProjectDialog({
 					</Button>
 				)}
 			</DialogTrigger>
-			<DialogContent className={cn(projectDialogVariants({ variant }), className)}>
+			<DialogContent
+				className={cn(projectDialogVariants({ variant }), className)}
+			>
 				<DialogHeader>
 					<DialogTitle>{dialogTitle}</DialogTitle>
 					<DialogDescription>{dialogDescription}</DialogDescription>
@@ -268,7 +286,11 @@ export function ProjectDialog({
 								<FormItem>
 									<FormLabel>Project Name</FormLabel>
 									<FormControl>
-										<Input placeholder="Project name" {...field} autoComplete="off" />
+										<Input
+											placeholder="Project name"
+											{...field}
+											autoComplete="off"
+										/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
@@ -294,7 +316,11 @@ export function ProjectDialog({
 											Create Team
 										</Button>
 									</div>
-									<Button type="button" variant="ghost" onClick={() => setShowNewTeamInput(false)}>
+									<Button
+										type="button"
+										variant="ghost"
+										onClick={() => setShowNewTeamInput(false)}
+									>
 										Cancel
 									</Button>
 								</div>
@@ -306,9 +332,14 @@ export function ProjectDialog({
 										<FormItem>
 											<FormLabel>Team</FormLabel>
 											{teams.length === 1 && teams[0]?.team?.name ? (
-												<div className="text-sm text-muted-foreground">{teams[0].team.name}</div>
+												<div className="text-sm text-muted-foreground">
+													{teams[0].team.name}
+												</div>
 											) : (
-												<Select onValueChange={field.onChange} defaultValue={field.value}>
+												<Select
+													onValueChange={field.onChange}
+													defaultValue={field.value}
+												>
 													<FormControl>
 														<SelectTrigger>
 															<SelectValue placeholder="Select a team" />

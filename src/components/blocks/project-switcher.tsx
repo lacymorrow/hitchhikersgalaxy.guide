@@ -4,6 +4,7 @@ import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { PlusIcon } from "lucide-react";
 import * as React from "react";
 import { ProjectDialog } from "@/components/modules/projects/project-dialog";
+import { useTeam } from "@/components/providers/team-provider";
 import { Button } from "@/components/ui/button";
 import {
 	Command,
@@ -14,10 +15,28 @@ import {
 	CommandList,
 	CommandSeparator,
 } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useTeam } from "@/components/providers/team-provider";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
-import { getTeamProjects } from "@/server/actions/projects";
+
+// Helper to fetch team projects via API
+async function fetchTeamProjects(
+	teamId: string,
+): Promise<{ id: string; name: string }[]> {
+	const response = await fetch(
+		`${routes.api.projects}?teamId=${encodeURIComponent(teamId)}`,
+	);
+	if (!response.ok) {
+		return [];
+	}
+	const data = await response.json();
+	return data.projects ?? [];
+}
+
 import { useSession } from "next-auth/react";
 
 interface ProjectSwitcherProject {
@@ -30,12 +49,16 @@ interface ProjectSwitcherProps {
 	onProjectChange?: (projectId: string) => void;
 }
 
-export const ProjectSwitcher = ({ className, onProjectChange }: ProjectSwitcherProps) => {
+export const ProjectSwitcher = ({
+	className,
+	onProjectChange,
+}: ProjectSwitcherProps) => {
 	const { data: session } = useSession();
 	const { selectedTeamId } = useTeam();
 
 	const [projects, setProjects] = React.useState<ProjectSwitcherProject[]>([]);
-	const [activeProject, setActiveProject] = React.useState<ProjectSwitcherProject | null>(null);
+	const [activeProject, setActiveProject] =
+		React.useState<ProjectSwitcherProject | null>(null);
 	const [open, setOpen] = React.useState(false);
 
 	React.useEffect(() => {
@@ -49,15 +72,19 @@ export const ProjectSwitcher = ({ className, onProjectChange }: ProjectSwitcherP
 			}
 
 			try {
-				const fetched = await getTeamProjects(selectedTeamId);
+				const fetched = await fetchTeamProjects(selectedTeamId);
 				if (isCancelled) return;
 
-				const nextProjects = (fetched || []).map((p) => ({ id: p.id, name: p.name }));
+				const nextProjects = (fetched || []).map((p) => ({
+					id: p.id,
+					name: p.name,
+				}));
 				setProjects(nextProjects);
 
 				// Keep selection stable across refreshes; default to first project.
 				setActiveProject((previous) => {
-					if (previous && nextProjects.some((p) => p.id === previous.id)) return previous;
+					if (previous && nextProjects.some((p) => p.id === previous.id))
+						return previous;
 					return nextProjects[0] ?? null;
 				});
 			} catch (error) {
@@ -81,7 +108,7 @@ export const ProjectSwitcher = ({ className, onProjectChange }: ProjectSwitcherP
 			setOpen(false);
 			onProjectChange?.(project.id);
 		},
-		[onProjectChange]
+		[onProjectChange],
 	);
 
 	return (
@@ -97,7 +124,8 @@ export const ProjectSwitcher = ({ className, onProjectChange }: ProjectSwitcherP
 					>
 						<div className="flex min-w-0 items-center gap-2">
 							<span className="truncate text-sm">
-								{activeProject?.name ?? (selectedTeamId ? "Select project" : "Select team first")}
+								{activeProject?.name ??
+									(selectedTeamId ? "Select project" : "Select team first")}
 							</span>
 						</div>
 						<CaretSortIcon className="h-4 w-4 shrink-0 opacity-50" />
@@ -119,7 +147,9 @@ export const ProjectSwitcher = ({ className, onProjectChange }: ProjectSwitcherP
 										<CheckIcon
 											className={cn(
 												"ml-auto h-4 w-4",
-												activeProject?.id === project.id ? "opacity-100" : "opacity-0"
+												activeProject?.id === project.id
+													? "opacity-100"
+													: "opacity-0",
 											)}
 										/>
 									</CommandItem>
@@ -129,7 +159,10 @@ export const ProjectSwitcher = ({ className, onProjectChange }: ProjectSwitcherP
 							<CommandGroup>
 								{session?.user?.id ? (
 									<ProjectDialog userId={session.user.id} variant="create">
-										<CommandItem onSelect={() => setOpen(false)} className="text-sm">
+										<CommandItem
+											onSelect={() => setOpen(false)}
+											className="text-sm"
+										>
 											<PlusIcon className="mr-2 h-4 w-4" />
 											Create Project
 										</CommandItem>
@@ -148,4 +181,3 @@ export const ProjectSwitcher = ({ className, onProjectChange }: ProjectSwitcherP
 		</div>
 	);
 };
-

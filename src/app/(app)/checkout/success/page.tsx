@@ -12,7 +12,6 @@ import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { logger } from "@/lib/logger";
 import { cn } from "@/lib/utils";
-import { downloadRepoAnonymously } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
 import { PaymentService } from "@/server/services/payment-service";
 
@@ -228,18 +227,16 @@ export default async function CheckoutSuccessPage({
 						<LoginButton />
 					)}
 
-					{canDownload && (
+					{canDownload && email && (
 						<div className="mt-20 text-center">
 							<h3 className="mb-4 text-lg font-semibold">Just want the code?</h3>
-							{/* Download button */}
-							<form action={downloadRepoAnonymously} className="w-full">
-								<input type="hidden" name="email" value={email} />
-								<input type="hidden" name="orderId" value={orderId} />
-								<Button type="submit" variant="outline" size="lg" className={cn("w-full")}>
+							{/* Download button - direct link with email param */}
+							<Button variant="outline" size="lg" className={cn("w-full")} asChild>
+								<Link href={`${routes.api.download}?email=${encodeURIComponent(email)}`}>
 									<DownloadIcon className="mr-2 h-4 w-4" />
 									Download {siteConfig.title}
-								</Button>
-							</form>
+								</Link>
+							</Button>
 						</div>
 					)}
 

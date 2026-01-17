@@ -1,13 +1,29 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { cacheConfigs, cacheService } from "@/server/services/cache-service";
+import { cacheService } from "@/server/services/cache-service";
 import { ErrorService } from "@/server/services/error-service";
 import { metrics, metricsService } from "@/server/services/metrics-service";
 import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
 import { userService } from "@/server/services/user-service";
 import { ValidationService } from "@/server/services/validation-service";
 import { updateProfileSchema, userSchema } from "./schemas";
+
+/**
+ * @fileoverview Server actions for user management - MUTATIONS ONLY
+ * @module server/actions/users
+ *
+ * NOTE: Read operations should be performed directly via service calls:
+ * - import { userService } from "@/server/services/user-service"
+ * - userService.getUserByEmail(email)
+ * - userService.getUserWithAssociations(userId)
+ * - userService.getTeamUsers(teamId)
+ * - userService.getProjectUsers(projectId)
+ * - userService.hasTeamAccess(userId, teamId)
+ * - userService.hasProjectAccess(userId, projectId)
+ *
+ * @see src/server/services/user-service.ts
+ */
 
 /**
  * Ensures a user exists in the database.
@@ -43,66 +59,6 @@ export async function ensureUserExists(authUser: {
 
 		revalidatePath("/");
 		return user;
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
-}
-
-/**
- * Gets a user by their email address.
- * @returns The user if found
- */
-export async function getUserByEmail(email: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(email, "getUserByEmail", rateLimits.api.default);
-
-		// Validation
-		await ValidationService.validateOrThrow(userSchema, { email });
-
-		// Try to get from cache first
-		return await cacheService.getOrSet(
-			`user:${email}`,
-			async () => {
-				const startTime = Date.now();
-				const user = await userService.getUserByEmail(email);
-				await metricsService.recordTiming(metrics.api.latency, startTime);
-				await metricsService.incrementCounter(metrics.api.requests);
-				return user;
-			},
-			cacheConfigs.medium
-		);
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
-}
-
-/**
- * Gets a user with all their associations.
- * @returns The user with their teams and projects
- */
-export async function getUserWithAssociations(userId: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(userId, "getUserWithAssociations", rateLimits.api.default);
-
-		// Validation
-		await ValidationService.validateOrThrow(userSchema, { id: userId });
-
-		// Try to get from cache first
-		return await cacheService.getOrSet(
-			`user:${userId}:associations`,
-			async () => {
-				const startTime = Date.now();
-				const user = await userService.getUserWithAssociations(userId);
-				await metricsService.recordTiming(metrics.api.latency, startTime);
-				await metricsService.incrementCounter(metrics.api.requests);
-				return user;
-			},
-			cacheConfigs.short
-		);
 	} catch (error) {
 		await metricsService.incrementCounter(metrics.api.errors);
 		throw ErrorService.handleError(error);
@@ -181,134 +137,6 @@ export async function verifyEmail(userId: string) {
 
 		revalidatePath("/");
 		return user;
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
-}
-
-/**
- * Gets all users in a team.
- * @returns The team's users with their roles
- */
-export async function getTeamUsers(teamId: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(teamId, "getTeamUsers", rateLimits.api.default);
-
-		// Validation
-		await ValidationService.validateOrThrow(userSchema, { id: teamId });
-
-		// Try to get from cache first
-		return await cacheService.getOrSet(
-			`team:${teamId}:users`,
-			async () => {
-				const startTime = Date.now();
-				const users = await userService.getTeamUsers(teamId);
-				await metricsService.recordTiming(metrics.api.latency, startTime);
-				await metricsService.incrementCounter(metrics.api.requests);
-				return users;
-			},
-			cacheConfigs.short
-		);
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
-}
-
-/**
- * Gets all users in a project.
- * @returns The project's users with their roles
- */
-export async function getProjectUsers(projectId: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(projectId, "getProjectUsers", rateLimits.api.default);
-
-		// Validation
-		await ValidationService.validateOrThrow(userSchema, { id: projectId });
-
-		// Try to get from cache first
-		return await cacheService.getOrSet(
-			`project:${projectId}:users`,
-			async () => {
-				const startTime = Date.now();
-				const users = await userService.getProjectUsers(projectId);
-				await metricsService.recordTiming(metrics.api.latency, startTime);
-				await metricsService.incrementCounter(metrics.api.requests);
-				return users;
-			},
-			cacheConfigs.short
-		);
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
-}
-
-/**
- * Checks if a user has access to a team.
- * @returns True if the user has access
- */
-export async function hasTeamAccess(userId: string, teamId: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(
-			`${userId}:${teamId}`,
-			"hasTeamAccess",
-			rateLimits.api.default
-		);
-
-		// Validation
-		await ValidationService.validateOrThrow(userSchema, { id: userId });
-
-		// Try to get from cache first
-		return await cacheService.getOrSet(
-			`user:${userId}:team:${teamId}:access`,
-			async () => {
-				const startTime = Date.now();
-				const hasAccess = await userService.hasTeamAccess(userId, teamId);
-				await metricsService.recordTiming(metrics.api.latency, startTime);
-				await metricsService.incrementCounter(metrics.api.requests);
-				return hasAccess;
-			},
-			cacheConfigs.medium
-		);
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
-}
-
-/**
- * Checks if a user has access to a project.
- * @returns True if the user has access
- */
-export async function hasProjectAccess(userId: string, projectId: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(
-			`${userId}:${projectId}`,
-			"hasProjectAccess",
-			rateLimits.api.default
-		);
-
-		// Validation
-		await ValidationService.validateOrThrow(userSchema, { id: userId });
-
-		// Try to get from cache first
-		return await cacheService.getOrSet(
-			`user:${userId}:project:${projectId}:access`,
-			async () => {
-				const startTime = Date.now();
-				const hasAccess = await userService.hasProjectAccess(userId, projectId);
-				await metricsService.recordTiming(metrics.api.latency, startTime);
-				await metricsService.incrementCounter(metrics.api.requests);
-				return hasAccess;
-			},
-			cacheConfigs.medium
-		);
 	} catch (error) {
 		await metricsService.incrementCounter(metrics.api.errors);
 		throw ErrorService.handleError(error);

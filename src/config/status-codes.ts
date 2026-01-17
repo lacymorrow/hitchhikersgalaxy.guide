@@ -73,6 +73,12 @@ export const STATUS_CODES = {
 		message: "Something went wrong. Please try again later.",
 	},
 
+	// Deployment status codes
+	DEPLOYMENT_CREATED: {
+		code: "DEPLOYMENT_CREATED",
+		message: "Deployment started successfully.",
+	},
+
 	UNKNOWN: {
 		code: "UNKNOWN",
 		message: "Something went wrong, please try again.",

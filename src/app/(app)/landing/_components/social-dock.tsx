@@ -55,9 +55,10 @@ const data = {
 
 const LinkOrIcon = ({
 	href,
+	children,
 	...props
-}: { href?: string } & React.ComponentPropsWithoutRef<"a">) => {
-	return href ? <Link href={href} {...props} /> : <a {...props} />;
+}: { href?: string; children: React.ReactNode } & Omit<React.ComponentPropsWithoutRef<"a">, "children">) => {
+	return href ? <Link href={href} {...props}>{children}</Link> : <a {...props}>{children}</a>;
 };
 
 const SOCIAL_DOCK_BUFFER = 200;

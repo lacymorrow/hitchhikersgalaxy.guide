@@ -1,21 +1,14 @@
 "use server";
 
+/**
+ * @fileoverview Server actions for credit operations (mutations only)
+ * NOTE: For read operations, use the service directly:
+ * import { getUserCredits } from "@/server/services/credits"
+ */
+
 import { auth } from "@/server/auth";
 import type { NewCreditTransaction } from "@/server/db/schema";
-import { getUserCredits, updateUserCredits } from "@/server/services/credits";
-
-/**
- * Gets the current authenticated user's credit balance.
- * @returns The user's credit balance.
- * @throws Error if the user is not authenticated.
- */
-export async function getCurrentUserCredits(): Promise<number> {
-	const session = await auth();
-	if (!session?.user?.id) {
-		throw new Error("User not authenticated");
-	}
-	return getUserCredits(session.user.id);
-}
+import { updateUserCredits } from "@/server/services/credits";
 
 interface SpendCreditsParams {
 	amount: number; // Must be positive, represents the amount to spend

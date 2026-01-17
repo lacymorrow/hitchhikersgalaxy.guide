@@ -58,10 +58,11 @@ export const emailAuth = {
 			name,
 		}),
 
-	forgotPassword: (email: string) => authClient.forgetPassword({ email }),
-
-	resetPassword: (token: string, newPassword: string) =>
-		authClient.resetPassword({ token, newPassword }),
+	// Note: forgotPassword and resetPassword require the "email-otp" plugin
+	// to be enabled in the Better Auth server config
+	// forgotPassword: (email: string) => authClient.forgotPassword({ email }),
+	// resetPassword: (token: string, newPassword: string) =>
+	// 	authClient.resetPassword({ token, newPassword }),
 };
 
 /**

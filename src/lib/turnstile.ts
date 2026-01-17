@@ -13,7 +13,7 @@ interface TurnstileResponse {
  * Call this from Server Components only.
  */
 export function isTurnstileConfigured(): boolean {
-	return buildTimeFeatures.TURNSTILE_ENABLED;
+	return buildTimeFeatures.TURNSTILE_ENABLED === true;
 }
 
 /**

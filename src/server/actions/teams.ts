@@ -1,7 +1,13 @@
 "use server";
 
-import { revalidatePath, revalidateTag, unstable_cache } from "next/cache";
-import { cacheConfigs, cacheService } from "@/server/services/cache-service";
+/**
+ * @fileoverview Server actions for team operations (mutations only)
+ * NOTE: For read operations, use teamService directly:
+ * import { teamService } from "@/server/services/team-service"
+ */
+
+import { revalidatePath, revalidateTag } from "next/cache";
+import { cacheService } from "@/server/services/cache-service";
 import { ErrorService } from "@/server/services/error-service";
 import { metrics, metricsService } from "@/server/services/metrics-service";
 import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
@@ -12,7 +18,6 @@ import {
 	teamIdSchema,
 	teamMemberSchema,
 	updateTeamSchema,
-	userIdSchema,
 } from "./schemas";
 
 /**
@@ -45,74 +50,11 @@ export async function createTeam(userId: string, name: string) {
 		await cacheService.delete(`user:${userId}:teams`);
 
 		// Revalidate Next.js cache using tags
-		revalidateTag(`user-teams-${userId}`);
-		revalidateTag("teams");
+		revalidateTag(`user-teams-${userId}`, "max");
+		revalidateTag("teams", "max");
 		revalidatePath("/");
 
 		return team;
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
-}
-
-/**
- * Gets all teams for a user with Next.js caching.
- * @returns The user's teams with their members
- */
-export async function getUserTeams(userId: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(userId, "getUserTeams", rateLimits.api.default);
-
-		// Validation
-		await ValidationService.validateOrThrow(userIdSchema, { userId });
-
-		// Use Next.js unstable_cache with tags for proper cache invalidation
-		return await unstable_cache(
-			async () => {
-				const startTime = Date.now();
-				const teams = await teamService.getUserTeams(userId);
-				await metricsService.recordTiming(metrics.api.latency, startTime);
-				await metricsService.incrementCounter(metrics.api.requests);
-				return teams;
-			},
-			[`user-teams-${userId}`],
-			{
-				tags: [`user-teams-${userId}`, "teams"],
-				revalidate: 3600, // Cache for 1 hour, but can be invalidated on-demand
-			}
-		)();
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
-}
-
-/**
- * Gets all members of a team.
- * @returns The team members with their user details
- */
-export async function getTeamMembers(teamId: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(teamId, "getTeamMembers", rateLimits.api.default);
-
-		// Validation
-		await ValidationService.validateOrThrow(teamIdSchema, { teamId });
-
-		// Try to get from cache first
-		return await cacheService.getOrSet(
-			`team:${teamId}:members`,
-			async () => {
-				const startTime = Date.now();
-				const members = await teamService.getTeamMembers(teamId);
-				await metricsService.recordTiming(metrics.api.latency, startTime);
-				await metricsService.incrementCounter(metrics.api.requests);
-				return members;
-			},
-			cacheConfigs.short
-		);
 	} catch (error) {
 		await metricsService.incrementCounter(metrics.api.errors);
 		throw ErrorService.handleError(error);
@@ -145,11 +87,11 @@ export async function updateTeam(teamId: string, data: { name?: string }) {
 		await cacheService.delete(`team:${teamId}`);
 
 		// Revalidate Next.js cache using tags
-		revalidateTag("teams");
+		revalidateTag("teams", "max");
 		// Revalidate for all users who are members of this team
 		const teamMembers = await teamService.getTeamMembers(teamId);
 		for (const member of teamMembers || []) {
-			revalidateTag(`user-teams-${member.userId}`);
+			revalidateTag(`user-teams-${member.userId}`, "max");
 		}
 		revalidatePath("/");
 
@@ -189,10 +131,10 @@ export async function deleteTeam(teamId: string) {
 		await cacheService.delete(`team:${teamId}`);
 
 		// Revalidate Next.js cache using tags
-		revalidateTag("teams");
+		revalidateTag("teams", "max");
 		// Revalidate for all users who were members of this team
 		for (const member of teamMembers || []) {
-			revalidateTag(`user-teams-${member.userId}`);
+			revalidateTag(`user-teams-${member.userId}`, "max");
 		}
 		revalidatePath("/");
 
@@ -272,8 +214,8 @@ export async function removeTeamMember(teamId: string, userId: string) {
 		await cacheService.delete(`user:${userId}:teams`);
 
 		// Revalidate Next.js cache using tags
-		revalidateTag(`user-teams-${userId}`);
-		revalidateTag("teams");
+		revalidateTag(`user-teams-${userId}`, "max");
+		revalidateTag("teams", "max");
 		revalidatePath("/");
 
 		return success;

@@ -1,13 +1,9 @@
 "use client";
 
-import { CheckCircle2, Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { AlertTriangle, CheckCircle2, Loader2, Rocket } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
-import AILoadingState, {
-	type TaskSequence,
-} from "@/components/kokonutui/ai-loading";
 import { Link as LinkWithTransition } from "@/components/primitives/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -27,75 +23,64 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { validateProjectName } from "@/lib/schemas/deployment";
 import { cn } from "@/lib/utils";
-import {
-	checkPendingGitHubInvitation,
-	checkRepositoryNameAvailable,
-	initiateDeployment,
-} from "@/server/actions/deployment-actions";
+import { initiateDeployment } from "@/server/actions/deployment-actions";
 import type { User } from "@/types/user";
+
+// API helpers for read operations (server actions should only be used for mutations)
+async function checkPendingGitHubInvitation(): Promise<{
+	hasPendingInvitation: boolean;
+	invitationUrl?: string;
+}> {
+	const response = await fetch(routes.api.github.checkInvitation);
+	if (!response.ok) {
+		return { hasPendingInvitation: false };
+	}
+	return response.json();
+}
+
+async function checkRepositoryNameAvailable(
+	name: string,
+): Promise<{ available: boolean; checked: boolean; error?: string }> {
+	const response = await fetch(
+		`${routes.api.github.checkRepoAvailability}?name=${encodeURIComponent(name)}`,
+	);
+	if (!response.ok) {
+		return { available: true, checked: false };
+	}
+	return response.json();
+}
 
 // Constants for validation and timing
 const VALIDATION_DEBOUNCE_MS = 300; // 300ms debounce for validation
-const VALIDATION_TIMEOUT_MS = 2000; // 2 seconds max wait for validation
-const VALIDATION_CHECK_INTERVAL_MS = 100; // Check validation status every 100ms
-
-const DEPLOYMENT_TASK_SEQUENCES: TaskSequence[] = [
-	{
-		status: "Preparing deployment",
-		lines: [
-			"Validating project configuration...",
-			"Checking GitHub connection...",
-			"Verifying Vercel credentials...",
-			"Preparing repository template...",
-		],
-	},
-	{
-		status: "Creating repository",
-		lines: [
-			"Forking template repository...",
-			"Setting up repository permissions...",
-			"Configuring branch protection...",
-			"Initializing project structure...",
-		],
-	},
-	{
-		status: "Deploying to Vercel",
-		lines: [
-			"Creating Vercel project...",
-			"Configuring environment variables...",
-			"Setting up build pipeline...",
-			"Initiating first deployment...",
-			"Finalizing deployment...",
-		],
-	},
-];
 
 interface DashboardVercelDeployProps {
 	className?: string;
 	isVercelConnected?: boolean;
 	user?: User;
+	hasActiveDeployment?: boolean;
 }
 
 export const DashboardVercelDeploy = ({
 	className,
 	isVercelConnected = true,
 	user,
+	hasActiveDeployment = false,
 }: DashboardVercelDeployProps) => {
-	const router = useRouter();
 	const { data: session } = useSession();
 	const currentUser = user ?? session?.user;
 	const [open, setOpen] = useState(false);
 	const [projectName, setProjectName] = useState("");
 	const [isDeploying, setIsDeploying] = useState(false);
+	const [deploymentInitiated, setDeploymentInitiated] = useState(false);
+	const [acknowledgedActiveDeployment, setAcknowledgedActiveDeployment] =
+		useState(false);
 	const [validationError, setValidationError] = useState<string | null>(null);
 	const [isValidating, setIsValidating] = useState(false);
 	const [availabilityChecked, setAvailabilityChecked] = useState(false);
-	const [availabilityReason, setAvailabilityReason] = useState<
-		string | undefined
-	>(undefined);
 	const [pendingInvitation, setPendingInvitation] = useState<{
 		hasPending: boolean;
 		url?: string;
@@ -320,9 +305,9 @@ export const DashboardVercelDeploy = ({
 			const result = await initiateDeployment(formData);
 
 			if (result.success) {
-				resetForm();
-				// Redirect to deployments page to monitor progress and see any errors
-				router.push("/deployments");
+				setIsDeploying(false);
+				setDeploymentInitiated(true);
+				setProjectName("");
 			} else {
 				setValidationError(result.error ?? "Deployment failed to start");
 				setIsDeploying(false);
@@ -340,11 +325,19 @@ export const DashboardVercelDeploy = ({
 		setValidationError(null);
 		setIsValidating(false);
 		setAvailabilityChecked(false);
+		setDeploymentInitiated(false);
+		setAcknowledgedActiveDeployment(false);
 		setOpen(false);
 		// Clear any pending validation
 		if (debounceTimerRef.current) {
 			clearTimeout(debounceTimerRef.current);
 		}
+	};
+
+	const handleStartNewDeployment = () => {
+		setDeploymentInitiated(false);
+		setProjectName("");
+		setValidationError(null);
 	};
 
 	const triggerButton = isVercelConnected ? (
@@ -391,12 +384,80 @@ export const DashboardVercelDeploy = ({
 					pendingInvitation.justAccepted && "animate-connection-highlight",
 				)}
 			>
-				{isDeploying ? (
-					<div className="py-8">
-						<AILoadingState
-							taskSequences={DEPLOYMENT_TASK_SEQUENCES}
-							className="flex items-center justify-center w-full"
-						/>
+				{deploymentInitiated ? (
+					<div className="py-8 flex flex-col items-center justify-center gap-4">
+						<div className="rounded-full bg-primary/10 p-3">
+							<Rocket className="h-8 w-8 text-primary" />
+						</div>
+						<div className="text-center space-y-2">
+							<p className="text-lg font-semibold">Deployment Started</p>
+							<p className="text-sm text-muted-foreground">
+								Your project is being deployed. You can monitor the progress on
+								the deployments page.
+							</p>
+						</div>
+						<div className="flex flex-col items-center gap-3 w-full">
+							<LinkWithTransition
+								href="/deployments"
+								onClick={() => setOpen(false)}
+								className="w-full"
+							>
+								<Button className="w-full">View Deployments</Button>
+							</LinkWithTransition>
+							<div className="flex gap-2">
+								<Button
+									variant="outline"
+									onClick={handleStartNewDeployment}
+								>
+									Start Another Deployment
+								</Button>
+								<Button variant="ghost" onClick={() => setOpen(false)}>
+									Close
+								</Button>
+							</div>
+						</div>
+					</div>
+				) : hasActiveDeployment && !acknowledgedActiveDeployment ? (
+					<div className="py-6 flex flex-col items-center justify-center gap-4">
+						<div className="rounded-full bg-yellow-500/10 p-3">
+							<AlertTriangle className="h-8 w-8 text-yellow-500" />
+						</div>
+						<div className="text-center space-y-2">
+							<p className="text-lg font-semibold">Deployment in Progress</p>
+							<p className="text-sm text-muted-foreground">
+								You already have an active deployment. Starting a new one may
+								cause conflicts.
+							</p>
+							<LinkWithTransition
+								href="/deployments"
+								onClick={() => setOpen(false)}
+								className="text-sm text-primary hover:underline"
+							>
+								View current deployments →
+							</LinkWithTransition>
+						</div>
+						<div className="flex gap-2 w-full">
+							<Button
+								variant="outline"
+								onClick={() => setOpen(false)}
+								className="flex-1"
+							>
+								Cancel
+							</Button>
+							<Button
+								onClick={() => setAcknowledgedActiveDeployment(true)}
+								className="flex-1"
+							>
+								Deploy Anyway
+							</Button>
+						</div>
+					</div>
+				) : isDeploying ? (
+					<div className="py-8 flex flex-col items-center justify-center gap-4">
+						<Loader2 className="h-8 w-8 animate-spin text-primary" />
+						<p className="text-sm text-muted-foreground">
+							Starting deployment...
+						</p>
 					</div>
 				) : pendingInvitation.justAccepted ? (
 					<div className="py-8 flex flex-col items-center justify-center gap-4">

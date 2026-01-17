@@ -28,7 +28,6 @@ import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { downloadRepo } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
 import { getGitHubConnectionStatus } from "@/server/services/github/github-token-service";
 import { PaymentService } from "@/server/services/payment-service";
@@ -228,18 +227,20 @@ function DirectDownloadCard({ downloadState }: { downloadState: DownloadState })
 				</ul>
 			</CardContent>
 			<CardFooter>
-				<form action={downloadRepo} className="w-full">
-					<Button
-						type="submit"
-						variant="default"
-						size="lg"
-						className="w-full"
-						disabled={!isEnabled}
+				{isEnabled ? (
+					<Link
+						href={routes.api.download}
+						className={cn(buttonVariants({ variant: "default", size: "lg" }), "w-full")}
 					>
 						<DownloadIcon className="mr-2 h-4 w-4" />
 						Download ZIP
+					</Link>
+				) : (
+					<Button variant="default" size="lg" className="w-full" disabled>
+						<DownloadIcon className="mr-2 h-4 w-4" />
+						Download ZIP
 					</Button>
-				</form>
+				)}
 			</CardFooter>
 		</Card>
 	);

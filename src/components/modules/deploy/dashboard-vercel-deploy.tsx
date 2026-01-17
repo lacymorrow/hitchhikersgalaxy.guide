@@ -1,7 +1,9 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, CheckCircle2, Loader2, Rocket } from "lucide-react";
 import { useSession } from "next-auth/react";
+import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
 import { Link as LinkWithTransition } from "@/components/primitives/link";
@@ -70,7 +72,10 @@ export const DashboardVercelDeploy = ({
 	user,
 	hasActiveDeployment = false,
 }: DashboardVercelDeployProps) => {
+	const queryClient = useQueryClient();
 	const { data: session } = useSession();
+	const pathname = usePathname();
+	const isOnDeploymentsPage = pathname === "/deployments";
 	const currentUser = user ?? session?.user;
 	const [open, setOpen] = useState(false);
 	const [projectName, setProjectName] = useState("");
@@ -97,6 +102,8 @@ export const DashboardVercelDeploy = ({
 	});
 	const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 	const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
+	const validationRequestIdRef = useRef(0);
+	const latestProjectNameRef = useRef("");
 	const POLLING_INTERVAL_MS = 3000; // Poll every 3 seconds
 	const SUCCESS_DISPLAY_MS = 2000; // Show success state for 2 seconds
 
@@ -232,47 +239,72 @@ export const DashboardVercelDeploy = ({
 
 		// Set new debounce timer
 		debounceTimerRef.current = setTimeout(async () => {
-			if (value.trim()) {
-				// First, validate the format
-				const validation = validateProjectName(value);
-				if (!validation.isValid) {
-					setValidationError(validation.error ?? "Invalid project name");
-					setAvailabilityChecked(false);
-					setIsValidating(false);
+			const trimmedValue = value.trim();
+			const validationId = validationRequestIdRef.current + 1;
+			validationRequestIdRef.current = validationId;
+			// Guard against out-of-order async results after fast typing.
+			const isCurrentValidation = () =>
+				validationId === validationRequestIdRef.current &&
+				trimmedValue === latestProjectNameRef.current.trim();
+
+			if (!trimmedValue) {
+				if (!isCurrentValidation()) {
 					return;
 				}
-
-				// Then check if the name is available on GitHub
-				try {
-					const availability = await checkRepositoryNameAvailable(value.trim());
-					setAvailabilityChecked(availability.checked);
-					if (!availability.available) {
-						setValidationError(
-							availability.error ?? "Repository name not available",
-						);
-					} else {
-						setValidationError(null);
-					}
-				} catch {
-					// If check fails, clear error and let deployment handle it
-					setAvailabilityChecked(false);
-					setValidationError(null);
-				}
-			} else {
 				setValidationError(null);
 				setAvailabilityChecked(false);
+				setIsValidating(false);
+				return;
 			}
-			setIsValidating(false);
+
+			// First, validate the format
+			const validation = validateProjectName(trimmedValue);
+			if (!validation.isValid) {
+				if (!isCurrentValidation()) {
+					return;
+				}
+				setValidationError(validation.error ?? "Invalid project name");
+				setAvailabilityChecked(false);
+				setIsValidating(false);
+				return;
+			}
+
+			// Then check if the name is available on GitHub
+			try {
+				const availability = await checkRepositoryNameAvailable(trimmedValue);
+				if (!isCurrentValidation()) {
+					return;
+				}
+				setAvailabilityChecked(availability.checked);
+				if (!availability.available) {
+					setValidationError(
+						availability.error ?? "Repository name not available",
+					);
+				} else {
+					setValidationError(null);
+				}
+			} catch {
+				if (!isCurrentValidation()) {
+					return;
+				}
+				// If check fails, clear error and let deployment handle it
+				setAvailabilityChecked(false);
+				setValidationError(null);
+			} finally {
+				if (isCurrentValidation()) {
+					setIsValidating(false);
+				}
+			}
 		}, VALIDATION_DEBOUNCE_MS);
 	}, []);
 
 	const handleProjectNameChange = (value: string) => {
+		latestProjectNameRef.current = value;
 		setProjectName(value);
 
-		// Clear validation error immediately when user starts typing
-		if (validationError && !isValidating) {
-			setValidationError(null);
-		}
+		// Clear validation error and availability check immediately when user types
+		setValidationError(null);
+		setAvailabilityChecked(false);
 
 		// Trigger debounced validation
 		validateProjectNameDebounced(value);
@@ -305,9 +337,18 @@ export const DashboardVercelDeploy = ({
 			const result = await initiateDeployment(formData);
 
 			if (result.success) {
-				setIsDeploying(false);
-				setDeploymentInitiated(true);
-				setProjectName("");
+				// Invalidate React Query cache so the deployments list refreshes immediately
+				await queryClient.invalidateQueries({ queryKey: ["deployments"] });
+
+				if (isOnDeploymentsPage) {
+					// User is already on deployments page, just close the dialog
+					// so they can see the deployment in the list
+					resetForm();
+				} else {
+					// User is on another page, show success dialog with link to deployments
+					setIsDeploying(false);
+					setDeploymentInitiated(true);
+				}
 			} else {
 				setValidationError(result.error ?? "Deployment failed to start");
 				setIsDeploying(false);
@@ -321,6 +362,7 @@ export const DashboardVercelDeploy = ({
 	};
 
 	const resetForm = () => {
+		latestProjectNameRef.current = "";
 		setProjectName("");
 		setValidationError(null);
 		setIsValidating(false);
@@ -336,6 +378,7 @@ export const DashboardVercelDeploy = ({
 
 	const handleStartNewDeployment = () => {
 		setDeploymentInitiated(false);
+		latestProjectNameRef.current = "";
 		setProjectName("");
 		setValidationError(null);
 	};
@@ -399,6 +442,7 @@ export const DashboardVercelDeploy = ({
 						<div className="flex flex-col items-center gap-3 w-full">
 							<LinkWithTransition
 								href="/deployments"
+								prefetch={false}
 								onClick={() => setOpen(false)}
 								className="w-full"
 							>

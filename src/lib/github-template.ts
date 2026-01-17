@@ -79,12 +79,15 @@ export class GitHubTemplateService {
 				upstreamRepo: config.templateRepo,
 			});
 
+			const defaultBranch = response.data.default_branch || "main";
+
 			// Trigger init-upstream workflow to graft upstream history
 			// This enables clean future syncs without --allow-unrelated-histories
 			// Run in background - don't block the deployment on this
 			this.initializeUpstreamHistory(
 				config.newRepoOwner,
 				config.newRepoName,
+				defaultBranch,
 			).catch((error) => {
 				console.warn(
 					"Failed to initialize upstream history (non-blocking):",
@@ -581,6 +584,7 @@ For more information, see the [GitHub documentation on syncing a fork](https://d
 	async initializeUpstreamHistory(
 		owner: string,
 		repo: string,
+		ref: string = "main",
 	): Promise<{ success: boolean; error?: string }> {
 		// Wait a bit for the repository to be fully initialized
 		// GitHub needs time to set up the repo after creation from template
@@ -595,7 +599,7 @@ For more information, see the [GitHub documentation on syncing a fork](https://d
 				owner,
 				repo,
 				"init-upstream.yml",
-				"main",
+				ref,
 			);
 
 			if (result.success) {

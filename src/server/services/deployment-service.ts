@@ -1,7 +1,6 @@
-import { and, desc, eq, lt } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { and, desc, eq, inArray } from "drizzle-orm";
 import { siteConfig } from "@/config/site-config";
-import { createGitHubTemplateService, type GitHubTemplateService } from "@/lib/github-template";
+import { createGitHubTemplateService } from "@/lib/github-template";
 import { logger } from "@/lib/logger";
 import { createVercelAPIService, type VercelAPIService } from "@/lib/vercel-api";
 import { db } from "@/server/db";
@@ -12,7 +11,6 @@ import { getVercelAccessToken } from "@/server/services/vercel/vercel-service";
 
 // Constants
 const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
-const STALE_DEPLOYMENT_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes
 const POLLING_INTERVAL_MS = 3000; // 3 seconds
 const MAX_DEPLOYMENT_POLL_ATTEMPTS = 20; // Poll for up to ~60 seconds
 
@@ -62,6 +60,36 @@ interface TokenValidationResult {
 	valid: boolean;
 	scopes?: string[];
 	missingScopes?: string[];
+}
+
+export function resolveDeploymentStatusFromVercelState(state?: string): {
+	status: "deploying" | "completed" | "failed";
+	isTerminal: boolean;
+	error?: string;
+} {
+	if (!state) {
+		return { status: "deploying", isTerminal: false };
+	}
+
+	const normalizedState = state.toUpperCase();
+	if (normalizedState === "READY") {
+		return { status: "completed", isTerminal: true };
+	}
+	if (normalizedState === "ERROR") {
+		return {
+			status: "failed",
+			isTerminal: true,
+			error: "Vercel deployment failed",
+		};
+	}
+	if (normalizedState === "CANCELED") {
+		return {
+			status: "failed",
+			isTerminal: true,
+			error: "Vercel deployment was canceled",
+		};
+	}
+	return { status: "deploying", isTerminal: false };
 }
 
 /**
@@ -123,8 +151,8 @@ class DeploymentService {
 			throw new Error("Database not available");
 		}
 
-		// First, mark any stale deployments as timed out
-		await this.markStaleDeploymentsAsTimedOut(userId);
+		// Refresh deployment statuses from Vercel before returning results.
+		await this.syncDeploymentStatuses(userId);
 
 		const userDeployments = await db
 			.select()
@@ -211,30 +239,71 @@ class DeploymentService {
 	}
 
 	/**
-	 * Mark deployments that have been stuck in "deploying" state for too long as timed out
+	 * Refresh deployments that are still deploying or previously timed out
+	 * by checking Vercel directly.
 	 */
-	private async markStaleDeploymentsAsTimedOut(userId: string): Promise<void> {
+	private async syncDeploymentStatuses(userId: string): Promise<void> {
 		if (!db) return;
 
-		const staleThreshold = new Date(Date.now() - STALE_DEPLOYMENT_THRESHOLD_MS);
+		const vercelToken = await getVercelAccessToken(userId);
+		if (!vercelToken) return;
 
-		try {
-			await db
-				.update(deployments)
-				.set({
-					status: "timeout",
-					error: "Deployment timed out - the deployment process did not complete in the expected time",
-					updatedAt: new Date(),
-				})
-				.where(
-					and(
-						eq(deployments.userId, userId),
-						eq(deployments.status, "deploying"),
-						lt(deployments.createdAt, staleThreshold)
-					)
+		const deploymentsToSync = await db
+			.select()
+			.from(deployments)
+			.where(
+				and(
+					eq(deployments.userId, userId),
+					inArray(deployments.status, ["deploying", "timeout"])
+				)
+			);
+
+		if (!deploymentsToSync.length) {
+			return;
+		}
+
+		const vercelService = createVercelAPIService(vercelToken);
+
+		for (const deployment of deploymentsToSync) {
+			const projectIdentifier =
+				deployment.vercelProjectId || deployment.projectName;
+
+			try {
+				const projectInfo = await vercelService.getProject(projectIdentifier);
+				const latestDeployment = projectInfo.data?.latestDeployments?.[0];
+				if (!projectInfo.success || !latestDeployment?.state) {
+					continue;
+				}
+
+				const resolvedStatus = resolveDeploymentStatusFromVercelState(
+					latestDeployment.state
 				);
-		} catch (error) {
-			logger.error("Failed to mark stale deployments as timed out", { error, userId });
+
+				if (resolvedStatus.isTerminal) {
+					const deploymentUrl = latestDeployment.url
+						? `https://${latestDeployment.url}`
+						: deployment.vercelDeploymentUrl;
+					await this.updateDeployment(deployment.id, userId, {
+						status: resolvedStatus.status,
+						vercelDeploymentUrl: deploymentUrl,
+						error: resolvedStatus.error,
+					});
+					continue;
+				}
+
+				if (deployment.status === "timeout") {
+					await this.updateDeployment(deployment.id, userId, {
+						status: "deploying",
+						error: undefined,
+					});
+				}
+			} catch (error) {
+				logger.warn("Failed to sync deployment status from Vercel", {
+					deploymentId: deployment.id,
+					projectIdentifier,
+					error,
+				});
+			}
 		}
 	}
 
@@ -399,6 +468,7 @@ class DeploymentService {
 
 			// Update deployment with Vercel info
 			await this.updateDeployment(currentDeploymentId, userId, {
+				vercelProjectId: vercelResult.projectId,
 				vercelProjectUrl: vercelResult.projectUrl ?? "",
 				vercelDeploymentUrl: `https://${projectName}.vercel.app`,
 			});
@@ -409,7 +479,8 @@ class DeploymentService {
 				vercelResult.projectId,
 				projectName,
 				currentDeploymentId,
-				userId
+				userId,
+				repoResult.repoId
 			);
 
 			// Step 6: Start background polling for deployment status
@@ -710,10 +781,16 @@ class DeploymentService {
 		projectId: string,
 		projectName: string,
 		deploymentId: string,
-		userId: string
+		userId: string,
+		githubRepoId?: number
 	): Promise<void> {
 		try {
-			const deploymentResult = await vercelService.createDeployment(projectId, projectName, "main");
+			const deploymentResult = await vercelService.createDeployment(
+				projectId,
+				projectName,
+				"main",
+				githubRepoId
+			);
 			if (deploymentResult.success && deploymentResult.deploymentUrl) {
 				logger.info("Initial deployment triggered", { projectName, url: deploymentResult.deploymentUrl });
 				await this.updateDeployment(deploymentId, userId, {
@@ -748,17 +825,23 @@ class DeploymentService {
 					const projectInfo = await vercelService.getProject(projectId);
 					if (projectInfo.success && projectInfo.data?.latestDeployments?.[0]) {
 						const latestDeployment = projectInfo.data.latestDeployments[0];
+						if (!latestDeployment?.state) {
+							continue;
+						}
 
-						if (["READY", "ERROR", "CANCELED"].includes(latestDeployment.state)) {
-							const status = latestDeployment.state === "READY" ? "completed" : "failed";
+						const resolvedStatus = resolveDeploymentStatusFromVercelState(
+							latestDeployment.state
+						);
+
+						if (resolvedStatus.isTerminal) {
 							const deploymentUrl = latestDeployment.url
 								? `https://${latestDeployment.url}`
 								: `https://${projectName}.vercel.app`;
 
 							await this.updateDeployment(deploymentId, userId, {
-								status,
+								status: resolvedStatus.status,
 								vercelDeploymentUrl: deploymentUrl,
-								error: latestDeployment.state === "ERROR" ? "Vercel deployment failed" : undefined,
+								error: resolvedStatus.error,
 							});
 							return;
 						}
@@ -768,21 +851,14 @@ class DeploymentService {
 				}
 			}
 
-			// Timeout
-			await this.updateDeployment(deploymentId, userId, {
-				status: "timeout",
-				error: "Deployment status check timed out. The deployment may still be running in Vercel.",
+			logger.info("Deployment poll stopped without terminal status", {
+				projectName,
+				attempts,
 			});
 		};
 
 		poll().catch((error) => {
 			logger.error("Failed to poll deployment status", { projectName, error });
-			this.updateDeployment(deploymentId, userId, {
-				status: "timeout",
-				error: "Unable to verify deployment status. Please check Vercel dashboard.",
-			}).catch((updateError) => {
-				logger.error("Failed to update deployment status", { projectName, updateError });
-			});
 		});
 	}
 

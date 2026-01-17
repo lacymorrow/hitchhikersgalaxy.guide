@@ -18,17 +18,12 @@ import { DeploymentActions } from "./deployment-actions";
 
 // Constants for polling configuration
 const POLLING_INTERVAL_MS = 3000; // 3 seconds
-const STALE_DEPLOYMENT_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes - same as server
 
 /**
- * Check if a deployment is actively deploying (not stale)
- * We only poll for deployments that started within the last 10 minutes
+ * Poll whenever deployments are still in progress or need verification
  */
 function isActivelyDeploying(deployment: Deployment): boolean {
-	if (deployment.status !== "deploying") return false;
-	const createdAt = new Date(deployment.createdAt).getTime();
-	const now = Date.now();
-	return now - createdAt < STALE_DEPLOYMENT_THRESHOLD_MS;
+	return deployment.status === "deploying" || deployment.status === "timeout";
 }
 
 interface DeploymentsListProps {
@@ -86,7 +81,7 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 	);
 
 	// Use React Query for efficient polling
-	// Only poll if there are actively deploying items (not stale ones)
+	// Only poll if there are deployments still in progress or pending verification
 	const { data: deployments = initialDeployments } = useQuery({
 		queryKey: ["deployments"],
 		queryFn: fetchDeployments,
@@ -123,7 +118,7 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 	}, [deployments]);
 
 	// Update polling state when deployments change
-	// Only poll for fresh deployments, not stale ones stuck for hours/days
+	// Keep polling while any deployment still needs status verification
 	useEffect(() => {
 		const shouldPoll = deployments.some(isActivelyDeploying);
 		setHasActiveDeployments(shouldPoll);

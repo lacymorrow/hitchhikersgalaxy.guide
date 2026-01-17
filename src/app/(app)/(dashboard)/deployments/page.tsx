@@ -15,6 +15,10 @@ export const metadata: Metadata = constructMetadata({
 		"Manage and monitor your application deployments. View deployment status, logs, and history.",
 });
 
+// Opt out of caching - deployments have many states and update frequently
+// React Query handles polling via /api/deployments for real-time updates
+export const dynamic = "force-dynamic";
+
 export default async function DeploymentsPage() {
 	const session = await auth({ protect: true });
 

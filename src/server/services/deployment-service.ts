@@ -1,4 +1,4 @@
-import { and, desc, eq, inArray } from "drizzle-orm";
+import { and, desc, eq } from "drizzle-orm";
 import { siteConfig } from "@/config/site-config";
 import { createGitHubTemplateService } from "@/lib/github-template";
 import { logger } from "@/lib/logger";
@@ -239,14 +239,16 @@ class DeploymentService {
 	}
 
 	/**
-	 * Refresh deployments that are still deploying or previously timed out
-	 * by checking Vercel directly.
+	 * Refresh deployments that are still deploying by checking Vercel directly.
 	 */
 	private async syncDeploymentStatuses(userId: string): Promise<void> {
 		if (!db) return;
 
 		const vercelToken = await getVercelAccessToken(userId);
-		if (!vercelToken) return;
+		if (!vercelToken) {
+			logger.debug("No Vercel token available for sync", { userId });
+			return;
+		}
 
 		const deploymentsToSync = await db
 			.select()
@@ -254,7 +256,7 @@ class DeploymentService {
 			.where(
 				and(
 					eq(deployments.userId, userId),
-					inArray(deployments.status, ["deploying", "timeout"])
+					eq(deployments.status, "deploying")
 				)
 			);
 
@@ -262,22 +264,68 @@ class DeploymentService {
 			return;
 		}
 
+		logger.debug("Syncing deployment statuses", {
+			userId,
+			count: deploymentsToSync.length,
+		});
+
 		const vercelService = createVercelAPIService(vercelToken);
 
 		for (const deployment of deploymentsToSync) {
 			const projectIdentifier =
 				deployment.vercelProjectId || deployment.projectName;
 
+			if (!projectIdentifier) {
+				logger.warn("Deployment has no project identifier for sync", {
+					deploymentId: deployment.id,
+				});
+				continue;
+			}
+
 			try {
+				// First try to get project info which may include latestDeployments
 				const projectInfo = await vercelService.getProject(projectIdentifier);
-				const latestDeployment = projectInfo.data?.latestDeployments?.[0];
-				if (!projectInfo.success || !latestDeployment?.state) {
+				let latestDeployment = projectInfo.data?.latestDeployments?.[0];
+				const projectId = projectInfo.data?.id;
+
+				// If latestDeployments is not in the project response, fetch deployments explicitly
+				// The Vercel API doesn't always include latestDeployments in the project endpoint
+				if (!latestDeployment && projectId) {
+					const vercelDeployments = await vercelService.getDeployments(projectId, 1);
+					if (vercelDeployments.length > 0) {
+						latestDeployment = vercelDeployments[0];
+					}
+				}
+
+				if (!latestDeployment) {
+					logger.debug("No Vercel deployment found for project", {
+						deploymentId: deployment.id,
+						projectIdentifier,
+						projectSuccess: projectInfo.success,
+					});
 					continue;
 				}
 
-				const resolvedStatus = resolveDeploymentStatusFromVercelState(
-					latestDeployment.state
-				);
+				// Handle both 'state' and 'readyState' fields from Vercel API
+				const deploymentState = latestDeployment.state || latestDeployment.readyState;
+
+				if (!deploymentState) {
+					logger.debug("Vercel deployment has no state", {
+						deploymentId: deployment.id,
+						projectIdentifier,
+						latestDeployment,
+					});
+					continue;
+				}
+
+				const resolvedStatus = resolveDeploymentStatusFromVercelState(deploymentState);
+
+				logger.debug("Resolved Vercel deployment status", {
+					deploymentId: deployment.id,
+					vercelState: deploymentState,
+					resolvedStatus: resolvedStatus.status,
+					isTerminal: resolvedStatus.isTerminal,
+				});
 
 				if (resolvedStatus.isTerminal) {
 					const deploymentUrl = latestDeployment.url
@@ -288,13 +336,10 @@ class DeploymentService {
 						vercelDeploymentUrl: deploymentUrl,
 						error: resolvedStatus.error,
 					});
-					continue;
-				}
-
-				if (deployment.status === "timeout") {
-					await this.updateDeployment(deployment.id, userId, {
-						status: "deploying",
-						error: undefined,
+					logger.info("Updated deployment status from Vercel", {
+						deploymentId: deployment.id,
+						projectName: deployment.projectName,
+						newStatus: resolvedStatus.status,
 					});
 				}
 			} catch (error) {
@@ -823,35 +868,45 @@ class DeploymentService {
 
 				try {
 					const projectInfo = await vercelService.getProject(projectId);
-					if (projectInfo.success && projectInfo.data?.latestDeployments?.[0]) {
-						const latestDeployment = projectInfo.data.latestDeployments[0];
-						if (!latestDeployment?.state) {
-							continue;
+					let latestDeployment = projectInfo.data?.latestDeployments?.[0];
+
+					// Fallback: If latestDeployments isn't in the project response, fetch deployments explicitly
+					// The Vercel API doesn't always include latestDeployments in the project endpoint
+					if (!latestDeployment && projectInfo.success && projectInfo.data?.id) {
+						const vercelDeployments = await vercelService.getDeployments(projectInfo.data.id, 1);
+						if (vercelDeployments.length > 0) {
+							latestDeployment = vercelDeployments[0];
 						}
+					}
 
-						const resolvedStatus = resolveDeploymentStatusFromVercelState(
-							latestDeployment.state
-						);
+					if (!latestDeployment?.state) {
+						continue;
+					}
 
-						if (resolvedStatus.isTerminal) {
-							const deploymentUrl = latestDeployment.url
-								? `https://${latestDeployment.url}`
-								: `https://${projectName}.vercel.app`;
+					const resolvedStatus = resolveDeploymentStatusFromVercelState(
+						latestDeployment.state
+					);
 
-							await this.updateDeployment(deploymentId, userId, {
-								status: resolvedStatus.status,
-								vercelDeploymentUrl: deploymentUrl,
-								error: resolvedStatus.error,
-							});
-							return;
-						}
+					if (resolvedStatus.isTerminal) {
+						const deploymentUrl = latestDeployment.url
+							? `https://${latestDeployment.url}`
+							: `https://${projectName}.vercel.app`;
+
+						await this.updateDeployment(deploymentId, userId, {
+							status: resolvedStatus.status,
+							vercelDeploymentUrl: deploymentUrl,
+							error: resolvedStatus.error,
+						});
+						return;
 					}
 				} catch (error) {
 					logger.warn("Deployment poll attempt failed", { attempts, projectName, error });
 				}
 			}
 
-			logger.info("Deployment poll stopped without terminal status", {
+			// Polling ended without finding a terminal state
+			// Leave status as "deploying" - syncDeploymentStatuses will update it on next page load
+			logger.info("Deployment poll ended without terminal status, will sync on next page load", {
 				projectName,
 				attempts,
 			});

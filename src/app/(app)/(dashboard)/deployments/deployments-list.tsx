@@ -20,10 +20,10 @@ import { DeploymentActions } from "./deployment-actions";
 const POLLING_INTERVAL_MS = 3000; // 3 seconds
 
 /**
- * Poll whenever deployments are still in progress or need verification
+ * Poll whenever deployments are still in progress
  */
 function isActivelyDeploying(deployment: Deployment): boolean {
-	return deployment.status === "deploying" || deployment.status === "timeout";
+	return deployment.status === "deploying";
 }
 
 interface DeploymentsListProps {
@@ -47,8 +47,6 @@ function getStatusIcon(status: string) {
 			return <AlertCircle className="h-4 w-4 text-red-500" />;
 		case "deploying":
 			return <Clock className="h-4 w-4 text-blue-500 animate-spin" />;
-		case "timeout":
-			return <Clock className="h-4 w-4 text-yellow-500" />;
 		default:
 			return null;
 	}
@@ -62,8 +60,6 @@ function getStatusBadgeVariant(status: string) {
 			return "destructive" as const;
 		case "deploying":
 			return "secondary" as const;
-		case "timeout":
-			return "outline" as const;
 		default:
 			return "outline" as const;
 	}
@@ -107,8 +103,6 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 						`Deployment "${deployment.projectName}" failed: ${deployment.error || "Unknown error"}`,
 						{ duration: 10000 }
 					);
-				} else if (deployment.status === "timeout") {
-					toast.warning(`Deployment "${deployment.projectName}" timed out`);
 				}
 			}
 		}

@@ -5,7 +5,10 @@ name: Initialize Upstream History
 # This enables seamless syncing with the upstream template via the sync-upstream.yml workflow.
 
 on:
-  workflow_dispatch: # Triggered programmatically after repo creation
+  push:
+    branches:
+      - "**"
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -16,6 +19,7 @@ env:
 
 jobs:
   init:
+    if: ${{ github.ref_name == github.event.repository.default_branch }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code

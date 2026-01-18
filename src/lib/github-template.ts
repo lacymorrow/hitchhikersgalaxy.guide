@@ -71,30 +71,6 @@ export class GitHubTemplateService {
 
 			console.log(`Successfully created repository: ${response.data.html_url}`);
 
-			// Add upstream information to the repository description or topics
-			await this.addUpstreamInfo({
-				owner: config.newRepoOwner,
-				repo: config.newRepoName,
-				upstreamOwner: config.templateOwner,
-				upstreamRepo: config.templateRepo,
-			});
-
-			const defaultBranch = response.data.default_branch || "main";
-
-			// Trigger init-upstream workflow to graft upstream history
-			// This enables clean future syncs without --allow-unrelated-histories
-			// Run in background - don't block the deployment on this
-			this.initializeUpstreamHistory(
-				config.newRepoOwner,
-				config.newRepoName,
-				defaultBranch,
-			).catch((error) => {
-				console.warn(
-					"Failed to initialize upstream history (non-blocking):",
-					error,
-				);
-			});
-
 			return {
 				success: true,
 				repoUrl: response.data.html_url,
@@ -290,6 +266,7 @@ For more information, see the [GitHub documentation on syncing a fork](https://d
 			// Don't fail the whole operation if this fails
 		}
 	}
+
 
 	/**
 	 * Get information about a repository

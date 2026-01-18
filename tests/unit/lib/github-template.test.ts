@@ -2,12 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest"
 import { GitHubTemplateService } from "@/lib/github-template"
 
 const mockCreateWorkflowDispatch = vi.fn()
-const mockCreateUsingTemplate = vi.fn()
 
 vi.mock("@octokit/rest", () => ({
 	Octokit: vi.fn(() => ({
 		repos: {
-			createUsingTemplate: mockCreateUsingTemplate,
 			replaceAllTopics: vi.fn(),
 		},
 		actions: {
@@ -19,7 +17,6 @@ vi.mock("@octokit/rest", () => ({
 describe("GitHubTemplateService", () => {
 	beforeEach(() => {
 		mockCreateWorkflowDispatch.mockReset()
-		mockCreateUsingTemplate.mockReset()
 	})
 
 	afterEach(() => {
@@ -46,37 +43,4 @@ describe("GitHubTemplateService", () => {
 		)
 	})
 
-	it("uses the template default branch when triggering init-upstream", async () => {
-		const service = new GitHubTemplateService({ accessToken: "token" })
-
-		// Avoid waiting for timers in initializeUpstreamHistory.
-		const initializeSpy = vi
-			.spyOn(service, "initializeUpstreamHistory")
-			.mockResolvedValue({ success: true })
-
-		vi.spyOn(service as unknown as { verifyTemplateAccess: () => Promise<void> }, "verifyTemplateAccess")
-			.mockResolvedValue(undefined)
-		vi.spyOn(service as unknown as { addUpstreamInfo: () => Promise<void> }, "addUpstreamInfo")
-			.mockResolvedValue(undefined)
-
-		mockCreateUsingTemplate.mockResolvedValue({
-			data: {
-				html_url: "https://github.com/ship-kit/repo-name",
-				id: 123,
-				clone_url: "https://github.com/ship-kit/repo-name.git",
-				ssh_url: "git@github.com:ship-kit/repo-name.git",
-				full_name: "ship-kit/repo-name",
-				default_branch: "develop",
-			},
-		})
-
-		await service.createFromTemplate({
-			templateOwner: "ship-kit",
-			templateRepo: "shipkit",
-			newRepoName: "repo-name",
-			newRepoOwner: "ship-kit",
-		})
-
-		expect(initializeSpy).toHaveBeenCalledWith("ship-kit", "repo-name", "develop")
-	})
 })

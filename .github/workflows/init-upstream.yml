@@ -5,10 +5,7 @@ name: Initialize Upstream History
 # This enables seamless syncing with the upstream template via the sync-upstream.yml workflow.
 
 on:
-  push:
-    branches:
-      - "**"
-  workflow_dispatch:
+  workflow_dispatch: # Triggered programmatically after repo creation
 
 permissions:
   contents: write

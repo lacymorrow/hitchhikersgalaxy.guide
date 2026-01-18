@@ -365,6 +365,7 @@ export const DashboardVercelDeploy = ({
 	const resetForm = () => {
 		latestProjectNameRef.current = "";
 		setProjectName("");
+		setIsDeploying(false);
 		setValidationError(null);
 		setIsValidating(false);
 		setAvailabilityChecked(false);

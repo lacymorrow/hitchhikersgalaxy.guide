@@ -7,6 +7,7 @@ import { AlertCircle, CheckCircle2, Clock, Rocket } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 
+import { Icons } from "@/components/assets/icons";
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/ui/data-table/data-table";
@@ -15,6 +16,7 @@ import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import type { Deployment } from "@/server/db/schema";
 import { DeploymentActions } from "./deployment-actions";
+import { ExternalLinkIcon, Link1Icon, Link2Icon } from "@radix-ui/react-icons";
 
 // Constants for polling configuration
 const POLLING_INTERVAL_MS = 3000; // 3 seconds
@@ -177,6 +179,47 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 				<span className="text-muted-foreground">
 					{formatDistanceToNow(new Date(row.original.createdAt), { addSuffix: true })}
 				</span>
+			),
+		},
+		{
+			id: "links",
+			header: "",
+			cell: ({ row }) => (
+				<div className="flex items-center gap-1">
+					{row.original.vercelProjectUrl && (
+						<a
+							href={row.original.vercelProjectUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+							title="View on Vercel"
+						>
+							<Icons.vercel className="h-4 w-4" />
+						</a>
+					)}
+					{row.original.vercelProjectUrl && (
+						<a
+							href={row.original.vercelProjectUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+							title="View on GitHub"
+						>
+							<Icons.github className="h-4 w-4" />
+						</a>
+					)}
+					{row.original.vercelProjectUrl && (
+						<a
+							href={row.original.vercelProjectUrl}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+							title="View on GitHub"
+						>
+							<Link2Icon className="h-4 w-4" />
+						</a>
+					)}
+				</div>
 			),
 		},
 		{

@@ -2,6 +2,7 @@
 
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { PlusIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 import * as React from "react";
 import { ProjectDialog } from "@/components/modules/projects/project-dialog";
 import { useTeam } from "@/components/providers/team-provider";
@@ -36,8 +37,6 @@ async function fetchTeamProjects(
 	const data = await response.json();
 	return data.projects ?? [];
 }
-
-import { useSession } from "next-auth/react";
 
 interface ProjectSwitcherProject {
 	id: string;
@@ -112,72 +111,81 @@ export const ProjectSwitcher = ({
 	);
 
 	return (
-		<div className={cn("min-w-0", className)}>
-			<Popover open={open} onOpenChange={setOpen}>
-				<PopoverTrigger asChild>
-					<Button
-						variant="outline"
-						size="sm"
-						className="flex w-[260px] max-w-full items-center justify-between gap-2"
-						disabled={!selectedTeamId}
-						aria-label="Select project"
-					>
-						<div className="flex min-w-0 items-center gap-2">
-							<span className="truncate text-sm">
-								{activeProject?.name ??
-									(selectedTeamId ? "Select project" : "Select team first")}
-							</span>
-						</div>
-						<CaretSortIcon className="h-4 w-4 shrink-0 opacity-50" />
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent className="w-[260px] p-0" align="start">
-					<Command>
-						<CommandInput placeholder="Search project..." />
-						<CommandList>
-							<CommandEmpty>No projects found.</CommandEmpty>
-							<CommandGroup heading="Projects">
-								{projects.map((project) => (
-									<CommandItem
-										key={project.id}
-										onSelect={() => handleProjectSelect(project)}
-										className="text-sm"
-									>
-										<span className="truncate">{project.name}</span>
-										<CheckIcon
-											className={cn(
-												"ml-auto h-4 w-4",
-												activeProject?.id === project.id
-													? "opacity-100"
-													: "opacity-0",
-											)}
-										/>
-									</CommandItem>
-								))}
-							</CommandGroup>
-							<CommandSeparator />
-							<CommandGroup>
-								{session?.user?.id ? (
-									<ProjectDialog userId={session.user.id} variant="create">
+		<Popover open={open} onOpenChange={setOpen}>
+			<PopoverTrigger asChild>
+				<Button
+					variant="ghost"
+					size="sm"
+					className={cn(
+						"flex h-12 w-[260px] max-w-full items-center justify-between gap-2 py-6",
+						className,
+					)}
+					disabled={!selectedTeamId}
+					aria-label="Select project"
+				>
+					<span className="truncate text-sm font-semibold">
+						{activeProject?.name ??
+							(selectedTeamId ? "Select project" : "Select team first")}
+					</span>
+					<CaretSortIcon className="h-4 w-4 shrink-0 opacity-50" />
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="w-[260px] p-0" align="start">
+				<Command>
+					<CommandInput placeholder="Search project..." />
+					<CommandList>
+						<CommandEmpty>No projects found.</CommandEmpty>
+						{projects.length > 0 ? (
+							<>
+								<CommandGroup heading="Projects">
+									{projects.map((project) => (
 										<CommandItem
-											onSelect={() => setOpen(false)}
+											key={project.id}
+											onSelect={() => handleProjectSelect(project)}
 											className="text-sm"
 										>
-											<PlusIcon className="mr-2 h-4 w-4" />
-											Create Project
+											<span className="truncate">{project.name}</span>
+											<CheckIcon
+												className={cn(
+													"ml-auto h-4 w-4",
+													activeProject?.id === project.id
+														? "opacity-100"
+														: "opacity-0",
+												)}
+											/>
 										</CommandItem>
-									</ProjectDialog>
-								) : (
-									<CommandItem disabled className="text-sm">
-										<PlusIcon className="mr-2 h-4 w-4" />
-										Sign in to create a project
-									</CommandItem>
-								)}
+									))}
+								</CommandGroup>
+								<CommandSeparator />
+							</>
+						) : (
+							<CommandGroup>
+								<CommandItem disabled className="text-sm text-muted-foreground">
+									No projects yet
+								</CommandItem>
 							</CommandGroup>
-						</CommandList>
-					</Command>
-				</PopoverContent>
-			</Popover>
-		</div>
+						)}
+						<CommandGroup>
+							{session?.user?.id ? (
+								<ProjectDialog userId={session.user.id} variant="create">
+									<CommandItem
+										onSelect={() => setOpen(false)}
+										className="text-sm"
+									>
+										<PlusIcon className="mr-2 h-4 w-4" />
+										Create Project
+									</CommandItem>
+								</ProjectDialog>
+							) : (
+								<CommandItem disabled className="text-sm">
+									<PlusIcon className="mr-2 h-4 w-4" />
+									Sign in to create a project
+								</CommandItem>
+							)}
+						</CommandGroup>
+					</CommandList>
+				</Command>
+			</PopoverContent>
+		</Popover>
 	);
 };

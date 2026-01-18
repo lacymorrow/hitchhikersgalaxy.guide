@@ -171,11 +171,11 @@ export function TeamSwitcher({
 						variant="ghost"
 						size="sm"
 						className={cn(
-							"flex items-center gap-2",
+							"flex items-center gap-2 py-6 h-12",
 							variant === "sidebar"
 								? "w-full"
 								: "w-[260px] max-w-full justify-between",
-							variant === "sidebar" && sidebarOpen && "justify-between py-6",
+							variant === "sidebar" && sidebarOpen && "justify-between",
 						)}
 						aria-label="Select team"
 					>
@@ -184,9 +184,9 @@ export function TeamSwitcher({
 								src={
 									activeTeam?.team
 										? getAvatarUrl(
-												activeTeam.team.name,
-												activeTeam.team.type as AvatarType,
-											)
+											activeTeam.team.name,
+											activeTeam.team.type as AvatarType,
+										)
 										: getAvatarUrl("team")
 								}
 								alt={activeTeam?.team?.name || "Team"}
@@ -265,40 +265,40 @@ export function TeamSwitcher({
 									{/* Other Teams */}
 									{teams.filter((t) => t.team.type === "workspace").length >
 										0 && (
-										<CommandGroup heading="Teams">
-											{teams
-												.filter((t) => t.team.type === "workspace")
-												.map((team) => (
-													<CommandItem
-														key={team.team.id}
-														onSelect={() => handleTeamSelect(team)}
-														className="text-sm"
-													>
-														<Avatar className="mr-2 h-5 w-5">
-															<AvatarImage
-																src={getAvatarUrl(
-																	team.team.name,
-																	team.team.type as AvatarType,
+											<CommandGroup heading="Teams">
+												{teams
+													.filter((t) => t.team.type === "workspace")
+													.map((team) => (
+														<CommandItem
+															key={team.team.id}
+															onSelect={() => handleTeamSelect(team)}
+															className="text-sm"
+														>
+															<Avatar className="mr-2 h-5 w-5">
+																<AvatarImage
+																	src={getAvatarUrl(
+																		team.team.name,
+																		team.team.type as AvatarType,
+																	)}
+																	alt={team.team.name}
+																/>
+																<AvatarFallback>
+																	{team.team.name.charAt(0)}
+																</AvatarFallback>
+															</Avatar>
+															{team.team.name}
+															<CheckIcon
+																className={cn(
+																	"ml-auto h-4 w-4",
+																	activeTeam?.team.id === team.team.id
+																		? "opacity-100"
+																		: "opacity-0",
 																)}
-																alt={team.team.name}
 															/>
-															<AvatarFallback>
-																{team.team.name.charAt(0)}
-															</AvatarFallback>
-														</Avatar>
-														{team.team.name}
-														<CheckIcon
-															className={cn(
-																"ml-auto h-4 w-4",
-																activeTeam?.team.id === team.team.id
-																	? "opacity-100"
-																	: "opacity-0",
-															)}
-														/>
-													</CommandItem>
-												))}
-										</CommandGroup>
-									)}
+														</CommandItem>
+													))}
+											</CommandGroup>
+										)}
 								</>
 							)}
 							<CommandSeparator />

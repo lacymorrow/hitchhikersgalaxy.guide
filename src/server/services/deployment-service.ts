@@ -11,8 +11,8 @@ import { getVercelAccessToken } from "@/server/services/vercel/vercel-service";
 
 // Constants
 const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
-const POLLING_INTERVAL_MS = 3000; // 3 seconds
-const MAX_DEPLOYMENT_POLL_ATTEMPTS = 20; // Poll for up to ~60 seconds
+const POLLING_INTERVAL_MS = 10000; // 10 seconds
+const MAX_DEPLOYMENT_POLL_ATTEMPTS = 18; // Poll for up to ~3 minutes
 
 // Types
 export interface DeploymentConfig {
@@ -333,6 +333,7 @@ class DeploymentService {
 						: deployment.vercelDeploymentUrl;
 					await this.updateDeployment(deployment.id, userId, {
 						status: resolvedStatus.status,
+						vercelDeploymentId: latestDeployment.uid ?? latestDeployment.id ?? deployment.vercelDeploymentId,
 						vercelDeploymentUrl: deploymentUrl,
 						error: resolvedStatus.error,
 					});
@@ -839,6 +840,7 @@ class DeploymentService {
 			if (deploymentResult.success && deploymentResult.deploymentUrl) {
 				logger.info("Initial deployment triggered", { projectName, url: deploymentResult.deploymentUrl });
 				await this.updateDeployment(deploymentId, userId, {
+					vercelDeploymentId: deploymentResult.deploymentId,
 					vercelDeploymentUrl: `https://${deploymentResult.deploymentUrl}`,
 				});
 			} else {
@@ -894,6 +896,7 @@ class DeploymentService {
 
 						await this.updateDeployment(deploymentId, userId, {
 							status: resolvedStatus.status,
+							vercelDeploymentId: latestDeployment.uid ?? latestDeployment.id,
 							vercelDeploymentUrl: deploymentUrl,
 							error: resolvedStatus.error,
 						});

@@ -219,6 +219,8 @@ const nextConfig: NextConfig = {
     "@payloadcms/plugin-cloud-storage",
     "@payloadcms/ui",
     "react-image-crop",
+    // ESM-only packages that need to be externalized
+    "@octokit/rest",
   ],
 
   /*

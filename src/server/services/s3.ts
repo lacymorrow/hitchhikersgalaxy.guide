@@ -95,44 +95,25 @@ async function getS3Client() {
  * Generates a presigned URL for uploading a file to S3.
  * Throws an error if S3 is not configured or enabled.
  */
-export async function generatePresignedUrl(
-  fileName: string,
-  contentType: string,
-) {
-  const client = await getS3Client();
+export async function generatePresignedUrl(fileName: string, contentType: string) {
+	if (!s3Client) {
+		logger.error("Attempted to generate presigned URL but S3 is disabled or not configured.");
+		throw new Error("S3 storage is not enabled or configured.");
+	}
 
-  if (!client) {
-    logger.error(
-      "Attempted to generate presigned URL but S3 is disabled or not configured.",
-    );
-    throw new Error("S3 storage is not enabled or configured.");
-  }
+	const command = new PutObjectCommand({
+		Bucket: env.AWS_BUCKET_NAME,
+		Key: fileName,
+		ContentType: contentType,
+	});
 
-  await loadAwsSdk();
-
-  if (!PutObjectCommandClass || !getSignedUrlFn) {
-    throw new Error("AWS SDK not properly loaded");
-  }
-
-  const command = new PutObjectCommandClass({
-    Bucket: env.AWS_BUCKET_NAME,
-    Key: fileName,
-    ContentType: contentType,
-  });
-
-  try {
-    const signedUrl = await getSignedUrlFn(client, command, {
-      expiresIn: 3600,
-    });
-    return signedUrl;
-  } catch (error) {
-    logger.error("Error generating presigned URL", {
-      error,
-      fileName,
-      contentType,
-    });
-    throw new Error("Failed to generate presigned URL for S3");
-  }
+	try {
+		const signedUrl = await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+		return signedUrl;
+	} catch (error) {
+		logger.error("Error generating presigned URL", { error, fileName, contentType });
+		throw new Error("Failed to generate presigned URL for S3");
+	}
 }
 
 /**
@@ -140,30 +121,20 @@ export async function generatePresignedUrl(
  * Throws an error if S3 is not configured or enabled.
  */
 export const deleteFromS3 = async (fileName: string): Promise<void> => {
-  const client = await getS3Client();
+	if (!s3Client) {
+		logger.error("Attempted to delete from S3 but S3 is disabled or not configured.");
+		throw new Error("S3 storage is not enabled or configured.");
+	}
 
-  if (!client) {
-    logger.error(
-      "Attempted to delete from S3 but S3 is disabled or not configured.",
-    );
-    throw new Error("S3 storage is not enabled or configured.");
-  }
-
-  await loadAwsSdk();
-
-  if (!DeleteObjectCommandClass) {
-    throw new Error("AWS SDK not properly loaded");
-  }
-
-  try {
-    await client.send(
-      new DeleteObjectCommandClass({
-        Bucket: env.AWS_BUCKET_NAME,
-        Key: fileName,
-      }),
-    );
-  } catch (error) {
-    logger.error("Error deleting file from S3", { error, fileName });
-    throw new Error("Failed to delete file from S3");
-  }
+	try {
+		await s3Client.send(
+			new DeleteObjectCommand({
+				Bucket: env.AWS_BUCKET_NAME,
+				Key: fileName,
+			})
+		);
+	} catch (error) {
+		logger.error("Error deleting file from S3", { error, fileName });
+		throw new Error("Failed to delete file from S3");
+	}
 };

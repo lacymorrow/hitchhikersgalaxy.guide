@@ -228,12 +228,6 @@ const nextConfig: NextConfig = {
   /*
    * Experimental configuration
    */
-  /*
-   * React Compiler - enables useMemoCache runtime support
-   * Required for dependencies like lucide-react and @payloadcms/ui that use the compiler
-   */
-  reactCompiler: true,
-
   experimental: {
     // esmExternals: true,
     // mdxRs: true,

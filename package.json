@@ -141,6 +141,7 @@
     "ansi-to-html": "^0.7.2",
     "ansi-to-react": "^6.1.6",
     "aspect-ratio": "^2.1.9",
+    "babel-plugin-react-compiler": "^1.0.0",
     "better-auth": "^1.4.10",
     "better-react-mathjax": "^2.3.0",
     "blurhash": "^2.0.5",

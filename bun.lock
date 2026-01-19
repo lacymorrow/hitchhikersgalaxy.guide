@@ -79,6 +79,7 @@
         "ansi-to-html": "^0.7.2",
         "ansi-to-react": "^6.1.6",
         "aspect-ratio": "^2.1.9",
+        "babel-plugin-react-compiler": "^1.0.0",
         "better-auth": "^1.4.10",
         "better-react-mathjax": "^2.3.0",
         "blurhash": "^2.0.5",
@@ -2341,6 +2342,8 @@
     "babel-plugin-polyfill-corejs3": ["babel-plugin-polyfill-corejs3@0.13.0", "", { "dependencies": { "@babel/helper-define-polyfill-provider": "^0.6.5", "core-js-compat": "^3.43.0" }, "peerDependencies": { "@babel/core": "^7.4.0 || ^8.0.0-0 <8.0.0" } }, "sha512-U+GNwMdSFgzVmfhNm8GJUX88AadB3uo9KpJqS3FaqNIPKgySuvMb+bHPsOmmuWyIcuqZj/pzt1RUIUZns4y2+A=="],
 
     "babel-plugin-polyfill-regenerator": ["babel-plugin-polyfill-regenerator@0.6.5", "", { "dependencies": { "@babel/helper-define-polyfill-provider": "^0.6.5" }, "peerDependencies": { "@babel/core": "^7.4.0 || ^8.0.0-0 <8.0.0" } }, "sha512-ISqQ2frbiNU9vIJkzg7dlPpznPZ4jOiUQ1uSmB0fEHeowtN3COYRsXr/xexn64NpU13P06jc/L5TgiJXOgrbEg=="],
+
+    "babel-plugin-react-compiler": ["babel-plugin-react-compiler@1.0.0", "", { "dependencies": { "@babel/types": "^7.26.0" } }, "sha512-Ixm8tFfoKKIPYdCCKYTsqv+Fd4IJ0DQqMyEimo+pxUOMUR9cVPlwTrFt9Avu+3cb6Zp3mAzl+t1MrG2fxxKsxw=="],
 
     "babel-plugin-syntax-jsx": ["babel-plugin-syntax-jsx@6.18.0", "", {}, "sha512-qrPaCSo9c8RHNRHIotaufGbuOBN8rtdC4QrrFFc43vyWCCz7Kl7GL1PGaXtMGQZUXrkCjNEgxDfmAuAabr/rlw=="],
 

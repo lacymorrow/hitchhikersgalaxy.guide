@@ -25,7 +25,8 @@ export const STATUS_CODES = {
 	},
 	EMAIL_EXISTS_DIFFERENT_PROVIDER: {
 		code: "EMAIL_EXISTS_DIFFERENT_PROVIDER",
-		message: "An account with this email already exists. Please sign in using your original sign-in method.",
+		message:
+			"An account with this email already exists. Please sign in using your original sign-in method.",
 	},
 	LOGIN: {
 		code: "LOGIN",
@@ -42,7 +43,16 @@ export const STATUS_CODES = {
 	},
 	GITHUB_INVITATION_PENDING: {
 		code: "GITHUB_INVITATION_PENDING",
-		message: "You have a pending GitHub repository invitation. Please accept it to continue.",
+		message:
+			"You have a pending GitHub repository invitation. Please accept it to continue.",
+	},
+	GITHUB_OAUTH_FAILED: {
+		code: "GITHUB_OAUTH_FAILED",
+		message: "Failed to connect with GitHub. Please try again.",
+	},
+	GITHUB_TOKEN_INVALID: {
+		code: "GITHUB_TOKEN_INVALID",
+		message: "Your GitHub connection has expired. Please reconnect.",
 	},
 
 	// Vercel connection status codes

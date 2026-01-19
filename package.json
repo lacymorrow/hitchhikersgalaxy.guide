@@ -6,7 +6,7 @@
   "scripts": {
     "build": "next build",
     "build:legacy": "next build",
-    "build:vercel": "NODE_OPTIONS='--max-old-space-size=8192 --import ./scripts/css-loader.mjs' next build --webpack",
+    "build:vercel": "NODE_OPTIONS='--max-old-space-size=8192' next build --webpack",
     "clean": "rm next-env.d.ts ; rm package-lock.json ; rm pnpm-lock.yaml ; rm bun.lockb ; rm -rf .next ; rm -rf node_modules ; rm -rf .next ; rm -rf .turbo",
     "clean:cache": "rm -rf .next/cache",
     "fix": "npm run clean && npm run payload generate:types && npm run payload generate:importmap",
@@ -36,7 +36,7 @@
     "start": "next start",
     "upstream:setup": "tsx scripts/setup-upstream.ts",
     "upstream:pull": "tsx scripts/git-sync-upstream.ts",
-    "postinstall": "npx next telemetry disable && tsx scripts/setup-upstream.ts",
+    "postinstall": "npx next telemetry disable && tsx scripts/setup-upstream.ts && node scripts/patch-react-image-crop.js",
     "pull": "tsx scripts/git-sync-upstream.ts",
     "workers:build": "tsc -p .config/tsconfig.workers.json",
     "workers:dev": "concurrently \"npm run workers:build\" \"tsc -p .config/tsconfig.workers.json --watch\"",

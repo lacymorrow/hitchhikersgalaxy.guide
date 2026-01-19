@@ -458,6 +458,17 @@ const nextConfig: NextConfig = {
       };
     }
 
+    // Handle CSS imports from react-image-crop on the server
+    // This prevents ERR_UNKNOWN_FILE_EXTENSION errors at runtime
+    if (isServer) {
+      config.resolve = config.resolve || {};
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        // Stub out react-image-crop CSS on the server
+        "react-image-crop/dist/ReactCrop.css": false,
+      };
+    }
+
     return config;
   },
 };

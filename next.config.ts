@@ -200,6 +200,8 @@ const nextConfig: NextConfig = {
    * This prevents Turbopack from trying to bundle these optional peer dependencies
    */
   serverExternalPackages: [
+    // Native modules that fail to compile on Vercel
+    "isolated-vm",
     // Drizzle Kit - CLI tool bundled by Payload CMS that has many optional drivers
     "drizzle-kit",
     // Optional Drizzle ORM database drivers

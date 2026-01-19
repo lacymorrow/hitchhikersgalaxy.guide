@@ -301,7 +301,8 @@
     "react-dom": "19.2.3",
     "oauth4webapi": "3.6.2",
     "@tanstack/react-query": "5.90.16",
-    "@tanstack/query-core": "5.83.0"
+    "@tanstack/query-core": "5.83.0",
+    "isolated-vm": "npm:empty-npm-package@1.0.0"
   },
   "packageManager": "bun@1.3.5",
   "trustedDependencies": [
@@ -314,7 +315,6 @@
     "edgedriver",
     "esbuild",
     "geckodriver",
-    "isolated-vm",
     "onnxruntime-node",
     "protobufjs",
     "sharp",

@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 /**
- * Patch react-image-crop to fix CSS import issues in Node.js ESM
+ * Patch Payload CMS UI to fix non-JS import issues in Node.js ESM
  *
- * This script replaces the CSS file content with a JS module stub.
- * Node.js ESM will execute the JS code instead of failing on the .css extension.
- * Webpack/browser bundling gets the CSS through @payloadcms/next/css.
+ * This script removes style/asset imports from @payloadcms/ui files that cause
+ * ERR_UNKNOWN_FILE_EXTENSION errors at runtime on Vercel serverless.
+ * The assets are already bundled separately by Payload/webpack for the browser.
  */
 
 import fs from "node:fs";
@@ -13,41 +13,112 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
+const payloadUiDir = path.join(projectRoot, "node_modules/@payloadcms/ui/dist");
 
-const cssPath = path.join(
-  projectRoot,
-  "node_modules/react-image-crop/dist/ReactCrop.css",
+// File extensions that Node.js ESM cannot handle
+const problematicExtensions =
+  "css|scss|svg|png|jpg|jpeg|gif|webp|ico|woff|woff2|eot|ttf|otf";
+
+// Patterns to match problematic imports (both formatted and minified)
+const problematicImportPatterns = [
+  // Style imports: import './something.scss';
+  new RegExp(
+    `import\\s+['"][^'"]*\\.(${problematicExtensions})['"];?\\n?`,
+    "g",
+  ),
+  // Minified style imports: import"./something.scss";
+  new RegExp(`import["'][^"']*\\.(${problematicExtensions})["'];?`, "g"),
+  // Asset imports with variable: import something from './file.svg';
+  new RegExp(
+    `import\\s+(\\w+)\\s+from\\s+['"][^'"]*\\.(${problematicExtensions})['"];?\\n?`,
+    "g",
+  ),
+  // Minified asset imports: import a from"./file.svg";
+  new RegExp(
+    `import\\s*(\\w+)\\s*from["'][^"']*\\.(${problematicExtensions})["'];?`,
+    "g",
+  ),
+  // Re-export: export { default as name } from './file.svg';
+  new RegExp(
+    `export\\s*\\{\\s*default\\s+as\\s+(\\w+)\\s*\\}\\s*from\\s*['"][^'"]*\\.(${problematicExtensions})['"];?\\n?`,
+    "g",
+  ),
+  // Minified re-export: export{default as name}from"./file.svg";
+  new RegExp(
+    `export\\s*\\{\\s*default\\s+as\\s+(\\w+)\\s*\\}\\s*from\\s*["'][^"']*\\.(${problematicExtensions})["'];?`,
+    "g",
+  ),
+];
+
+let patchedCount = 0;
+let filesScanned = 0;
+
+function patchFile(filePath) {
+  if (!fs.existsSync(filePath)) {
+    return false;
+  }
+
+  let content = fs.readFileSync(filePath, "utf-8");
+  let originalContent = content;
+
+  for (const pattern of problematicImportPatterns) {
+    pattern.lastIndex = 0;
+    content = content.replace(pattern, (match, varName) => {
+      // For imports/exports that assign to a variable, replace with empty string
+      if (varName && /^[a-zA-Z_$][a-zA-Z0-9_$]*$/.test(varName)) {
+        if (match.trimStart().startsWith("export")) {
+          return `export const ${varName} = "";/* asset export removed */`;
+        }
+        return `const ${varName} = "";/* asset import removed */`;
+      }
+      return "/* style import removed */";
+    });
+  }
+
+  if (content !== originalContent) {
+    fs.writeFileSync(filePath, content);
+    return true;
+  }
+  return false;
+}
+
+function walkDir(dir, callback) {
+  if (!fs.existsSync(dir)) {
+    return;
+  }
+
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      walkDir(fullPath, callback);
+    } else if (entry.isFile() && entry.name.endsWith(".js")) {
+      callback(fullPath);
+    }
+  }
+}
+
+console.log("[patch] Scanning @payloadcms/ui for problematic imports...");
+
+if (fs.existsSync(payloadUiDir)) {
+  walkDir(payloadUiDir, (filePath) => {
+    filesScanned++;
+    if (patchFile(filePath)) {
+      const relPath = path.relative(projectRoot, filePath);
+      console.log(`[patch] Patched: ${relPath}`);
+      patchedCount++;
+    }
+  });
+}
+
+console.log(
+  `[patch] Scanned ${filesScanned} files, patched ${patchedCount} file(s)`,
 );
 
-// Check if already patched
-const cssContent = fs.existsSync(cssPath)
-  ? fs.readFileSync(cssPath, "utf-8")
-  : "";
-if (cssContent.includes("Auto-generated stub")) {
-  console.log("[patch-react-image-crop] Already patched, skipping");
-  process.exit(0);
-}
-
-// Check if the CSS file exists
-if (!fs.existsSync(cssPath)) {
-  console.log("[patch-react-image-crop] CSS file not found, skipping patch");
-  process.exit(0);
-}
-
-// The stub content - a valid JS module that Node.js ESM can execute
-const stubContent = `// Auto-generated stub for Node.js ESM compatibility
-// The actual CSS styles are bundled by @payloadcms/next/css for the browser
-export default {};
-`;
-
-try {
-  // Simply replace the CSS file content with the JS stub
-  // Node.js ESM will execute this as JavaScript even though it has a .css extension
-  // because the package.json has "type": "module"
-  fs.writeFileSync(cssPath, stubContent);
-  console.log("[patch-react-image-crop] Replaced CSS with JS stub at", cssPath);
-  console.log("[patch-react-image-crop] Patch complete");
-} catch (error) {
-  console.error("[patch-react-image-crop] Error:", error.message);
-  process.exit(1);
+if (patchedCount > 0) {
+  console.log(
+    "[patch] Successfully removed problematic imports from @payloadcms/ui",
+  );
+} else {
+  console.log("[patch] No problematic imports found to patch");
 }

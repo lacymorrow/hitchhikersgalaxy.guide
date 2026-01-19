@@ -5,15 +5,15 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "build:legacy": "next build",
-    "build:vercel": "NODE_OPTIONS='--max-old-space-size=8192 --import ./scripts/css-loader.mjs' next build --webpack",
+    "build:webpack": "next build --webpack",
+    "build:vercel": "NODE_OPTIONS='--max-old-space-size=8192 --import ./scripts/css-loader.mjs' next build",
     "clean": "rm next-env.d.ts ; rm package-lock.json ; rm pnpm-lock.yaml ; rm bun.lockb ; rm -rf .next ; rm -rf node_modules ; rm -rf .next ; rm -rf .turbo",
     "clean:cache": "rm -rf .next/cache",
     "fix": "npm run clean && npm run payload generate:types && npm run payload generate:importmap",
     "dev": "next dev",
-    "dev:legacy": "next dev",
+    "dev:webpack": "next dev --webpack",
     "dev:https": "next dev --experimental-https",
-    "dev:all": "concurrently \"npm run dev:legacy\" \"npm run workers:dev\"",
+    "dev:all": "concurrently \"npm run dev\" \"npm run workers:dev\"",
     "db:generate": "drizzle-kit generate --config .config/drizzle.config.ts",
     "db:migrate": "drizzle-kit migrate --config .config/drizzle.config.ts",
     "db:push": "drizzle-kit push --config .config/drizzle.config.ts",
@@ -284,8 +284,7 @@
     "vite-tsconfig-paths": "^6.0.3",
     "vitest": "^4.0.16",
     "vitest-browser-react": "^2.0.2",
-    "webdriverio": "9.22.0",
-    "worker-loader": "^3.0.8"
+    "webdriverio": "9.22.0"
   },
   "shipkit": {
     "bones": "0.2.1"

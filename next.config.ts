@@ -1,7 +1,4 @@
-import path from "node:path";
 import type { NextConfig } from "next";
-import webpack from "webpack";
-import type { Configuration as WebpackConfiguration } from "webpack";
 import {
   buildTimeFeatureFlags,
   buildTimeFeatures,
@@ -372,122 +369,26 @@ const nextConfig: NextConfig = {
   },
 
   /*
-   * Turbopack configuration
-   * @see https://nextjs.org/docs/app/api-reference/next-config-js/turbo
-   * Note: Turbopack is disabled for production builds due to Payload CMS CSS import issues
-   * See: https://github.com/payloadcms/payload/issues/14786
+   * Turbopack configuration (stable in Next.js 16)
+   * @see https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack
    */
   turbopack: {
     rules: {
-      // Add rules for raw-loader to handle specific file types
-      // This mirrors the webpack config for these extensions
+      // Handle raw file types
       "*.(node|bin|html)": {
         loaders: ["raw-loader"],
         as: "*.js",
       },
+      // Handle MDX files for docs
+      "*.mdx": {
+        loaders: ["raw-loader"],
+        as: "*.js",
+      },
     },
-  },
-
-  /*
-   * Webpack configuration
-   */
-  webpack: (
-    config: WebpackConfiguration,
-    { dev, isServer }: { dev: boolean; isServer: boolean },
-  ) => {
-    // Enable top-level await
-    config.experiments = { ...config.experiments, topLevelAwait: true };
-
-    if (config.module?.rules) {
-      // Add support for async/await in web workers
-      config.module.rules.push({
-        test: /\.worker\.(js|ts)$/,
-        use: {
-          loader: "worker-loader",
-          options: {
-            filename: "static/[hash].worker.js",
-            publicPath: "/_next/",
-          },
-        },
-      });
-
-      if (isServer) {
-        // Ensure docs directory is included in the bundle for dynamic imports
-        config.module.rules.push({
-          test: /\.(md|mdx)$/,
-          include: [
-            path.join(process.cwd(), "docs"),
-            // require("path").join(process.cwd(), "src/content/docs"),
-          ],
-          use: "raw-loader",
-        });
-      }
-    }
-
-    /*
-     * Enhanced Webpack Externals - Production Bundle Optimization
-     * Excludes heavy dependencies from client bundle to reduce size
-     * Only applied in production server builds to maintain functionality
-     */
-    if (!dev && isServer) {
-      const existingExternals = Array.isArray(config.externals)
-        ? config.externals
-        : [];
-      config.externals = [
-        ...existingExternals,
-        {
-          // AI/ML Libraries - Heavy and not needed in client
-          "@huggingface/transformers": "commonjs @huggingface/transformers",
-          "@huggingface/inference": "commonjs @huggingface/inference",
-
-          // API Clients - Server-side only
-          googleapis: "commonjs googleapis",
-          "@octokit/rest": "commonjs @octokit/rest",
-
-          // Rich Text Editors - Client-side alternatives available
-          "monaco-editor": "commonjs monaco-editor",
-
-          // Large utility libraries - Tree-shake in production
-          jspdf: "commonjs jspdf",
-          three: "commonjs three",
-          "@react-three/fiber": "commonjs @react-three/fiber",
-          "@react-three/drei": "commonjs @react-three/drei",
-
-          // Development tools - Not needed in production
-          "react-scan": "commonjs react-scan",
-        },
-      ];
-    }
-
-    if (config.resolve?.alias) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        // "onnxruntime-node": false,
-        // "onnxruntime-common": false,
-      };
-    }
-
-    // Handle CSS imports from react-image-crop on the server
-    // This prevents ERR_UNKNOWN_FILE_EXTENSION errors at runtime
-    if (isServer) {
-      config.resolve = config.resolve || {};
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        // Stub out react-image-crop CSS on the server
-        "react-image-crop/dist/ReactCrop.css": false,
-      };
-
-      // Use NormalModuleReplacementPlugin to replace CSS imports with empty module
-      config.plugins = config.plugins || [];
-      config.plugins.push(
-        new webpack.NormalModuleReplacementPlugin(
-          /react-image-crop\/dist\/ReactCrop\.css$/,
-          require.resolve("./src/lib/empty-module.js"),
-        ),
-      );
-    }
-
-    return config;
+    resolveAlias: {
+      // Stub out react-image-crop CSS on the server to prevent import errors
+      "react-image-crop/dist/ReactCrop.css": "./src/lib/empty-module.js",
+    },
   },
 };
 

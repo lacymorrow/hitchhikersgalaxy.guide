@@ -2,7 +2,7 @@
 
 import { CheckIcon } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
-import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
+import { GitHubOAuthButton } from "@/components/buttons/github-oauth-button";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { IntroDisclosure } from "@/components/ui/intro-disclosure";
@@ -97,7 +97,7 @@ export const OnboardingWizard = ({
 							</div>
 						)}
 						<div className="mx-auto">
-							<GitHubConnectButton className="mt-2" />
+							<GitHubOAuthButton className="mt-2" user={user} isConnected={hasGitHubConnection} />
 						</div>
 					</div>
 				),

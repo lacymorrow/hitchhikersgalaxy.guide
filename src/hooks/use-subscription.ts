@@ -2,9 +2,28 @@
 
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
-import { checkUserSubscription } from "@/server/actions/payments";
+import { routes } from "@/config/routes";
 
 type SubscriptionProvider = "lemonsqueezy" | "polar";
+
+// API helper for checking subscription status
+async function checkSubscriptionStatus(
+	provider?: SubscriptionProvider
+): Promise<{ success: boolean; hasSubscription: boolean; message?: string }> {
+	try {
+		const url = new URL(routes.api.payments.checkSubscription, window.location.origin);
+		if (provider) {
+			url.searchParams.set("provider", provider);
+		}
+		const response = await fetch(url.toString());
+		if (!response.ok) {
+			return { success: false, hasSubscription: false, message: "Failed to check subscription" };
+		}
+		return response.json();
+	} catch (error) {
+		return { success: false, hasSubscription: false, message: "Failed to check subscription" };
+	}
+}
 
 // Simple cache to prevent repeated API calls
 const subscriptionCache = new Map<string, { data: boolean; timestamp: number }>();
@@ -47,7 +66,7 @@ export function useSubscription(provider?: SubscriptionProvider) {
 					`Checking subscription for user ${session.user.email || session.user.id} with provider: ${provider || "all"}`
 				);
 			}
-			const result = await checkUserSubscription(provider);
+			const result = await checkSubscriptionStatus(provider);
 
 			// Cache the result
 			subscriptionCache.set(cacheKey, {

@@ -2,8 +2,10 @@
 
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { PlusIcon } from "lucide-react";
+import { useSession } from "next-auth/react";
 import * as React from "react";
 import { ProjectDialog } from "@/components/modules/projects/project-dialog";
+import { useTeam } from "@/components/providers/team-provider";
 import { Button } from "@/components/ui/button";
 import {
 	Command,
@@ -14,11 +16,27 @@ import {
 	CommandList,
 	CommandSeparator,
 } from "@/components/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { useTeam } from "@/components/providers/team-provider";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
+import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
-import { getTeamProjects } from "@/server/actions/projects";
-import { useSession } from "next-auth/react";
+
+// Helper to fetch team projects via API
+async function fetchTeamProjects(
+	teamId: string,
+): Promise<{ id: string; name: string }[]> {
+	const response = await fetch(
+		`${routes.api.projects}?teamId=${encodeURIComponent(teamId)}`,
+	);
+	if (!response.ok) {
+		return [];
+	}
+	const data = await response.json();
+	return data.projects ?? [];
+}
 
 interface ProjectSwitcherProject {
 	id: string;
@@ -30,12 +48,16 @@ interface ProjectSwitcherProps {
 	onProjectChange?: (projectId: string) => void;
 }
 
-export const ProjectSwitcher = ({ className, onProjectChange }: ProjectSwitcherProps) => {
+export const ProjectSwitcher = ({
+	className,
+	onProjectChange,
+}: ProjectSwitcherProps) => {
 	const { data: session } = useSession();
 	const { selectedTeamId } = useTeam();
 
 	const [projects, setProjects] = React.useState<ProjectSwitcherProject[]>([]);
-	const [activeProject, setActiveProject] = React.useState<ProjectSwitcherProject | null>(null);
+	const [activeProject, setActiveProject] =
+		React.useState<ProjectSwitcherProject | null>(null);
 	const [open, setOpen] = React.useState(false);
 
 	React.useEffect(() => {
@@ -49,15 +71,19 @@ export const ProjectSwitcher = ({ className, onProjectChange }: ProjectSwitcherP
 			}
 
 			try {
-				const fetched = await getTeamProjects(selectedTeamId);
+				const fetched = await fetchTeamProjects(selectedTeamId);
 				if (isCancelled) return;
 
-				const nextProjects = (fetched || []).map((p) => ({ id: p.id, name: p.name }));
+				const nextProjects = (fetched || []).map((p) => ({
+					id: p.id,
+					name: p.name,
+				}));
 				setProjects(nextProjects);
 
 				// Keep selection stable across refreshes; default to first project.
 				setActiveProject((previous) => {
-					if (previous && nextProjects.some((p) => p.id === previous.id)) return previous;
+					if (previous && nextProjects.some((p) => p.id === previous.id))
+						return previous;
 					return nextProjects[0] ?? null;
 				});
 			} catch (error) {
@@ -81,71 +107,85 @@ export const ProjectSwitcher = ({ className, onProjectChange }: ProjectSwitcherP
 			setOpen(false);
 			onProjectChange?.(project.id);
 		},
-		[onProjectChange]
+		[onProjectChange],
 	);
 
 	return (
-		<div className={cn("min-w-0", className)}>
-			<Popover open={open} onOpenChange={setOpen}>
-				<PopoverTrigger asChild>
-					<Button
-						variant="outline"
-						size="sm"
-						className="flex w-[260px] max-w-full items-center justify-between gap-2"
-						disabled={!selectedTeamId}
-						aria-label="Select project"
-					>
-						<div className="flex min-w-0 items-center gap-2">
-							<span className="truncate text-sm">
-								{activeProject?.name ?? (selectedTeamId ? "Select project" : "Select team first")}
-							</span>
-						</div>
-						<CaretSortIcon className="h-4 w-4 shrink-0 opacity-50" />
-					</Button>
-				</PopoverTrigger>
-				<PopoverContent className="w-[260px] p-0" align="start">
-					<Command>
-						<CommandInput placeholder="Search project..." />
-						<CommandList>
-							<CommandEmpty>No projects found.</CommandEmpty>
-							<CommandGroup heading="Projects">
-								{projects.map((project) => (
+		<Popover open={open} onOpenChange={setOpen}>
+			<PopoverTrigger asChild>
+				<Button
+					variant="ghost"
+					size="sm"
+					className={cn(
+						"flex h-12 w-[260px] max-w-full items-center justify-between gap-2 py-6",
+						className,
+					)}
+					disabled={!selectedTeamId}
+					aria-label="Select project"
+				>
+					<span className="truncate text-sm font-semibold">
+						{activeProject?.name ??
+							(selectedTeamId ? "Select project" : "Select team first")}
+					</span>
+					<CaretSortIcon className="h-4 w-4 shrink-0 opacity-50" />
+				</Button>
+			</PopoverTrigger>
+			<PopoverContent className="w-[260px] p-0" align="start">
+				<Command>
+					<CommandInput placeholder="Search project..." />
+					<CommandList>
+						<CommandEmpty>No projects found.</CommandEmpty>
+						{projects.length > 0 ? (
+							<>
+								<CommandGroup heading="Projects">
+									{projects.map((project) => (
+										<CommandItem
+											key={project.id}
+											onSelect={() => handleProjectSelect(project)}
+											className="text-sm"
+										>
+											<span className="truncate">{project.name}</span>
+											<CheckIcon
+												className={cn(
+													"ml-auto h-4 w-4",
+													activeProject?.id === project.id
+														? "opacity-100"
+														: "opacity-0",
+												)}
+											/>
+										</CommandItem>
+									))}
+								</CommandGroup>
+								<CommandSeparator />
+							</>
+						) : (
+							<CommandGroup>
+								<CommandItem disabled className="text-sm text-muted-foreground">
+									No projects yet
+								</CommandItem>
+							</CommandGroup>
+						)}
+						<CommandGroup>
+							{session?.user?.id ? (
+								<ProjectDialog userId={session.user.id} variant="create">
 									<CommandItem
-										key={project.id}
-										onSelect={() => handleProjectSelect(project)}
+										onSelect={() => setOpen(false)}
 										className="text-sm"
 									>
-										<span className="truncate">{project.name}</span>
-										<CheckIcon
-											className={cn(
-												"ml-auto h-4 w-4",
-												activeProject?.id === project.id ? "opacity-100" : "opacity-0"
-											)}
-										/>
-									</CommandItem>
-								))}
-							</CommandGroup>
-							<CommandSeparator />
-							<CommandGroup>
-								{session?.user?.id ? (
-									<ProjectDialog userId={session.user.id} variant="create">
-										<CommandItem onSelect={() => setOpen(false)} className="text-sm">
-											<PlusIcon className="mr-2 h-4 w-4" />
-											Create Project
-										</CommandItem>
-									</ProjectDialog>
-								) : (
-									<CommandItem disabled className="text-sm">
 										<PlusIcon className="mr-2 h-4 w-4" />
-										Sign in to create a project
+										Create Project
 									</CommandItem>
-								)}
-							</CommandGroup>
-						</CommandList>
-					</Command>
-				</PopoverContent>
-			</Popover>
-		</div>
+								</ProjectDialog>
+							) : (
+								<CommandItem disabled className="text-sm">
+									<PlusIcon className="mr-2 h-4 w-4" />
+									Sign in to create a project
+								</CommandItem>
+							)}
+						</CommandGroup>
+					</CommandList>
+				</Command>
+			</PopoverContent>
+		</Popover>
 	);
 };
-

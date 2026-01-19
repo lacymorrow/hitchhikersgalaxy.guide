@@ -45,6 +45,7 @@ dist/
 build/
 
 # Cache
+cache/
 .cache/
 .eslintcache
 
@@ -83,3 +84,4 @@ gha-creds-*.json
 
 # AI
 ai.mdx
+.env*.local

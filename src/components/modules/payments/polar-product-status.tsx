@@ -15,7 +15,22 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { checkUserPurchasedProduct, createPolarCheckoutUrl } from "@/server/actions/payments";
+import { createPolarCheckoutUrl } from "@/server/actions/payments";
+
+// Helper to check purchase status via API
+async function checkUserPurchasedProduct(
+	productId: string,
+	provider?: "lemonsqueezy" | "polar"
+): Promise<{ success: boolean; purchased: boolean; message?: string }> {
+	const params = new URLSearchParams({ productId });
+	if (provider) params.set("provider", provider);
+
+	const response = await fetch(`/api/payments/check-purchase?${params}`);
+	if (!response.ok) {
+		return { success: false, purchased: false, message: "Failed to check purchase status" };
+	}
+	return response.json();
+}
 
 // Simple cache to prevent repeated API calls
 const productStatusCache = new Map<string, { data: boolean; timestamp: number }>();

@@ -1,5 +1,11 @@
 "use server";
 
+/**
+ * @fileoverview Server actions for API key operations (mutations only)
+ * NOTE: For validation, use the service directly:
+ * import { apiKeyService } from "@/server/services/api-key-service"
+ */
+
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { auth } from "@/server/auth";
@@ -16,9 +22,6 @@ const schemas = {
 		name: z.string().min(1, "Name is required"),
 		description: z.string().optional(),
 		expiresIn: z.string().optional(),
-	}),
-	validateApiKey: z.object({
-		apiKey: z.string(),
 	}),
 } as const;
 
@@ -113,14 +116,3 @@ export async function deleteApiKey(apiKeyId: string) {
 	}
 }
 
-/**
- * Validates an API key
- */
-export async function validateApiKey(apiKey: string) {
-	try {
-		await ValidationService.validateOrThrow(schemas.validateApiKey, { apiKey });
-		return await apiKeyService.validateApiKey(apiKey);
-	} catch (error) {
-		throw ErrorService.handleError(error);
-	}
-}

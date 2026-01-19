@@ -4,7 +4,7 @@ import { siteConfig } from "@/config/site-config";
 import { createRedirectUrl } from "@/lib/utils/redirect";
 import { auth } from "@/server/auth";
 import { isAdmin } from "@/server/services/admin-service";
-import { checkGitHubConnection } from "@/server/services/github/github-service";
+import { getGitHubConnectionStatus } from "@/server/services/github/github-token-service";
 import { PaymentService } from "@/server/services/payment-service";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
 
@@ -17,10 +17,10 @@ export async function useDashboardData() {
 
 	const userId = session.user.id;
 
-	const [isUserAdmin, hasGitHubConnection, hasVercelConnection, isCustomer, isSubscribed] =
+	const [isUserAdmin, gitHubStatus, hasVercelConnection, isCustomer, isSubscribed] =
 		await Promise.all([
 			isAdmin({ email: session.user.email || "" }),
-			checkGitHubConnection(userId),
+			getGitHubConnectionStatus(userId),
 			checkVercelConnection(userId),
 			PaymentService.hasUserPurchasedVariant({
 				userId,
@@ -33,7 +33,7 @@ export async function useDashboardData() {
 	return {
 		session,
 		isUserAdmin,
-		hasGitHubConnection,
+		hasGitHubConnection: gitHubStatus.isConnected,
 		hasVercelConnection,
 		isCustomer,
 		isSubscribed,

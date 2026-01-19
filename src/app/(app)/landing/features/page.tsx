@@ -1,6 +1,8 @@
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { constructMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import { FAQ } from "../_components/faq";
 import { FeaturesTable } from "../_components/features-table";
 
@@ -56,7 +58,9 @@ export default async function Features() {
 				<h2 className="mb-8 text-center text-2xl font-semibold">
 					Frequently Asked Questions
 				</h2>
-				<FAQ />
+				<Suspense fallback={<SuspenseFallback />}>
+					<FAQ />
+				</Suspense>
 			</section>
 		</div>
 	);

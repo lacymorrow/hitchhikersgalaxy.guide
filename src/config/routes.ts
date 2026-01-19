@@ -107,6 +107,17 @@ export const routes = {
 		activityStream: "/api/activity/stream",
 		logger: "/v1",
 		docsSearch: "/api/docs/search",
+		github: {
+			checkInvitation: "/api/github/check-invitation",
+			checkRepoAvailability: "/api/github/check-repo-availability",
+		},
+		teams: "/api/teams",
+		projects: "/api/projects",
+		deployments: "/api/deployments",
+		payments: {
+			checkPurchase: "/api/payments/check-purchase",
+			checkSubscription: "/api/payments/check-subscription",
+		},
 	},
 
 	// Integration routes

@@ -26,6 +26,7 @@ export interface User {
 	updatedAt?: Date;
 	metadata?: string | null;
 	isGuest?: boolean;
+	isAdmin?: boolean;
 	accounts?: {
 		provider: string;
 		providerAccountId: string;

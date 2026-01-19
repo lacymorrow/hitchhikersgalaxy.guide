@@ -1,16 +1,16 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { auth, update as updateSession } from "@/server/auth";
 import { db } from "@/server/db";
-import { users } from "@/server/db/schema";
+import { accounts, users } from "@/server/db/schema";
 import {
 	grantGitHubAccess,
 	revokeGitHubAccess,
 	verifyAndStoreGitHubUsername,
 } from "@/server/services/github/github-service";
-import { getUserRoles } from "./rbac";
+import { rbacService } from "@/server/services/rbac";
 
 interface GitHubConnectionData {
 	githubId: string;
@@ -116,7 +116,7 @@ export async function disconnectGitHub() {
 		}
 
 		// Check if user is an owner or has critical role
-		const userRoles = await getUserRoles(session.user.id);
+		const userRoles = await rbacService.getAllUserRoles(session.user.id);
 		// const isOwner = userRoles.includes("owner");
 		const isOwner = false;
 		const isCritical = userRoles.includes("admin") || userRoles.includes("developer");
@@ -133,14 +133,54 @@ export async function disconnectGitHub() {
 			);
 		}
 
-		// First revoke GitHub access
-		await revokeGitHubAccess(session.user.id);
+		// First revoke GitHub access (remove from repo collaborators)
+		console.log("[disconnectGitHub] Revoking GitHub access for user:", session.user.id);
+		try {
+			await revokeGitHubAccess(session.user.id);
+			console.log("[disconnectGitHub] Successfully revoked GitHub access");
+		} catch (revokeError) {
+			console.error("[disconnectGitHub] Failed to revoke GitHub access:", revokeError);
+			// Continue with cleanup even if revoke fails
+		}
 
-		// Then update user record to remove GitHub connection
+		// Delete the GitHub OAuth account from the accounts table
+		// This is required for getGitHubConnectionStatus() to return isConnected: false
+		await db
+			?.delete(accounts)
+			.where(
+				and(
+					eq(accounts.userId, session.user.id),
+					eq(accounts.provider, "github")
+				)
+			);
+
+		// Get current user to update metadata
+		const currentUser = await db?.query.users.findFirst({
+			where: eq(users.id, session.user.id),
+			columns: { metadata: true },
+		});
+
+		// Clear GitHub from metadata if it exists
+		let updatedMetadata: string | null = null;
+		if (currentUser?.metadata) {
+			try {
+				const metadata = JSON.parse(currentUser.metadata);
+				if (metadata?.providers?.github) {
+					delete metadata.providers.github;
+					updatedMetadata = JSON.stringify(metadata);
+				}
+			} catch {
+				// If metadata parsing fails, just set to null
+				updatedMetadata = null;
+			}
+		}
+
+		// Update user record to remove GitHub connection and clear metadata
 		await db
 			?.update(users)
 			.set({
 				githubUsername: null,
+				metadata: updatedMetadata ?? currentUser?.metadata ?? null,
 				updatedAt: new Date(),
 			})
 			.where(eq(users.id, session.user.id));

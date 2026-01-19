@@ -229,8 +229,8 @@ export async function revokeGitHubAccess(userId: string) {
 		});
 
 		if (!user?.githubUsername) {
-			logger.warn("No GitHub username found for user", { userId });
-			return true; // Indicate success/disabled
+			logger.warn("No GitHub username found for user - cannot revoke repo access", { userId });
+			return false; // Indicate no action taken (username not found)
 		}
 
 		if (siteConfig.repo.owner === user.githubUsername) {
@@ -258,14 +258,51 @@ export async function revokeGitHubAccess(userId: string) {
 		});
 
 		try {
-			// Remove user as collaborator using admin token
+			// First, check for and cancel any pending invitations
+			try {
+				const invitationsResponse = await octokit?.rest.repos.listInvitations({
+					owner: siteConfig.repo.owner,
+					repo: siteConfig.repo.name,
+				});
+
+				const pendingInvitation = invitationsResponse?.data?.find(
+					(inv) => inv.invitee?.login?.toLowerCase() === user.githubUsername?.toLowerCase()
+				);
+
+				if (pendingInvitation) {
+					logger.info("Found pending invitation, canceling it", {
+						invitationId: pendingInvitation.id,
+						username: user.githubUsername,
+					});
+
+					await octokit?.rest.repos.deleteInvitation({
+						owner: siteConfig.repo.owner,
+						repo: siteConfig.repo.name,
+						invitation_id: pendingInvitation.id,
+					});
+
+					logger.info("Successfully canceled pending invitation", {
+						invitationId: pendingInvitation.id,
+						username: user.githubUsername,
+					});
+				}
+			} catch (invError) {
+				logger.warn("Error checking/canceling invitations", {
+					error: invError instanceof Error ? invError.message : "Unknown error",
+					username: user.githubUsername,
+				});
+				// Continue with removing collaborator even if invitation check fails
+			}
+
+			// Remove user as collaborator using admin token (for users who accepted)
 			const response = await octokit?.rest.repos.removeCollaborator({
 				owner: siteConfig.repo.owner,
 				repo: siteConfig.repo.name,
 				username: user.githubUsername,
 			});
 
-			if (response?.status !== 204) {
+			// 204 = success, 404 = user was not a collaborator (might have been just invited)
+			if (response?.status !== 204 && response?.status !== 404) {
 				throw new Error(`Failed to remove collaborator: ${response?.status}`);
 			}
 
@@ -387,35 +424,6 @@ export async function checkGitHubUsername(username: string): Promise<boolean> {
 		});
 		return false;
 	}
-}
-
-/**
- * Check if a user has connected their GitHub account
- */
-export async function checkGitHubConnection(userId: string): Promise<boolean> {
-	if (!isGitHubServiceEnabled()) {
-		logger.debug("GitHub Service disabled, skipping checkGitHubConnection.");
-		// Check DB even if API is disabled?
-		// For now, returning false as connection likely requires API interaction downstream.
-		return false;
-	}
-	logger.info("Checking GitHub connection", { userId });
-
-	const user = await db
-		?.select()
-		.from(users)
-		.where(eq(users.id, userId))
-		.then((rows: any) => rows[0]);
-
-	const hasGitHubConnection = Boolean(user?.githubUsername);
-
-	logger.info("GitHub connection status", {
-		userId,
-		hasGitHubConnection,
-		githubUsername: user?.githubUsername,
-	});
-
-	return hasGitHubConnection;
 }
 
 // Cache the star count for 5 minutes to avoid hitting GitHub's rate limits

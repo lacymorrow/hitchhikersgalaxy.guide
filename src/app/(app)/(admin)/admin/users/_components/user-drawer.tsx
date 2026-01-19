@@ -1,12 +1,26 @@
 "use client";
 
 import { format } from "date-fns";
-import { Calendar, ChevronDown, ChevronUp, CreditCard, Mail, Package, User } from "lucide-react";
-import { useState } from "react";
+import {
+	Calendar,
+	ChevronDown,
+	ChevronUp,
+	CreditCard,
+	Database,
+	Loader2,
+	Mail,
+	Package,
+	User,
+} from "lucide-react";
+import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import {
+	Collapsible,
+	CollapsibleContent,
+	CollapsibleTrigger,
+} from "@/components/ui/collapsible";
 import {
 	Drawer,
 	DrawerClose,
@@ -29,6 +43,36 @@ import {
 } from "@/components/ui/table";
 import type { Purchase, UserData } from "@/server/services/payment-service";
 
+// Type for complete user data from API
+interface CompleteUserData {
+	user: unknown | null;
+	accounts: unknown[];
+	payments: unknown[];
+	deployments: unknown[];
+	apiKeys: unknown[];
+	credits: unknown | null;
+	creditTransactions: unknown[];
+	teamMemberships: unknown[];
+}
+
+// Helper to fetch complete user data via API
+async function getCompleteUserData(userId: string): Promise<CompleteUserData> {
+	const response = await fetch(`/api/admin/users/${userId}`);
+	if (!response.ok) {
+		return {
+			user: null,
+			accounts: [],
+			payments: [],
+			deployments: [],
+			apiKeys: [],
+			credits: null,
+			creditTransactions: [],
+			teamMemberships: [],
+		};
+	}
+	return response.json();
+}
+
 interface UserDrawerProps {
 	user: UserData | null;
 	open: boolean;
@@ -36,14 +80,34 @@ interface UserDrawerProps {
 }
 
 export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
-	if (!user) return null;
-
 	const [isJsonOpen, setIsJsonOpen] = useState(false);
+	const [completeData, setCompleteData] = useState<CompleteUserData | null>(
+		null,
+	);
+	const [isLoadingCompleteData, setIsLoadingCompleteData] = useState(false);
+
+	useEffect(() => {
+		if (open && user?.id && isJsonOpen && !completeData) {
+			setIsLoadingCompleteData(true);
+			getCompleteUserData(user.id)
+				.then(setCompleteData)
+				.finally(() => setIsLoadingCompleteData(false));
+		}
+	}, [open, user?.id, isJsonOpen, completeData]);
+
+	useEffect(() => {
+		if (!open) {
+			setCompleteData(null);
+			setIsJsonOpen(false);
+		}
+	}, [open]);
+
+	if (!user) return null;
 
 	const getStatusBadgeVariant = (
 		status: Purchase["status"],
 		isSubscription = false,
-		isActive = false
+		isActive = false,
 	) => {
 		if (isSubscription) {
 			return isActive ? "default" : "secondary";
@@ -93,7 +157,9 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 													<User className="h-8 w-8 text-primary" />
 												</div>
 												<div>
-													<h4 className="text-xl font-medium">{user.name || "Unnamed User"}</h4>
+													<h4 className="text-xl font-medium">
+														{user.name || "Unnamed User"}
+													</h4>
 													<div className="flex items-center gap-2 text-sm text-muted-foreground">
 														<Mail className="h-3 w-3" />
 														<span>{user.email}</span>
@@ -109,8 +175,12 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 															<Calendar className="h-5 w-5 text-primary" />
 														</div>
 														<div>
-															<p className="text-sm font-medium text-muted-foreground">Joined</p>
-															<p className="font-medium">{format(user.createdAt, "PPP")}</p>
+															<p className="text-sm font-medium text-muted-foreground">
+																Joined
+															</p>
+															<p className="font-medium">
+																{format(user.createdAt, "PPP")}
+															</p>
 														</div>
 													</div>
 												</div>
@@ -120,7 +190,9 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 															<CreditCard className="h-5 w-5 text-primary" />
 														</div>
 														<div>
-															<p className="text-sm font-medium text-muted-foreground">Status</p>
+															<p className="text-sm font-medium text-muted-foreground">
+																Status
+															</p>
 															<Badge
 																variant={user.hasPaid ? "default" : "secondary"}
 																className="mt-1"
@@ -140,7 +212,12 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 																{user.id}
 															</code>
 														</div>
-														<Button variant="ghost" size="sm" className="h-7 gap-1" asChild>
+														<Button
+															variant="ghost"
+															size="sm"
+															className="h-7 gap-1"
+															asChild
+														>
 															<a
 																href={`mailto:${user.email}`}
 																target="_blank"
@@ -170,7 +247,9 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 													<p className="text-sm font-medium text-muted-foreground">
 														Payment Status
 													</p>
-													<Badge variant={user.hasPaid ? "default" : "secondary"}>
+													<Badge
+														variant={user.hasPaid ? "default" : "secondary"}
+													>
 														{user.hasPaid ? "Paid" : "Not Paid"}
 													</Badge>
 												</div>
@@ -178,7 +257,9 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 													<p className="text-sm font-medium text-muted-foreground">
 														Total Purchases
 													</p>
-													<p className="text-2xl font-bold">{user.totalPurchases}</p>
+													<p className="text-2xl font-bold">
+														{user.totalPurchases}
+													</p>
 												</div>
 											</div>
 										</CardContent>
@@ -200,7 +281,9 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 													)}
 												</div>
 												<div className="text-right">
-													<p className="text-sm font-medium text-muted-foreground">Last Purchase</p>
+													<p className="text-sm font-medium text-muted-foreground">
+														Last Purchase
+													</p>
 													<p className="text-lg">
 														{user.lastPurchaseDate
 															? format(user.lastPurchaseDate, "PPP")
@@ -272,7 +355,9 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 													<TableRow key={purchase.id}>
 														<TableCell>
 															<div>
-																<p className="font-medium">{purchase.productName}</p>
+																<p className="font-medium">
+																	{purchase.productName}
+																</p>
 																{purchase.variantName && (
 																	<p className="text-xs text-muted-foreground">
 																		Variant: {purchase.variantName}
@@ -283,16 +368,20 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 																</p>
 															</div>
 														</TableCell>
-														<TableCell>{format(purchase.purchaseDate, "PPP")}</TableCell>
+														<TableCell>
+															{format(purchase.purchaseDate, "PPP")}
+														</TableCell>
 														<TableCell>
 															<div className="flex items-center gap-2">
-																<CreditCard className="h-4 w-4 text-muted-foreground" />$
-																{purchase.amount.toFixed(2)}
+																<CreditCard className="h-4 w-4 text-muted-foreground" />
+																${purchase.amount.toFixed(2)}
 															</div>
 														</TableCell>
 														<TableCell>
 															{(() => {
-																const isSubscription = isSubscriptionProduct(purchase.productName);
+																const isSubscription = isSubscriptionProduct(
+																	purchase.productName,
+																);
 																// Check if this specific purchase is an active subscription
 																const isActive =
 																	isSubscription &&
@@ -300,20 +389,29 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 																	user.purchases
 																		?.filter(
 																			(p) =>
-																				isSubscriptionProduct(p.productName) && p.status === "paid"
+																				isSubscriptionProduct(p.productName) &&
+																				p.status === "paid",
 																		)
 																		.slice(-1)[0]?.id === purchase.id;
 
 																if (isSubscription) {
 																	return (
-																		<Badge variant={isActive ? "default" : "secondary"}>
+																		<Badge
+																			variant={
+																				isActive ? "default" : "secondary"
+																			}
+																		>
 																			{isActive ? "Subscribed" : "Inactive"}
 																		</Badge>
 																	);
 																}
 
 																return (
-																	<Badge variant={getStatusBadgeVariant(purchase.status)}>
+																	<Badge
+																		variant={getStatusBadgeVariant(
+																			purchase.status,
+																		)}
+																	>
 																		{purchase.status.charAt(0).toUpperCase() +
 																			purchase.status.slice(1)}
 																	</Badge>
@@ -339,7 +437,9 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 									<Card>
 										<CardContent className="flex flex-col items-center justify-center py-6 text-center">
 											<Package className="mb-2 h-8 w-8 text-muted-foreground" />
-											<p className="text-sm text-muted-foreground">No purchase history available</p>
+											<p className="text-sm text-muted-foreground">
+												No purchase history available
+											</p>
 										</CardContent>
 									</Card>
 								)}
@@ -348,8 +448,16 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 							<Separator />
 
 							<section>
-								<Collapsible open={isJsonOpen} onOpenChange={setIsJsonOpen} className="w-full">
-									<div className="flex items-center justify-end">
+								<Collapsible
+									open={isJsonOpen}
+									onOpenChange={setIsJsonOpen}
+									className="w-full"
+								>
+									<div className="flex items-center justify-between">
+										<div className="flex items-center gap-2 text-sm text-muted-foreground">
+											<Database className="h-4 w-4" />
+											<span>Complete Database Records</span>
+										</div>
 										<CollapsibleTrigger asChild>
 											<Button
 												variant="ghost"
@@ -359,19 +467,53 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 												{isJsonOpen ? (
 													<>
 														<ChevronUp className="h-3 w-3 mr-1" />
-														<span>Raw JSON</span>
+														<span>Hide Raw Data</span>
 													</>
 												) : (
 													<>
 														<ChevronDown className="h-3 w-3 mr-1" />
-														<span>Raw JSON</span>
+														<span>Show Raw Data</span>
 													</>
 												)}
 											</Button>
 										</CollapsibleTrigger>
 									</div>
 									<CollapsibleContent>
-										<JsonViewer data={user} className="mt-2" />
+										{isLoadingCompleteData ? (
+											<div className="flex items-center justify-center py-8">
+												<Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+												<span className="ml-2 text-sm text-muted-foreground">
+													Loading complete user data...
+												</span>
+											</div>
+										) : completeData ? (
+											<div className="mt-4 space-y-4">
+												<div className="flex flex-wrap gap-2 text-xs">
+													<Badge variant="outline">
+														{completeData.accounts.length} Account(s)
+													</Badge>
+													<Badge variant="outline">
+														{completeData.payments.length} Payment(s)
+													</Badge>
+													<Badge variant="outline">
+														{completeData.deployments.length} Deployment(s)
+													</Badge>
+													<Badge variant="outline">
+														{completeData.apiKeys.length} API Key(s)
+													</Badge>
+													<Badge variant="outline">
+														{completeData.teamMemberships.length} Team(s)
+													</Badge>
+												</div>
+												<JsonViewer data={completeData} className="mt-2" />
+											</div>
+										) : (
+											<div className="flex items-center justify-center py-8">
+												<span className="text-sm text-muted-foreground">
+													Click to load complete user data
+												</span>
+											</div>
+										)}
 									</CollapsibleContent>
 								</Collapsible>
 							</section>

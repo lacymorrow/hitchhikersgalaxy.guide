@@ -1,40 +1,17 @@
 "use server";
 
-import {
-	getAdminDomains as getAdminDomainsService,
-	getAdminEmails as getAdminEmailsService,
-	isAdmin,
-} from "@/server/services/admin-service";
-
 /**
- * Server action to check if a user is an admin
- * This keeps admin checking logic on the server side for security
+ * @fileoverview Server actions for admin operations
+ * @module server/actions/admin-actions
  *
- * @param email The email address to check
- * @returns Boolean indicating if the email belongs to an admin
+ * NOTE: Most admin read operations should be performed directly via service calls
+ * in Server Components. This file only contains mutation actions.
+ *
+ * For read operations, use:
+ * - import { isAdmin, getAdminEmails, getAdminDomains } from "@/server/services/admin-service"
+ *
+ * @see src/server/services/admin-service.ts
  */
-export async function checkIsAdmin(email?: string | null): Promise<boolean> {
-	return isAdmin({ email });
-}
 
-/**
- * Server action to get admin emails (for authorized users only)
- * Should only be called after verifying the requester is an admin
- *
- * @param requestingEmail The email of the user requesting the admin list
- * @returns Array of admin emails if requester is admin, empty array otherwise
- */
-export async function getAdminEmails(requestingEmail?: string | null): Promise<string[]> {
-	return getAdminEmailsService(requestingEmail);
-}
-
-/**
- * Server action to get admin domains (for authorized users only)
- * Should only be called after verifying the requester is an admin
- *
- * @param requestingEmail The email of the user requesting the admin domains
- * @returns Array of admin domains if requester is admin, empty array otherwise
- */
-export async function getAdminDomains(requestingEmail?: string | null): Promise<string[]> {
-	return getAdminDomainsService(requestingEmail);
-}
+// Currently no mutation actions needed for admin operations.
+// Add mutation actions here as needed (e.g., updateAdminSettings, etc.)

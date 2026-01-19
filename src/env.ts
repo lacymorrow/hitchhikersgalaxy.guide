@@ -195,6 +195,9 @@ export const env = createEnv({
 
 		NEXT_PUBLIC_VERCEL_INTEGRATION_SLUG: z.string().optional(),
 
+		// GitHub OAuth (for deployment integrations)
+		NEXT_PUBLIC_GITHUB_CLIENT_ID: z.string().optional(),
+
 		// ======== Build-Time Feature Flags (Derived in next.config.ts) ========
 		NEXT_PUBLIC_FEATURE_DATABASE_ENABLED: zBooleanFeatureFlag,
 		NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED: zBooleanFeatureFlag,
@@ -435,6 +438,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED: process.env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED,
 		NEXT_PUBLIC_VERCEL_INTEGRATION_SLUG:
 			process.env.NEXT_PUBLIC_VERCEL_INTEGRATION_SLUG,
+		NEXT_PUBLIC_GITHUB_CLIENT_ID: process.env.NEXT_PUBLIC_GITHUB_CLIENT_ID,
 		NEXT_PUBLIC_FEATURE_STRIPE_ENABLED: process.env.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED,
 
 		// Analytics

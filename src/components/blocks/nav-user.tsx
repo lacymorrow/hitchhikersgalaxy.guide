@@ -27,7 +27,6 @@ export function NavUser({ className, showUpgrade = true }: NavUserProps) {
 	const isAdmin = useIsAdmin();
 	const { hasActiveSubscription } = useSubscription();
 	const isLoading = status === "loading";
-	console.log("session", session?.user);
 
 	const userInitials = session?.user?.name
 		?.split(" ")

@@ -1,10 +1,6 @@
-import { usePermission } from "@/hooks/use-permission";
+import { useSession } from "next-auth/react";
 
 export const useIsAdmin = () => {
-	const { hasPermission } = usePermission({
-		resource: "system",
-		action: "admin",
-	});
-
-	return hasPermission;
+	const { data: session } = useSession();
+	return session?.user?.isAdmin ?? false;
 };

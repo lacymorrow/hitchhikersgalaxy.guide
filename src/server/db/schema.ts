@@ -136,7 +136,7 @@ export const users = createTable("user", {
 		.primaryKey()
 		.$defaultFn(() => crypto.randomUUID()),
 	name: varchar("name", { length: 255 }),
-	email: varchar("email", { length: 255 }).notNull(),
+	email: varchar("email", { length: 255 }).notNull().unique(),
 	emailVerified: timestamp("email_verified", {
 		mode: "date",
 		withTimezone: true,
@@ -655,6 +655,7 @@ export const deployments = createTable(
 		githubRepoName: text("github_repo_name"),
 		vercelProjectId: text("vercel_project_id"),
 		vercelProjectUrl: text("vercel_project_url"),
+		vercelDeploymentId: text("vercel_deployment_id"),
 		vercelDeploymentUrl: text("vercel_deployment_url"),
 		status: text("status", {
 			enum: ["deploying", "completed", "failed", "timeout"],

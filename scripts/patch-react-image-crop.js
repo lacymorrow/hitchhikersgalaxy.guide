@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
- * Patch Payload CMS UI to fix non-JS import issues in Node.js ESM
+ * Patch Payload CMS packages to fix non-JS import issues in Node.js ESM
  *
- * This script removes style/asset imports from @payloadcms/ui files that cause
+ * This script removes style/asset imports from Payload packages that cause
  * ERR_UNKNOWN_FILE_EXTENSION errors at runtime on Vercel serverless.
  * The assets are already bundled separately by Payload/webpack for the browser.
  */
@@ -13,7 +13,14 @@ import { fileURLToPath } from "node:url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const projectRoot = path.resolve(__dirname, "..");
-const payloadUiDir = path.join(projectRoot, "node_modules/@payloadcms/ui/dist");
+
+// Directories to patch
+const dirsToPath = [
+  "node_modules/@payloadcms/ui/dist",
+  "node_modules/@payloadcms/richtext-lexical/dist",
+  "node_modules/@payloadcms/plugin-cloud-storage/dist",
+  "node_modules/@payloadcms/storage-s3/dist",
+];
 
 // File extensions that Node.js ESM cannot handle
 const problematicExtensions =
@@ -98,17 +105,21 @@ function walkDir(dir, callback) {
   }
 }
 
-console.log("[patch] Scanning @payloadcms/ui for problematic imports...");
+console.log("[patch] Scanning Payload packages for problematic imports...");
 
-if (fs.existsSync(payloadUiDir)) {
-  walkDir(payloadUiDir, (filePath) => {
-    filesScanned++;
-    if (patchFile(filePath)) {
-      const relPath = path.relative(projectRoot, filePath);
-      console.log(`[patch] Patched: ${relPath}`);
-      patchedCount++;
-    }
-  });
+for (const relDir of dirsToPath) {
+  const dir = path.join(projectRoot, relDir);
+  if (fs.existsSync(dir)) {
+    console.log(`[patch] Scanning ${relDir}...`);
+    walkDir(dir, (filePath) => {
+      filesScanned++;
+      if (patchFile(filePath)) {
+        const relPath = path.relative(projectRoot, filePath);
+        console.log(`[patch] Patched: ${relPath}`);
+        patchedCount++;
+      }
+    });
+  }
 }
 
 console.log(
@@ -117,7 +128,7 @@ console.log(
 
 if (patchedCount > 0) {
   console.log(
-    "[patch] Successfully removed problematic imports from @payloadcms/ui",
+    "[patch] Successfully removed problematic imports from Payload packages",
   );
 } else {
   console.log("[patch] No problematic imports found to patch");

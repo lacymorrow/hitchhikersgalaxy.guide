@@ -271,6 +271,7 @@
     "lighthouse": "^13.0.1",
     "next-sitemap": "^4.2.3",
     "npm-check-updates": "^19.2.1",
+    "patch-package": "^8.0.1",
     "payload": "^3.72.0",
     "playwright": "^1.57.0",
     "postcss": "8.5.6",

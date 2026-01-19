@@ -1,5 +1,6 @@
 import path from "node:path";
 import type { NextConfig } from "next";
+import webpack from "webpack";
 import type { Configuration as WebpackConfiguration } from "webpack";
 import {
   buildTimeFeatureFlags,
@@ -467,6 +468,15 @@ const nextConfig: NextConfig = {
         // Stub out react-image-crop CSS on the server
         "react-image-crop/dist/ReactCrop.css": false,
       };
+
+      // Use NormalModuleReplacementPlugin to replace CSS imports with empty module
+      config.plugins = config.plugins || [];
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(
+          /react-image-crop\/dist\/ReactCrop\.css$/,
+          require.resolve("./src/lib/empty-module.js"),
+        ),
+      );
     }
 
     return config;

@@ -365,6 +365,8 @@ const nextConfig: NextConfig = {
   /*
    * Turbopack configuration
    * @see https://nextjs.org/docs/app/api-reference/next-config-js/turbo
+   * Note: Turbopack is disabled for production builds due to Payload CMS CSS import issues
+   * See: https://github.com/payloadcms/payload/issues/14786
    */
   turbopack: {
     rules: {

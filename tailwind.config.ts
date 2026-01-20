@@ -11,6 +11,7 @@ const config = {
 		"./src/**/*.{js,jsx,ts,tsx,md,mdx}",
 		"./content/**/*.{md,mdx}",
 		"./node_modules/fumadocs-ui/dist/**/*.js",
+		"./mdx-components.tsx",
 	],
 	// Performance optimizations
 	safelist: [

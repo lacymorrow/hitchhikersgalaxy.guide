@@ -1,7 +1,7 @@
 {
-	"extends": "../tsconfig.json",
+  "extends": "./tsconfig.json",
   "compilerOptions": {
-		"outDir": "../public/workers",
+    "outDir": "./public/workers",
     "target": "ES6",
     "module": "preserve",
     "moduleResolution": "Bundler",
@@ -14,6 +14,6 @@
     "isolatedModules": false,
     "noEmit": false
   },
-	"include": ["../src/workers/**/*.ts"],
-	"exclude": ["../node_modules"]
+  "include": ["src/workers/**/*.ts"],
+  "exclude": ["node_modules"]
 }

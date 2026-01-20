@@ -23,29 +23,28 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-	root: path.resolve(__dirname, ".."), // Ensure Vitest resolves globs from the repository root
 	plugins: [
 		react(), // React JSX transformation and Fast Refresh
 		tsconfigPaths(), // TypeScript path mapping support
 	],
 	resolve: {
 		alias: {
-			"@": path.resolve(__dirname, "../src"), // Resolve @/* imports to src/*
+			"@": path.resolve(__dirname, "./src"), // Resolve @/* imports to src/*
 			// Alias next/server to a test shim to avoid ESM resolution issues in next-auth during unit tests
-			"next/server": path.resolve(__dirname, "../tests/shims/next-server.ts"),
+			"next/server": path.resolve(__dirname, "./tests/shims/next-server.ts"),
 		},
 	},
 	test: {
 		environment: "jsdom", // DOM environment for React component testing
 		globals: true, // Enable global test functions (describe, it, expect)
 		setupFiles: [
-			"../tests/setup-env.ts", // Environment variables for testing
-			"../tests/setup.ts", // Testing utilities and global setup
+			"./tests/setup-env.ts", // Environment variables for testing
+			"./tests/setup.ts", // Testing utilities and global setup
 		],
-		include: ["../tests/unit/**/*.test.{ts,tsx}"], // Only unit tests in this config
+		include: ["tests/unit/**/*.test.{ts,tsx}"], // Only unit tests in this config
 		exclude: [
 			// Exclude brittle suite that imports next-auth env and requires real Next runtime
-			"../tests/unit/server/actions/deploy-private-repo.test.ts",
+			"tests/unit/server/actions/deploy-private-repo.test.ts",
 		],
 		watch: false, // Disable watch mode for CI/CD compatibility
 		coverage: {

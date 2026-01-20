@@ -17,7 +17,7 @@ export default defineConfig({
 	// Timeout per test
 	timeout: 30 * 1000,
 	// Test directory
-	testDir: path.join(__dirname, "../tests/e2e"),
+	testDir: path.join(__dirname, "tests/e2e"),
 	// If a test fails, retry it additional 2 times
 	retries: 2,
 	// Artifacts folder where screenshots, videos, and traces are stored.
@@ -26,7 +26,7 @@ export default defineConfig({
 	// Run your local dev server before starting the tests:*
 	// https://playwright.dev/docs/test-advanced#launching-a-development-web-server-during-the-tests
 	webServer: {
-		command: "bun dev",
+		command: "pnpm dev",
 		url: baseURL,
 		timeout: 120 * 1000,
 		reuseExistingServer: !process.env.CI,

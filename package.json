@@ -1,6 +1,14 @@
 {
-  "name": "ship-kit",
+  "name": "shipkit",
   "version": "0.2.1",
+  "homepage": "https://shipkit.io",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lacymorrow/shipkit"
+  },
+  "shipkit": {
+    "bones": "0.2.1"
+  },
   "private": true,
   "type": "module",
   "scripts": {

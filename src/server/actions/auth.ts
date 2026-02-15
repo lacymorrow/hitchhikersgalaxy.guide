@@ -77,13 +77,17 @@ export const signInWithCredentialsAction = async (input: SignInCredentialsInput)
 
 		return { ok: true, url: result.url };
 	} catch (error: any) {
-		console.error("Error in signInWithCredentialsAction:", error);
-
 		// Check if it's an AuthError from next-auth
 		if (error.type === "CredentialsSignin" || error.code === "CredentialsSignin") {
 			return { ok: false, error: STATUS_CODES.CREDENTIALS.message };
 		}
 
+		// Known credential errors don't need extra logging
+		if (error.message === STATUS_CODES.CREDENTIALS.message) {
+			return { ok: false, error: error.message };
+		}
+
+		console.error("Error in signInWithCredentialsAction:", error);
 		return { ok: false, error: error.message || "Sign in failed" };
 	}
 };

@@ -1,9 +1,9 @@
-import type { Route } from "next";
 import { redirect as nextRedirect } from "next/navigation";
 import { NextResponse } from "next/server";
-import { BASE_URL } from "@/config/base-url";
-import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
-import { logger } from "@/lib/logger";
+import type { Route } from "next";
+import { BASE_URL } from "../../config/base-url";
+import { SEARCH_PARAM_KEYS } from "../../config/search-param-keys";
+import { logger } from "../logger";
 
 interface RedirectOptions {
 	code?: string;
@@ -55,3 +55,21 @@ export function routeRedirect(
 	logger.info(`routeRedirect: Redirecting to ${url}`);
 	return NextResponse.redirect(url);
 }
+
+export interface Redirect {
+	source: Route;
+	destination: Route;
+	permanent: boolean;
+}
+
+export const createRedirects = (
+	sources: Route[],
+	destination: Route,
+	permanent = false
+): Redirect[] => {
+	if (!sources.length) return [];
+
+	return sources
+		.filter((source) => source !== destination)
+		.map((source) => ({ source, destination, permanent }));
+};

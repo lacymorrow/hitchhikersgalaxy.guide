@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import { notFound } from "next/navigation";
 import { siteConfig } from "@/config/site-config";
 import { routes } from "@/config/routes";
 import { getBlogPosts } from "@/lib/blog";
@@ -36,6 +37,10 @@ function sanitizeText(input: string | undefined): string {
 }
 
 export async function GET(_req: NextRequest): Promise<Response> {
+    // Return 404 if blog is not enabled
+    if (process.env.NEXT_PUBLIC_HAS_BLOG !== "true") {
+        notFound();
+    }
     const posts = await getBlogPosts();
     const sorted = posts
         .filter((p) => p.publishedAt && !isNaN(new Date(p.publishedAt).getTime()))

@@ -80,3 +80,6 @@ gha-creds-*.json
 # Tooling output
 .lighthouse/
 .tmp/
+
+# AI
+ai.mdx

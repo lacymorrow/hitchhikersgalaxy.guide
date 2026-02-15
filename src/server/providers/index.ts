@@ -31,11 +31,6 @@ export async function initializePaymentProviders(): Promise<void> {
 
 	// Conditionally register and initialize LemonSqueezy
 	if (env.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED) {
-		console.debug("LemonSqueezy feature enabled, initializing provider", {
-			apiKeyExists: !!env.LEMONSQUEEZY_API_KEY,
-			storeIdExists: !!env.LEMONSQUEEZY_STORE_ID,
-		});
-
 		initializers.push(
 			(async () => {
 				try {
@@ -51,11 +46,6 @@ export async function initializePaymentProviders(): Promise<void> {
 							// sandbox: env.LEMONSQUEEZY_SANDBOX === 'true',
 						});
 					}
-
-					console.info("✅ LemonSqueezy Provider Initialized", {
-						isConfigured: lemonSqueezyProvider.isConfigured,
-						isEnabled: lemonSqueezyProvider.isEnabled,
-					});
 				} catch (error) {
 					console.error("❌ Failed to initialize LemonSqueezy Provider", { error });
 				}

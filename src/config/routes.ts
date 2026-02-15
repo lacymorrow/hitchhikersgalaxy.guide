@@ -19,6 +19,10 @@ export const routes = {
 	// Public routes
 	home: "/",
 	docs: "/docs",
+	/**
+	 * Blog route - only use when NEXT_PUBLIC_HAS_BLOG === "true"
+	 * @see src/config/nextjs/with-blog.ts for blog detection logic
+	 */
 	blog: "/blog",
 	contact: "/contact",
 

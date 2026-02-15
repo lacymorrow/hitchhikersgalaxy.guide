@@ -303,9 +303,7 @@ async function ensureGlobalsCss(container: any): Promise<void> {
 		}
 
 		// If no alternative paths work, create a default globals.css
-		const defaultContent = `@import "tw-animate-css";
-
-/* ! Tailwind directives */
+	const defaultContent = `/* ! Tailwind directives */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

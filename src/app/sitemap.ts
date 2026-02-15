@@ -46,11 +46,17 @@ export async function generateSitemaps() {
 		getContentFiles("docs"),
 	]);
 
-	return [
-		{ id: 0 }, // Static routes
-		{ id: 1 }, // Blog posts
-		{ id: 2 }, // Documentation
-	];
+	const sitemaps = [{ id: 0 }]; // Static routes
+	
+	// Only include blog sitemap if blog is enabled
+	if (process.env.NEXT_PUBLIC_HAS_BLOG === "true") {
+		sitemaps.push({ id: 1 }); // Blog posts
+		sitemaps.push({ id: 2 }); // Documentation
+	} else {
+		sitemaps.push({ id: 1 }); // Documentation (when blog is disabled)
+	}
+	
+	return sitemaps;
 }
 
 export default async function sitemap({ id }: { id: number }): Promise<MetadataRoute.Sitemap> {
@@ -127,7 +133,23 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
 			// Main sitemap with static routes
 			return [...marketingRoutes, ...docRoutes, ...exampleRoutes, ...supportRoutes];
 		case 1: {
-			// Blog posts sitemap
+			// Blog posts sitemap (only when blog is enabled)
+			if (process.env.NEXT_PUBLIC_HAS_BLOG !== "true") {
+				// When blog is disabled, case 1 is documentation
+				const docFiles = await getContentFiles("docs");
+				const docsRoutes = await Promise.all(
+					docFiles.map(async (file) => {
+						const stats = await stat(file.path);
+						return {
+							url: `${siteConfig.url}${routes.docs}/${file.slug}`,
+							lastModified: stats.mtime,
+							changeFrequency: "weekly" as const,
+							priority: 0.7,
+						};
+					})
+				);
+				return docsRoutes;
+			}
 			const blogFiles = await getContentFiles("blog");
 			const blogRoutes = await Promise.all(
 				blogFiles.map(async (file) => {
@@ -143,7 +165,11 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
 			return blogRoutes;
 		}
 		case 2: {
-			// Documentation pages sitemap
+			// Documentation pages sitemap (only when blog is enabled)
+			if (process.env.NEXT_PUBLIC_HAS_BLOG !== "true") {
+				// When blog is disabled, case 2 should not be called
+				return [];
+			}
 			const docFiles = await getContentFiles("docs");
 			const docsRoutes = await Promise.all(
 				docFiles.map(async (file) => {

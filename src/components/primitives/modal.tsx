@@ -55,6 +55,7 @@ export function Modal({
 	const [isMobile, setIsMobile] = React.useState(true);
 	const [isOpen, setIsOpen] = React.useState(typeof open === "undefined" ? true : open);
 	const closingDueToRouteChange = React.useRef(false);
+	const hasHandledInitialRoute = React.useRef(false);
 
 	// Responsive breakpoint for mobile
 	useEffect(() => {
@@ -70,12 +71,17 @@ export function Modal({
 	// the forward navigation initiated by the new link.
 	useEffect(() => {
 		if (!autoCloseOnRouteChange) return;
+		if (!hasHandledInitialRoute.current) {
+			hasHandledInitialRoute.current = true;
+			return;
+		}
+
 		closingDueToRouteChange.current = true;
 		setIsOpen(false);
-		const timeoutId = setTimeout(() => {
+		const timeoutId = window.setTimeout(() => {
 			closingDueToRouteChange.current = false;
 		}, 400);
-		return () => clearTimeout(timeoutId);
+		return () => window.clearTimeout(timeoutId);
 	}, [pathname, autoCloseOnRouteChange]);
 
 	const handleOpenChange = (open: boolean) => {
@@ -89,6 +95,14 @@ export function Modal({
 			debouncedRouteBack();
 		}
 	};
+
+	useEffect(() => {
+		return () => {
+			if (typeof debouncedRouteBack.cancel === "function") {
+				debouncedRouteBack.cancel();
+			}
+		};
+	}, [debouncedRouteBack]);
 
 	// Using Tailwind responsive classes to conditionally render Dialog or Drawer
 	// md: breakpoint is typically 768px which is a common tablet/desktop breakpoint

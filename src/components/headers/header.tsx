@@ -97,7 +97,15 @@ export const Header: React.FC<HeaderProps> = ({
 
 	return (
 		<>
-			<header
+			<motion.header
+				initial={false}
+				animate={{
+					y: variant === "floating" ? (isOpaque ? 12 : 0) : 0,
+				}}
+				transition={{
+					duration: 0.25,
+					ease: [0.4, 0, 0.2, 1],
+				}}
 				className={cn(
 					headerVariants({ variant }),
 					variant === "floating" && styles.header,
@@ -332,7 +340,7 @@ export const Header: React.FC<HeaderProps> = ({
 						</>
 					)}
 				</nav>
-			</header>
+			</motion.header>
 			{variant === "floating" && <div className="-mt-24" />}
 		</>
 	);

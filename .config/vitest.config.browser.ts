@@ -4,16 +4,17 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
+	root: path.resolve(__dirname, ".."), // Ensure browser tests resolve from repository root
 	plugins: [react(), tsconfigPaths()],
 	resolve: {
 		alias: {
-			"@": path.resolve(__dirname, "./src"),
+			"@": path.resolve(__dirname, "../src"),
 		},
 	},
 	test: {
-		include: ["tests/browser/**/*.test.{ts,tsx}"],
+		include: ["../tests/browser/**/*.test.{ts,tsx}"],
 		watch: false,
-		setupFiles: ["./tests/setup-env.ts", "./tests/setup.ts"],
+		setupFiles: ["../tests/setup-env.ts", "../tests/setup.ts"],
 		browser: {
 			enabled: true,
 			name: "chromium",

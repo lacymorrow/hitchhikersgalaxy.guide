@@ -64,7 +64,7 @@ export class AILoader {
 				cms: "Payload CMS 3",
 				email: "Resend",
 				auth: "NextAuth/AuthJS v5",
-				packageManager: "PNPM",
+				packageManager: "Bun",
 			},
 			structure: {
 				root: "/",

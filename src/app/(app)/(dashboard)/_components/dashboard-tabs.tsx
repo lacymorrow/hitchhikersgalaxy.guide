@@ -12,10 +12,10 @@ git clone ${siteConfig.repo.url}
 cd ${siteConfig.branding.projectSlug}
 
 # Install dependencies
-pnpm install
+bun install --frozen-lockfile
 
 # Start the development server
-pnpm dev`;
+bun dev`;
 
 const dockerCode = `# Clone the repository
 git clone ${siteConfig.repo.url}
@@ -85,7 +85,7 @@ export function DashboardTabs({ hasGitHubConnection }: { hasGitHubConnection: bo
 												/>
 												then install dependencies with{" "}
 												<CodeWindow
-													code="pnpm install"
+													code="bun install --frozen-lockfile"
 													language="bash"
 													variant="single"
 													showLineNumbers={false}

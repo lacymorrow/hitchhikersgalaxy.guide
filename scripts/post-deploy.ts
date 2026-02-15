@@ -6,7 +6,7 @@ async function postDeploy() {
 	try {
 		// Sync database
 		console.log("🔄 Syncing database...");
-		execSync("pnpm db:sync", { stdio: "inherit" });
+		execSync("bun run db:sync", { stdio: "inherit" });
 
 		console.log("✨ Post-deployment tasks completed successfully!");
 		process.exit(0);

@@ -18,7 +18,7 @@
     "skipLibCheck": true,
     "verbatimModuleSyntax": false,
     "noEmit": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "module": "ESNext",
     "moduleResolution": "bundler",
     "target": "ES2022",

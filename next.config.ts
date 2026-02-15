@@ -195,7 +195,7 @@ const nextConfig: NextConfig = {
 		// 	mdxType: "gfm",
 		// },
 
-		nextScriptWorkers: true,
+		// nextScriptWorkers: true, // Disabled - causes __non_webpack_require__ warnings with Turbopack
 		serverActions: {
 			bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
 		},

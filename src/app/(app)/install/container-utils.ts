@@ -184,7 +184,7 @@ export class ContainerManager {
 	 * within the container environment with real-time output streaming.
 	 *
 	 * SUPPORTED COMMANDS:
-	 * - npm/yarn/pnpm package manager commands
+	 * - bun/npm/yarn package manager commands (pnpm allowed for compatibility)
 	 * - Node.js script execution
 	 * - Build tools (webpack, vite, etc.)
 	 * - Custom shell commands
@@ -1099,7 +1099,8 @@ export function cn(...inputs: ClassValue[]) {
 						entryName === "pnpm-lock.yaml" ||
 						entryName === ".pnpm-lock.yaml" ||
 						entryName === "npm-shrinkwrap.json" ||
-						entryName === "bun.lockb"
+						entryName === "bun.lockb" ||
+						entryName === "bun.lock"
 					) {
 						logInfo(`Skipping lockfile: ${dirPath}/${entryName}`);
 						continue;
@@ -1196,11 +1197,11 @@ export function cn(...inputs: ClassValue[]) {
 			logInfo(`Original command: ${originalCommand.join(" ")}`);
 
 			// Parse the command to determine package manager and actual command
-			let packageManager = "npx";
+			let packageManager = "bunx";
 			let actualCommand = [...command];
 
 			// Check if command starts with a package manager
-			const packageManagers = ["npx", "pnpx", "pnpm", "bunx", "yarn"];
+			const packageManagers = ["bunx", "bun", "npx", "pnpx", "pnpm", "npm", "yarn"];
 			if (command.length > 0 && command[0] && packageManagers.includes(command[0])) {
 				packageManager = command[0];
 				actualCommand = command.slice(1);

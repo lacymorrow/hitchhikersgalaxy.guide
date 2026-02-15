@@ -107,7 +107,7 @@ function setup(): void {
 	// Add the upstream remote
 	if (runSilent(`git remote add ${UPSTREAM_REMOTE} ${upstreamUrl}`)) {
 		console.info(`✓ Added upstream remote: ${upstreamUrl}`);
-		console.info("  Run 'pnpm upstream:pull' to sync changes from upstream");
+		console.info("  Run 'bun run upstream:pull' to sync changes from upstream");
 	}
 }
 

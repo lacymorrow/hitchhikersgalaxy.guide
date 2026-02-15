@@ -47,7 +47,7 @@ if (__DEV__) console.debug('[Timing] some-work', Math.round(performance.now() - 
 ## Phase 0 — Baseline & Safety
 
 - [ ] Add `NEXT_PUBLIC_DEBUG` to `.env.example` (no code changes required yet)
-- [ ] Do not run dev in CI; rely on `pnpm test`, `pnpm typecheck`, `pnpm lint`
+- [ ] Do not run dev in CI; rely on `bun run test`, `bun run typecheck`, `bun run lint`
 - [ ] Snapshot counts:
   - [ ] Count files with `"use client"`
   - [ ] Identify files > 700 lines
@@ -242,7 +242,7 @@ Acceptance:
 
 ## Phase 8 — Tests, Types, and Docs
 
-- [ ] `pnpm typecheck` clean
+- [ ] `bun run typecheck` clean
 - [ ] Unit tests for split modules
 - [ ] Update `ai.mdx` and `audit-progress.md` with checklist progress
 
@@ -307,9 +307,9 @@ Acceptance:
 ## Appendix — Commands (run locally)
 
 - Lint & types:
-  - `pnpm typecheck`
-  - `pnpm lint`
+  - `bun run typecheck`
+  - `bun run lint`
 - Tests:
-  - `pnpm test`
+  - `bun run test`
 - Bundle analyzer (optional, local):
   - `NEXT_PUBLIC_DEBUG=true` to surface console.debug timing locally`

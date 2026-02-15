@@ -12,7 +12,7 @@ This guide explains how to rebrand the Shipkit boilerplate to your own project n
 The easiest way to rebrand is to use the automated rebranding script:
 
 ```bash
-pnpm tsx scripts/rebrand.ts
+bunx tsx scripts/rebrand.ts
 ```
 
 This script will prompt you for essential branding information and update the necessary files automatically.
@@ -22,7 +22,7 @@ This script will prompt you for essential branding information and update the ne
 If you want to preview the changes without actually modifying any files, use the `--dry-run` flag:
 
 ```bash
-pnpm tsx scripts/rebrand.ts --dry-run
+bunx tsx scripts/rebrand.ts --dry-run
 ```
 
 This will show you what changes would be made without actually writing to any files.
@@ -32,7 +32,7 @@ This will show you what changes would be made without actually writing to any fi
 You can also provide the branding information as command line arguments:
 
 ```bash
-pnpm tsx scripts/rebrand.ts --name "MyApp" --domain "myapp.com" --creator-name "John Doe"
+bunx tsx scripts/rebrand.ts --name "MyApp" --domain "myapp.com" --creator-name "John Doe"
 ```
 
 Available arguments:

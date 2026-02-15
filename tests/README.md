@@ -15,19 +15,19 @@ This directory contains tests for the Shipkit application. The test suite is org
 
 ```bash
 # Run all unit tests
-pnpm test
+bun run test
 
 # Run Node.js specific tests
-pnpm test:node
+bun run test:node
 
 # Run browser tests
-pnpm test:browser
+bun run test:browser
 
 # Run specific test file
-pnpm test tests/unit/utils/standalone-test.test.ts
+bun run test tests/unit/utils/standalone-test.test.ts
 
 # Run tests with coverage
-pnpm test:coverage
+bun run test:coverage
 ```
 
 ## Test Structure
@@ -91,9 +91,9 @@ Tests use Next.js's built-in `loadEnvConfig` from `@next/env` to load environmen
   3. .env.test
   4. .env
 
-For browser-specific tests (`pnpm test:browser`), the browser environment is set up with Playwright and the same environment variables are available.
+For browser-specific tests (`bun run test:browser`), the browser environment is set up with Playwright and the same environment variables are available.
 
-For Node.js-specific tests (`pnpm test:node`), tests run in a Node environment with access to the same environment variables.
+For Node.js-specific tests (`bun run test:node`), tests run in a Node environment with access to the same environment variables.
 
 ### Adding New Tests
 

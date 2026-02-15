@@ -53,7 +53,7 @@ getWaitlistStats() - Public stats access
 ### Migration Pattern
 Use Drizzle Kit for schema changes:
 ```bash
-pnpm db:push
+bun run db:push
 ```
 
 ### Schema Conventions

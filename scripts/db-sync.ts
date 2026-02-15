@@ -43,7 +43,7 @@ async function generateMigrations() {
 	try {
 		// Generate Drizzle migrations
 		console.log("📦 Generating Drizzle migrations...");
-		await execAsync("pnpm db:generate");
+		await execAsync("bun run db:generate");
 		console.log("✅ Drizzle migrations generated");
 
 		// Generate Payload migrations using CLI directly with interactive stdin

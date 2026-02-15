@@ -185,7 +185,7 @@ export function JsonLd({
 	};
 
 	return (
-		<Script id="json-ld" type="application/ld+json" strategy="worker">
+		<Script id="json-ld" type="application/ld+json" strategy="lazyOnload">
 			{`${JSON.stringify(structuredData)}`}
 		</Script>
 	);

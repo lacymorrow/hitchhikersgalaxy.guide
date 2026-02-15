@@ -19,7 +19,7 @@ Get Shipkit running in 4 steps:
 
 2. **Install dependencies:**
    ```bash
-   pnpm install
+   bun install --frozen-lockfile
    ```
 
 3. **Set up environment:**
@@ -30,7 +30,7 @@ Get Shipkit running in 4 steps:
 
 4. **Start developing:**
    ```bash
-   pnpm dev
+   bun dev
    ```
 
 That's it! You're ready to build.
@@ -39,7 +39,7 @@ That's it! You're ready to build.
 
 ### Required Tools
 - **Node.js** v18+ ([download](https://nodejs.org))
-- **PNPM** v8+ ([install](https://pnpm.io/installation))
+- **Bun** v1.1+ ([install](https://bun.sh))
 - **PostgreSQL** v15+ (for database features)
 - **VS Code** (recommended)
 
@@ -113,9 +113,9 @@ export function MyComponent() {
 
 ### Add Database Schema
 ```bash
-pnpm db:migration:create add_users_table
+bun run db:generate
 # Edit the migration file
-pnpm db:migrate
+bun run db:migrate
 ```
 
 ## Feature Flags
@@ -138,16 +138,16 @@ Run these checks:
 
 ```bash
 # Type checking
-pnpm typecheck
+bun run typecheck
 
 # Code quality
-pnpm lint
+bun run lint
 
 # Tests (if you have them)
-pnpm test
+bun run test
 
 # Build test
-pnpm build
+bun run build
 ```
 
 ## Need Help?

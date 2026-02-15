@@ -13,7 +13,7 @@ export const ProjectPaths = {
 	COMPONENTS_JSON: "components.json",
 	TAILWIND_CONFIG: "tailwind.config.ts",
 	NEXT_CONFIG: "next.config.ts",
-	PNPM_LOCK: "pnpm-lock.yaml",
+	BUN_LOCK: "bun.lockb",
 
 	// Essential style and utility files
 	GLOBALS_CSS: "src/styles/globals.css",
@@ -36,7 +36,7 @@ export function getEssentialConfigFiles(): string[] {
 		ProjectPaths.COMPONENTS_JSON,
 		ProjectPaths.TAILWIND_CONFIG,
 		ProjectPaths.NEXT_CONFIG,
-		ProjectPaths.PNPM_LOCK,
+		ProjectPaths.BUN_LOCK,
 		ProjectPaths.GLOBALS_CSS,
 		ProjectPaths.UTILS_TS,
 	];

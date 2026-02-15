@@ -258,19 +258,19 @@ export default nextConfig;
 
    ```bash
    # Terminal 1 - Main Shipkit app
-   pnpm dev
+   bun dev
 
    # Terminal 2 - Documentation app
-   cd ../shipkit-docs && pnpm dev -- --port 3001
+   cd ../shipkit-docs && bun dev -- --port 3001
 
    # Terminal 3 - Blog app
-   cd ../shipkit-blog && pnpm dev -- --port 3002
+   cd ../shipkit-blog && bun dev -- --port 3002
 
    # Terminal 4 - UI Library
-   cd ../shipkit-ui && pnpm dev -- --port 3003
+   cd ../shipkit-ui && bun dev -- --port 3003
 
    # Terminal 5 - Tools app
-   cd ../shipkit-tools && pnpm dev -- --port 3004
+   cd ../shipkit-tools && bun dev -- --port 3004
    ```
 
 2. **Test routes:**

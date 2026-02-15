@@ -1,6 +1,6 @@
 // Main site icon
-import { ShipkitIcon } from "@/components/assets/shipkit-icon";
+import { KitIcon } from "@/components/assets/kit-icon";
 
-export const Icon = (props: React.ComponentProps<typeof ShipkitIcon>) => {
-	return <ShipkitIcon {...props} />;
+export const Icon = (props: React.ComponentProps<typeof KitIcon>) => {
+	return <KitIcon {...props} />;
 };

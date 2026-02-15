@@ -18,7 +18,7 @@ import { FontProvider } from "@/components/providers/font-provider";
 
 import "@/styles/globals.css";
 
-interface ShipkitProviderProps {
+interface KitProviderProps {
 	children: ReactNode;
 	/**
 	 * Session data for Next Auth
@@ -34,7 +34,7 @@ interface ShipkitProviderProps {
  * Main provider component that wraps all providers used in the application
  * Can be used in both App Router and Pages Router
  */
-export function ShipkitProvider({ children, session, pageProps }: ShipkitProviderProps) {
+export function KitProvider({ children, session, pageProps }: KitProviderProps) {
 	const authEnabled = isAuthenticationAvailable();
 	const sessionProviderProps = authEnabled
 		? { session }

@@ -80,10 +80,10 @@ git clone https://github.com/lacymorrow/shipkit.git shipkit-ui
 git clone https://github.com/lacymorrow/shipkit.git shipkit-tools
 
 # Install dependencies for each zone
-cd shipkit-docs && pnpm install
-cd shipkit-blog && pnpm install
-cd shipkit-ui && pnpm install
-cd shipkit-tools && pnpm install
+cd shipkit-docs && bun install --frozen-lockfile
+cd shipkit-blog && bun install --frozen-lockfile
+cd shipkit-ui && bun install --frozen-lockfile
+cd shipkit-tools && bun install --frozen-lockfile
 ```
 
 ### 2. Configuration Patterns

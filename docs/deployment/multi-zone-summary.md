@@ -93,19 +93,19 @@ async rewrites() {
 ```bash
 # Documentation Shipkit app
 git clone https://github.com/lacymorrow/shipkit.git shipkit-docs
-cd shipkit-docs && pnpm install
+cd shipkit-docs && bun install --frozen-lockfile
 
 # Blog Shipkit app
 git clone https://github.com/lacymorrow/shipkit.git shipkit-blog
-cd shipkit-blog && pnpm install
+cd shipkit-blog && bun install --frozen-lockfile
 
 # UI Component Library Shipkit app
 git clone https://github.com/lacymorrow/shipkit.git shipkit-ui
-cd shipkit-ui && pnpm install
+cd shipkit-ui && bun install --frozen-lockfile
 
 # Developer Tools Shipkit app
 git clone https://github.com/lacymorrow/shipkit.git shipkit-tools
-cd shipkit-tools && pnpm install
+cd shipkit-tools && bun install --frozen-lockfile
 ```
 
 **Step 3: Configure each Shipkit app for its zone**
@@ -246,19 +246,19 @@ import { cn } from "@/lib/utils";
 
 ```bash
 # Terminal 1 - Main Shipkit app
-cd shipkit && pnpm dev
+cd shipkit && bun dev
 
 # Terminal 2 - Documentation Shipkit app
-cd shipkit-docs && pnpm dev -- --port 3001
+cd shipkit-docs && bun dev -- --port 3001
 
 # Terminal 3 - Blog Shipkit app
-cd shipkit-blog && pnpm dev -- --port 3002
+cd shipkit-blog && bun dev -- --port 3002
 
 # Terminal 4 - UI Library Shipkit app
-cd shipkit-ui && pnpm dev -- --port 3003
+cd shipkit-ui && bun dev -- --port 3003
 
 # Terminal 5 - Tools Shipkit app
-cd shipkit-tools && pnpm dev -- --port 3004
+cd shipkit-tools && bun dev -- --port 3004
 ```
 
 ### Verification Checklist for Shipkit.io

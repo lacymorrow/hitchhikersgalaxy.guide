@@ -3,7 +3,7 @@
 import { useTheme } from "next-themes";
 import { useEffect, useRef, useState } from "react";
 
-export const ShipkitLogoParticles = () => {
+export const KitLogoParticles = () => {
 	const { theme } = useTheme();
 	const canvasRef = useRef<HTMLCanvasElement>(null);
 	const containerRef = useRef<HTMLDivElement>(null);

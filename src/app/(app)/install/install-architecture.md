@@ -119,7 +119,8 @@ export function shouldIgnoreFile(filename: string): boolean {
     normalizedName.includes("pnpm-lock.yaml") ||
     normalizedName.includes(".pnpm-lock.yaml") ||
     normalizedName.includes("npm-shrinkwrap.json") ||
-    normalizedName.includes("bun.lockb")
+    normalizedName.includes("bun.lockb") ||
+    normalizedName.includes("bun.lock")
   ) return true;
   
   // Ignore TypeScript environment files

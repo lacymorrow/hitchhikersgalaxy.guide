@@ -184,7 +184,7 @@ if (process.argv.includes("--bones")) {
 } else {
 	// Default cleanup
 	const defaultDirs = ["node_modules", ".next", ".turbo"];
-	const defaultFiles = ["pnpm-lock.yaml"];
+	const defaultFiles = ["bun.lockb", "bun.lock", "pnpm-lock.yaml"];
 	const additionalFolders = process.argv.slice(2);
 
 	for (const dir of [...defaultDirs, ...additionalFolders]) {
@@ -195,5 +195,5 @@ if (process.argv.includes("--bones")) {
 		removeFile(file);
 	}
 
-	runCommand("pnpm store prune");
+	runCommand("bun pm cache clean");
 }

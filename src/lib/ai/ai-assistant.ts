@@ -180,7 +180,7 @@ export class AIAssistant {
 				"Follow security best practices",
 			],
 			packageManager: [
-				"Use PNPM effectively",
+				"Use Bun effectively",
 				"Manage dependencies properly",
 				"Use proper scripts",
 				"Follow lockfile practices",

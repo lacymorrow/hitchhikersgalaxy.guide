@@ -66,7 +66,7 @@ export const FeedbackPopover = () => {
 				<PopoverTrigger disabled={loading}>
 					{loading ? <span className="">Sending...</span> : "Feedback"}
 				</PopoverTrigger>
-				<PopoverContent>
+				<PopoverContent align="end">
 					<PopoverForm onSubmit={(data) => void handleSubmit(data)}>
 						<PopoverHeader>Let us know what you think</PopoverHeader>
 						<PopoverTextarea />

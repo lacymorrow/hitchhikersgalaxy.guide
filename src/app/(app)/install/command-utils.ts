@@ -5,7 +5,7 @@ import { logInfo } from "./logging";
 /**
  * Run an installation command and return the exit code
  * @param container The WebContainer instance
- * @param packageManager The package manager to use (e.g. npm, yarn, pnpm)
+ * @param packageManager The package manager to use (e.g. npm, yarn, bun)
  * @param command The command to run
  * @param displayCommand Optional display command for logging
  * @returns The exit code of the command

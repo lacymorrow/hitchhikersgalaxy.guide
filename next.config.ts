@@ -203,12 +203,6 @@ const nextConfig: NextConfig = {
 		viewTransition: true,
 		webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
 
-		// Enhanced client-side router cache
-		clientSegmentCache: true,
-
-		// Optimized prefetching
-		optimisticClientCache: true,
-
 		/*
 		 * Optimize Package Imports - Enhanced Bundle Optimization
 		 * Automatically optimizes imports from large libraries like Lodash, Material-UI, etc.
@@ -247,9 +241,14 @@ const nextConfig: NextConfig = {
 		// webpackBuildWorker: false, // Disable for low memory
 		// cpus: 1, // Limit concurrent operations
 		// workerThreads: false, // Disable worker threads
-		serverComponentsExternalPackages: ["@payloadcms/db-postgres", "payload"],
 		// ppr: true,
 	},
+
+	/*
+	 * Server Components External Packages
+	 * Packages that should be bundled as external in Server Components
+	 */
+	serverComponentsExternalPackages: ["@payloadcms/db-postgres", "payload"],
 
 	/*
 	 * Miscellaneous configuration

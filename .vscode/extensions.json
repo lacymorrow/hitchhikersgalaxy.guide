@@ -1,6 +1,5 @@
 {
   "recommendations": [
-    "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "foxundermoon.shell-format",
     "ms-azuretools.vscode-docker",

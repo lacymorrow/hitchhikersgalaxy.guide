@@ -9,7 +9,7 @@ const rootDir = process.cwd();
 function runCommand(command: string) {
 	try {
 		execSync(command, { stdio: "inherit" });
-	} catch (error) {}
+	} catch (error) { }
 }
 
 function removeDirectory(dir: string) {
@@ -36,7 +36,6 @@ const filesToRemove = [
 	".ncurc",
 	".npmrc",
 	".nvmrc",
-	".prettierignore",
 	".vscode/settings.json",
 	".config/next-sitemap.config.js",
 	"vercel.json",

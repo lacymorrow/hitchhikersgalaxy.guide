@@ -7,10 +7,21 @@ import {
 	buildTimePublicEnv,
 } from "@/config/features-config";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
-import { redirects } from "@/config/routes";
+import { routes } from "@/config/routes";
 import { getDerivedSecrets } from "@/config/secrets";
 import { withPlugins } from "@/config/with-plugins";
 import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/posthog-config";
+import { createRedirects, type Redirect } from "@/lib/utils/redirect";
+
+/* eslint-disable-next-line @typescript-eslint/require-await */
+const redirects = async (): Promise<Redirect[]> => {
+	return [
+		...createRedirects(["/docs", "/documentation"], routes.docs, true),
+		...createRedirects(["/join", "/signup", "/sign-up"], routes.auth.signUp, true),
+		...createRedirects(["/login", "/log-in", "/signin", "/sign-in"], routes.auth.signIn),
+		...createRedirects(["/logout", "/log-out", "/signout", "/sign-out"], routes.auth.signOut),
+	];
+};
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
@@ -160,17 +171,6 @@ const nextConfig: NextConfig = {
 	 */
 	productionBrowserSourceMaps: false,
 
-	/*
-	 * Lint configuration
-	 */
-	eslint: {
-		/*
-	  !! WARNING !!
-	  * This allows production builds to successfully complete even if
-	  * your project has ESLint errors.
-	*/
-		ignoreDuringBuilds: true,
-	},
 	typescript: {
 		/*
 	  !! WARNING !!
@@ -203,6 +203,10 @@ const nextConfig: NextConfig = {
 		viewTransition: true,
 		webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
 
+
+		// Optimized prefetching
+		optimisticClientCache: true,
+
 		/*
 		 * Optimize Package Imports - Enhanced Bundle Optimization
 		 * Automatically optimizes imports from large libraries like Lodash, Material-UI, etc.
@@ -229,26 +233,12 @@ const nextConfig: NextConfig = {
 			static: 360, // 360 seconds for static routes
 		},
 
-		/*
-		 * Server Components HMR Cache - Development Performance Boost
-		 * Caches fetch responses in Server Components across HMR refreshes
-		 * Improves development speed and reduces API costs
-		 * ⚠️  Only enable in development - can cause stale data issues
-		 */
-		serverComponentsHmrCache: process.env.NODE_ENV === "development",
-
 		// Memory optimization for builds - Uncomment if experiencing memory issues
 		// webpackBuildWorker: false, // Disable for low memory
 		// cpus: 1, // Limit concurrent operations
 		// workerThreads: false, // Disable worker threads
 		// ppr: true,
 	},
-
-	/*
-	 * Server Components External Packages
-	 * Packages that should be bundled as external in Server Components
-	 */
-	serverComponentsExternalPackages: ["@payloadcms/db-postgres", "payload"],
 
 	/*
 	 * Miscellaneous configuration
@@ -266,7 +256,7 @@ const nextConfig: NextConfig = {
 	logging: {
 		fetches: {
 			fullUrl: true, // Log full URLs of fetch requests even if cached
-			hmrRefreshes: process.env.NODE_ENV === "development", // Log HMR refreshes in development
+			hmrRefreshes: process.env.NODE_ENV === 'development', // Log HMR refreshes in development
 		},
 	},
 
@@ -276,7 +266,7 @@ const nextConfig: NextConfig = {
 		// Use DISABLE_ERROR_LOGGING to disable error logging too
 		removeConsole:
 			process.env.DISABLE_LOGGING === "true" ||
-			(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+				(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
 				? process.env.DISABLE_ERROR_LOGGING === "true" ||
 					(process.env.NODE_ENV === "production" && !process.env.DISABLE_ERROR_LOGGING)
 					? true
@@ -402,12 +392,23 @@ const nextConfig: NextConfig = {
 				{
 					// AI/ML Libraries - Heavy and not needed in client
 					"@huggingface/transformers": "commonjs @huggingface/transformers",
+					"@huggingface/inference": "commonjs @huggingface/inference",
 
 					// API Clients - Server-side only
 					googleapis: "commonjs googleapis",
+					"@octokit/rest": "commonjs @octokit/rest",
 
 					// Rich Text Editors - Client-side alternatives available
 					"monaco-editor": "commonjs monaco-editor",
+
+					// Large utility libraries - Tree-shake in production
+					"jspdf": "commonjs jspdf",
+					"three": "commonjs three",
+					"@react-three/fiber": "commonjs @react-three/fiber",
+					"@react-three/drei": "commonjs @react-three/drei",
+
+					// Development tools - Not needed in production
+					"react-scan": "commonjs react-scan",
 				},
 			];
 		}

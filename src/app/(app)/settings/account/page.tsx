@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ConnectionHighlightWrapper } from "@/app/(app)/settings/_components/connection-highlight-wrapper";
 import { DeleteAccountCard } from "@/app/(app)/settings/_components/delete-account-card";
-import { GitHubConnectButton } from "@/components/buttons/github-connect-button";
+import { GitHubOAuthButton } from "@/components/buttons/github-oauth-button";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
 import {
 	Card,
@@ -15,6 +15,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { constructMetadata } from "@/config/metadata";
 import { auth } from "@/server/auth";
+import { getGitHubConnectionStatus } from "@/server/services/github/github-token-service";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
 
 export const metadata: Metadata = constructMetadata({
@@ -28,15 +29,22 @@ export default async function AccountPage() {
 
 	const userId = session.user.id;
 
-	// Check if user has connected Vercel using our server-side function
-	const hasVercelConnection = await checkVercelConnection(userId);
+	// Check connections using server-side functions
+	// Using unified getGitHubConnectionStatus() ensures isConnected and username are always consistent
+	const [hasVercel, gitHubStatus] = await Promise.all([
+		checkVercelConnection(userId),
+		getGitHubConnectionStatus(userId),
+	]);
 
-	// Define the connected accounts based on session data
+	const hasGitHub = gitHubStatus.isConnected;
+	const gitHubUsername = gitHubStatus.username;
+
+	// Define the connected accounts based on unified connection status
 	const connectedAccounts = [
 		{
 			name: "GitHub",
-			connected: !!session?.user?.githubUsername,
-			username: session?.user?.githubUsername,
+			connected: hasGitHub,
+			username: gitHubUsername,
 		},
 		{
 			name: "GitLab",
@@ -71,14 +79,14 @@ export default async function AccountPage() {
 					<CardContent>
 						<div className="space-y-2">
 							<p>
-								{hasVercelConnection
+								{hasVercel
 									? "Your Vercel account is connected. You can now deploy projects directly to Vercel."
 									: "Connect your Vercel account to deploy projects directly from Shipkit."}
 							</p>
 						</div>
 					</CardContent>
 					<CardFooter>
-						<VercelConnectButton user={session?.user} isConnected={hasVercelConnection} className="w-full" />
+						<VercelConnectButton user={session?.user} isConnected={hasVercel} className="w-full" />
 					</CardFooter>
 				</Card>
 			</ConnectionHighlightWrapper>
@@ -87,11 +95,27 @@ export default async function AccountPage() {
 				<Card>
 					<CardHeader>
 						<CardTitle>GitHub Connection</CardTitle>
-						<CardDescription>Connect your GitHub account to access the repository.</CardDescription>
+						<CardDescription>
+							Connect your GitHub account with OAuth to enable repository creation and deployments.
+						</CardDescription>
 					</CardHeader>
 					<CardContent>
-						<GitHubConnectButton />
+						<div className="space-y-2">
+							<p>
+								{hasGitHub
+									? "Your GitHub account is connected via OAuth. You can now create repositories and deploy projects."
+									: "Connect your GitHub account with OAuth to create repositories and deploy projects directly from Shipkit."}
+							</p>
+						</div>
 					</CardContent>
+					<CardFooter>
+						<GitHubOAuthButton
+							user={session?.user}
+							isConnected={hasGitHub}
+							githubUsername={gitHubUsername}
+							className="w-full"
+						/>
+					</CardFooter>
 				</Card>
 			</ConnectionHighlightWrapper>
 

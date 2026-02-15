@@ -1,5 +1,5 @@
 import { Clock, Users, Zap } from "lucide-react";
-import { getWaitlistStats } from "@/server/actions/waitlist-actions";
+import { getWaitlistStats } from "@/server/services/waitlist-service";
 
 export async function WaitlistStats() {
 	const stats = await getWaitlistStats();

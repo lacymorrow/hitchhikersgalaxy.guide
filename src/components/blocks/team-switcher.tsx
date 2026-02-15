@@ -5,6 +5,7 @@ import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import * as React from "react";
+import { useTeam } from "@/components/providers/team-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,14 +27,28 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
+} from "@/components/ui/popover";
 import { useSidebar } from "@/components/ui/sidebar";
-import { useTeam } from "@/components/providers/team-provider";
 import { useToast } from "@/hooks/use-toast";
+import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import { type AvatarType, getAvatarUrl } from "@/lib/utils/avatar";
-import { createTeam, getUserTeams } from "@/server/actions/teams";
+import { createTeam } from "@/server/actions/teams";
 import type { Team } from "@/types/team";
+
+// Helper to fetch user teams via API
+async function fetchUserTeams(): Promise<Team[]> {
+	const response = await fetch(routes.api.teams);
+	if (!response.ok) {
+		return [];
+	}
+	const data = await response.json();
+	return data.teams ?? [];
+}
 
 interface TeamSwitcherProps {
 	userId?: string;
@@ -66,21 +81,25 @@ export function TeamSwitcher({
 
 	React.useEffect(() => {
 		if (userId) {
-			getUserTeams(userId).then((fetchedTeams) => {
+			fetchUserTeams().then((fetchedTeams) => {
 				if (!fetchedTeams) return;
 
 				setTeams(fetchedTeams);
 
 				// Set the active team based on props or default to personal team
 				if (activeTeamId) {
-					const activeTeamFromProps = fetchedTeams.find((t) => t.team.id === activeTeamId);
+					const activeTeamFromProps = fetchedTeams.find(
+						(t) => t.team.id === activeTeamId,
+					);
 					if (activeTeamFromProps) {
 						setActiveTeam(activeTeamFromProps);
 						return;
 					}
 				}
 
-				const personalTeam = fetchedTeams.find((t) => t.team.type === "personal");
+				const personalTeam = fetchedTeams.find(
+					(t) => t.team.type === "personal",
+				);
 				if (personalTeam) {
 					setActiveTeam(personalTeam);
 				}
@@ -110,7 +129,7 @@ export function TeamSwitcher({
 			}
 
 			// Reload teams to get the updated list for consistency
-			const userTeams = await getUserTeams(userId);
+			const userTeams = await fetchUserTeams();
 			setTeams(userTeams);
 
 			// Select the newly created team
@@ -152,9 +171,11 @@ export function TeamSwitcher({
 						variant="ghost"
 						size="sm"
 						className={cn(
-							"flex items-center gap-2",
-							variant === "sidebar" ? "w-full" : "w-[260px] max-w-full justify-between",
-							variant === "sidebar" && sidebarOpen && "justify-between py-6"
+							"flex items-center gap-2 py-6 h-12",
+							variant === "sidebar"
+								? "w-full"
+								: "w-[260px] max-w-full justify-between",
+							variant === "sidebar" && sidebarOpen && "justify-between",
 						)}
 						aria-label="Select team"
 					>
@@ -162,12 +183,17 @@ export function TeamSwitcher({
 							<AvatarImage
 								src={
 									activeTeam?.team
-										? getAvatarUrl(activeTeam.team.name, activeTeam.team.type as AvatarType)
+										? getAvatarUrl(
+											activeTeam.team.name,
+											activeTeam.team.type as AvatarType,
+										)
 										: getAvatarUrl("team")
 								}
 								alt={activeTeam?.team?.name || "Team"}
 							/>
-							<AvatarFallback>{activeTeam?.team?.name?.charAt(0) || "T"}</AvatarFallback>
+							<AvatarFallback>
+								{activeTeam?.team?.name?.charAt(0) || "T"}
+							</AvatarFallback>
 						</Avatar>
 						{(variant === "header" || sidebarOpen) && (
 							<>
@@ -192,7 +218,7 @@ export function TeamSwitcher({
 							? "w-[260px]"
 							: sidebarOpen
 								? "w-[var(--radix-popover-trigger-width)]"
-								: undefined
+								: undefined,
 					)}
 					align="start"
 				>
@@ -214,50 +240,65 @@ export function TeamSwitcher({
 												>
 													<Avatar className="mr-2 h-5 w-5">
 														<AvatarImage
-															src={getAvatarUrl(team.team.name, team.team.type as AvatarType)}
+															src={getAvatarUrl(
+																team.team.name,
+																team.team.type as AvatarType,
+															)}
 															alt={team.team.name}
 														/>
-														<AvatarFallback>{team.team.name.charAt(0)}</AvatarFallback>
+														<AvatarFallback>
+															{team.team.name.charAt(0)}
+														</AvatarFallback>
 													</Avatar>
 													{team.team.name}
 													<CheckIcon
 														className={cn(
 															"ml-auto h-4 w-4",
-															activeTeam?.team.id === team.team.id ? "opacity-100" : "opacity-0"
+															activeTeam?.team.id === team.team.id
+																? "opacity-100"
+																: "opacity-0",
 														)}
 													/>
 												</CommandItem>
 											))}
 									</CommandGroup>
 									{/* Other Teams */}
-									{teams.filter((t) => t.team.type === "workspace").length > 0 && (
-										<CommandGroup heading="Teams">
-											{teams
-												.filter((t) => t.team.type === "workspace")
-												.map((team) => (
-													<CommandItem
-														key={team.team.id}
-														onSelect={() => handleTeamSelect(team)}
-														className="text-sm"
-													>
-														<Avatar className="mr-2 h-5 w-5">
-															<AvatarImage
-																src={getAvatarUrl(team.team.name, team.team.type as AvatarType)}
-																alt={team.team.name}
+									{teams.filter((t) => t.team.type === "workspace").length >
+										0 && (
+											<CommandGroup heading="Teams">
+												{teams
+													.filter((t) => t.team.type === "workspace")
+													.map((team) => (
+														<CommandItem
+															key={team.team.id}
+															onSelect={() => handleTeamSelect(team)}
+															className="text-sm"
+														>
+															<Avatar className="mr-2 h-5 w-5">
+																<AvatarImage
+																	src={getAvatarUrl(
+																		team.team.name,
+																		team.team.type as AvatarType,
+																	)}
+																	alt={team.team.name}
+																/>
+																<AvatarFallback>
+																	{team.team.name.charAt(0)}
+																</AvatarFallback>
+															</Avatar>
+															{team.team.name}
+															<CheckIcon
+																className={cn(
+																	"ml-auto h-4 w-4",
+																	activeTeam?.team.id === team.team.id
+																		? "opacity-100"
+																		: "opacity-0",
+																)}
 															/>
-															<AvatarFallback>{team.team.name.charAt(0)}</AvatarFallback>
-														</Avatar>
-														{team.team.name}
-														<CheckIcon
-															className={cn(
-																"ml-auto h-4 w-4",
-																activeTeam?.team.id === team.team.id ? "opacity-100" : "opacity-0"
-															)}
-														/>
-													</CommandItem>
-												))}
-										</CommandGroup>
-									)}
+														</CommandItem>
+													))}
+											</CommandGroup>
+										)}
 								</>
 							)}
 							<CommandSeparator />
@@ -305,7 +346,10 @@ export function TeamSwitcher({
 						>
 							Cancel
 						</Button>
-						<Button onClick={handleCreateTeam} disabled={!newTeamName.trim() || isLoading}>
+						<Button
+							onClick={handleCreateTeam}
+							disabled={!newTeamName.trim() || isLoading}
+						>
 							{isLoading ? "Creating..." : "Continue"}
 						</Button>
 					</DialogFooter>

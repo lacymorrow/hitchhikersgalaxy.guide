@@ -1,40 +1,94 @@
-import { DeleteObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 
-// Initialize S3 client only if the feature is enabled
-let s3Client: S3Client | null = null;
+// Lazy-loaded S3 client and SDK types
+let s3Client: InstanceType<
+  typeof import("@aws-sdk/client-s3").S3Client
+> | null = null;
 let isInitialized = false;
 
-if (env.NEXT_PUBLIC_FEATURE_S3_ENABLED) {
-	// Explicitly check required env vars for type safety, even though the flag implies they exist.
-	if (!env.AWS_REGION || !env.AWS_ACCESS_KEY_ID || !env.AWS_SECRET_ACCESS_KEY) {
-		if (!isInitialized) {
-			logger.error("❌ S3 feature is enabled, but required AWS credentials or region are missing.");
-			isInitialized = true;
-		}
-	} else {
-		try {
-			s3Client = new S3Client({
-				region: env.AWS_REGION, // Now guaranteed to be string
-				credentials: {
-					accessKeyId: env.AWS_ACCESS_KEY_ID, // Now guaranteed to be string
-					secretAccessKey: env.AWS_SECRET_ACCESS_KEY, // Now guaranteed to be string
-				},
-			});
-			if (!isInitialized) {
-				logger.info("✅ S3 Client Initialized");
-				isInitialized = true;
-			}
-		} catch (error) {
-			if (!isInitialized) {
-				logger.error("❌ Failed to initialize S3 client:", error);
-				isInitialized = true;
-			}
-			// Keep s3Client as null if initialization fails
-		}
-	}
+// Cache for dynamically imported modules
+let S3ClientClass: typeof import("@aws-sdk/client-s3").S3Client | null = null;
+let PutObjectCommandClass:
+  | typeof import("@aws-sdk/client-s3").PutObjectCommand
+  | null = null;
+let DeleteObjectCommandClass:
+  | typeof import("@aws-sdk/client-s3").DeleteObjectCommand
+  | null = null;
+let getSignedUrlFn:
+  | typeof import("@aws-sdk/s3-request-presigner").getSignedUrl
+  | null = null;
+
+/**
+ * Lazily loads the AWS SDK modules to prevent Turbopack bundling issues.
+ * The SDK is only loaded when S3 functionality is actually used.
+ */
+async function loadAwsSdk() {
+  if (!S3ClientClass) {
+    const s3Module = await import("@aws-sdk/client-s3");
+    S3ClientClass = s3Module.S3Client;
+    PutObjectCommandClass = s3Module.PutObjectCommand;
+    DeleteObjectCommandClass = s3Module.DeleteObjectCommand;
+  }
+  if (!getSignedUrlFn) {
+    const presignerModule = await import("@aws-sdk/s3-request-presigner");
+    getSignedUrlFn = presignerModule.getSignedUrl;
+  }
+}
+
+/**
+ * Initializes the S3 client if the feature is enabled and credentials are available.
+ * Uses dynamic imports to avoid Turbopack bundling issues.
+ */
+async function initializeS3Client() {
+  if (isInitialized) return s3Client;
+
+  if (!env.NEXT_PUBLIC_FEATURE_S3_ENABLED) {
+    isInitialized = true;
+    return null;
+  }
+
+  if (!env.AWS_REGION || !env.AWS_ACCESS_KEY_ID || !env.AWS_SECRET_ACCESS_KEY) {
+    logger.error(
+      "❌ S3 feature is enabled, but required AWS credentials or region are missing.",
+    );
+    isInitialized = true;
+    return null;
+  }
+
+  try {
+    await loadAwsSdk();
+
+    if (!S3ClientClass) {
+      throw new Error("Failed to load S3Client class");
+    }
+
+    s3Client = new S3ClientClass({
+      region: env.AWS_REGION,
+      credentials: {
+        accessKeyId: env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: env.AWS_SECRET_ACCESS_KEY,
+      },
+    });
+
+    logger.info("✅ S3 Client Initialized");
+    isInitialized = true;
+    return s3Client;
+  } catch (error) {
+    logger.error("❌ Failed to initialize S3 client:", error);
+    isInitialized = true;
+    return null;
+  }
+}
+
+/**
+ * Gets the S3 client, initializing it if necessary.
+ */
+async function getS3Client() {
+  if (!isInitialized) {
+    await initializeS3Client();
+  }
+  return s3Client;
 }
 
 /**

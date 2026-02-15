@@ -3,6 +3,8 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
+import { STATUS_CODES } from "@/config/status-codes";
+import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 
 interface ConnectionHighlightWrapperProps {
 	children: React.ReactNode;
@@ -18,12 +20,12 @@ export const ConnectionHighlightWrapper = ({
 	const wrapperRef = useRef<HTMLDivElement>(null);
 
 	useEffect(() => {
-		const success = searchParams?.get("success");
-		const highlight = searchParams?.get("highlight");
+		const code = searchParams?.get(SEARCH_PARAM_KEYS.statusCode);
 
+		const slug = `CONNECT_${connectionType.toUpperCase()}` as keyof typeof STATUS_CODES;
 		// Check if this section should be highlighted
 		const shouldHighlight =
-			success === `${connectionType}_connected` || highlight === connectionType;
+			code === STATUS_CODES[slug]?.code;
 
 		if (shouldHighlight && wrapperRef.current) {
 			// Scroll into view
@@ -41,10 +43,10 @@ export const ConnectionHighlightWrapper = ({
 
 				// Clean up URL after animation
 				const url = new URL(window.location.href);
-				url.searchParams.delete("success");
-				url.searchParams.delete("highlight");
+				url.searchParams.delete(SEARCH_PARAM_KEYS.statusCode);
+
 				// Only update URL if there were params to remove
-				if (success || highlight) {
+				if (code) {
 					router.replace(url.pathname + (url.search ? url.search : ""), { scroll: false });
 				}
 			}, 3000);

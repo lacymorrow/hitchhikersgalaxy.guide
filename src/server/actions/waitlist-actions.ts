@@ -4,7 +4,6 @@ import { env } from "@/env";
 import { resend } from "@/lib/resend";
 import {
 	addWaitlistEntry,
-	getWaitlistStats as getStats,
 	isEmailOnWaitlist,
 } from "@/server/services/waitlist-service";
 
@@ -128,15 +127,3 @@ export const addToWaitlistSimple = async (email: string) => {
 	});
 };
 
-/**
- * Get waitlist statistics
- * @returns Waitlist stats including total, notified, and pending counts
- */
-export const getWaitlistStats = async () => {
-	try {
-		return await getStats();
-	} catch (error) {
-		console.error("Error getting waitlist stats:", error);
-		return { total: 0, notified: 0, pending: 0 };
-	}
-};

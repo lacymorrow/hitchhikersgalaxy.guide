@@ -43,44 +43,6 @@ describe.skip("Deployment Actions (DB gated)", () => {
 		vi.clearAllMocks();
 	});
 
-	describe("getUserDeployments", () => {
-		if (!process.env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED) {
-			it.skip("skipped: database feature disabled", () => {});
-			return;
-		}
-
-		it("should return user deployments when authenticated", async () => {
-			const mockDeployments = [
-				{
-					id: "1",
-					userId: mockUserId,
-					projectName: "test-project",
-					status: "completed",
-					createdAt: new Date(),
-				},
-			];
-
-			vi.mocked(db.db.orderBy).mockReturnValue({
-				then: vi.fn().mockResolvedValue(mockDeployments),
-			} as any);
-
-			const result = await deploymentActions.getUserDeployments();
-
-			expect(result).toEqual(mockDeployments);
-			expect(auth).toHaveBeenCalled();
-			expect(db.db.select).toHaveBeenCalled();
-		});
-
-		it("should return empty array when not authenticated", async () => {
-			vi.mocked(auth).mockResolvedValue(null);
-
-			const result = await deploymentActions.getUserDeployments();
-
-			expect(result).toEqual([]);
-			expect(db.db.select).not.toHaveBeenCalled();
-		});
-	});
-
 	describe("createDeployment", () => {
 		it("should create a deployment when authenticated", async () => {
 			const newDeployment = {
@@ -189,25 +151,4 @@ describe.skip("Deployment Actions (DB gated)", () => {
 		});
 	});
 
-	describe("initializeDemoDeployments", () => {
-		it("should create demo deployments when authenticated", async () => {
-			vi.mocked(db.db.returning).mockReturnValue({
-				then: vi.fn().mockResolvedValue([{ id: "demo-1" }, { id: "demo-2" }, { id: "demo-3" }]),
-			} as any);
-
-			await deploymentActions.initializeDemoDeployments();
-
-			expect(auth).toHaveBeenCalled();
-			expect(db.db.insert).toHaveBeenCalledWith(deployments);
-			expect(db.db.values).toHaveBeenCalled();
-		});
-
-		it("should do nothing when not authenticated", async () => {
-			vi.mocked(auth).mockResolvedValue(null);
-
-			await deploymentActions.initializeDemoDeployments();
-
-			expect(db.db.insert).not.toHaveBeenCalled();
-		});
-	});
 });

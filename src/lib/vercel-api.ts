@@ -105,10 +105,18 @@ export class VercelAPIService {
 				await this.addDomains(response.id, config.domains);
 			}
 
+			const accountSlug = await this.resolveAccountSlug(
+				response.accountId ?? this.teamId
+			);
+			const accountPath = accountSlug ?? response.accountId;
+
 			return {
 				success: true,
 				projectId: response.id,
-				projectUrl: `https://vercel.com/${response.accountId}/${response.name}`,
+				// Vercel project URLs use account slug (team/user), not accountId.
+				projectUrl: accountPath
+					? `https://vercel.com/${accountPath}/${response.name}`
+					: undefined,
 				details: response,
 			};
 		} catch (error: any) {
@@ -132,7 +140,8 @@ export class VercelAPIService {
 	async createDeployment(
 		projectId: string,
 		projectName?: string,
-		gitRef?: string
+		gitRef?: string,
+		repoId?: number
 	): Promise<VercelDeploymentResult> {
 		try {
 			console.log(`Creating deployment for project: ${projectId}`);
@@ -143,12 +152,15 @@ export class VercelAPIService {
 				target: "production" as const,
 			};
 
-			// Only add gitSource if provided
-			if (gitRef) {
+			// Only add gitSource when repoId is available (required by Vercel)
+			if (gitRef && repoId) {
 				deploymentData.gitSource = {
 					type: "github" as const,
 					ref: gitRef,
+					repoId,
 				};
+			} else if (gitRef && !repoId) {
+				console.warn("Skipping gitSource because repoId is missing", { projectId, projectName });
 			}
 
 			// Log the deployment request for debugging
@@ -437,9 +449,13 @@ export class VercelAPIService {
 	/**
 	 * Make authenticated request to Vercel API
 	 */
-	private async makeRequest(endpoint: string, options: RequestInit = {}) {
+	private async makeRequest(
+		endpoint: string,
+		options: RequestInit = {},
+		config?: { skipTeamId?: boolean }
+	) {
 		const url = new URL(`${this.baseUrl}${endpoint}`);
-		if (this.teamId) {
+		if (this.teamId && !config?.skipTeamId) {
 			url.searchParams.append("teamId", this.teamId);
 		}
 
@@ -461,6 +477,33 @@ export class VercelAPIService {
 		}
 
 		return response.json();
+	}
+
+	private async resolveAccountSlug(accountId?: string) {
+		if (!accountId) return undefined;
+
+		try {
+			const teamResponse = await this.makeRequest(
+				`/v2/teams/${accountId}`,
+				{},
+				{ skipTeamId: true }
+			);
+			if (teamResponse?.slug) return teamResponse.slug;
+			if (teamResponse?.name) return teamResponse.name;
+		} catch {
+			// Swallow errors to allow fallback to user slug.
+		}
+
+		try {
+			const userResponse = await this.makeRequest(
+				"/v2/user",
+				{},
+				{ skipTeamId: true }
+			);
+			return userResponse?.user?.username;
+		} catch {
+			return undefined;
+		}
 	}
 
 	/**

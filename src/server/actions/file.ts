@@ -31,7 +31,7 @@ export const uploadFileAction = async (
 		title: fileName,
 		location: url,
 	});
-	revalidateTag("files");
+	revalidateTag("files", "max");
 	if (!userFile) {
 		throw new Error("Failed to create user file");
 	}
@@ -54,7 +54,7 @@ export async function deleteFileAction({
 		await userService.deleteUserFile(session.user.id, fileId);
 		await deleteFile(fileName);
 		// Remove the file from the user's profile
-		revalidateTag("files");
+		revalidateTag("files", "max");
 
 		logger.info(`File deleted successfully: ${fileId}`);
 	} catch (error) {

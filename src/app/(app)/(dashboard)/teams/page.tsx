@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -17,9 +17,20 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableDialog } from "@/components/ui/data-table/data-table-dialog";
+import { routes } from "@/config/routes";
 import { useToast } from "@/hooks/use-toast";
-import { createTeam, deleteTeam, getUserTeams, updateTeam } from "@/server/actions/teams";
+import { createTeam, deleteTeam, updateTeam } from "@/server/actions/teams";
 import type { Team } from "@/types/team";
+
+// Helper to fetch user teams via API
+async function fetchUserTeams(): Promise<Team[]> {
+	const response = await fetch(routes.api.teams);
+	if (!response.ok) {
+		return [];
+	}
+	const data = await response.json();
+	return data.teams ?? [];
+}
 
 export default function TeamsPage() {
 	const { data: session } = useSession();
@@ -32,17 +43,11 @@ export default function TeamsPage() {
 	const [newTeamName, setNewTeamName] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	useEffect(() => {
-		if (session?.user?.id) {
-			void loadTeams();
-		}
-	}, [session?.user?.id]);
-
-	const loadTeams = async () => {
+	const loadTeams = useCallback(async () => {
 		if (!session?.user?.id) return;
 		setIsLoading(true);
 		try {
-			const teams = await getUserTeams(session.user.id);
+			const teams = await fetchUserTeams();
 			setTeams(teams);
 		} catch (error) {
 			console.error("Failed to load teams:", error);
@@ -54,7 +59,13 @@ export default function TeamsPage() {
 		} finally {
 			setIsLoading(false);
 		}
-	};
+	}, [session?.user?.id, toast]);
+
+	useEffect(() => {
+		if (session?.user?.id) {
+			void loadTeams();
+		}
+	}, [session?.user?.id, loadTeams]);
 
 	const handleAdd = () => {
 		setShowAddDialog(true);
@@ -170,7 +181,10 @@ export default function TeamsPage() {
 						{!isPersonal && (
 							<AlertDialog>
 								<AlertDialogTrigger asChild>
-									<button type="button" className="text-sm text-red-600 hover:text-red-900">
+									<button
+										type="button"
+										className="text-sm text-red-600 hover:text-red-900"
+									>
 										Delete
 									</button>
 								</AlertDialogTrigger>
@@ -178,8 +192,9 @@ export default function TeamsPage() {
 									<AlertDialogHeader>
 										<AlertDialogTitle>Delete Team</AlertDialogTitle>
 										<AlertDialogDescription>
-											Are you sure you want to delete this team? This action will also delete all
-											associated projects, API keys, and cannot be undone.
+											Are you sure you want to delete this team? This action
+											will also delete all associated projects, API keys, and
+											cannot be undone.
 										</AlertDialogDescription>
 									</AlertDialogHeader>
 									<AlertDialogFooter>
@@ -208,8 +223,8 @@ export default function TeamsPage() {
 			<div className="mb-8">
 				<h2 className="text-2xl font-bold tracking-tight">Teams</h2>
 				<p className="text-muted-foreground">
-					Manage your teams and their members. Every user has a personal team that cannot be
-					deleted.
+					Manage your teams and their members. Every user has a personal team
+					that cannot be deleted.
 				</p>
 			</div>
 

@@ -5,6 +5,9 @@ import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { accounts } from "@/server/db/schema";
 import { env } from "@/env";
+import { STATUS_CODES } from "@/config/status-codes";
+import { routes } from "@/config/routes";
+import { routeRedirect } from "@/lib/utils/redirect";
 
 interface RouteContext {
 	params: Promise<{
@@ -167,7 +170,11 @@ export async function GET(request: NextRequest, context: RouteContext) {
 		try {
 			if (!db) {
 				console.error("Database not initialized - cannot save Vercel connection");
-				return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_ERROR" }));
+				return routeRedirect(routes.settings.account, {
+					code: STATUS_CODES.CONNECT_VERCEL_ERROR.code,
+					nextUrl: request.url,
+					request: request,
+				});
 			}
 
 			// First, check if this Vercel account (by providerAccountId) already exists
@@ -241,7 +248,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
 		// Redirect back using the dynamic path with success message and clear CSRF cookie
 		const successResponse = NextResponse.redirect(
-			constructRedirectUrl({ code: "VERCEL_CONNECTED" })
+			constructRedirectUrl({ code: STATUS_CODES.CONNECT_VERCEL.code })
 		);
 		successResponse.cookies.delete("vercel_oauth_state");
 		return successResponse;

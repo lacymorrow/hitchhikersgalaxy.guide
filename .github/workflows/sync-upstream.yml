@@ -2,24 +2,17 @@ name: Sync Upstream
 
 on:
   workflow_dispatch: # Allow manual triggering
-  schedule:
-    - cron: '0 0 * * 0' # Run weekly on Sunday at midnight UTC
+  # schedule:
+  #   - cron: '0 0 * * 0' # Run weekly on Sunday at midnight UTC
 
 permissions:
   contents: write # To push branches and commit changes
   pull-requests: write # To create Pull Requests
 
 env:
-  # Primary upstream (premium) - will fall back to public if inaccessible
-  PRIMARY_UPSTREAM_REPO: shipkit-io/shipkit
-  # Fallback upstream (public)
-  FALLBACK_UPSTREAM_REPO: shipkit-io/bones
+  UPSTREAM_REPO: lacymorrow/shipkit
   UPSTREAM_BRANCH: main
-  TARGET_BRANCH: main # Or your main development branch
-  GIT_AUTHOR_NAME: github-actions[bot]
-  GIT_AUTHOR_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
-  GIT_COMMITTER_NAME: github-actions[bot]
-  GIT_COMMITTER_EMAIL: 41898282+github-actions[bot]@users.noreply.github.com
+  TARGET_BRANCH: main
 
 jobs:
   sync:
@@ -31,25 +24,9 @@ jobs:
           fetch-depth: 0 # Fetch all history for merging
           token: ${{ secrets.GITHUB_TOKEN }} # Use default token for checkout
 
-      - name: Setup Git User
-        run: |
-          git config user.name "${{ env.GIT_AUTHOR_NAME }}"
-          git config user.email "${{ env.GIT_AUTHOR_EMAIL }}"
-
-      - name: Determine upstream repository
-        id: upstream
-        run: |
-          # Try primary repo first (premium Shipkit)
-          if git ls-remote "https://github.com/${{ env.PRIMARY_UPSTREAM_REPO }}.git" &>/dev/null; then
-            echo "repo=${{ env.PRIMARY_UPSTREAM_REPO }}" >> $GITHUB_OUTPUT
-            echo "✅ Using primary upstream: ${{ env.PRIMARY_UPSTREAM_REPO }}"
-          else
-            echo "repo=${{ env.FALLBACK_UPSTREAM_REPO }}" >> $GITHUB_OUTPUT
-            echo "⚠️ Primary repo inaccessible, using fallback: ${{ env.FALLBACK_UPSTREAM_REPO }}"
-          fi
-
       - name: Add upstream remote
-        run: git remote add upstream https://github.com/${{ steps.upstream.outputs.repo }}.git
+        run: |
+          git remote add upstream "https://github.com/${{ env.UPSTREAM_REPO }}.git" || git remote set-url upstream "https://github.com/${{ env.UPSTREAM_REPO }}.git"
 
       - name: Fetch upstream
         run: git fetch upstream ${{ env.UPSTREAM_BRANCH }}
@@ -91,7 +68,7 @@ jobs:
           # Check if merge is still failing after potential resolution attempt
           if git merge --is-ancestor HEAD upstream/${{ env.UPSTREAM_BRANCH }}; then
             echo "Merge completed or conflicts resolved."
-            echo "COMMIT_MESSAGE=chore: Sync with upstream ${{ steps.upstream.outputs.repo }}" >> $GITHUB_OUTPUT
+            echo "COMMIT_MESSAGE=chore: Sync with upstream ${{ env.UPSTREAM_REPO }}" >> $GITHUB_OUTPUT
           elif [[ -n "$(git diff --check)" ]]; then
             # Check if there are still conflict markers
             echo "::error::Merge conflicts remain after AI resolution attempt."
@@ -99,7 +76,7 @@ jobs:
           elif [[ -n "$(git diff --staged)" || -n "$(git diff)" ]]; then
              # If there are staged changes from resolution script
              echo "Merge conflicts resolved by AI."
-             echo "COMMIT_MESSAGE=chore: Sync with upstream ${{ steps.upstream.outputs.repo }} (Conflicts Resolved by AI)" >> $GITHUB_OUTPUT
+             echo "COMMIT_MESSAGE=chore: Sync with upstream ${{ env.UPSTREAM_REPO }} (Conflicts Resolved by AI)" >> $GITHUB_OUTPUT
           else
              # This case shouldn't normally be reached if conflicts existed and weren't resolved/staged
              echo "::error::Unknown merge state after conflict detection."
@@ -124,13 +101,13 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: ${{ steps.merge_status.outputs.COMMIT_MESSAGE }}
-          title: 'chore: Sync with upstream ${{ steps.upstream.outputs.repo }}'
+          title: 'chore: Sync with upstream ${{ env.UPSTREAM_REPO }}'
           body: |
-            Automated sync with upstream repository `${{ steps.upstream.outputs.repo }}`.
+            Automated sync with upstream repository `${{ env.UPSTREAM_REPO }}`.
 
             ${{ env.CONFLICTS_DETECTED == 'true' && format('**Note:** Merge conflicts were detected and resolved using AI. Please review carefully!') || '' }}
 
-            Upstream: `https://github.com/${{ steps.upstream.outputs.repo }}/tree/${{ env.UPSTREAM_BRANCH }}`
+            Upstream: `https://github.com/${{ env.UPSTREAM_REPO }}/tree/${{ env.UPSTREAM_BRANCH }}`
             Branch: `${{ steps.sync_branch.outputs.name }}`
           branch: ${{ steps.sync_branch.outputs.name }}
           base: ${{ env.TARGET_BRANCH }}

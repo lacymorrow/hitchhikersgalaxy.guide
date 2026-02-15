@@ -416,7 +416,7 @@ importers:
         version: 1.1.1(react@19.2.4)
       recharts:
         specifier: ^3.7.0
-        version: 3.7.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react-is@16.13.1)(react@19.2.4)(redux@5.0.1)
+        version: 3.7.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react-is@17.0.2)(react@19.2.4)(redux@5.0.1)
       rehype-highlight:
         specifier: ^7.0.2
         version: 7.0.2
@@ -441,9 +441,6 @@ importers:
       server-only:
         specifier: 0.0.1
         version: 0.0.1
-      shadcn-prose:
-        specifier: ^1.2.1
-        version: 1.2.1
       sharp:
         specifier: 0.33.5
         version: 0.33.5
@@ -505,9 +502,6 @@ importers:
       '@biomejs/biome':
         specifier: 2.3.15
         version: 2.3.15
-      '@builder.io/partytown':
-        specifier: ^0.10.3
-        version: 0.10.3
       '@eslint/eslintrc':
         specifier: ^3.3.3
         version: 3.3.3
@@ -529,6 +523,9 @@ importers:
       '@playwright/test':
         specifier: ^1.58.2
         version: 1.58.2
+      '@qwik.dev/partytown':
+        specifier: ^0.11.2
+        version: 0.11.2
       '@testing-library/jest-dom':
         specifier: ^6.9.1
         version: 6.9.1
@@ -1531,12 +1528,6 @@ packages:
   '@builder.io/dev-tools@1.26.12':
     resolution: {integrity: sha512-dVKeyCn0sBPKcbV6KZKTsHgldelMcdpI5Zv9RuIKtdwsaDEbK0EY+xMZ/11Lov8g5a/+rwqHDuXqbmJifCRnUw==}
     engines: {node: '>=18'}
-    hasBin: true
-
-  '@builder.io/partytown@0.10.3':
-    resolution: {integrity: sha512-N2SWA3c5vEad3rgdAFM3zMb6uc7aXqibkgAz4ijvYzycgQXJ4dE5oH6fGFMXSQWj6ayVlLT1/CmpflYUJHfmQg==}
-    engines: {node: '>=18.0.0'}
-    deprecated: Use @qwik.dev/partytown instead
     hasBin: true
 
   '@builder.io/react@9.1.0':
@@ -3958,6 +3949,11 @@ packages:
   '@puppeteer/browsers@2.12.1':
     resolution: {integrity: sha512-fXa6uXLxfslBlus3MEpW8S6S9fe5RwmAE5Gd8u3krqOwnkZJV3/lQJiY3LaFdTctLLqJtyMgEUGkbDnRNf6vbQ==}
     engines: {node: '>=18'}
+    hasBin: true
+
+  '@qwik.dev/partytown@0.11.2':
+    resolution: {integrity: sha512-795y49CqBiKiwKAD+QBZlzlqEK275hVcazZ7wBPSfgC23L+vWuA7PJmMpgxojOucZHzYi5rAAQ+IP1I3BKVZxw==}
+    engines: {node: '>=18.0.0'}
     hasBin: true
 
   '@radix-ui/number@1.1.1':
@@ -8859,6 +8855,7 @@ packages:
 
   glob@10.4.5:
     resolution: {integrity: sha512-7Bv8RF0k6xjo7d4A/PxYLbUCfb6c+Vpd2/mB2yRDlew7Jb5hEXiCD9ibfO7wpk8i4sevK6DFny9h7EYbM3/sHg==}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@10.5.0:
@@ -11975,10 +11972,6 @@ packages:
     resolution: {integrity: sha512-8LzC5+bvI45BjpfXU8V5fdU2mfeKiQe1D1gIMn7XUlF3OTUrpdJpPPH4EMAnF0DsHHdSZqCdSss5qCmJKuiO3w==}
     engines: {node: '>= 0.10'}
     hasBin: true
-
-  shadcn-prose@1.2.1:
-    resolution: {integrity: sha512-WKYSb3lZ4/iC7YPrZP8HeO1ywQJE94iuBrTaUmPm0C3tPrM+ymWVmKyuzabCTtAkqWQAPOO7SOB40UcDuzsxyw==}
-    deprecated: 'You can now install this as a shadcn component with: npx kibo-ui add typography'
 
   sharp@0.33.5:
     resolution: {integrity: sha512-haPVm1EkS9pgvHrQ/F3Xy+hgcuMV0Wm9vfIBSiwZ05k+xgb0PkBQpGsAA/oWdDobNaZTH5ppvHtzCFbnSEwHVw==}
@@ -15195,8 +15188,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@builder.io/partytown@0.10.3': {}
-
   '@builder.io/react@9.1.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:
       '@builder.io/sdk': 6.2.0
@@ -17940,6 +17931,10 @@ snapshots:
       - bare-buffer
       - react-native-b4a
       - supports-color
+
+  '@qwik.dev/partytown@0.11.2':
+    dependencies:
+      dotenv: 16.6.1
 
   '@radix-ui/number@1.1.1': {}
 
@@ -26476,7 +26471,7 @@ snapshots:
 
   real-require@0.2.0: {}
 
-  recharts@3.7.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react-is@16.13.1)(react@19.2.4)(redux@5.0.1):
+  recharts@3.7.0(@types/react@19.2.14)(react-dom@19.2.4(react@19.2.4))(react-is@17.0.2)(react@19.2.4)(redux@5.0.1):
     dependencies:
       '@reduxjs/toolkit': 2.11.2(react-redux@9.2.0(@types/react@19.2.14)(react@19.2.4)(redux@5.0.1))(react@19.2.4)
       clsx: 2.1.1
@@ -26486,7 +26481,7 @@ snapshots:
       immer: 10.2.0
       react: 19.2.4
       react-dom: 19.2.4(react@19.2.4)
-      react-is: 16.13.1
+      react-is: 17.0.2
       react-redux: 9.2.0(@types/react@19.2.14)(react@19.2.4)(redux@5.0.1)
       reselect: 5.1.1
       tiny-invariant: 1.3.3
@@ -27047,8 +27042,6 @@ snapshots:
       inherits: 2.0.4
       safe-buffer: 5.2.1
       to-buffer: 1.2.2
-
-  shadcn-prose@1.2.1: {}
 
   sharp@0.33.5:
     dependencies:

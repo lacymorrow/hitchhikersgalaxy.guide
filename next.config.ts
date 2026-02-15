@@ -1,5 +1,6 @@
 import path from "node:path";
 import type { NextConfig } from "next";
+import webpack from "webpack";
 import type { Configuration as WebpackConfiguration } from "webpack";
 import {
   buildTimeFeatureFlags,
@@ -199,6 +200,8 @@ const nextConfig: NextConfig = {
    * This prevents Turbopack from trying to bundle these optional peer dependencies
    */
   serverExternalPackages: [
+    // Native modules that fail to compile on Vercel
+    "isolated-vm",
     // Drizzle Kit - CLI tool bundled by Payload CMS that has many optional drivers
     "drizzle-kit",
     // Optional Drizzle ORM database drivers
@@ -214,6 +217,12 @@ const nextConfig: NextConfig = {
     "@aws-sdk/client-s3",
     "@aws-sdk/s3-request-presigner",
     "@payloadcms/storage-s3",
+    // Payload CMS packages with CSS imports that cause runtime issues
+    "@payloadcms/plugin-cloud-storage",
+    "@payloadcms/ui",
+    "react-image-crop",
+    // ESM-only packages that need to be externalized
+    "@octokit/rest",
   ],
 
   /*
@@ -365,6 +374,8 @@ const nextConfig: NextConfig = {
   /*
    * Turbopack configuration
    * @see https://nextjs.org/docs/app/api-reference/next-config-js/turbo
+   * Note: Turbopack is disabled for production builds due to Payload CMS CSS import issues
+   * See: https://github.com/payloadcms/payload/issues/14786
    */
   turbopack: {
     rules: {
@@ -454,6 +465,26 @@ const nextConfig: NextConfig = {
         // "onnxruntime-node": false,
         // "onnxruntime-common": false,
       };
+    }
+
+    // Handle CSS imports from react-image-crop on the server
+    // This prevents ERR_UNKNOWN_FILE_EXTENSION errors at runtime
+    if (isServer) {
+      config.resolve = config.resolve || {};
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        // Stub out react-image-crop CSS on the server
+        "react-image-crop/dist/ReactCrop.css": false,
+      };
+
+      // Use NormalModuleReplacementPlugin to replace CSS imports with empty module
+      config.plugins = config.plugins || [];
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(
+          /react-image-crop\/dist\/ReactCrop\.css$/,
+          require.resolve("./src/lib/empty-module.js"),
+        ),
+      );
     }
 
     return config;

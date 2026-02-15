@@ -16,7 +16,7 @@ import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import type { Deployment } from "@/server/db/schema";
 import { DeploymentActions } from "./deployment-actions";
-import { ExternalLinkIcon, Link1Icon, Link2Icon } from "@radix-ui/react-icons";
+import { Link2Icon } from "@radix-ui/react-icons";
 
 // Constants for polling configuration
 const POLLING_INTERVAL_MS = 3000; // 3 seconds
@@ -197,9 +197,9 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 							<Icons.vercel className="h-4 w-4" />
 						</a>
 					)}
-					{row.original.vercelProjectUrl && (
+					{row.original.githubRepoUrl && (
 						<a
-							href={row.original.vercelProjectUrl}
+							href={row.original.githubRepoUrl}
 							target="_blank"
 							rel="noopener noreferrer"
 							className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
@@ -208,13 +208,13 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 							<Icons.github className="h-4 w-4" />
 						</a>
 					)}
-					{row.original.vercelProjectUrl && (
+					{row.original.vercelDeploymentUrl && (
 						<a
-							href={row.original.vercelProjectUrl}
+							href={row.original.vercelDeploymentUrl}
 							target="_blank"
 							rel="noopener noreferrer"
 							className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-							title="View on GitHub"
+							title="View deployment"
 						>
 							<Link2Icon className="h-4 w-4" />
 						</a>

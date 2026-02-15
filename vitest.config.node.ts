@@ -4,18 +4,17 @@ import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
 export default defineConfig({
-	root: path.resolve(__dirname, ".."), // Ensure Node tests resolve from repository root
 	plugins: [react(), tsconfigPaths()],
 	resolve: {
 		alias: {
-			"@": path.resolve(__dirname, "../src"),
+			"@": path.resolve(__dirname, "./src"),
 		},
 	},
 	test: {
 		environment: "node",
 		globals: true,
-		setupFiles: ["../tests/setup-env.ts", "../tests/setup.ts"],
-		include: ["../tests/node/**/*.test.{ts,tsx}"],
+		setupFiles: ["./tests/setup-env.ts", "./tests/setup.ts"],
+		include: ["tests/node/**/*.test.{ts,tsx}"],
 		watch: false,
 		coverage: {
 			provider: "v8",

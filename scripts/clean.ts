@@ -9,7 +9,7 @@ const rootDir = process.cwd();
 function runCommand(command: string) {
 	try {
 		execSync(command, { stdio: "inherit" });
-	} catch (error) { }
+	} catch (error) {}
 }
 
 function removeDirectory(dir: string) {
@@ -36,15 +36,16 @@ const filesToRemove = [
 	".ncurc",
 	".npmrc",
 	".nvmrc",
+	".prettierignore",
 	".vscode/settings.json",
-	".config/next-sitemap.config.js",
+	"next-sitemap.config.js",
 	"vercel.json",
 	"withLogFlare.ts",
-	".config/vitest.config.browser.ts",
-	".config/vitest.config.node.ts",
-	".config/vitest.config.ts",
-	".config/tsconfig.workers.json",
-	".config/tsconfig.disabled.json",
+	"vitest.config.browser.ts",
+	"vitest.config.node.ts",
+	"vitest.config.ts",
+	"tsconfig.workers.json",
+	"tsconfig.disabled.json",
 	"troubleshooting.md",
 	"todo.mdx",
 	"start-database.sh",
@@ -184,7 +185,7 @@ if (process.argv.includes("--bones")) {
 } else {
 	// Default cleanup
 	const defaultDirs = ["node_modules", ".next", ".turbo"];
-	const defaultFiles = ["bun.lockb", "bun.lock", "pnpm-lock.yaml"];
+	const defaultFiles = ["pnpm-lock.yaml"];
 	const additionalFolders = process.argv.slice(2);
 
 	for (const dir of [...defaultDirs, ...additionalFolders]) {
@@ -195,5 +196,5 @@ if (process.argv.includes("--bones")) {
 		removeFile(file);
 	}
 
-	runCommand("bun pm cache clean");
+	runCommand("pnpm store prune");
 }

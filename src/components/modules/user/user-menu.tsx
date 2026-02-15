@@ -3,7 +3,6 @@
 import { UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
-import { useTheme } from "next-themes";
 import * as React from "react";
 import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";
 import { Link } from "@/components/primitives/link";
@@ -11,6 +10,8 @@ import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-pr
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { useThemeToggle, type Theme } from "@/components/ui/shipkit/theme";
+import { ToastAction } from "@/components/ui/toast";
 import { ShortcutAction, type ShortcutActionType } from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
@@ -20,8 +21,6 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { updateTheme } from "@/server/actions/settings";
 import type { User } from "@/types/user";
-
-type Theme = "light" | "dark" | "system";
 
 interface UserMenuProps {
 	size?: "default" | "sm";
@@ -39,7 +38,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 	const pathname = usePathname();
 	const { data: session, status } = useSession();
 	const signInRedirectUrl = useSignInRedirectUrl();
-	const { theme, setTheme } = useTheme();
 	const { toast } = useToast();
 	const [isOpen, setIsOpen] = React.useState(false);
 	const { hasActiveSubscription } = useSubscription();
@@ -48,36 +46,97 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 
 	const currentUser = user ?? session?.user;
 
-	const handleThemeChange = React.useCallback(
-		async (value: string) => {
-			const newTheme = value as Theme;
-			setTheme(newTheme);
-			if (currentUser) {
-				try {
-					const result = await updateTheme(newTheme);
-					if (!result.success) {
-						toast({
-							title: "Failed to save theme preference",
-							description: result.error || "Your theme preference will reset on next visit.",
-							variant: "destructive",
-						});
-						return;
-					}
-					toast({
-						title: "Theme updated",
-						description: result.message,
-					});
-				} catch (error) {
-					console.error("Failed to update theme:", error);
+	// Persist theme to database when user is logged in
+	const handleThemePersist = React.useCallback(
+		async (newTheme: Theme) => {
+			if (!currentUser) return;
+			try {
+				const result = await updateTheme(newTheme);
+				if (!result.success) {
 					toast({
 						title: "Failed to save theme preference",
-						description: "Your theme preference will reset on next visit.",
+						description:
+							result.error || "Your theme preference could not be saved.",
 						variant: "destructive",
 					});
 				}
+			} catch (error) {
+				console.error("Failed to save theme preference:", error);
+				toast({
+					title: "Failed to save theme preference",
+					description: "An unexpected error occurred while saving your theme.",
+					variant: "destructive",
+				});
 			}
 		},
-		[currentUser, setTheme, toast]
+		[currentUser, toast],
+	);
+
+	const { theme, setLightTheme, setDarkTheme, setSystemTheme } = useThemeToggle({
+		onThemeChange: handleThemePersist,
+	});
+
+	// Detect invalid session state: user object exists but is missing required fields
+	// This can happen after deployment or session invalidation
+	const isInvalidSession = React.useMemo(() => {
+		if (!currentUser) return false;
+		// A valid user must have an id - if currentUser exists but has no id, session is invalid
+		if (!currentUser.id) return true;
+		// If user has no name AND no image, the session data is likely corrupted/stale
+		// This causes the "?" avatar fallback which indicates an invalid session
+		if (!currentUser.name && !currentUser.image) return true;
+		return false;
+	}, [currentUser]);
+
+	// Debug: log session state when it might be invalid
+	React.useEffect(() => {
+		if (currentUser) {
+			console.log("[UserMenu] Session state:", {
+				id: currentUser.id,
+				name: currentUser.name,
+				image: currentUser.image,
+				email: currentUser.email,
+				isInvalidSession,
+				status,
+			});
+		}
+	}, [currentUser, isInvalidSession, status]);
+
+	// Handle invalid session by logging out and showing a toast
+	React.useEffect(() => {
+		if (isInvalidSession && status !== "loading") {
+			// Sign out without redirect to avoid navigation loop
+			void signOut({ redirect: false }).then(() => {
+				toast({
+					title: "Session expired",
+					description:
+						"Your session has expired. Would you like to sign in again?",
+					action: (
+						<ToastAction altText="Sign in" asChild>
+							<Link href={signInRedirectUrl}>Sign in</Link>
+						</ToastAction>
+					),
+				});
+			});
+		}
+	}, [isInvalidSession, status, toast, signInRedirectUrl]);
+
+	const handleThemeChange = React.useCallback(
+		(value: string) => {
+			const newTheme = value as Theme;
+			switch (newTheme) {
+				case "light":
+					setLightTheme();
+					break;
+				case "dark":
+					setDarkTheme();
+					break;
+				case "system":
+					setSystemTheme();
+					break;
+			}
+		},
+		[setLightTheme, setDarkTheme, setSystemTheme],
 	);
 
 	// ---- Refactored Shortcut Handling ----
@@ -86,13 +145,13 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 			event.preventDefault();
 			switch (action) {
 				case ShortcutAction.SET_THEME_LIGHT:
-					void handleThemeChange("light");
+					handleThemeChange("light");
 					break;
 				case ShortcutAction.SET_THEME_DARK:
-					void handleThemeChange("dark");
+					handleThemeChange("dark");
 					break;
 				case ShortcutAction.SET_THEME_SYSTEM:
-					void handleThemeChange("system");
+					handleThemeChange("system");
 					break;
 				case ShortcutAction.GOTO_ADMIN:
 					if (isAdmin) router.push(routes.admin.index);
@@ -105,7 +164,7 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 					break;
 			}
 		},
-		[handleThemeChange, isAdmin, router]
+		[handleThemeChange, isAdmin, router],
 	);
 
 	const isAuthenticated = status === "authenticated";
@@ -114,44 +173,44 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 		ShortcutAction.SET_THEME_LIGHT,
 		(event) => handleShortcut(event, ShortcutAction.SET_THEME_LIGHT),
 		undefined,
-		[handleShortcut]
+		[handleShortcut],
 	);
 	useKeyboardShortcut(
 		ShortcutAction.SET_THEME_DARK,
 		(event) => handleShortcut(event, ShortcutAction.SET_THEME_DARK),
 		undefined,
-		[handleShortcut]
+		[handleShortcut],
 	);
 	useKeyboardShortcut(
 		ShortcutAction.SET_THEME_SYSTEM,
 		(event) => handleShortcut(event, ShortcutAction.SET_THEME_SYSTEM),
 		undefined,
-		[handleShortcut]
+		[handleShortcut],
 	);
 	useKeyboardShortcut(
 		ShortcutAction.GOTO_ADMIN,
 		(event) => handleShortcut(event, ShortcutAction.GOTO_ADMIN),
 		() => isAuthenticated && isAdmin,
-		[handleShortcut, isAuthenticated, isAdmin]
+		[handleShortcut, isAuthenticated, isAdmin],
 	);
 	useKeyboardShortcut(
 		ShortcutAction.GOTO_SETTINGS,
 		(event) => handleShortcut(event, ShortcutAction.GOTO_SETTINGS),
 		() => isAuthenticated,
-		[handleShortcut, isAuthenticated]
+		[handleShortcut, isAuthenticated],
 	);
 	useKeyboardShortcut(
 		ShortcutAction.LOGOUT_USER,
 		(event) => handleShortcut(event, ShortcutAction.LOGOUT_USER),
 		() => isAuthenticated,
-		[handleShortcut, isAuthenticated]
+		[handleShortcut, isAuthenticated],
 	);
 
 	return (
 		<div
 			className={cn(
 				"relative rounded-full flex items-center justify-center aspect-square",
-				size === "sm" ? "size-9" : "size-9"
+				size === "sm" ? "size-9" : "size-9",
 			)}
 		>
 			{/* Loading state */}
@@ -174,7 +233,11 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 					<Button
 						variant="ghost"
 						size="icon"
-						className={cn("relative rounded-full", size === "sm" ? "size-6" : "size-8", className)}
+						className={cn(
+							"relative rounded-full",
+							size === "sm" ? "size-6" : "size-8",
+							className,
+						)}
 						aria-label="User menu"
 					>
 						<Avatar className={cn(size === "sm" ? "size-6" : "size-8")}>
@@ -183,24 +246,31 @@ export const UserMenu: React.FC<UserMenuProps> = ({
 								alt={currentUser?.name || "User avatar"}
 								draggable={false}
 							/>
-							<AvatarFallback>{currentUser?.name?.[0]?.toUpperCase() || "?"}</AvatarFallback>
+							<AvatarFallback>
+								{currentUser?.name?.[0]?.toUpperCase() || "?"}
+							</AvatarFallback>
 						</Avatar>
 					</Button>
 				</UserMenuDropdown>
 			) : (
 				<>
-					{pathname !== routes.auth.signIn && pathname !== routes.auth.signUp ? (
+					{pathname !== routes.auth.signIn &&
+						pathname !== routes.auth.signUp ? (
 						<Link
 							href={signInRedirectUrl}
 							className={cn(
 								buttonVariants({ variant: "ghost", size: "icon" }),
-								"rounded-full cursor-pointer"
+								"rounded-full cursor-pointer",
 							)}
 						>
 							<UserIcon className="size-6" />
 						</Link>
 					) : (
-						<Button variant="ghost" size="icon" className={cn("relative rounded-full", className)}>
+						<Button
+							variant="ghost"
+							size="icon"
+							className={cn("relative rounded-full", className)}
+						>
 							<UserIcon className="size-6" />
 						</Button>
 					)}

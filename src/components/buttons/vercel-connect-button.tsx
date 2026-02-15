@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { disconnectAccount, markVercelConnectionAttempt } from "@/server/actions/settings";
 import type { User } from "@/types/user";
+import { env } from "@/env";
 
 interface VercelConnectButtonProps {
 	className?: string;
@@ -28,8 +29,7 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
 		setIsConnected(!!hasVercelAccount);
 	}, [user]);
 
-	if (!process.env.NEXT_PUBLIC_VERCEL_INTEGRATION_SLUG && process.env.NODE_ENV === "production") {
-		console.warn("Vercel integration slug is not set");
+	if (!env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED) {
 		return null;
 	}
 
@@ -41,7 +41,7 @@ export const VercelConnectButton = ({ className, user }: VercelConnectButtonProp
 			await markVercelConnectionAttempt();
 
 			// the integration URL slug from vercel
-			const client_slug = process.env.NEXT_PUBLIC_VERCEL_INTEGRATION_SLUG;
+			const client_slug = env.NEXT_PUBLIC_VERCEL_INTEGRATION_SLUG;
 
 			// create a CSRF token and store it in a secure cookie
 			const state = Array.from(crypto.getRandomValues(new Uint8Array(16)))

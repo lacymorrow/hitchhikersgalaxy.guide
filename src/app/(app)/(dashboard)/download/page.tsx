@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import {
 	CheckCircleIcon,
 	CreditCardIcon,
@@ -24,6 +25,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { CodeWindow } from "@/components/ui/code-window";
+import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { siteConfig } from "@/config/site-config";
@@ -32,6 +34,11 @@ import { downloadRepo } from "@/server/actions/github/download-repo";
 import { auth } from "@/server/auth";
 import { checkGitHubConnection } from "@/server/services/github/github-service";
 import { PaymentService } from "@/server/services/payment-service";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Download",
+	description: `Download ${siteConfig.name} and get started with the complete source code, documentation, and all features.`,
+});
 
 const installationCode = `# Clone the repository
 git clone ${siteConfig.repo.url}

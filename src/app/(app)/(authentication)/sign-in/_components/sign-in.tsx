@@ -5,7 +5,7 @@ import { Divider } from "@/components/primitives/divider";
 import { env } from "@/env";
 // Compute guest-only on server component via build flags
 
-export const SignIn = async () => {
+export const SignIn = () => {
 	// Special handling for guest-only mode
 	const isGuestOnlyMode =
 		!!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;

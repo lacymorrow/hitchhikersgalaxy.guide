@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import {
 	Card,
@@ -7,9 +8,15 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
+import { constructMetadata } from "@/config/metadata";
 import { hasUserActiveSubscription, hasUserPurchasedProduct } from "@/lib/polar";
 import { auth } from "@/server/auth";
 import { SubscriptionButton } from "./subscription-button";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Subscription Plans",
+	description: "Choose a subscription plan that fits your needs.",
+});
 
 export default async function SubscriptionsPage() {
 	// Get current user session

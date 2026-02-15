@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
+import { constructMetadata } from "@/config/metadata";
 
-export const metadata: Metadata = {
-	title: "v0 Component Installer - Shipkit",
-	description: "Install v0.dev components into your Shipkit project",
-};
+export const metadata: Metadata = constructMetadata({
+	title: "Install shadcn/ui Components",
+	description: "Add beautiful, accessible UI components to your Next.js application with the shadcn/ui installer.",
+});
 
 export default function InstallLayout({ children }: { children: React.ReactNode }) {
 	return (

@@ -72,7 +72,14 @@ export const SocialLinks = ({
 	if (items.length === 0) return null;
 
 	return (
-		<nav aria-label="Social links" className={cn("flex flex-wrap items-center gap-3", className)}>
+		<nav
+			aria-label="Social links"
+			className={cn(
+				"flex items-center",
+				labelled ? "flex-col items-start gap-2" : "flex-wrap gap-4",
+				className
+			)}
+		>
 			{items.map(({ platform, url }) => {
 				const Icon = platformIcon[platform] ?? Globe;
 				const label = platform.charAt(0).toUpperCase() + platform.slice(1);
@@ -84,7 +91,7 @@ export const SocialLinks = ({
 						rel="noopener noreferrer"
 						aria-label={labelled ? undefined : label}
 						className={cn(
-							"inline-flex items-center gap-2 text-muted-foreground hover:text-foreground"
+							"inline-flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors"
 						)}
 					>
 						<Icon className={cn("h-5 w-5", iconClassName)} />

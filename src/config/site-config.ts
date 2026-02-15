@@ -221,9 +221,8 @@ export const siteConfig: SiteConfig = {
 	// Configure social profiles here. Leave any you don't use as empty strings.
 	social: {
 		github: "https://github.com/shipkit-io",
-		twitter: "https://twitter.com/lacybuilds",
 		x: "https://x.com/lacybuilds",
-		linkedin: "https://www.linkedin.com/company/shipkit-io/",
+		linkedin: "",
 		instagram: "",
 		facebook: "",
 		youtube: "",

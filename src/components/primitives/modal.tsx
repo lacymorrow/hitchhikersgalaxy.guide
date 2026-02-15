@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
 import { useEffect, useMemo } from "react";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -23,6 +24,7 @@ import {
 	DrawerTrigger,
 } from "@/components/ui/drawer";
 import { debounce } from "@/lib/utils/debounce";
+import { ModalProvider } from "./modal-context";
 
 interface DrawerDialogProps {
 	asChild?: boolean;
@@ -43,7 +45,7 @@ export function Modal({
 	trigger,
 	dialogTitle,
 	dialogDescription,
-	open,
+	open = true,
 	children,
 	onOpenChange,
 	autoCloseOnRouteChange = true,
@@ -52,15 +54,16 @@ export function Modal({
 }: DrawerDialogProps) {
 	const router = useRouter();
 	const pathname = usePathname();
-	const [isMobile, setIsMobile] = React.useState(true);
-	const [isOpen, setIsOpen] = React.useState(typeof open === "undefined" ? true : open);
+	const isMobile = useIsMobile();
+	const [isOpen, setIsOpen] = React.useState(open);
 	const closingDueToRouteChange = React.useRef(false);
 	const hasHandledInitialRoute = React.useRef(false);
+	const previousPathname = React.useRef(pathname);
 
-	// Responsive breakpoint for mobile
+	// Sync isOpen state with open prop when it changes
 	useEffect(() => {
-		setIsMobile(window.innerWidth < 768);
-	}, []);
+		setIsOpen(open);
+	}, [open]);
 
 	// Don't immediately close the modal, we need to wait for the modal to animate closed before we should navigate
 	// @see https://nextjs.org/docs/app/building-your-application/routing/parallel-routes#modals
@@ -73,9 +76,14 @@ export function Modal({
 		if (!autoCloseOnRouteChange) return;
 		if (!hasHandledInitialRoute.current) {
 			hasHandledInitialRoute.current = true;
+			previousPathname.current = pathname;
 			return;
 		}
 
+		// Only close if pathname actually changed
+		if (previousPathname.current === pathname) return;
+
+		previousPathname.current = pathname;
 		closingDueToRouteChange.current = true;
 		setIsOpen(false);
 		const timeoutId = window.setTimeout(() => {
@@ -98,8 +106,9 @@ export function Modal({
 
 	useEffect(() => {
 		return () => {
-			if (typeof debouncedRouteBack.cancel === "function") {
-				debouncedRouteBack.cancel();
+			const debounced = debouncedRouteBack as typeof debouncedRouteBack & { cancel?: () => void };
+			if (typeof debounced.cancel === "function") {
+				debounced.cancel();
 			}
 		};
 	}, [debouncedRouteBack]);
@@ -118,17 +127,19 @@ export function Modal({
 					{trigger && <DialogTrigger asChild={asChild}>{trigger}</DialogTrigger>}
 
 					<DialogContent className={className}>
-						<DialogHeader>
-							{dialogTitle ? (
-								<DialogTitle>{dialogTitle}</DialogTitle>
-							) : (
-								<DialogTitle className="sr-only">
-									{dialogTitle ?? "Modal dialog window"}
-								</DialogTitle>
-							)}
-							{dialogDescription && <DialogDescription>{dialogDescription}</DialogDescription>}
-						</DialogHeader>
-						{children}
+						<ModalProvider>
+							<DialogHeader>
+								{dialogTitle ? (
+									<DialogTitle>{dialogTitle}</DialogTitle>
+								) : (
+									<DialogTitle className="sr-only">
+										{dialogTitle ?? "Modal dialog window"}
+									</DialogTitle>
+								)}
+								{dialogDescription && <DialogDescription>{dialogDescription}</DialogDescription>}
+							</DialogHeader>
+							{children}
+						</ModalProvider>
 					</DialogContent>
 				</Dialog>
 			) : (
@@ -140,22 +151,24 @@ export function Modal({
 					>
 						{trigger && <DrawerTrigger asChild={asChild}>{trigger}</DrawerTrigger>}
 						<DrawerContent>
-							<DrawerHeader className="text-left">
-								<DrawerTitle className={dialogTitle ? "" : "sr-only"}>
-									{dialogTitle ?? "Modal"}
-								</DrawerTitle>
-								<DrawerDescription className={dialogDescription ? "" : "sr-only"}>
-									{dialogDescription ?? ""}
-								</DrawerDescription>
-							</DrawerHeader>
-							{children}
-							<DrawerFooter className="pt-2">
-								<DrawerClose asChild>
-									<Button type="button" variant="outline">
-										Cancel
-									</Button>
-								</DrawerClose>
-							</DrawerFooter>
+							<ModalProvider>
+								<DrawerHeader className="text-left">
+									<DrawerTitle className={dialogTitle ? "" : "sr-only"}>
+										{dialogTitle ?? "Modal"}
+									</DrawerTitle>
+									<DrawerDescription className={dialogDescription ? "" : "sr-only"}>
+										{dialogDescription ?? ""}
+									</DrawerDescription>
+								</DrawerHeader>
+								{children}
+								<DrawerFooter className="pt-2">
+									<DrawerClose asChild>
+										<Button type="button" variant="outline">
+											Cancel
+										</Button>
+									</DrawerClose>
+								</DrawerFooter>
+							</ModalProvider>
 						</DrawerContent>
 					</Drawer>
 				</>

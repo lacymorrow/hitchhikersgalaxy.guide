@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import React from "react";
+import React, { Suspense } from "react";
 
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import {
@@ -12,9 +12,11 @@ import { fontSans, fontSerif } from "@/config/fonts";
 import { initializePaymentProviders } from "@/server/providers";
 import { FontSelector } from "@/components/modules/devtools/font-selector";
 import { env } from "@/env";
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
+import { BrickMarquee } from "@/components/blocks/brick-marquee";
 
-export const metadata: Metadata = defaultMetadata;
 export const fetchCache = "default-cache";
+export const metadata: Metadata = defaultMetadata;
 export const viewport: Viewport = sharedViewport;
 
 await initializePaymentProviders();
@@ -67,12 +69,15 @@ export default async function Layout({
 
 					{/* Dynamically render all available slots */}
 					{resolvedSlots.map(([key, slot]) => (
-						<React.Fragment key={`slot-${key}`}>{slot}</React.Fragment>
+						<Suspense key={`slot-${key}`} fallback={<SuspenseFallback />}>
+							{slot}
+						</Suspense>
+
 					))}
 
 					{/* TODO: Uncomment this when we have this working */}
 					{/* Lacy Morrow vanity plate */}
-					{/* <BrickMarquee /> */}
+					<BrickMarquee />
 				</AppRouterLayout>
 
 				{/* Add FontSelector only in development */}
@@ -83,6 +88,6 @@ export default async function Layout({
 						</React.Suspense>
 					)}
 			</body>
-		</html>
+		</html >
 	);
 }

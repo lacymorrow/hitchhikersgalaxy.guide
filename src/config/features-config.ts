@@ -52,6 +52,7 @@ const PUBLIC_ENV_BASE_KEYS = [
 	"GOOGLE_GTM_ID",
 	// Consent / Privacy
 	"C15T_URL",
+	"VERCEL_INTEGRATION_SLUG",
 ];
 
 function getEnvValue(name: string): string | undefined {
@@ -222,6 +223,9 @@ buildTimeFeatures.REDIS_ENABLED =
 	hasEnv("UPSTASH_REDIS_REST_URL", "UPSTASH_REDIS_REST_TOKEN") && !envIsTrue("DISABLE_REDIS");
 buildTimeFeatures.VERCEL_API_ENABLED =
 	hasEnv("VERCEL_ACCESS_TOKEN") && !envIsTrue("DISABLE_VERCEL_API");
+buildTimeFeatures.VERCEL_INTEGRATION_ENABLED =
+	hasEnv("VERCEL_INTEGRATION_SLUG", "VERCEL_CLIENT_ID", "VERCEL_CLIENT_SECRET") &&
+	!envIsTrue("DISABLE_VERCEL_INTEGRATION");
 
 // Analytics
 buildTimeFeatures.POSTHOG_ENABLED =

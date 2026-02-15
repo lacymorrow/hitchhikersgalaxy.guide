@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { accounts } from "@/server/db/schema";
+import { env } from "@/env";
 
 interface RouteContext {
 	params: Promise<{
@@ -12,6 +13,10 @@ interface RouteContext {
 }
 
 export async function GET(request: NextRequest, context: RouteContext) {
+	if (!env.NEXT_PUBLIC_FEATURE_VERCEL_API_ENABLED) {
+		return NextResponse.redirect(new URL("/", request.url));
+	}
+
 	try {
 		const session = await auth();
 		if (!session?.user) {
@@ -126,11 +131,11 @@ export async function GET(request: NextRequest, context: RouteContext) {
 			hasUserId: !!(userData.user?.id || userData.user?.uid),
 			user: userData.user
 				? {
-						id: userData.user.id || userData.user.uid,
-						email: userData.user.email,
-						username: userData.user.username,
-						name: userData.user.name,
-					}
+					id: userData.user.id || userData.user.uid,
+					email: userData.user.email,
+					username: userData.user.username,
+					name: userData.user.name,
+				}
 				: null,
 		});
 

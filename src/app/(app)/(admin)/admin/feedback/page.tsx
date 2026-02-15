@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
+import { constructMetadata } from "@/config/metadata";
 import { getFeedback } from "@/server/services/feedback-service";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Feedback Management",
+	description: "Review and manage user feedback submissions.",
+	noIndex: true,
+});
 
 export default async function FeedbackPage() {
 	const feedbackItems = await getFeedback();

@@ -37,6 +37,7 @@ export const env = createEnv({
 	server: {
 		// ======== App Secret (Master) ========
 		APP_SECRET: z.string().optional(),
+
 		// ======== Database ========
 		DATABASE_URL: z.string().url().optional(),
 		DB_PREFIX: z.string().default("db"),
@@ -146,6 +147,7 @@ export const env = createEnv({
 
 		// Deployment
 		VERCEL_ACCESS_TOKEN: z.string().optional(),
+		VERCEL_INTEGRATION_SLUG: z.string().optional(),
 		VERCEL_CLIENT_ID: z.string().optional(),
 		VERCEL_CLIENT_SECRET: z.string().optional(),
 		VERCEL_BLOB_READ_WRITE_TOKEN: z.string().optional(),
@@ -158,9 +160,6 @@ export const env = createEnv({
 	client: {
 		// Consent Manager
 		NEXT_PUBLIC_C15T_URL: z.string().optional(),
-
-		// Shipkit Repo
-		NEXT_PUBLIC_SHIPKIT_REPO: z.string().optional().default("lacymorrow/shipkit"),
 
 		// Content Management
 		NEXT_PUBLIC_BUILDER_API_KEY: z.string().optional(),
@@ -234,6 +233,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_FEATURE_REDIS_ENABLED: zBooleanFeatureFlag,
 		NEXT_PUBLIC_FEATURE_VERCEL_API_ENABLED: zBooleanFeatureFlag,
 		NEXT_PUBLIC_FEATURE_VERCEL_BLOB_ENABLED: zBooleanFeatureFlag,
+		NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED: zBooleanFeatureFlag,
 		NEXT_PUBLIC_FEATURE_STRIPE_ENABLED: zBooleanFeatureFlag,
 
 		// Analytics
@@ -254,12 +254,6 @@ export const env = createEnv({
 		 * Devtools Font Selector
 		 */
 		NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED: zBooleanFeatureFlag,
-
-		/**
-		 * Theme
-		 */
-		NEXT_PUBLIC_FEATURE_LIGHT_MODE_ENABLED: zBooleanFeatureFlag,
-		NEXT_PUBLIC_FEATURE_DARK_MODE_ENABLED: zBooleanFeatureFlag,
 
 		// File Upload
 		NEXT_PUBLIC_FEATURE_FILE_UPLOAD_ENABLED: zBooleanFeatureFlag,
@@ -365,12 +359,13 @@ export const env = createEnv({
 		VERCEL_CLIENT_ID: process.env.VERCEL_CLIENT_ID,
 		VERCEL_CLIENT_SECRET: process.env.VERCEL_CLIENT_SECRET,
 		VERCEL_BLOB_READ_WRITE_TOKEN: process.env.VERCEL_BLOB_READ_WRITE_TOKEN,
+		VERCEL_INTEGRATION_SLUG: process.env.VERCEL_INTEGRATION_SLUG,
 
 		// Consent Manager
 		NEXT_PUBLIC_C15T_URL: process.env.NEXT_PUBLIC_C15T_URL,
 
-		// Shipkit Repo
-		NEXT_PUBLIC_SHIPKIT_REPO: process.env.NEXT_PUBLIC_SHIPKIT_REPO,
+		// Clerk Authentication (alternative to Auth.js)
+		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
 
 		NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
 		NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,
@@ -405,8 +400,8 @@ export const env = createEnv({
 		// Better Auth Feature Flags
 		NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED: process.env.NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED,
 
-		// Clerk Authentication (alternative to Auth.js)
-		NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+		// DevTools Font Selector
+		NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED: process.env.NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED,
 
 		// Auth.js Feature Flags
 		NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED: process.env.NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED,
@@ -438,6 +433,7 @@ export const env = createEnv({
 		NEXT_PUBLIC_FEATURE_REDIS_ENABLED: process.env.NEXT_PUBLIC_FEATURE_REDIS_ENABLED,
 		NEXT_PUBLIC_FEATURE_VERCEL_API_ENABLED: process.env.NEXT_PUBLIC_FEATURE_VERCEL_API_ENABLED,
 		NEXT_PUBLIC_FEATURE_VERCEL_BLOB_ENABLED: process.env.NEXT_PUBLIC_FEATURE_VERCEL_BLOB_ENABLED,
+		NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED: process.env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED,
 		NEXT_PUBLIC_FEATURE_STRIPE_ENABLED: process.env.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED,
 
 		// Analytics
@@ -455,6 +451,8 @@ export const env = createEnv({
 		NEXT_PUBLIC_FEATURE_CONSENT_MANAGER_ENABLED:
 			process.env.NEXT_PUBLIC_FEATURE_CONSENT_MANAGER_ENABLED,
 		NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED: process.env.NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED,
+		NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED:
+			process.env.NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED,
 		NEXT_PUBLIC_FEATURE_FILE_UPLOAD_ENABLED: process.env.NEXT_PUBLIC_FEATURE_FILE_UPLOAD_ENABLED,
 		NEXT_PUBLIC_FEATURE_TURNSTILE_ENABLED: process.env.NEXT_PUBLIC_FEATURE_TURNSTILE_ENABLED,
 	},

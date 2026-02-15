@@ -1,5 +1,13 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
+import { constructMetadata } from "@/config/metadata";
 import { WaitlistAdmin } from "./_components/waitlist-admin";
+
+export const metadata: Metadata = constructMetadata({
+	title: "Waitlist Management",
+	description: "View and manage waitlist entries and analytics.",
+	noIndex: true,
+});
 
 export default function AdminWaitlistPage() {
 	return (
@@ -15,8 +23,3 @@ export default function AdminWaitlistPage() {
 		</div>
 	);
 }
-
-export const metadata = {
-	title: "Waitlist Management - Shipkit Admin",
-	description: "Manage waitlist entries and view analytics",
-};

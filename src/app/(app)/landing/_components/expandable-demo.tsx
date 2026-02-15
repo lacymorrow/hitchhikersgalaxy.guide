@@ -49,8 +49,8 @@ function DesignSyncExample() {
 			expandDirection="both"
 			expandBehavior="replace"
 			initialDelay={0.2}
-			onExpandStart={() => console.log("Expanding meeting card...")}
-			onExpandEnd={() => console.log("Meeting card expanded!")}
+			onExpandStart={() => {}}
+			onExpandEnd={() => {}}
 		>
 			{({ isExpanded }) => (
 				<ExpandableTrigger>
@@ -167,8 +167,8 @@ export function ProductShowcaseCard() {
 		<Expandable
 			expandDirection="both"
 			expandBehavior="replace"
-			onExpandStart={() => console.log("Expanding product card...")}
-			onExpandEnd={() => console.log("Product card expanded!")}
+			onExpandStart={() => {}}
+			onExpandEnd={() => {}}
 		>
 			{({ isExpanded }) => (
 				<ExpandableTrigger>

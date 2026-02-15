@@ -1,4 +1,3 @@
-// @ts-nocheck
 "use client";
 import { AnimatePresence, motion, type Transition, type Variants } from "motion/react";
 import { useId, useMemo } from "react";

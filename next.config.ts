@@ -197,7 +197,7 @@ const nextConfig: NextConfig = {
    * This prevents Turbopack from trying to bundle these optional peer dependencies
    */
   serverExternalPackages: [
-    // Native modules that fail to compile on Vercel
+    // Native module (transitive dep of @builder.io/react) that fails to compile on Vercel
     "isolated-vm",
     // Drizzle Kit - CLI tool bundled by Payload CMS that has many optional drivers
     "drizzle-kit",
@@ -214,10 +214,6 @@ const nextConfig: NextConfig = {
     "@aws-sdk/client-s3",
     "@aws-sdk/s3-request-presigner",
     "@payloadcms/storage-s3",
-    // Payload CMS packages with CSS imports that cause runtime issues
-    "@payloadcms/plugin-cloud-storage",
-    "@payloadcms/ui",
-    "react-image-crop",
     // ESM-only packages that need to be externalized
     "@octokit/rest",
   ],
@@ -385,7 +381,6 @@ const nextConfig: NextConfig = {
         as: "*.js",
       },
     },
-    resolveAlias: {},
   },
 };
 

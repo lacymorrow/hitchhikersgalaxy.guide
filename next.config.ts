@@ -385,10 +385,7 @@ const nextConfig: NextConfig = {
         as: "*.js",
       },
     },
-    resolveAlias: {
-      // Stub out react-image-crop CSS on the server to prevent import errors
-      "react-image-crop/dist/ReactCrop.css": "./src/lib/empty-module.js",
-    },
+    resolveAlias: {},
   },
 };
 

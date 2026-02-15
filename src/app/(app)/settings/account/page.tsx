@@ -78,7 +78,7 @@ export default async function AccountPage() {
 						</div>
 					</CardContent>
 					<CardFooter>
-						<VercelConnectButton user={session?.user} className="w-full" />
+						<VercelConnectButton user={session?.user} isConnected={hasVercelConnection} className="w-full" />
 					</CardFooter>
 				</Card>
 			</ConnectionHighlightWrapper>

@@ -1,6 +1,6 @@
 "use client";
 
-import { LifeBuoy, type LucideIcon, Send, Settings2 } from "lucide-react";
+import { LifeBuoy, type LucideIcon, PanelLeftClose, PanelLeftOpen, Send, Settings2 } from "lucide-react";
 import type React from "react";
 import { FeedbackDialog } from "@/components/forms/feedback-dialog";
 import { Link } from "@/components/primitives/link";
@@ -71,7 +71,7 @@ const getButtonProps = (open: boolean) => ({
 });
 
 export function NavSecondary({ items, className }: NavSecondaryProps) {
-	const { open } = useSidebar();
+	const { open, state, toggleSidebar } = useSidebar();
 	if (!items) items = data;
 
 	return (
@@ -121,6 +121,26 @@ export function NavSecondary({ items, className }: NavSecondaryProps) {
 					</NavItemWrapper>
 				);
 			})}
+
+			<NavItemWrapper title={state === "collapsed" ? "Expand sidebar" : "Collapse sidebar"} open={open}>
+				<Button
+					{...getButtonProps(open)}
+					type="button"
+					onClick={toggleSidebar}
+					aria-label={state === "collapsed" ? "Expand sidebar" : "Collapse sidebar"}
+				>
+					{state === "collapsed" ? (
+						<PanelLeftOpen className="h-4 w-4 shrink-0" />
+					) : (
+						<PanelLeftClose className="h-4 w-4 shrink-0" />
+					)}
+					{open && (
+						<span className="ml-2 transition-all duration-200 group-data-[collapsible=icon]:opacity-0">
+							{state === "collapsed" ? "Expand sidebar" : "Collapse sidebar"}
+						</span>
+					)}
+				</Button>
+			</NavItemWrapper>
 		</nav>
 	);
 }

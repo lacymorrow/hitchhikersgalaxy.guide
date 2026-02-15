@@ -2,14 +2,11 @@ import { cva, type VariantProps } from "class-variance-authority";
 import * as React from "react";
 import { useId } from "react";
 import { NavUser } from "@/components/blocks/nav-user";
-import { TeamSwitcher } from "@/components/blocks/team-switcher";
-import { ProjectsList } from "@/components/modules/projects/projects-list";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
 	Sidebar,
 	SidebarContent,
 	SidebarFooter,
-	SidebarHeader,
 	SidebarRail,
 } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
@@ -55,13 +52,9 @@ export const AppSidebar = React.forwardRef<HTMLDivElement, AppSidebarProps>(
 				className={cn(appSidebarVariants({ variant, size }), "select-none", className)}
 				{...props}
 			>
-				<SidebarHeader>
-					<TeamSwitcher />
-				</SidebarHeader>
 				<SidebarContent>
 					<ScrollArea className="[&>div>div]:!block">
 						<NavMain />
-						<ProjectsList />
 					</ScrollArea>
 				</SidebarContent>
 				<SidebarFooter className="p-2">

@@ -16,6 +16,18 @@ import { DeploymentActions } from "./deployment-actions";
 
 // Constants for polling configuration
 const POLLING_INTERVAL_MS = 3000; // 3 seconds
+const STALE_DEPLOYMENT_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes - same as server
+
+/**
+ * Check if a deployment is actively deploying (not stale)
+ * We only poll for deployments that started within the last 10 minutes
+ */
+function isActivelyDeploying(deployment: Deployment): boolean {
+	if (deployment.status !== "deploying") return false;
+	const createdAt = new Date(deployment.createdAt).getTime();
+	const now = Date.now();
+	return now - createdAt < STALE_DEPLOYMENT_THRESHOLD_MS;
+}
 
 interface DeploymentsListProps {
 	deployments: Deployment[];
@@ -31,25 +43,38 @@ async function fetchDeployments(): Promise<Deployment[]> {
 }
 
 export function DeploymentsList({ deployments: initialDeployments }: DeploymentsListProps) {
-	const [hasDeployingItems, setHasDeployingItems] = useState(
-		initialDeployments.some((d) => d.status === "deploying")
+	const [hasActiveDeployments, setHasActiveDeployments] = useState(
+		initialDeployments.some(isActivelyDeploying)
 	);
+	// Counter to force re-renders for timestamp updates
+	const [, setTick] = useState(0);
 
 	// Use React Query for efficient polling
+	// Only poll if there are actively deploying items (not stale ones)
 	const { data: deployments = initialDeployments } = useQuery({
 		queryKey: ["deployments"],
 		queryFn: fetchDeployments,
 		initialData: initialDeployments,
-		refetchInterval: hasDeployingItems ? POLLING_INTERVAL_MS : false,
+		refetchInterval: hasActiveDeployments ? POLLING_INTERVAL_MS : false,
 		refetchIntervalInBackground: true,
 		staleTime: 1000, // Consider data stale after 1 second
 	});
 
 	// Update polling state when deployments change
+	// Only poll for fresh deployments, not stale ones stuck for hours/days
 	useEffect(() => {
-		const shouldPoll = deployments.some((d) => d.status === "deploying");
-		setHasDeployingItems(shouldPoll);
+		const shouldPoll = deployments.some(isActivelyDeploying);
+		setHasActiveDeployments(shouldPoll);
 	}, [deployments]);
+
+	// Live-update timestamps every second while there are active deployments
+	useEffect(() => {
+		if (!hasActiveDeployments) return;
+		const interval = setInterval(() => {
+			setTick((t) => t + 1);
+		}, 1000);
+		return () => clearInterval(interval);
+	}, [hasActiveDeployments]);
 	const getStatusIcon = (status: string) => {
 		switch (status) {
 			case "completed":

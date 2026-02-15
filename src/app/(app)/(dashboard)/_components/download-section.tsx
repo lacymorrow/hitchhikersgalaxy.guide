@@ -9,6 +9,8 @@ import { auth } from "@/server/auth";
 import { checkGitHubConnection } from "@/server/services/github/github-service";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
 import { DownloadSubmitButton } from "./download-submit-button";
+import { GitHubIntegration } from "@/app/(app)/install/_components/github-integration";
+import { PrivateRepoDeployButton } from "@/components/modules/deploy/private-repo-deploy-button";
 
 interface DownloadSectionProps {
     isCustomer: boolean;
@@ -24,7 +26,6 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
                 <LoginButton size="lg" className="w-full">
                     Sign in to download {siteConfig.title}
                 </LoginButton>
-                <DashboardVercelDeploy className="w-full mt-3" isVercelConnected={false} />
             </div>
         );
     }
@@ -39,7 +40,6 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
                 <p className="w-full text-sm text-muted-foreground mt-2">
                     Purchase required to download {siteConfig.title}
                 </p>
-                <DashboardVercelDeploy className="w-full mt-3" isVercelConnected={false} />
             </div>
         );
     }
@@ -54,6 +54,8 @@ export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
     return (
         <div className="flex flex-wrap items-stretch justify-stretch max-w-md gap-3">
             <div className="flex flex-wrap items-stretch justify-stretch w-full gap-3">
+                <GitHubIntegration changedFiles={[]} />
+                <PrivateRepoDeployButton />
                 {/* Download button */}
                 <form action={downloadRepo} className="grow min-w-1/2">
                     <input type="hidden" name="email" value={session.user.email} />

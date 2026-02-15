@@ -29,6 +29,7 @@ import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/site-config";
 
 const MIN_HEIGHT = 48;
 const MAX_HEIGHT = 120;
@@ -250,7 +251,7 @@ export const SearchAi = ({ ...props }: ButtonProps) => {
 					"relative"
 				)}
 			>
-				<span className="hidden lg:inline-flex">Search docs...</span>
+				<span className="hidden lg:inline-flex">Search {siteConfig.title}...</span>
 				<span className="inline-flex lg:hidden">Search...</span>
 				<ShortcutDisplay
 					action={ShortcutAction.OPEN_SEARCH}

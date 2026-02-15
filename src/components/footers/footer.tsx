@@ -138,7 +138,7 @@ export const Footer: FC<FooterProps> = ({
 						<Link href={routes.home}>
 							<h1 className="text-4xl font-bold">{siteConfig.title}</h1>
 						</Link>
-						<SocialLinks labelled className="mt-2" />
+						<SocialLinks labelled className="" />
 					</div>
 					{/* Desktop Layout */}
 					<div className="hidden md:grid w-full items-start justify-items-start md:grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] gap-xl xl:gap-2xl">

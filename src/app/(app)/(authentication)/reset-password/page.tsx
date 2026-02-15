@@ -1,10 +1,10 @@
 import { AuthBranding } from "@/app/(app)/(authentication)/_components/auth-branding";
 import type { Metadata } from "next";
+import { AuthenticationCard } from "@/app/(app)/(authentication)/_components/authentication-card";
 import { ResetPasswordForm } from "@/app/(app)/(authentication)/reset-password/_components/reset-password-form";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { constructMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
-import { AuthenticationCard } from "../_components/authentication-card";
 
 export const metadata: Metadata = constructMetadata({
 	title: "Reset Password",

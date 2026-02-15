@@ -29,6 +29,7 @@ export interface DeploymentConfig {
 	includeAllBranches?: boolean;
 	githubToken?: string; // Optional - will use OAuth token if not provided
 	deploymentId?: string; // Optional - for tracking deployment status
+	userId?: string; // Optional - for background tasks where auth() won't work
 }
 
 export interface DeploymentResult {
@@ -57,32 +58,39 @@ export interface DeploymentResult {
  * Deploy a private repository template to user's GitHub and Vercel accounts
  */
 export async function deployPrivateRepository(config: DeploymentConfig): Promise<DeploymentResult> {
-	const session = await auth();
+	// Use provided userId (for background tasks) or get from auth
+	let userId = config.userId;
 
-	// Handle NextResponse type from auth function when redirecting
-	if (!session || (typeof session === "object" && "status" in session)) {
-		return {
-			success: false,
-			error: "Authentication required. Please log in to continue.",
-		};
-	}
+	if (!userId) {
+		const session = await auth();
 
-	if (!session.user?.id) {
-		return {
-			success: false,
-			error: "Authentication required. Please log in to continue.",
-		};
+		// Handle NextResponse type from auth function when redirecting
+		if (!session || (typeof session === "object" && "status" in session)) {
+			return {
+				success: false,
+				error: "Authentication required. Please log in to continue.",
+			};
+		}
+
+		if (!session.user?.id) {
+			return {
+				success: false,
+				error: "Authentication required. Please log in to continue.",
+			};
+		}
+
+		userId = session.user.id;
 	}
 
 	// Apply rate limiting for deployment attempts
 	try {
 		await rateLimitService.checkLimit(
-			session.user.id,
+			userId,
 			"deployment:create",
 			rateLimits.deployments.create
 		);
 	} catch (error) {
-		console.warn(`Rate limit exceeded for user ${session.user.id}`, error);
+		console.warn(`Rate limit exceeded for user ${userId}`, error);
 		return {
 			success: false,
 			error: "Too many deployment attempts. Please wait before trying again.",
@@ -100,7 +108,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 	} = config;
 
 	// Try to get GitHub token from OAuth connection first
-	let githubToken = await getGitHubAccessToken(session.user.id);
+	let githubToken = await getGitHubAccessToken(userId);
 
 	// Fall back to provided token if OAuth token not available
 	if (!githubToken && providedGithubToken) {
@@ -129,7 +137,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 
 		if (!scopeValidation.valid) {
 			console.error(
-				`GitHub token missing required scopes for user ${session.user.id}:`,
+				`GitHub token missing required scopes for user ${userId}:`,
 				scopeValidation.missingScopes
 			);
 			return {
@@ -143,7 +151,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 	}
 
 	// Get user's Vercel access token using the service
-	const vercelToken = await getVercelAccessToken(session.user.id);
+	const vercelToken = await getVercelAccessToken(userId);
 
 	if (!vercelToken) {
 		return {
@@ -177,7 +185,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			const userError = "Configuration validation failed. Please check your settings.";
 			console.error("[Validation Error] Details:", validation.error);
 			if (currentDeploymentId) {
-				await updateDeployment(currentDeploymentId, { status: "failed", error: userError });
+				await updateDeployment(currentDeploymentId, { status: "failed", error: userError }, userId);
 			}
 			return {
 				success: false,
@@ -192,7 +200,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		if (!templateOwner || !templateRepoName) {
 			const error = "Template repository must be in format 'owner/repo-name'";
 			if (currentDeploymentId) {
-				await updateDeployment(currentDeploymentId, { status: "failed", error });
+				await updateDeployment(currentDeploymentId, { status: "failed", error }, userId);
 			}
 			return {
 				success: false,
@@ -209,7 +217,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			const error =
 				userInfo.error || "Failed to get GitHub user information. Please check your access token.";
 			if (currentDeploymentId) {
-				await updateDeployment(currentDeploymentId, { status: "failed", error });
+				await updateDeployment(currentDeploymentId, { status: "failed", error }, userId);
 			}
 			return {
 				success: false,
@@ -231,7 +239,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 		if (!repoResult.success) {
 			const error = repoResult.error || "Failed to create GitHub repository";
 			if (currentDeploymentId) {
-				await updateDeployment(currentDeploymentId, { status: "failed", error });
+				await updateDeployment(currentDeploymentId, { status: "failed", error }, userId);
 			}
 			return {
 				success: false,
@@ -257,7 +265,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			await updateDeployment(currentDeploymentId, {
 				githubRepoUrl: repoInfo.url,
 				githubRepoName: repoInfo.name,
-			});
+			}, userId);
 		}
 
 		// Step 2: Create Vercel project
@@ -308,7 +316,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 				projectResult.error ??
 				"Failed to create Vercel project. You can manually import the repository.";
 			if (currentDeploymentId) {
-				await updateDeployment(currentDeploymentId, { status: "failed", error });
+				await updateDeployment(currentDeploymentId, { status: "failed", error }, userId);
 			}
 			return {
 				success: false,
@@ -329,7 +337,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			await updateDeployment(currentDeploymentId, {
 				vercelProjectUrl: projectResult.projectUrl ?? "",
 				vercelDeploymentUrl: `https://${projectName}.vercel.app`,
-			});
+			}, userId);
 		}
 
 		// Constants for polling configuration
@@ -370,7 +378,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 									vercelDeploymentUrl: deploymentUrl,
 									error:
 										latestDeployment.state === "ERROR" ? "Vercel deployment failed" : undefined,
-								});
+								}, userId);
 							}
 							break;
 						}
@@ -388,7 +396,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 					status: "timeout", // Use timeout status to clearly indicate polling timed out
 					error:
 						"Deployment status check timed out. The deployment may still be running in Vercel.",
-				});
+				}, userId);
 			}
 		};
 
@@ -400,7 +408,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 				updateDeployment(currentDeploymentId, {
 					status: "timeout", // Mark as timeout when polling fails completely
 					error: "Unable to verify deployment status. Please check Vercel dashboard.",
-				}).catch((updateError) => {
+				}, userId).catch((updateError) => {
 					console.error("Failed to update deployment status:", updateError);
 				});
 			}
@@ -450,7 +458,7 @@ export async function deployPrivateRepository(config: DeploymentConfig): Promise
 			await updateDeployment(currentDeploymentId, {
 				status: "failed",
 				error: userFriendlyError,
-			});
+			}, userId);
 		}
 
 		return {

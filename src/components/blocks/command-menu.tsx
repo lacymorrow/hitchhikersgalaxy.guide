@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/command";
 import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { cn } from "@/lib/utils";
+import { siteConfig } from "@/config/site-config";
 
 export function CommandMenu() {
 	const router = useRouter();
@@ -39,7 +40,7 @@ export function CommandMenu() {
 				)}
 				onClick={() => setOpen(true)}
 			>
-				<span className="hidden lg:inline-flex">Search docs...</span>
+				<span className="hidden lg:inline-flex">Search {siteConfig.title}...</span>
 				<span className="inline-flex lg:hidden">Search...</span>
 				<ShortcutDisplay
 					action={ShortcutAction.OPEN_SEARCH}

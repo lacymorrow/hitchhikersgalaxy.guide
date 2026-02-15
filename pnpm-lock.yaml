@@ -502,6 +502,9 @@ importers:
       '@biomejs/biome':
         specifier: 2.3.15
         version: 2.3.15
+      '@builder.io/partytown':
+        specifier: ^0.10.3
+        version: 0.10.3
       '@eslint/eslintrc':
         specifier: ^3.3.3
         version: 3.3.3
@@ -1528,6 +1531,12 @@ packages:
   '@builder.io/dev-tools@1.26.12':
     resolution: {integrity: sha512-dVKeyCn0sBPKcbV6KZKTsHgldelMcdpI5Zv9RuIKtdwsaDEbK0EY+xMZ/11Lov8g5a/+rwqHDuXqbmJifCRnUw==}
     engines: {node: '>=18'}
+    hasBin: true
+
+  '@builder.io/partytown@0.10.3':
+    resolution: {integrity: sha512-N2SWA3c5vEad3rgdAFM3zMb6uc7aXqibkgAz4ijvYzycgQXJ4dE5oH6fGFMXSQWj6ayVlLT1/CmpflYUJHfmQg==}
+    engines: {node: '>=18.0.0'}
+    deprecated: Use @qwik.dev/partytown instead
     hasBin: true
 
   '@builder.io/react@9.1.0':
@@ -15187,6 +15196,8 @@ snapshots:
       '@lydell/node-pty': 1.1.0
     transitivePeerDependencies:
       - supports-color
+
+  '@builder.io/partytown@0.10.3': {}
 
   '@builder.io/react@9.1.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)':
     dependencies:

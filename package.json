@@ -46,7 +46,7 @@
     "start": "next start",
     "upstream:setup": "tsx scripts/setup-upstream.ts",
     "upstream:pull": "tsx scripts/git-sync-upstream.ts",
-    "postinstall": "npx next telemetry disable && tsx scripts/setup-upstream.ts",
+    "postinstall": "npx next telemetry disable && tsx scripts/setup-upstream.ts && node scripts/patch-payload-imports.js",
     "workers:build": "tsc -p ./tsconfig.workers.json",
     "workers:dev": "concurrently \"npm run workers:build\" \"tsc -p ./tsconfig.workers.json --watch\"",
     "test": "vitest run",

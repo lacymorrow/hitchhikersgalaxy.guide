@@ -159,10 +159,9 @@ export const providers: NextAuthConfig["providers"] = [
 	 * @see https://authjs.dev/getting-started/providers
 	 *
 	 * NOTE: allowDangerousEmailAccountLinking is set to true on all OAuth providers.
-	 * This allows our custom signIn callback (in auth.config.ts) to handle email
-	 * deduplication logic. Without this, NextAuth would block sign-ins before our
-	 * callback executes. Our callback blocks sign-ins when email exists with a
-	 * different provider, ensuring users must use their original sign-in method.
+	 * This allows users to link multiple OAuth providers to the same email address.
+	 * When a user signs in with a new provider that shares an email with an existing
+	 * account, the new provider is automatically linked to that account.
 	 */
 	...(availableProviderIds.includes("bitbucket")
 		? [

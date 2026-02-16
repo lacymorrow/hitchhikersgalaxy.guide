@@ -14,9 +14,6 @@ import {
 	type DeploymentResult,
 } from "@/server/services/deployment-service";
 
-// Re-export types
-export type { DeploymentResult };
-
 // Re-export from utils for backwards compatibility
 export { generateProjectNameSuggestions };
 

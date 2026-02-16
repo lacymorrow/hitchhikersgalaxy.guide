@@ -5,7 +5,7 @@ import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { logger } from "@/lib/logger";
 import { providers } from "@/server/auth-js/auth-providers.config";
 import { db } from "@/server/db";
-import { accounts, users } from "@/server/db/schema";
+import { users } from "@/server/db/schema";
 import { isAdmin } from "@/server/services/admin-service";
 import { grantGitHubAccess } from "@/server/services/github/github-service";
 import { userService } from "@/server/services/user-service";
@@ -52,56 +52,8 @@ export const authOptions: NextAuthConfig = {
         return true; // Always allow guest sign-in
       }
 
-      // Email conflict detection for OAuth providers
-      // Check if this email exists with a DIFFERENT provider and redirect to error page if so
-      if (
-        account?.provider &&
-        account.provider !== "guest" &&
-        account.provider !== "credentials" &&
-        user.email
-      ) {
-        try {
-          // Check if this email exists with a DIFFERENT provider
-          const existingUser = await db?.query.users.findFirst({
-            where: eq(users.email, user.email.toLowerCase()),
-            columns: { id: true },
-          });
-
-          if (existingUser) {
-            // Check what provider the existing user signed up with
-            const existingAccounts = await db?.query.accounts.findMany({
-              where: eq(accounts.userId, existingUser.id),
-              columns: { provider: true },
-            });
-
-            // If user exists but has NO accounts yet, allow linking (first OAuth after credentials)
-            if (existingAccounts && existingAccounts.length > 0) {
-              // Check if current provider is already linked
-              const hasCurrentProvider = existingAccounts.some(
-                (a) => a.provider === account.provider,
-              );
-
-              if (!hasCurrentProvider) {
-                // Email exists with different provider - redirect to sign-in with error toast
-                logger.warn(
-                  "Email conflict: user attempting OAuth with different provider",
-                  {
-                    email: user.email,
-                    attemptedProvider: account.provider,
-                    originalProvider: existingAccounts[0]?.provider,
-                  },
-                );
-
-                // Redirect to sign-in with status code - ErrorToast will display the message
-                return `${routes.auth.signIn}?code=EMAIL_EXISTS_DIFFERENT_PROVIDER`;
-              }
-            }
-          }
-        } catch (error) {
-          // Don't block sign-in if conflict check fails - log and continue
-          logger.error("Error checking email conflict", { error });
-        }
-      }
+      // Account linking: allowDangerousEmailAccountLinking is enabled on all OAuth providers,
+      // so multiple providers can be linked to the same email address automatically.
 
       // Handle GitHub OAuth connection
       if (account?.provider === "github" && account.access_token) {

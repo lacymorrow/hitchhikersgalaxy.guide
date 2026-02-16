@@ -33,6 +33,8 @@ function buildTree(files: FileTreeProps["files"]): TreeNode {
 		children: {},
 	};
 
+	if (!files) return root;
+
 	files.forEach((file) => {
 		const parts = file.path.split("/");
 		let current = root;

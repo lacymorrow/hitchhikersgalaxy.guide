@@ -1,9 +1,4 @@
 // @ts-nocheck
-/* eslint-disable-all */
-
-// Remove the import statement for Timeout
-// import { Timeout } from 'node';
-
 // Add a type annotation for startIndex
 export function restArguments<T extends any[], R>(
 	func: (...args: [...T, ...R[]]) => any,

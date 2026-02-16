@@ -389,7 +389,10 @@ export const AuthService = {
 
 			return { ok: true, url: result.url ?? redirectTo };
 		} catch (error) {
-			logger.error("Error in signInWithCredentials:", error);
+			// Only log unexpected errors; credential/auth errors are already logged at origin
+			if (!(error instanceof Error && (error.message === STATUS_CODES.CREDENTIALS.message || error.message === STATUS_CODES.AUTH_ERROR.message))) {
+				logger.error("Error in signInWithCredentials:", error);
+			}
 			throw error;
 		}
 	},
@@ -700,20 +703,22 @@ export const AuthService = {
 					// logger.info("User authenticated successfully:", user.id);
 					return user;
 				} catch (loginError) {
-					logger.warn(`Login failed for existing user: ${email}`, loginError);
 					throw new Error(STATUS_CODES.CREDENTIALS.message);
 				}
 			} catch (error) {
-				logger.error("Authentication error:", error);
-				// Re-throw the error if it's already a specific error message
+				// Re-throw credential errors as-is, wrap unexpected errors
 				if (error instanceof Error && error.message === STATUS_CODES.CREDENTIALS.message) {
 					throw error;
 				}
+				logger.error("Authentication error:", error);
 				throw new Error(STATUS_CODES.AUTH_ERROR.message);
 			}
 		} catch (error) {
-			logger.error("Auth error:", error);
-			// Re-throw the error instead of returning null
+			// Re-throw known auth errors without logging again
+			if (error instanceof Error && (error.message === STATUS_CODES.CREDENTIALS.message || error.message === STATUS_CODES.AUTH_ERROR.message)) {
+				throw error;
+			}
+			logger.error("Unexpected auth error:", error);
 			throw error;
 		}
 	},

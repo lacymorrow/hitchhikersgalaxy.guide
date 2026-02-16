@@ -5,31 +5,10 @@ import {
   buildTimePublicEnv,
 } from "@/config/features-config";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
-import { routes } from "@/config/routes";
 import { getDerivedSecrets } from "@/config/secrets";
 import { withPlugins } from "@/config/with-plugins";
 import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/posthog-config";
-import { createRedirects, type Redirect } from "@/lib/utils/redirect";
-
-/* eslint-disable-next-line @typescript-eslint/require-await */
-const redirects = async (): Promise<Redirect[]> => {
-  return [
-    ...createRedirects(["/docs", "/documentation"], routes.docs, true),
-    ...createRedirects(
-      ["/join", "/signup", "/sign-up"],
-      routes.auth.signUp,
-      true,
-    ),
-    ...createRedirects(
-      ["/login", "/log-in", "/signin", "/sign-in"],
-      routes.auth.signIn,
-    ),
-    ...createRedirects(
-      ["/logout", "/log-out", "/signout", "/sign-out"],
-      routes.auth.signOut,
-    ),
-  ];
-};
+import { redirects } from "@/config/redirects";
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {
@@ -87,10 +66,7 @@ const nextConfig: NextConfig = {
     // contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
 
-  /*
-   * Redirects are defined in this file via `redirects()` using `createRedirects`
-   * and the route constants from `src/config/routes.ts`.
-   */
+  /* Redirects — see src/config/redirects.ts */
   redirects,
 
   /*
@@ -192,10 +168,7 @@ const nextConfig: NextConfig = {
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 
   // Force-bundle packages that Next.js auto-externalizes but aren't available at runtime on Vercel
-  transpilePackages: [
-    "@aws-sdk/client-s3",
-    "@aws-sdk/s3-request-presigner",
-  ],
+  transpilePackages: ["@aws-sdk/client-s3", "@aws-sdk/s3-request-presigner"],
 
   /*
    * Server External Packages

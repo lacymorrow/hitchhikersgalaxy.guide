@@ -414,7 +414,7 @@ export const DashboardVercelDeploy = ({
 						<TooltipTrigger asChild>{triggerButton}</TooltipTrigger>
 						<TooltipContent className="flex flex-col gap-2">
 							<p>Connect your Vercel account to deploy</p>
-							<LinkWithTransition href="/settings/accounts">
+							<LinkWithTransition href={routes.settings.account}>
 								<span className="text-xs text-primary hover:underline">
 									Go to Settings →
 								</span>

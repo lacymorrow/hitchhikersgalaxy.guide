@@ -11,6 +11,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import { deployPrivateRepository } from "@/server/actions/deploy-private-repo";
@@ -175,7 +176,7 @@ export const PrivateRepoDeployButton = () => {
 							{needsGitHubAuth && (
 								<div className="mt-3">
 									<LinkWithTransition
-										href="/settings/accounts"
+										href={routes.settings.account}
 										className={cn(
 											buttonVariants({ variant: "default", size: "sm" }),
 											"inline-flex items-center gap-2"
@@ -330,7 +331,7 @@ export const PrivateRepoDeployButton = () => {
 							<p className="text-xs text-center text-muted-foreground">
 								Make sure you've connected your GitHub and Vercel accounts in{" "}
 								<LinkWithTransition
-									href="/settings/accounts"
+									href={routes.settings.account}
 									className="text-primary hover:underline"
 								>
 									Settings

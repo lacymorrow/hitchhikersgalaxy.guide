@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
+import { routes } from "@/config/routes";
 import {
 	Command,
 	CommandEmpty,
@@ -67,7 +68,7 @@ export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
 							))}
 						</CommandGroup>
 						<CommandGroup className="pt-0">
-							<CommandItem onSelect={() => router.push("/examples")}>More examples</CommandItem>
+							<CommandItem onSelect={() => router.push(routes.examples.index)}>More examples</CommandItem>
 						</CommandGroup>
 					</CommandList>
 				</Command>

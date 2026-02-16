@@ -28,14 +28,14 @@ export async function GET(request: NextRequest, context: RouteContext) {
 		console.log("[Vercel OAuth] Session check", { hasUser: !!session?.user, userId: session?.user?.id });
 
 		if (!session?.user) {
-			return NextResponse.redirect(new URL("/login", request.url));
+			return NextResponse.redirect(new URL(routes.auth.signIn, request.url));
 		}
 
 		// Await the params Promise
 		const resolvedParams = await context.params;
 		// Determine the base path for redirection from the dynamic route parameter
 		const pathSegments = resolvedParams.path;
-		let redirectBasePath = "/settings/account"; // Default
+		let redirectBasePath = routes.settings.account; // Default
 
 		if (pathSegments && pathSegments.length > 0) {
 			const decodedPath = pathSegments.map(decodeURIComponent).join("/");
@@ -258,7 +258,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
 		const resolvedParams = await context.params;
 		// Determine the base path for redirection even in the catch block
 		const pathSegments = resolvedParams.path;
-		let redirectBasePath = "/settings/account"; // Default
+		let redirectBasePath = routes.settings.account; // Default
 		if (pathSegments && pathSegments.length > 0) {
 			const decodedPath = pathSegments.map(decodeURIComponent).join("/");
 			redirectBasePath = decodedPath.startsWith("/") ? decodedPath : `/${decodedPath}`;

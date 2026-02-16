@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 
 export const GuestForm = () => {
@@ -28,7 +29,7 @@ export const GuestForm = () => {
 				const result = await signIn("guest", {
 					name: name.trim(),
 					redirect: false,
-					redirectTo: nextUrl || "/dashboard",
+					redirectTo: nextUrl || routes.app.dashboard,
 				});
 
 				// When redirect is false, NextAuth returns an object we can inspect

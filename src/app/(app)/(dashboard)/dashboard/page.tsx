@@ -24,6 +24,7 @@ export default async function DashboardPage() {
 		session,
 		isUserAdmin,
 		hasGitHubConnection,
+		githubUsername,
 		hasVercelConnection,
 		isCustomer,
 		isSubscribed,
@@ -35,6 +36,7 @@ export default async function DashboardPage() {
 				user={session.user}
 				hasGitHubConnection={hasGitHubConnection}
 				hasVercelConnection={hasVercelConnection}
+				githubUsername={githubUsername}
 				hasPurchased={isCustomer || isUserAdmin}
 				forceEnabled={isUserAdmin}
 			/>

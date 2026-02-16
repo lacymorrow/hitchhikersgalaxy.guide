@@ -2,6 +2,7 @@ import { ArrowLeft } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { routes } from "@/config/routes";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Suspense } from "react";
 import { BlogImage } from "@/components/modules/blog/image";
@@ -107,7 +108,7 @@ const BlogPostPage = async ({ params }: Props) => {
 		<div className="relative w-full">
 			{/* Back button */}
 			<Link
-				href="/blog"
+				href={routes.blog}
 				className={cn(
 					buttonVariants({ variant: "ghost", size: "sm" }),
 					"mb-8 h-auto p-0 text-muted-foreground hover:text-foreground"

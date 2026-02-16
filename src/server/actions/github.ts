@@ -2,6 +2,7 @@
 
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { routes } from "@/config/routes";
 import { auth, update as updateSession } from "@/server/auth";
 import { db } from "@/server/db";
 import { accounts, users } from "@/server/db/schema";
@@ -93,7 +94,7 @@ export async function connectGitHub(data?: GitHubConnectionData) {
 			}
 		}
 
-		revalidatePath("/settings");
+		revalidatePath(routes.settings.index);
 		return { success: true };
 	} catch (error) {
 		console.error("Failed to connect GitHub:", error);
@@ -192,7 +193,7 @@ export async function disconnectGitHub() {
 			},
 		});
 
-		revalidatePath("/settings");
+		revalidatePath(routes.settings.index);
 		revalidatePath("/");
 
 		return { success: true };
@@ -237,7 +238,7 @@ export async function verifyGitHubUsername(username: string) {
 			},
 		});
 
-		revalidatePath("/settings");
+		revalidatePath(routes.settings.index);
 		return { success: true, githubUsername: username };
 	} catch (error) {
 		console.error("Failed to verify GitHub username:", error);
@@ -292,7 +293,7 @@ export async function updateGitHubUsername(username: string) {
 			},
 		});
 
-		revalidatePath("/settings"); // Or relevant path
+		revalidatePath(routes.settings.index); // Or relevant path
 
 		return { success: true, githubUsername: username };
 	} catch (error) {

@@ -14,8 +14,9 @@ import {
 	CommandList,
 } from "@/components/ui/command";
 import { ShortcutAction } from "@/config/keyboard-shortcuts";
-import { cn } from "@/lib/utils";
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
+import { cn } from "@/lib/utils";
 
 export function CommandMenu() {
 	const router = useRouter();
@@ -54,7 +55,7 @@ export function CommandMenu() {
 					<CommandGroup heading="Links">
 						<CommandItem
 							onSelect={() => {
-								router.push("/docs");
+								router.push(routes.docs);
 								setOpen(false);
 							}}
 						>
@@ -62,7 +63,7 @@ export function CommandMenu() {
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {
-								router.push("/docs/components/accordion");
+								router.push(`${routes.docs}/components/accordion`);
 								setOpen(false);
 							}}
 						>
@@ -70,7 +71,7 @@ export function CommandMenu() {
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {
-								router.push("/docs/themes");
+								router.push(`${routes.docs}/themes`);
 								setOpen(false);
 							}}
 						>
@@ -78,7 +79,7 @@ export function CommandMenu() {
 						</CommandItem>
 						<CommandItem
 							onSelect={() => {
-								router.push("/docs/examples");
+								router.push(`${routes.docs}/examples`);
 								setOpen(false);
 							}}
 						>

@@ -13,6 +13,7 @@ interface OnboardingCheckProps {
 	hasGitHubConnection?: boolean;
 	hasVercelConnection?: boolean;
 	hasPurchased?: boolean;
+	githubUsername?: string | null;
 	/**
 	 * Force enable the onboarding wizard even if feature flags are disabled.
 	 * Useful for administrators or internal testing.
@@ -25,10 +26,11 @@ export function OnboardingCheck({
 	hasGitHubConnection = false,
 	hasVercelConnection = false,
 	hasPurchased = false,
+	githubUsername,
 	forceEnabled = false,
 }: OnboardingCheckProps) {
 	const userId = user?.id ?? "";
-	const [showOnboarding, setShowOnboarding] = useState(true);
+	const [showOnboarding, setShowOnboarding] = useState(false);
 	const [onboardingState, _setOnboardingState] = useLocalStorage<{
 		completed: boolean;
 		currentStep: number;
@@ -37,13 +39,15 @@ export function OnboardingCheck({
 
 	useEffect(() => {
 		// Only show onboarding if:
-		// 1. User has purchased the starter kit
+		// 1. User has purchased the starter kit (or is admin via forceEnabled)
 		// 2. Onboarding hasn't been completed yet
 		// 3. We have a valid userId
-		if (hasPurchased && userId && !onboardingState?.completed) {
+		if ((hasPurchased || forceEnabled) && userId && !onboardingState?.completed) {
 			setShowOnboarding(true);
+		} else {
+			setShowOnboarding(false);
 		}
-	}, [hasPurchased, userId, onboardingState]);
+	}, [hasPurchased, forceEnabled, userId, onboardingState]);
 
 	// Allow admins (or forced contexts) to bypass feature-flag gating so they can run onboarding.
 	if (
@@ -66,6 +70,7 @@ export function OnboardingCheck({
 			user={user}
 			hasGitHubConnection={hasGitHubConnection}
 			hasVercelConnection={hasVercelConnection}
+			githubUsername={githubUsername}
 			onComplete={handleOnboardingComplete}
 		/>
 	);

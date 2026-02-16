@@ -15,6 +15,7 @@ interface OnboardingWizardProps {
 	user: User | undefined;
 	hasGitHubConnection?: boolean;
 	hasVercelConnection?: boolean;
+	githubUsername?: string | null;
 	onComplete?: () => void;
 }
 
@@ -22,6 +23,7 @@ export const OnboardingWizard = ({
 	user,
 	hasGitHubConnection = false,
 	hasVercelConnection = false,
+	githubUsername,
 	onComplete,
 }: OnboardingWizardProps) => {
 	const { toast } = useToast();
@@ -97,7 +99,7 @@ export const OnboardingWizard = ({
 							</div>
 						)}
 						<div className="mx-auto">
-							<GitHubOAuthButton className="mt-2" user={user} isConnected={hasGitHubConnection} />
+							<GitHubOAuthButton className="mt-2 w-full" user={user} isConnected={hasGitHubConnection} githubUsername={githubUsername} />
 						</div>
 					</div>
 				),
@@ -113,7 +115,7 @@ export const OnboardingWizard = ({
 								<span>Vercel account connected</span>
 							</div>
 						)}
-						{user && <VercelConnectButton className="mt-2" user={user} isConnected={hasVercelConnection} />}
+						<VercelConnectButton className="mt-2 w-full" user={user} isConnected={hasVercelConnection} />
 					</div>
 				),
 			},
@@ -136,7 +138,7 @@ export const OnboardingWizard = ({
 				),
 			},
 		],
-		[hasGitHubConnection, hasVercelConnection, user]
+		[hasGitHubConnection, hasVercelConnection, githubUsername, user]
 	);
 
 	const handleComplete = () => {

@@ -15,6 +15,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
 
@@ -33,7 +34,7 @@ const nextSteps: NextStep[] = [
 		title: "Set up your database",
 		description: "Configure PostgreSQL and run your first migration",
 		icon: Database,
-		href: "/docs/database",
+		href: `${routes.docs}/database`,
 		isComplete: !!env?.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED,
 		estimatedTime: "5 min",
 		isOptional: true,
@@ -42,7 +43,7 @@ const nextSteps: NextStep[] = [
 		title: "Configure authentication",
 		description: "Set up authentication providers",
 		icon: Shield,
-		href: "/docs/auth",
+		href: `${routes.docs}/auth`,
 		isComplete: !!env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED,
 		estimatedTime: "10 min",
 		isOptional: true,
@@ -51,7 +52,7 @@ const nextSteps: NextStep[] = [
 		title: "Choose your CMS",
 		description: "Set up Payload CMS or Builder.io for content management",
 		icon: FileText,
-		href: "/docs/cms",
+		href: `${routes.docs}/cms`,
 		isComplete:
 			!!env?.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED || !!env?.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED,
 		isOptional: true,
@@ -61,7 +62,7 @@ const nextSteps: NextStep[] = [
 		title: "Enable payments",
 		description: "Configure Stripe, Polar, or LemonSqueezy for subscriptions and one-time payments",
 		icon: CreditCard,
-		href: "/docs/payments",
+		href: `${routes.docs}/payments`,
 		isComplete:
 			!!env?.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED ||
 			!!env?.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED ||

@@ -175,7 +175,7 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
 						});
 
 						// Fallback to success page redirect if API fails
-						const successUrl = new URL("/checkout/success", window.location.origin);
+						const successUrl = new URL(routes.checkoutSuccess, window.location.origin);
 
 						// Add order data to URL
 						successUrl.searchParams.set("order_id", orderData.attributes.identifier);

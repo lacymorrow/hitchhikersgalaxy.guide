@@ -1,6 +1,7 @@
 import { BookOpen, CheckCircle } from "lucide-react";
 import { Link } from "@/components/primitives/link";
 import { Badge } from "@/components/ui/badge";
+import { routes } from "@/config/routes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RainbowButton } from "@/components/ui/magicui/rainbow-button";
@@ -32,7 +33,7 @@ export function OnboardingHeader() {
 					</p>
 
 					<div className="flex gap-4 flex-row justify-center">
-						<Link href="/docs" className="inline-flex">
+						<Link href={routes.docs} className="inline-flex">
 							<RainbowButton>
 								<BookOpen className="mr-2 h-4 w-4" />
 								View Documentation

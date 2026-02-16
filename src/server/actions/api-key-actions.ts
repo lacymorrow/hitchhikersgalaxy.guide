@@ -7,6 +7,7 @@
  */
 
 import { revalidatePath } from "next/cache";
+import { routes } from "@/config/routes";
 import { z } from "zod";
 import { auth } from "@/server/auth";
 import { apiKeyService } from "@/server/services/api-key-service";
@@ -58,7 +59,7 @@ export async function createApiKey(data: z.infer<typeof schemas.createApiKey>) {
 		});
 
 		// Revalidate the API keys page
-		revalidatePath("/api-keys");
+		revalidatePath(routes.app.apiKeys);
 
 		// Return the API key - this is the only time it will be shown in full
 		return { key: apiKey?.key };
@@ -108,7 +109,7 @@ export async function deleteApiKey(apiKeyId: string) {
 		const success = await apiKeyService.delete(apiKeyId);
 
 		// Revalidate the API keys page
-		revalidatePath("/api-keys");
+		revalidatePath(routes.app.apiKeys);
 
 		return success;
 	} catch (error) {

@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import { routes } from "@/config/routes";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Form,
@@ -185,7 +186,7 @@ export function NotificationsForm() {
 								<FormLabel>Use different settings for my mobile devices</FormLabel>
 								<FormDescription>
 									You can manage your mobile notifications in the{" "}
-									<Link href="/examples/forms">mobile settings</Link> page.
+									<Link href={routes.examples.forms}>mobile settings</Link> page.
 								</FormDescription>
 							</div>
 						</FormItem>

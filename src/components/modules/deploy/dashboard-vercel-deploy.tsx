@@ -76,7 +76,7 @@ export const DashboardVercelDeploy = ({
 	const queryClient = useQueryClient();
 	const { data: session } = useSession();
 	const pathname = usePathname();
-	const isOnDeploymentsPage = pathname === "/deployments";
+	const isOnDeploymentsPage = pathname === routes.app.deployments;
 	const currentUser = user ?? session?.user;
 	const [open, setOpen] = useState(false);
 	const [projectName, setProjectName] = useState("");
@@ -443,7 +443,7 @@ export const DashboardVercelDeploy = ({
 						</div>
 						<div className="flex flex-col items-center gap-3 w-full">
 							<LinkWithTransition
-								href="/deployments"
+								href={routes.app.deployments}
 								prefetch={false}
 								onClick={() => setOpen(false)}
 								className="w-full"
@@ -475,7 +475,7 @@ export const DashboardVercelDeploy = ({
 								cause conflicts.
 							</p>
 							<LinkWithTransition
-								href="/deployments"
+								href={routes.app.deployments}
 								onClick={() => setOpen(false)}
 								className="text-sm text-primary hover:underline"
 							>
@@ -712,7 +712,7 @@ export const DashboardVercelDeploy = ({
 							<p className="text-xs text-center text-muted-foreground">
 								Ensure you&apos;ve connected GitHub and Vercel in{" "}
 								<LinkWithTransition
-									href="/settings/accounts"
+									href={routes.settings.account}
 									onClick={() => setOpen(false)}
 								>
 									<span className="text-primary hover:underline">Settings</span>

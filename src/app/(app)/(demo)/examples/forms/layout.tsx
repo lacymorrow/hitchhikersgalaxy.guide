@@ -3,6 +3,7 @@ import Image from "next/image";
 
 import { SidebarNav } from "@/app/(app)/(demo)/examples/forms/components/sidebar-nav";
 import { Separator } from "@/components/ui/separator";
+import { routes } from "@/config/routes";
 
 export const metadata: Metadata = {
 	title: "Forms",
@@ -12,23 +13,23 @@ export const metadata: Metadata = {
 const sidebarNavItems = [
 	{
 		title: "Profile",
-		href: "/examples/forms",
+		href: routes.examples.forms,
 	},
 	{
 		title: "Account",
-		href: "/examples/forms/account",
+		href: routes.examples.formsAccount,
 	},
 	{
 		title: "Appearance",
-		href: "/examples/forms/appearance",
+		href: routes.examples.formsAppearance,
 	},
 	{
 		title: "Notifications",
-		href: "/examples/forms/notifications",
+		href: routes.examples.formsNotifications,
 	},
 	{
 		title: "Display",
-		href: "/examples/forms/display",
+		href: routes.examples.formsDisplay,
 	},
 ];
 

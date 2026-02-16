@@ -1,3 +1,4 @@
+import { routes } from "@/config/routes";
 import { Section, SectionHeader } from "@/components/primitives/section";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { ExamplesNav } from "../_components/examples-nav";
@@ -13,49 +14,49 @@ import TasksPage from "../tasks/page";
 export const examples = [
 	{
 		name: "Mail",
-		href: "/examples/mail",
+		href: routes.examples.mail,
 		code: "https://github.com/shadcn/ui/tree/main/apps/www/app/(app)/examples/mail",
 		component: MailPage,
 	},
 	{
 		name: "Dashboard",
-		href: "/examples/dashboard",
+		href: routes.examples.dashboard,
 		code: "https://github.com/shadcn/ui/tree/main/apps/www/app/(app)/examples/dashboard",
 		component: DashboardPage,
 	},
 	{
 		name: "Cards",
-		href: "/examples/cards",
+		href: routes.examples.cards,
 		code: "https://github.com/shadcn/ui/tree/main/apps/www/app/(app)/examples/cards",
 		component: CardsPage,
 	},
 	{
 		name: "Tasks",
-		href: "/examples/tasks",
+		href: routes.examples.tasks,
 		code: "https://github.com/shadcn/ui/tree/main/apps/www/app/(app)/examples/tasks",
 		component: TasksPage,
 	},
 	{
 		name: "Playground",
-		href: "/examples/playground",
+		href: routes.examples.playground,
 		code: "https://github.com/shadcn/ui/tree/main/apps/www/app/(app)/examples/playground",
 		component: PlaygroundPage,
 	},
 	{
 		name: "Forms",
-		href: "/examples/forms",
+		href: routes.examples.forms,
 		code: "https://github.com/shadcn/ui/tree/main/apps/www/app/(app)/examples/forms",
 		component: FormsPage,
 	},
 	{
 		name: "Music",
-		href: "/examples/music",
+		href: routes.examples.music,
 		code: "https://github.com/shadcn/ui/tree/main/apps/www/app/(app)/examples/music",
 		component: MusicPage,
 	},
 	{
 		name: "Authentication",
-		href: "/examples/authentication",
+		href: routes.examples.authentication,
 		code: "https://github.com/shadcn/ui/tree/main/apps/www/app/(app)/examples/authentication",
 		component: AuthenticationPage,
 	},

@@ -35,6 +35,7 @@ export async function useDashboardData() {
 		session,
 		isUserAdmin,
 		hasGitHubConnection: gitHubStatus.isConnected,
+		githubUsername: gitHubStatus.username,
 		hasVercelConnection,
 		isCustomer,
 		isSubscribed,

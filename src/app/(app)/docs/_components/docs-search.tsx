@@ -21,6 +21,7 @@ import {
 } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
+import { routes } from "@/config/routes";
 import { type DocSearchResult, useDocsSearch } from "@/hooks/use-docs-search";
 import { cn } from "@/lib/utils";
 
@@ -28,27 +29,27 @@ import { cn } from "@/lib/utils";
 const POPULAR_DOCS = [
 	{
 		title: "Introduction",
-		url: "/docs/introduction",
+		url: `${routes.docs}/introduction`,
 		description: "Get started with Shipkit",
 	},
 	{
 		title: "Quickstart Guide",
-		url: "/docs/quickstart",
+		url: `${routes.docs}/quickstart`,
 		description: "Quick setup and deployment",
 	},
 	{
 		title: "Authentication",
-		url: "/docs/auth",
+		url: `${routes.docs}/auth`,
 		description: "User authentication and authorization",
 	},
 	{
 		title: "Database",
-		url: "/docs/database",
+		url: `${routes.docs}/database`,
 		description: "Database setup and configuration",
 	},
 	{
 		title: "Deployment",
-		url: "/docs/deployment",
+		url: `${routes.docs}/deployment`,
 		description: "Deploy your application",
 	},
 ];

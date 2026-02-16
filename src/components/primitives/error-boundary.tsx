@@ -7,6 +7,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { AuthenticationError } from "@/lib/errors/authentication-error";
 import { logger } from "@/lib/logger";
@@ -226,7 +227,7 @@ export class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoun
 			// Cannot use hooks in class components - use direct redirect with hardcoded path
 			// Get current path from window.location for nextUrl parameter
 			const currentPath = typeof window !== "undefined" ? window.location.pathname : "/";
-			redirect("/sign-in", {
+			redirect(routes.auth.signIn, {
 				code: STATUS_CODES.AUTH.code,
 				nextUrl: currentPath,
 			});

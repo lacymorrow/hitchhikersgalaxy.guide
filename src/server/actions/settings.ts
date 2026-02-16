@@ -2,6 +2,7 @@
 
 import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { routes } from "@/config/routes";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { accounts, users } from "@/server/db/schema";
@@ -47,7 +48,7 @@ export async function updateProfile(data: ProfileData) {
 			})
 			.where(eq(users.id, session.user.id));
 
-		void revalidatePath("/settings");
+		void revalidatePath(routes.settings.index);
 		return { success: true, message: "Profile updated successfully" };
 	} catch (error) {
 		console.error("Failed to update profile:", error);
@@ -71,7 +72,7 @@ export async function updateSettings(data: SettingsData) {
 			})
 			.where(eq(users.id, session.user.id));
 
-		void revalidatePath("/settings");
+		void revalidatePath(routes.settings.index);
 		return { success: true, message: "Settings updated successfully" };
 	} catch (error) {
 		console.error("Failed to update settings:", error);
@@ -112,7 +113,7 @@ export async function updateTheme(theme: "light" | "dark" | "system") {
 			})
 			.where(eq(users.id, session.user.id));
 
-		void revalidatePath("/settings");
+		void revalidatePath(routes.settings.index);
 		return { success: true, message: "Theme updated successfully" };
 	} catch (error) {
 		console.error("Failed to update theme:", error);
@@ -147,7 +148,7 @@ export async function disconnectAccount(
 			},
 		});
 
-		revalidatePath("/settings");
+		revalidatePath(routes.settings.index);
 		return {
 			success: true,
 			message: `${provider.charAt(0).toUpperCase() + provider.slice(1)} account disconnected successfully`,

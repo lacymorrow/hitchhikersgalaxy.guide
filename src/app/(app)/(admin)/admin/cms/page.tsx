@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { getCMSStatusAction, seedCMSAction } from "@/app/(app)/(admin)/admin/integrations/actions";
 import { Link } from "@/components/primitives/link";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { routes } from "@/config/routes";
 import { Badge } from "@/components/ui/badge";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -130,7 +131,7 @@ export default function CMSPage() {
 							target="_blank"
 							rel="noopener noreferrer"
 							className={cn(buttonVariants({ variant: "outline" }), "mt-auto")}
-							href="/cms"
+							href={routes.cms.index}
 						>
 							Open Payload Admin
 							<ExternalLink className="ml-2 h-4 w-4" />

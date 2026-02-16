@@ -71,7 +71,7 @@ export const GitHubConnectButton = ({ className }: { className?: string }) => {
 				// Refresh client session and current route to update both client and server components
 				await updateSession({ force: true });
 				// If we're on the settings page, add highlight parameter
-				if (pathname?.includes("/settings")) {
+				if (pathname?.includes(routes.settings.index)) {
 					const redirectUrl = createRedirectUrl(routes.settings.account, { code: "GITHUB_CONNECTED" });
 					router.push(redirectUrl);
 				} else {

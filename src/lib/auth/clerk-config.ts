@@ -1,3 +1,4 @@
+import { routes } from "@/config/routes";
 import { env } from "@/env";
 
 /**
@@ -60,40 +61,40 @@ export const clerkConfig = {
 		},
 	},
 	// Sign-in and sign-up URLs that match Shipkit's routing
-	signInUrl: "/sign-in",
-	signUpUrl: "/sign-up",
-	afterSignInUrl: "/dashboard",
-	afterSignUpUrl: "/dashboard",
+	signInUrl: routes.auth.signIn,
+	signUpUrl: routes.auth.signUp,
+	afterSignInUrl: routes.app.dashboard,
+	afterSignUpUrl: routes.app.dashboard,
 	// Clerk dashboard redirect for user management
-	userProfileUrl: "/settings/profile",
+	userProfileUrl: routes.settings.profile,
 } as const;
 
 /**
  * Protected routes that require authentication when using Clerk
  */
 export const clerkProtectedRoutes = [
-	"/dashboard",
-	"/settings",
-	"/projects",
-	"/teams",
-	"/api-keys",
-	"/admin",
+	routes.app.dashboard,
+	routes.settings.index,
+	routes.app.projects,
+	routes.app.teams,
+	routes.app.apiKeys,
+	routes.admin.index,
 ] as const;
 
 /**
  * Public routes that should be accessible without authentication
  */
 export const clerkPublicRoutes = [
-	"/",
-	"/features",
-	"/pricing",
-	"/docs",
-	"/blog",
-	"/contact",
-	"/sign-in",
-	"/sign-up",
-	"/forgot-password",
-	"/reset-password",
+	routes.home,
+	routes.features,
+	routes.pricing,
+	routes.docs,
+	routes.blog,
+	routes.contact,
+	routes.auth.signIn,
+	routes.auth.signUp,
+	routes.auth.forgotPassword,
+	routes.auth.resetPassword,
 	"/api/webhooks/clerk",
 	"/api/docs",
 ] as const;

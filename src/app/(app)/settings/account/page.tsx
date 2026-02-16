@@ -13,6 +13,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
+import { routes } from "@/config/routes";
 import { constructMetadata } from "@/config/metadata";
 import { auth } from "@/server/auth";
 import { getGitHubConnectionStatus } from "@/server/services/github/github-token-service";
@@ -25,7 +26,7 @@ export const metadata: Metadata = constructMetadata({
 
 export default async function AccountPage() {
 	const session = await auth();
-	if (!session?.user) redirect("/login");
+	if (!session?.user) redirect(routes.auth.signIn);
 
 	const userId = session.user.id;
 

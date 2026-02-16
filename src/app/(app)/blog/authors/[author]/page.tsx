@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AuthorProfile } from "@/components/modules/blog/author-profile";
 import { Link } from "@/components/primitives/link";
+import { routes } from "@/config/routes";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -88,7 +89,7 @@ export default async function AuthorPage({ params }: Props) {
 			<div className="container py-8">
 				<h1 className="text-3xl font-bold mb-4">Author Not Found</h1>
 				<p className="text-muted-foreground mb-4">No posts found for author "{displayName}".</p>
-				<Link href="/blog" className="text-blue-600 hover:text-blue-800 underline">
+				<Link href={routes.blog} className="text-blue-600 hover:text-blue-800 underline">
 					← Back to Blog
 				</Link>
 			</div>

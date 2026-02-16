@@ -128,8 +128,17 @@ export const routes = {
 	// Example routes
 	examples: {
 		index: "/examples",
+		mail: "/examples/mail",
 		dashboard: "/examples/dashboard",
+		cards: "/examples/cards",
+		tasks: "/examples/tasks",
+		playground: "/examples/playground",
 		forms: "/examples/forms",
+		formsAccount: "/examples/forms/account",
+		formsAppearance: "/examples/forms/appearance",
+		formsNotifications: "/examples/forms/notifications",
+		formsDisplay: "/examples/forms/display",
+		music: "/examples/music",
 		authentication: "/examples/authentication",
 		notifications: "/examples/forms/notifications",
 		profile: "/examples/forms/profile",

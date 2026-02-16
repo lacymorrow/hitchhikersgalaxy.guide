@@ -6,6 +6,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import { routes } from "@/config/routes";
 import {
 	Form,
 	FormControl,
@@ -122,7 +123,7 @@ export function ProfileForm() {
 							</Select>
 							<FormDescription>
 								You can manage verified email addresses in your{" "}
-								<Link href="/examples/forms">email settings</Link>.
+								<Link href={routes.examples.forms}>email settings</Link>.
 							</FormDescription>
 							<FormMessage />
 						</FormItem>

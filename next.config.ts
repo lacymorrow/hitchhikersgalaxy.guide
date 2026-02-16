@@ -191,6 +191,12 @@ const nextConfig: NextConfig = {
   // Configure `pageExtensions` to include markdown and MDX files
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 
+  // Force-bundle packages that Next.js auto-externalizes but aren't available at runtime on Vercel
+  transpilePackages: [
+    "@aws-sdk/client-s3",
+    "@aws-sdk/s3-request-presigner",
+  ],
+
   /*
    * Server External Packages
    * Externalize optional Drizzle ORM database drivers that aren't installed

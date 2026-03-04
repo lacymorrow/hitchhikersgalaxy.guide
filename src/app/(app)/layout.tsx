@@ -14,6 +14,7 @@ import { FontSelector } from "@/components/modules/devtools/font-selector";
 import { env } from "@/env";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { BrickMarquee } from "@/components/blocks/brick-marquee";
+import { RepoJsonLd } from "@/components/seo/repo-json-ld";
 
 export const fetchCache = "default-cache";
 export const metadata: Metadata = defaultMetadata;
@@ -56,6 +57,8 @@ export default async function Layout({
             crossOrigin={l.crossOrigin}
           />
         ))}
+
+        <RepoJsonLd />
 
         {env.NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED && (
           <script

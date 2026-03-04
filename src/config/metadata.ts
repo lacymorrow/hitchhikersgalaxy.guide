@@ -77,6 +77,11 @@ export const defaultMetadata: Metadata = {
 	bookmarks: [siteConfig.metadata.bookmarksPath],
 	category: siteConfig.metadata.category,
 	classification: siteConfig.metadata.classification,
+	// Repository discovery meta tags
+	other: {
+		repository: siteConfig.repo.url,
+		source: siteConfig.repo.url,
+	},
 };
 
 export const metadata: Metadata = defaultMetadata;
@@ -110,6 +115,8 @@ export const headLinkHints: readonly HeadLinkHint[] = [
 	{ rel: "dns-prefetch", href: "https://vercel.com" },
 	{ rel: "dns-prefetch", href: "https://api.github.com" },
 	{ rel: "dns-prefetch", href: "https://cdn.jsdelivr.net" },
+	// Repository discovery (vcs-git convention)
+	{ rel: "vcs-git", href: siteConfig.repo.url },
 ] as const;
 
 type ConstructMetadataProps = Metadata & {

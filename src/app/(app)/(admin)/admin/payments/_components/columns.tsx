@@ -88,7 +88,7 @@ export const columns: ColumnDef<PaymentData>[] = [
 				currency: "USD",
 			}).format(amount);
 
-			return formatted;
+			return <span className="tabular-nums">{formatted}</span>;
 		},
 	},
 	{

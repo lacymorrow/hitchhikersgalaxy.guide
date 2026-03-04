@@ -1,10 +1,17 @@
 "use client";
 
-import { LifeBuoy, type LucideIcon, PanelLeftClose, PanelLeftOpen, Send, Settings2 } from "lucide-react";
+import {
+	LifeBuoy,
+	type LucideIcon,
+	PanelLeftClose,
+	PanelLeftOpen,
+	Send,
+	Settings2,
+} from "lucide-react";
 import type React from "react";
 import { FeedbackDialog } from "@/components/forms/feedback-dialog";
 import { Link } from "@/components/primitives/link";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { useSidebar } from "@/components/ui/sidebar";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { routes } from "@/config/routes";
@@ -105,24 +112,33 @@ export function NavSecondary({ items, className }: NavSecondaryProps) {
 					);
 				}
 
-				// Regular link
+				// Regular link — use Link with buttonVariants styling directly
+				// to avoid Slot composition issues with next-view-transitions
 				return (
 					<NavItemWrapper key={item.title} title={item.title} open={open}>
-						<Button {...buttonProps} asChild>
-							<Link href={item?.href ?? "#"}>
-								<Icon className="h-4 w-4 shrink-0" />
-								{open && (
-									<span className="ml-2 transition-all duration-200 group-data-[collapsible=icon]:opacity-0">
-										{item.title}
-									</span>
-								)}
-							</Link>
-						</Button>
+						<Link
+							href={item?.href ?? "#"}
+							className={cn(
+								buttonVariants({ variant: "ghost", size: "sm" }),
+								"group justify-center",
+								open && "w-full justify-start"
+							)}
+						>
+							<Icon className="h-4 w-4 shrink-0" />
+							{open && (
+								<span className="ml-2 transition-all duration-200 group-data-[collapsible=icon]:opacity-0">
+									{item.title}
+								</span>
+							)}
+						</Link>
 					</NavItemWrapper>
 				);
 			})}
 
-			<NavItemWrapper title={state === "collapsed" ? "Expand sidebar" : "Collapse sidebar"} open={open}>
+			<NavItemWrapper
+				title={state === "collapsed" ? "Expand sidebar" : "Collapse sidebar"}
+				open={open}
+			>
 				<Button
 					{...getButtonProps(open)}
 					type="button"

@@ -1,5 +1,5 @@
 import crypto from "crypto";
-import { eq, isNull } from "drizzle-orm";
+import { and, eq, isNull } from "drizzle-orm";
 import { siteConfig } from "@/config/site-config";
 import { db } from "@/server/db";
 import { apiKeys, users } from "@/server/db/schema";
@@ -41,7 +41,7 @@ export class ApiKeyService {
 			})
 			.from(apiKeys)
 			.leftJoin(users, eq(apiKeys.userId, users.id))
-			.where(eq(apiKeys.userId, userId) && isNull(apiKeys.deletedAt));
+			.where(and(eq(apiKeys.userId, userId), isNull(apiKeys.deletedAt)));
 	}
 
 	/**
@@ -119,7 +119,7 @@ export class ApiKeyService {
 				})
 				.from(apiKeys)
 				.leftJoin(users, eq(apiKeys.userId, users.id))
-				.where(eq(apiKeys.key, key) && isNull(apiKeys.deletedAt))
+				.where(and(eq(apiKeys.key, key), isNull(apiKeys.deletedAt)))
 				.limit(1)) || [];
 
 		if (!result) {

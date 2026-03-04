@@ -77,7 +77,7 @@ export const PaymentDrawer = ({ payment, open, onClose }: PaymentDrawerProps) =>
 													<h4 className="text-xl font-medium">{payment.productName}</h4>
 													<div className="flex items-center gap-2 text-sm text-muted-foreground">
 														<DollarSign className="h-3 w-3" />
-														<span>
+														<span className="tabular-nums">
 															{new Intl.NumberFormat("en-US", {
 																style: "currency",
 																currency: "USD",

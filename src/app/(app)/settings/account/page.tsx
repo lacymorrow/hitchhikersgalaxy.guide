@@ -13,8 +13,9 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { routes } from "@/config/routes";
 import { constructMetadata } from "@/config/metadata";
+import { routes } from "@/config/routes";
+import { env } from "@/env";
 import { auth } from "@/server/auth";
 import { getGitHubConnectionStatus } from "@/server/services/github/github-token-service";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
@@ -33,7 +34,9 @@ export default async function AccountPage() {
 	// Check connections using server-side functions
 	// Using unified getGitHubConnectionStatus() ensures isConnected and username are always consistent
 	const [hasVercel, gitHubStatus] = await Promise.all([
-		checkVercelConnection(userId),
+		env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED
+			? checkVercelConnection(userId)
+			: Promise.resolve(false),
 		getGitHubConnectionStatus(userId),
 	]);
 
@@ -68,29 +71,35 @@ export default async function AccountPage() {
 			</div>
 			<Separator />
 
-			{/* Vercel Connection */}
-			<ConnectionHighlightWrapper connectionType="vercel">
-				<Card>
-					<CardHeader>
-						<CardTitle>Vercel Connection</CardTitle>
-						<CardDescription>
-							Connect your Vercel account to deploy projects directly.
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="space-y-2">
-							<p>
-								{hasVercel
-									? "Your Vercel account is connected. You can now deploy projects directly to Vercel."
-									: "Connect your Vercel account to deploy projects directly from Shipkit."}
-							</p>
-						</div>
-					</CardContent>
-					<CardFooter>
-						<VercelConnectButton user={session?.user} isConnected={hasVercel} className="w-full" />
-					</CardFooter>
-				</Card>
-			</ConnectionHighlightWrapper>
+			{/* Vercel Connection — only show when the integration feature is enabled */}
+			{env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED && (
+				<ConnectionHighlightWrapper connectionType="vercel">
+					<Card>
+						<CardHeader>
+							<CardTitle>Vercel Connection</CardTitle>
+							<CardDescription>
+								Connect your Vercel account to deploy projects directly.
+							</CardDescription>
+						</CardHeader>
+						<CardContent>
+							<div className="space-y-2">
+								<p>
+									{hasVercel
+										? "Your Vercel account is connected. You can now deploy projects directly to Vercel."
+										: "Connect your Vercel account to deploy projects directly from Shipkit."}
+								</p>
+							</div>
+						</CardContent>
+						<CardFooter>
+							<VercelConnectButton
+								user={session?.user}
+								isConnected={hasVercel}
+								className="w-full"
+							/>
+						</CardFooter>
+					</Card>
+				</ConnectionHighlightWrapper>
+			)}
 
 			<ConnectionHighlightWrapper connectionType="github">
 				<Card>

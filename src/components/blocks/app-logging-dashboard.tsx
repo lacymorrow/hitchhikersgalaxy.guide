@@ -111,7 +111,7 @@ export function AppLoggingDashboardComponent({ apiKey }: AppLoggingDashboardComp
 		<div className="mx-auto mt-10 w-full max-w-6xl rounded-lg bg-white p-6 shadow-xl">
 			<h1 className="mb-6 text-3xl font-bold text-gray-800">App Logging Dashboard</h1>
 			<div className="mb-4 flex items-center justify-between">
-				<div className="text-sm text-gray-500">Total Logs: {logs.length}</div>
+				<div className="text-sm text-gray-500">Total Logs: <span className="tabular-nums">{logs.length}</span></div>
 			</div>
 			<div className="relative min-h-[500px] rounded-lg bg-gray-50 p-4">
 				{isLoading ? (

@@ -5,8 +5,10 @@ import { useEffect, useMemo, useState } from "react";
 import { GitHubOAuthButton } from "@/components/buttons/github-oauth-button";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
+import { Link } from "@/components/primitives/link";
 import { IntroDisclosure } from "@/components/ui/intro-disclosure";
 import { siteConfig } from "@/config/site-config";
+import { env } from "@/env";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { useToast } from "@/hooks/use-toast";
 import type { User } from "@/types/user";
@@ -99,7 +101,12 @@ export const OnboardingWizard = ({
 							</div>
 						)}
 						<div className="mx-auto">
-							<GitHubOAuthButton className="mt-2 w-full" user={user} isConnected={hasGitHubConnection} githubUsername={githubUsername} />
+							<GitHubOAuthButton
+								className="mt-2 w-full"
+								user={user}
+								isConnected={hasGitHubConnection}
+								githubUsername={githubUsername}
+							/>
 						</div>
 					</div>
 				),
@@ -115,7 +122,21 @@ export const OnboardingWizard = ({
 								<span>Vercel account connected</span>
 							</div>
 						)}
-						<VercelConnectButton className="mt-2 w-full" user={user} isConnected={hasVercelConnection} />
+						{env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED ? (
+							<VercelConnectButton
+								className="mt-2 w-full"
+								user={user}
+								isConnected={hasVercelConnection}
+							/>
+						) : (
+							<p className="text-sm text-muted-foreground">
+								Vercel integration is not configured yet. You can set it up later in{" "}
+								<Link href="/settings/account" className="underline">
+									Settings
+								</Link>
+								.
+							</p>
+						)}
 					</div>
 				),
 			},
@@ -125,7 +146,11 @@ export const OnboardingWizard = ({
 				full_description: (
 					<div className="space-y-4">
 						<div className="mx-auto">
-							<DashboardVercelDeploy className="mt-2" isVercelConnected={true} user={user ?? undefined} />
+							<DashboardVercelDeploy
+								className="mt-2"
+								isVercelConnected={true}
+								user={user ?? undefined}
+							/>
 						</div>
 						<div className="rounded-lg bg-primary/10 p-3 text-center">
 							<h3 className="font-semibold">Almost there!</h3>
@@ -155,13 +180,21 @@ export const OnboardingWizard = ({
 		onComplete?.();
 	};
 
+	// Wrap setOpen so closing the dialog (via X button) also persists dismissal
+	const handleSetOpen = (value: boolean) => {
+		setOpen(value);
+		if (!value) {
+			setOnboardingState((prev) => ({ ...(prev ?? defaultOnboardingState), completed: true }));
+		}
+	};
+
 	if (!user || safeOnboardingState.completed) return null;
 
 	return (
 		<IntroDisclosure
 			steps={steps}
 			open={open}
-			setOpen={setOpen}
+			setOpen={handleSetOpen}
 			featureId={`onboarding-${user.id}`}
 			onComplete={handleComplete}
 			onSkip={handleSkip}

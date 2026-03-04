@@ -37,7 +37,7 @@ export function PricingPageComponent() {
 					{/* Free Tier */}
 					<div className={`flex flex-col p-6 ${fadingBorderStyle}`}>
 						<h2 className="mb-4 text-2xl font-bold">Free</h2>
-						<div className="mb-6 text-4xl font-bold">$0 / mo</div>
+						<div className="mb-6 text-4xl font-bold tabular-nums">$0 / mo</div>
 						<div className="mb-6">
 							<div>Up to 50,000 log entries / mo</div>
 							<div className="text-sm text-gray-400">1,000 log entries / day</div>
@@ -57,7 +57,7 @@ export function PricingPageComponent() {
 					{/* Pro Tier */}
 					<div className={`flex flex-col p-6 ${fadingBorderStyle}`}>
 						<h2 className="mb-4 text-2xl font-bold">Pro</h2>
-						<div className="mb-6 text-4xl font-bold">${calculatePrice(logEntries)} / mo</div>
+						<div className="mb-6 text-4xl font-bold tabular-nums">${calculatePrice(logEntries)} / mo</div>
 						<div className="mb-6">
 							<Slider
 								min={100000}
@@ -66,7 +66,7 @@ export function PricingPageComponent() {
 								value={[logEntries]}
 								onValueChange={(value) => value[0] && setLogEntries(value[0])}
 							/>
-							<div>{logEntries.toLocaleString()} log entries / mo</div>
+							<div><span className="tabular-nums">{logEntries.toLocaleString()}</span> log entries / mo</div>
 							<div className="text-sm text-gray-400">No daily sending limit</div>
 						</div>
 						<div className="flex-grow space-y-2">

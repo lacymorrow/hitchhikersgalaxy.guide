@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { AlertCircleIcon } from "lucide-react";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { constructMetadata } from "@/config/metadata";
@@ -13,7 +13,8 @@ import { ApiKeysTable } from "./_components/api-keys-table";
 
 export const metadata: Metadata = constructMetadata({
 	title: "API Keys",
-	description: "Manage your API keys for programmatic access. Create, view, and revoke API keys securely.",
+	description:
+		"Manage your API keys for programmatic access. Create, view, and revoke API keys securely.",
 });
 
 export default async function ApiKeysPage() {
@@ -21,7 +22,7 @@ export default async function ApiKeysPage() {
 	if (!session) {
 		redirect(createRedirectUrl(routes.auth.signIn, { nextUrl: routes.app.apiKeys }));
 	}
-	const user = session?.user;
+	const user = session.user;
 
 	try {
 		// Get user's API keys with caching
@@ -41,20 +42,17 @@ export default async function ApiKeysPage() {
 				expiresAt: apiKey.expiresAt ? new Date(apiKey.expiresAt) : null,
 			}));
 
-		if (!activeApiKeys) {
-			return <div>No API keys found.</div>;
-		}
-
 		return (
 			<div className="container mx-auto py-10">
 				<div className="mb-8">
 					<h1 className="text-2xl font-bold tracking-tight">API Keys</h1>
 					<p className="text-muted-foreground">
-						Manage your API keys. Keep these secure and never share them publicly.
+						Manage your API keys for programmatic access. Keep these secure and never share them
+						publicly.
 					</p>
 				</div>
 
-				<ApiKeysTable apiKeys={activeApiKeys} userId={user.id} />
+				<ApiKeysTable apiKeys={activeApiKeys ?? []} userId={user.id} />
 			</div>
 		);
 	} catch (error) {

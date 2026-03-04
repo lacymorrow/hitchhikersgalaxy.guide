@@ -50,7 +50,7 @@ export const ROICalculator = () => {
 								step={1}
 								className="w-full"
 							/>
-							<span className="min-w-[4ch] text-right">{teamSize}</span>
+							<span className="min-w-[4ch] text-right tabular-nums">{teamSize}</span>
 						</div>
 					</div>
 
@@ -66,7 +66,7 @@ export const ROICalculator = () => {
 								step={1}
 								className="w-full"
 							/>
-							<span className="min-w-[4ch] text-right">{monthsToLaunch}</span>
+							<span className="min-w-[4ch] text-right tabular-nums">{monthsToLaunch}</span>
 						</div>
 					</div>
 
@@ -82,7 +82,7 @@ export const ROICalculator = () => {
 								step={5000}
 								className="w-full"
 							/>
-							<span className="min-w-[8ch] text-right">{formatCurrency(monthlyBurn)}</span>
+							<span className="min-w-[8ch] text-right tabular-nums">{formatCurrency(monthlyBurn)}</span>
 						</div>
 					</div>
 				</div>
@@ -100,7 +100,7 @@ export const ROICalculator = () => {
 									key={totalSavings}
 									initial={{ scale: 0.95 }}
 									animate={{ scale: 1 }}
-									className="text-3xl font-bold text-primary"
+									className="text-3xl font-bold tabular-nums text-primary"
 								>
 									{formatCurrency(totalSavings)}
 								</motion.div>
@@ -111,7 +111,7 @@ export const ROICalculator = () => {
 									key={timeToMarket}
 									initial={{ scale: 0.95 }}
 									animate={{ scale: 1 }}
-									className="text-3xl font-bold text-primary"
+									className="text-3xl font-bold tabular-nums text-primary"
 								>
 									{timeToMarket} Months Faster
 								</motion.div>
@@ -122,7 +122,7 @@ export const ROICalculator = () => {
 									key={burnSavings}
 									initial={{ scale: 0.95 }}
 									animate={{ scale: 1 }}
-									className="text-3xl font-bold text-primary"
+									className="text-3xl font-bold tabular-nums text-primary"
 								>
 									{formatCurrency(burnSavings)}
 								</motion.div>

@@ -77,7 +77,7 @@ const headings = [
 ];
 
 export const metadata: Metadata = constructMetadata({
-	title: `${siteConfig.name} - The Ultimate Next.js Stack | Launch Your SaaS in Days`,
+	title: `${siteConfig.name} - Launch Your SaaS in Days`,
 	description: `Join top startups using ${siteConfig.name} to launch faster. Get a production-ready Next.js stack with auth, AI, payments & more. Save $50k+ in development costs.`,
 });
 

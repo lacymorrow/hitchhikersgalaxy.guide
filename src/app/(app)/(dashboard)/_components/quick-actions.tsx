@@ -28,7 +28,7 @@ export function QuickActions() {
 					<HardDrive className="h-4 w-4 text-muted-foreground" />
 				</CardHeader>
 				<CardContent>
-					<div className="text-2xl font-bold">75%</div>
+					<div className="text-2xl font-bold tabular-nums">75%</div>
 					<div className="mt-2">
 						<div className="h-2 w-full rounded-full bg-muted">
 							<div className="h-2 rounded-full bg-primary" style={{ width: "75%" }} />
@@ -42,7 +42,7 @@ export function QuickActions() {
 					<LineChart className="h-4 w-4 text-muted-foreground" />
 				</CardHeader>
 				<CardContent>
-					<div className="text-2xl font-bold">89%</div>
+					<div className="text-2xl font-bold tabular-nums">89%</div>
 					<div className="text-xs text-muted-foreground">Of monthly quota</div>
 				</CardContent>
 			</Card>
@@ -52,7 +52,7 @@ export function QuickActions() {
 					<History className="h-4 w-4 text-muted-foreground" />
 				</CardHeader>
 				<CardContent>
-					<div className="text-2xl font-bold">2h ago</div>
+					<div className="text-2xl font-bold tabular-nums">2h ago</div>
 					<div className="text-xs text-muted-foreground">Next backup in 4h</div>
 				</CardContent>
 			</Card>

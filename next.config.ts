@@ -167,13 +167,10 @@ const nextConfig: NextConfig = {
   // Configure `pageExtensions` to include markdown and MDX files
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 
-  // Force-bundle packages that Next.js auto-externalizes but aren't available at runtime on Vercel
-  transpilePackages: ["@aws-sdk/client-s3", "@aws-sdk/s3-request-presigner"],
-
   /*
    * Server External Packages
-   * Externalize optional Drizzle ORM database drivers that aren't installed
-   * This prevents Turbopack from trying to bundle these optional peer dependencies
+   * Externalize packages that cause bundling issues with Turbopack/Vercel:
+   * - Native modules, optional DB drivers, AWS SDK, Payload CMS packages with CSS imports
    */
   serverExternalPackages: [
     // Native module (transitive dep of @builder.io/react) that fails to compile on Vercel
@@ -189,6 +186,14 @@ const nextConfig: NextConfig = {
     "@vercel/postgres",
     "better-sqlite3",
     "mysql2",
+    // AWS SDK — externalize to prevent Turbopack bundling issues
+    "@aws-sdk/client-s3",
+    "@aws-sdk/s3-request-presigner",
+    "@payloadcms/storage-s3",
+    // Payload CMS packages with CSS imports that cause ERR_UNKNOWN_FILE_EXTENSION at runtime
+    "@payloadcms/plugin-cloud-storage",
+    "@payloadcms/ui",
+    "react-image-crop",
     // ESM-only packages that need to be externalized
     "@octokit/rest",
   ],

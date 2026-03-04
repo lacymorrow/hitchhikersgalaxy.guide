@@ -238,3 +238,58 @@ bun run check:performance      # Performance profiling
 ```
 
 Always run `bun run lint` and `bun run typecheck` before committing changes.
+
+## Scaffolding New ShipKit Sites
+
+Use the ShipKit CLI to create new sites from this template:
+
+### Using the CLI
+```bash
+# From anywhere — interactive
+cd cli && bun run build && node dist/index.js create my-new-site
+
+# Non-interactive (CI/agent)
+node cli/dist/index.js create my-new-site --yes
+```
+
+### Manual Steps (if CLI unavailable)
+```bash
+# 1. Create repo from template
+gh repo create my-new-site --template shipkit-io/bones --clone --public
+cd my-new-site
+
+# 2. Add upstream remote (premium first, bones fallback)
+git remote add upstream https://github.com/shipkit-io/shipkit.git || \
+git remote add upstream https://github.com/shipkit-io/bones.git
+
+# 3. Graft upstream history
+git fetch upstream
+git merge upstream/main --allow-unrelated-histories --no-edit \
+  -m "chore: graft upstream template history"
+
+# 4. Install and run
+bun install
+cp .env.example .env
+bun dev
+```
+
+### Syncing Upstream Changes
+```bash
+# Via CLI (creates PR branch)
+node cli/dist/index.js sync --yes
+
+# Via npm script (from within a ShipKit project)
+bun run upstream:pull
+
+# Direct merge (no PR)
+node cli/dist/index.js sync --yes --direct
+```
+
+### CLI Development
+The CLI lives in `cli/` and uses Commander + @clack/prompts:
+```bash
+cd cli
+bun install
+bun run build   # Builds to cli/dist/index.js
+bun run dev     # Watch mode
+```

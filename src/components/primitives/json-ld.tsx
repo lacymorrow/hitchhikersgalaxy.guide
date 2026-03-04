@@ -4,6 +4,7 @@ import { siteConfig } from "@/config/site-config";
 interface JsonLdProps {
 	organization?: boolean;
 	website?: boolean;
+	softwareSourceCode?: boolean;
 	breadcrumbs?: {
 		name: string;
 		item: string;
@@ -50,6 +51,7 @@ interface JsonLdProps {
 export function JsonLd({
 	organization = true,
 	website = true,
+	softwareSourceCode = true,
 	breadcrumbs,
 	article,
 	product,
@@ -87,6 +89,18 @@ export function JsonLd({
 					"@id": `${siteConfig.url}/#organization`,
 				},
 				inLanguage: "en-US",
+			},
+			softwareSourceCode && {
+				"@type": "SoftwareSourceCode",
+				"@id": `${siteConfig.url}/#source-code`,
+				name: siteConfig.title,
+				description: siteConfig.description,
+				url: siteConfig.url,
+				codeRepository: siteConfig.repo.url,
+				programmingLanguage: "TypeScript",
+				author: {
+					"@id": `${siteConfig.url}/#organization`,
+				},
 			},
 			breadcrumbs && {
 				"@type": "BreadcrumbList",

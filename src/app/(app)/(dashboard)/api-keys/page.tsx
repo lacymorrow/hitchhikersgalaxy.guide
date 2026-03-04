@@ -23,12 +23,15 @@ export default async function ApiKeysPage() {
 		redirect(createRedirectUrl(routes.auth.signIn, { nextUrl: routes.app.apiKeys }));
 	}
 	const user = session.user;
+	if (!user?.id) {
+		redirect(createRedirectUrl(routes.auth.signIn, { nextUrl: routes.app.apiKeys }));
+	}
 
 	try {
 		// Get user's API keys with caching
 		const userApiKeys = await cacheService.getOrSet(
-			`user:${user?.id}:api-keys`,
-			() => apiKeyService.getUserApiKeys(user?.id),
+			`user:${user.id}:api-keys`,
+			() => apiKeyService.getUserApiKeys(user.id),
 			cacheConfigs.short
 		);
 

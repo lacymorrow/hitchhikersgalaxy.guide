@@ -186,10 +186,7 @@ const nextConfig: NextConfig = {
     "@vercel/postgres",
     "better-sqlite3",
     "mysql2",
-    // AWS SDK — externalize to prevent Turbopack bundling issues
-    "@aws-sdk/client-s3",
-    "@aws-sdk/s3-request-presigner",
-    "@payloadcms/storage-s3",
+
     // ESM-only packages that need to be externalized
     "@octokit/rest",
   ],

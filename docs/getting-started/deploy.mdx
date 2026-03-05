@@ -1,117 +1,71 @@
 ---
-title: 'Deployment'
-description: 'Deploy Shipkit to Vercel with zero configuration'
+title: "Deployment"
+description: "Deploy Shipkit to Vercel."
 ---
 
 # Deployment
 
-Shipkit deploys beautifully on Vercel. One-click setup with all the performance optimizations you need.
-
 ## One-Click Deploy
 
-The fastest way to get started:
+Click the Deploy button in the README. Connect GitHub, set env vars, done.
 
-1. **Click the Deploy button** in the README
-2. **Connect your GitHub repo** to Vercel
-3. **Add your environment variables**
-4. **You're live!**
-
-That's it. Shipkit handles the rest.
-
-## Manual Deploy (Advanced)
-
-For more control:
+Minimum env vars for a working deploy:
 
 ```bash
-# Install Vercel CLI
+DATABASE_URL=postgresql://...   # Neon, Supabase, Railway, etc.
+AUTH_SECRET=...                  # openssl rand -base64 32
+```
+
+Everything else is optional — features auto-enable when their env vars are present.
+
+## Manual Deploy
+
+```bash
 npm install -g vercel
-
-# Login to your account
 vercel login
-
-# Deploy your app
 vercel deploy
 ```
 
+Or push to GitHub with your Vercel project connected — auto-deploys on every push.
+
 ## Environment Variables
 
-Shipkit needs these to work properly:
+```bash
+cp .env.example .env.local
+```
 
-1. **Copy the example file:**
-   ```bash
-   cp .env.example .env.local
-   ```
+See [Environment Variables](/docs/getting-started/environment) for the full reference.
 
-2. **Configure your services:**
-   - Database (if using Payload CMS)
-   - Authentication providers
-   - Payment processors
-   - Analytics services
+Add variables to Vercel via dashboard or CLI:
 
-3. **Add to Vercel:**
-   - Go to your project dashboard
-   - Add variables under "Environment Variables"
-   - Set up different values for production/staging
+```bash
+vercel env add DATABASE_URL
+```
 
-## Built-in Features
-
-Shipkit comes with Vercel optimizations:
-
-- ✅ **Automatic HTTPS** - SSL certificates handled for you
-- ✅ **Edge Functions** - Global CDN with fast responses
-- ✅ **Analytics** - Built-in performance monitoring
-- ✅ **Preview Deployments** - Test changes before merging
-- ✅ **CI/CD** - Automatic deployments from Git
+Redeploy after adding variables.
 
 ## Production Checklist
 
-Before going live:
+- [ ] `DATABASE_URL` and `AUTH_SECRET` set
+- [ ] Domain connected (Vercel dashboard → Domains)
+- [ ] At least one auth provider configured
+- [ ] Payment webhooks pointed to your domain (if using payments)
 
-- [ ] Environment variables configured
-- [ ] Domain connected (optional)
-- [ ] Analytics enabled
-- [ ] Error monitoring set up
-- [ ] Performance tested
+## Multi-Zone Deployment
 
-## Advanced Deployment
+Run multiple Shipkit instances on different paths under one domain. See the [Multi-Zone guide](/docs/guides/deployment/multi-zone) for setup.
 
-### Multi-Zone Setup
-Run multiple Shipkit apps on different paths:
+## Vercel-Specific
 
-```typescript
-// next.config.ts - Add rewrites for zones
-async rewrites() {
-  return [
-    {
-      source: '/docs/:path*',
-      destination: 'https://docs.yourdomain.com/docs/:path*',
-    },
-    // Add more zones as needed
-  ];
-}
-```
-
-### Custom Domains
-Point your domain to Vercel:
-
-1. Add your domain in Vercel dashboard
-2. Update DNS records as instructed
-3. SSL certificate is automatic
+- Preview deployments on every PR
+- `AUTH_URL` auto-set from `VERCEL_URL`
+- Use `bun run build:vercel` for 8GB heap (large projects)
 
 ## Troubleshooting
 
-**Build failing?**
-- Check environment variables are set
-- Verify database connection
-- Check for TypeScript errors
-
-**Slow performance?**
-- Enable Vercel's analytics
-- Check image optimization
-- Review bundle size
-
-## Resources
-
-- [Vercel Deployment Guide](https://vercel.com/docs/deployments/overview)
-- [Next.js Deployment](https://nextjs.org/docs/deployment)
-- [Environment Variables Guide](https://vercel.com/docs/concepts/projects/environment-variables)
+| Problem | Fix |
+|---------|-----|
+| Build fails | Check env vars are set, run `bun run typecheck` locally |
+| DB connection error | Verify `DATABASE_URL`, check IP allowlists |
+| OOM during build | Use `bun run build:vercel` (8GB heap) |
+| Stale features | Env vars are build-time — redeploy after changes |

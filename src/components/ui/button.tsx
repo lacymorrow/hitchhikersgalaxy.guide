@@ -2,6 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { Slot as SlotPrimitive } from "radix-ui";
 import * as React from "react";
 
+import { haptic } from "@/hooks/use-haptics";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -37,13 +38,29 @@ export interface ButtonProps
 	asChild?: boolean;
 	icon?: React.ElementType;
 	iconPosition?: "left" | "right";
+	/** Disable haptic feedback on click */
+	noHaptics?: boolean;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	({ className, variant, size, asChild = false, ...props }, ref) => {
+	({ className, variant, size, asChild = false, noHaptics = false, onClick, ...props }, ref) => {
 		const Comp = asChild ? SlotPrimitive.Slot : "button";
+		const handleClick = React.useCallback(
+			(e: React.MouseEvent<HTMLButtonElement>) => {
+				if (!noHaptics) {
+					haptic(variant === "destructive" ? "heavy" : "light");
+				}
+				onClick?.(e);
+			},
+			[noHaptics, variant, onClick]
+		);
 		return (
-			<Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />
+			<Comp
+				className={cn(buttonVariants({ variant, size, className }))}
+				ref={ref}
+				onClick={handleClick}
+				{...props}
+			/>
 		);
 	}
 );

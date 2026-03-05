@@ -190,10 +190,6 @@ const nextConfig: NextConfig = {
     "@aws-sdk/client-s3",
     "@aws-sdk/s3-request-presigner",
     "@payloadcms/storage-s3",
-    // Payload CMS packages with CSS imports that cause ERR_UNKNOWN_FILE_EXTENSION at runtime
-    "@payloadcms/plugin-cloud-storage",
-    "@payloadcms/ui",
-    "react-image-crop",
     // ESM-only packages that need to be externalized
     "@octokit/rest",
   ],

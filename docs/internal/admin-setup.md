@@ -11,7 +11,7 @@ This document explains how to set up administrator access when deploying your Sh
 
 Shipkit uses an environment variable to determine which users have administrator access. This allows you to set up admin access during deployment without modifying any code.
 
-For the most up-to-date documentation, visit [shipkit.io/docs/env](https://shipkit.io/docs/env).
+For the full environment variable reference, see [Environment Variables](/docs/getting-started/environment).
 
 ## Environment Variable
 

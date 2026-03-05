@@ -1,48 +1,82 @@
 ---
-title: Shipkit Next.js Starter Kit Documentation
-description: Modern, type-safe, and scalable Next.js starter kit
+title: Shipkit Documentation
+description: Next.js 15 starter kit with auth, payments, CMS, email, AI, and analytics. All feature-flagged.
 ---
 
 # <SiteName /> Documentation
 
-A Next.js starter to help you ship really, *really* fast. Built for/with Shadcn UI, Cursor, v0.dev.
+Next.js 15 starter kit. Enable features by setting env vars — no code changes needed.
+
+## Getting Started
+
+- [Quick Start](/docs/getting-started) — clone, install, run
+- [Environment Variables](/docs/getting-started/environment) — configure features
+- [Deploy to Vercel](/docs/getting-started/deploy)
+- [Setup Wizard](/docs/getting-started/setup-wizard)
+- [File Structure](/docs/getting-started/file-structure)
 
 ## Features
 
-- **Multi-Zone Architecture**: Deploy different sections as separate applications while maintaining a unified domain
-- **Modern Stack**: Next.js 15, React, TypeScript, Tailwind CSS, Shadcn/UI
-- **CMS Integration**: Payload CMS 3 for content management
-- **Authentication**: NextAuth/AuthJS v5 with multiple providers
-- **Developer Tools**: Built-in tools for development and deployment
-- **Performance Optimized**: Server components, proper caching, and optimization strategies
+| Feature | Guide | What it does |
+|---------|-------|-------------|
+| Authentication | [Guide](/docs/features/authentication) | Auth.js v5, Better Auth, Clerk, Supabase, Stack. OAuth, magic links, credentials, guest. |
+| Payments | [Guide](/docs/features/payments) | Lemon Squeezy, Stripe, Polar. Unified PaymentService across all providers. |
+| CMS | [Guide](/docs/features/cms) | Payload CMS v3. Collections, media, admin panel. |
+| Visual Builder | [Guide](/docs/features/visual-builder) | Builder.io drag-and-drop page editing. |
+| Database | [Guide](/docs/features/database) | PostgreSQL + Drizzle ORM. Migrations, seeding, studio. |
+| Email | [Guide](/docs/features/email) | Resend. Transactional email + magic link auth. |
+| AI | [Guide](/docs/features/ai) | Browser-based SmolLM (WebGPU) + OpenAI/Anthropic cloud. |
+| Analytics | [Guide](/docs/features/analytics) | PostHog, Umami, Google Analytics, Statsig, DataFast. |
+| Storage | [Guide](/docs/features/storage) | AWS S3, Vercel Blob. |
+| Waitlist | [Guide](/docs/features/waitlist) | Pre-launch signup collection. |
 
-Shipkit is a starter kit to launch a website without the hassle of setting up the infrastructure and dependencies. You can deploy it in minutes to Vercel with a few clicks, and add features like authentication, email, content management, etc. as you need them.
+## Integrations
 
-Non-Developers can use the visual builder to create beautiful pages and content with a drag-and-drop interface.
+### Auth Providers
+[Auth.js](/docs/integrations/authentication/auth-js) · [Better Auth](/docs/integrations/authentication/better-auth) · [Clerk](/docs/integrations/authentication/clerk) · [Supabase](/docs/integrations/authentication/supabase) · [Stack](/docs/integrations/authentication/stack)
 
-Developers can build on top of the type-safe, scalable, and feature-rich Next.js App router or Pages router.
+### Payment Providers
+[Lemon Squeezy](/docs/integrations/payments/lemonsqueezy) · [Stripe](/docs/integrations/payments/stripe) · [Polar](/docs/integrations/payments/polar)
 
-## What's included?
+### Analytics
+[PostHog](/docs/integrations/analytics/posthog) · [Umami](/docs/integrations/analytics/umami) · [Google Analytics](/docs/integrations/analytics/google-analytics) · [Google Tag Manager](/docs/integrations/analytics/google-tag-manager) · [Statsig](/docs/integrations/analytics/statsig) · [DataFast](/docs/integrations/analytics/datafast)
 
-- A full-stack, type-safe, and scalable Next.js website, built completely on open-source technologies and leveraging tools with generous free tiers, so you can get started without spending another dime.
-- Configuration to work seamlessly with Cursor, Windsurf, v0.dev, Bolt.new, Replit, Claude Codes, and more.
-- Use the visual builder to create beautiful pages and content with a drag-and-drop interface, [learn more about using Builder.io](/docs/features/visual-builder).
-- Manage content, media, and more with [Payload CMS](/docs/features/cms).
-- Tons of ready-to-use [UI components](/docs/reference/components), including all of the components from Shadcn/UI.
-- Authentication is built-in, just provide your environment variables for each auth provider you want to use.
-- Email is managed via Resend, so you can send emails and allow logging in using magic links.
-- Role-based access control (RBAC) to manage user permissions.
-- User/Team/Organization/Api Key management.
-- Demo pages, AI examples, templates, and more.
+### Infrastructure
+[Resend](/docs/integrations/infra/resend) · [AWS S3](/docs/integrations/infra/aws-s3) · [Vercel Blob](/docs/integrations/infra/vercel-blob) · [Upstash Redis](/docs/integrations/infra/upstash-redis) · [Vercel API](/docs/integrations/infra/vercel-api)
 
-## Core Technologies
+### Content
+[Payload CMS](/docs/integrations/content/payload-cms) · [Builder.io](/docs/integrations/content/builder-io)
+
+## Development
+
+- [Development Guide](/docs/development) — dev server, linting, testing
+- [Feature Flags](/docs/development/feature-flags) — how the flag system works
+- [DevTools](/docs/development/devtools) — built-in development tools
+- [Web Workers](/docs/development/web-workers)
+
+## Guides
+
+- [Caching](/docs/guides/caching)
+- [Content Management](/docs/guides/content-management)
+- [Error Handling](/docs/guides/error-handling)
+- [Middleware](/docs/guides/middleware)
+- [Rebranding](/docs/guides/rebranding)
+- [Server Actions](/docs/guides/proxy-safe-server-actions)
+- [Webhooks](/docs/guides/webhooks)
+- [Multi-Zone Deployment](/docs/guides/deployment/multi-zone)
+
+## Reference
+
+- [Components](/docs/reference/components)
+- [Code Snippets](/docs/reference/snippets/snippet-intro)
+
+## Stack
 
 - **Framework**: Next.js 15 (App Router)
 - **Language**: TypeScript
-- **Package Manager**: `bun` (primary). Also supports `npm` and `yarn`.
-- **Authentication**: Supports Auth.js v5 (formerly NextAuth; default), Better Auth, Stack Auth, and Clerk
-- **UI**: Shadcn/UI + Tailwind CSS
+- **Package Manager**: Bun (also supports npm, yarn)
+- **Database**: PostgreSQL + Drizzle ORM
+- **UI**: Tailwind CSS + Shadcn/UI
 - **CMS**: Payload CMS v3
 - **Visual Builder**: Builder.io
 - **Email**: Resend
-- **Database**: PostgreSQL + Drizzle ORM

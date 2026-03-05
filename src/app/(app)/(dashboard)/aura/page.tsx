@@ -159,12 +159,6 @@ export default async function AuraDashboard() {
           icon="🎙️"
         />
         <QuickLink
-          href="/aura/demo"
-          title="Demo"
-          desc="Upload a WAV and see pipeline output"
-          icon="🚀"
-        />
-        <QuickLink
           href="/aura/knowledge"
           title="Knowledge"
           desc="Facts, commitments, events"

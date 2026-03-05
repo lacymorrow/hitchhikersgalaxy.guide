@@ -1,49 +1,57 @@
 ---
-title: 'Database'
-description: 'Database configuration using PostgreSQL and Drizzle ORM in Shipkit'
+title: "Database"
+description: "PostgreSQL + Drizzle ORM setup in Shipkit."
 ---
 
 # Database
 
-Shipkit uses PostgreSQL as the database and [Drizzle ORM](https://orm.drizzle.team) for type-safe database operations.
+PostgreSQL with Drizzle ORM. Enabled when `DATABASE_URL` is set.
 
-## Features
-
-- Type-safe queries
-- Automatic migrations
-- Schema validation
-- Connection pooling
-- Prepared statements
-- SQL security
-
-## Configuration
-
-Add these environment variables to configure your database:
-
-```env
-# Required
+```bash
 DATABASE_URL=postgresql://user:password@host:port/database
-
-# Optional - For database naming prefix
-DB_PREFIX=your_prefix
+DB_PREFIX=your_prefix  # optional, prefixes table names
 ```
 
-## Database Setup
+## Commands
 
-1. Create a PostgreSQL database
-2. Set up the connection URL in your environment
-3. Run migrations: `bun run db:migrate`
-4. Generate types: `bun run db:generate`
+```bash
+bun run db:generate    # generate Drizzle schema from code
+bun run db:migrate     # run migrations
+bun run db:push        # push schema directly (dev shortcut)
+bun run db:studio      # open Drizzle Studio (visual DB browser)
+bun run db:reset       # drop + regenerate + migrate + push
+bun run db:seed        # seed with test data
+```
 
-## Hosting Options
+## Schema
 
-- [Neon](https://neon.tech) - Serverless Postgres (Recommended)
-- [Supabase](https://supabase.com) - Open source Firebase alternative
-- [Railway](https://railway.app) - Infrastructure platform
-- Self-hosted PostgreSQL
+The main schema lives at `src/server/db/schema.ts`. It defines tables for users, accounts, sessions, posts, payments, teams, projects, API keys, and more.
 
-## Resources
+Payload CMS has its own schema management — it handles migrations for its collections separately. Both share the same database.
 
-- [Drizzle Documentation](https://orm.drizzle.team/docs/overview)
-- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
-- [Database Schema Guide](https://orm.drizzle.team/docs/sql-schema-declaration)
+## Usage
+
+```typescript
+import { db } from "@/server/db";
+import { users } from "@/server/db/schema";
+import { eq } from "drizzle-orm";
+
+const user = await db.query.users.findFirst({
+  where: eq(users.email, "user@example.com"),
+});
+```
+
+## Hosting
+
+- [Neon](https://neon.tech) — serverless Postgres, good free tier
+- [Supabase](https://supabase.com) — Postgres + extras
+- [Railway](https://railway.app) — simple managed Postgres
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `src/server/db/index.ts` | Database connection |
+| `src/server/db/schema.ts` | Drizzle schema definitions |
+| `drizzle.config.ts` | Drizzle Kit config |
+| `src/config/features-config.ts` | `DATABASE_ENABLED` flag |

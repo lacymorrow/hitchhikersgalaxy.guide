@@ -1,43 +1,39 @@
 ---
-title: 'Email Integration'
-description: 'Email configuration using Resend in Shipkit'
+title: "Email"
+description: "Resend email integration in Shipkit."
 ---
 
-# Email Integration
+# Email
 
-Shipkit uses [Resend](https://resend.com) for sending transactional emails, marketing campaigns, and authentication emails.
+Resend for transactional email. Also powers magic link authentication.
 
-## Features
-
-- Transactional emails
-- Marketing campaigns
-- Authentication emails
-- Email templates
-- Analytics and tracking
-- DKIM and SPF setup
-
-## Configuration
-
-Add these environment variables to enable email functionality:
-
-```env
-# Required
-RESEND_API_KEY=your_resend_api_key
-
-# Optional - For audience management
-RESEND_AUDIENCE_ID=your_audience_id
+```bash
+RESEND_API_KEY=re_...
+RESEND_AUDIENCE_ID=...  # optional, for audience/list management
 ```
 
-Get your API key from the [Resend Dashboard](https://resend.com/dashboard).
+## What It Does
+
+- Transactional email (welcome, receipts, notifications)
+- Magic link sign-in (when `AUTH_RESEND_ENABLED` — dev only by default)
+- Audience management for marketing lists
+
+## Magic Link Auth
+
+Set `RESEND_API_KEY` and the auth system picks it up automatically. Note: Resend-based auth is **development-only** by default to prevent accidental email abuse in production. See [Authentication](/docs/features/authentication) for details.
 
 ## Domain Setup
 
-1. Add your domain in the [Resend Dashboard](https://resend.com/domains)
-2. Configure DNS records for DKIM and SPF
-3. Verify domain ownership
+1. Add your domain in [Resend Dashboard → Domains](https://resend.com/domains)
+2. Add the DNS records (DKIM + SPF)
+3. Verify ownership
 
-## Resources
+Without a verified domain, emails send from Resend's shared domain (fine for dev).
 
-- [Resend Documentation](https://resend.com/docs)
-- [React Email Templates](https://resend.com/docs/templates)
-- [Email Authentication Guide](https://resend.com/docs/dashboard/domains/overview)
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `src/server/services/resend-service.ts` | Email sending logic |
+| `src/server/actions/resend-actions.ts` | Server actions for email |
+| `src/config/features-config.ts` | `AUTH_RESEND_ENABLED` flag |

@@ -1,5 +1,5 @@
 name: Claude Issue Triage
-description: Automatically triage GitHub issues using Claude Code
+# Automatically triage GitHub issues using Claude Code
 on:
   issues:
     types: [opened]
@@ -17,7 +17,8 @@ jobs:
     steps:
       - name: Skip if Anthropic not configured
         if: env.ANTHROPIC_API_KEY == ''
-        run: echo 'Skipping Claude Issue Triage: ANTHROPIC_API_KEY not set'
+        run: |
+          echo 'Skipping Claude Issue Triage: ANTHROPIC_API_KEY not set'
       - name: Checkout repository
         uses: actions/checkout@v4
 

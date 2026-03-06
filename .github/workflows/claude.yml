@@ -31,7 +31,8 @@ jobs:
     steps:
       - name: Skip if Claude OAuth not configured
         if: env.CLAUDE_ACCESS_TOKEN == '' || env.CLAUDE_REFRESH_TOKEN == '' || env.CLAUDE_EXPIRES_AT == ''
-        run: echo 'Skipping Claude PR Assistant: Claude OAuth secrets not set'
+        run: |
+          echo 'Skipping Claude PR Assistant: Claude OAuth secrets not set'
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
@@ -45,5 +46,4 @@ jobs:
           claude_access_token: ${{ secrets.CLAUDE_ACCESS_TOKEN }}
           claude_refresh_token: ${{ secrets.CLAUDE_REFRESH_TOKEN }}
           claude_expires_at: ${{ secrets.CLAUDE_EXPIRES_AT }}
-
           timeout_minutes: "60"

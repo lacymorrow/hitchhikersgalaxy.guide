@@ -18,7 +18,8 @@ jobs:
     steps:
       - name: Skip if OpenAI not configured
         if: env.OPENAI_API_KEY == ''
-        run: echo 'Skipping Auto Fix Issues: OPENAI_API_KEY not set'
+        run: |
+          echo 'Skipping Auto Fix Issues: OPENAI_API_KEY not set'
       - name: Checkout repository
         uses: actions/checkout@v4
 

@@ -34,7 +34,8 @@ jobs:
     steps:
       - name: Skip if Claude not configured
         if: env.CLAUDE_CODE_OAUTH_TOKEN == ''
-        run: echo 'Skipping Claude Code Review: CLAUDE_CODE_OAUTH_TOKEN not set'
+        run: |
+          echo 'Skipping Claude Code Review: CLAUDE_CODE_OAUTH_TOKEN not set'
       - name: Checkout repository
         uses: actions/checkout@v4
         with:

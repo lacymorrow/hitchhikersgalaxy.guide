@@ -34,8 +34,7 @@ jobs:
       github.event.action == 'synchronize'
       || github.event.action == 'opened'
       || github.event.action == 'reopened') &&
-      vars.NEON_PROJECT_ID != '' &&
-      secrets.NEON_API_KEY != ''
+      vars.NEON_PROJECT_ID != ''
     runs-on: ubuntu-latest
     steps:
       - name: Create Neon Branch
@@ -88,8 +87,7 @@ jobs:
     if: |
       github.event_name == 'pull_request' && 
       github.event.action == 'closed' &&
-      vars.NEON_PROJECT_ID != '' &&
-      secrets.NEON_API_KEY != ''
+      vars.NEON_PROJECT_ID != ''
     runs-on: ubuntu-latest
     steps:
       - name: Delete Neon Branch

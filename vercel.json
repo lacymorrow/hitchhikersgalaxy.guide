@@ -18,7 +18,7 @@
   "trailingSlash": false,
 
   "functions": {
-    "src/app/api/**/*": {
+    "api/**": {
       "maxDuration": 10,
       "excludeFiles": "{.next,*.cache,node_modules/eslint/**,node_modules/@types/**,node_modules/typescript/**,node_modules/three/**,node_modules/@react-three/**,node_modules/@huggingface/**,public,app}/**"
     }

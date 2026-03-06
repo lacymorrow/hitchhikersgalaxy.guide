@@ -1,68 +1,68 @@
 # Vercel Deployment Check
 #
-# Runs after Vercel deploys a preview/production build.
+# Runs when Vercel finishes building a deployment (before promotion).
 # Hits the deployment URL and verifies it returns 2xx.
-# Used with Vercel Deployment Checks to gate production promotion.
+# Uses Vercel's repository_dispatch events — the official mechanism
+# for Deployment Checks integration.
 #
 # Setup:
-#   1. Enable "Protection Bypass for Automation" in Vercel project settings
-#      (Settings → Deployment Protection → Protection Bypass for Automation)
-#   2. Copy the generated secret and add it as a GitHub Actions secret:
-#      VERCEL_AUTOMATION_BYPASS_SECRET
-#   3. Enable Deployment Checks and select "Deployment Check: Health"
-#   4. Vercel won't promote to production until this passes
+#   1. Enable repository_dispatch events in Vercel project settings
+#      (Settings → Git → Repository Dispatch)
+#   2. Add this workflow's check as a Deployment Check
+#      (Settings → Deployment Checks → Add Check → select "smoke-test")
+#   3. Vercel won't promote to production until this passes
 #
-# For non-Vercel deployments, this workflow is a no-op.
+# Docs: https://vercel.com/docs/deployment-checks
+# Ref:  https://github.com/vercel/repository-dispatch
 
 name: Deployment Check
 
 on:
-  deployment_status:
+  repository_dispatch:
+    types:
+      - 'vercel.deployment.ready'
 
-permissions:
-  checks: write
-  statuses: write
-  deployments: read
+run-name: "Deployment Check: ${{ github.event.client_payload.project.name }} (${{ github.event.client_payload.environment }})"
 
 jobs:
   smoke-test:
-    # Only run when the deployment is ready (not pending/failed)
-    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
-    steps:
-      - name: Get deployment URL
-        id: url
-        run: |
-          URL="${{ github.event.deployment_status.target_url }}"
-          if [ -z "$URL" ]; then
-            URL="${{ github.event.deployment_status.environment_url }}"
-          fi
-          echo "url=$URL" >> $GITHUB_OUTPUT
-          echo "🔗 Deployment URL: $URL"
+    permissions:
+      actions: read
+      statuses: write
 
-      - name: Wait for deployment to stabilize
-        run: sleep 10
+    steps:
+      # Sets commit status on the correct SHA (from client_payload.git.sha)
+      # and auto-reports job result as a post step
+      - name: Set commit status
+        uses: vercel/repository-dispatch/actions/status@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Health check
         env:
           VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
-          URL="${{ steps.url.outputs.url }}"
+          URL="${{ github.event.client_payload.url }}"
           if [ -z "$URL" ]; then
-            echo "⚠️ No deployment URL found — skipping check"
+            echo "⚠️ No deployment URL in payload — skipping check"
             exit 0
           fi
 
-          echo "🔥 Checking $URL ..."
+          echo "🔗 Deployment URL: $URL"
+          echo "🔑 SHA: ${{ github.event.client_payload.git.sha }}"
+          echo "🌍 Environment: ${{ github.event.client_payload.environment }}"
+          echo ""
 
           # Build curl args — add bypass header if secret is available
           CURL_ARGS=(-s -o /dev/null -w "%{http_code}" --max-time 30)
           if [ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
             CURL_ARGS+=(-H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET")
             echo "🔑 Using Vercel automation bypass token"
-          else
-            echo "⚠️ No VERCEL_AUTOMATION_BYPASS_SECRET set — 401 from protected deployments will pass as non-5xx"
           fi
+
+          echo "🔥 Checking $URL ..."
+          echo ""
 
           # Retry up to 3 times with backoff
           for attempt in 1 2 3; do
@@ -70,53 +70,17 @@ jobs:
             echo "  Attempt $attempt: HTTP $STATUS"
 
             if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
+              echo ""
               echo "✅ Deployment is healthy (HTTP $STATUS)"
               exit 0
             fi
 
-            if [ "$STATUS" -ge 500 ]; then
-              echo "❌ Server error detected (HTTP $STATUS)"
-              if [ "$attempt" -lt 3 ]; then
-                echo "  Retrying in $((attempt * 10))s..."
-                sleep $((attempt * 10))
-              fi
-            elif [ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
-              # With bypass token, any non-2xx/3xx is unexpected
-              echo "❌ Unexpected HTTP $STATUS with bypass token"
-              if [ "$attempt" -lt 3 ]; then
-                echo "  Retrying in $((attempt * 10))s..."
-                sleep $((attempt * 10))
-              fi
-            else
-              # Without bypass token, 4xx might be auth — not a server error
-              echo "⚠️ Got HTTP $STATUS — not a 5xx, passing (set VERCEL_AUTOMATION_BYPASS_SECRET for full check)"
-              exit 0
+            if [ "$attempt" -lt 3 ]; then
+              echo "  Retrying in $((attempt * 10))s..."
+              sleep $((attempt * 10))
             fi
           done
 
           echo ""
           echo "💥 Deployment check FAILED — $URL returned HTTP $STATUS after 3 attempts"
           exit 1
-
-      # Report status back via GitHub Checks API
-      # (commit statuses 403 on deployment_status events from third-party apps)
-      - name: Report check result
-        if: always()
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const conclusion = '${{ job.status }}' === 'success' ? 'success' : 'failure';
-            await github.rest.checks.create({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              head_sha: context.sha,
-              name: 'Deployment Check: Health',
-              status: 'completed',
-              conclusion,
-              output: {
-                title: conclusion === 'success' ? 'Deployment is healthy' : 'Deployment check failed',
-                summary: conclusion === 'success'
-                  ? `Deployment at \`${{ steps.url.outputs.url }}\` returned a healthy response.`
-                  : 'Deployment returned 5xx or was unreachable after 3 attempts.',
-              },
-            });

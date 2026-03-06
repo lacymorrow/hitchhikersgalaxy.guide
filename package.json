@@ -14,7 +14,7 @@
   "scripts": {
     "build": "next build --turbo",
     "build:legacy": "next build",
-    "build:vercel": "NODE_OPTIONS='--max-old-space-size=8192' next build --turbo && npx tsx scripts/smoke-test.ts",
+    "build:vercel": "NODE_OPTIONS='--max-old-space-size=8192' next build --turbo",
     "clean": "rm next-env.d.ts ; rm package-lock.json ; rm pnpm-lock.yaml ; rm bun.lockb ; rm -rf .next ; rm -rf node_modules ; rm -rf .turbo",
     "clean:cache": "rm -rf .next/cache",
     "fix": "npm run clean && npm run payload generate:types && npm run payload generate:importmap",

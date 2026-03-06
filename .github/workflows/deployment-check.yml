@@ -5,9 +5,12 @@
 # Used with Vercel Deployment Checks to gate production promotion.
 #
 # Setup:
-#   1. Enable Deployment Checks in Vercel project settings
-#   2. Select this workflow as a required check
-#   3. Vercel won't promote to production until this passes
+#   1. Enable "Protection Bypass for Automation" in Vercel project settings
+#      (Settings → Deployment Protection → Protection Bypass for Automation)
+#   2. Copy the generated secret and add it as a GitHub Actions secret:
+#      VERCEL_AUTOMATION_BYPASS_SECRET
+#   3. Enable Deployment Checks and select "Deployment Check: Health"
+#   4. Vercel won't promote to production until this passes
 #
 # For non-Vercel deployments, this workflow is a no-op.
 
@@ -40,6 +43,8 @@ jobs:
         run: sleep 10
 
       - name: Health check
+        env:
+          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
           URL="${{ steps.url.outputs.url }}"
           if [ -z "$URL" ]; then
@@ -49,9 +54,18 @@ jobs:
 
           echo "🔥 Checking $URL ..."
 
+          # Build curl args — add bypass header if secret is available
+          CURL_ARGS=(-s -o /dev/null -w "%{http_code}" --max-time 30)
+          if [ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
+            CURL_ARGS+=(-H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET")
+            echo "🔑 Using Vercel automation bypass token"
+          else
+            echo "⚠️ No VERCEL_AUTOMATION_BYPASS_SECRET set — 401 from protected deployments will pass as non-5xx"
+          fi
+
           # Retry up to 3 times with backoff
           for attempt in 1 2 3; do
-            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$URL" || echo "000")
+            STATUS=$(curl "${CURL_ARGS[@]}" "$URL" || echo "000")
             echo "  Attempt $attempt: HTTP $STATUS"
 
             if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
@@ -65,15 +79,22 @@ jobs:
                 echo "  Retrying in $((attempt * 10))s..."
                 sleep $((attempt * 10))
               fi
+            elif [ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
+              # With bypass token, any non-2xx/3xx is unexpected
+              echo "❌ Unexpected HTTP $STATUS with bypass token"
+              if [ "$attempt" -lt 3 ]; then
+                echo "  Retrying in $((attempt * 10))s..."
+                sleep $((attempt * 10))
+              fi
             else
-              # 4xx might be expected (auth, etc.) — not a server error
-              echo "⚠️ Got HTTP $STATUS — not a 5xx, passing"
+              # Without bypass token, 4xx might be auth — not a server error
+              echo "⚠️ Got HTTP $STATUS — not a 5xx, passing (set VERCEL_AUTOMATION_BYPASS_SECRET for full check)"
               exit 0
             fi
           done
 
           echo ""
-          echo "💥 Deployment check FAILED — $URL returned 5xx after 3 attempts"
+          echo "💥 Deployment check FAILED — $URL returned HTTP $STATUS after 3 attempts"
           exit 1
 
       # Report status back to Vercel via commit status

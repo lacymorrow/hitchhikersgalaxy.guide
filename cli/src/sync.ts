@@ -51,6 +51,83 @@ export async function sync(opts: SyncOptions): Promise<void> {
   await runOrThrow("git", ["fetch", UPSTREAM_REMOTE], { cwd });
   s.stop("Fetched upstream.");
 
+  // Check if histories are connected
+  const mergeBase = await run(
+    "git",
+    ["merge-base", "HEAD", `${UPSTREAM_REMOTE}/main`],
+    { cwd }
+  );
+  if (mergeBase === null) {
+    p.log.warn("No common history with upstream (unrelated histories).");
+    p.log.info(
+      "This repo was likely created from a template without grafting upstream history."
+    );
+
+    if (!nonInteractive) {
+      const doGraft = await p.confirm({
+        message:
+          "Graft upstream history now? (required for future syncs to work cleanly)",
+        initialValue: true,
+      });
+      if (p.isCancel(doGraft) || !doGraft) {
+        p.cancel("Cancelled.");
+        process.exit(0);
+      }
+    }
+
+    s.start("Grafting upstream history...");
+    const graft = await run(
+      "git",
+      [
+        "merge",
+        `${UPSTREAM_REMOTE}/main`,
+        "--allow-unrelated-histories",
+        "--no-edit",
+        "-m",
+        "chore: graft upstream template history\n\nConnects this repo's history with the upstream template,\nenabling clean future syncs via 'shipkit sync'.",
+      ],
+      { cwd }
+    );
+    if (graft !== null) {
+      s.stop("Upstream history grafted. Future syncs will work normally.");
+      p.outro(pc.green("✓ Graft complete. Run 'shipkit sync' again to pull latest changes."));
+      return;
+    }
+
+    // Auto-resolve add/add conflicts by keeping ours
+    p.log.info("Resolving graft conflicts (keeping local versions)...");
+    const conflicted = await run(
+      "git",
+      ["diff", "--name-only", "--diff-filter=U"],
+      { cwd }
+    );
+    if (conflicted) {
+      for (const file of conflicted.split("\n").filter(Boolean)) {
+        await run("git", ["checkout", "--ours", file], { cwd });
+        await run("git", ["add", file], { cwd });
+      }
+    }
+    await run("git", ["add", "-A"], { cwd });
+    const commit = await run(
+      "git",
+      [
+        "commit",
+        "--no-edit",
+        "-m",
+        "chore: graft upstream template history\n\nConnects this repo's history with the upstream template,\nenabling clean future syncs via 'shipkit sync'.\n\nConflicts auto-resolved by keeping local versions.",
+      ],
+      { cwd }
+    );
+    if (commit !== null) {
+      s.stop("Upstream history grafted (conflicts auto-resolved).");
+      p.outro(pc.green("✓ Graft complete. Run 'shipkit sync' again to pull latest changes."));
+      return;
+    }
+
+    s.stop("Graft failed — resolve conflicts manually and commit.");
+    process.exit(1);
+  }
+
   // Check for changes
   const behind = await run(
     "git",

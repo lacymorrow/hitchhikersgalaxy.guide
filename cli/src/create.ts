@@ -208,6 +208,13 @@ export async function create(
   }
 
   // --- Graft upstream history ---
+  // gh repo create --template produces a single "Initial commit" with no
+  // relation to the template's git history.  We merge upstream with
+  // --allow-unrelated-histories so that future `shipkit sync` (regular
+  // merge) works without needing that flag every time.
+  //
+  // Because the files are identical at creation time, any add/add conflicts
+  // are resolved automatically by keeping "ours" (the cloned template).
   if (upstreamUrl) {
     s.start("Grafting upstream history...");
     await run("git", ["fetch", UPSTREAM_REMOTE], { cwd: targetDir });
@@ -217,7 +224,7 @@ export async function create(
       { cwd: targetDir }
     );
     if (mergeBase === null) {
-      // No common ancestor — graft
+      // No common ancestor — graft with allow-unrelated-histories
       const graft = await run(
         "git",
         [
@@ -226,14 +233,46 @@ export async function create(
           "--allow-unrelated-histories",
           "--no-edit",
           "-m",
-          "chore: graft upstream template history",
+          "chore: graft upstream template history\n\nConnects this repo's history with the upstream template,\nenabling clean future syncs via 'shipkit sync'.",
         ],
         { cwd: targetDir }
       );
       if (graft !== null) {
         s.stop("Upstream history grafted.");
       } else {
-        s.stop("History graft had conflicts — resolve manually.");
+        // Merge had conflicts (expected: add/add from identical files).
+        // Auto-resolve by keeping ours and completing the merge.
+        p.log.info("Resolving graft conflicts (keeping local versions)...");
+        const conflicted = await run(
+          "git",
+          ["diff", "--name-only", "--diff-filter=U"],
+          { cwd: targetDir }
+        );
+        if (conflicted) {
+          for (const file of conflicted.split("\n").filter(Boolean)) {
+            await run("git", ["checkout", "--ours", file], { cwd: targetDir });
+            await run("git", ["add", file], { cwd: targetDir });
+          }
+        }
+        // Also stage any auto-merged files
+        await run("git", ["add", "-A"], { cwd: targetDir });
+        const commit = await run(
+          "git",
+          [
+            "commit",
+            "--no-edit",
+            "-m",
+            "chore: graft upstream template history\n\nConnects this repo's history with the upstream template,\nenabling clean future syncs via 'shipkit sync'.\n\nConflicts auto-resolved by keeping local versions.",
+          ],
+          { cwd: targetDir }
+        );
+        if (commit !== null) {
+          s.stop("Upstream history grafted (conflicts auto-resolved).");
+        } else {
+          s.stop(
+            "History graft incomplete — run 'shipkit sync --direct' to retry."
+          );
+        }
       }
     } else {
       s.stop("Histories already connected.");

@@ -1,6 +1,7 @@
 "use client";
 
 import { CaretSortIcon } from "@radix-ui/react-icons";
+import { env } from "@/env";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";
@@ -44,7 +45,7 @@ export function NavUser({ className, showUpgrade = true }: NavUserProps) {
 					user={session?.user}
 					showUpgrade={showUpgrade}
 					hasActiveSubscription={hasActiveSubscription}
-					showOnboarding={true}
+					showOnboarding={env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED && env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED && env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED}
 					side={isMobile ? "bottom" : "right"}
 					align="end"
 					sideOffset={4}

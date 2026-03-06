@@ -52,7 +52,9 @@ export function OnboardingCheck({
 	// Allow admins (or forced contexts) to bypass feature-flag gating so they can run onboarding.
 	if (
 		!forceEnabled &&
-		(!env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED || !env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED)
+		(!env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED ||
+			!env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED ||
+			!env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED)
 	) {
 		return null;
 	}
@@ -115,6 +117,15 @@ export function RestartOnboardingButton({
 		});
 		window?.location?.reload();
 	};
+
+	// Hide the button unless all required integrations are enabled (regardless of forceVisible).
+	if (
+		!env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED ||
+		!env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED ||
+		!env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED
+	) {
+		return null;
+	}
 
 	// Only show the button if onboarding has been completed before,
 	// unless forceVisible is enabled (e.g., for admins to start onboarding).

@@ -20,7 +20,6 @@ on:
   deployment_status:
 
 permissions:
-  checks: write
   statuses: write
   deployments: read
 
@@ -98,26 +97,19 @@ jobs:
           echo "💥 Deployment check FAILED — $URL returned HTTP $STATUS after 3 attempts"
           exit 1
 
-      # Report status back via GitHub Checks API
-      # (commit statuses 403 on deployment_status events from third-party apps)
-      #
+      # Report status back to Vercel via commit status
       - name: Report check result
         if: always()
         uses: actions/github-script@v7
         with:
           script: |
-            const conclusion = '${{ job.status }}' === 'success' ? 'success' : 'failure';
-            await github.rest.checks.create({
+            const state = '${{ job.status }}' === 'success' ? 'success' : 'failure';
+            await github.rest.repos.createCommitStatus({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              head_sha: context.sha,
-              name: 'Deployment Check: Health',
-              status: 'completed',
-              conclusion,
-              output: {
-                title: conclusion === 'success' ? 'Deployment is healthy' : 'Deployment check failed',
-                summary: conclusion === 'success'
-                  ? `Deployment at \`${{ steps.url.outputs.url }}\` returned a healthy response.`
-                  : 'Deployment returned 5xx or was unreachable after 3 attempts.',
-              },
+              sha: context.sha,
+              state,
+              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              context: 'Deployment Check: Health',
+              description: state === 'success' ? 'Deployment is healthy' : 'Deployment returned 5xx',
             });

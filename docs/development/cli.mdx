@@ -1,0 +1,69 @@
+---
+title: "CLI"
+description: "The create-shipkit CLI for scaffolding and managing ShipKit projects."
+---
+
+# CLI (`create-shipkit`)
+
+A CLI tool to scaffold new ShipKit projects, sync upstream changes, and deploy.
+
+## Install
+
+```bash
+npx create-shipkit my-app
+# or
+bunx create-shipkit my-app
+```
+
+## Commands
+
+### `shipkit create [name]`
+
+Scaffold a new project from the ShipKit template.
+
+```bash
+shipkit create my-app
+shipkit create my-app --yes          # skip prompts
+shipkit create my-app --no-install   # skip bun install
+shipkit create --template user/repo  # custom template
+```
+
+### `shipkit sync`
+
+Pull upstream ShipKit changes into your project.
+
+```bash
+shipkit sync            # creates a PR branch with upstream changes
+shipkit sync --direct   # merge directly into current branch
+shipkit sync --yes      # skip prompts
+```
+
+### `shipkit deploy`
+
+Deploy to Vercel.
+
+```bash
+shipkit deploy        # interactive
+shipkit deploy --open # open Vercel import page in browser
+```
+
+## Development
+
+The CLI lives in `cli/` with its own `package.json` and build:
+
+```bash
+cd cli
+bun install
+bun run build    # tsup build → cli/dist/
+bun run dev      # watch mode
+```
+
+## Key Files
+
+| File | Purpose |
+|------|---------|
+| `cli/src/index.ts` | Entry point, command definitions |
+| `cli/src/create.ts` | Project scaffolding logic |
+| `cli/src/sync.ts` | Upstream sync logic |
+| `cli/src/deploy.ts` | Vercel deployment logic |
+| `cli/src/utils.ts` | Shared utilities |

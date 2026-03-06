@@ -208,18 +208,24 @@ Each zone is a full Shipkit installation with:
 ### Required for Basic Functionality
 ```env
 DATABASE_URL=                 # PostgreSQL connection string
-NEXTAUTH_SECRET=             # Auth encryption key
-NEXTAUTH_URL=               # App URL
+AUTH_SECRET=                  # Auth encryption key (or APP_SECRET to derive all secrets)
 ```
 
 ### Optional Feature Enablement
+
+Features auto-enable when their env vars are set. No manual flags needed.
+
 ```env
-NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED=true
-NEXT_PUBLIC_FEATURE_PAYMENTS_LEMONSQUEEZY_ENABLED=true
-NEXT_PUBLIC_FEATURE_CMS_ENABLED=true
-BUILDER_IO_API_KEY=          # For visual editing
-RESEND_API_KEY=             # For email
+AUTH_GITHUB_ID=              # + AUTH_GITHUB_SECRET → GitHub OAuth
+LEMONSQUEEZY_API_KEY=        # + LEMONSQUEEZY_STORE_ID → Lemon Squeezy payments
+STRIPE_SECRET_KEY=           # + STRIPE_PUBLISHABLE_KEY → Stripe payments
+BUILDER_API_KEY=             # → Builder.io visual editing
+RESEND_API_KEY=              # → Email (Resend)
+OPENAI_API_KEY=              # → OpenAI
+ANTHROPIC_API_KEY=           # → Anthropic
 ```
+
+See `src/config/features-config.ts` for the complete flag detection logic.
 
 ## Troubleshooting
 

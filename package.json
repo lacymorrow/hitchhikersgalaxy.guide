@@ -335,6 +335,7 @@
   "trustedDependencies": [
     "@clerk/shared",
     "@lvce-editor/ripgrep",
+    "@prisma/engines",
     "@tsparticles/engine",
     "@vercel/speed-insights",
     "bufferutil",
@@ -344,6 +345,7 @@
     "geckodriver",
     "isolated-vm",
     "onnxruntime-node",
+    "prisma",
     "protobufjs",
     "sharp",
     "unrs-resolver",

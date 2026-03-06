@@ -100,6 +100,7 @@ jobs:
 
       # Report status back via GitHub Checks API
       # (commit statuses 403 on deployment_status events from third-party apps)
+      #
       - name: Report check result
         if: always()
         uses: actions/github-script@v7

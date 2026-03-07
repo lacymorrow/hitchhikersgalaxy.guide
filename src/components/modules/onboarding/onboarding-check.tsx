@@ -49,12 +49,12 @@ export function OnboardingCheck({
 		}
 	}, [hasPurchased, forceEnabled, userId, onboardingState]);
 
-	// Allow admins (or forced contexts) to bypass feature-flag gating so they can run onboarding.
+	// Onboarding requires both Vercel and GitHub integrations to be configured.
+	// Without both, the wizard steps can't function — hide it regardless of admin status.
 	if (
-		!forceEnabled &&
-		(!env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED ||
-			!env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED ||
-			!env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED)
+		!env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED ||
+		!env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED ||
+		!env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED
 	) {
 		return null;
 	}

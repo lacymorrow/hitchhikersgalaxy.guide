@@ -5,6 +5,7 @@ import { PageTracker } from "react-page-tracker";
 import { KitProvider } from "@/components/providers/kit-provider";
 import { TeamProvider } from "@/components/providers/team-provider";
 import { ThemeProvider } from "@/components/ui/shipkit/theme";
+import { logger } from "@/lib/logger";
 import { auth } from "@/server/auth";
 import { teamService } from "@/server/services/team-service";
 
@@ -19,7 +20,8 @@ export async function AppRouterLayout({
 	children: ReactNode;
 	themeProvider?: typeof ThemeProvider;
 }) {
-	// Fetch user teams if authenticated
+	// Reuse the server session in the client SessionProvider to avoid
+	// an immediate follow-up session fetch after the initial render.
 	const session = await auth();
 	let userTeams = [{ id: "personal", name: "Personal" }];
 
@@ -44,8 +46,10 @@ export async function AppRouterLayout({
 				}
 			}
 		} catch (error) {
-			// eslint-disable-next-line no-console
-			console.error("Failed to fetch user teams:", error);
+			logger.error("Failed to fetch user teams", {
+				error: error instanceof Error ? error.message : "Unknown error",
+				userId: session.user.id,
+			});
 		}
 	}
 	return (
@@ -56,7 +60,7 @@ export async function AppRouterLayout({
 			{/* ThemeProvider should wrap providers that might need theme context */}
 			<ThemeProviderWrapper>
 				{/* KitProvider - Manage all core providers */}
-				<KitProvider>
+				<KitProvider session={session}>
 					<NuqsAdapter>
 						<TeamProvider initialTeams={userTeams}>{children}</TeamProvider>
 					</NuqsAdapter>

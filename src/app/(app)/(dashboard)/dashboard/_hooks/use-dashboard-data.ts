@@ -7,10 +7,9 @@ import { getGitHubConnectionStatus } from "@/server/services/github/github-token
 import { PaymentService } from "@/server/services/payment-service";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
 
-export async function useDashboardData() {
-	const session = await auth({ protect: true });
+export async function getDashboardData() {
+	const session = await auth();
 
-	// Defensive check: even with protect: true, ensure user exists
 	if (!session?.user?.id) {
 		redirect(routes.auth.signIn); // Simplified redirect as per new redirect utility
 	}

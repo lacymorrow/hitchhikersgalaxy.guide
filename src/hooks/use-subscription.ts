@@ -20,13 +20,17 @@ async function checkSubscriptionStatus(
 			return { success: false, hasSubscription: false, message: "Failed to check subscription" };
 		}
 		return response.json();
-	} catch (error) {
+	} catch {
 		return { success: false, hasSubscription: false, message: "Failed to check subscription" };
 	}
 }
 
 // Simple cache to prevent repeated API calls
 const subscriptionCache = new Map<string, { data: boolean; timestamp: number }>();
+const pendingSubscriptionChecks = new Map<
+	string,
+	Promise<{ success: boolean; hasSubscription: boolean; message?: string }>
+>();
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 /**
@@ -60,13 +64,24 @@ export function useSubscription(provider?: SubscriptionProvider) {
 		}
 
 		try {
-			// Only log subscription checks in development or when debugging
-			if (process.env.NODE_ENV === "development") {
-				console.log(
-					`Checking subscription for user ${session.user.email || session.user.id} with provider: ${provider || "all"}`
-				);
+			/*
+			 * Multiple user menus can mount at the same time (header + sidebar).
+			 * Share the in-flight request so they do not fan out identical checks.
+			 */
+			const pendingRequest =
+				pendingSubscriptionChecks.get(cacheKey) ?? checkSubscriptionStatus(provider);
+
+			if (!pendingSubscriptionChecks.has(cacheKey)) {
+				pendingSubscriptionChecks.set(cacheKey, pendingRequest);
 			}
-			const result = await checkSubscriptionStatus(provider);
+
+			const result = await pendingRequest;
+
+			if (!result.success) {
+				setHasActiveSubscription(false);
+				setError(result.message || "Failed to check subscription");
+				return;
+			}
 
 			// Cache the result
 			subscriptionCache.set(cacheKey, {
@@ -78,10 +93,10 @@ export function useSubscription(provider?: SubscriptionProvider) {
 			setError(null);
 		} catch (error) {
 			const errorMessage = error instanceof Error ? error.message : String(error);
-			console.error("Error checking subscription:", errorMessage);
 			setHasActiveSubscription(false);
 			setError(errorMessage);
 		} finally {
+			pendingSubscriptionChecks.delete(cacheKey);
 			setIsLoading(false);
 		}
 	}, [session?.user?.id, status, provider]); // Only depend on stable values

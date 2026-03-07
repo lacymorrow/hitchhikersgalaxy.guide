@@ -3,87 +3,75 @@ import { GitHubOAuthButton } from "@/components/buttons/github-oauth-button";
 import { BuyButton } from "@/components/buttons/lemonsqueezy-buy-button";
 import { LoginButton } from "@/components/buttons/sign-in-button";
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
-import { PrivateRepoDeployButton } from "@/components/modules/deploy/private-repo-deploy-button";
 import { Link } from "@/components/primitives/link";
 import { buttonVariants } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
-import { cn } from "@/lib/utils";
-import { auth } from "@/server/auth";
-import { getGitHubConnectionStatus } from "@/server/services/github/github-token-service";
-import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
 import { env } from "@/env";
+import { cn } from "@/lib/utils";
 
 interface DownloadSectionProps {
-  isCustomer: boolean;
+	isAuthenticated: boolean;
+	isCustomer: boolean;
+	hasGitHubConnection: boolean;
+	githubUsername: string | null;
+	hasVercelConnection: boolean;
 }
 
-export const DownloadSection = async ({ isCustomer }: DownloadSectionProps) => {
-  const session = await auth();
+export const DownloadSection = ({
+	isAuthenticated,
+	isCustomer,
+	hasGitHubConnection,
+	githubUsername,
+	hasVercelConnection,
+}: DownloadSectionProps) => {
+	if (!isAuthenticated) {
+		return (
+			<div className="flex max-w-md flex-wrap items-stretch justify-stretch">
+				<LoginButton size="lg" className="w-full">
+					Sign in to download {siteConfig.title}
+				</LoginButton>
+			</div>
+		);
+	}
 
-  // If not authenticated, show login button
-  if (!session?.user) {
-    return (
-      <div className="flex flex-wrap items-stretch justify-stretch max-w-md">
-        <LoginButton size="lg" className="w-full">
-          Sign in to download {siteConfig.title}
-        </LoginButton>
-      </div>
-    );
-  }
+	if (!isCustomer) {
+		return (
+			<div className="flex max-w-md flex-wrap items-stretch justify-stretch">
+				<BuyButton className="w-full" />
+				<p className="mt-2 w-full text-sm text-muted-foreground">
+					Purchase required to download {siteConfig.title}
+				</p>
+			</div>
+		);
+	}
 
-  const userId = session.user.id;
+	if (!env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED) {
+		return null;
+	}
 
-  // If authenticated but not purchased, show buy button
-  if (!isCustomer) {
-    return (
-      <div className="flex flex-wrap items-stretch justify-stretch max-w-md">
-        <BuyButton className="w-full" />
-        <p className="w-full text-sm text-muted-foreground mt-2">
-          Purchase required to download {siteConfig.title}
-        </p>
-      </div>
-    );
-  }
-
-  // Run all async operations in parallel
-  const [gitHubStatus, isVercelConnected] = await Promise.all([
-    getGitHubConnectionStatus(userId),
-    checkVercelConnection(userId),
-  ]);
-
-  if (!env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED) {
-    return null
-  }
-
-  // User is authenticated and has purchased, show download options
-  return (
-    <div className="flex flex-wrap items-stretch justify-stretch max-w-md gap-3">
-      <div className="flex flex-wrap items-stretch justify-stretch w-full gap-3">
-        {/* Download button - direct link instead of form action */}
-        <Link
-          href={routes.api.download}
-          className={cn(
-            buttonVariants({ variant: "default" }),
-            "grow min-w-1/2 w-full",
-          )}
-        >
-          <DownloadIcon className="mr-2 h-4 w-4" />
-          Download {siteConfig.title}
-        </Link>
-        {gitHubStatus.isConnected && isVercelConnected && (
-          <DashboardVercelDeploy
-            className="grow min-w-1/2"
-            isVercelConnected={isVercelConnected}
-          />
-        )}
-      </div>
-      {/* GitHub connection section */}
-      <GitHubOAuthButton
-        className="w-full"
-        isConnected={gitHubStatus.isConnected}
-        githubUsername={gitHubStatus.username}
-      />
-    </div>
-  );
+	return (
+		<div className="flex max-w-md flex-wrap items-stretch justify-stretch gap-3">
+			<div className="flex w-full flex-wrap items-stretch justify-stretch gap-3">
+				<Link
+					href={routes.api.download}
+					className={cn(buttonVariants({ variant: "default" }), "grow min-w-1/2 w-full")}
+				>
+					<DownloadIcon className="mr-2 h-4 w-4" />
+					Download {siteConfig.title}
+				</Link>
+				{hasGitHubConnection && hasVercelConnection && (
+					<DashboardVercelDeploy
+						className="grow min-w-1/2"
+						isVercelConnected={hasVercelConnection}
+					/>
+				)}
+			</div>
+			<GitHubOAuthButton
+				className="w-full"
+				isConnected={hasGitHubConnection}
+				githubUsername={githubUsername}
+			/>
+		</div>
+	);
 };

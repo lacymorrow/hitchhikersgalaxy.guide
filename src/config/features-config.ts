@@ -19,6 +19,13 @@ function hasEnv(...names: string[]): boolean {
 	});
 }
 
+function hasAnyEnv(...names: string[]): boolean {
+	return names.some((name) => {
+		const value = process.env[name];
+		return typeof value === "string" && value.trim().length > 0;
+	});
+}
+
 /**
  * Check if environment variable is enabled (true/1/yes/on)
  */
@@ -100,7 +107,26 @@ const buildTimeFeatures = {} as Record<string, boolean>;
 // Secrets can be derived from a single APP_SECRET. If APP_SECRET exists,
 // treat dependent secrets as satisfied for feature detection.
 function secretProvidedOrDerivable(name: string): boolean {
-	return hasEnv(name) || hasEnv("APP_SECRET");
+	return hasAnyEnv(name, "APP_SECRET");
+}
+
+export type AiProviderId = "claude-code" | "codex" | "gemini";
+
+export interface AiProvider {
+	id: AiProviderId;
+	/** Resolved value of the relevant API key for this provider. */
+	env: string | undefined;
+}
+
+function getAiPreferredProvider(): AiProviderId | undefined {
+	if (hasEnv("ANTHROPIC_API_KEY") && !envIsTrue("DISABLE_ANTHROPIC"))
+		return "claude-code";
+
+	if (hasEnv("OPENAI_API_KEY") && !envIsTrue("DISABLE_OPENAI")) return "codex";
+
+	if (hasAnyEnv("GOOGLE_GEMINI_API_KEY", "GOOGLE_API_KEY")) return "gemini";
+
+	return undefined;
 }
 
 // Core Features
@@ -118,6 +144,28 @@ buildTimeFeatures.PWA_ENABLED = !envIsTrue("DISABLE_PWA");
 // Developer tools (off by default; enable via ENABLE_DEVTOOLS)
 buildTimeFeatures.DEVTOOLS_ENABLED = envIsTrue("ENABLE_DEVTOOLS");
 buildTimeFeatures.DEVTOOLS_FONT_SELECTOR_ENABLED = buildTimeFeatures.DEVTOOLS_ENABLED;
+
+/*
+ * Generic preferred AI provider resolved at build time.
+ * Carries a single resolved `env` value — whichever API key is present.
+ * Downstream configs (e.g. react-grab-config) import this and layer feature-specific details on top.
+ */
+export const preferredAiProvider: AiProvider | undefined = (() => {
+	const id = getAiPreferredProvider();
+	if (!id) return undefined;
+	const env =
+		id === "claude-code"
+			? getEnvValue("ANTHROPIC_API_KEY")
+			: id === "codex"
+			? getEnvValue("OPENAI_API_KEY")
+			: (getEnvValue("GOOGLE_GEMINI_API_KEY") ?? getEnvValue("GOOGLE_API_KEY"));
+	return { id, env };
+})();
+
+buildTimeFeatures.DEVTOOLS_REACT_GRAB_ENABLED =
+	buildTimeFeatures.DEVTOOLS_ENABLED &&
+	!!preferredAiProvider &&
+	envIsTrue("ENABLE_REACT_GRAB");
 
 // UI / Theme
 buildTimeFeatures.LIGHT_MODE_ENABLED = !envIsTrue("DISABLE_LIGHT_MODE");

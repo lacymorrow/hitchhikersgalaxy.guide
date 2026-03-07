@@ -1,27 +1,24 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 // Import the actual features-config to test real functionality
-import { buildTimeFeatureFlags } from "../../../src/config/features-config";
+import { buildTimeFeatureFlags, reactGrabConfig } from "../../../src/config/features-config";
 
-// Create a test version of EnvChecker for testing
-class TestEnvChecker {
-	private static hasEnvVar(name: string): boolean {
-		const value = process.env[name];
-		return typeof value === "string" && value.trim().length > 0;
-	}
+function hasTestEnvVar(name: string): boolean {
+	const value = process.env[name];
+	return typeof value === "string" && value.trim().length > 0;
+}
 
-	static isEnabled(name: string): boolean {
-		const value = process.env[name]?.toLowerCase().trim();
-		return ["true", "1", "yes", "on", "enable", "enabled"].includes(value || "");
-	}
+function isTestEnvEnabled(name: string): boolean {
+	const value = process.env[name]?.toLowerCase().trim();
+	return ["true", "1", "yes", "on", "enable", "enabled"].includes(value || "");
+}
 
-	static has(...names: string[]): boolean {
-		return names.every((name) => TestEnvChecker.hasEnvVar(name));
-	}
+function hasTestEnv(...names: string[]): boolean {
+	return names.every((name) => hasTestEnvVar(name));
+}
 
-	static hasAny(...names: string[]): boolean {
-		return names.some((name) => TestEnvChecker.hasEnvVar(name));
-	}
+function hasAnyTestEnv(...names: string[]): boolean {
+	return names.some((name) => hasTestEnvVar(name));
 }
 
 describe("EnvChecker utility functions", () => {
@@ -46,21 +43,21 @@ describe("EnvChecker utility functions", () => {
 	describe("has() method", () => {
 		it("should return true for single existing non-empty variable", () => {
 			process.env.TEST_VAR = "some-value";
-			expect(TestEnvChecker.has("TEST_VAR")).toBe(true);
+			expect(hasTestEnv("TEST_VAR")).toBe(true);
 		});
 
 		it("should return false for single undefined variable", () => {
-			expect(TestEnvChecker.has("TEST_UNDEFINED")).toBe(false);
+			expect(hasTestEnv("TEST_UNDEFINED")).toBe(false);
 		});
 
 		it("should return false for single empty string variable", () => {
 			process.env.TEST_VAR = "";
-			expect(TestEnvChecker.has("TEST_VAR")).toBe(false);
+			expect(hasTestEnv("TEST_VAR")).toBe(false);
 		});
 
 		it("should return false for single whitespace-only variable", () => {
 			process.env.TEST_VAR = "   ";
-			expect(TestEnvChecker.has("TEST_VAR")).toBe(false);
+			expect(hasTestEnv("TEST_VAR")).toBe(false);
 		});
 
 		it("should return true when all variables exist", () => {
@@ -68,14 +65,14 @@ describe("EnvChecker utility functions", () => {
 			process.env.TEST_VAR2 = "value2";
 			process.env.TEST_VAR3 = "value3";
 
-			expect(TestEnvChecker.has("TEST_VAR1", "TEST_VAR2", "TEST_VAR3")).toBe(true);
+			expect(hasTestEnv("TEST_VAR1", "TEST_VAR2", "TEST_VAR3")).toBe(true);
 		});
 
 		it("should return false when any variable is missing", () => {
 			process.env.TEST_VAR1 = "value1";
 			process.env.TEST_VAR2 = "value2";
 
-			expect(TestEnvChecker.has("TEST_VAR1", "TEST_VAR2", "TEST_VAR3")).toBe(false);
+			expect(hasTestEnv("TEST_VAR1", "TEST_VAR2", "TEST_VAR3")).toBe(false);
 		});
 	});
 
@@ -86,50 +83,50 @@ describe("EnvChecker utility functions", () => {
 		it("should handle truthy values correctly", () => {
 			for (const value of truthyValues) {
 				process.env.TEST_VAR = value;
-				expect(TestEnvChecker.isEnabled("TEST_VAR")).toBe(true);
+				expect(isTestEnvEnabled("TEST_VAR")).toBe(true);
 
 				// Test case insensitive
 				process.env.TEST_VAR = value.toUpperCase();
-				expect(TestEnvChecker.isEnabled("TEST_VAR")).toBe(true);
+				expect(isTestEnvEnabled("TEST_VAR")).toBe(true);
 			}
 		});
 
 		it("should handle falsy values correctly", () => {
 			for (const value of falsyValues) {
 				process.env.TEST_VAR = value;
-				expect(TestEnvChecker.isEnabled("TEST_VAR")).toBe(false);
+				expect(isTestEnvEnabled("TEST_VAR")).toBe(false);
 
 				// Test case insensitive
 				process.env.TEST_VAR = value.toUpperCase();
-				expect(TestEnvChecker.isEnabled("TEST_VAR")).toBe(false);
+				expect(isTestEnvEnabled("TEST_VAR")).toBe(false);
 			}
 		});
 
 		it("should handle undefined/empty variables", () => {
 			delete process.env.TEST_VAR;
-			expect(TestEnvChecker.isEnabled("TEST_VAR")).toBe(false);
+			expect(isTestEnvEnabled("TEST_VAR")).toBe(false);
 
 			process.env.TEST_VAR = "";
-			expect(TestEnvChecker.isEnabled("TEST_VAR")).toBe(false);
+			expect(isTestEnvEnabled("TEST_VAR")).toBe(false);
 		});
 
 		it("should handle unknown values as false", () => {
 			process.env.TEST_VAR = "maybe";
-			expect(TestEnvChecker.isEnabled("TEST_VAR")).toBe(false);
+			expect(isTestEnvEnabled("TEST_VAR")).toBe(false);
 
 			process.env.TEST_VAR = "unknown";
-			expect(TestEnvChecker.isEnabled("TEST_VAR")).toBe(false);
+			expect(isTestEnvEnabled("TEST_VAR")).toBe(false);
 		});
 
 		it("should handle whitespace correctly", () => {
 			process.env.TEST_VAR = "  true  ";
-			expect(TestEnvChecker.isEnabled("TEST_VAR")).toBe(true);
+			expect(isTestEnvEnabled("TEST_VAR")).toBe(true);
 
 			process.env.TEST_VAR = "\t1\n";
-			expect(TestEnvChecker.isEnabled("TEST_VAR")).toBe(true);
+			expect(isTestEnvEnabled("TEST_VAR")).toBe(true);
 
 			process.env.TEST_VAR = "  false  ";
-			expect(TestEnvChecker.isEnabled("TEST_VAR")).toBe(false);
+			expect(isTestEnvEnabled("TEST_VAR")).toBe(false);
 		});
 	});
 
@@ -137,11 +134,11 @@ describe("EnvChecker utility functions", () => {
 		it("should return true when at least one variable exists", () => {
 			process.env.TEST_VAR1 = "value1";
 
-			expect(TestEnvChecker.hasAny("TEST_VAR1", "TEST_VAR2", "TEST_VAR3")).toBe(true);
+			expect(hasAnyTestEnv("TEST_VAR1", "TEST_VAR2", "TEST_VAR3")).toBe(true);
 		});
 
 		it("should return false when no variables exist", () => {
-			expect(TestEnvChecker.hasAny("TEST_VAR1", "TEST_VAR2", "TEST_VAR3")).toBe(false);
+			expect(hasAnyTestEnv("TEST_VAR1", "TEST_VAR2", "TEST_VAR3")).toBe(false);
 		});
 	});
 });
@@ -161,7 +158,7 @@ describe("Feature flag generation", () => {
 		expect(typeof buildTimeFeatureFlags).toBe("object");
 
 		// All values should be strings. Most are "true" (enabled-only export),
-		// except the two always-exported flags which may be "false" when disabled.
+		// except the always-exported auth flags which may be "false".
 		Object.entries(buildTimeFeatureFlags).forEach(([key, value]) => {
 			expect(typeof value).toBe("string");
 			if (
@@ -178,7 +175,7 @@ describe("Feature flag generation", () => {
 	it("should have consistent feature naming for client flags", () => {
 		const buildTimeKeys = Object.keys(buildTimeFeatureFlags);
 
-		// Client flags should be prefixed with NEXT_PUBLIC_FEATURE_ and end with _ENABLED
+		// Client flags should be prefixed with NEXT_PUBLIC_FEATURE_ and end with _ENABLED.
 		buildTimeKeys.forEach((key) => {
 			expect(key.startsWith("NEXT_PUBLIC_FEATURE_")).toBe(true);
 			expect(key.endsWith("_ENABLED")).toBe(true);
@@ -186,8 +183,8 @@ describe("Feature flag generation", () => {
 	});
 
 	it("should only include enabled features", () => {
-		// Only enabled features should be present with value "true".
-		// Two special flags are always exported and may be "false".
+		// Only enabled boolean features should be present with value "true".
+		// Two special auth flags are always exported and may be "false".
 		Object.entries(buildTimeFeatureFlags).forEach(([key, value]) => {
 			if (
 				key === "NEXT_PUBLIC_FEATURE_AUTH_ENABLED" ||
@@ -198,5 +195,21 @@ describe("Feature flag generation", () => {
 				expect(value).toBe("true");
 			}
 		});
+	});
+
+	it("exports a server-side React Grab config object", () => {
+		expect(typeof reactGrabConfig.enabled).toBe("boolean");
+
+		if (reactGrabConfig.provider) {
+			expect(["claude-code", "codex", "gemini"]).toContain(reactGrabConfig.provider.id);
+			expect(reactGrabConfig.provider.packageName.startsWith("@react-grab/")).toBe(true);
+			expect(reactGrabConfig.provider.clientScriptUrl).toContain("unpkg.com/@react-grab/");
+			expect(reactGrabConfig.provider.requiredEnvKeys.length).toBeGreaterThan(0);
+			expect(typeof reactGrabConfig.provider.resolvedEnv).toBe("object");
+
+			for (const envKey of reactGrabConfig.provider.requiredEnvKeys) {
+				expect(envKey in reactGrabConfig.provider.resolvedEnv).toBe(true);
+			}
+		}
 	});
 });

@@ -21,7 +21,7 @@ interface IntegrationsClientContentProps {
 }
 
 // Modified to handle the PayloadCMS card specially with seeding functionality
-const renderIntegrationCard = (status: IntegrationStatus) => {
+const IntegrationCard = ({ status }: { status: IntegrationStatus }) => {
 	// Special handling for Payload CMS to include seeding functionality
 	if (status.name === "Payload CMS" && status.configured) {
 		return <PayloadCMSCard status={status} />;
@@ -29,7 +29,7 @@ const renderIntegrationCard = (status: IntegrationStatus) => {
 
 	// Standard card for all other integrations
 	return (
-		<Card key={status.name} className="flex flex-col">
+		<Card className="flex flex-col">
 			<CardHeader>
 				<CardTitle className="flex items-center justify-between">
 					{status.name}
@@ -93,7 +93,7 @@ const PayloadCMSCard: React.FC<{ status: IntegrationStatus }> = ({ status }) => 
 	};
 
 	return (
-		<Card key={status.name} className="flex flex-col">
+		<Card className="flex flex-col">
 			<CardHeader>
 				<CardTitle className="flex items-center justify-between">
 					{status.name}
@@ -182,7 +182,9 @@ export const IntegrationsClientContent: React.FC<IntegrationsClientContentProps>
 						<section key={category}>
 							<h2 className="text-xl font-semibold tracking-tight mb-4">{category}</h2>
 							<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-								{integrations.map((integration) => renderIntegrationCard(integration))}
+								{integrations.map((integration) => (
+									<IntegrationCard key={integration.name} status={integration} />
+								))}
 							</div>
 							<Separator className="my-8" />
 						</section>

@@ -1,4 +1,5 @@
 import { Head, Html, Main, NextScript } from "next/document";
+import { reactGrabConfig } from "@/config/react-grab-config";
 import { headLinkHints, type HeadLinkHint } from "@/config/metadata";
 import { env } from "@/env";
 
@@ -19,6 +20,15 @@ export default function Document() {
 						crossOrigin="anonymous"
 						src="https://tweakcn.com/live-preview.min.js"
 					/>
+				)}
+				{process.env.NODE_ENV === "development" && reactGrabConfig.enabled && reactGrabConfig.provider && (
+					<>
+						<script
+							crossOrigin="anonymous"
+							src="https://unpkg.com/react-grab/dist/index.global.js"
+						/>
+						<script crossOrigin="anonymous" src={reactGrabConfig.provider.clientScriptUrl} />
+					</>
 				)}
 			</Head>
 			<body className="min-h-screen antialiased">

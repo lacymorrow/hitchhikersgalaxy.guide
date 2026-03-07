@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
-import React, { Suspense } from "react";
+import type React from "react";
+import { Suspense } from "react";
 
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import {
@@ -10,10 +11,10 @@ import {
 } from "@/config/metadata";
 import { fontSans, fontSerif } from "@/config/fonts";
 import { initializePaymentProviders } from "@/server/providers";
-import { FontSelector } from "@/components/modules/devtools/font-selector";
+
+import { ReactGrabLoader } from "@/components/modules/devtools/react-grab-loader";
 import { env } from "@/env";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
-import { BrickMarquee } from "@/components/blocks/brick-marquee";
 
 export const fetchCache = "default-cache";
 export const metadata: Metadata = defaultMetadata;
@@ -65,6 +66,7 @@ export default async function Layout({
             src="https://tweakcn.com/live-preview.min.js"
           />
         )}
+        <ReactGrabLoader />
       </head>
       {/* Ensure portaled UI (e.g. Radix primitives) inherits the sans-serif family */}
       <body

@@ -256,7 +256,11 @@ export class GitHubTemplateService {
 
 			return { hasPendingInvitation: false };
 		} catch (error) {
-			console.warn("Failed to check pending invitations:", error);
+			// 401 means the token is expired/revoked — not an unexpected failure
+			const status = (error as { status?: number })?.status;
+			if (status !== 401) {
+				console.warn("Failed to check pending invitations:", error);
+			}
 			return { hasPendingInvitation: false };
 		}
 	}

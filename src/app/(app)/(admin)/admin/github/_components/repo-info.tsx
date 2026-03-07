@@ -28,7 +28,12 @@ export function RepoInfoSkeleton() {
 }
 
 export async function RepoInfoContent() {
-	const repo = await getRepo();
+	let repo = null;
+	try {
+		repo = await getRepo();
+	} catch {
+		// handled below
+	}
 
 	if (!repo) {
 		return (

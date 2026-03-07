@@ -2,12 +2,14 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { format } from "date-fns";
-import { ExternalLink, Users } from "lucide-react";
+import { ExternalLink, Trash2, Users } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
+import { useToast } from "@/hooks/use-toast";
 import type { GitHubProfile } from "@/server/services/github/github-service";
+import { revokeGitHubAccessAction } from "../actions";
 
 export interface GitHubUserData {
 	id: string;
@@ -17,6 +19,7 @@ export interface GitHubUserData {
 	createdAt: Date;
 	updatedAt: Date | null;
 	githubDetails: GitHubProfile | null;
+	isOwner: boolean;
 }
 
 function formatDate(date: Date | null) {
@@ -95,5 +98,44 @@ export const columns: ColumnDef<GitHubUserData>[] = [
 		accessorKey: "updatedAt",
 		header: "Last Updated",
 		cell: ({ row }) => formatDate(row.original.updatedAt),
+	},
+	{
+		id: "actions",
+		cell: ({ row }) => {
+			const { toast } = useToast();
+			const handleRevoke = async () => {
+				try {
+					const result = await revokeGitHubAccessAction(row.original.id);
+					if (result.success) {
+						toast({
+							title: "Access Revoked",
+							description: "GitHub access has been revoked successfully.",
+						});
+						// Optionally refresh the page or update the table
+						window.location.reload();
+					} else {
+						toast({
+							title: "Error",
+							description: result.error || "Failed to revoke GitHub access",
+							variant: "destructive",
+						});
+					}
+				} catch (error) {
+					toast({
+						title: "Error",
+						description: "Failed to revoke GitHub access",
+						variant: "destructive",
+					});
+				}
+			};
+
+			if (row.original.isOwner) return null;
+
+			return (
+				<Button variant="ghost" size="icon" onClick={() => void handleRevoke()} className="h-8 w-8">
+					<Trash2 className="h-4 w-4" />
+				</Button>
+			);
+		},
 	},
 ];

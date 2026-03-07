@@ -51,6 +51,10 @@ if (env.NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED) {
 // Export the potentially null octokit instance
 export { octokit };
 
+/** Placeholder email used for stub users created when manually adding a collaborator */
+export const pendingCollaboratorEmail = (username: string) =>
+	`github:${username.toLowerCase()}@pending.local`;
+
 // --- Helper Function to check if service is enabled ---
 const isGitHubServiceEnabled = (): boolean => {
 	if (!octokit) {
@@ -93,7 +97,7 @@ export const getRepo = cache(async (owner?: string, repo?: string) => {
 
 		return response.data;
 	} catch (error) {
-		logger.error("Error fetching GitHub stars:", error);
+		logger.error("Error fetching GitHub repo:", error);
 		return null;
 	}
 });
@@ -311,14 +315,16 @@ export async function revokeGitHubAccess(userId: string) {
 				username: user.githubUsername,
 			});
 
-			// Update user record
-			await db
-				?.update(users)
-				.set({
-					githubUsername: null,
-					updatedAt: new Date(),
-				})
-				.where(eq(users.id, userId));
+			// If this is a stub (pending invite) record, delete it; otherwise just clear the username
+			if (user.email === pendingCollaboratorEmail(user.githubUsername)) {
+				await db?.delete(users).where(eq(users.id, userId));
+				logger.info("Deleted stub collaborator record", { userId, githubUsername: user.githubUsername });
+			} else {
+				await db
+					?.update(users)
+					.set({ githubUsername: null, updatedAt: new Date() })
+					.where(eq(users.id, userId));
+			}
 
 			logger.info("Successfully revoked GitHub access", {
 				userId,

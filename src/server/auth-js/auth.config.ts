@@ -7,7 +7,7 @@ import { providers } from "@/server/auth-js/auth-providers.config";
 import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { isAdmin } from "@/server/services/admin-service";
-import { grantGitHubAccess } from "@/server/services/github/github-service";
+import { grantGitHubAccess, pendingCollaboratorEmail } from "@/server/services/github/github-service";
 import { userService } from "@/server/services/user-service";
 import type { User } from "@/types/user";
 
@@ -131,6 +131,18 @@ export const authOptions: NextAuthConfig = {
               userId: targetUserId,
               githubUsername,
             });
+
+            // Delete any pending stub record created when the collaborator was manually invited
+            try {
+              await db
+                ?.delete(users)
+                .where(eq(users.email, pendingCollaboratorEmail(githubUsername)));
+            } catch (stubError) {
+              logger.warn("Failed to clean up pending collaborator stub", {
+                githubUsername,
+                error: stubError instanceof Error ? stubError.message : "Unknown error",
+              });
+            }
 
             // Grant repository access
             try {

@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { cn } from "@/lib/utils";
 import { STATUS_CODES } from "@/config/status-codes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 
@@ -16,16 +17,17 @@ export const ConnectionHighlightWrapper = ({
 }: ConnectionHighlightWrapperProps) => {
   const router = useRouter();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const [highlighted, setHighlighted] = useState(false);
 
   useEffect(() => {
-    // Read directly from window.location to avoid useSearchParams() Suspense timing issues
     const params = new URLSearchParams(window.location.search);
     const code = params.get(SEARCH_PARAM_KEYS.statusCode);
 
     const slug =
       `CONNECT_${connectionType.toUpperCase()}` as keyof typeof STATUS_CODES;
+    const expectedCode = STATUS_CODES[slug]?.code;
     const shouldHighlight =
-      code?.toLowerCase() === STATUS_CODES[slug]?.code.toLowerCase();
+      code?.toLowerCase() === expectedCode?.toLowerCase();
 
     if (shouldHighlight && wrapperRef.current) {
       // Scroll into view
@@ -34,14 +36,13 @@ export const ConnectionHighlightWrapper = ({
         block: "center",
       });
 
-      // Add highlight animation
-      wrapperRef.current.classList.add("animate-connection-highlight");
+      // Trigger highlight via state so React controls the style
+      setHighlighted(true);
 
-      // Remove animation class after animation completes
+      // Remove highlight and clean up URL after animation
       const timeout = setTimeout(() => {
-        wrapperRef.current?.classList.remove("animate-connection-highlight");
+        setHighlighted(false);
 
-        // Clean up URL after animation
         const url = new URL(window.location.href);
         url.searchParams.delete(SEARCH_PARAM_KEYS.statusCode);
 
@@ -57,7 +58,14 @@ export const ConnectionHighlightWrapper = ({
   }, [connectionType, router]);
 
   return (
-    <div ref={wrapperRef} className="rounded-lg">
+    <div
+      ref={wrapperRef}
+      className={cn(
+        "rounded-lg transition-all duration-700",
+        highlighted &&
+          "ring-2 ring-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.5),0_0_40px_rgba(59,130,246,0.25)]",
+      )}
+    >
       {children}
     </div>
   );

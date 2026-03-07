@@ -151,22 +151,31 @@ export async function RepoMetricsContent() {
 		);
 	} catch (error) {
 		console.error("Error fetching repo metrics:", error);
+		const message = error instanceof Error ? error.message : String(error);
+		const isBadCredentials =
+			message.toLowerCase().includes("bad credentials") || message.includes("401");
 		return (
 			<div className="grid gap-4 md:grid-cols-1">
 				<Card>
 					<CardHeader>
 						<CardTitle className="flex items-center gap-2">
 							<AlertCircle className="h-5 w-5 text-red-500" />
-							Error Loading Repository Metrics
+							{isBadCredentials ? "GitHub API: Bad Credentials" : "Error Loading Repository Metrics"}
 						</CardTitle>
-						<CardDescription>Failed to fetch repository information from GitHub</CardDescription>
+						<CardDescription>
+							{isBadCredentials
+								? "The GitHub access token is invalid or missing required permissions."
+								: "Failed to fetch repository information from GitHub"}
+						</CardDescription>
 					</CardHeader>
-					<CardContent>
-						<p className="text-sm text-muted-foreground">
-							There was an error connecting to the GitHub API. Please check your configuration and
-							try again.
-						</p>
-					</CardContent>
+					{isBadCredentials && (
+						<CardContent>
+							<ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
+								<li>Ensure <code>GITHUB_ACCESS_TOKEN</code> is set in your environment</li>
+								<li>The token must have the <code>repo</code> scope</li>
+							</ul>
+						</CardContent>
+					)}
 				</Card>
 			</div>
 		);

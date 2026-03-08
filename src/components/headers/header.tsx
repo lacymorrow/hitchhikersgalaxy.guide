@@ -226,17 +226,6 @@ export const Header: React.FC<HeaderProps> = ({
           </Link>
 
           <div className="hidden items-center gap-md text-sm md:flex">
-            {isLoggedIn && (
-              <Link
-                key={routes.docs}
-                href={routes.docs}
-                className={cn(
-                  "text-muted-foreground transition-colors hover:text-foreground",
-                )}
-              >
-                Documentation
-              </Link>
-            )}
             {navLinks.map((link) => (
               <Link
                 key={`${link.href}-${link.label}`}

@@ -42,6 +42,7 @@ export const Features: CollectionConfig = {
 			options: [
 				{ label: "Bones", value: "bones" },
 				{ label: "Brains", value: "brains" },
+				{ label: "Muscles", value: "muscles" },
 			],
 		},
 		{

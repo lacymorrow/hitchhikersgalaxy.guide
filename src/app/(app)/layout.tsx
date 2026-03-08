@@ -12,7 +12,7 @@ import {
 import { fontSans, fontSerif } from "@/config/fonts";
 import { initializePaymentProviders } from "@/server/providers";
 
-import { ReactGrabLoader } from "@/components/modules/devtools/react-grab-loader";
+import { ReactGrab } from "@/components/modules/devtools/react-grab";
 import { env } from "@/env";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 
@@ -86,6 +86,9 @@ export default async function Layout({
           {/* Lacy Morrow vanity plate */}
           {/*<BrickMarquee />*/}
         </AppRouterLayout>
+
+        {/* React Grab — select elements and edit with AI agents */}
+        {process.env.NODE_ENV === "development" && <ReactGrab />}
 
         {/* Add FontSelector only in development */}
         {/*{process.env.NODE_ENV === "development" &&

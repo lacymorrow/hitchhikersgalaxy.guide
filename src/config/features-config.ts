@@ -7,6 +7,8 @@
  * @note This runs BEFORE T3 Env validation, so we use raw process.env
  */
 
+import type { O } from "node_modules/@upstash/redis/zmscore-DcU8fVDf.d.mts";
+
 // ======== Utility Functions =========
 
 /**
@@ -36,6 +38,9 @@ export function envIsTrue(name: string): boolean {
 
 // ======== Public Env Mirrors =========
 /**
+ * !!!!!!! IMPORTANT !!!!!!!
+ * ! THESE VARIABLES ARE EXPOSED TO THE CLIENT !
+ * ! USE WITH CAUTION !
  * Mirror server-side public keys to NEXT_PUBLIC_ variants at build time.
  * This allows users to set e.g. STRIPE_PUBLISHABLE_KEY and have
  * NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY generated automatically for the client bundle.
@@ -70,10 +75,7 @@ function getEnvValue(name: string): string | undefined {
 }
 
 function mirrorPublicEnvVariables(): Record<`NEXT_PUBLIC_${string}`, string> {
-	const mirrored: Record<`NEXT_PUBLIC_${string}`, string> = {} as Record<
-		`NEXT_PUBLIC_${string}`,
-		string
-	>;
+	const mirrored: Record<`NEXT_PUBLIC_${string}` | typeof PUBLIC_ENV_BASE_KEYS[number], string> = {};
 
 	for (const base of PUBLIC_ENV_BASE_KEYS) {
 		const publicKey = `NEXT_PUBLIC_${base}` as const;
@@ -81,7 +83,8 @@ function mirrorPublicEnvVariables(): Record<`NEXT_PUBLIC_${string}`, string> {
 		// Prefer explicitly provided NEXT_PUBLIC_ value if present
 		const explicitPublic = getEnvValue(publicKey);
 		if (explicitPublic) {
-			mirrored[publicKey] = explicitPublic;
+			mirrored[base] = explicitPublic; // e.g. STRIPE_PUBLISHABLE_KEY
+			mirrored[publicKey] = explicitPublic; // e.g. NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 			continue;
 		}
 
@@ -89,8 +92,10 @@ function mirrorPublicEnvVariables(): Record<`NEXT_PUBLIC_${string}`, string> {
 		const serverValue = getEnvValue(base);
 		if (serverValue) {
 			// Make it available during this build process
+			process.env[base] = serverValue;
 			process.env[publicKey] = serverValue;
-			mirrored[publicKey] = serverValue;
+			mirrored[base] = serverValue; // e.g. STRIPE_PUBLISHABLE_KEY
+			mirrored[publicKey] = serverValue; // e.g. NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 		}
 	}
 
@@ -157,8 +162,8 @@ export const preferredAiProvider: AiProvider | undefined = (() => {
 		id === "claude-code"
 			? getEnvValue("ANTHROPIC_API_KEY")
 			: id === "codex"
-			? getEnvValue("OPENAI_API_KEY")
-			: (getEnvValue("GOOGLE_GEMINI_API_KEY") ?? getEnvValue("GOOGLE_API_KEY"));
+				? getEnvValue("OPENAI_API_KEY")
+				: (getEnvValue("GOOGLE_GEMINI_API_KEY") ?? getEnvValue("GOOGLE_API_KEY"));
 	return { id, env };
 })();
 

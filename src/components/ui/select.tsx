@@ -3,9 +3,22 @@
 import { CheckIcon, ChevronDownIcon, ChevronUpIcon } from "@radix-ui/react-icons";
 import { Select as SelectPrimitive } from "radix-ui";
 import * as React from "react";
+import { haptic } from "@/hooks/use-haptics";
 import { cn } from "@/lib/utils";
 
-const Select = SelectPrimitive.Root;
+const Select = ({
+	onValueChange,
+	...props
+}: React.ComponentProps<typeof SelectPrimitive.Root>) => (
+	<SelectPrimitive.Root
+		onValueChange={(value) => {
+			haptic("selection");
+			onValueChange?.(value);
+		}}
+		{...props}
+	/>
+);
+Select.displayName = "Select";
 
 const SelectGroup = SelectPrimitive.Group;
 

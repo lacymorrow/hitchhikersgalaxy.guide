@@ -66,7 +66,7 @@ export default async function Layout({
             src="https://tweakcn.com/live-preview.min.js"
           />
         )}
-        <ReactGrabLoader />
+        <ReactGrab />
       </head>
       {/* Ensure portaled UI (e.g. Radix primitives) inherits the sans-serif family */}
       <body

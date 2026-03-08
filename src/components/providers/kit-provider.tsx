@@ -1,6 +1,7 @@
 import { ErrorToast } from "@/components/primitives/error-toast";
 import { JsonLd } from "@/components/primitives/json-ld";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
+import { HapticsProvider } from "@/components/providers/haptics-provider";
 import { KeyboardShortcutProvider } from "@/components/providers/keyboard-shortcut-provider";
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as LegacyToaster } from "@/components/ui/toaster";
@@ -61,6 +62,7 @@ export function KitProvider({ children, session, pageProps }: KitProviderProps) 
 							<AnalyticsProvider>
 								{/* <ConsentProvider> */}
 
+								<HapticsProvider>
 								<KeyboardShortcutProvider>
 									<FontProvider>
 										{/* Content */}
@@ -77,6 +79,7 @@ export function KitProvider({ children, session, pageProps }: KitProviderProps) 
 										</Suspense>
 									</FontProvider>
 								</KeyboardShortcutProvider>
+								</HapticsProvider>
 								{/* </ConsentProvider> */}
 							</AnalyticsProvider>
 						</TooltipProvider>

@@ -4,6 +4,7 @@ import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 import * as React from "react";
 
 import { buttonVariants } from "@/components/ui/button";
+import { haptic } from "@/hooks/use-haptics";
 import { cn } from "@/lib/utils";
 
 const AlertDialog = AlertDialogPrimitive.Root;
@@ -85,18 +86,30 @@ AlertDialogDescription.displayName = AlertDialogPrimitive.Description.displayNam
 const AlertDialogAction = React.forwardRef<
 	React.ElementRef<typeof AlertDialogPrimitive.Action>,
 	React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Action>
->(({ className, ...props }, ref) => (
-	<AlertDialogPrimitive.Action ref={ref} className={cn(buttonVariants(), className)} {...props} />
+>(({ className, onClick, ...props }, ref) => (
+	<AlertDialogPrimitive.Action
+		ref={ref}
+		className={cn(buttonVariants(), className)}
+		onClick={(e) => {
+			haptic("heavy");
+			onClick?.(e);
+		}}
+		{...props}
+	/>
 ));
 AlertDialogAction.displayName = AlertDialogPrimitive.Action.displayName;
 
 const AlertDialogCancel = React.forwardRef<
 	React.ElementRef<typeof AlertDialogPrimitive.Cancel>,
 	React.ComponentPropsWithoutRef<typeof AlertDialogPrimitive.Cancel>
->(({ className, ...props }, ref) => (
+>(({ className, onClick, ...props }, ref) => (
 	<AlertDialogPrimitive.Cancel
 		ref={ref}
 		className={cn(buttonVariants({ variant: "outline" }), "mt-2 sm:mt-0", className)}
+		onClick={(e) => {
+			haptic("light");
+			onClick?.(e);
+		}}
 		{...props}
 	/>
 ));

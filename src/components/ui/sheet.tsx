@@ -4,9 +4,22 @@ import { Cross2Icon } from "@radix-ui/react-icons";
 import { cva, type VariantProps } from "class-variance-authority";
 import { Dialog as SheetPrimitive } from "radix-ui";
 import * as React from "react";
+import { haptic } from "@/hooks/use-haptics";
 import { cn } from "@/lib/utils";
 
-const Sheet = SheetPrimitive.Root;
+const Sheet = ({
+	onOpenChange,
+	...props
+}: React.ComponentProps<typeof SheetPrimitive.Root>) => (
+	<SheetPrimitive.Root
+		onOpenChange={(open) => {
+			haptic(open ? "soft" : "light");
+			onOpenChange?.(open);
+		}}
+		{...props}
+	/>
+);
+Sheet.displayName = "Sheet";
 
 const SheetTrigger = SheetPrimitive.Trigger;
 

@@ -3,6 +3,7 @@
 import { CheckIcon, ChevronRightIcon, DotFilledIcon } from "@radix-ui/react-icons";
 import { DropdownMenu as DropdownMenuPrimitive } from "radix-ui";
 import * as React from "react";
+import { haptic } from "@/hooks/use-haptics";
 import { cn } from "@/lib/utils";
 
 const DropdownMenu = DropdownMenuPrimitive.Root;
@@ -77,7 +78,7 @@ const DropdownMenuItem = React.forwardRef<
 	React.ComponentPropsWithoutRef<typeof DropdownMenuPrimitive.Item> & {
 		inset?: boolean;
 	}
->(({ className, inset, ...props }, ref) => (
+>(({ className, inset, onSelect, ...props }, ref) => (
 	<DropdownMenuPrimitive.Item
 		ref={ref}
 		className={cn(
@@ -85,6 +86,10 @@ const DropdownMenuItem = React.forwardRef<
 			inset && "pl-8",
 			className
 		)}
+		onSelect={(e) => {
+			haptic("selection");
+			onSelect?.(e);
+		}}
 		{...props}
 	/>
 ));

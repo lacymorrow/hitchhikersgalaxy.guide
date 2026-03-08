@@ -10,6 +10,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { BASE_URL } from "@/config/base-url";
+import { haptic } from "@/hooks/use-haptics";
 import { useToast } from "@/hooks/use-toast";
 
 interface ShareProps {
@@ -61,6 +62,7 @@ export const Share = ({
 	const handleCopyLink = async () => {
 		try {
 			await navigator.clipboard.writeText(url);
+			haptic("success");
 			toast({
 				title: "Copied!",
 				description: "Link copied to clipboard",

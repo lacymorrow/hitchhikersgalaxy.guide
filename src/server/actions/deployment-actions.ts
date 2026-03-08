@@ -67,13 +67,19 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 		// Trigger deployment in background
 		void (async () => {
 			try {
-				await deploymentService.deployPrivateRepository({
+				const result = await deploymentService.deployPrivateRepository({
 					templateRepo: deploymentService.getDefaultTemplateRepo(),
 					projectName: sanitizedProjectName,
 					description: `Deployment of ${sanitizedProjectName}`,
 					deploymentId: newDeployment.id,
 					userId,
 				});
+				if (!result.success) {
+					await deploymentService.updateDeployment(newDeployment.id, userId, {
+						status: "failed",
+						error: result.error || "Deployment failed",
+					});
+				}
 			} catch (error) {
 				console.error(`Deployment failed for ${sanitizedProjectName}:`, error);
 				try {

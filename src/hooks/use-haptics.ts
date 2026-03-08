@@ -13,6 +13,7 @@
  * @see https://github.com/lochie/web-haptics
  */
 
+import { useMemo } from "react";
 import { useWebHaptics } from "web-haptics/react";
 import type { HapticInput, TriggerOptions } from "web-haptics";
 
@@ -72,36 +73,39 @@ export function useHaptics() {
 	singletonTrigger = trigger;
 	singletonCancel = cancel;
 
-	return {
-		/** Light tap — general button presses */
-		tap: () => trigger("light"),
-		/** Medium pulse — switches, toggles */
-		toggle: () => trigger("medium"),
-		/** Selection tick — tabs, radio, checkbox */
-		selection: () => trigger("selection"),
-		/** Double-pulse — copy, save, success */
-		success: () => trigger("success"),
-		/** Warning burst */
-		warning: () => trigger("warning"),
-		/** Error buzz */
-		error: () => trigger("error"),
-		/** Heavy thud — destructive / confirm */
-		heavy: () => trigger("heavy"),
-		/** Soft cushioned tap */
-		soft: () => trigger("soft"),
-		/** Hard crisp tap */
-		rigid: () => trigger("rigid"),
-		/** Reminder nudge */
-		nudge: () => trigger("nudge"),
-		/** Long buzz */
-		buzz: () => trigger("buzz"),
-		/** Cancel current vibration */
-		cancel,
-		/** Whether the device supports haptics */
-		isSupported,
-		/** Raw trigger — pass any HapticInput */
-		trigger,
-		/** Legacy pattern access (calls trigger internally) */
-		haptic,
-	};
+	return useMemo(
+		() => ({
+			/** Light tap — general button presses */
+			tap: () => trigger("light"),
+			/** Medium pulse — switches, toggles */
+			toggle: () => trigger("medium"),
+			/** Selection tick — tabs, radio, checkbox */
+			selection: () => trigger("selection"),
+			/** Double-pulse — copy, save, success */
+			success: () => trigger("success"),
+			/** Warning burst */
+			warning: () => trigger("warning"),
+			/** Error buzz */
+			error: () => trigger("error"),
+			/** Heavy thud — destructive / confirm */
+			heavy: () => trigger("heavy"),
+			/** Soft cushioned tap */
+			soft: () => trigger("soft"),
+			/** Hard crisp tap */
+			rigid: () => trigger("rigid"),
+			/** Reminder nudge */
+			nudge: () => trigger("nudge"),
+			/** Long buzz */
+			buzz: () => trigger("buzz"),
+			/** Cancel current vibration */
+			cancel,
+			/** Whether the device supports haptics */
+			isSupported,
+			/** Raw trigger — pass any HapticInput */
+			trigger,
+			/** Legacy pattern access (calls trigger internally) */
+			haptic,
+		}),
+		[trigger, cancel, isSupported],
+	);
 }

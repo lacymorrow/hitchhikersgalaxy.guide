@@ -4,7 +4,7 @@
 import * as React from "react";
 
 import type { ToastActionElement, ToastProps } from "@/components/ui/toast";
-import { haptic } from "@/hooks/use-haptics";
+
 
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
@@ -139,14 +139,6 @@ function dispatch(action: Action) {
 type Toast = Omit<ToasterToast, "id">;
 
 function toast({ ...props }: Toast) {
-	// Haptic feedback based on toast variant
-	const variant = props.variant;
-	if (variant === "destructive") {
-		haptic("error");
-	} else {
-		haptic("success");
-	}
-
 	const id = genId();
 
 	const update = (props: ToasterToast) =>

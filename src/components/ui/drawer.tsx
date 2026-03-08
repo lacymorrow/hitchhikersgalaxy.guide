@@ -3,13 +3,22 @@
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
 
+import { haptic } from "@/hooks/use-haptics";
 import { cn } from "@/lib/utils";
 
 const Drawer = ({
 	shouldScaleBackground = true,
+	onOpenChange,
 	...props
 }: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
-	<DrawerPrimitive.Root shouldScaleBackground={shouldScaleBackground} {...props} />
+	<DrawerPrimitive.Root
+		shouldScaleBackground={shouldScaleBackground}
+		onOpenChange={(open) => {
+			haptic(open ? "soft" : "light");
+			onOpenChange?.(open);
+		}}
+		{...props}
+	/>
 );
 Drawer.displayName = "Drawer";
 

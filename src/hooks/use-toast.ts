@@ -144,7 +144,7 @@ function toast({ ...props }: Toast) {
 	if (variant === "destructive") {
 		haptic("error");
 	} else {
-		haptic("warning");
+		haptic("success");
 	}
 
 	const id = genId();

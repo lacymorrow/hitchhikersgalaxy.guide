@@ -1,55 +1,64 @@
 "use client";
 
 /**
- * Web Haptics API hook.
+ * Web Haptics hook for ShipKit.
  *
- * Wraps `navigator.vibrate()` with preset patterns for common UI
- * interactions.  Falls back silently on browsers / devices that don't
- * support the Vibration API (iOS Safari, most desktops).
+ * Uses the `web-haptics` library which provides:
+ * - `navigator.vibrate()` on Android/Chrome
+ * - iOS Safari haptics via the `<input type="checkbox" switch>` trick
+ * - PWM intensity modulation for perceived vibration strength
+ * - Audio debug mode for desktop testing
  *
- * @see https://developer.mozilla.org/en-US/docs/Web/API/Vibration_API
+ * @see https://haptics.lochie.me
+ * @see https://github.com/lochie/web-haptics
  */
 
-export type HapticPattern = "light" | "medium" | "heavy" | "success" | "warning" | "error" | "selection";
+import { useWebHaptics } from "web-haptics/react";
+import type { HapticInput, TriggerOptions } from "web-haptics";
 
-const patterns: Record<HapticPattern, number | number[]> = {
-	/** Subtle tap – buttons, list items */
-	light: 10,
-	/** Standard press – toggles, switches */
-	medium: 20,
-	/** Strong tap – destructive actions, confirmations */
-	heavy: 40,
-	/** Double-pulse – copy-to-clipboard, save */
-	success: [10, 60, 20],
-	/** Triple short burst – validation error */
-	warning: [15, 40, 15, 40, 15],
-	/** Single long buzz – delete, error toast */
-	error: [50, 30, 80],
-	/** Ultra-light tap – tab switch, checkbox */
-	selection: 6,
-};
+export type HapticPattern =
+	| "light"
+	| "medium"
+	| "heavy"
+	| "success"
+	| "warning"
+	| "error"
+	| "selection"
+	| "soft"
+	| "rigid"
+	| "nudge"
+	| "buzz";
 
-function canVibrate(): boolean {
-	return typeof navigator !== "undefined" && typeof navigator.vibrate === "function";
-}
+// Singleton instance for imperative (non-hook) usage
+let singletonTrigger: ((input?: HapticInput, opts?: TriggerOptions) => void) | null = null;
+let singletonCancel: (() => void) | null = null;
 
 /**
  * Fire a haptic vibration pattern.
  *
- * Safe to call unconditionally – no-ops when the Vibration API is
- * unavailable (SSR, iOS, desktop).
+ * Safe to call unconditionally — no-ops during SSR and on
+ * unsupported devices.
  */
 export function haptic(pattern: HapticPattern = "light"): void {
-	if (!canVibrate()) return;
-	try {
-		navigator.vibrate(patterns[pattern]);
-	} catch {
-		// Swallow – some browsers throw in restrictive contexts
+	if (singletonTrigger) {
+		singletonTrigger(pattern);
+	}
+}
+
+/**
+ * Cancel any ongoing haptic vibration.
+ */
+export function hapticCancel(): void {
+	if (singletonCancel) {
+		singletonCancel();
 	}
 }
 
 /**
  * React hook that returns memoised haptic helpers.
+ *
+ * Uses `web-haptics` under the hood for cross-platform support
+ * (including iOS Safari via the checkbox switch trick).
  *
  * ```tsx
  * const { tap, toggle, success } = useHaptics();
@@ -57,22 +66,42 @@ export function haptic(pattern: HapticPattern = "light"): void {
  * ```
  */
 export function useHaptics() {
+	const { trigger, cancel, isSupported } = useWebHaptics();
+
+	// Register singleton for imperative access
+	singletonTrigger = trigger;
+	singletonCancel = cancel;
+
 	return {
-		/** Light tap – general button presses */
-		tap: () => haptic("light"),
-		/** Medium pulse – switches, toggles */
-		toggle: () => haptic("medium"),
-		/** Selection tick – tabs, radio, checkbox */
-		selection: () => haptic("selection"),
-		/** Double-pulse – copy, save, success */
-		success: () => haptic("success"),
+		/** Light tap — general button presses */
+		tap: () => trigger("light"),
+		/** Medium pulse — switches, toggles */
+		toggle: () => trigger("medium"),
+		/** Selection tick — tabs, radio, checkbox */
+		selection: () => trigger("selection"),
+		/** Double-pulse — copy, save, success */
+		success: () => trigger("success"),
 		/** Warning burst */
-		warning: () => haptic("warning"),
+		warning: () => trigger("warning"),
 		/** Error buzz */
-		error: () => haptic("error"),
-		/** Heavy thud – destructive / confirm */
-		heavy: () => haptic("heavy"),
-		/** Raw pattern access */
+		error: () => trigger("error"),
+		/** Heavy thud — destructive / confirm */
+		heavy: () => trigger("heavy"),
+		/** Soft cushioned tap */
+		soft: () => trigger("soft"),
+		/** Hard crisp tap */
+		rigid: () => trigger("rigid"),
+		/** Reminder nudge */
+		nudge: () => trigger("nudge"),
+		/** Long buzz */
+		buzz: () => trigger("buzz"),
+		/** Cancel current vibration */
+		cancel,
+		/** Whether the device supports haptics */
+		isSupported,
+		/** Raw trigger — pass any HapticInput */
+		trigger,
+		/** Legacy pattern access (calls trigger internally) */
 		haptic,
 	};
 }

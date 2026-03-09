@@ -15,6 +15,7 @@ import { initializePaymentProviders } from "@/server/providers";
 import { ReactGrab } from "@/components/modules/devtools/react-grab";
 import { env } from "@/env";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
+import { FontSelector } from "@/components/modules/devtools/font-selector";
 
 export const fetchCache = "default-cache";
 export const metadata: Metadata = defaultMetadata;
@@ -91,12 +92,12 @@ export default async function Layout({
         {process.env.NODE_ENV === "development" && <ReactGrab />}
 
         {/* Add FontSelector only in development */}
-        {/*{process.env.NODE_ENV === "development" &&
-					env.NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED && (
-						<React.Suspense fallback={null}>
-							<FontSelector />
-						</React.Suspense>
-					)}*/}
+        {process.env.NODE_ENV === "development" &&
+          env.NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED && (
+            <Suspense fallback={null}>
+              <FontSelector />
+            </Suspense>
+          )}
       </body>
     </html>
   );

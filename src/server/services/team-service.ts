@@ -25,16 +25,11 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async createPersonalTeam(userId: string) {
 		if (!db) {
-			logger.error("Database not initialized", { userId });
+			logger.warn("Database not initialized", { userId });
 			return null;
 		}
 		try {
 			logger.debug("Creating personal team for user", { userId });
-
-			if (!db) {
-				logger.error("Database not initialized", { userId });
-				return null;
-			}
 
 			// First check if user exists
 			const user = await db.query.users.findFirst({
@@ -125,16 +120,10 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	private async getAllPersonalTeams(userId: string) {
 		if (!db) {
-			logger.error("Database not initialized", { userId });
+			logger.warn("Database not initialized", { userId });
 			return [];
 		}
 		try {
-			if (!db) {
-				logger.debug("Database not initialized when getting personal teams", {
-					userId,
-				});
-				return [];
-			}
 
 			const personalTeams = await db.query.teamMembers.findMany({
 				where: eq(teamMembers.userId, userId),
@@ -164,7 +153,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async ensureOnePersonalTeam(userId: string) {
 		if (!db) {
-			logger.error("Database not initialized", { userId });
+			logger.warn("Database not initialized", { userId });
 			return null;
 		}
 		try {
@@ -210,7 +199,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async getPersonalTeam(userId: string) {
 		if (!db) {
-			logger.error("Database not initialized", { userId });
+			logger.warn("Database not initialized", { userId });
 			return null;
 		}
 		try {
@@ -249,7 +238,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async createTeam(userId: string, teamName: string) {
 		if (!db) {
-			logger.error("Database not initialized", { userId });
+			logger.warn("Database not initialized", { userId });
 			return null;
 		}
 		const teamId = crypto.randomUUID();
@@ -311,7 +300,7 @@ export class TeamService extends BaseService<typeof teams> {
 		userId: string
 	): Promise<{ team: TeamData & { type: TeamType }; role: string }[]> {
 		if (!db) {
-			logger.error("Database not initialized", { userId });
+			logger.warn("Database not initialized", { userId });
 			return [];
 		}
 		try {
@@ -319,7 +308,7 @@ export class TeamService extends BaseService<typeof teams> {
 			await this.ensureOnePersonalTeam(userId);
 
 			if (!db) {
-				logger.error("Database not initialized", { userId });
+				logger.warn("Database not initialized", { userId });
 				return [];
 			}
 
@@ -365,7 +354,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async addTeamMember(teamId: string, userId: string, role: string) {
 		if (!db) {
-			logger.error("Database not initialized", { teamId, userId });
+			logger.warn("Database not initialized", { teamId, userId });
 			return null;
 		}
 		const result = await db
@@ -389,7 +378,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async removeTeamMember(teamId: string, userId: string) {
 		if (!db) {
-			logger.error("Database not initialized", { teamId, userId });
+			logger.warn("Database not initialized", { teamId, userId });
 			return false;
 		}
 		const result = await db
@@ -410,7 +399,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async updateTeamMemberRole(teamId: string, userId: string, role: string) {
 		if (!db) {
-			logger.error("Database not initialized", { teamId, userId });
+			logger.warn("Database not initialized", { teamId, userId });
 			return null;
 		}
 		const result = await db
@@ -431,7 +420,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async getTeamMembers(teamId: string) {
 		if (!db) {
-			logger.error("Database not initialized", { teamId });
+			logger.warn("Database not initialized", { teamId });
 			return [];
 		}
 		return db.query.teamMembers.findMany({
@@ -450,7 +439,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async updateTeam(teamId: string, data: { name?: string }) {
 		if (!db) {
-			logger.error("Database not initialized", { teamId });
+			logger.warn("Database not initialized", { teamId });
 			return null;
 		}
 		const team = await this.update(teamId, data);
@@ -478,7 +467,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async deleteTeam(teamId: string) {
 		if (!db) {
-			logger.error("Database not initialized", { teamId });
+			logger.warn("Database not initialized", { teamId });
 			return false;
 		}
 		const team = await db.query.teams.findFirst({
@@ -509,7 +498,7 @@ export class TeamService extends BaseService<typeof teams> {
 	 */
 	async ensurePersonalTeam(userId: string) {
 		if (!db) {
-			logger.error("Database not initialized", { userId });
+			logger.warn("Database not initialized", { userId });
 			return null;
 		}
 		const personalTeam = await this.getPersonalTeam(userId);
@@ -527,7 +516,7 @@ export class TeamService extends BaseService<typeof teams> {
 	private async findByIdWithMembers(teamId: string) {
 		try {
 			if (!db) {
-				logger.error("Database not initialized when finding team with members", { teamId });
+				logger.warn("Database not initialized when finding team with members", { teamId });
 				return null;
 			}
 

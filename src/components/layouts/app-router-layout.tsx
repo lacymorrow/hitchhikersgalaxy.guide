@@ -25,7 +25,7 @@ export async function AppRouterLayout({
 	const session = await auth();
 	let userTeams = [{ id: "personal", name: "Personal" }];
 
-	if (session?.user?.id) {
+	if (session?.user?.id && process.env.DATABASE_URL) {
 		try {
 			const teams = await teamService.getUserTeams(session.user.id);
 			if (teams && teams.length > 0) {

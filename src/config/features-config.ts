@@ -7,8 +7,6 @@
  * @note This runs BEFORE T3 Env validation, so we use raw process.env
  */
 
-import type { O } from "node_modules/@upstash/redis/zmscore-DcU8fVDf.d.mts";
-
 // ======== Utility Functions =========
 
 /**
@@ -68,39 +66,38 @@ const PUBLIC_ENV_BASE_KEYS = [
 ];
 
 function getEnvValue(name: string): string | undefined {
-	const value = process.env[name];
+	const upper = name.toUpperCase();
+	// Check exact key first, then fall back to case-insensitive scan
+	const value =
+		process.env[name] ??
+		process.env[upper] ??
+		Object.entries(process.env).find(([k]) => k.toUpperCase() === upper)?.[1];
 	if (typeof value !== "string") return undefined;
 	const trimmed = value.trim();
 	return trimmed.length > 0 ? trimmed : undefined;
 }
 
 function mirrorPublicEnvVariables(): Record<`NEXT_PUBLIC_${string}`, string> {
-	const mirrored: Record<`NEXT_PUBLIC_${string}` | (typeof PUBLIC_ENV_BASE_KEYS)[number], string> =
-		{};
+	const mirrored: Record<string, string> = {};
 
 	for (const base of PUBLIC_ENV_BASE_KEYS) {
 		const publicKey = `NEXT_PUBLIC_${base}` as const;
 
-		// Prefer explicitly provided NEXT_PUBLIC_ value if present
-		const explicitPublic = getEnvValue(publicKey);
-		if (explicitPublic) {
-			mirrored[base] = explicitPublic; // e.g. STRIPE_PUBLISHABLE_KEY
-			mirrored[publicKey] = explicitPublic; // e.g. NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
-			continue;
-		}
+		// Prefer explicitly provided NEXT_PUBLIC_ value, fall back to base key
+		const value = getEnvValue(publicKey) ?? getEnvValue(base);
 
-		// Otherwise, mirror from server-side base key if present
-		const serverValue = getEnvValue(base);
-		if (serverValue) {
-			// Make it available during this build process
-			process.env[base] = serverValue;
-			process.env[publicKey] = serverValue;
-			mirrored[base] = serverValue; // e.g. STRIPE_PUBLISHABLE_KEY
-			mirrored[publicKey] = serverValue; // e.g. NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+		if (value) {
+			// Always set both forms on process.env so hasEnv(), T3 Env runtimeEnv,
+			// and downstream feature detection all see the values consistently
+			process.env[base] = value;
+			process.env[publicKey] = value;
+
+			// Return NEXT_PUBLIC_ form for next.config.ts env injection (client bundle)
+			mirrored[publicKey] = value;
 		}
 	}
 
-	return mirrored;
+	return mirrored as Record<`NEXT_PUBLIC_${string}`, string>;
 }
 
 // Execute mirroring immediately so feature detection below can see NEXT_PUBLIC_* keys
@@ -124,15 +121,23 @@ export interface AiProvider {
 	env: string | undefined;
 }
 
-function getAiPreferredProvider(): AiProviderId | undefined {
-	if (hasEnv("ANTHROPIC_API_KEY") && !envIsTrue("DISABLE_ANTHROPIC")) return "claude-code";
-
-	if (hasEnv("OPENAI_API_KEY") && !envIsTrue("DISABLE_OPENAI")) return "codex";
-
-	if (hasAnyEnv("GOOGLE_GEMINI_API_KEY", "GOOGLE_API_KEY")) return "gemini";
-
+/*
+ * Generic preferred AI provider resolved at build time.
+ * Carries a single resolved `env` value — whichever API key is present.
+ * Downstream configs (e.g. react-grab-config) import this and layer feature-specific details on top.
+ */
+export const preferredAiProvider: AiProvider | undefined = (() => {
+	if (hasEnv("ANTHROPIC_API_KEY") && !envIsTrue("DISABLE_ANTHROPIC"))
+		return { id: "claude-code", env: getEnvValue("ANTHROPIC_API_KEY") };
+	if (hasEnv("OPENAI_API_KEY") && !envIsTrue("DISABLE_OPENAI"))
+		return { id: "codex", env: getEnvValue("OPENAI_API_KEY") };
+	if (hasAnyEnv("GOOGLE_GEMINI_API_KEY", "GOOGLE_API_KEY"))
+		return {
+			id: "gemini",
+			env: getEnvValue("GOOGLE_GEMINI_API_KEY") ?? getEnvValue("GOOGLE_API_KEY"),
+		};
 	return undefined;
-}
+})();
 
 // Core Features
 buildTimeFeatures.DATABASE_ENABLED = hasEnv("DATABASE_URL");
@@ -149,23 +154,6 @@ buildTimeFeatures.PWA_ENABLED = !envIsTrue("DISABLE_PWA");
 // Developer tools (off by default; enable via ENABLE_DEVTOOLS)
 buildTimeFeatures.DEVTOOLS_ENABLED = envIsTrue("ENABLE_DEVTOOLS");
 buildTimeFeatures.DEVTOOLS_FONT_SELECTOR_ENABLED = buildTimeFeatures.DEVTOOLS_ENABLED;
-
-/*
- * Generic preferred AI provider resolved at build time.
- * Carries a single resolved `env` value — whichever API key is present.
- * Downstream configs (e.g. react-grab-config) import this and layer feature-specific details on top.
- */
-export const preferredAiProvider: AiProvider | undefined = (() => {
-	const id = getAiPreferredProvider();
-	if (!id) return undefined;
-	const env =
-		id === "claude-code"
-			? getEnvValue("ANTHROPIC_API_KEY")
-			: id === "codex"
-				? getEnvValue("OPENAI_API_KEY")
-				: (getEnvValue("GOOGLE_GEMINI_API_KEY") ?? getEnvValue("GOOGLE_API_KEY"));
-	return { id, env };
-})();
 
 buildTimeFeatures.DEVTOOLS_REACT_GRAB_ENABLED =
 	buildTimeFeatures.DEVTOOLS_ENABLED && !!preferredAiProvider && envIsTrue("ENABLE_REACT_GRAB");

@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { GOOGLE_FONTS } from "@/config/fonts";
+import { env } from "@/env";
 
 interface GoogleFontApiItem {
 	family: string;
@@ -68,7 +69,7 @@ async function fetchAndCacheFullFontList(apiKey: string): Promise<string[]> {
 }
 
 export async function GET(request: NextRequest) {
-	const apiKey = process.env.GOOGLE_FONTS_API_KEY;
+	const apiKey = env.GOOGLE_FONTS_API_KEY;
 	const searchParams = request.nextUrl.searchParams;
 	const searchQuery = searchParams.get("search")?.trim().toLowerCase();
 	const page = Number.parseInt(searchParams.get("page") || "1", 10);

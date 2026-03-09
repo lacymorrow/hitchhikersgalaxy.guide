@@ -1,4 +1,5 @@
 import { adminConfig } from "@/config/admin-config";
+import { env } from "@/env";
 
 interface MailtoOptions {
 	to?: string | string[];
@@ -75,9 +76,5 @@ export function generateFeedbackMailto(content: string, source: string): string 
  * @returns Boolean indicating if email service is available
  */
 export function isEmailServiceAvailable(): boolean {
-	if (typeof window !== "undefined") {
-		// Client-side: we can't access server env vars
-		return false;
-	}
-	return !!(process.env.RESEND_API_KEY || process.env.RESEND_API_KEY);
+	return !!env.RESEND_API_KEY;
 }

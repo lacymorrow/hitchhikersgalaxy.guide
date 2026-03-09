@@ -45,6 +45,7 @@ export const env = createEnv({
 		// ======== Content Management ========
 		// Payload CMS
 		PAYLOAD_SECRET: z.string().optional(),
+		PAYLOAD_PUBLIC_DRAFT_SECRET: z.string().optional(),
 
 		// ======== Authentication ========
 		AUTH_SECRET: z.string().optional(),
@@ -69,6 +70,16 @@ export const env = createEnv({
 		AUTH_GITHUB_SECRET: z.string().optional(),
 		AUTH_GOOGLE_ID: z.string().optional(),
 		AUTH_GOOGLE_SECRET: z.string().optional(),
+		AUTH_BITBUCKET_ID: z.string().optional(),
+		AUTH_BITBUCKET_SECRET: z.string().optional(),
+		AUTH_GITLAB_ID: z.string().optional(),
+		AUTH_GITLAB_SECRET: z.string().optional(),
+		AUTH_TWITTER_ID: z.string().optional(),
+		AUTH_TWITTER_SECRET: z.string().optional(),
+
+		// Admin
+		ADMIN_EMAIL: z.string().optional(),
+		ADMIN_DOMAINS: z.string().optional(),
 
 		// ======== Stack Auth ========
 		STACK_PROJECT_ID: z.string().optional(),
@@ -91,6 +102,7 @@ export const env = createEnv({
 		// Google
 		GOOGLE_CLIENT_EMAIL: z.string().optional(),
 		GOOGLE_PRIVATE_KEY: z.string().optional(),
+		GOOGLE_FONTS_API_KEY: z.string().optional(),
 
 		// AI Services
 		OPENAI_API_KEY: z.string().optional(),
@@ -299,6 +311,12 @@ export const env = createEnv({
 		AUTH_GITHUB_SECRET: process.env.AUTH_GITHUB_SECRET,
 		AUTH_GOOGLE_ID: process.env.AUTH_GOOGLE_ID,
 		AUTH_GOOGLE_SECRET: process.env.AUTH_GOOGLE_SECRET,
+		AUTH_BITBUCKET_ID: process.env.AUTH_BITBUCKET_ID,
+		AUTH_BITBUCKET_SECRET: process.env.AUTH_BITBUCKET_SECRET,
+		AUTH_GITLAB_ID: process.env.AUTH_GITLAB_ID,
+		AUTH_GITLAB_SECRET: process.env.AUTH_GITLAB_SECRET,
+		AUTH_TWITTER_ID: process.env.AUTH_TWITTER_ID,
+		AUTH_TWITTER_SECRET: process.env.AUTH_TWITTER_SECRET,
 
 		// Stack Auth
 		STACK_PROJECT_ID: process.env.STACK_PROJECT_ID,
@@ -312,8 +330,13 @@ export const env = createEnv({
 		CLERK_SECRET_KEY: process.env.CLERK_SECRET_KEY,
 		CLERK_WEBHOOK_SECRET: process.env.CLERK_WEBHOOK_SECRET,
 
+		// Admin
+		ADMIN_EMAIL: process.env.ADMIN_EMAIL,
+		ADMIN_DOMAINS: process.env.ADMIN_DOMAINS,
+
 		// Content Management
 		PAYLOAD_SECRET: process.env.PAYLOAD_SECRET,
+		PAYLOAD_PUBLIC_DRAFT_SECRET: process.env.PAYLOAD_PUBLIC_DRAFT_SECRET,
 
 		// External Services (Server-side keys)
 		GITHUB_ACCESS_TOKEN: process.env.GITHUB_ACCESS_TOKEN,
@@ -321,6 +344,7 @@ export const env = createEnv({
 		GITHUB_REPO_NAME: process.env.GITHUB_REPO_NAME,
 		GOOGLE_CLIENT_EMAIL: process.env.GOOGLE_CLIENT_EMAIL,
 		GOOGLE_PRIVATE_KEY: process.env.GOOGLE_PRIVATE_KEY,
+		GOOGLE_FONTS_API_KEY: process.env.GOOGLE_FONTS_API_KEY,
 		OPENAI_API_KEY: process.env.OPENAI_API_KEY,
 		ANTHROPIC_API_KEY: process.env.ANTHROPIC_API_KEY,
 		DEEPSEEK_API_KEY: process.env.DEEPSEEK_API_KEY,

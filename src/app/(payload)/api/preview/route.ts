@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { env } from "@/env";
 import { getPayloadClient } from "@/lib/payload/payload";
 
 export async function GET(request: Request) {
@@ -7,7 +8,7 @@ export async function GET(request: Request) {
 	const secret = searchParams.get("secret");
 
 	// Check the secret and next parameters
-	if (secret !== process.env.PAYLOAD_PUBLIC_DRAFT_SECRET) {
+	if (secret !== env.PAYLOAD_PUBLIC_DRAFT_SECRET) {
 		return NextResponse.json({ message: "Invalid token" }, { status: 401 });
 	}
 
@@ -38,7 +39,7 @@ export async function GET(request: Request) {
 
 	// Enable Preview Mode by setting a cookie
 	const response = NextResponse.redirect(new URL(`/${slug}?preview=true`, request.url));
-	response.cookies.set("payload-token", process.env.PAYLOAD_PUBLIC_DRAFT_SECRET || "", {
+	response.cookies.set("payload-token", env.PAYLOAD_PUBLIC_DRAFT_SECRET || "", {
 		path: "/",
 		httpOnly: true,
 		secure: process.env.NODE_ENV === "production",

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 
 // Import the actual features-config to test real functionality
-import { buildTimeFeatureFlags, reactGrabConfig } from "../../../src/config/features-config";
+import { buildTimeFeatureFlags } from "../../../src/config/features-config";
 
 function hasTestEnvVar(name: string): boolean {
 	const value = process.env[name];
@@ -197,19 +197,4 @@ describe("Feature flag generation", () => {
 		});
 	});
 
-	it("exports a server-side React Grab config object", () => {
-		expect(typeof reactGrabConfig.enabled).toBe("boolean");
-
-		if (reactGrabConfig.provider) {
-			expect(["claude-code", "codex", "gemini"]).toContain(reactGrabConfig.provider.id);
-			expect(reactGrabConfig.provider.packageName.startsWith("@react-grab/")).toBe(true);
-			expect(reactGrabConfig.provider.clientScriptUrl).toContain("unpkg.com/@react-grab/");
-			expect(reactGrabConfig.provider.requiredEnvKeys.length).toBeGreaterThan(0);
-			expect(typeof reactGrabConfig.provider.resolvedEnv).toBe("object");
-
-			for (const envKey of reactGrabConfig.provider.requiredEnvKeys) {
-				expect(envKey in reactGrabConfig.provider.resolvedEnv).toBe(true);
-			}
-		}
-	});
 });

@@ -1,4 +1,5 @@
 import { buildTimeFeatures } from "@/config/features-config";
+import { env } from "@/env";
 
 const TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
@@ -22,7 +23,7 @@ export function isTurnstileConfigured(): boolean {
  * @returns Promise<boolean> - Whether the token is valid
  */
 export async function verifyTurnstileToken(token: string): Promise<boolean> {
-	const secretKey = process.env.TURNSTILE_SECRET_KEY;
+	const secretKey = env.TURNSTILE_SECRET_KEY;
 
 	if (!secretKey) {
 		console.error("Turnstile secret key not configured");

@@ -1,5 +1,7 @@
 // This file should NOT have "use server"; it's a server-side service.
 
+import { buildTimeFeatures } from "@/config/features-config";
+import { env } from "@/env";
 import { auth } from "@/server/auth";
 import { isAdmin } from "@/server/services/admin-service";
 
@@ -55,10 +57,10 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 	};
 
 	// === Content Management ===
-	const dbUrl = !!process.env.DATABASE_URL;
+	const dbUrl = !!env.DATABASE_URL;
 
-	const payloadEnabled = process.env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED === "true";
-	const payloadSecret = !!process.env.PAYLOAD_SECRET;
+	const payloadEnabled = buildTimeFeatures.PAYLOAD_ENABLED === true;
+	const payloadSecret = !!env.PAYLOAD_SECRET;
 	const payloadConfigured = payloadEnabled && payloadSecret && dbUrl;
 	addStatus("Content Management", {
 		name: "Payload CMS",
@@ -74,8 +76,8 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		adminUrl: payloadEnabled && payloadConfigured ? "/cms" : undefined,
 	});
 
-	const builderApiKey = !!process.env.NEXT_PUBLIC_BUILDER_API_KEY;
-	const builderEnabledFlag = process.env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED === "true";
+	const builderApiKey = !!env.NEXT_PUBLIC_BUILDER_API_KEY;
+	const builderEnabledFlag = buildTimeFeatures.BUILDER_ENABLED === true;
 	addStatus("Content Management", {
 		name: "Builder.io",
 		enabled: builderEnabledFlag,
@@ -87,7 +89,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 			: "Disabled (NEXT_PUBLIC_FEATURE_BUILDER_ENABLED is not 'true').",
 	});
 
-	const mdxEnabled = process.env.NEXT_PUBLIC_FEATURE_MDX_ENABLED === "true";
+	const mdxEnabled = buildTimeFeatures.MDX_ENABLED === true;
 	addStatus("Content Management", {
 		name: "MDX Content",
 		enabled: mdxEnabled,
@@ -98,9 +100,9 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 	});
 
 	// === Payments ===
-	const stripeSecretKey = !!process.env.STRIPE_SECRET_KEY;
-	const stripePublishableKey = !!process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
-	const stripeWebhookSecret = !!process.env.STRIPE_WEBHOOK_SECRET;
+	const stripeSecretKey = !!env.STRIPE_SECRET_KEY;
+	const stripePublishableKey = !!env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+	const stripeWebhookSecret = !!env.STRIPE_WEBHOOK_SECRET;
 	const stripeConfigured = stripeSecretKey && stripePublishableKey;
 	addStatus("Payments", {
 		name: "Stripe",
@@ -112,9 +114,9 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		adminUrl: stripeConfigured ? "https://dashboard.stripe.com/" : undefined,
 	});
 
-	const lemonApiKey = !!process.env.LEMONSQUEEZY_API_KEY;
-	const lemonStoreId = !!process.env.LEMONSQUEEZY_STORE_ID;
-	const lemonWebhookSecret = !!process.env.LEMONSQUEEZY_WEBHOOK_SECRET;
+	const lemonApiKey = !!env.LEMONSQUEEZY_API_KEY;
+	const lemonStoreId = !!env.LEMONSQUEEZY_STORE_ID;
+	const lemonWebhookSecret = !!env.LEMONSQUEEZY_WEBHOOK_SECRET;
 	const lemonConfigured = lemonApiKey && lemonStoreId;
 	addStatus("Payments", {
 		name: "Lemon Squeezy",
@@ -126,7 +128,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		adminUrl: lemonConfigured ? "https://app.lemonsqueezy.com/" : undefined,
 	});
 
-	const polarToken = !!process.env.POLAR_ACCESS_TOKEN;
+	const polarToken = !!env.POLAR_ACCESS_TOKEN;
 	addStatus("Payments", {
 		name: "Polar",
 		enabled: polarToken,
@@ -138,7 +140,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 	});
 
 	// === Artificial Intelligence ===
-	const openaiKey = !!process.env.OPENAI_API_KEY;
+	const openaiKey = !!env.OPENAI_API_KEY;
 	addStatus("Artificial Intelligence", {
 		name: "OpenAI",
 		enabled: openaiKey,
@@ -147,7 +149,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		adminUrl: "https://platform.openai.com/",
 	});
 
-	const anthropicKey = !!process.env.ANTHROPIC_API_KEY;
+	const anthropicKey = !!env.ANTHROPIC_API_KEY;
 	addStatus("Artificial Intelligence", {
 		name: "Anthropic",
 		enabled: anthropicKey,
@@ -168,10 +170,10 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 			: "Database connection not configured (DATABASE_URL is missing).",
 	});
 
-	const s3Region = !!process.env.AWS_REGION;
-	const s3AccessKey = !!process.env.AWS_ACCESS_KEY_ID;
-	const s3SecretKey = !!process.env.AWS_SECRET_ACCESS_KEY;
-	const s3Bucket = !!process.env.AWS_BUCKET_NAME;
+	const s3Region = !!env.AWS_REGION;
+	const s3AccessKey = !!env.AWS_ACCESS_KEY_ID;
+	const s3SecretKey = !!env.AWS_SECRET_ACCESS_KEY;
+	const s3Bucket = !!env.AWS_BUCKET_NAME;
 	const s3Configured = s3Region && s3AccessKey && s3SecretKey && s3Bucket;
 	addStatus("Storage", {
 		name: "AWS S3",
@@ -183,7 +185,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		adminUrl: "https://s3.console.aws.amazon.com/",
 	});
 
-	const blobToken = !!process.env.VERCEL_BLOB_READ_WRITE_TOKEN;
+	const blobToken = !!env.VERCEL_BLOB_READ_WRITE_TOKEN;
 	addStatus("Storage", {
 		name: "Vercel Blob Storage",
 		enabled: blobToken,
@@ -195,7 +197,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 	});
 
 	// === Analytics ===
-	const posthogKey = !!process.env.NEXT_PUBLIC_POSTHOG_KEY;
+	const posthogKey = !!env.NEXT_PUBLIC_POSTHOG_KEY;
 	addStatus("Analytics", {
 		name: "PostHog",
 		enabled: posthogKey,
@@ -206,7 +208,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		adminUrl: "https://posthog.com/",
 	});
 
-	const umamiId = !!process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
+	const umamiId = !!env.NEXT_PUBLIC_UMAMI_WEBSITE_ID;
 	addStatus("Analytics", {
 		name: "Umami",
 		enabled: umamiId,
@@ -217,7 +219,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		adminUrl: "https://umami.is/",
 	});
 
-	const datafastId = !!process.env.NEXT_PUBLIC_DATAFAST_WEBSITE_ID;
+	const datafastId = !!env.NEXT_PUBLIC_DATAFAST_WEBSITE_ID;
 	addStatus("Analytics", {
 		name: "DataFast",
 		enabled: datafastId,
@@ -229,9 +231,9 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 	});
 
 	// === Developer Tools & API ===
-	const githubToken = !!process.env.GITHUB_ACCESS_TOKEN;
-	const githubOwner = !!process.env.GITHUB_REPO_OWNER;
-	const githubRepo = !!process.env.GITHUB_REPO_NAME;
+	const githubToken = !!env.GITHUB_ACCESS_TOKEN;
+	const githubOwner = !!env.GITHUB_REPO_OWNER;
+	const githubRepo = !!env.GITHUB_REPO_NAME;
 	const githubApiConfigured = githubToken && githubOwner && githubRepo;
 	addStatus("Developer Tools & API", {
 		name: "GitHub API",
@@ -241,12 +243,12 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 			? "Configured (Token, Owner, Repo set)."
 			: "Disabled (Missing GITHUB_ACCESS_TOKEN, GITHUB_REPO_OWNER, or GITHUB_REPO_NAME).",
 		adminUrl: githubApiConfigured
-			? `https://github.com/${process.env.GITHUB_REPO_OWNER}/${process.env.GITHUB_REPO_NAME}`
+			? `https://github.com/${env.GITHUB_REPO_OWNER}/${env.GITHUB_REPO_NAME}`
 			: undefined,
 	});
 
-	const googleEmail = !!process.env.GOOGLE_CLIENT_EMAIL;
-	const googleKey = !!process.env.GOOGLE_PRIVATE_KEY;
+	const googleEmail = !!env.GOOGLE_CLIENT_EMAIL;
+	const googleKey = !!env.GOOGLE_PRIVATE_KEY;
 	const googleSvcConfigured = googleEmail && googleKey;
 	addStatus("Developer Tools & API", {
 		name: "Google Service Account",
@@ -258,8 +260,8 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		adminUrl: "https://console.cloud.google.com/",
 	});
 
-	const redisUrl = !!process.env.UPSTASH_REDIS_REST_URL;
-	const redisToken = !!process.env.UPSTASH_REDIS_REST_TOKEN;
+	const redisUrl = !!env.UPSTASH_REDIS_REST_URL;
+	const redisToken = !!env.UPSTASH_REDIS_REST_TOKEN;
 	const redisConfigured = redisUrl && redisToken;
 	addStatus("Developer Tools & API", {
 		name: "Redis (Upstash)",
@@ -271,7 +273,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		adminUrl: "https://console.upstash.com/",
 	});
 
-	const vercelToken = !!process.env.VERCEL_ACCESS_TOKEN;
+	const vercelToken = !!env.VERCEL_ACCESS_TOKEN;
 	addStatus("Developer Tools & API", {
 		name: "Vercel API",
 		enabled: vercelToken,

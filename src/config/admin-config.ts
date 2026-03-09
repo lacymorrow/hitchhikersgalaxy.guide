@@ -1,3 +1,5 @@
+import { env } from "@/env";
+
 /**
  * Admin Configuration
  *
@@ -21,13 +23,13 @@ export interface AdminConfig {
  */
 export const adminConfig: AdminConfig = {
 	// Admin emails - comma-separated list from environment variable or defaults
-	emails: process.env.ADMIN_EMAIL
-		? process.env.ADMIN_EMAIL.split(",").map((email) => email.trim())
+	emails: env.ADMIN_EMAIL
+		? env.ADMIN_EMAIL.split(",").map((email) => email.trim())
 		: ["me@lacymorrow.com"],
 
 	// Admin domains - using default values
-	domains: process.env.ADMIN_DOMAINS
-		? process.env.ADMIN_DOMAINS.split(",").map((domain) => domain.trim())
+	domains: env.ADMIN_DOMAINS
+		? env.ADMIN_DOMAINS.split(",").map((domain) => domain.trim())
 		: ["lacymorrow.com"],
 
 	// Check if an email is an admin based on config

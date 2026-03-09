@@ -48,7 +48,7 @@ export const providers: NextAuthConfig["providers"] = [
 	...(availableProviderIds.includes("resend") && env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED
 		? [
 				Resend({
-					apiKey: process.env.RESEND_API_KEY ?? "",
+					apiKey: env.RESEND_API_KEY ?? "",
 					from: RESEND_FROM_EMAIL,
 					// sendVerificationRequest({ identifier: email, url, provider: { server, from } }) {
 					// 	// your function
@@ -166,8 +166,8 @@ export const providers: NextAuthConfig["providers"] = [
 	...(availableProviderIds.includes("bitbucket")
 		? [
 				Bitbucket({
-					clientId: process.env.AUTH_BITBUCKET_ID ?? "",
-					clientSecret: process.env.AUTH_BITBUCKET_SECRET ?? "",
+					clientId: env.AUTH_BITBUCKET_ID ?? "",
+					clientSecret: env.AUTH_BITBUCKET_SECRET ?? "",
 					allowDangerousEmailAccountLinking: true,
 				}),
 			]
@@ -175,8 +175,8 @@ export const providers: NextAuthConfig["providers"] = [
 	...(availableProviderIds.includes("discord")
 		? [
 				Discord({
-					clientId: process.env.AUTH_DISCORD_ID ?? "",
-					clientSecret: process.env.AUTH_DISCORD_SECRET ?? "",
+					clientId: env.AUTH_DISCORD_ID ?? "",
+					clientSecret: env.AUTH_DISCORD_SECRET ?? "",
 					allowDangerousEmailAccountLinking: true,
 				}),
 			]
@@ -184,8 +184,8 @@ export const providers: NextAuthConfig["providers"] = [
 	...(availableProviderIds.includes("github")
 		? [
 				GitHub({
-					clientId: process.env.AUTH_GITHUB_ID ?? "",
-					clientSecret: process.env.AUTH_GITHUB_SECRET ?? "",
+					clientId: env.AUTH_GITHUB_ID ?? "",
+					clientSecret: env.AUTH_GITHUB_SECRET ?? "",
 					authorization: {
 						params: {
 							scope: "read:user user:email repo workflow",
@@ -209,8 +209,8 @@ export const providers: NextAuthConfig["providers"] = [
 	...(availableProviderIds.includes("gitlab")
 		? [
 				GitLab({
-					clientId: process.env.AUTH_GITLAB_ID ?? "",
-					clientSecret: process.env.AUTH_GITLAB_SECRET ?? "",
+					clientId: env.AUTH_GITLAB_ID ?? "",
+					clientSecret: env.AUTH_GITLAB_SECRET ?? "",
 					allowDangerousEmailAccountLinking: true,
 				}),
 			]
@@ -218,8 +218,8 @@ export const providers: NextAuthConfig["providers"] = [
 	...(availableProviderIds.includes("google")
 		? [
 				Google({
-					clientId: process.env.AUTH_GOOGLE_ID ?? "",
-					clientSecret: process.env.AUTH_GOOGLE_SECRET ?? "",
+					clientId: env.AUTH_GOOGLE_ID ?? "",
+					clientSecret: env.AUTH_GOOGLE_SECRET ?? "",
 					allowDangerousEmailAccountLinking: true,
 					profile(profile) {
 						return {
@@ -235,8 +235,8 @@ export const providers: NextAuthConfig["providers"] = [
 	...(availableProviderIds.includes("twitter")
 		? [
 				Twitter({
-					clientId: process.env.AUTH_TWITTER_ID ?? "",
-					clientSecret: process.env.AUTH_TWITTER_SECRET ?? "",
+					clientId: env.AUTH_TWITTER_ID ?? "",
+					clientSecret: env.AUTH_TWITTER_SECRET ?? "",
 					allowDangerousEmailAccountLinking: true,
 				}),
 			]
@@ -249,8 +249,8 @@ export const providers: NextAuthConfig["providers"] = [
 					id: "vercel",
 					name: "Vercel",
 					type: "oauth" as const,
-					clientId: process.env.VERCEL_CLIENT_ID,
-					clientSecret: process.env.VERCEL_CLIENT_SECRET,
+					clientId: env.VERCEL_CLIENT_ID,
+					clientSecret: env.VERCEL_CLIENT_SECRET,
 					authorization: {
 						url: "https://vercel.com/oauth/authorize",
 						params: {

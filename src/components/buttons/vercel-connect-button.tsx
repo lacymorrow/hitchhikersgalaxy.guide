@@ -51,19 +51,16 @@ export const VercelConnectButton = ({
 				.map((b) => b.toString(16).padStart(2, "0"))
 				.join("");
 
-			// Store CSRF token in a secure, httpOnly cookie (via server action would be better, but using JS for now)
-			// Set SameSite=Lax to allow the OAuth redirect while preventing CSRF
-			document.cookie = `vercel_oauth_state=${state}; path=/; SameSite=Lax; Secure; Max-Age=600`;
+			// Store CSRF token in a cookie for validation on callback
+			// SameSite=Lax allows the cookie to be sent on the OAuth redirect back
+			// Secure ensures cookie is only sent over HTTPS
+			const isSecure = window.location.protocol === "https:";
+			document.cookie = `vercel_oauth_state=${state}; path=/;${isSecure ? " Secure;" : ""} SameSite=Lax; Max-Age=600`;
 
-			// Get the origin for the callback URL
-			const origin = window.location.origin;
-
-			// Create the redirect URI
-			const redirectUri = `${origin}/connect/vercel/auth`;
-
-			// redirect the user to vercel with the callback URL
-			// Use redirectUri as the parameter name for consistency with the OAuth spec
-			const link = `https://vercel.com/integrations/${client_slug}/new?state=${state}&redirect_uri=${encodeURIComponent(redirectUri)}`;
+			// Redirect to Vercel's external installation flow
+			// Vercel uses the Redirect URL configured in the Integration Console for the callback
+			// The state param is forwarded back for CSRF protection
+			const link = `https://vercel.com/integrations/${client_slug}/new?state=${state}`;
 			window.location.assign(link);
 		} catch (error) {
 			legacyToast({

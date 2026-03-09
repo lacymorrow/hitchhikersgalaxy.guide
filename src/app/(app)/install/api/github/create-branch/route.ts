@@ -10,16 +10,19 @@ export async function POST(req: Request) {
 			return NextResponse.json({ error: "Branch name is required" }, { status: 400 });
 		}
 
-		// Validate GitHub environment variables
-		if (!env.GITHUB_ACCESS_TOKEN || !env.GITHUB_REPO_OWNER || !env.GITHUB_REPO_NAME) {
+		// Validate GitHub access token
+		if (!env.GITHUB_ACCESS_TOKEN) {
 			return NextResponse.json(
 				{
 					error: "GitHub configuration is incomplete",
-					details: "Missing required environment variables",
+					details: "Missing GITHUB_ACCESS_TOKEN",
 				},
 				{ status: 500 }
 			);
 		}
+
+		const owner = env.GITHUB_REPO_OWNER || "lacymorrow";
+		const repo = env.GITHUB_REPO_NAME || "shipkit";
 
 		const octokit = new Octokit({
 			auth: env.GITHUB_ACCESS_TOKEN,
@@ -28,8 +31,8 @@ export async function POST(req: Request) {
 		try {
 			// Try to get the reference to check if branch exists
 			const { data: refData } = await octokit.git.getRef({
-				owner: env.GITHUB_REPO_OWNER,
-				repo: env.GITHUB_REPO_NAME,
+				owner,
+				repo,
 				ref: `heads/${branchName}`,
 			});
 
@@ -51,20 +54,20 @@ export async function POST(req: Request) {
 
 				// Get the SHA of the default branch
 				const { data: defaultBranch } = await octokit.repos.get({
-					owner: env.GITHUB_REPO_OWNER,
-					repo: env.GITHUB_REPO_NAME,
+					owner,
+					repo,
 				});
 
 				const { data: ref } = await octokit.git.getRef({
-					owner: env.GITHUB_REPO_OWNER,
-					repo: env.GITHUB_REPO_NAME,
+					owner,
+					repo,
 					ref: `heads/${defaultBranch.default_branch}`,
 				});
 
 				// Create the new branch
 				const { data: newRef } = await octokit.git.createRef({
-					owner: env.GITHUB_REPO_OWNER,
-					repo: env.GITHUB_REPO_NAME,
+					owner,
+					repo,
 					ref: `refs/heads/${branchName}`,
 					sha: ref.object.sha,
 				});

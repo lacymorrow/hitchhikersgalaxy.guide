@@ -1,6 +1,7 @@
 import { and, eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { BASE_URL } from "@/config/base-url";
 import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { env } from "@/env";
@@ -85,7 +86,11 @@ export async function GET(request: NextRequest, context: RouteContext) {
 		const storedState = cookieStore.get("vercel_oauth_state")?.value;
 
 		if (!state || !storedState || state !== storedState) {
-			console.error("CSRF validation failed: state mismatch");
+			console.error("[Vercel OAuth] CSRF validation failed:", {
+				stateFromQuery: state ?? "missing",
+				stateFromCookie: storedState ?? "missing",
+				cookiesPresent: request.cookies.getAll().map((c) => c.name),
+			});
 			return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_CONNECTION_FAILED" }));
 		}
 
@@ -95,10 +100,24 @@ export async function GET(request: NextRequest, context: RouteContext) {
 			return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_CONNECTION_FAILED" }));
 		}
 
-		// Get the origin for the redirect_uri - this should be the fixed callback route
-		const origin = new URL(request.url).origin;
-		// Construct the specific redirect_uri for Vercel API, which might not include the dynamic path
-		const vercelCallbackUri = `${origin}/connect/vercel/auth`;
+		// Validate required credentials before attempting token exchange
+		const clientId = env.VERCEL_CLIENT_ID;
+		const clientSecret = env.VERCEL_CLIENT_SECRET;
+
+		if (!clientId || !clientSecret) {
+			console.error("[Vercel OAuth] Missing VERCEL_CLIENT_ID or VERCEL_CLIENT_SECRET env vars");
+			return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_CONNECTION_FAILED" }));
+		}
+
+		// The redirect_uri MUST match the Redirect URL configured in the Vercel Integration Console
+		// Use BASE_URL (canonical production URL) rather than request.url.origin to ensure consistency
+		const vercelCallbackUri = `${BASE_URL}/connect/vercel/auth`;
+
+		console.log("[Vercel OAuth] Token exchange", {
+			baseUrl: BASE_URL,
+			requestOrigin: new URL(request.url).origin,
+			vercelCallbackUri,
+		});
 
 		// Exchange code for access token
 		const tokenResponse = await fetch("https://api.vercel.com/v2/oauth/access_token", {
@@ -106,21 +125,25 @@ export async function GET(request: NextRequest, context: RouteContext) {
 			headers: { "Content-Type": "application/x-www-form-urlencoded" },
 			body: new URLSearchParams({
 				code,
-				client_id: process.env.VERCEL_CLIENT_ID!,
-				client_secret: process.env.VERCEL_CLIENT_SECRET!,
-				redirect_uri: vercelCallbackUri, // Use the fixed callback URI for the API call
+				client_id: clientId,
+				client_secret: clientSecret,
+				redirect_uri: vercelCallbackUri,
 			}),
 		});
 
 		if (!tokenResponse.ok) {
 			const errorText = await tokenResponse.text();
-			console.error("Failed to exchange code for token:", errorText);
-			// Use dynamic redirect path for error
+			console.error("[Vercel OAuth] Token exchange failed:", {
+				status: tokenResponse.status,
+				statusText: tokenResponse.statusText,
+				body: errorText,
+				redirectUri: vercelCallbackUri,
+			});
 			return NextResponse.redirect(constructRedirectUrl({ code: "VERCEL_CONNECTION_FAILED" }));
 		}
 
 		const tokenData = await tokenResponse.json();
-		console.log("Token exchange successful:", tokenData);
+		console.log("[Vercel OAuth] Token exchange successful");
 
 		const { access_token, refresh_token, expires_in, team_id } = tokenData;
 

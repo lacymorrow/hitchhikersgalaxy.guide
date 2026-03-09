@@ -232,18 +232,17 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 
 	// === Developer Tools & API ===
 	const githubToken = !!env.GITHUB_ACCESS_TOKEN;
-	const githubOwner = !!env.GITHUB_REPO_OWNER;
-	const githubRepo = !!env.GITHUB_REPO_NAME;
-	const githubApiConfigured = githubToken && githubOwner && githubRepo;
+	const githubOwner = env.GITHUB_REPO_OWNER || "lacymorrow";
+	const githubRepo = env.GITHUB_REPO_NAME || "shipkit";
 	addStatus("Developer Tools & API", {
 		name: "GitHub API",
-		enabled: githubApiConfigured,
-		configured: githubApiConfigured,
-		message: githubApiConfigured
-			? "Configured (Token, Owner, Repo set)."
-			: "Disabled (Missing GITHUB_ACCESS_TOKEN, GITHUB_REPO_OWNER, or GITHUB_REPO_NAME).",
-		adminUrl: githubApiConfigured
-			? `https://github.com/${env.GITHUB_REPO_OWNER}/${env.GITHUB_REPO_NAME}`
+		enabled: githubToken,
+		configured: githubToken,
+		message: githubToken
+			? "Configured (GITHUB_ACCESS_TOKEN set)."
+			: "Disabled (Missing GITHUB_ACCESS_TOKEN).",
+		adminUrl: githubToken
+			? `https://github.com/${githubOwner}/${githubRepo}`
 			: undefined,
 	});
 
@@ -271,17 +270,6 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 			? "Configured (URL & Token set)."
 			: "Disabled (Missing UPSTASH_REDIS_REST_URL or UPSTASH_REDIS_REST_TOKEN).",
 		adminUrl: "https://console.upstash.com/",
-	});
-
-	const vercelToken = !!env.VERCEL_ACCESS_TOKEN;
-	addStatus("Developer Tools & API", {
-		name: "Vercel API",
-		enabled: vercelToken,
-		configured: vercelToken,
-		message: vercelToken
-			? "Configured (VERCEL_ACCESS_TOKEN set)."
-			: "Disabled (Missing VERCEL_ACCESS_TOKEN).",
-		adminUrl: "https://vercel.com/dashboard",
 	});
 
 	return categorizedStatuses;

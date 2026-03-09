@@ -19,20 +19,19 @@ export async function POST(req: Request) {
 			return NextResponse.json({ error: "No files to commit" }, { status: 400 });
 		}
 
-		// Validate GitHub environment variables
-		if (!env.GITHUB_ACCESS_TOKEN || !env.GITHUB_REPO_OWNER || !env.GITHUB_REPO_NAME) {
+		// Validate GitHub access token
+		if (!env.GITHUB_ACCESS_TOKEN) {
 			return NextResponse.json(
 				{
 					error: "GitHub configuration is incomplete",
-					details: "Missing required environment variables",
+					details: "Missing GITHUB_ACCESS_TOKEN",
 				},
 				{ status: 500 }
 			);
 		}
 
-		// After validation, we can safely assert these values are defined
-		const owner = env.GITHUB_REPO_OWNER;
-		const repo = env.GITHUB_REPO_NAME;
+		const owner = env.GITHUB_REPO_OWNER || "lacymorrow";
+		const repo = env.GITHUB_REPO_NAME || "shipkit";
 
 		// Sanitize and validate all file paths
 		const sanitizedFiles = files.map((file) => ({

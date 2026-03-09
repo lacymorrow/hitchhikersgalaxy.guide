@@ -2,7 +2,6 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { Slot as SlotPrimitive } from "radix-ui";
 import * as React from "react";
 
-import { haptic } from "@/hooks/use-haptics";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(

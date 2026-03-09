@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { PagesRouterLayout } from "@/components/layouts/pages-router-layout";
 import { Button } from "@/components/ui/button";

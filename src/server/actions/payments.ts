@@ -530,3 +530,13 @@ export async function importPaymentsFromAllProviders() {
 	}
 }
 
+/**
+ * Gets the payment status for the current user
+ * @returns Whether the user has paid
+ */
+export async function getUserPaymentStatus(): Promise<boolean> {
+	const session = await getSession();
+	if (!session?.user?.id) return false;
+	return await PaymentService.getUserPaymentStatus(session.user.id);
+}
+

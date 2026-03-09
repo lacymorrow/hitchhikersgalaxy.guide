@@ -1,3 +1,5 @@
+"use client";
+
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import type { ComponentProps } from "react";
 

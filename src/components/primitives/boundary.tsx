@@ -1,3 +1,5 @@
+"use client";
+
 import type * as React from "react";
 import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";

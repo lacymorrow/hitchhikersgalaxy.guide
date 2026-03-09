@@ -167,6 +167,9 @@ const nextConfig: NextConfig = {
 	// Configure `pageExtensions` to include markdown and MDX files
 	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 
+	// Force-bundle packages that Next.js auto-externalizes but aren't available at runtime on Vercel
+	// transpilePackages: ["@aws-sdk/client-s3", "@aws-sdk/s3-request-presigner"],
+
 	/*
 	 * Server External Packages
 	 * Externalize packages that cause bundling issues with Turbopack/Vercel:
@@ -186,10 +189,13 @@ const nextConfig: NextConfig = {
 		"@vercel/postgres",
 		"better-sqlite3",
 		"mysql2",
-
 		// ESM-only packages that need to be externalized
 		"@octokit/rest",
 	],
+
+	// Enable React Compiler for useMemoCache runtime support
+	// Required for dependencies like lucide-react and @payloadcms/ui that use the compiler
+	reactCompiler: true,
 
 	/*
 	 * Experimental configuration
@@ -273,7 +279,7 @@ const nextConfig: NextConfig = {
 		// Use DISABLE_ERROR_LOGGING to disable error logging too
 		removeConsole:
 			process.env.DISABLE_LOGGING === "true" ||
-			(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
+				(process.env.NODE_ENV === "production" && !process.env.DISABLE_LOGGING)
 				? process.env.DISABLE_ERROR_LOGGING === "true" ||
 					(process.env.NODE_ENV === "production" && !process.env.DISABLE_ERROR_LOGGING)
 					? true

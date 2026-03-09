@@ -19,12 +19,17 @@ import { DeploymentActions } from "./deployment-actions";
 
 // Constants for polling configuration
 const POLLING_INTERVAL_MS = 3000; // 3 seconds
+const MAX_DEPLOYING_AGE_MS = 15 * 60 * 1000; // 15 minutes — safety net for frontend
 
 /**
- * Poll whenever deployments are still in progress
+ * Poll whenever deployments are still in progress.
+ * Treats deployments older than MAX_DEPLOYING_AGE_MS as stale (backend should
+ * have resolved them, but this prevents infinite frontend polling).
  */
 function isActivelyDeploying(deployment: Deployment): boolean {
-	return deployment.status === "deploying";
+	if (deployment.status !== "deploying") return false;
+	const age = Date.now() - new Date(deployment.updatedAt).getTime();
+	return age < MAX_DEPLOYING_AGE_MS;
 }
 
 interface DeploymentsListProps {
@@ -46,6 +51,8 @@ function getStatusIcon(status: string) {
 			return <CheckCircle2 className="h-4 w-4 text-green-500" />;
 		case "failed":
 			return <AlertCircle className="h-4 w-4 text-red-500" />;
+		case "timeout":
+			return <AlertCircle className="h-4 w-4 text-orange-500" />;
 		case "deploying":
 			return <Clock className="h-4 w-4 text-blue-500 animate-spin" />;
 		default:
@@ -58,6 +65,8 @@ function getStatusBadgeVariant(status: string) {
 		case "completed":
 			return "default" as const;
 		case "failed":
+			return "destructive" as const;
+		case "timeout":
 			return "destructive" as const;
 		case "deploying":
 			return "secondary" as const;
@@ -102,6 +111,11 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 				} else if (deployment.status === "failed") {
 					toast.error(
 						`Deployment "${deployment.projectName}" failed: ${deployment.error || "Unknown error"}`,
+						{ duration: 10000 }
+					);
+				} else if (deployment.status === "timeout") {
+					toast.error(
+						`Deployment "${deployment.projectName}" timed out: ${deployment.error || "No response received"}`,
 						{ duration: 10000 }
 					);
 				}
@@ -162,7 +176,7 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 						<span className="text-muted-foreground">
 							{row.original.description ?? "No description"}
 						</span>
-						{row.original.status === "failed" && row.original.error && (
+						{(row.original.status === "failed" || row.original.status === "timeout") && row.original.error && (
 							<div className="mt-1">
 								<span className="text-xs text-red-600 dark:text-red-400">
 									Error: {row.original.error}

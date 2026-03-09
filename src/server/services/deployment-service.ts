@@ -13,6 +13,7 @@ import { getVercelAccessToken } from "@/server/services/vercel/vercel-service";
 const SHIPKIT_REPO = `${siteConfig.repo.owner}/${siteConfig.repo.name}`;
 const POLLING_INTERVAL_MS = 10000; // 10 seconds
 const MAX_DEPLOYMENT_POLL_ATTEMPTS = 18; // Poll for up to ~3 minutes
+const STALE_DEPLOYMENT_MS = 10 * 60 * 1000; // 10 minutes — deployments older than this are considered stale
 
 // Types
 export interface DeploymentConfig {
@@ -268,11 +269,24 @@ class DeploymentService {
 
 		for (const deployment of deploymentsToSync) {
 			const projectIdentifier = deployment.vercelProjectId || deployment.projectName;
+			const deploymentAge = Date.now() - new Date(deployment.updatedAt).getTime();
+			const isStale = deploymentAge > STALE_DEPLOYMENT_MS;
 
 			if (!projectIdentifier) {
-				logger.warn("Deployment has no project identifier for sync", {
-					deploymentId: deployment.id,
-				});
+				// No project identifier and stale — mark as failed
+				if (isStale) {
+					await this.updateDeployment(deployment.id, userId, {
+						status: "timeout",
+						error: "Deployment timed out — no project was created",
+					});
+					logger.info("Marked stale deployment as timed out (no project identifier)", {
+						deploymentId: deployment.id,
+					});
+				} else {
+					logger.warn("Deployment has no project identifier for sync", {
+						deploymentId: deployment.id,
+					});
+				}
 				continue;
 			}
 
@@ -292,11 +306,22 @@ class DeploymentService {
 				}
 
 				if (!latestDeployment) {
-					logger.debug("No Vercel deployment found for project", {
-						deploymentId: deployment.id,
-						projectIdentifier,
-						projectSuccess: projectInfo.success,
-					});
+					if (isStale) {
+						await this.updateDeployment(deployment.id, userId, {
+							status: "timeout",
+							error: "Deployment timed out — no deployment found on Vercel",
+						});
+						logger.info("Marked stale deployment as timed out (no Vercel deployment found)", {
+							deploymentId: deployment.id,
+							projectIdentifier,
+						});
+					} else {
+						logger.debug("No Vercel deployment found for project", {
+							deploymentId: deployment.id,
+							projectIdentifier,
+							projectSuccess: projectInfo.success,
+						});
+					}
 					continue;
 				}
 
@@ -304,11 +329,22 @@ class DeploymentService {
 				const deploymentState = latestDeployment.state || latestDeployment.readyState;
 
 				if (!deploymentState) {
-					logger.debug("Vercel deployment has no state", {
-						deploymentId: deployment.id,
-						projectIdentifier,
-						latestDeployment,
-					});
+					if (isStale) {
+						await this.updateDeployment(deployment.id, userId, {
+							status: "timeout",
+							error: "Deployment timed out — Vercel returned no status",
+						});
+						logger.info("Marked stale deployment as timed out (no Vercel state)", {
+							deploymentId: deployment.id,
+							projectIdentifier,
+						});
+					} else {
+						logger.debug("Vercel deployment has no state", {
+							deploymentId: deployment.id,
+							projectIdentifier,
+							latestDeployment,
+						});
+					}
 					continue;
 				}
 
@@ -337,13 +373,35 @@ class DeploymentService {
 						projectName: deployment.projectName,
 						newStatus: resolvedStatus.status,
 					});
+				} else if (isStale) {
+					// Vercel still says it's deploying but it's been too long
+					await this.updateDeployment(deployment.id, userId, {
+						status: "timeout",
+						error: "Deployment timed out — build exceeded maximum expected duration",
+					});
+					logger.info("Marked stale deployment as timed out (still deploying on Vercel)", {
+						deploymentId: deployment.id,
+						projectName: deployment.projectName,
+					});
 				}
 			} catch (error) {
-				logger.warn("Failed to sync deployment status from Vercel", {
-					deploymentId: deployment.id,
-					projectIdentifier,
-					error,
-				});
+				if (isStale) {
+					await this.updateDeployment(deployment.id, userId, {
+						status: "timeout",
+						error: "Deployment timed out — unable to verify status",
+					});
+					logger.info("Marked stale deployment as timed out (API error)", {
+						deploymentId: deployment.id,
+						projectIdentifier,
+						error,
+					});
+				} else {
+					logger.warn("Failed to sync deployment status from Vercel", {
+						deploymentId: deployment.id,
+						projectIdentifier,
+						error,
+					});
+				}
 			}
 		}
 	}
@@ -925,11 +983,14 @@ class DeploymentService {
 				}
 			}
 
-			// Polling ended without finding a terminal state
-			// Leave status as "deploying" - syncDeploymentStatuses will update it on next page load
-			logger.info("Deployment poll ended without terminal status, will sync on next page load", {
+			// Polling ended without finding a terminal state — mark as timeout
+			logger.info("Deployment poll ended without terminal status, marking as timeout", {
 				projectName,
 				attempts,
+			});
+			await this.updateDeployment(deploymentId, userId, {
+				status: "timeout",
+				error: "Deployment timed out — no response from Vercel after polling",
 			});
 		};
 

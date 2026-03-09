@@ -1,3 +1,4 @@
+import "server-only";
 import { adminConfig } from "@/config/admin-config";
 import { env } from "@/env";
 

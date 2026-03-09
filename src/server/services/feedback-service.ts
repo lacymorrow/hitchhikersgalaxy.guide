@@ -1,4 +1,5 @@
 import { sql } from "drizzle-orm";
+import { generateFeedbackMailto } from "@/lib/utils/email-utils";
 import { resend } from "@/lib/resend";
 import { db } from "@/server/db";
 import { feedback } from "@/server/db/schema";
@@ -13,6 +14,7 @@ export interface CreateFeedbackInput {
 export interface FeedbackResult {
 	success: boolean;
 	requiresEmailFallback?: boolean;
+	mailtoLink?: string;
 	data?: any;
 	error?: string;
 }
@@ -67,6 +69,7 @@ export const createFeedback = async (
 				return {
 					success: true,
 					requiresEmailFallback: true,
+					mailtoLink: generateFeedbackMailto(input.content, input.source),
 					data: dbResult,
 				};
 			}
@@ -79,6 +82,7 @@ export const createFeedback = async (
 				return {
 					success: true,
 					requiresEmailFallback: true,
+					mailtoLink: generateFeedbackMailto(input.content, input.source),
 					data: dbResult,
 				};
 			}

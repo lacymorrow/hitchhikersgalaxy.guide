@@ -14,7 +14,6 @@ import {
 	PopoverTextarea,
 	PopoverTrigger,
 } from "@/components/ui/cults/animated-popover";
-import { generateFeedbackMailto } from "@/lib/utils/email-utils";
 import { submitFeedback } from "@/server/actions/feedback-actions";
 
 export const FeedbackPopover = () => {
@@ -23,6 +22,7 @@ export const FeedbackPopover = () => {
 	const [error, setError] = useState<string | null>(null);
 	const [showEmailFallback, setShowEmailFallback] = useState(false);
 	const [feedbackContent, setFeedbackContent] = useState("");
+	const [mailtoLink, setMailtoLink] = useState<string | null>(null);
 
 	const handleSubmit = async (content: string) => {
 		setLoading(true);
@@ -40,6 +40,7 @@ export const FeedbackPopover = () => {
 			if (result.success) {
 				if (result.requiresEmailFallback) {
 					setShowEmailFallback(true);
+					if (result.mailtoLink) setMailtoLink(result.mailtoLink);
 				} else {
 					setSuccess(true);
 				}
@@ -54,8 +55,7 @@ export const FeedbackPopover = () => {
 	};
 
 	const handleEmailFallback = () => {
-		const mailtoLink = generateFeedbackMailto(feedbackContent, "popover");
-		window.open(mailtoLink, "_blank");
+		if (mailtoLink) window.open(mailtoLink, "_blank");
 		setSuccess(true);
 		setShowEmailFallback(false);
 	};

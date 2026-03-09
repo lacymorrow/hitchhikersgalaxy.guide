@@ -78,5 +78,3 @@ export default async function DocsPage({ params }: PageProps) {
 		</article>
 	);
 }
-
-export const dynamicParams = false;

@@ -14,7 +14,6 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
-import { generateFeedbackMailto } from "@/lib/utils/email-utils";
 import { submitFeedback } from "@/server/actions/feedback-actions";
 
 interface FeedbackDialogProps {
@@ -29,6 +28,7 @@ export const FeedbackDialog = ({ trigger, className }: FeedbackDialogProps) => {
 	const [feedback, setFeedback] = useState("");
 	const [open, setOpen] = useState(false);
 	const [showEmailFallback, setShowEmailFallback] = useState(false);
+	const [mailtoLink, setMailtoLink] = useState<string | null>(null);
 
 	// Reset form when dialog closes
 	useEffect(() => {
@@ -62,6 +62,7 @@ export const FeedbackDialog = ({ trigger, className }: FeedbackDialogProps) => {
 			if (result.success) {
 				if (result.requiresEmailFallback) {
 					setShowEmailFallback(true);
+					if (result.mailtoLink) setMailtoLink(result.mailtoLink);
 				} else {
 					setSuccess(true);
 					// Close dialog after success
@@ -82,8 +83,7 @@ export const FeedbackDialog = ({ trigger, className }: FeedbackDialogProps) => {
 	};
 
 	const handleEmailFallback = () => {
-		const mailtoLink = generateFeedbackMailto(feedback.trim(), "dialog");
-		window.open(mailtoLink, "_blank");
+		if (mailtoLink) window.open(mailtoLink, "_blank");
 		setSuccess(true);
 		// Close dialog after opening email
 		const timeout = setTimeout(() => {

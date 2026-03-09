@@ -1,7 +1,6 @@
-import type { Metadata } from "next";
 import { AlertCircle } from "lucide-react";
+import type { Metadata } from "next";
 import { Suspense } from "react";
-import { siteConfig } from "@/config/site-config";
 import {
 	PageHeader,
 	PageHeaderDescription,
@@ -11,6 +10,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { Skeleton } from "@/components/ui/skeleton";
 import { constructMetadata } from "@/config/metadata";
+import { siteConfig } from "@/config/site-config";
 import { safeDbExecute } from "@/server/db";
 import { users } from "@/server/db/schema";
 import { getCollaboratorDetails } from "@/server/services/github/github-service";
@@ -127,7 +127,9 @@ export default function GitHubUsersPage() {
 			<div className="mb-6 flex items-end justify-between gap-4">
 				<div>
 					<h2 className="text-xl font-semibold tracking-tight">Repository Collaborators</h2>
-					<p className="text-sm text-muted-foreground">Users with access to the GitHub repository.</p>
+					<p className="text-sm text-muted-foreground">
+						Users with access to the GitHub repository.
+					</p>
 				</div>
 				<AddCollaboratorForm />
 			</div>

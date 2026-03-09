@@ -281,7 +281,10 @@ export class ContainerManager {
 			// Run the command
 			// Check if commandArray already includes npx shadcn@latest
 			const commandString =
-				commandArray[0] === "npx" && commandArray.length > 1 && commandArray[1] && commandArray[1].includes("shadcn")
+				commandArray[0] === "npx" &&
+				commandArray.length > 1 &&
+				commandArray[1] &&
+				commandArray[1].includes("shadcn")
 					? commandArray.join(" ")
 					: `npx shadcn@latest ${commandArray.join(" ")}`;
 

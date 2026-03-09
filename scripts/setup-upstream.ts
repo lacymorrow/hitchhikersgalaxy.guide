@@ -113,4 +113,3 @@ function setup(): void {
 
 // Run setup
 setup();
-

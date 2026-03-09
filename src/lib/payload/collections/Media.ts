@@ -1,4 +1,5 @@
 import type { CollectionConfig } from "payload";
+import { buildTimeFeatures } from "@/config/features-config";
 
 export const Media: CollectionConfig = {
 	slug: "media",
@@ -12,5 +13,5 @@ export const Media: CollectionConfig = {
 			required: true,
 		},
 	],
-	upload: true,
+	upload: process.env.NODE_ENV !== "production" || buildTimeFeatures.FILE_UPLOAD_ENABLED,
 };

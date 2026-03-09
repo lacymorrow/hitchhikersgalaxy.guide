@@ -92,9 +92,12 @@ const useIntersectionObserver = (ref: any, shouldObserve = false) => {
 	useEffect(() => {
 		if (!shouldObserve || !ref.current) return;
 
-		const observer = new IntersectionObserver(([entry]) => setIsVisible(entry?.isIntersecting || false), {
-			threshold: 0.1,
-		});
+		const observer = new IntersectionObserver(
+			([entry]) => setIsVisible(entry?.isIntersecting || false),
+			{
+				threshold: 0.1,
+			}
+		);
 
 		observer.observe(ref.current);
 		return () => observer.disconnect();
@@ -108,7 +111,8 @@ function GradualBlur(props: any) {
 	const [isHovered, setIsHovered] = useState(false);
 
 	const config = useMemo(() => {
-		const presetConfig = props.preset && (PRESETS as any)[props.preset] ? (PRESETS as any)[props.preset] : {};
+		const presetConfig =
+			props.preset && (PRESETS as any)[props.preset] ? (PRESETS as any)[props.preset] : {};
 		return mergeConfigs(DEFAULT_CONFIG, presetConfig, props);
 	}, [props]);
 
@@ -133,7 +137,7 @@ function GradualBlur(props: any) {
 
 			let blurValue;
 			if (config.exponential) {
-				blurValue = (Math.pow(2, progress * 4) as number) * 0.0625 * currentStrength;
+				blurValue = ((2 ** (progress * 4)) as number) * 0.0625 * currentStrength;
 			} else {
 				blurValue = 0.0625 * (progress * config.divCount + 1) * currentStrength;
 			}

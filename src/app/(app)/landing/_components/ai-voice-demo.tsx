@@ -1,13 +1,13 @@
 "use client";
 
+import { Loader2, Mic, Square } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LoadingBar } from "@/components/ui/loading-bar";
 import { SuspenseBoundary } from "@/components/ui/suspense-boundary";
 import { createAudioContext, setupAudioAnalyser } from "@/lib/utils/audio";
 import { useWebGPUAvailability } from "@/lib/utils/webgpu";
-import { Loader2, Mic, Square } from "lucide-react";
-import { useCallback, useEffect, useRef, useState } from "react";
 
 declare global {
 	interface Window {
@@ -44,7 +44,7 @@ function AudioVisualizer({ stream, simulate = false }: AudioVisualizerProps) {
 	const [dimensions] = useState<{ width: number; height: number }>({ width: 300, height: 100 });
 
 	const requestFrame = useCallback((callback: FrameRequestCallback): number => {
-		if (typeof window === 'undefined') {
+		if (typeof window === "undefined") {
 			return 0;
 		}
 		const id = window.requestAnimationFrame(callback);
@@ -53,14 +53,14 @@ function AudioVisualizer({ stream, simulate = false }: AudioVisualizerProps) {
 	}, []);
 
 	const cancelFrame = useCallback((frameId: number) => {
-		if (typeof window !== 'undefined' && frameId !== 0) {
+		if (typeof window !== "undefined" && frameId !== 0) {
 			window.cancelAnimationFrame(frameId);
 			frameStateRef.current.id = 0;
 		}
 	}, []);
 
 	useEffect(() => {
-		if (typeof window === 'undefined') return undefined;
+		if (typeof window === "undefined") return undefined;
 
 		const canvas = canvasRef.current;
 		if (!canvas) return undefined;
@@ -108,7 +108,7 @@ function AudioVisualizer({ stream, simulate = false }: AudioVisualizerProps) {
 
 				for (let i = 0; i < bufferLength; i++) {
 					const value = dataArray[i];
-					if (typeof value === 'undefined') continue;
+					if (typeof value === "undefined") continue;
 
 					const barHeight = (value / 255) * height;
 					context.fillStyle = `hsl(${(i / bufferLength) * 360}, 100%, 50%)`;
@@ -190,9 +190,7 @@ export function AIVoiceDemo() {
 		try {
 			if (!worker.current && hasAcceptedPermissions) {
 				setIsLoadingModel(true);
-				worker.current = new Worker(
-					new URL(WHISPER_WORKER_URL, import.meta.url),
-				);
+				worker.current = new Worker(new URL(WHISPER_WORKER_URL, import.meta.url));
 
 				worker.current.postMessage({ type: "load" });
 
@@ -208,7 +206,7 @@ export function AIVoiceDemo() {
 
 						case "update":
 							if (output) {
-								setCurrentStream(prev => prev + output);
+								setCurrentStream((prev) => prev + output);
 							}
 							break;
 
@@ -249,7 +247,7 @@ export function AIVoiceDemo() {
 
 	useEffect(() => {
 		if (currentStream && !isProcessing) {
-			setTranscript(prev => {
+			setTranscript((prev) => {
 				const newTranscript = prev ? `${prev}\n${currentStream}` : currentStream;
 				return newTranscript;
 			});
@@ -307,13 +305,13 @@ export function AIVoiceDemo() {
 								type: "generate",
 								data: {
 									audio,
-									language: "en"
-								}
+									language: "en",
+								},
 							});
 						}
 					};
 				})
-				.catch(err => {
+				.catch((err) => {
 					console.error("Error accessing microphone:", err);
 					setError("Failed to access microphone. Please ensure you have granted permission.");
 				});
@@ -356,8 +354,8 @@ export function AIVoiceDemo() {
 				<div className="space-y-4 text-center">
 					<h2 className="text-lg font-semibold">Browser Not Supported</h2>
 					<p className="text-sm text-muted-foreground">
-						Your browser doesn't support WebGPU, which is required for voice recognition.
-						Please try using Chrome Canary or another WebGPU-enabled browser.
+						Your browser doesn't support WebGPU, which is required for voice recognition. Please try
+						using Chrome Canary or another WebGPU-enabled browser.
 					</p>
 				</div>
 			</Card>
@@ -371,7 +369,8 @@ export function AIVoiceDemo() {
 					<div className="space-y-2">
 						<h2 className="text-lg font-semibold">AI Voice Demo</h2>
 						<p className="text-sm text-muted-foreground">
-							Convert speech to text using AI that runs entirely in your browser. No servers, no data collection.
+							Convert speech to text using AI that runs entirely in your browser. No servers, no
+							data collection.
 						</p>
 					</div>
 
@@ -384,23 +383,26 @@ export function AIVoiceDemo() {
 
 					<div className="flex flex-col space-y-4">
 						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							<span className="flex h-6 w-6 items-center justify-center rounded-full border">1</span>
+							<span className="flex h-6 w-6 items-center justify-center rounded-full border">
+								1
+							</span>
 							<span>Downloads ~50MB model to your browser</span>
 						</div>
 						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							<span className="flex h-6 w-6 items-center justify-center rounded-full border">2</span>
+							<span className="flex h-6 w-6 items-center justify-center rounded-full border">
+								2
+							</span>
 							<span>Runs 100% locally - complete privacy</span>
 						</div>
 						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							<span className="flex h-6 w-6 items-center justify-center rounded-full border">3</span>
+							<span className="flex h-6 w-6 items-center justify-center rounded-full border">
+								3
+							</span>
 							<span>Works offline once loaded</span>
 						</div>
 					</div>
 
-					<Button
-						className="w-full"
-						onClick={() => setHasAcceptedPermissions(true)}
-					>
+					<Button className="w-full" onClick={() => setHasAcceptedPermissions(true)}>
 						Download & Run Live
 					</Button>
 				</div>
@@ -417,8 +419,7 @@ export function AIVoiceDemo() {
 						<div className="space-y-2 text-center">
 							<h2 className="text-lg font-semibold">Loading AI Model</h2>
 							<p className="text-sm text-muted-foreground">
-								Downloading and initializing the voice recognition model.
-								This may take a moment...
+								Downloading and initializing the voice recognition model. This may take a moment...
 							</p>
 						</div>
 					</div>
@@ -432,10 +433,7 @@ export function AIVoiceDemo() {
 			<Card className="w-full max-w-2xl p-4 md:p-6">
 				<div className="space-y-4">
 					<div className="flex flex-col items-center gap-4">
-						<AudioVisualizer
-							stream={stream}
-							simulate={!!error || (!isReady && !stream)}
-						/>
+						<AudioVisualizer stream={stream} simulate={!!error || (!isReady && !stream)} />
 						<Button
 							size="lg"
 							variant={isRecording ? "destructive" : "default"}
@@ -453,9 +451,7 @@ export function AIVoiceDemo() {
 						</Button>
 					</div>
 
-					{error && (
-						<div className="text-sm text-red-500">{error}</div>
-					)}
+					{error && <div className="text-sm text-red-500">{error}</div>}
 
 					{(transcript || currentStream) && (
 						<div className="mt-4 rounded-lg bg-muted p-4">

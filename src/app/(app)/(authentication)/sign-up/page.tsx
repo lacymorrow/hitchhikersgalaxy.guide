@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { AuthBranding } from "@/app/(app)/(authentication)/_components/auth-branding";
 import { AuthForm } from "@/app/(app)/(authentication)/_components/auth-form";
+import { AuthenticationCard } from "@/app/(app)/(authentication)/_components/authentication-card";
 import { Icon } from "@/components/assets/icon";
 import { Divider } from "@/components/primitives/divider";
 import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
-import { AuthenticationCard } from "@/app/(app)/(authentication)/_components/authentication-card";
 import { SignUpForm } from "./_components/sign-up-form";
 
 export const metadata: Metadata = constructMetadata({

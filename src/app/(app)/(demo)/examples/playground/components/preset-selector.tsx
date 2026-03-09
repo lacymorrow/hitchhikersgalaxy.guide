@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
-import { routes } from "@/config/routes";
 import {
 	Command,
 	CommandEmpty,
@@ -16,6 +15,7 @@ import {
 	CommandList,
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 
 import type { Preset } from "../data/presets";
@@ -68,7 +68,9 @@ export function PresetSelector({ presets, ...props }: PresetSelectorProps) {
 							))}
 						</CommandGroup>
 						<CommandGroup className="pt-0">
-							<CommandItem onSelect={() => router.push(routes.examples.index)}>More examples</CommandItem>
+							<CommandItem onSelect={() => router.push(routes.examples.index)}>
+								More examples
+							</CommandItem>
 						</CommandGroup>
 					</CommandList>
 				</Command>

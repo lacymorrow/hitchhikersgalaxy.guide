@@ -259,7 +259,9 @@ export function EnhancedLogDatatable() {
 						Delete Selected
 					</Button>
 				</div>
-				<div className="text-sm text-gray-500">Total Logs: <span className="tabular-nums">{logs.length}</span></div>
+				<div className="text-sm text-gray-500">
+					Total Logs: <span className="tabular-nums">{logs.length}</span>
+				</div>
 			</div>
 			<div className="relative min-h-[500px] rounded-lg bg-gray-50 p-4">
 				{isLoading ? (

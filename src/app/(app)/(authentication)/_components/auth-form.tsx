@@ -6,12 +6,12 @@ import { type ComponentPropsWithoutRef, type ReactNode, Suspense } from "react";
 import { OAuthButtons } from "@/app/(app)/(authentication)/_components/oauth-buttons";
 import { useIsModal } from "@/components/primitives/modal-context";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
+import { buttonVariants } from "@/components/ui/button";
 import { CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useAuthForm } from "../_hooks/use-auth-form";
 import { AuthFooter } from "./auth-footer";
 import { AuthHeader } from "./auth-header";
-import { buttonVariants } from "@/components/ui/button";
 
 interface AuthFormProps extends ComponentPropsWithoutRef<"div"> {
 	mode: "sign-in" | "sign-up";
@@ -83,7 +83,10 @@ export function AuthForm({
 							{alternateLink.text}{" "}
 							<Link
 								href={alternateLink.href}
-								className={cn(buttonVariants({ variant: "link" }), "underline underline-offset-4 hover:no-underline hover:text-muted-foreground px-0")}
+								className={cn(
+									buttonVariants({ variant: "link" }),
+									"underline underline-offset-4 hover:no-underline hover:text-muted-foreground px-0"
+								)}
 								onClick={handleAlternateLinkClick}
 							>
 								{alternateLink.label}

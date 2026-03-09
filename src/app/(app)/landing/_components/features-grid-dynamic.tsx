@@ -1,7 +1,7 @@
+import { v4 as uuidv4 } from "uuid";
 import { cn } from "@/lib/utils";
 import { getPayloadContent } from "@/lib/utils/get-payload-content";
 import type { FeatureCategory, FeaturePlan } from "@/types/feature";
-import { v4 as uuidv4 } from "uuid";
 import { FeatureCard } from "./feature-card";
 
 type PayloadFeature = {
@@ -37,7 +37,7 @@ export async function FeaturesGridDynamic() {
 		<div
 			className={cn(
 				"grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3",
-				"relative mx-auto max-w-5xl px-4",
+				"relative mx-auto max-w-5xl px-4"
 			)}
 		>
 			{features.map((feature, index) => {

@@ -2,6 +2,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { Slot as SlotPrimitive } from "radix-ui";
 import * as React from "react";
 
+import type { HapticPattern } from "@/hooks/use-haptics";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
@@ -33,18 +34,27 @@ const buttonVariants = cva(
 
 export interface ButtonProps
 	extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-	VariantProps<typeof buttonVariants> {
+		VariantProps<typeof buttonVariants> {
 	asChild?: boolean;
 	icon?: React.ElementType;
 	iconPosition?: "left" | "right";
 	/** Disable haptic feedback on click */
 	noHaptics?: boolean;
+	/** Haptic pattern to fire on click (default: "light"). Ignored when noHaptics is true. */
+	hapticPattern?: HapticPattern;
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	({ className, variant, size, asChild = false, noHaptics: _noHaptics = false, ...props }, ref) => {
+	({ className, variant, size, asChild = false, noHaptics = false, hapticPattern, ...props }, ref) => {
 		const Comp = asChild ? SlotPrimitive.Slot : "button";
-		return <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} {...props} />;
+		return (
+			<Comp
+				className={cn(buttonVariants({ variant, size, className }))}
+				ref={ref}
+				data-haptic={noHaptics ? undefined : (hapticPattern ?? "light")}
+				{...props}
+			/>
+		);
 	}
 );
 Button.displayName = "Button";

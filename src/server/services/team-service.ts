@@ -124,7 +124,6 @@ export class TeamService extends BaseService<typeof teams> {
 			return [];
 		}
 		try {
-
 			const personalTeams = await db.query.teamMembers.findMany({
 				where: eq(teamMembers.userId, userId),
 				with: {

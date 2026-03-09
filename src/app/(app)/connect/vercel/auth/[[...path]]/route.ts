@@ -1,13 +1,13 @@
 import { and, eq } from "drizzle-orm";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
+import { routes } from "@/config/routes";
+import { STATUS_CODES } from "@/config/status-codes";
+import { env } from "@/env";
+import { routeRedirect } from "@/lib/utils/redirect";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
 import { accounts } from "@/server/db/schema";
-import { env } from "@/env";
-import { STATUS_CODES } from "@/config/status-codes";
-import { routes } from "@/config/routes";
-import { routeRedirect } from "@/lib/utils/redirect";
 
 interface RouteContext {
 	params: Promise<{
@@ -25,7 +25,10 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
 	try {
 		const session = await auth();
-		console.log("[Vercel OAuth] Session check", { hasUser: !!session?.user, userId: session?.user?.id });
+		console.log("[Vercel OAuth] Session check", {
+			hasUser: !!session?.user,
+			userId: session?.user?.id,
+		});
 
 		if (!session?.user) {
 			return NextResponse.redirect(new URL(routes.auth.signIn, request.url));
@@ -139,11 +142,11 @@ export async function GET(request: NextRequest, context: RouteContext) {
 			hasUserId: !!(userData.user?.id || userData.user?.uid),
 			user: userData.user
 				? {
-					id: userData.user.id || userData.user.uid,
-					email: userData.user.email,
-					username: userData.user.username,
-					name: userData.user.name,
-				}
+						id: userData.user.id || userData.user.uid,
+						email: userData.user.email,
+						username: userData.user.username,
+						name: userData.user.name,
+					}
 				: null,
 		});
 

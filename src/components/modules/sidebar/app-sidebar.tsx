@@ -3,12 +3,7 @@ import * as React from "react";
 import { useId } from "react";
 import { NavUser } from "@/components/blocks/nav-user";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import {
-	Sidebar,
-	SidebarContent,
-	SidebarFooter,
-	SidebarRail,
-} from "@/components/ui/sidebar";
+import { Sidebar, SidebarContent, SidebarFooter, SidebarRail } from "@/components/ui/sidebar";
 import { cn } from "@/lib/utils";
 import { NavMain } from "../../blocks/nav-main";
 import { NavSecondary } from "../../blocks/nav-secondary";
@@ -34,7 +29,7 @@ const appSidebarVariants = cva("", {
 
 interface AppSidebarProps
 	extends Omit<React.ComponentProps<typeof Sidebar>, "variant">,
-	VariantProps<typeof appSidebarVariants> {
+		VariantProps<typeof appSidebarVariants> {
 	variant?: "inset" | "floating" | "sidebar";
 	size?: "default" | "sm" | "lg";
 }

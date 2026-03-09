@@ -43,7 +43,7 @@ export async function verifyTurnstileToken(token: string): Promise<boolean> {
 
 		if (!response.ok) {
 			console.error(
-				`Turnstile verification request failed: ${response.status} ${response.statusText}`,
+				`Turnstile verification request failed: ${response.status} ${response.statusText}`
 			);
 			return false;
 		}

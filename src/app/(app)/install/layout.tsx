@@ -3,7 +3,8 @@ import { constructMetadata } from "@/config/metadata";
 
 export const metadata: Metadata = constructMetadata({
 	title: "Install shadcn/ui Components",
-	description: "Add beautiful, accessible UI components to your Next.js application with the shadcn/ui installer.",
+	description:
+		"Add beautiful, accessible UI components to your Next.js application with the shadcn/ui installer.",
 });
 
 export default function InstallLayout({ children }: { children: React.ReactNode }) {

@@ -6,7 +6,6 @@ import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { routes } from "@/config/routes";
 import {
 	Form,
 	FormControl,
@@ -25,6 +24,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { routes } from "@/config/routes";
 import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 

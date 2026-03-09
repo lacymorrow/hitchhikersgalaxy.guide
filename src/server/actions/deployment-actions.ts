@@ -4,8 +4,8 @@ import { revalidatePath } from "next/cache";
 import { routes } from "@/config/routes";
 import { validateProjectName } from "@/lib/schemas/deployment";
 import { auth } from "@/server/auth";
-import { type Deployment } from "@/server/db/schema";
-import { deploymentService, type DeploymentResult } from "@/server/services/deployment-service";
+import type { Deployment } from "@/server/db/schema";
+import { type DeploymentResult, deploymentService } from "@/server/services/deployment-service";
 
 /**
  * Server Actions for Deployments
@@ -43,7 +43,10 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 
 	// Pre-check repository name availability
 	try {
-		const availability = await deploymentService.checkRepositoryNameAvailable(userId, sanitizedProjectName);
+		const availability = await deploymentService.checkRepositoryNameAvailable(
+			userId,
+			sanitizedProjectName
+		);
 		if (availability.checked && !availability.available) {
 			return {
 				success: false,
@@ -88,14 +91,15 @@ export async function initiateDeployment(formData: FormData): Promise<Deployment
 						error: error instanceof Error ? error.message : "An unknown error occurred",
 					});
 				} catch (updateError) {
-					console.error(`Failed to update deployment status:`, updateError);
+					console.error("Failed to update deployment status:", updateError);
 				}
 			}
 		})();
 
 		return {
 			success: true,
-			message: "Deployment started! Monitor progress below - you'll be notified when it completes or if any errors occur.",
+			message:
+				"Deployment started! Monitor progress below - you'll be notified when it completes or if any errors occur.",
 			deploymentId: newDeployment.id,
 			data: { githubRepo: undefined, vercelProject: undefined },
 		};
@@ -182,4 +186,3 @@ export async function cancelDeployment(id: string): Promise<Deployment | null> {
 	}
 	return result;
 }
-

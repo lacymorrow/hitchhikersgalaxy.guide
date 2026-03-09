@@ -2,11 +2,11 @@
 
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { AudioVisualizer } from "./_components/AudioVisualizer";
-import Progress from "./_components/Progress";
 import { LanguageSelector } from "./_components/LanguageSelector";
+import Progress from "./_components/Progress";
 
 const IS_WEBGPU_AVAILABLE = !!navigator?.gpu;
 
@@ -65,15 +65,13 @@ export const AIRealtimeWhisperWebGPU = () => {
 								return { ...item, ...e.data };
 							}
 							return item;
-						}),
+						})
 					);
 					break;
 
 				case "done":
 					// Model file loaded: remove the progress item from the list.
-					setProgressItems((prev) =>
-						prev.filter((item) => item.file !== e.data.file),
-					);
+					setProgressItems((prev) => prev.filter((item) => item.file !== e.data.file));
 					break;
 
 				case "ready":
@@ -175,8 +173,7 @@ export const AIRealtimeWhisperWebGPU = () => {
 
 			fileReader.onloadend = async () => {
 				const arrayBuffer = fileReader.result;
-				const decoded =
-					await audioContextRef.current.decodeAudioData(arrayBuffer);
+				const decoded = await audioContextRef.current.decodeAudioData(arrayBuffer);
 				let audio = decoded.getChannelData(0);
 				if (audio.length > MAX_SAMPLES) {
 					// Get last MAX_SAMPLES
@@ -199,16 +196,9 @@ export const AIRealtimeWhisperWebGPU = () => {
 			{
 				<div className="h-full overflow-auto scrollbar-thin flex justify-center items-center flex-col relative">
 					<div className="flex flex-col items-center mb-1 max-w-[400px] text-center">
-						<img
-							src="/logo.png"
-							width="50%"
-							height="auto"
-							className="block"
-						></img>
+						<img src="/logo.png" width="50%" height="auto" className="block" />
 						<h1 className="text-4xl font-bold mb-1">Whisper WebGPU</h1>
-						<h2 className="text-xl font-semibold">
-							Real-time in-browser speech recognition
-						</h2>
+						<h2 className="text-xl font-semibold">Real-time in-browser speech recognition</h2>
 					</div>
 
 					<div className="flex flex-col items-center px-4">
@@ -225,10 +215,9 @@ export const AIRealtimeWhisperWebGPU = () => {
 									>
 										whisper-base
 									</a>
-									, a 73 million parameter speech recognition model that is
-									optimized for inference on the web. Once downloaded, the model
-									(~200&nbsp;MB) will be cached and reused when you revisit the
-									page.
+									, a 73 million parameter speech recognition model that is optimized for inference
+									on the web. Once downloaded, the model (~200&nbsp;MB) will be cached and reused
+									when you revisit the page.
 									<br />
 									<br />
 									Everything runs directly in your browser using{" "}
@@ -240,9 +229,8 @@ export const AIRealtimeWhisperWebGPU = () => {
 									>
 										🤗&nbsp;Transformers.js
 									</a>{" "}
-									and ONNX Runtime Web, meaning no data is sent to a server. You
-									can even disconnect from the internet after the model has
-									loaded!
+									and ONNX Runtime Web, meaning no data is sent to a server. You can even disconnect
+									from the internet after the model has loaded!
 								</p>
 
 								<button
@@ -266,9 +254,7 @@ export const AIRealtimeWhisperWebGPU = () => {
 										{text}
 									</p>
 									{tps && (
-										<span className="absolute bottom-0 right-0 px-1">
-											{tps.toFixed(2)} tok/s
-										</span>
+										<span className="absolute bottom-0 right-0 px-1">{tps.toFixed(2)} tok/s</span>
 									)}
 								</div>
 							)}
@@ -298,12 +284,7 @@ export const AIRealtimeWhisperWebGPU = () => {
 							<div className="w-full max-w-[500px] text-left mx-auto p-4">
 								<p className="text-center">{loadingMessage}</p>
 								{progressItems.map(({ file, progress, total }, i) => (
-									<Progress
-										key={i}
-										text={file}
-										percentage={progress}
-										total={total}
-									/>
+									<Progress key={i} text={file} percentage={progress} total={total} />
 								))}
 							</div>
 						)}

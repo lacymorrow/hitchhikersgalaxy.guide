@@ -1,12 +1,12 @@
 "use client";
 
+import { Loader2, MessageSquare } from "lucide-react";
+import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LoadingBar } from "@/components/ui/loading-bar";
 import { Textarea } from "@/components/ui/textarea";
 import { useWebGPUAvailability } from "@/lib/utils/webgpu";
-import { Loader2, MessageSquare } from "lucide-react";
-import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
 
 function TypingAnimation({ simulate = false }: { simulate?: boolean }) {
 	const [text, setText] = useState("Hi! I'm an AI assistant...");
@@ -51,7 +51,9 @@ export function AILandingDemo() {
 	const [hasAcceptedPermissions, setHasAcceptedPermissions] = useState(false);
 	const [isLoadingModel, setIsLoadingModel] = useState(false);
 	const [loadingMessage, setLoadingMessage] = useState("");
-	const [progressItems, setProgressItems] = useState<Array<{ file: string; progress: number; total: number }>>([]);
+	const [progressItems, setProgressItems] = useState<
+		Array<{ file: string; progress: number; total: number }>
+	>([]);
 	const worker = useRef<Worker | null>(null);
 	const currentMessageRef = useRef<string>("");
 
@@ -72,11 +74,11 @@ export function AILandingDemo() {
 						setLoadingMessage(data);
 						break;
 					case "initiate":
-						setProgressItems(prev => [...prev, e.data]);
+						setProgressItems((prev) => [...prev, e.data]);
 						break;
 					case "progress":
-						setProgressItems(prev =>
-							prev.map(item => {
+						setProgressItems((prev) =>
+							prev.map((item) => {
 								if (item.file === e.data.file) {
 									return { ...item, ...e.data };
 								}
@@ -85,9 +87,7 @@ export function AILandingDemo() {
 						);
 						break;
 					case "done":
-						setProgressItems(prev =>
-							prev.filter(item => item.file !== e.data.file)
-						);
+						setProgressItems((prev) => prev.filter((item) => item.file !== e.data.file));
 						break;
 					case "ready":
 						setIsLoadingModel(false);
@@ -95,7 +95,7 @@ export function AILandingDemo() {
 						break;
 					case "update":
 						if (workerOutput) {
-							setOutput(prev => prev + workerOutput);
+							setOutput((prev) => prev + workerOutput);
 						}
 						break;
 					case "complete":
@@ -108,16 +108,22 @@ export function AILandingDemo() {
 
 						switch (errorType) {
 							case "webgpu_not_supported":
-								setError("Your browser doesn't support WebGPU, which is required for this demo. Please try using Chrome Canary or another WebGPU-enabled browser.");
+								setError(
+									"Your browser doesn't support WebGPU, which is required for this demo. Please try using Chrome Canary or another WebGPU-enabled browser."
+								);
 								break;
 							case "model_load_failed":
-								setError("Failed to load the AI model. Please try again or check your browser's WebGPU support.");
+								setError(
+									"Failed to load the AI model. Please try again or check your browser's WebGPU support."
+								);
 								break;
 							case "generation_failed":
 								setError("Failed to generate a response. Please try again.");
 								break;
 							case "initialization_failed":
-								setError("Failed to initialize the AI model. Please try again or check your browser's WebGPU support.");
+								setError(
+									"Failed to initialize the AI model. Please try again or check your browser's WebGPU support."
+								);
 								break;
 							default:
 								setError(errorMessage);
@@ -151,10 +157,12 @@ export function AILandingDemo() {
 		try {
 			worker.current.postMessage({
 				type: "generate",
-				data: [{
-					role: "user",
-					content: input.trim()
-				}]
+				data: [
+					{
+						role: "user",
+						content: input.trim(),
+					},
+				],
 			});
 		} catch (err) {
 			console.error("Error generating response:", err);
@@ -169,8 +177,8 @@ export function AILandingDemo() {
 				<div className="space-y-4 text-center">
 					<h2 className="text-lg font-semibold">Browser Not Supported</h2>
 					<p className="text-sm text-muted-foreground">
-						Your browser doesn't support WebGPU, which is required for this demo.
-						Please try using Chrome Canary or another WebGPU-enabled browser.
+						Your browser doesn't support WebGPU, which is required for this demo. Please try using
+						Chrome Canary or another WebGPU-enabled browser.
 					</p>
 				</div>
 			</Card>
@@ -184,7 +192,8 @@ export function AILandingDemo() {
 					<div className="space-y-2">
 						<h2 className="text-lg font-semibold">AI Chat Demo</h2>
 						<p className="text-sm text-muted-foreground">
-							Chat with a powerful AI model that runs entirely in your browser. No servers, no data collection.
+							Chat with a powerful AI model that runs entirely in your browser. No servers, no data
+							collection.
 						</p>
 					</div>
 
@@ -194,23 +203,26 @@ export function AILandingDemo() {
 
 					<div className="flex flex-col space-y-4">
 						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							<span className="flex h-6 w-6 items-center justify-center rounded-full border">1</span>
+							<span className="flex h-6 w-6 items-center justify-center rounded-full border">
+								1
+							</span>
 							<span>Downloads ~50MB model to your browser</span>
 						</div>
 						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							<span className="flex h-6 w-6 items-center justify-center rounded-full border">2</span>
+							<span className="flex h-6 w-6 items-center justify-center rounded-full border">
+								2
+							</span>
 							<span>Runs 100% locally - complete privacy</span>
 						</div>
 						<div className="flex items-center gap-2 text-sm text-muted-foreground">
-							<span className="flex h-6 w-6 items-center justify-center rounded-full border">3</span>
+							<span className="flex h-6 w-6 items-center justify-center rounded-full border">
+								3
+							</span>
 							<span>Works offline once loaded</span>
 						</div>
 					</div>
 
-					<Button
-						className="w-full"
-						onClick={() => setHasAcceptedPermissions(true)}
-					>
+					<Button className="w-full" onClick={() => setHasAcceptedPermissions(true)}>
 						Download & Run Live
 					</Button>
 				</div>
@@ -226,9 +238,7 @@ export function AILandingDemo() {
 					<div className="flex flex-col items-center justify-center space-y-4">
 						<div className="space-y-2 text-center">
 							<h2 className="text-lg font-semibold">Loading AI Model</h2>
-							<p className="text-sm text-muted-foreground">
-								{loadingMessage}
-							</p>
+							<p className="text-sm text-muted-foreground">{loadingMessage}</p>
 						</div>
 						{progressItems.map(({ file, progress, total }) => (
 							<div key={`${file}-${progress}`} className="w-full">
@@ -280,9 +290,7 @@ export function AILandingDemo() {
 					</Button>
 				</div>
 
-				{error && (
-					<div className="text-sm text-red-500">{error}</div>
-				)}
+				{error && <div className="text-sm text-red-500">{error}</div>}
 
 				{output && (
 					<div className="mt-4 rounded-lg bg-muted p-4">
@@ -293,4 +301,3 @@ export function AILandingDemo() {
 		</Card>
 	);
 }
-

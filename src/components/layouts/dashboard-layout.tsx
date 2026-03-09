@@ -1,4 +1,4 @@
-import { Suspense, type ReactNode } from "react";
+import { type ReactNode, Suspense } from "react";
 import { DashboardHeader } from "@/components/blocks/dashboard-header";
 import { SidebarLayout } from "@/components/layouts/sidebar-layout";
 import { AppSidebar } from "@/components/modules/sidebar/app-sidebar";

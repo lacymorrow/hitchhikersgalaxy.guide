@@ -318,11 +318,12 @@ export const FileInput = forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDiv
 			>
 				<div
 					className={cn(
-						`w-full rounded-lg duration-300 ease-in-out ${dropzoneState.isDragAccept
-							? "border-green-500"
-							: dropzoneState.isDragReject || isFileTooBig
-								? "border-red-500"
-								: "border-gray-300"
+						`w-full rounded-lg duration-300 ease-in-out ${
+							dropzoneState.isDragAccept
+								? "border-green-500"
+								: dropzoneState.isDragReject || isFileTooBig
+									? "border-red-500"
+									: "border-gray-300"
 						}`,
 						className
 					)}

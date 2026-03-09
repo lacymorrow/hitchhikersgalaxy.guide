@@ -12,7 +12,13 @@
  * Skips gracefully if any are missing.
  */
 import { expect, test } from "@playwright/test";
-import { generateProjectName, isAuthenticated, login, TEST_PROJECT_PREFIX, TEST_USER } from "./fixtures";
+import {
+	generateProjectName,
+	isAuthenticated,
+	login,
+	TEST_PROJECT_PREFIX,
+	TEST_USER,
+} from "./fixtures";
 import { cleanupDeployment, closeDb as closeCleanupDb } from "./helpers/cleanup-deployment";
 import {
 	cleanupConnections,
@@ -112,9 +118,7 @@ test.describe("Full Deployment Flow", () => {
 		await nameInput.fill(projectName);
 
 		// Wait for validation to complete (either "Name available" or "Valid format")
-		await expect(
-			page.getByText(/name available|valid format/i),
-		).toBeVisible({ timeout: 10000 });
+		await expect(page.getByText(/name available|valid format/i)).toBeVisible({ timeout: 10000 });
 
 		// Click Deploy Now
 		const deployNowButton = page.getByRole("button", { name: /deploy now/i });

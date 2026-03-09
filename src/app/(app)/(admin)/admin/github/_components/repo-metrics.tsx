@@ -160,7 +160,9 @@ export async function RepoMetricsContent() {
 					<CardHeader>
 						<CardTitle className="flex items-center gap-2">
 							<AlertCircle className="h-5 w-5 text-red-500" />
-							{isBadCredentials ? "GitHub API: Bad Credentials" : "Error Loading Repository Metrics"}
+							{isBadCredentials
+								? "GitHub API: Bad Credentials"
+								: "Error Loading Repository Metrics"}
 						</CardTitle>
 						<CardDescription>
 							{isBadCredentials
@@ -171,8 +173,12 @@ export async function RepoMetricsContent() {
 					{isBadCredentials && (
 						<CardContent>
 							<ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
-								<li>Ensure <code>GITHUB_ACCESS_TOKEN</code> is set in your environment</li>
-								<li>The token must have the <code>repo</code> scope</li>
+								<li>
+									Ensure <code>GITHUB_ACCESS_TOKEN</code> is set in your environment
+								</li>
+								<li>
+									The token must have the <code>repo</code> scope
+								</li>
 							</ul>
 						</CardContent>
 					)}

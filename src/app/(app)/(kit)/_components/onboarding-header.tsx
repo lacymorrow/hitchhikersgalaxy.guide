@@ -1,10 +1,10 @@
 import { BookOpen, CheckCircle } from "lucide-react";
 import { Link } from "@/components/primitives/link";
 import { Badge } from "@/components/ui/badge";
-import { routes } from "@/config/routes";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { RainbowButton } from "@/components/ui/magicui/rainbow-button";
+import { routes } from "@/config/routes";
 
 export function OnboardingHeader() {
 	return (

@@ -3,7 +3,6 @@
 import { Check, ChevronsUpDown, ListPlus, Loader2 } from "lucide-react";
 import * as React from "react";
 import { useDebounce } from "use-debounce";
-import { env } from "@/env";
 import { Button } from "@/components/ui/button";
 import {
 	Command,
@@ -16,6 +15,7 @@ import {
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { GOOGLE_FONTS } from "@/config/fonts"; // Initial curated list
+import { env } from "@/env";
 import { cn } from "@/lib/utils";
 
 interface FontsApiResponse {
@@ -263,9 +263,7 @@ export function FontSelector() {
 				<PopoverContent className="w-[200px] p-0">
 					<Command shouldFilter={false}>
 						<CommandInput
-							placeholder={
-								isCuratedList ? "Browse suggestions..." : "Search or Browse fonts..."
-							}
+							placeholder={isCuratedList ? "Browse suggestions..." : "Search or Browse fonts..."}
 							value={searchQuery}
 							onValueChange={setSearchQuery}
 							disabled={!isReady}
@@ -339,21 +337,21 @@ export function FontSelector() {
 										<CommandGroup heading="Browse Fonts">
 											{browsedFonts.length > 0
 												? browsedFonts.map((fontFamily) => (
-													<CommandItem
-														key={`browse-${fontFamily}`}
-														value={fontFamily}
-														onSelect={handleSelectFont}
-													>
-														<Check
-															className={cn(
-																"mr-2 h-4 w-4",
-																selectedFont === fontFamily ? "opacity-100" : "opacity-0"
-															)}
-															aria-hidden="true"
-														/>
-														<span>{fontFamily}</span>
-													</CommandItem>
-												))
+														<CommandItem
+															key={`browse-${fontFamily}`}
+															value={fontFamily}
+															onSelect={handleSelectFont}
+														>
+															<Check
+																className={cn(
+																	"mr-2 h-4 w-4",
+																	selectedFont === fontFamily ? "opacity-100" : "opacity-0"
+																)}
+																aria-hidden="true"
+															/>
+															<span>{fontFamily}</span>
+														</CommandItem>
+													))
 												: null}
 
 											{/* Loading/Error/Load More Section */}

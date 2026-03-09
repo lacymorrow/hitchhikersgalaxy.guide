@@ -16,7 +16,8 @@ import { getDashboardData } from "./_hooks/use-dashboard-data";
 
 export const metadata: Metadata = constructMetadata({
 	title: "Dashboard",
-	description: "View your project overview, recent activity, and quick actions from your personalized dashboard.",
+	description:
+		"View your project overview, recent activity, and quick actions from your personalized dashboard.",
 });
 
 export default async function DashboardPage() {

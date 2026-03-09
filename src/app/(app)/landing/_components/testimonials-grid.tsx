@@ -5,7 +5,7 @@ import { getPayloadContent } from "@/lib/utils/get-payload-content";
 import type { Media, Testimonial } from "@/payload-types";
 
 // Make StaticTestimonial match Payload's type structure
-type StaticTestimonial = Omit<Testimonial, 'id' | 'updatedAt' | 'createdAt'> & {
+type StaticTestimonial = Omit<Testimonial, "id" | "updatedAt" | "createdAt"> & {
 	id?: string;
 };
 
@@ -31,7 +31,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial | StaticTes
 				// light styles
 				"border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
 				// dark styles
-				"dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]",
+				"dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
 			)}
 		>
 			<div className="flex flex-row items-start justify-between">
@@ -42,9 +42,7 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial | StaticTes
 					</Avatar>
 					<div className="flex flex-col">
 						<div className="flex items-center gap-2">
-							<figcaption className="text-sm font-medium dark:text-white">
-								{name}
-							</figcaption>
+							<figcaption className="text-sm font-medium dark:text-white">{name}</figcaption>
 							{testimonial.verified && (
 								<Badge variant="secondary" className="h-5 px-1">
 									Verified
@@ -55,16 +53,12 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial | StaticTes
 							{testimonial.role} at {testimonial.company}
 						</p>
 						{testimonial.username && (
-							<p className="text-xs font-medium dark:text-white/40">
-								{testimonial.username}
-							</p>
+							<p className="text-xs font-medium dark:text-white/40">{testimonial.username}</p>
 						)}
 					</div>
 				</div>
 			</div>
-			<blockquote className="mt-4 text-sm leading-relaxed">
-				{testimonial.testimonial}
-			</blockquote>
+			<blockquote className="mt-4 text-sm leading-relaxed">{testimonial.testimonial}</blockquote>
 		</figure>
 	);
 };

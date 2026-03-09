@@ -1,3 +1,27 @@
+import { StarFilledIcon } from "@radix-ui/react-icons";
+import {
+	IconBrandDeno,
+	IconBrandDocker,
+	IconBrandOpenai,
+	IconBrandVercelFilled,
+	IconRobotFace,
+} from "@tabler/icons-react";
+import {
+	ArrowUp,
+	Calculator,
+	DatabaseIcon,
+	Headphones,
+	LockKeyholeIcon,
+	MegaphoneIcon,
+	RefreshCw,
+	Shield,
+	ShieldCheckIcon,
+	Sparkles,
+	TargetIcon,
+	Timer,
+} from "lucide-react";
+import type { Metadata } from "next";
+import { Suspense } from "react";
 import AnimatedCounter from "@/app/(app)/landing/_components/animated-counter";
 import { FeaturesGrid } from "@/app/(app)/landing/_components/features-grid";
 import { Spotlight } from "@/app/(app)/landing/_components/spotlight";
@@ -14,6 +38,7 @@ import {
 	SectionCopy,
 	SectionHeader,
 } from "@/components/primitives/section";
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import AnimatedGradientText from "@/components/ui/animated-gradient-text";
 import BlurFade from "@/components/ui/blur-fade";
 import { buttonVariants } from "@/components/ui/button";
@@ -29,31 +54,6 @@ import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { singlePlan } from "@/content/pricing/pricing-content";
 import { cn } from "@/lib/utils";
-import { StarFilledIcon } from "@radix-ui/react-icons";
-import {
-	IconBrandDeno,
-	IconBrandDocker,
-	IconBrandOpenai,
-	IconBrandVercelFilled,
-	IconRobotFace
-} from "@tabler/icons-react";
-import {
-	ArrowUp,
-	Calculator,
-	DatabaseIcon,
-	Headphones,
-	LockKeyholeIcon,
-	MegaphoneIcon,
-	RefreshCw,
-	Shield,
-	ShieldCheckIcon,
-	Sparkles,
-	TargetIcon,
-	Timer
-} from "lucide-react";
-import type { Metadata } from "next";
-import { Suspense } from "react";
-import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { AiDemoSection } from "./_components/ai-demo-section";
 import { ComparisonTable } from "./_components/comparison-table";
 import { FAQ } from "./_components/faq";
@@ -65,6 +65,7 @@ import { ROICalculator } from "./_components/roi-calculator";
 import { SocialDock } from "./_components/social-dock";
 import { SocialMarquee } from "./_components/social-marquee";
 import { SocialProof } from "./_components/social-proof";
+
 const headings = [
 	"The Next.js Stack for Startups",
 	"A website that builds itself",
@@ -84,16 +85,12 @@ export const metadata: Metadata = constructMetadata({
 const LAUNCH_END_DATE = "2025-09-10T23:59:59";
 
 export default async function Home() {
-
 	return (
 		<>
 			<JsonLd organization website />
 			<div className="flex flex-col gap-20 overflow-hidden">
 				<ParticlesHero quantity={50} speed={80}>
-					<div
-						className="absolute left-1/2 top-0 -translate-x-1/2 blur-3xl"
-						aria-hidden="true"
-					>
+					<div className="absolute left-1/2 top-0 -translate-x-1/2 blur-3xl" aria-hidden="true">
 						<div
 							className="aspect-[1155/678] w-[72.1875rem] animate-galaxy-shimmer bg-gradient-to-tr from-[#ff80b5] via-[#9089fc] to-[#ff80b5] opacity-0"
 							style={{
@@ -118,7 +115,6 @@ export default async function Home() {
 										</div>
 									</AnimatedGradientText>
 									{/* </Link> */}
-
 								</div>
 							</BlurFade>
 
@@ -130,7 +126,9 @@ export default async function Home() {
 
 							<BlurFade delay={1} duration={1}>
 								<div className="mb-8 text-balance text-lg tracking-tight md:text-xl">
-									<span className="lg:hidden">Join the ranks of founders launching together—deploy in minutes without code.</span>
+									<span className="lg:hidden">
+										Join the ranks of founders launching together—deploy in minutes without code.
+									</span>
 									<HoverInfo
 										className="hidden lg:inline-block"
 										content={
@@ -144,9 +142,11 @@ export default async function Home() {
 											</>
 										}
 									>
-										Join founders shipping enterprise-ready sites in minutes<br />
-									</HoverInfo>{' '}
-									without touching code.<br />
+										Join founders shipping enterprise-ready sites in minutes
+										<br />
+									</HoverInfo>{" "}
+									without touching code.
+									<br />
 									<b>Build together, succeed together.</b> Skip the grind and launch now.
 								</div>
 							</BlurFade>
@@ -156,12 +156,9 @@ export default async function Home() {
 									<div className="flex flex-col-reverse sm:flex-row justify-center flex-wrap gap-4">
 										<PrimaryCta />
 									</div>
-
 								</div>
 							</BlurFade>
 						</div>
-
-
 
 						<Meteors number={2} />
 					</div>
@@ -185,16 +182,14 @@ export default async function Home() {
 						</div>
 					</BlurFade>
 					<BlurFade delay={0.5} duration={1} inView>
-
-						<SectionHeader>
-							Stop Reinventing the Wheel
-						</SectionHeader>
+						<SectionHeader>Stop Reinventing the Wheel</SectionHeader>
 					</BlurFade>
 
 					<BlurFade delay={1} duration={1} inView>
 						<SectionCopy>
 							{siteConfig.name} is a production-ready codebase <b>powering real companies today</b>.
-							Start with a full dashboard, pre-built payment and user management, and a CMS, so you can focus on your product.
+							Start with a full dashboard, pre-built payment and user management, and a CMS, so you
+							can focus on your product.
 						</SectionCopy>
 					</BlurFade>
 				</Section>
@@ -206,18 +201,23 @@ export default async function Home() {
 						<AiDemoSection />
 					</div>
 
-
-
-
-
 					<Section>
-
 						<SectionHeader>Choose Your Launch Plan</SectionHeader>
-						<SectionCopy>Join these successful founders and launch your product in days, not months.</SectionCopy>
+						<SectionCopy>
+							Join these successful founders and launch your product in days, not months.
+						</SectionCopy>
 
 						<PricingSectionSingle plan={singlePlan}>
 							<div className="border-gray-800 pt-8 text-center text-sm text-gray-400">
-								<p>Prefer to build it yourself? <Link href={routes.external.buy} className={cn(buttonVariants({ variant: "link" }), "px-1")}>Shipkit Bones is always free</Link></p>
+								<p>
+									Prefer to build it yourself?{" "}
+									<Link
+										href={routes.external.buy}
+										className={cn(buttonVariants({ variant: "link" }), "px-1")}
+									>
+										Shipkit Bones is always free
+									</Link>
+								</p>
 							</div>
 						</PricingSectionSingle>
 
@@ -230,7 +230,8 @@ export default async function Home() {
 								</p>
 							</div>
 							<p className="text-sm text-gray-500 mb-4">
-								Everything included: Next.js 15, TypeScript, Authentication, Database, UI Components, and more
+								Everything included: Next.js 15, TypeScript, Authentication, Database, UI
+								Components, and more
 							</p>
 							<div className="flex items-center justify-center gap-8">
 								<div className="flex items-center gap-2">
@@ -254,9 +255,7 @@ export default async function Home() {
 							<Calculator className="h-4 w-4" />
 							<span>$ Saved</span>
 						</SectionBadge>
-						<SectionHeader>
-							How much will you save?
-						</SectionHeader>
+						<SectionHeader>How much will you save?</SectionHeader>
 						<SectionContent>
 							<div className="max-w-4xl mx-auto">
 								<div className="text-center mb-8">
@@ -278,8 +277,18 @@ export default async function Home() {
 						<SectionHeader>Everything You Need to Know</SectionHeader>
 						<SectionCopy>
 							Can't find what you're looking for? Reach out on
-							<Link className={cn(buttonVariants({ variant: "link", size: "lg" }), "px-1")} href={routes.external.email}>email</Link>
-							<Link className={cn(buttonVariants({ variant: "link", size: "lg" }), "px-1")} href={routes.external.x_follow}>or Twitter</Link>
+							<Link
+								className={cn(buttonVariants({ variant: "link", size: "lg" }), "px-1")}
+								href={routes.external.email}
+							>
+								email
+							</Link>
+							<Link
+								className={cn(buttonVariants({ variant: "link", size: "lg" }), "px-1")}
+								href={routes.external.x_follow}
+							>
+								or Twitter
+							</Link>
 						</SectionCopy>
 						<SectionContent>
 							<FAQ />
@@ -295,25 +304,21 @@ export default async function Home() {
 						</SectionCopy>
 					</Section>
 
-
 					{process.env.NEXT_PUBLIC_VERCEL_ENV !== "production" && (
 						<>
-
-							<h2 className="mb-8 text-center text-3xl font-bold">
-								DEVELOPMENT DEMO
-							</h2>
+							<h2 className="mb-8 text-center text-3xl font-bold">DEVELOPMENT DEMO</h2>
 
 							<FeaturesCards />
 
 							<Section className="relative">
 								<SectionBadge className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-sm font-medium">
-									<StarFilledIcon className="h-4 w-4" /> Loved by Early Adopters</SectionBadge>
+									<StarFilledIcon className="h-4 w-4" /> Loved by Early Adopters
+								</SectionBadge>
 								<SectionHeader>
 									Built for teams to <span className="underline">scale</span>
 								</SectionHeader>
 								<SectionContent>
 									<div className="text-center max-w-2xl mx-auto mb-8">
-
 										<SectionCopy className="mb-6">
 											Battle-tested by developers launching their own products. Get a stack that's
 											ready to scale with rock-solid code and best practices in place.
@@ -324,21 +329,27 @@ export default async function Home() {
 													Hireable Tech
 												</div>
 												<h3 className="font-semibold mb-2">Lightning Fast</h3>
-												<p className="text-sm text-gray-600 dark:text-gray-300">Next.js 15 + React Server Components for instant loads</p>
+												<p className="text-sm text-gray-600 dark:text-gray-300">
+													Next.js 15 + React Server Components for instant loads
+												</p>
 											</div>
 											<div className="p-6 rounded-lg border border-gray-100 dark:border-gray-800 relative group hover:border-primary/50 transition-colors">
 												<div className="absolute -top-3 left-4 px-2 py-1 bg-purple-50 dark:bg-purple-900/20 text-purple-600 dark:text-purple-400 text-xs font-medium rounded-full">
 													Enterprise Ready
 												</div>
 												<h3 className="font-semibold mb-2">Type-Safe</h3>
-												<p className="text-sm text-gray-600 dark:text-gray-300">End-to-end TypeScript with zero runtime errors</p>
+												<p className="text-sm text-gray-600 dark:text-gray-300">
+													End-to-end TypeScript with zero runtime errors
+												</p>
 											</div>
 											<div className="p-6 rounded-lg border border-gray-100 dark:border-gray-800 relative group hover:border-primary/50 transition-colors">
 												<div className="absolute -top-3 left-4 px-2 py-1 bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400 text-xs font-medium rounded-full">
 													Future-Proof
 												</div>
 												<h3 className="font-semibold mb-2">AI-Powered</h3>
-												<p className="text-sm text-gray-600 dark:text-gray-300">OpenAI integration with custom GPTs built-in</p>
+												<p className="text-sm text-gray-600 dark:text-gray-300">
+													OpenAI integration with custom GPTs built-in
+												</p>
 											</div>
 										</div>
 										<div className="flex flex-col items-center gap-4">
@@ -365,12 +376,10 @@ export default async function Home() {
 									<Timer className="h-4 w-4" />
 									<span>Proven Developer Experience</span>
 								</SectionBadge>
-								<SectionHeader>
-									Why Start Building Now?
-								</SectionHeader>
+								<SectionHeader>Why Start Building Now?</SectionHeader>
 								<SectionCopy>
-									Why waste months building foundations? Get straight to creating unique value
-									with production-ready infrastructure.
+									Why waste months building foundations? Get straight to creating unique value with
+									production-ready infrastructure.
 								</SectionCopy>
 								<div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
 									<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
@@ -379,7 +388,8 @@ export default async function Home() {
 										</div>
 										<h3 className="text-xl font-semibold mb-4">The AI Revolution is Here</h3>
 										<p className="text-gray-600 dark:text-gray-300 mb-4">
-											Every day without AI features is a day your competitors get ahead. Launch with production-ready AI capabilities from day one.
+											Every day without AI features is a day your competitors get ahead. Launch with
+											production-ready AI capabilities from day one.
 										</p>
 										<div className="pt-4 border-t border-gray-100 dark:border-gray-700">
 											<div className="text-sm font-medium mb-2">What You Get:</div>
@@ -405,7 +415,8 @@ export default async function Home() {
 										</div>
 										<h3 className="text-xl font-semibold mb-4">Rising Dev Costs</h3>
 										<p className="text-gray-600 dark:text-gray-300 mb-4">
-											The average developer salary hit $150k in 2024. Save months of development time and launch before your runway runs out.
+											The average developer salary hit $150k in 2024. Save months of development
+											time and launch before your runway runs out.
 										</p>
 										<div className="pt-4 border-t border-gray-100 dark:border-gray-700">
 											<div className="text-sm font-medium mb-2">Your Savings:</div>
@@ -431,7 +442,8 @@ export default async function Home() {
 										</div>
 										<h3 className="text-xl font-semibold mb-4">Launch Price</h3>
 										<p className="text-gray-600 dark:text-gray-300 mb-4">
-											Get lifetime access at our special launch price. After launch (and my wedding), prices will increase to match market rates.
+											Get lifetime access at our special launch price. After launch (and my
+											wedding), prices will increase to match market rates.
 										</p>
 										<div className="pt-4 border-t border-gray-100 dark:border-gray-700">
 											<div className="text-sm font-medium mb-2">Limited Time:</div>
@@ -460,22 +472,30 @@ export default async function Home() {
 									<div className="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto">
 										<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
 											<div className="font-medium mb-2">Indie Hackers</div>
-											<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">Launched in days</div>
+											<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+												Launched in days
+											</div>
 											<div className="text-2xl font-bold text-primary">10+ Apps</div>
 										</div>
 										<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
 											<div className="font-medium mb-2">Fly5</div>
-											<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">MVP created in 4 hours</div>
+											<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+												MVP created in 4 hours
+											</div>
 											<div className="text-2xl font-bold text-primary">4 Weeks → 4 hours</div>
 										</div>
 										<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
 											<div className="font-medium mb-2">Ship Log</div>
-											<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">2 days to MVP</div>
+											<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+												2 days to MVP
+											</div>
 											<div className="text-2xl font-bold text-primary">Users in a week</div>
 										</div>
 										<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-all">
 											<div className="font-medium mb-2">Illish</div>
-											<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">3 Days to Launch</div>
+											<div className="text-sm text-gray-600 dark:text-gray-300 mb-4">
+												3 Days to Launch
+											</div>
 											<div className="text-2xl font-bold text-primary">98% Less Code</div>
 										</div>
 									</div>
@@ -488,7 +508,6 @@ export default async function Home() {
 												<span>Special Launch Pricing - Save 50%</span>
 											</SectionBadge>
 										</div>
-
 									</div>
 								</div>
 							</Section>
@@ -499,19 +518,17 @@ export default async function Home() {
 									<span>Practical AI Integration</span>
 								</SectionBadge>
 								<SectionCopy>
-									Don't just integrate AI - make it your competitive advantage. Launch with production-ready AI features that your users will love.
+									Don't just integrate AI - make it your competitive advantage. Launch with
+									production-ready AI features that your users will love.
 								</SectionCopy>
-
 							</Section>
 							<Section>
 								<SectionHeader>Built With Modern Tech</SectionHeader>
 								<div className="max-w-2xl mx-auto text-center">
-									<SectionCopy>
-										A cutting-edge stack that scales from MVP to IPO.
-									</SectionCopy>
+									<SectionCopy>A cutting-edge stack that scales from MVP to IPO.</SectionCopy>
 									<p className="text-gray-600 dark:text-gray-300">
-										Every component is chosen for performance, reliability, and developer experience.
-										No more decision fatigue - just proven tools that work.
+										Every component is chosen for performance, reliability, and developer
+										experience. No more decision fatigue - just proven tools that work.
 									</p>
 								</div>
 								<SectionContent>
@@ -644,7 +661,9 @@ export default async function Home() {
 													<Icons.bun className="h-6 w-6 my-sm" />
 													<IconBrandDeno className="h-6 w-6 my-sm" />
 												</div>
-												<div className="text-sm text-gray-600 dark:text-gray-300">Package Managers</div>
+												<div className="text-sm text-gray-600 dark:text-gray-300">
+													Package Managers
+												</div>
 											</div>
 										</div>
 										<div className="flex justify-center gap-4">
@@ -672,12 +691,15 @@ export default async function Home() {
 								<SectionContent>
 									<div className="max-w-3xl mx-auto text-center mb-8">
 										<p className="text-lg mb-4">
-											From indie hackers to funded startups, {siteConfig.name} powers the next generation of web apps.
+											From indie hackers to funded startups, {siteConfig.name} powers the next
+											generation of web apps.
 										</p>
 										<div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
 											<div className="p-4">
 												<div className="text-3xl font-bold mb-2">10+</div>
-												<div className="text-sm text-gray-600 dark:text-gray-300">Production Apps</div>
+												<div className="text-sm text-gray-600 dark:text-gray-300">
+													Production Apps
+												</div>
 											</div>
 											<div className="p-4">
 												<div className="text-3xl font-bold mb-2">90%+</div>
@@ -685,7 +707,9 @@ export default async function Home() {
 											</div>
 											<div className="p-4">
 												<div className="text-3xl font-bold mb-2">24/7</div>
-												<div className="text-sm text-gray-600 dark:text-gray-300">Developer Support</div>
+												<div className="text-sm text-gray-600 dark:text-gray-300">
+													Developer Support
+												</div>
 											</div>
 										</div>
 									</div>
@@ -698,9 +722,7 @@ export default async function Home() {
 									<StarFilledIcon className="h-4 w-4" />
 									<span>Feature Comparison</span>
 								</SectionBadge>
-								<SectionHeader>
-									Compare AI Features
-								</SectionHeader>
+								<SectionHeader>Compare AI Features</SectionHeader>
 								<div className="max-w-4xl mx-auto">
 									<div className="text-center mb-12">
 										<p className="text-lg text-gray-600 dark:text-gray-300">
@@ -771,9 +793,7 @@ export default async function Home() {
 									<Calculator className="h-4 w-4" />
 									<span>ROI Calculator</span>
 								</SectionBadge>
-								<SectionHeader>
-									Calculate Your ROI
-								</SectionHeader>
+								<SectionHeader>Calculate Your ROI</SectionHeader>
 								<SectionContent>
 									<div className="max-w-4xl mx-auto">
 										<div className="text-center mb-8">
@@ -795,12 +815,8 @@ export default async function Home() {
 									<StarFilledIcon className="h-4 w-4" />
 									<span>Compare Solutions</span>
 								</SectionBadge>
-								<SectionHeader>
-									Feature Comparison
-								</SectionHeader>
-								<SectionCopy>
-									See how {siteConfig.name} stacks up against other options
-								</SectionCopy>
+								<SectionHeader>Feature Comparison</SectionHeader>
+								<SectionCopy>See how {siteConfig.name} stacks up against other options</SectionCopy>
 								<SectionContent>
 									<ComparisonTable />
 									<div className="mt-8 text-center">
@@ -827,21 +843,14 @@ export default async function Home() {
 
 							<SocialDock className="fixed bottom-12 left-0 right-0 z-50" />
 
-
-
-
 							<div className="mt-12 w-full max-w-6xl mx-auto px-6">
 								<BlurFade delay={3} duration={1} inView>
 									<HeroDemo />
 								</BlurFade>
 							</div>
 
-
-
 							<Section className="relative bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 py-12">
-								<SectionHeader>
-									Trusted By Industry Leaders
-								</SectionHeader>
+								<SectionHeader>Trusted By Industry Leaders</SectionHeader>
 								<div className="max-w-4xl mx-auto">
 									<div className="text-center mb-12">
 										<div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-medium mb-4">
@@ -849,7 +858,8 @@ export default async function Home() {
 											<span>Not Backed by Y Combinator</span>
 										</div>
 										<p className="text-lg text-gray-600 dark:text-gray-300">
-											Join the founders who turned their ideas into successful products in record time
+											Join the founders who turned their ideas into successful products in record
+											time
 										</p>
 									</div>
 									<div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
@@ -863,11 +873,15 @@ export default async function Home() {
 												<div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700" />
 												<div>
 													<h3 className="font-semibold">Sarah Chen</h3>
-													<p className="text-sm text-gray-600 dark:text-gray-300">CTO at RocketAI</p>
+													<p className="text-sm text-gray-600 dark:text-gray-300">
+														CTO at RocketAI
+													</p>
 												</div>
 											</div>
 											<blockquote className="text-lg mb-4">
-												"{siteConfig.name} saved us 4 months of development time. The AI features alone would have taken us months to build properly. We closed our seed round 2 weeks after launch."
+												"{siteConfig.name} saved us 4 months of development time. The AI features
+												alone would have taken us months to build properly. We closed our seed round
+												2 weeks after launch."
 											</blockquote>
 											<div className="flex items-center gap-2">
 												<StarFilledIcon className="h-4 w-4 text-yellow-400" />
@@ -908,11 +922,14 @@ export default async function Home() {
 												<div className="w-12 h-12 rounded-full bg-gray-200 dark:bg-gray-700" />
 												<div>
 													<h3 className="font-semibold">Michael Torres</h3>
-													<p className="text-sm text-gray-600 dark:text-gray-300">Founder, DataFlow</p>
+													<p className="text-sm text-gray-600 dark:text-gray-300">
+														Founder, DataFlow
+													</p>
 												</div>
 											</div>
 											<blockquote className="text-lg mb-4">
-												"We went from idea to paying customers in 3 weeks. The authentication and payment systems worked flawlessly from day one. Best investment we've made."
+												"We went from idea to paying customers in 3 weeks. The authentication and
+												payment systems worked flawlessly from day one. Best investment we've made."
 											</blockquote>
 											<div className="flex items-center gap-2">
 												<StarFilledIcon className="h-4 w-4 text-yellow-400" />
@@ -946,15 +963,21 @@ export default async function Home() {
 									</div>
 									<div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
 										<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-shadow">
-											<div className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">$12M+</div>
+											<div className="text-4xl font-bold mb-2 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+												$12M+
+											</div>
 											<div className="text-gray-600 dark:text-gray-300">Raised by customers</div>
 										</div>
 										<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-shadow">
-											<div className="text-4xl font-bold mb-2 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">150+</div>
+											<div className="text-4xl font-bold mb-2 bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent">
+												150+
+											</div>
 											<div className="text-gray-600 dark:text-gray-300">Active products</div>
 										</div>
 										<div className="p-6 rounded-lg bg-white dark:bg-gray-800 shadow-sm group hover:shadow-md transition-shadow">
-											<div className="text-4xl font-bold mb-2 bg-gradient-to-r from-yellow-600 to-red-600 bg-clip-text text-transparent">4.9/5</div>
+											<div className="text-4xl font-bold mb-2 bg-gradient-to-r from-yellow-600 to-red-600 bg-clip-text text-transparent">
+												4.9/5
+											</div>
 											<div className="text-gray-600 dark:text-gray-300">Average rating</div>
 										</div>
 									</div>
@@ -986,8 +1009,8 @@ export default async function Home() {
 								<SectionHeader>Supercharged AI tools</SectionHeader>
 								<SectionCopy>
 									We ❤️ v0. <br />
-									{siteConfig.name} includes a suite of AI tools to help you build
-									your product faster.
+									{siteConfig.name} includes a suite of AI tools to help you build your product
+									faster.
 									<br />
 									<Link href="#" className={buttonVariants({ variant: "link" })}>
 										See it in action
@@ -997,8 +1020,7 @@ export default async function Home() {
 
 							<Section>
 								<SectionHeader>
-									Built by a solopreneur with{" "}
-									<span className="font-bold underline">Hustle</span>
+									Built by a solopreneur with <span className="font-bold underline">Hustle</span>
 								</SectionHeader>
 								<SectionCopy>
 									A lifelong web developer with a
@@ -1028,9 +1050,9 @@ export default async function Home() {
 								<SectionCopy>
 									{siteConfig.name} isn't just for Developers.
 									<br />
-									We include tools for Marketers, Designers, and Founders. Export
-									Figma directly into React components, drag-and-drop code using
-									Builder, and manage your documentation with Markdown.
+									We include tools for Marketers, Designers, and Founders. Export Figma directly
+									into React components, drag-and-drop code using Builder, and manage your
+									documentation with Markdown.
 								</SectionCopy>
 								<SectionContent>
 									<FeaturesGrid />
@@ -1043,12 +1065,10 @@ export default async function Home() {
 								<p className="text-sm text-muted-foreground">Downloads</p>
 								<AnimatedCounter />
 							</div>
-
 						</>
 					)}
-				</Suspense >
-
-			</div >
+				</Suspense>
+			</div>
 		</>
 	);
 }

@@ -6,10 +6,7 @@ import * as React from "react";
 import { haptic } from "@/hooks/use-haptics";
 import { cn } from "@/lib/utils";
 
-const Select = ({
-	onValueChange,
-	...props
-}: React.ComponentProps<typeof SelectPrimitive.Root>) => (
+const Select = ({ onValueChange, ...props }: React.ComponentProps<typeof SelectPrimitive.Root>) => (
 	<SelectPrimitive.Root
 		onValueChange={(value) => {
 			haptic("selection");

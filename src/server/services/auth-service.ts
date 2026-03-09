@@ -390,7 +390,13 @@ export const AuthService = {
 			return { ok: true, url: result.url ?? redirectTo };
 		} catch (error) {
 			// Only log unexpected errors; credential/auth errors are already logged at origin
-			if (!(error instanceof Error && (error.message === STATUS_CODES.CREDENTIALS.message || error.message === STATUS_CODES.AUTH_ERROR.message))) {
+			if (
+				!(
+					error instanceof Error &&
+					(error.message === STATUS_CODES.CREDENTIALS.message ||
+						error.message === STATUS_CODES.AUTH_ERROR.message)
+				)
+			) {
 				logger.error("Error in signInWithCredentials:", error);
 			}
 			throw error;
@@ -715,7 +721,11 @@ export const AuthService = {
 			}
 		} catch (error) {
 			// Re-throw known auth errors without logging again
-			if (error instanceof Error && (error.message === STATUS_CODES.CREDENTIALS.message || error.message === STATUS_CODES.AUTH_ERROR.message)) {
+			if (
+				error instanceof Error &&
+				(error.message === STATUS_CODES.CREDENTIALS.message ||
+					error.message === STATUS_CODES.AUTH_ERROR.message)
+			) {
 				throw error;
 			}
 			logger.error("Unexpected auth error:", error);

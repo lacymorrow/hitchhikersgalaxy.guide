@@ -1,6 +1,6 @@
 "use client";
-import { Counter } from "@/components/ui/cui/counter";
 import { useEffect, useState } from "react";
+import { Counter } from "@/components/ui/cui/counter";
 
 export default function AnimatedCounter() {
 	const [count, setCount] = useState(0);

@@ -1,8 +1,8 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { GithubStarsButton } from "@/components/buttons/github-stars-button";
 import { siteConfig } from "@/config/site-config";
-import { useEffect, useState } from "react";
 import "./github-button.css";
 
 export default function GithubButtonDemo() {

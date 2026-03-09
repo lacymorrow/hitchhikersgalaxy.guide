@@ -13,17 +13,14 @@ export async function GET(request: NextRequest) {
 		if (!session?.user?.id) {
 			return NextResponse.json(
 				{ success: false, purchased: false, error: "Authentication required" },
-				{ status: 401 },
+				{ status: 401 }
 			);
 		}
 
 		const searchParams = request.nextUrl.searchParams;
 		const productId = searchParams.get("productId");
 		const variantId = searchParams.get("variantId");
-		const provider = searchParams.get("provider") as
-			| "lemonsqueezy"
-			| "polar"
-			| undefined;
+		const provider = searchParams.get("provider") as "lemonsqueezy" | "polar" | undefined;
 
 		if (!productId && !variantId) {
 			return NextResponse.json(
@@ -32,7 +29,7 @@ export async function GET(request: NextRequest) {
 					purchased: false,
 					error: "productId or variantId is required",
 				},
-				{ status: 400 },
+				{ status: 400 }
 			);
 		}
 
@@ -61,7 +58,7 @@ export async function GET(request: NextRequest) {
 				purchased: false,
 				error: "Failed to check purchase status",
 			},
-			{ status: 500 },
+			{ status: 500 }
 		);
 	}
 }

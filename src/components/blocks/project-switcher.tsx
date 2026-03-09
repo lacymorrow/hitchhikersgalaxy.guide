@@ -16,21 +16,13 @@ import {
 	CommandList,
 	CommandSeparator,
 } from "@/components/ui/command";
-import {
-	Popover,
-	PopoverContent,
-	PopoverTrigger,
-} from "@/components/ui/popover";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 
 // Helper to fetch team projects via API
-async function fetchTeamProjects(
-	teamId: string,
-): Promise<{ id: string; name: string }[]> {
-	const response = await fetch(
-		`${routes.api.projects}?teamId=${encodeURIComponent(teamId)}`,
-	);
+async function fetchTeamProjects(teamId: string): Promise<{ id: string; name: string }[]> {
+	const response = await fetch(`${routes.api.projects}?teamId=${encodeURIComponent(teamId)}`);
 	if (!response.ok) {
 		return [];
 	}
@@ -48,16 +40,12 @@ interface ProjectSwitcherProps {
 	onProjectChange?: (projectId: string) => void;
 }
 
-export const ProjectSwitcher = ({
-	className,
-	onProjectChange,
-}: ProjectSwitcherProps) => {
+export const ProjectSwitcher = ({ className, onProjectChange }: ProjectSwitcherProps) => {
 	const { data: session } = useSession();
 	const { selectedTeamId } = useTeam();
 
 	const [projects, setProjects] = React.useState<ProjectSwitcherProject[]>([]);
-	const [activeProject, setActiveProject] =
-		React.useState<ProjectSwitcherProject | null>(null);
+	const [activeProject, setActiveProject] = React.useState<ProjectSwitcherProject | null>(null);
 	const [open, setOpen] = React.useState(false);
 
 	React.useEffect(() => {
@@ -82,8 +70,7 @@ export const ProjectSwitcher = ({
 
 				// Keep selection stable across refreshes; default to first project.
 				setActiveProject((previous) => {
-					if (previous && nextProjects.some((p) => p.id === previous.id))
-						return previous;
+					if (previous && nextProjects.some((p) => p.id === previous.id)) return previous;
 					return nextProjects[0] ?? null;
 				});
 			} catch (error) {
@@ -107,7 +94,7 @@ export const ProjectSwitcher = ({
 			setOpen(false);
 			onProjectChange?.(project.id);
 		},
-		[onProjectChange],
+		[onProjectChange]
 	);
 
 	return (
@@ -118,14 +105,13 @@ export const ProjectSwitcher = ({
 					size="sm"
 					className={cn(
 						"flex h-12 w-[260px] max-w-full items-center justify-between gap-2 py-6",
-						className,
+						className
 					)}
 					disabled={!selectedTeamId}
 					aria-label="Select project"
 				>
 					<span className="truncate text-sm font-semibold">
-						{activeProject?.name ??
-							(selectedTeamId ? "Select project" : "Select team first")}
+						{activeProject?.name ?? (selectedTeamId ? "Select project" : "Select team first")}
 					</span>
 					<CaretSortIcon className="h-4 w-4 shrink-0 opacity-50" />
 				</Button>
@@ -148,9 +134,7 @@ export const ProjectSwitcher = ({
 											<CheckIcon
 												className={cn(
 													"ml-auto h-4 w-4",
-													activeProject?.id === project.id
-														? "opacity-100"
-														: "opacity-0",
+													activeProject?.id === project.id ? "opacity-100" : "opacity-0"
 												)}
 											/>
 										</CommandItem>
@@ -168,10 +152,7 @@ export const ProjectSwitcher = ({
 						<CommandGroup>
 							{session?.user?.id ? (
 								<ProjectDialog userId={session.user.id} variant="create">
-									<CommandItem
-										onSelect={() => setOpen(false)}
-										className="text-sm"
-									>
+									<CommandItem onSelect={() => setOpen(false)} className="text-sm">
 										<PlusIcon className="mr-2 h-4 w-4" />
 										Create Project
 									</CommandItem>

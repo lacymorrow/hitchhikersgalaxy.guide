@@ -7,10 +7,7 @@ import * as React from "react";
 import { haptic } from "@/hooks/use-haptics";
 import { cn } from "@/lib/utils";
 
-const Sheet = ({
-	onOpenChange,
-	...props
-}: React.ComponentProps<typeof SheetPrimitive.Root>) => (
+const Sheet = ({ onOpenChange, ...props }: React.ComponentProps<typeof SheetPrimitive.Root>) => (
 	<SheetPrimitive.Root
 		onOpenChange={(open) => {
 			haptic(open ? "soft" : "light");

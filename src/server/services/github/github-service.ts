@@ -318,7 +318,10 @@ export async function revokeGitHubAccess(userId: string) {
 			// If this is a stub (pending invite) record, delete it; otherwise just clear the username
 			if (user.email === pendingCollaboratorEmail(user.githubUsername)) {
 				await db?.delete(users).where(eq(users.id, userId));
-				logger.info("Deleted stub collaborator record", { userId, githubUsername: user.githubUsername });
+				logger.info("Deleted stub collaborator record", {
+					userId,
+					githubUsername: user.githubUsername,
+				});
 			} else {
 				await db
 					?.update(users)

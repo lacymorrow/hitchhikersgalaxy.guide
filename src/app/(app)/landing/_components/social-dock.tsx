@@ -1,21 +1,17 @@
 "use client";
 
+import { IconBrandDiscordFilled } from "@tabler/icons-react";
+import { useWindowScroll } from "@uidotdev/usehooks";
+import { Code2Icon, HomeIcon } from "lucide-react";
 import { Icons } from "@/components/assets/icons";
 import { Link } from "@/components/primitives/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Dock, DockIcon } from "@/components/ui/dock";
 import { Separator } from "@/components/ui/separator";
 import { ThemeToggle } from "@/components/ui/shipkit/theme";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
-import { IconBrandDiscordFilled } from "@tabler/icons-react";
-import { useWindowScroll } from "@uidotdev/usehooks";
-import { Code2Icon, HomeIcon } from "lucide-react";
 
 const data = {
 	navbar: [
@@ -57,8 +53,17 @@ const LinkOrIcon = ({
 	href,
 	children,
 	...props
-}: { href?: string; children: React.ReactNode } & Omit<React.ComponentPropsWithoutRef<"a">, "children">) => {
-	return href ? <Link href={href} {...props}>{children}</Link> : <a {...props}>{children}</a>;
+}: { href?: string; children: React.ReactNode } & Omit<
+	React.ComponentPropsWithoutRef<"a">,
+	"children"
+>) => {
+	return href ? (
+		<Link href={href} {...props}>
+			{children}
+		</Link>
+	) : (
+		<a {...props}>{children}</a>
+	);
 };
 
 const SOCIAL_DOCK_BUFFER = 200;
@@ -67,8 +72,7 @@ export const SocialDock = ({ className }: { className?: string }) => {
 	const [{ y }] = useWindowScroll();
 	const isNearTop = y && y < SOCIAL_DOCK_BUFFER;
 	const isNearBottom =
-		y &&
-		y < document.body.scrollHeight - window.innerHeight - SOCIAL_DOCK_BUFFER;
+		y && y < document.body.scrollHeight - window.innerHeight - SOCIAL_DOCK_BUFFER;
 	const isHidden = isNearTop || isNearBottom;
 
 	return (
@@ -78,7 +82,7 @@ export const SocialDock = ({ className }: { className?: string }) => {
 				className={cn(
 					"pointer-events-none bg-white/15 opacity-0 transition-opacity delay-100 duration-500 dark:bg-black/15",
 					isHidden && "pointer-events-auto opacity-100",
-					className,
+					className
 				)}
 			>
 				{data.navbar.map((item) => (
@@ -90,7 +94,7 @@ export const SocialDock = ({ className }: { className?: string }) => {
 									aria-label={item.label}
 									className={cn(
 										buttonVariants({ variant: "ghost", size: "icon" }),
-										"size-12 rounded-full",
+										"size-12 rounded-full"
 									)}
 								>
 									<item.icon className="size-4" />
@@ -112,7 +116,7 @@ export const SocialDock = ({ className }: { className?: string }) => {
 									aria-label={social.name}
 									className={cn(
 										buttonVariants({ variant: "ghost", size: "icon" }),
-										"size-12 rounded-full",
+										"size-12 rounded-full"
 									)}
 								>
 									<social.icon className="size-4" />

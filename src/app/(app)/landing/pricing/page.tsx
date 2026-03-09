@@ -1,16 +1,18 @@
+import type { Metadata } from "next";
 import { PricingSectionSingle } from "@/components/blocks/pricing-section-single";
 import { Link } from "@/components/primitives/link";
 import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { singlePlan } from "@/content/pricing/pricing-content";
-import type { Metadata } from "next";
 import { FAQ } from "../_components/faq";
 export const metadata: Metadata = constructMetadata({
 	title: "Pricing & Plans - Start Building Today | Shipkit",
-	description: "Transparent, flexible pricing for teams of all sizes. Launch your app with confidence using Shipkit's powerful features. Free tier available, no credit card required.",
+	description:
+		"Transparent, flexible pricing for teams of all sizes. Launch your app with confidence using Shipkit's powerful features. Free tier available, no credit card required.",
 	openGraph: {
 		title: "Pricing & Plans - Start Building Today | Shipkit",
-		description: "Transparent, flexible pricing for teams of all sizes. Launch your app with confidence using Shipkit's powerful features. Free tier available, no credit card required.",
+		description:
+			"Transparent, flexible pricing for teams of all sizes. Launch your app with confidence using Shipkit's powerful features. Free tier available, no credit card required.",
 		type: "website",
 		siteName: "Shipkit",
 		locale: "en_US",
@@ -50,9 +52,7 @@ export default function PricingPage() {
 
 			{/* FAQ Section */}
 			<section className="mx-auto mt-24 max-w-3xl">
-				<h2 className="mb-8 text-center text-2xl font-semibold">
-					Common Questions
-				</h2>
+				<h2 className="mb-8 text-center text-2xl font-semibold">Common Questions</h2>
 				<FAQ />
 			</section>
 

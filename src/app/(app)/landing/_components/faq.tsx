@@ -1,3 +1,4 @@
+import type { HTMLAttributes } from "react";
 import {
 	Accordion,
 	AccordionContent,
@@ -7,7 +8,6 @@ import {
 import { cn } from "@/lib/utils";
 import { getPayloadContent } from "@/lib/utils/get-payload-content";
 import type { Faq } from "@/payload-types";
-import type { HTMLAttributes } from "react";
 
 type StaticFaq = {
 	id?: string;
@@ -19,7 +19,7 @@ type StaticFaq = {
 type FaqType = Faq | StaticFaq;
 
 const serializeAnswer = (answer: unknown): string => {
-	if (typeof answer === 'string') return answer;
+	if (typeof answer === "string") return answer;
 	return JSON.stringify(answer);
 };
 
@@ -53,9 +53,7 @@ export const FAQ = async (props: HTMLAttributes<HTMLDivElement>) => {
 								{faq.question}
 							</AccordionTrigger>
 							<AccordionContent className="mt-2 leading-6 text-neutral-700 dark:text-neutral-400">
-								<div className="whitespace-pre-line">
-									{serializeAnswer(faq.answer)}
-								</div>
+								<div className="whitespace-pre-line">{serializeAnswer(faq.answer)}</div>
 							</AccordionContent>
 						</AccordionItem>
 					);

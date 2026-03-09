@@ -13,15 +13,12 @@ export async function GET(request: NextRequest) {
 		if (!session?.user?.id) {
 			return NextResponse.json(
 				{ success: false, hasSubscription: false, error: "Authentication required" },
-				{ status: 401 },
+				{ status: 401 }
 			);
 		}
 
 		const searchParams = request.nextUrl.searchParams;
-		const provider = searchParams.get("provider") as
-			| "lemonsqueezy"
-			| "polar"
-			| undefined;
+		const provider = searchParams.get("provider") as "lemonsqueezy" | "polar" | undefined;
 
 		const hasSubscription = await PaymentService.hasUserActiveSubscription({
 			userId: session.user.id,
@@ -37,7 +34,7 @@ export async function GET(request: NextRequest) {
 				hasSubscription: false,
 				error: "Failed to check subscription status",
 			},
-			{ status: 500 },
+			{ status: 500 }
 		);
 	}
 }

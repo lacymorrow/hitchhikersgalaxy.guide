@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { ArrowUpRight, CheckCircle } from "lucide-react";
+import type { Metadata } from "next";
 import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {

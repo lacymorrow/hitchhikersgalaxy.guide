@@ -9,9 +9,9 @@
 import { generateProjectNameSuggestions } from "@/lib/utils";
 import { auth } from "@/server/auth";
 import {
+	type DeploymentResult,
 	deploymentService,
 	type DeploymentConfig as ServiceDeploymentConfig,
-	type DeploymentResult,
 } from "@/server/services/deployment-service";
 
 // Re-export from utils for backwards compatibility

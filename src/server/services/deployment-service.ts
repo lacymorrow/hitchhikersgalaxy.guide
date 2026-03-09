@@ -253,12 +253,7 @@ class DeploymentService {
 		const deploymentsToSync = await db
 			.select()
 			.from(deployments)
-			.where(
-				and(
-					eq(deployments.userId, userId),
-					eq(deployments.status, "deploying")
-				)
-			);
+			.where(and(eq(deployments.userId, userId), eq(deployments.status, "deploying")));
 
 		if (!deploymentsToSync.length) {
 			return;
@@ -272,8 +267,7 @@ class DeploymentService {
 		const vercelService = createVercelAPIService(vercelToken);
 
 		for (const deployment of deploymentsToSync) {
-			const projectIdentifier =
-				deployment.vercelProjectId || deployment.projectName;
+			const projectIdentifier = deployment.vercelProjectId || deployment.projectName;
 
 			if (!projectIdentifier) {
 				logger.warn("Deployment has no project identifier for sync", {
@@ -333,7 +327,8 @@ class DeploymentService {
 						: deployment.vercelDeploymentUrl;
 					await this.updateDeployment(deployment.id, userId, {
 						status: resolvedStatus.status,
-						vercelDeploymentId: latestDeployment.uid ?? latestDeployment.id ?? deployment.vercelDeploymentId,
+						vercelDeploymentId:
+							latestDeployment.uid ?? latestDeployment.id ?? deployment.vercelDeploymentId,
 						vercelDeploymentUrl: deploymentUrl,
 						error: resolvedStatus.error,
 					});
@@ -379,7 +374,8 @@ class DeploymentService {
 		if (!githubToken) {
 			return {
 				success: false,
-				error: "GitHub account not connected. Please connect your GitHub account first or provide an access token.",
+				error:
+					"GitHub account not connected. Please connect your GitHub account first or provide an access token.",
 			};
 		}
 
@@ -395,7 +391,8 @@ class DeploymentService {
 		if (!vercelToken) {
 			return {
 				success: false,
-				error: "Vercel account not connected. Please connect your Vercel account in Settings first.",
+				error:
+					"Vercel account not connected. Please connect your Vercel account in Settings first.",
 			};
 		}
 
@@ -450,7 +447,10 @@ class DeploymentService {
 			const githubUsername = userInfo.username;
 
 			// Step 2: Check repository name availability
-			const isAvailable = await githubService.isRepositoryNameAvailable(githubUsername, projectName);
+			const isAvailable = await githubService.isRepositoryNameAvailable(
+				githubUsername,
+				projectName
+			);
 			if (!isAvailable) {
 				const error = `A repository named "${projectName}" already exists on your GitHub account.`;
 				await this.updateDeployment(currentDeploymentId, userId, { status: "failed", error });
@@ -475,7 +475,11 @@ class DeploymentService {
 					return {
 						success: false,
 						error: `${error} Visit: ${repoResult.invitationUrl || "https://github.com/notifications"}`,
-						data: { step: "github-pending-invitation", isPendingInvitation: true, invitationUrl: repoResult.invitationUrl },
+						data: {
+							step: "github-pending-invitation",
+							isPendingInvitation: true,
+							invitationUrl: repoResult.invitationUrl,
+						},
 					};
 				}
 
@@ -508,7 +512,11 @@ class DeploymentService {
 				return {
 					success: false,
 					error,
-					data: { step: "vercel-project-creation", githubRepo: repoInfo, requiresManualImport: true },
+					data: {
+						step: "vercel-project-creation",
+						githubRepo: repoInfo,
+						requiresManualImport: true,
+					},
 				};
 			}
 
@@ -590,7 +598,10 @@ class DeploymentService {
 		}
 
 		if (!/^[a-z0-9-]+$/.test(projectName)) {
-			return { success: false, error: "Project name can only contain lowercase letters, numbers, and hyphens" };
+			return {
+				success: false,
+				error: "Project name can only contain lowercase letters, numbers, and hyphens",
+			};
 		}
 
 		if (!vercelToken) {
@@ -686,7 +697,10 @@ class DeploymentService {
 				return { available: true, checked: false, reason: "github_api_error" };
 			}
 
-			const isAvailable = await githubService.isRepositoryNameAvailable(userInfo.username, projectName);
+			const isAvailable = await githubService.isRepositoryNameAvailable(
+				userInfo.username,
+				projectName
+			);
 
 			if (!isAvailable) {
 				return {
@@ -838,13 +852,19 @@ class DeploymentService {
 				githubRepoId
 			);
 			if (deploymentResult.success && deploymentResult.deploymentUrl) {
-				logger.info("Initial deployment triggered", { projectName, url: deploymentResult.deploymentUrl });
+				logger.info("Initial deployment triggered", {
+					projectName,
+					url: deploymentResult.deploymentUrl,
+				});
 				await this.updateDeployment(deploymentId, userId, {
 					vercelDeploymentId: deploymentResult.deploymentId,
 					vercelDeploymentUrl: `https://${deploymentResult.deploymentUrl}`,
 				});
 			} else {
-				logger.warn("Failed to trigger initial deployment", { projectName, error: deploymentResult.error });
+				logger.warn("Failed to trigger initial deployment", {
+					projectName,
+					error: deploymentResult.error,
+				});
 			}
 		} catch (error) {
 			logger.warn("Error triggering initial deployment", { projectName, error });
@@ -885,9 +905,7 @@ class DeploymentService {
 						continue;
 					}
 
-					const resolvedStatus = resolveDeploymentStatusFromVercelState(
-						latestDeployment.state
-					);
+					const resolvedStatus = resolveDeploymentStatusFromVercelState(latestDeployment.state);
 
 					if (resolvedStatus.isTerminal) {
 						const deploymentUrl = latestDeployment.url

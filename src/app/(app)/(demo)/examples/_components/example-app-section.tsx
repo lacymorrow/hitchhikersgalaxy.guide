@@ -1,6 +1,6 @@
-import { routes } from "@/config/routes";
 import { Section, SectionHeader } from "@/components/primitives/section";
 import { BorderBeam } from "@/components/ui/border-beam";
+import { routes } from "@/config/routes";
 import { ExamplesNav } from "../_components/examples-nav";
 import AuthenticationPage from "../authentication/page";
 import CardsPage from "../cards/page";

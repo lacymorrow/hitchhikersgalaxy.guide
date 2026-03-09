@@ -43,8 +43,7 @@ export const STATUS_CODES = {
 	},
 	GITHUB_INVITATION_PENDING: {
 		code: "GITHUB_INVITATION_PENDING",
-		message:
-			"You have a pending GitHub repository invitation. Please accept it to continue.",
+		message: "You have a pending GitHub repository invitation. Please accept it to continue.",
 	},
 	GITHUB_OAUTH_FAILED: {
 		code: "GITHUB_OAUTH_FAILED",

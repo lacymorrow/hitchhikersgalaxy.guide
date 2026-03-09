@@ -52,12 +52,7 @@ import { cn } from "@/lib/utils";
 // Types
 // ///////////////////////////////////////////////////////////////////////////
 
-export type AnimationVariant =
-	| "circle"
-	| "rectangle"
-	| "gif"
-	| "polygon"
-	| "circle-blur";
+export type AnimationVariant = "circle" | "rectangle" | "gif" | "polygon" | "circle-blur";
 
 export type AnimationStart =
 	| "top-left"
@@ -184,7 +179,7 @@ export function createAnimation(
 	variant: AnimationVariant,
 	start: AnimationStart = "center",
 	blur = false,
-	url?: string,
+	url?: string
 ): Animation {
 	const svg = generateSVG(variant, start);
 	const transformOrigin = getTransformOrigin(start);
@@ -754,9 +749,7 @@ export const useThemeToggle = ({
 		if (typeof window === "undefined") return;
 
 		// Check system preference for dark mode
-		const prefersDark = window.matchMedia(
-			"(prefers-color-scheme: dark)",
-		).matches;
+		const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
 		setIsDark(prefersDark);
 
 		const animation = createAnimation(variant, start, blur, gifUrl);
@@ -794,64 +787,39 @@ export const useThemeToggle = ({
 // Theme Button Components
 // ///////////////////////////////////////////////////////////////////////////
 
-const ThemeButton = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	(props, ref) => (
-		<Button variant="ghost" size="icon" {...props} ref={ref}>
-			<SunIcon className="size-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-			<MoonIcon className="absolute size-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-			<span className="sr-only">Toggle theme</span>
-		</Button>
-	),
-);
+const ThemeButton = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
+	<Button variant="ghost" size="icon" {...props} ref={ref}>
+		<SunIcon className="size-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+		<MoonIcon className="absolute size-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+		<span className="sr-only">Toggle theme</span>
+	</Button>
+));
 ThemeButton.displayName = "ThemeButton";
 
-const ThemeToggle = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	(props, ref) => {
-		const { toggleTheme, canToggle } = useThemeToggle();
+const ThemeToggle = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+	const { toggleTheme, canToggle } = useThemeToggle();
 
-		return (
-			<ThemeButton
-				onClick={toggleTheme}
-				disabled={!canToggle}
-				{...props}
-				ref={ref}
-			/>
-		);
-	},
-);
+	return <ThemeButton onClick={toggleTheme} disabled={!canToggle} {...props} ref={ref} />;
+});
 ThemeToggle.displayName = "ThemeToggle";
 
-const ThemeChooser = React.forwardRef<HTMLButtonElement, ButtonProps>(
-	(props, ref) => {
-		const {
-			setLightTheme,
-			setDarkTheme,
-			setSystemTheme,
-			lightEnabled,
-			darkEnabled,
-			canToggle,
-		} = useThemeToggle();
+const ThemeChooser = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => {
+	const { setLightTheme, setDarkTheme, setSystemTheme, lightEnabled, darkEnabled, canToggle } =
+		useThemeToggle();
 
-		return (
-			<DropdownMenu>
-				<DropdownMenuTrigger asChild>
-					<ThemeButton {...props} ref={ref} />
-				</DropdownMenuTrigger>
-				<DropdownMenuContent align="end">
-					{lightEnabled && (
-						<DropdownMenuItem onClick={setLightTheme}>Light</DropdownMenuItem>
-					)}
-					{darkEnabled && (
-						<DropdownMenuItem onClick={setDarkTheme}>Dark</DropdownMenuItem>
-					)}
-					{canToggle && (
-						<DropdownMenuItem onClick={setSystemTheme}>System</DropdownMenuItem>
-					)}
-				</DropdownMenuContent>
-			</DropdownMenu>
-		);
-	},
-);
+	return (
+		<DropdownMenu>
+			<DropdownMenuTrigger asChild>
+				<ThemeButton {...props} ref={ref} />
+			</DropdownMenuTrigger>
+			<DropdownMenuContent align="end">
+				{lightEnabled && <DropdownMenuItem onClick={setLightTheme}>Light</DropdownMenuItem>}
+				{darkEnabled && <DropdownMenuItem onClick={setDarkTheme}>Dark</DropdownMenuItem>}
+				{canToggle && <DropdownMenuItem onClick={setSystemTheme}>System</DropdownMenuItem>}
+			</DropdownMenuContent>
+		</DropdownMenu>
+	);
+});
 ThemeChooser.displayName = "ThemeChooser";
 
 // ///////////////////////////////////////////////////////////////////////////
@@ -945,30 +913,20 @@ interface AnimatedButtonProps {
 }
 
 // Yin-Yang style toggle button
-const ThemeToggleYinYang = ({
-	className,
-	isDark,
-	onToggle,
-	disabled,
-}: AnimatedButtonProps) => {
+const ThemeToggleYinYang = ({ className, isDark, onToggle, disabled }: AnimatedButtonProps) => {
 	return (
 		<button
 			type="button"
 			className={cn(
 				"size-10 cursor-pointer rounded-full bg-black p-0 transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50",
-				className,
+				className
 			)}
 			onClick={onToggle}
 			disabled={disabled}
 			aria-label="Toggle theme"
 		>
 			<span className="sr-only">Toggle theme</span>
-			<svg
-				viewBox="0 0 240 240"
-				fill="none"
-				xmlns="http://www.w3.org/2000/svg"
-				aria-hidden="true"
-			>
+			<svg viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
 				<motion.g
 					animate={{ rotate: isDark ? -180 : 0 }}
 					transition={{ ease: "easeInOut", duration: 0.5 }}
@@ -994,19 +952,14 @@ const ThemeToggleYinYang = ({
 };
 
 // Sun/Moon toggle with rays
-const ThemeToggleSunMoon = ({
-	className,
-	isDark,
-	onToggle,
-	disabled,
-}: AnimatedButtonProps) => {
+const ThemeToggleSunMoon = ({ className, isDark, onToggle, disabled }: AnimatedButtonProps) => {
 	return (
 		<button
 			type="button"
 			className={cn(
 				"size-10 rounded-full p-2 transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50",
 				isDark ? "bg-black text-white" : "bg-white text-black",
-				className,
+				className
 			)}
 			onClick={onToggle}
 			disabled={disabled}
@@ -1059,19 +1012,14 @@ const ThemeToggleSunMoon = ({
 };
 
 // Sun with dots instead of rays
-const ThemeToggleSunDots = ({
-	className,
-	isDark,
-	onToggle,
-	disabled,
-}: AnimatedButtonProps) => {
+const ThemeToggleSunDots = ({ className, isDark, onToggle, disabled }: AnimatedButtonProps) => {
 	return (
 		<button
 			type="button"
 			className={cn(
 				"size-10 rounded-full p-2 transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50",
 				isDark ? "bg-black text-white" : "bg-white text-black",
-				className,
+				className
 			)}
 			onClick={onToggle}
 			disabled={disabled}
@@ -1116,19 +1064,14 @@ const ThemeToggleSunDots = ({
 };
 
 // Lightbulb toggle
-const ThemeToggleLightbulb = ({
-	className,
-	isDark,
-	onToggle,
-	disabled,
-}: AnimatedButtonProps) => {
+const ThemeToggleLightbulb = ({ className, isDark, onToggle, disabled }: AnimatedButtonProps) => {
 	return (
 		<button
 			type="button"
 			className={cn(
 				"size-10 rounded-full p-2 transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50",
 				isDark ? "bg-black text-white" : "bg-white text-black",
-				className,
+				className
 			)}
 			onClick={onToggle}
 			disabled={disabled}
@@ -1179,19 +1122,14 @@ const ThemeToggleLightbulb = ({
 };
 
 // Eclipse style toggle
-const ThemeToggleEclipse = ({
-	className,
-	isDark,
-	onToggle,
-	disabled,
-}: AnimatedButtonProps) => {
+const ThemeToggleEclipse = ({ className, isDark, onToggle, disabled }: AnimatedButtonProps) => {
 	return (
 		<button
 			type="button"
 			className={cn(
 				"size-10 rounded-full p-3 transition-all duration-300 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50",
 				isDark ? "bg-black text-white" : "bg-white text-black",
-				className,
+				className
 			)}
 			onClick={onToggle}
 			disabled={disabled}
@@ -1224,17 +1162,13 @@ const ThemeToggleEclipse = ({
 
 // Wrapper ThemeProvider that enforces allowed themes based on build-time flags
 // while preserving a compatible interface with next-themes' ThemeProvider
-const ThemeProvider = ({
-	children,
-	...props
-}: React.ComponentProps<typeof NextThemesProvider>) => {
+const ThemeProvider = ({ children, ...props }: React.ComponentProps<typeof NextThemesProvider>) => {
 	const lightEnabled = !!env.NEXT_PUBLIC_FEATURE_LIGHT_MODE_ENABLED;
 	const darkEnabled = !!env.NEXT_PUBLIC_FEATURE_DARK_MODE_ENABLED;
 	const bothEnabled = lightEnabled && darkEnabled;
-	const computedThemes = [
-		lightEnabled && "light",
-		darkEnabled && "dark",
-	].filter(Boolean) as string[];
+	const computedThemes = [lightEnabled && "light", darkEnabled && "dark"].filter(
+		Boolean
+	) as string[];
 	const themes = computedThemes.length ? computedThemes : ["light"];
 	const defaultTheme = bothEnabled ? "system" : lightEnabled ? "light" : "dark";
 	const forcedTheme = bothEnabled ? undefined : lightEnabled ? "light" : "dark";

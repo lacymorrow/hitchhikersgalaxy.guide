@@ -1,5 +1,5 @@
-import type { PricingPlan } from "@/content/pricing/pricing-content";
 import { CheckIcon } from "lucide-react";
+import type { PricingPlan } from "@/content/pricing/pricing-content";
 import advancedGradient from "./advanced-gradient.jpg";
 
 export interface PricingSectionBoldProps {
@@ -45,9 +45,7 @@ export const PricingSectionBold = ({
 													<p className="mb-2 text-xl font-semibold tracking-tighter text-white">
 														{priceDisplay}
 													</p>
-													<p className="tracking-tight text-white">
-														{plan.description}
-													</p>
+													<p className="tracking-tight text-white">{plan.description}</p>
 												</div>
 											</div>
 											<div className="p-12 pb-11">
@@ -56,10 +54,7 @@ export const PricingSectionBold = ({
 														<FeatureItem key={feature}>{feature}</FeatureItem>
 													))}
 												</ul>
-												<PricingButton
-													href={plan.href}
-													noCardRequired={plan.noCardRequired}
-												>
+												<PricingButton href={plan.href} noCardRequired={plan.noCardRequired}>
 													{`Get Started with ${plan.title}`}
 												</PricingButton>
 											</div>
@@ -70,9 +65,7 @@ export const PricingSectionBold = ({
 										<div className="border-b border-neutral-300 p-12 dark:border-neutral-600">
 											<div className="pr-9">
 												<h4 className="mb-6 text-6xl tracking-tighter">{plan.title}</h4>
-												<p className="mb-2 text-xl font-semibold tracking-tight">
-													{priceDisplay}
-												</p>
+												<p className="mb-2 text-xl font-semibold tracking-tight">{priceDisplay}</p>
 												<p className="tracking-tight">{plan.description}</p>
 											</div>
 										</div>
@@ -82,10 +75,7 @@ export const PricingSectionBold = ({
 													<FeatureItem key={feature}>{feature}</FeatureItem>
 												))}
 											</ul>
-											<PricingButton
-												href={plan.href}
-												noCardRequired={plan.noCardRequired}
-											>
+											<PricingButton href={plan.href} noCardRequired={plan.noCardRequired}>
 												{`Get Started with ${plan.title}`}
 											</PricingButton>
 										</div>
@@ -127,9 +117,7 @@ const PricingButton = ({
 				{children}
 			</a>
 			{noCardRequired && (
-				<span className="text-sm tracking-tight text-neutral-600">
-					No credit card required
-				</span>
+				<span className="text-sm tracking-tight text-neutral-600">No credit card required</span>
 			)}
 		</>
 	);

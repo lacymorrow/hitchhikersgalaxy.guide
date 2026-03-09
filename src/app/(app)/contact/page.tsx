@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { MailIcon } from "lucide-react";
+import type { Metadata } from "next";
 import { ContactForm } from "@/components/forms/contact-form";
 import { Link } from "@/components/primitives/link";
 import { Boxes } from "@/components/ui/background-boxes";

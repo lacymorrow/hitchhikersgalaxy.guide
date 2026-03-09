@@ -14,8 +14,8 @@
  */
 
 import { useMemo } from "react";
-import { useWebHaptics } from "web-haptics/react";
 import type { HapticInput, TriggerOptions } from "web-haptics";
+import { useWebHaptics } from "web-haptics/react";
 
 export type HapticPattern =
 	| "light"
@@ -106,6 +106,6 @@ export function useHaptics() {
 			/** Legacy pattern access (calls trigger internally) */
 			haptic,
 		}),
-		[trigger, cancel, isSupported],
+		[trigger, cancel, isSupported]
 	);
 }

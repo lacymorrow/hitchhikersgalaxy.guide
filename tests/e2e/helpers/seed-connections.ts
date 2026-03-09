@@ -2,9 +2,9 @@
  * Seeds GitHub and Vercel OAuth connections directly into the database.
  * Used by the full deploy flow E2E test to avoid automating third-party OAuth pages.
  */
-import { eq, and } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
+import { integer, pgTableCreator, primaryKey, text, varchar } from "drizzle-orm/pg-core";
 import { drizzle } from "drizzle-orm/postgres-js";
-import { pgTableCreator, text, varchar, integer, primaryKey } from "drizzle-orm/pg-core";
 import postgres from "postgres";
 
 // Re-declare minimal schema locally to avoid importing from the app (which pulls in @/env).
@@ -38,7 +38,7 @@ const accounts = createTable(
 		compoundKey: primaryKey({
 			columns: [account.provider, account.providerAccountId],
 		}),
-	}),
+	})
 );
 
 // Lazy singleton DB connection to avoid leaking connection pools
@@ -73,9 +73,9 @@ export async function seedGitHubConnection(userId: string, token: string, userna
 	const db = getDb();
 
 	// Delete existing GitHub accounts for this user first (upsert via delete+insert)
-	await db.delete(accounts).where(
-		and(eq(accounts.userId, userId), eq(accounts.provider, "github")),
-	);
+	await db
+		.delete(accounts)
+		.where(and(eq(accounts.userId, userId), eq(accounts.provider, "github")));
 
 	await db.insert(accounts).values({
 		userId,
@@ -95,9 +95,9 @@ export async function seedVercelConnection(userId: string, token: string, vercel
 	const db = getDb();
 
 	// Delete existing Vercel accounts for this user first
-	await db.delete(accounts).where(
-		and(eq(accounts.userId, userId), eq(accounts.provider, "vercel")),
-	);
+	await db
+		.delete(accounts)
+		.where(and(eq(accounts.userId, userId), eq(accounts.provider, "vercel")));
 
 	// expires_at is seconds since epoch; set 30 days from now
 	const expiresAt = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60;
@@ -116,11 +116,11 @@ export async function seedVercelConnection(userId: string, token: string, vercel
 export async function cleanupConnections(userId: string) {
 	const db = getDb();
 
-	await db.delete(accounts).where(
-		and(eq(accounts.userId, userId), eq(accounts.provider, "github")),
-	);
-	await db.delete(accounts).where(
-		and(eq(accounts.userId, userId), eq(accounts.provider, "vercel")),
-	);
+	await db
+		.delete(accounts)
+		.where(and(eq(accounts.userId, userId), eq(accounts.provider, "github")));
+	await db
+		.delete(accounts)
+		.where(and(eq(accounts.userId, userId), eq(accounts.provider, "vercel")));
 	await db.update(users).set({ githubUsername: null }).where(eq(users.id, userId));
 }

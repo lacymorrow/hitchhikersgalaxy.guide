@@ -1,22 +1,21 @@
 "use client";
 
+import { Link2Icon } from "@radix-ui/react-icons";
 import { useQuery } from "@tanstack/react-query";
 import type { ColumnDef } from "@tanstack/react-table";
 import { formatDistanceToNow } from "date-fns";
 import { AlertCircle, CheckCircle2, Clock, Rocket } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
-
 import { Icons } from "@/components/assets/icons";
 import { DashboardVercelDeploy } from "@/components/modules/deploy/dashboard-vercel-deploy";
 import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/ui/data-table/data-table";
-import { siteConfig } from "@/config/site-config";
 import { routes } from "@/config/routes";
+import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import type { Deployment } from "@/server/db/schema";
 import { DeploymentActions } from "./deployment-actions";
-import { Link2Icon } from "@radix-ui/react-icons";
 
 // Constants for polling configuration
 const POLLING_INTERVAL_MS = 3000; // 3 seconds
@@ -130,103 +129,106 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 	}, [hasActiveDeployments]);
 
 	// Memoize columns to prevent re-renders from closing dropdown menus
-	const columns: ColumnDef<Deployment>[] = useMemo(() => [
-		{
-			accessorKey: "projectName",
-			header: "Project",
-			cell: ({ row }) => (
-				<div className="flex items-center gap-2">
-					<Rocket className="h-4 w-4 text-muted-foreground" />
-					<span className="font-medium">{row.original.projectName}</span>
-				</div>
-			),
-		},
-		{
-			accessorKey: "status",
-			header: "Status",
-			cell: ({ row }) => (
-				<Badge
-					variant={getStatusBadgeVariant(row.original.status)}
-					className="flex items-center gap-1 w-fit"
-				>
-					{getStatusIcon(row.original.status)}
-					<span className="capitalize">{row.original.status}</span>
-				</Badge>
-			),
-		},
-		{
-			accessorKey: "description",
-			header: "Description",
-			cell: ({ row }) => (
-				<div>
+	const columns: ColumnDef<Deployment>[] = useMemo(
+		() => [
+			{
+				accessorKey: "projectName",
+				header: "Project",
+				cell: ({ row }) => (
+					<div className="flex items-center gap-2">
+						<Rocket className="h-4 w-4 text-muted-foreground" />
+						<span className="font-medium">{row.original.projectName}</span>
+					</div>
+				),
+			},
+			{
+				accessorKey: "status",
+				header: "Status",
+				cell: ({ row }) => (
+					<Badge
+						variant={getStatusBadgeVariant(row.original.status)}
+						className="flex items-center gap-1 w-fit"
+					>
+						{getStatusIcon(row.original.status)}
+						<span className="capitalize">{row.original.status}</span>
+					</Badge>
+				),
+			},
+			{
+				accessorKey: "description",
+				header: "Description",
+				cell: ({ row }) => (
+					<div>
+						<span className="text-muted-foreground">
+							{row.original.description ?? "No description"}
+						</span>
+						{row.original.status === "failed" && row.original.error && (
+							<div className="mt-1">
+								<span className="text-xs text-red-600 dark:text-red-400">
+									Error: {row.original.error}
+								</span>
+							</div>
+						)}
+					</div>
+				),
+			},
+			{
+				accessorKey: "createdAt",
+				header: "Deployed",
+				cell: ({ row }) => (
 					<span className="text-muted-foreground">
-						{row.original.description ?? "No description"}
+						{formatDistanceToNow(new Date(row.original.createdAt), { addSuffix: true })}
 					</span>
-					{row.original.status === "failed" && row.original.error && (
-						<div className="mt-1">
-							<span className="text-xs text-red-600 dark:text-red-400">
-								Error: {row.original.error}
-							</span>
-						</div>
-					)}
-				</div>
-			),
-		},
-		{
-			accessorKey: "createdAt",
-			header: "Deployed",
-			cell: ({ row }) => (
-				<span className="text-muted-foreground">
-					{formatDistanceToNow(new Date(row.original.createdAt), { addSuffix: true })}
-				</span>
-			),
-		},
-		{
-			id: "links",
-			header: "",
-			cell: ({ row }) => (
-				<div className="flex items-center gap-1">
-					{row.original.vercelProjectUrl && (
-						<a
-							href={row.original.vercelProjectUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-							title="View on Vercel"
-						>
-							<Icons.vercel className="h-4 w-4" />
-						</a>
-					)}
-					{row.original.githubRepoUrl && (
-						<a
-							href={row.original.githubRepoUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-							title="View on GitHub"
-						>
-							<Icons.github className="h-4 w-4" />
-						</a>
-					)}
-					{row.original.vercelDeploymentUrl && (
-						<a
-							href={row.original.vercelDeploymentUrl}
-							target="_blank"
-							rel="noopener noreferrer"
-							className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-							title="View deployment"
-						>
-							<Link2Icon className="h-4 w-4" />
-						</a>
-					)}
-				</div>
-			),
-		},
-		{
-			id: "actions",
-			cell: ({ row }) => <DeploymentActions deployment={row.original} />,
-		},
-	], []);
+				),
+			},
+			{
+				id: "links",
+				header: "",
+				cell: ({ row }) => (
+					<div className="flex items-center gap-1">
+						{row.original.vercelProjectUrl && (
+							<a
+								href={row.original.vercelProjectUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+								title="View on Vercel"
+							>
+								<Icons.vercel className="h-4 w-4" />
+							</a>
+						)}
+						{row.original.githubRepoUrl && (
+							<a
+								href={row.original.githubRepoUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+								title="View on GitHub"
+							>
+								<Icons.github className="h-4 w-4" />
+							</a>
+						)}
+						{row.original.vercelDeploymentUrl && (
+							<a
+								href={row.original.vercelDeploymentUrl}
+								target="_blank"
+								rel="noopener noreferrer"
+								className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+								title="View deployment"
+							>
+								<Link2Icon className="h-4 w-4" />
+							</a>
+						)}
+					</div>
+				),
+			},
+			{
+				id: "actions",
+				cell: ({ row }) => <DeploymentActions deployment={row.original} />,
+			},
+		],
+		[]
+	);
 
 	return (
 		<>

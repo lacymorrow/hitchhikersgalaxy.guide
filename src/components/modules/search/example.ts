@@ -14,9 +14,7 @@ export const docsConfig: DocsConfig = {
 			href: routes.docs,
 		},
 		// Only include blog link when blog is enabled
-		...(process.env.NEXT_PUBLIC_HAS_BLOG === "true"
-			? [{ title: "Blog", href: routes.blog }]
-			: []),
+		...(process.env.NEXT_PUBLIC_HAS_BLOG === "true" ? [{ title: "Blog", href: routes.blog }] : []),
 		{
 			title: "Examples",
 			href: routes.examples.index,

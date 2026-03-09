@@ -3,19 +3,19 @@ import { JsonLd } from "@/components/primitives/json-ld";
 import { AnalyticsProvider } from "@/components/providers/analytics-provider";
 import { HapticsProvider } from "@/components/providers/haptics-provider";
 import { KeyboardShortcutProvider } from "@/components/providers/keyboard-shortcut-provider";
+import { ThemeProvider as ShipkitThemeProvider } from "@/components/ui/shipkit/theme";
 import { Toaster } from "@/components/ui/sonner";
 import { Toaster as LegacyToaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TRPCReactProvider } from "@/lib/trpc/react";
-import { ThemeProvider as ShipkitThemeProvider } from "@/components/ui/shipkit/theme";
 // import ConsentProvider from "@/components/providers/consent-provider";
 
 import HolyLoader from "holy-loader";
 import { SessionProvider } from "next-auth/react";
 import type { ReactNode } from "react";
 import { Suspense } from "react";
-import { isAuthenticationAvailable } from "@/lib/auth/auth-strategy";
 import { FontProvider } from "@/components/providers/font-provider";
+import { isAuthenticationAvailable } from "@/lib/auth/auth-strategy";
 
 import "@/styles/globals.css";
 
@@ -40,12 +40,12 @@ export function KitProvider({ children, session, pageProps }: KitProviderProps) 
 	const sessionProviderProps = authEnabled
 		? { session }
 		: {
-			session: null,
-			refetchOnWindowFocus: false,
-			refetchInterval: 0,
-			refetchWhenOffline: false,
-			refetchOnMount: false,
-		};
+				session: null,
+				refetchOnWindowFocus: false,
+				refetchInterval: 0,
+				refetchWhenOffline: false,
+				refetchOnMount: false,
+			};
 
 	return (
 		<>
@@ -63,22 +63,22 @@ export function KitProvider({ children, session, pageProps }: KitProviderProps) 
 								{/* <ConsentProvider> */}
 
 								<HapticsProvider>
-								<KeyboardShortcutProvider>
-									<FontProvider>
-										{/* Content */}
-										{children}
+									<KeyboardShortcutProvider>
+										<FontProvider>
+											{/* Content */}
+											{children}
 
-										{/* Toast - Display messages to the user */}
-										<Toaster />
+											{/* Toast - Display messages to the user */}
+											<Toaster />
 
-										<LegacyToaster />
+											<LegacyToaster />
 
-										{/* Error Toast - Display error messages to the user based on search params */}
-										<Suspense>
-											<ErrorToast />
-										</Suspense>
-									</FontProvider>
-								</KeyboardShortcutProvider>
+											{/* Error Toast - Display error messages to the user based on search params */}
+											<Suspense>
+												<ErrorToast />
+											</Suspense>
+										</FontProvider>
+									</KeyboardShortcutProvider>
 								</HapticsProvider>
 								{/* </ConsentProvider> */}
 							</AnalyticsProvider>

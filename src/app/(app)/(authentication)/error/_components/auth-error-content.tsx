@@ -21,13 +21,9 @@ enum AuthError {
 	Default = "Default",
 }
 
-const errorConfig: Record<
-	AuthError,
-	{ message: string; action: string; href: string }
-> = {
+const errorConfig: Record<AuthError, { message: string; action: string; href: string }> = {
 	[AuthError.Configuration]: {
-		message:
-			"There is a problem with the server configuration. Please contact support.",
+		message: "There is a problem with the server configuration. Please contact support.",
 		action: "Go home",
 		href: routes.home,
 	},
@@ -47,14 +43,12 @@ const errorConfig: Record<
 		href: routes.auth.signIn,
 	},
 	[AuthError.OAuthCallback]: {
-		message:
-			"Could not complete sign-in. The provider may be experiencing issues.",
+		message: "Could not complete sign-in. The provider may be experiencing issues.",
 		action: "Try again",
 		href: routes.auth.signIn,
 	},
 	[AuthError.OAuthCreateAccount]: {
-		message:
-			"Could not create your account. Please try a different sign-in method.",
+		message: "Could not create your account. Please try a different sign-in method.",
 		action: "Try again",
 		href: routes.auth.signIn,
 	},

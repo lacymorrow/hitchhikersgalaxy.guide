@@ -424,7 +424,7 @@ export const ShadcnCommand = ({
 							</div>
 						</TabsContent>
 						<TabsContent value="files" className="mt-2 max-h-[300px] overflow-auto">
-							<FileChangeDisplay changedFiles={changedFiles} onDownloadAll={() => { }} />
+							<FileChangeDisplay changedFiles={changedFiles} onDownloadAll={() => {}} />
 						</TabsContent>
 					</Tabs>
 				)}

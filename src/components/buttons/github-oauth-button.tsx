@@ -8,13 +8,13 @@ import { Icons } from "@/components/assets/icons";
 import { Link } from "@/components/primitives/link";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
+import { STATUS_CODES } from "@/config/status-codes";
 import { cn } from "@/lib/utils";
+import { createRedirectUrl } from "@/lib/utils/redirect";
 import { disconnectGitHub } from "@/server/actions/github";
 import type { User } from "@/types/user";
-import { STATUS_CODES } from "@/config/status-codes";
-import { routes } from "@/config/routes";
-import { createRedirectUrl } from "@/lib/utils/redirect";
 
 interface GitHubOAuthButtonProps {
 	className?: string;
@@ -42,7 +42,9 @@ export const GitHubOAuthButton = ({
 			setIsLoading(true);
 
 			// Get the callback URL - return to settings page with success param
-			const callbackUrl = createRedirectUrl(routes.settings.account, { code: STATUS_CODES.CONNECT_GITHUB.code });
+			const callbackUrl = createRedirectUrl(routes.settings.account, {
+				code: STATUS_CODES.CONNECT_GITHUB.code,
+			});
 
 			// Use NextAuth's signIn to trigger the OAuth flow
 			// This will redirect to GitHub for authorization
@@ -73,9 +75,7 @@ export const GitHubOAuthButton = ({
 			router.refresh();
 		} catch (error) {
 			console.error("Disconnect GitHub error:", error);
-			toast.error(
-				error instanceof Error ? error.message : "Failed to disconnect GitHub account"
-			);
+			toast.error(error instanceof Error ? error.message : "Failed to disconnect GitHub account");
 		} finally {
 			setIsLoading(false);
 		}
@@ -108,9 +108,7 @@ export const GitHubOAuthButton = ({
 								disabled={isLoading}
 								className="text-muted-foreground"
 							>
-								{isLoading
-									? "Disconnecting..."
-									: `Not ${githubUsername}? Disconnect from GitHub.`}
+								{isLoading ? "Disconnecting..." : `Not ${githubUsername}? Disconnect from GitHub.`}
 							</Button>
 						</TooltipTrigger>
 						<TooltipContent>

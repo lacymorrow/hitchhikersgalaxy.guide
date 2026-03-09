@@ -1,6 +1,5 @@
 "use client";
 
-import { v4 as uuidv4 } from "uuid";
 import { AnimatePresence, motion } from "framer-motion";
 import {
 	Battery,
@@ -22,6 +21,7 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { v4 as uuidv4 } from "uuid";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -35,12 +35,7 @@ import {
 	ExpandableContent,
 	ExpandableTrigger,
 } from "@/components/ui/cults/expandable";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipProvider,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 // _____________________EXAMPLES______________________
 function DesignSyncExample() {
@@ -106,8 +101,8 @@ function DesignSyncExample() {
 							</div>
 							<ExpandableContent preset="blur-md" stagger staggerChildren={0.2}>
 								<p className="mb-4 text-sm text-gray-700 dark:text-gray-200">
-									Weekly design sync to discuss ongoing projects, share updates,
-									and address any design-related challenges.
+									Weekly design sync to discuss ongoing projects, share updates, and address any
+									design-related challenges.
 								</p>
 								<div className="mb-4">
 									<h4 className="mb-2 flex items-center text-sm font-medium text-gray-800 dark:text-gray-100">
@@ -182,10 +177,7 @@ export function ProductShowcaseCard() {
 					>
 						<ExpandableCardHeader>
 							<div className="flex items-center justify-between">
-								<Badge
-									variant="secondary"
-									className="bg-blue-100 text-blue-800"
-								>
+								<Badge variant="secondary" className="bg-blue-100 text-blue-800">
 									New Arrival
 								</Badge>
 								<Badge variant="outline" className="ml-2">
@@ -218,10 +210,7 @@ export function ProductShowcaseCard() {
 									</h3>
 									<div className="mt-1 flex items-center">
 										{[1, 2, 3, 4, 5].map((star) => (
-											<Star
-												key={star}
-												className="h-4 w-4 fill-current text-yellow-400"
-											/>
+											<Star key={star} className="h-4 w-4 fill-current text-yellow-400" />
 										))}
 										<AnimatePresence mode="wait">
 											{isExpanded ? (
@@ -261,9 +250,8 @@ export function ProductShowcaseCard() {
 								}}
 							>
 								<p className="mb-4 max-w-xs text-sm text-gray-600 dark:text-gray-400">
-									Experience crystal-clear audio with our latest
-									noise-cancelling technology. Perfect for work, travel, or
-									relaxation.
+									Experience crystal-clear audio with our latest noise-cancelling technology.
+									Perfect for work, travel, or relaxation.
 								</p>
 
 								<div className="space-y-4">
@@ -333,9 +321,7 @@ export function WeatherForecastCard() {
 						<div className="mb-4 flex items-center justify-between">
 							<div>
 								<p className="text-2xl font-bold">72°F</p>
-								<p className="text-sm text-gray-600 dark:text-gray-400">
-									Feels like 75°F
-								</p>
+								<p className="text-sm text-gray-600 dark:text-gray-400">Feels like 75°F</p>
 							</div>
 							<div className="text-right">
 								<p className="font-medium">Sunny</p>
@@ -350,9 +336,7 @@ export function WeatherForecastCard() {
 										transition: { type: "spring", stiffness: 300, damping: 20 },
 									}}
 								>
-									<p className="text-sm text-gray-600 dark:text-gray-400">
-										High 78° / Low 65°
-									</p>
+									<p className="text-sm text-gray-600 dark:text-gray-400">High 78° / Low 65°</p>
 								</ExpandableContent>
 							</div>
 						</div>
@@ -405,9 +389,7 @@ export function WeatherForecastCard() {
 						</ExpandableContent>
 					</ExpandableCardContent>
 					<ExpandableCardFooter>
-						<p className="text-xs text-gray-500 dark:text-gray-400">
-							Last updated: 5 minutes ago
-						</p>
+						<p className="text-xs text-gray-500 dark:text-gray-400">Last updated: 5 minutes ago</p>
 					</ExpandableCardFooter>
 				</ExpandableCard>
 			</ExpandableTrigger>
@@ -442,31 +424,21 @@ function ControlledExpandableCard() {
 				>
 					<ExpandableTrigger>
 						<ExpandableCardHeader>
-							<h3 className="text-lg font-semibold">
-								Controlled Expandable Card
-							</h3>
-							<Badge variant="secondary">
-								{isExpanded ? "Expanded" : "Collapsed"}
-							</Badge>
+							<h3 className="text-lg font-semibold">Controlled Expandable Card</h3>
+							<Badge variant="secondary">{isExpanded ? "Expanded" : "Collapsed"}</Badge>
 						</ExpandableCardHeader>
 					</ExpandableTrigger>
 					<ExpandableCardContent>
-						<p className="mb-4">
-							This card's expanded state is controlled externally.
-						</p>
+						<p className="mb-4">This card's expanded state is controlled externally.</p>
 						<ExpandableContent preset="fade" stagger staggerChildren={0.1}>
 							<p className="mb-2">This content fades in when expanded.</p>
-							<p className="mb-2">
-								It uses staggered animation for child elements.
-							</p>
+							<p className="mb-2">It uses staggered animation for child elements.</p>
 							<p>The expansion is controlled by the button above.</p>
 						</ExpandableContent>
 					</ExpandableCardContent>
 					<ExpandableCardFooter>
 						<ExpandableContent preset="slide-up">
-							<p className="text-sm text-gray-500">
-								Footer content slides up when expanded
-							</p>
+							<p className="text-sm text-gray-500">Footer content slides up when expanded</p>
 						</ExpandableContent>
 					</ExpandableCardFooter>
 				</ExpandableCard>

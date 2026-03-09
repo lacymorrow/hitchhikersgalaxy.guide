@@ -24,9 +24,7 @@ export default async function DeploymentsPage() {
 
 	// Defensive check: even with protect: true, ensure user exists
 	if (!session?.user?.id) {
-		redirect(
-			createRedirectUrl(routes.auth.signIn, { nextUrl: routes.app.dashboard }),
-		);
+		redirect(createRedirectUrl(routes.auth.signIn, { nextUrl: routes.app.dashboard }));
 	}
 
 	let deployments: Deployment[] = [];
@@ -44,9 +42,7 @@ export default async function DeploymentsPage() {
 	}
 
 	// Check if there's an active deployment (status = "deploying")
-	const hasActiveDeployment = deployments.some(
-		(deployment) => deployment.status === "deploying"
-	);
+	const hasActiveDeployment = deployments.some((deployment) => deployment.status === "deploying");
 
 	return (
 		<div className="container mx-auto py-10 space-y-6">

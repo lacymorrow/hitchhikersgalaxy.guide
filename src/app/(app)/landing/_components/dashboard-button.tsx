@@ -24,10 +24,7 @@ export const DashboardButton = async () => {
 
 	if (orders.length === 0) {
 		return (
-			<Link
-				href={routes.launch}
-				className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-			>
+			<Link href={routes.launch} className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
 				Get {siteConfig.title}
 			</Link>
 		);

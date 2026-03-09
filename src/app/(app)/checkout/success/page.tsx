@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { DownloadIcon } from "lucide-react";
+import type { Metadata } from "next";
 import { LoginButton } from "@/components/buttons/sign-in-button";
 import { Link } from "@/components/primitives/link";
 import { Button } from "@/components/ui/button";

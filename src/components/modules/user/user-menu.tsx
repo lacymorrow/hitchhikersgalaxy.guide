@@ -10,7 +10,7 @@ import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-pr
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { useThemeToggle, type Theme } from "@/components/ui/shipkit/theme";
+import { type Theme, useThemeToggle } from "@/components/ui/shipkit/theme";
 import { ToastAction } from "@/components/ui/toast";
 import { ShortcutAction, type ShortcutActionType } from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
@@ -60,8 +60,7 @@ export const UserMenu = ({
 				if (!result.success) {
 					toast({
 						title: "Failed to save theme preference",
-						description:
-							result.error || "Your theme preference could not be saved.",
+						description: result.error || "Your theme preference could not be saved.",
 						variant: "destructive",
 					});
 				}
@@ -79,7 +78,7 @@ export const UserMenu = ({
 				});
 			}
 		},
-		[currentUser, toast],
+		[currentUser, toast]
 	);
 
 	const { theme, setLightTheme, setDarkTheme, setSystemTheme } = useThemeToggle({
@@ -105,8 +104,7 @@ export const UserMenu = ({
 			void signOut({ redirect: false }).then(() => {
 				toast({
 					title: "Session expired",
-					description:
-						"Your session has expired. Would you like to sign in again?",
+					description: "Your session has expired. Would you like to sign in again?",
 					action: (
 						<ToastAction altText="Sign in" asChild>
 							<Link href={signInRedirectUrl}>Sign in</Link>
@@ -132,7 +130,7 @@ export const UserMenu = ({
 					break;
 			}
 		},
-		[setLightTheme, setDarkTheme, setSystemTheme],
+		[setLightTheme, setDarkTheme, setSystemTheme]
 	);
 
 	// ---- Refactored Shortcut Handling ----
@@ -160,7 +158,7 @@ export const UserMenu = ({
 					break;
 			}
 		},
-		[handleThemeChange, isAdmin, router],
+		[handleThemeChange, isAdmin, router]
 	);
 
 	const isAuthenticated = status === "authenticated";
@@ -169,44 +167,44 @@ export const UserMenu = ({
 		ShortcutAction.SET_THEME_LIGHT,
 		(event) => handleShortcut(event, ShortcutAction.SET_THEME_LIGHT),
 		undefined,
-		[handleShortcut],
+		[handleShortcut]
 	);
 	useKeyboardShortcut(
 		ShortcutAction.SET_THEME_DARK,
 		(event) => handleShortcut(event, ShortcutAction.SET_THEME_DARK),
 		undefined,
-		[handleShortcut],
+		[handleShortcut]
 	);
 	useKeyboardShortcut(
 		ShortcutAction.SET_THEME_SYSTEM,
 		(event) => handleShortcut(event, ShortcutAction.SET_THEME_SYSTEM),
 		undefined,
-		[handleShortcut],
+		[handleShortcut]
 	);
 	useKeyboardShortcut(
 		ShortcutAction.GOTO_ADMIN,
 		(event) => handleShortcut(event, ShortcutAction.GOTO_ADMIN),
 		() => isAuthenticated && isAdmin,
-		[handleShortcut, isAuthenticated, isAdmin],
+		[handleShortcut, isAuthenticated, isAdmin]
 	);
 	useKeyboardShortcut(
 		ShortcutAction.GOTO_SETTINGS,
 		(event) => handleShortcut(event, ShortcutAction.GOTO_SETTINGS),
 		() => isAuthenticated,
-		[handleShortcut, isAuthenticated],
+		[handleShortcut, isAuthenticated]
 	);
 	useKeyboardShortcut(
 		ShortcutAction.LOGOUT_USER,
 		(event) => handleShortcut(event, ShortcutAction.LOGOUT_USER),
 		() => isAuthenticated,
-		[handleShortcut, isAuthenticated],
+		[handleShortcut, isAuthenticated]
 	);
 
 	return (
 		<div
 			className={cn(
 				"relative rounded-full flex items-center justify-center aspect-square",
-				size === "sm" ? "size-9" : "size-9",
+				size === "sm" ? "size-9" : "size-9"
 			)}
 		>
 			{/* Loading state */}
@@ -229,11 +227,7 @@ export const UserMenu = ({
 					<Button
 						variant="ghost"
 						size="icon"
-						className={cn(
-							"relative rounded-full",
-							size === "sm" ? "size-6" : "size-8",
-							className,
-						)}
+						className={cn("relative rounded-full", size === "sm" ? "size-6" : "size-8", className)}
 						aria-label="User menu"
 					>
 						<Avatar className={cn(size === "sm" ? "size-6" : "size-8")}>
@@ -242,31 +236,24 @@ export const UserMenu = ({
 								alt={currentUser?.name || "User avatar"}
 								draggable={false}
 							/>
-							<AvatarFallback>
-								{currentUser?.name?.[0]?.toUpperCase() || "?"}
-							</AvatarFallback>
+							<AvatarFallback>{currentUser?.name?.[0]?.toUpperCase() || "?"}</AvatarFallback>
 						</Avatar>
 					</Button>
 				</UserMenuDropdown>
 			) : (
 				<>
-					{pathname !== routes.auth.signIn &&
-						pathname !== routes.auth.signUp ? (
+					{pathname !== routes.auth.signIn && pathname !== routes.auth.signUp ? (
 						<Link
 							href={signInRedirectUrl}
 							className={cn(
 								buttonVariants({ variant: "ghost", size: "icon" }),
-								"rounded-full cursor-pointer",
+								"rounded-full cursor-pointer"
 							)}
 						>
 							<UserIcon className="size-6" />
 						</Link>
 					) : (
-						<Button
-							variant="ghost"
-							size="icon"
-							className={cn("relative rounded-full", className)}
-						>
+						<Button variant="ghost" size="icon" className={cn("relative rounded-full", className)}>
 							<UserIcon className="size-6" />
 						</Button>
 					)}
@@ -275,4 +262,3 @@ export const UserMenu = ({
 		</div>
 	);
 };
-

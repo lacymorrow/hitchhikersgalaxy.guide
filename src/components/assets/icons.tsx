@@ -231,12 +231,7 @@ export const Icons = {
 		</svg>
 	),
 	vercel: (props: IconProps) => (
-		<svg
-			viewBox="0 0 76 65"
-			fill="currentColor"
-			xmlns="http://www.w3.org/2000/svg"
-			{...props}
-		>
+		<svg viewBox="0 0 76 65" fill="currentColor" xmlns="http://www.w3.org/2000/svg" {...props}>
 			<title>Vercel</title>
 			<path d="M37.5274 0L75.0548 65H0L37.5274 0Z" />
 		</svg>

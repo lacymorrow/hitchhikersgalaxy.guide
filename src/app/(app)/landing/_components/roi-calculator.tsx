@@ -1,18 +1,18 @@
 "use client";
 
+import { motion } from "framer-motion";
+import { Calculator, Clock, DollarSign, Users } from "lucide-react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { siteConfig } from "@/config/site-config";
 import { oneTimePlans } from "@/content/pricing/pricing-content";
-import { motion } from "framer-motion";
-import { Calculator, Clock, DollarSign, Users } from "lucide-react";
-import { useState } from "react";
 
 const formatCurrency = (value: number) => {
-	return new Intl.NumberFormat('en-US', {
-		style: 'currency',
-		currency: 'USD',
+	return new Intl.NumberFormat("en-US", {
+		style: "currency",
+		currency: "USD",
 		maximumFractionDigits: 0,
 	}).format(value);
 };
@@ -23,13 +23,13 @@ export const ROICalculator = () => {
 	const [monthlyBurn, setMonthlyBurn] = useState(20000);
 
 	// Get the highest priced plan
-	const shipkitCost = Math.max(...oneTimePlans.map(plan => plan.price.oneTime || 0));
+	const shipkitCost = Math.max(...oneTimePlans.map((plan) => plan.price.oneTime || 0));
 
 	// Calculate savings
 	const avgDevSalary = 150000; // Average developer salary in 2024
 	const devCostPerMonth = (avgDevSalary / 12) * teamSize;
 	const infrastructureCost = 2000 * monthsToLaunch; // Monthly infrastructure and tooling costs
-	const traditionalCost = (devCostPerMonth * monthsToLaunch) + infrastructureCost;
+	const traditionalCost = devCostPerMonth * monthsToLaunch + infrastructureCost;
 	const totalSavings = traditionalCost - shipkitCost;
 	const timeToMarket = monthsToLaunch - 1; // Months saved with ShipKit
 	const burnSavings = monthlyBurn * timeToMarket;
@@ -82,7 +82,9 @@ export const ROICalculator = () => {
 								step={5000}
 								className="w-full"
 							/>
-							<span className="min-w-[8ch] text-right tabular-nums">{formatCurrency(monthlyBurn)}</span>
+							<span className="min-w-[8ch] text-right tabular-nums">
+								{formatCurrency(monthlyBurn)}
+							</span>
 						</div>
 					</div>
 				</div>
@@ -136,7 +138,9 @@ export const ROICalculator = () => {
 							<li>Average developer salary of {formatCurrency(avgDevSalary)}/year in 2024</li>
 							<li>Infrastructure and tooling costs of {formatCurrency(2000)}/month</li>
 							<li>Typical time savings of 75% with {siteConfig.title}</li>
-							<li>One-time {siteConfig.title} cost of {formatCurrency(shipkitCost)}</li>
+							<li>
+								One-time {siteConfig.title} cost of {formatCurrency(shipkitCost)}
+							</li>
 						</ul>
 					</div>
 				</div>

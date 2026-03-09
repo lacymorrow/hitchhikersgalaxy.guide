@@ -18,7 +18,7 @@ export async function GET(_request: NextRequest) {
 		if (!session?.user?.id) {
 			return NextResponse.json(
 				{ hasPendingInvitation: false, error: "Authentication required" },
-				{ status: 401 },
+				{ status: 401 }
 			);
 		}
 
@@ -26,19 +26,17 @@ export async function GET(_request: NextRequest) {
 		await rateLimitService.checkLimit(
 			session.user.id,
 			"checkGitHubInvitation",
-			rateLimits.deployments.status,
+			rateLimits.deployments.status
 		);
 
-		const result = await deploymentService.checkPendingGitHubInvitation(
-			session.user.id,
-		);
+		const result = await deploymentService.checkPendingGitHubInvitation(session.user.id);
 		return NextResponse.json(result);
 	} catch (error) {
 		// Handle rate limit errors
 		if (error instanceof Error && error.message.includes("Too many requests")) {
 			return NextResponse.json(
 				{ hasPendingInvitation: false, error: "Rate limit exceeded" },
-				{ status: 429 },
+				{ status: 429 }
 			);
 		}
 		console.error("Failed to check GitHub invitation:", error);
@@ -47,7 +45,7 @@ export async function GET(_request: NextRequest) {
 				hasPendingInvitation: false,
 				error: "Failed to check invitation status",
 			},
-			{ status: 500 },
+			{ status: 500 }
 		);
 	}
 }

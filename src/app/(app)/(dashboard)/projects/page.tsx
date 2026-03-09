@@ -23,11 +23,7 @@ import { useTeamId } from "@/hooks/use-team-id";
 import { useToast } from "@/hooks/use-toast";
 import { LocalProjectStorage } from "@/lib/local-storage/project-storage";
 import { LocalTeamStorage } from "@/lib/local-storage/team-storage";
-import {
-	createProject,
-	deleteProject,
-	updateProject,
-} from "@/server/actions/projects";
+import { createProject, deleteProject, updateProject } from "@/server/actions/projects";
 
 // Helper to fetch team projects via API
 async function fetchTeamProjects(teamId: string): Promise<any[]> {

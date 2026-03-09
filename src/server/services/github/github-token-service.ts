@@ -7,9 +7,7 @@ import { accounts, users } from "@/server/db/schema";
  * Validates a GitHub token by making a lightweight API call.
  * Returns true if token is valid, false if expired/revoked.
  */
-export async function validateGitHubToken(
-	accessToken: string,
-): Promise<boolean> {
+export async function validateGitHubToken(accessToken: string): Promise<boolean> {
 	try {
 		const response = await fetch("https://api.github.com/user", {
 			headers: {
@@ -38,15 +36,14 @@ export async function validateGitHubToken(
  */
 export async function getGitHubConnectionStatusWithValidation(
 	userId?: string,
-	options: { validateToken?: boolean } = {},
+	options: { validateToken?: boolean } = {}
 ): Promise<{
 	isConnected: boolean;
 	isTokenValid: boolean;
 	username: string | null;
 	accessToken: string | null;
 }> {
-	const { isConnected, username, accessToken } =
-		await getGitHubConnectionStatus(userId);
+	const { isConnected, username, accessToken } = await getGitHubConnectionStatus(userId);
 
 	// Skip validation if not connected or not requested
 	if (!isConnected || !accessToken || !options.validateToken) {
@@ -62,13 +59,10 @@ export async function getGitHubConnectionStatusWithValidation(
 	const isTokenValid = await validateGitHubToken(accessToken);
 
 	if (!isTokenValid) {
-		console.warn(
-			"[getGitHubConnectionStatusWithValidation] Token validation failed",
-			{
-				userId,
-				username,
-			},
-		);
+		console.warn("[getGitHubConnectionStatusWithValidation] Token validation failed", {
+			userId,
+			username,
+		});
 	}
 
 	return {
@@ -83,9 +77,7 @@ export async function getGitHubConnectionStatusWithValidation(
  * Get the GitHub access token for the currently authenticated user
  * @returns The GitHub access token or null if not found
  */
-export async function getGitHubAccessToken(
-	userId?: string,
-): Promise<string | null> {
+export async function getGitHubAccessToken(userId?: string): Promise<string | null> {
 	try {
 		// If no userId provided, get from current session
 		if (!userId) {
@@ -151,7 +143,7 @@ export async function getGitHubConnectionStatus(userId?: string): Promise<{
 			{
 				userId,
 				hasToken: !!accessToken,
-			},
+			}
 		);
 	}
 
@@ -168,9 +160,7 @@ export async function getGitHubConnectionStatus(userId?: string): Promise<{
  * fetches it from GitHub API and stores it for future use.
  * @returns The GitHub username or null if not found
  */
-export async function getGitHubUsername(
-	userId?: string,
-): Promise<string | null> {
+export async function getGitHubUsername(userId?: string): Promise<string | null> {
 	try {
 		// If no userId provided, get from current session
 		if (!userId) {
@@ -215,22 +205,16 @@ export async function getGitHubUsername(
 							})
 							.where(eq(users.id, userId));
 
-						console.info(
-							"[getGitHubUsername] Fetched and stored missing GitHub username:",
-							{
-								userId,
-								githubUsername,
-							},
-						);
+						console.info("[getGitHubUsername] Fetched and stored missing GitHub username:", {
+							userId,
+							githubUsername,
+						});
 
 						return githubUsername;
 					}
 				}
 			} catch (fetchError) {
-				console.error(
-					"[getGitHubUsername] Error fetching from GitHub API:",
-					fetchError,
-				);
+				console.error("[getGitHubUsername] Error fetching from GitHub API:", fetchError);
 			}
 		}
 

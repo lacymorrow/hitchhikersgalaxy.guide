@@ -57,9 +57,7 @@ describe("VercelAPIService createProject", () => {
 		const service = new VercelAPIService({ accessToken: "token" });
 		const result = await service.createProject({ name: "delete-1211" });
 
-		expect(result.projectUrl).toBe(
-			"https://vercel.com/shipkits-projects/delete-1211"
-		);
+		expect(result.projectUrl).toBe("https://vercel.com/shipkits-projects/delete-1211");
 	});
 
 	test("falls back to user slug when team lookup fails", async () => {
@@ -90,9 +88,7 @@ describe("VercelAPIService createProject", () => {
 		const service = new VercelAPIService({ accessToken: "token" });
 		const result = await service.createProject({ name: "delete-1211" });
 
-		expect(result.projectUrl).toBe(
-			"https://vercel.com/shipkits-projects/delete-1211"
-		);
+		expect(result.projectUrl).toBe("https://vercel.com/shipkits-projects/delete-1211");
 	});
 });
 

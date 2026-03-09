@@ -31,16 +31,8 @@ export const Spotlight = ({ className }: { className?: string }) => {
 						colorInterpolationFilters="sRGB"
 					>
 						<feFlood floodOpacity="0" result="BackgroundImageFix" />
-						<feBlend
-							mode="normal"
-							in="SourceGraphic"
-							in2="BackgroundImageFix"
-							result="shape"
-						/>
-						<feGaussianBlur
-							stdDeviation="150"
-							result="effect1_foregroundBlur_1065_8"
-						/>
+						<feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+						<feGaussianBlur stdDeviation="150" result="effect1_foregroundBlur_1065_8" />
 					</filter>
 				</defs>
 				<g filter="url(#filter)">

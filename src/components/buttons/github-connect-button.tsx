@@ -20,11 +20,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
-import { disconnectGitHub, updateGitHubUsername } from "@/server/actions/github";
 import { createRedirectUrl } from "@/lib/utils/redirect";
-import { routes } from "@/config/routes";
+import { disconnectGitHub, updateGitHubUsername } from "@/server/actions/github";
 
 interface GitHubSession {
 	user: {
@@ -72,7 +72,9 @@ export const GitHubConnectButton = ({ className }: { className?: string }) => {
 				await updateSession({ force: true });
 				// If we're on the settings page, add highlight parameter
 				if (pathname?.includes(routes.settings.index)) {
-					const redirectUrl = createRedirectUrl(routes.settings.account, { code: "GITHUB_CONNECTED" });
+					const redirectUrl = createRedirectUrl(routes.settings.account, {
+						code: "GITHUB_CONNECTED",
+					});
 					router.push(redirectUrl);
 				} else {
 					router.refresh();

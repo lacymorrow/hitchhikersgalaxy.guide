@@ -7,11 +7,11 @@ import { env } from "@/env";
 
 const TailwindIndicator = dynamic(
 	() => import("@/components/modules/devtools/tailwind-indicator").then((m) => m.TailwindIndicator),
-	{ ssr: false, loading: () => null },
+	{ ssr: false, loading: () => null }
 );
 const FontSelector = dynamic(
 	() => import("@/components/modules/devtools/font-selector").then((m) => m.FontSelector),
-	{ ssr: false, loading: () => null },
+	{ ssr: false, loading: () => null }
 );
 
 export default function PagesApp({ Component, pageProps }: AppProps) {

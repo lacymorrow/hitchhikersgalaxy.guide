@@ -1,7 +1,8 @@
 // Example file structure, app/[...page]/page.tsx
 // You could alternatively use src/app/[...page]/page.tsx
-import type { Metadata } from "next";
+
 import { builder } from "@builder.io/sdk";
+import type { Metadata } from "next";
 import { constructMetadata } from "@/config/metadata";
 import { env } from "@/env";
 import { RenderBuilderContent } from "@/lib/builder-io/builder-io";

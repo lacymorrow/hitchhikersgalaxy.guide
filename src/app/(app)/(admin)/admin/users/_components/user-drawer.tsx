@@ -16,11 +16,7 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-	Collapsible,
-	CollapsibleContent,
-	CollapsibleTrigger,
-} from "@/components/ui/collapsible";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
 	Drawer,
 	DrawerClose,
@@ -81,9 +77,7 @@ interface UserDrawerProps {
 
 export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 	const [isJsonOpen, setIsJsonOpen] = useState(false);
-	const [completeData, setCompleteData] = useState<CompleteUserData | null>(
-		null,
-	);
+	const [completeData, setCompleteData] = useState<CompleteUserData | null>(null);
 	const [isLoadingCompleteData, setIsLoadingCompleteData] = useState(false);
 
 	useEffect(() => {
@@ -107,7 +101,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 	const getStatusBadgeVariant = (
 		status: Purchase["status"],
 		isSubscription = false,
-		isActive = false,
+		isActive = false
 	) => {
 		if (isSubscription) {
 			return isActive ? "default" : "secondary";
@@ -157,9 +151,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 													<User className="h-8 w-8 text-primary" />
 												</div>
 												<div>
-													<h4 className="text-xl font-medium">
-														{user.name || "Unnamed User"}
-													</h4>
+													<h4 className="text-xl font-medium">{user.name || "Unnamed User"}</h4>
 													<div className="flex items-center gap-2 text-sm text-muted-foreground">
 														<Mail className="h-3 w-3" />
 														<span>{user.email}</span>
@@ -175,12 +167,8 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 															<Calendar className="h-5 w-5 text-primary" />
 														</div>
 														<div>
-															<p className="text-sm font-medium text-muted-foreground">
-																Joined
-															</p>
-															<p className="font-medium">
-																{format(user.createdAt, "PPP")}
-															</p>
+															<p className="text-sm font-medium text-muted-foreground">Joined</p>
+															<p className="font-medium">{format(user.createdAt, "PPP")}</p>
 														</div>
 													</div>
 												</div>
@@ -190,9 +178,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 															<CreditCard className="h-5 w-5 text-primary" />
 														</div>
 														<div>
-															<p className="text-sm font-medium text-muted-foreground">
-																Status
-															</p>
+															<p className="text-sm font-medium text-muted-foreground">Status</p>
 															<Badge
 																variant={user.hasPaid ? "default" : "secondary"}
 																className="mt-1"
@@ -212,12 +198,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 																{user.id}
 															</code>
 														</div>
-														<Button
-															variant="ghost"
-															size="sm"
-															className="h-7 gap-1"
-															asChild
-														>
+														<Button variant="ghost" size="sm" className="h-7 gap-1" asChild>
 															<a
 																href={`mailto:${user.email}`}
 																target="_blank"
@@ -247,9 +228,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 													<p className="text-sm font-medium text-muted-foreground">
 														Payment Status
 													</p>
-													<Badge
-														variant={user.hasPaid ? "default" : "secondary"}
-													>
+													<Badge variant={user.hasPaid ? "default" : "secondary"}>
 														{user.hasPaid ? "Paid" : "Not Paid"}
 													</Badge>
 												</div>
@@ -257,9 +236,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 													<p className="text-sm font-medium text-muted-foreground">
 														Total Purchases
 													</p>
-													<p className="text-2xl font-bold">
-														{user.totalPurchases}
-													</p>
+													<p className="text-2xl font-bold">{user.totalPurchases}</p>
 												</div>
 											</div>
 										</CardContent>
@@ -281,9 +258,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 													)}
 												</div>
 												<div className="text-right">
-													<p className="text-sm font-medium text-muted-foreground">
-														Last Purchase
-													</p>
+													<p className="text-sm font-medium text-muted-foreground">Last Purchase</p>
 													<p className="text-lg">
 														{user.lastPurchaseDate
 															? format(user.lastPurchaseDate, "PPP")
@@ -355,9 +330,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 													<TableRow key={purchase.id}>
 														<TableCell>
 															<div>
-																<p className="font-medium">
-																	{purchase.productName}
-																</p>
+																<p className="font-medium">{purchase.productName}</p>
 																{purchase.variantName && (
 																	<p className="text-xs text-muted-foreground">
 																		Variant: {purchase.variantName}
@@ -368,20 +341,16 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 																</p>
 															</div>
 														</TableCell>
-														<TableCell>
-															{format(purchase.purchaseDate, "PPP")}
-														</TableCell>
+														<TableCell>{format(purchase.purchaseDate, "PPP")}</TableCell>
 														<TableCell>
 															<div className="flex items-center gap-2">
-																<CreditCard className="h-4 w-4 text-muted-foreground" />
-																${purchase.amount.toFixed(2)}
+																<CreditCard className="h-4 w-4 text-muted-foreground" />$
+																{purchase.amount.toFixed(2)}
 															</div>
 														</TableCell>
 														<TableCell>
 															{(() => {
-																const isSubscription = isSubscriptionProduct(
-																	purchase.productName,
-																);
+																const isSubscription = isSubscriptionProduct(purchase.productName);
 																// Check if this specific purchase is an active subscription
 																const isActive =
 																	isSubscription &&
@@ -389,29 +358,20 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 																	user.purchases
 																		?.filter(
 																			(p) =>
-																				isSubscriptionProduct(p.productName) &&
-																				p.status === "paid",
+																				isSubscriptionProduct(p.productName) && p.status === "paid"
 																		)
 																		.slice(-1)[0]?.id === purchase.id;
 
 																if (isSubscription) {
 																	return (
-																		<Badge
-																			variant={
-																				isActive ? "default" : "secondary"
-																			}
-																		>
+																		<Badge variant={isActive ? "default" : "secondary"}>
 																			{isActive ? "Subscribed" : "Inactive"}
 																		</Badge>
 																	);
 																}
 
 																return (
-																	<Badge
-																		variant={getStatusBadgeVariant(
-																			purchase.status,
-																		)}
-																	>
+																	<Badge variant={getStatusBadgeVariant(purchase.status)}>
 																		{purchase.status.charAt(0).toUpperCase() +
 																			purchase.status.slice(1)}
 																	</Badge>
@@ -437,9 +397,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 									<Card>
 										<CardContent className="flex flex-col items-center justify-center py-6 text-center">
 											<Package className="mb-2 h-8 w-8 text-muted-foreground" />
-											<p className="text-sm text-muted-foreground">
-												No purchase history available
-											</p>
+											<p className="text-sm text-muted-foreground">No purchase history available</p>
 										</CardContent>
 									</Card>
 								)}
@@ -448,11 +406,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 							<Separator />
 
 							<section>
-								<Collapsible
-									open={isJsonOpen}
-									onOpenChange={setIsJsonOpen}
-									className="w-full"
-								>
+								<Collapsible open={isJsonOpen} onOpenChange={setIsJsonOpen} className="w-full">
 									<div className="flex items-center justify-between">
 										<div className="flex items-center gap-2 text-sm text-muted-foreground">
 											<Database className="h-4 w-4" />
@@ -489,18 +443,12 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 										) : completeData ? (
 											<div className="mt-4 space-y-4">
 												<div className="flex flex-wrap gap-2 text-xs">
-													<Badge variant="outline">
-														{completeData.accounts.length} Account(s)
-													</Badge>
-													<Badge variant="outline">
-														{completeData.payments.length} Payment(s)
-													</Badge>
+													<Badge variant="outline">{completeData.accounts.length} Account(s)</Badge>
+													<Badge variant="outline">{completeData.payments.length} Payment(s)</Badge>
 													<Badge variant="outline">
 														{completeData.deployments.length} Deployment(s)
 													</Badge>
-													<Badge variant="outline">
-														{completeData.apiKeys.length} API Key(s)
-													</Badge>
+													<Badge variant="outline">{completeData.apiKeys.length} API Key(s)</Badge>
 													<Badge variant="outline">
 														{completeData.teamMemberships.length} Team(s)
 													</Badge>

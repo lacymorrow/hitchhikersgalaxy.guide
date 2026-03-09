@@ -10,8 +10,8 @@
  * don't blow up on Vercel at runtime.
  */
 
-import { env } from "@/env";
 import type React from "react";
+import { env } from "@/env";
 
 interface Args {
 	children: React.ReactNode;

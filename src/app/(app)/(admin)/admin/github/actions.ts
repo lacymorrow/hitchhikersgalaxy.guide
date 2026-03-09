@@ -46,7 +46,8 @@ export async function addCollaboratorAction(githubUsername: string) {
 	} catch (error) {
 		console.error("Failed to add collaborator:", error);
 		const message = error instanceof Error ? error.message : "Unknown error occurred";
-		const isBadCredentials = message.toLowerCase().includes("bad credentials") || message.includes("401");
+		const isBadCredentials =
+			message.toLowerCase().includes("bad credentials") || message.includes("401");
 		return {
 			success: false,
 			error: isBadCredentials

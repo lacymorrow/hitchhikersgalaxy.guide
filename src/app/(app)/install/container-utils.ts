@@ -79,7 +79,7 @@ export class ContainerManager {
 	 * @param templateBaseDir - Base directory path containing template files
 	 *                         used for initializing the container file system
 	 */
-	constructor(private templateBaseDir: string) { }
+	constructor(private templateBaseDir: string) {}
 
 	/**
 	 * Initialize and boot the WebContainer instance

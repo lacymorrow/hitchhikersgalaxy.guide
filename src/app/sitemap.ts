@@ -47,7 +47,7 @@ export async function generateSitemaps() {
 	]);
 
 	const sitemaps = [{ id: 0 }]; // Static routes
-	
+
 	// Only include blog sitemap if blog is enabled
 	if (process.env.NEXT_PUBLIC_HAS_BLOG === "true") {
 		sitemaps.push({ id: 1 }); // Blog posts
@@ -55,7 +55,7 @@ export async function generateSitemaps() {
 	} else {
 		sitemaps.push({ id: 1 }); // Documentation (when blog is disabled)
 	}
-	
+
 	return sitemaps;
 }
 

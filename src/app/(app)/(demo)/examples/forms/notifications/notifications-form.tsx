@@ -6,7 +6,6 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
-import { routes } from "@/config/routes";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
 	Form,
@@ -19,6 +18,7 @@ import {
 } from "@/components/ui/form";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Switch } from "@/components/ui/switch";
+import { routes } from "@/config/routes";
 import { toast } from "@/hooks/use-toast";
 
 const notificationsFormSchema = z.object({

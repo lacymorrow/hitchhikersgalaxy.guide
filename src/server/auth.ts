@@ -1,5 +1,5 @@
-import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import type { Adapter, AdapterAccount } from "@auth/core/adapters";
+import { DrizzleAdapter } from "@auth/drizzle-adapter";
 import { eq } from "drizzle-orm";
 import type { Session } from "next-auth";
 import NextAuth from "next-auth";

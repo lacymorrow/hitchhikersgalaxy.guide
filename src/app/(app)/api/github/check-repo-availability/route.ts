@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
 		if (!session?.user?.id) {
 			return NextResponse.json(
 				{ available: false, checked: false, error: "Authentication required" },
-				{ status: 401 },
+				{ status: 401 }
 			);
 		}
 
@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
 		await rateLimitService.checkLimit(
 			session.user.id,
 			"checkRepoAvailability",
-			rateLimits.deployments.status,
+			rateLimits.deployments.status
 		);
 
 		const searchParams = request.nextUrl.searchParams;
@@ -35,13 +35,13 @@ export async function GET(request: NextRequest) {
 		if (!projectName) {
 			return NextResponse.json(
 				{ available: false, checked: false, error: "Project name is required" },
-				{ status: 400 },
+				{ status: 400 }
 			);
 		}
 
 		const result = await deploymentService.checkRepositoryNameAvailable(
 			session.user.id,
-			projectName,
+			projectName
 		);
 		return NextResponse.json(result);
 	} catch (error) {
@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
 		if (error instanceof Error && error.message.includes("Too many requests")) {
 			return NextResponse.json(
 				{ available: false, checked: false, error: "Rate limit exceeded" },
-				{ status: 429 },
+				{ status: 429 }
 			);
 		}
 		console.error("Failed to check repository availability:", error);
@@ -59,7 +59,7 @@ export async function GET(request: NextRequest) {
 				checked: false,
 				error: "Failed to check availability",
 			},
-			{ status: 500 },
+			{ status: 500 }
 		);
 	}
 }

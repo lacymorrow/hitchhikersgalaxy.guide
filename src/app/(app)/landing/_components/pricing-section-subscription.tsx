@@ -1,10 +1,10 @@
 "use client";
 
-import type { PricingPlan } from "@/content/pricing/pricing-content";
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { CheckIcon, EuroIcon } from "lucide-react";
 import { useState } from "react";
+import type { PricingPlan } from "@/content/pricing/pricing-content";
+import { cn } from "@/lib/utils";
 
 type BilledType = "monthly" | "annually";
 
@@ -22,18 +22,11 @@ export const PricingSectionSubscription = ({ plans }: PricingSectionSubscription
 	return (
 		<div className="mx-auto w-full max-w-5xl">
 			<div className="mb-8 flex flex-col items-center justify-center gap-4">
-				<SelectOfferTab
-					handleSwitchTab={handleSwitchTab}
-					selectedBilledType={selectedBilledType}
-				/>
+				<SelectOfferTab handleSwitchTab={handleSwitchTab} selectedBilledType={selectedBilledType} />
 			</div>
 			<div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
 				{plans?.map((plan) => (
-					<OfferCard
-						key={plan.title}
-						{...plan}
-						selectedBilledType={selectedBilledType}
-					/>
+					<OfferCard key={plan.title} {...plan} selectedBilledType={selectedBilledType} />
 				))}
 			</div>
 		</div>
@@ -59,14 +52,13 @@ const OfferCard = ({
 		return price.monthly || 0;
 	}
 
-	const currentPrice =
-		selectedBilledType === "annually" ? getAnnualPrice() : getMonthlyPrice();
+	const currentPrice = selectedBilledType === "annually" ? getAnnualPrice() : getMonthlyPrice();
 
 	return (
 		<div
 			className={cn(
 				"relative rounded-2xl border bg-card p-8",
-				isBestValue && "border-primary shadow-lg",
+				isBestValue && "border-primary shadow-lg"
 			)}
 		>
 			{isBestValue && (
@@ -133,9 +125,7 @@ export function SelectOfferTab({
 				onClick={() => handleSwitchTab("monthly")}
 				className={cn(
 					"relative z-10 flex-1 rounded-full px-4 text-sm font-medium transition-colors",
-					selectedBilledType === "monthly"
-						? "text-primary-foreground"
-						: "text-foreground",
+					selectedBilledType === "monthly" ? "text-primary-foreground" : "text-foreground"
 				)}
 			>
 				Monthly
@@ -144,9 +134,7 @@ export function SelectOfferTab({
 				onClick={() => handleSwitchTab("annually")}
 				className={cn(
 					"relative z-10 flex-1 rounded-full px-4 text-sm font-medium transition-colors",
-					selectedBilledType === "annually"
-						? "text-primary-foreground"
-						: "text-foreground",
+					selectedBilledType === "annually" ? "text-primary-foreground" : "text-foreground"
 				)}
 			>
 				Annually

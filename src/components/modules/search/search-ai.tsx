@@ -28,9 +28,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
 import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
+import { siteConfig } from "@/config/site-config";
 import { useAutoResizeTextarea } from "@/hooks/use-auto-resize-textarea";
 import { cn } from "@/lib/utils";
-import { siteConfig } from "@/config/site-config";
 
 const MIN_HEIGHT = 48;
 const MAX_HEIGHT = 120;
@@ -276,21 +276,14 @@ export const SearchAi = ({
 				size="sm"
 				className={cn(
 					"relative bg-muted/50 text-sm font-normal text-muted-foreground shadow-none",
-					collapsible
-						? "justify-center lg:justify-start lg:pr-12"
-						: "justify-start sm:pr-12",
+					collapsible ? "justify-center lg:justify-start lg:pr-12" : "justify-start sm:pr-12",
 					className
 				)}
 				{...props}
 			>
-				{collapsible && (
-					<Search className="h-4 w-4 shrink-0 lg:mr-2" />
-				)}
+				{collapsible && <Search className="h-4 w-4 shrink-0 lg:mr-2" />}
 				<span
-					className={cn(
-						"text-xs truncate",
-						collapsible ? "hidden lg:inline-flex" : "inline-flex"
-					)}
+					className={cn("text-xs truncate", collapsible ? "hidden lg:inline-flex" : "inline-flex")}
 				>
 					{buttonText ?? defaultButtonText}
 				</span>

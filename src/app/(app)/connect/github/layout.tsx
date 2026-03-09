@@ -3,7 +3,8 @@ import { constructMetadata } from "@/config/metadata";
 
 export const metadata: Metadata = constructMetadata({
 	title: "Connect GitHub",
-	description: "Connect your GitHub account to access repository features and collaborate on projects.",
+	description:
+		"Connect your GitHub account to access repository features and collaborate on projects.",
 	noIndex: true,
 });
 

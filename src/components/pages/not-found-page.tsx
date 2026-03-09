@@ -1,7 +1,7 @@
 // This must be a server component
 
 import { RocketIcon } from "lucide-react";
-import { ThemeProvider as NextThemesProvider } from "next-themes";
+import type { ThemeProvider as NextThemesProvider } from "next-themes";
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { Link } from "@/components/primitives/link";
 // import { PageHeader, PageHeaderDescription, PageHeaderHeading } from "@/components/primitives/page-header";
@@ -16,7 +16,9 @@ interface NotFoundPageProps {
 	statusCode?: number;
 }
 
-const NoOpProvider = ({ children, ...props }: React.ComponentProps<typeof NextThemesProvider>) => <>{children}</>;
+const NoOpProvider = ({ children, ...props }: React.ComponentProps<typeof NextThemesProvider>) => (
+	<>{children}</>
+);
 
 export const NotFoundPage = ({
 	containerClassName,

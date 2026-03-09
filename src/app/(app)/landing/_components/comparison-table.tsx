@@ -1,19 +1,5 @@
 "use client";
 
-import { Badge } from "@/components/ui/badge";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger
-} from "@/components/ui/tooltip";
 import { motion } from "framer-motion";
 import {
 	Brain,
@@ -29,9 +15,19 @@ import {
 	Shield,
 	Sparkles,
 	Users,
-	X
+	X,
 } from "lucide-react";
 import { Fragment, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import {
+	Table,
+	TableBody,
+	TableCell,
+	TableHead,
+	TableHeader,
+	TableRow,
+} from "@/components/ui/table";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 interface Feature {
 	name: string;
@@ -209,17 +205,13 @@ export const ComparisonTable = () => {
 						<TableHead className="text-center w-[30%]">
 							<div className="flex flex-col items-center gap-1">
 								<Badge variant="default">ShipKit</Badge>
-								<span className="text-xs text-muted-foreground">
-									Production-Ready
-								</span>
+								<span className="text-xs text-muted-foreground">Production-Ready</span>
 							</div>
 						</TableHead>
 						<TableHead className="text-center w-[30%]">
 							<div className="flex flex-col items-center gap-1 py-2">
 								<Badge variant="secondary">Others</Badge>
-								<span className="text-xs text-muted-foreground">
-									Basic Features
-								</span>
+								<span className="text-xs text-muted-foreground">Basic Features</span>
 							</div>
 						</TableHead>
 					</TableRow>
@@ -231,9 +223,7 @@ export const ComparisonTable = () => {
 								className="cursor-pointer bg-muted/50 transition-colors hover:bg-muted/70"
 								onClick={() =>
 									setExpandedCategory(
-										expandedCategory === category.category
-											? null
-											: category.category,
+										expandedCategory === category.category ? null : category.category
 									)
 								}
 							>
@@ -243,9 +233,7 @@ export const ComparisonTable = () => {
 											<category.icon className="h-5 w-5 text-primary" />
 											<span className="font-medium">{category.category}</span>
 										</div>
-										<div className="text-sm text-muted-foreground">
-											{category.description}
-										</div>
+										<div className="text-sm text-muted-foreground">{category.description}</div>
 									</div>
 								</TableCell>
 							</TableRow>
@@ -259,8 +247,10 @@ export const ComparisonTable = () => {
 									className={[
 										"relative",
 										hoveredFeature === feature.name ? "bg-muted/30" : "",
-										feature.highlight ? "bg-primary/5" : ""
-									].filter(Boolean).join(" ")}
+										feature.highlight ? "bg-primary/5" : "",
+									]
+										.filter(Boolean)
+										.join(" ")}
 								>
 									<TableCell className="font-medium">
 										<div className="flex items-center gap-2">
@@ -269,9 +259,7 @@ export const ComparisonTable = () => {
 													className={`h-4 w-4 ${hoveredFeature === feature.name ? "text-primary" : "text-muted-foreground"}`}
 												/>
 											)}
-											<span
-												className={feature.highlight ? "text-primary" : ""}
-											>
+											<span className={feature.highlight ? "text-primary" : ""}>
 												{feature.name}
 											</span>
 											{feature.tooltip && (
@@ -291,16 +279,14 @@ export const ComparisonTable = () => {
 									</TableCell>
 									<TableCell className="text-center">
 										{feature.shipkit ? (
-											<motion.div
-												className="flex justify-center"
-												whileHover={{ scale: 1.05 }}
-											>
+											<motion.div className="flex justify-center" whileHover={{ scale: 1.05 }}>
 												<Badge
 													variant="outline"
-													className={`gap-1 transition-colors duration-200 ${hoveredFeature === feature.name
-														? "bg-primary text-primary-foreground"
-														: "bg-green-500/10 text-green-500"
-														} `}
+													className={`gap-1 transition-colors duration-200 ${
+														hoveredFeature === feature.name
+															? "bg-primary text-primary-foreground"
+															: "bg-green-500/10 text-green-500"
+													} `}
 												>
 													<Check className="h-3 w-3" />
 													Included
@@ -312,17 +298,11 @@ export const ComparisonTable = () => {
 									</TableCell>
 									<TableCell className="text-center">
 										{feature.others ? (
-											<motion.div
-												whileHover={{ scale: 1.1 }}
-												className="flex justify-center"
-											>
+											<motion.div whileHover={{ scale: 1.1 }} className="flex justify-center">
 												<Check className="h-4 w-4 text-green-500" />
 											</motion.div>
 										) : (
-											<motion.div
-												whileHover={{ scale: 1.1 }}
-												className="flex justify-center"
-											>
+											<motion.div whileHover={{ scale: 1.1 }} className="flex justify-center">
 												<X className="h-4 w-4 text-muted-foreground" />
 											</motion.div>
 										)}

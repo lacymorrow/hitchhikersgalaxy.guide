@@ -75,7 +75,8 @@ function getEnvValue(name: string): string | undefined {
 }
 
 function mirrorPublicEnvVariables(): Record<`NEXT_PUBLIC_${string}`, string> {
-	const mirrored: Record<`NEXT_PUBLIC_${string}` | typeof PUBLIC_ENV_BASE_KEYS[number], string> = {};
+	const mirrored: Record<`NEXT_PUBLIC_${string}` | (typeof PUBLIC_ENV_BASE_KEYS)[number], string> =
+		{};
 
 	for (const base of PUBLIC_ENV_BASE_KEYS) {
 		const publicKey = `NEXT_PUBLIC_${base}` as const;
@@ -124,8 +125,7 @@ export interface AiProvider {
 }
 
 function getAiPreferredProvider(): AiProviderId | undefined {
-	if (hasEnv("ANTHROPIC_API_KEY") && !envIsTrue("DISABLE_ANTHROPIC"))
-		return "claude-code";
+	if (hasEnv("ANTHROPIC_API_KEY") && !envIsTrue("DISABLE_ANTHROPIC")) return "claude-code";
 
 	if (hasEnv("OPENAI_API_KEY") && !envIsTrue("DISABLE_OPENAI")) return "codex";
 
@@ -168,13 +168,12 @@ export const preferredAiProvider: AiProvider | undefined = (() => {
 })();
 
 buildTimeFeatures.DEVTOOLS_REACT_GRAB_ENABLED =
-	buildTimeFeatures.DEVTOOLS_ENABLED &&
-	!!preferredAiProvider &&
-	envIsTrue("ENABLE_REACT_GRAB");
+	buildTimeFeatures.DEVTOOLS_ENABLED && !!preferredAiProvider && envIsTrue("ENABLE_REACT_GRAB");
 
 // UI / Theme
 buildTimeFeatures.LIGHT_MODE_ENABLED = !envIsTrue("DISABLE_LIGHT_MODE");
 buildTimeFeatures.DARK_MODE_ENABLED = !envIsTrue("DISABLE_DARK_MODE");
+buildTimeFeatures.HAPTICS_ENABLED = !envIsTrue("DISABLE_HAPTICS");
 
 // Authentication
 // Better Auth can also derive its secret from APP_SECRET
@@ -303,8 +302,10 @@ buildTimeFeatures.CONSENT_MANAGER_ENABLED =
 	!envIsTrue("DISABLE_CONSENT_MANAGER");
 
 // Cloudflare Turnstile (CAPTCHA)
-buildTimeFeatures.TURNSTILE_ENABLED =
-	hasEnv("NEXT_PUBLIC_TURNSTILE_SITE_KEY", "TURNSTILE_SECRET_KEY");
+buildTimeFeatures.TURNSTILE_ENABLED = hasEnv(
+	"NEXT_PUBLIC_TURNSTILE_SITE_KEY",
+	"TURNSTILE_SECRET_KEY"
+);
 
 // Composite Features
 buildTimeFeatures.FILE_UPLOAD_ENABLED =

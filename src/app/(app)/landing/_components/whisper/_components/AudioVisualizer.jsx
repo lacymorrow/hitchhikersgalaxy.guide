@@ -1,15 +1,13 @@
 // @ts-nocheck
 "use client";
 
-import { useRef, useCallback, useEffect } from "react";
+import { useCallback, useEffect, useRef } from "react";
 
 export function AudioVisualizer({ stream, ...props }) {
 	const canvasRef = useRef(null);
 
 	const visualize = useCallback((stream) => {
-		const audioContext = new (
-			window.AudioContext || window.webkitAudioContext
-		)();
+		const audioContext = new (window.AudioContext || window.webkitAudioContext)();
 		const source = audioContext.createMediaStreamSource(stream);
 		const analyser = audioContext.createAnalyser();
 		analyser.fftSize = 2048;
@@ -57,5 +55,5 @@ export function AudioVisualizer({ stream, ...props }) {
 	useEffect(() => {
 		stream && visualize(stream);
 	}, [visualize, stream]);
-	return <canvas {...props} width={720} height={240} ref={canvasRef}></canvas>;
+	return <canvas {...props} width={720} height={240} ref={canvasRef} />;
 }

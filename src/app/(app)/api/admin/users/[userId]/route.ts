@@ -22,15 +22,12 @@ import { isAdmin } from "@/server/services/admin-service";
  */
 export async function GET(
 	_request: NextRequest,
-	{ params }: { params: Promise<{ userId: string }> },
+	{ params }: { params: Promise<{ userId: string }> }
 ) {
 	try {
 		const session = await auth();
 		if (!session?.user?.id) {
-			return NextResponse.json(
-				{ error: "Authentication required" },
-				{ status: 401 },
-			);
+			return NextResponse.json({ error: "Authentication required" }, { status: 401 });
 		}
 
 		const adminStatus = await isAdmin({
@@ -38,19 +35,13 @@ export async function GET(
 			userId: session.user.id,
 		});
 		if (!adminStatus) {
-			return NextResponse.json(
-				{ error: "Admin access required" },
-				{ status: 403 },
-			);
+			return NextResponse.json({ error: "Admin access required" }, { status: 403 });
 		}
 
 		const { userId } = await params;
 
 		if (!userId) {
-			return NextResponse.json(
-				{ error: "User ID is required" },
-				{ status: 400 },
-			);
+			return NextResponse.json({ error: "User ID is required" }, { status: 400 });
 		}
 
 		const emptyResult = {
@@ -91,10 +82,7 @@ export async function GET(
 					.where(eq(userCredits.userId, userId))
 					.limit(1)
 					.then((rows) => rows[0] ?? null),
-				db
-					.select()
-					.from(creditTransactions)
-					.where(eq(creditTransactions.userId, userId)),
+				db.select().from(creditTransactions).where(eq(creditTransactions.userId, userId)),
 				db.select().from(teamMembers).where(eq(teamMembers.userId, userId)),
 			]);
 
@@ -113,9 +101,6 @@ export async function GET(
 		return NextResponse.json(result);
 	} catch (error) {
 		console.error("Failed to fetch user data:", error);
-		return NextResponse.json(
-			{ error: "Failed to fetch user data" },
-			{ status: 500 },
-		);
+		return NextResponse.json({ error: "Failed to fetch user data" }, { status: 500 });
 	}
 }

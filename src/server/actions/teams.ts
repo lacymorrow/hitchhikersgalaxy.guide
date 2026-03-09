@@ -13,12 +13,7 @@ import { metrics, metricsService } from "@/server/services/metrics-service";
 import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
 import { teamService } from "@/server/services/team-service";
 import { ValidationService } from "@/server/services/validation-service";
-import {
-	createTeamSchema,
-	teamIdSchema,
-	teamMemberSchema,
-	updateTeamSchema,
-} from "./schemas";
+import { createTeamSchema, teamIdSchema, teamMemberSchema, updateTeamSchema } from "./schemas";
 
 /**
  * Creates a new team and assigns the user as the owner.

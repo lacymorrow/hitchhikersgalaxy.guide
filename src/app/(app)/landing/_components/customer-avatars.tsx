@@ -1,5 +1,6 @@
-import AvatarCircles from "@/components/ui/avatar-circles";
 import { Star } from "lucide-react";
+import AvatarCircles from "@/components/ui/avatar-circles";
+
 const avatarUrls = [
 	"https://avatars.githubusercontent.com/u/5619728", // @tedtoy
 	"https://avatars.githubusercontent.com/u/124599", // @shadcn
@@ -21,9 +22,7 @@ export const CustomerAvatars = () => {
 					<Star className="h-4 w-4 fill-current" />
 				</div>
 				<div className="flex flex-col">
-					<span className="text-xs font-medium text-muted-foreground">
-						5/5 from our users
-					</span>
+					<span className="text-xs font-medium text-muted-foreground">5/5 from our users</span>
 				</div>
 			</div>
 		</div>

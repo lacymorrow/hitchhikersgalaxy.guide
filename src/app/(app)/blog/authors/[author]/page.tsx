@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { AuthorProfile } from "@/components/modules/blog/author-profile";
 import { Link } from "@/components/primitives/link";
-import { routes } from "@/config/routes";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -12,6 +11,7 @@ import {
 	getAuthorByName,
 } from "@/config/blog-authors";
 import { constructMetadata } from "@/config/metadata";
+import { routes } from "@/config/routes";
 import { getBlogPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils/format-date";
 

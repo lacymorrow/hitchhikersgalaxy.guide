@@ -20,6 +20,6 @@ export function GET() {
 			headers: {
 				"Cache-Control": "public, max-age=86400",
 			},
-		},
+		}
 	);
 }

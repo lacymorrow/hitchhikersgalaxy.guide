@@ -16,18 +16,13 @@ const signInButton = (
 	</Link>
 );
 
-export const LemonSqueezyButton = async ({
-	userId,
-	email,
-}: LemonSqueezyButtonProps) => {
+export const LemonSqueezyButton = async ({ userId, email }: LemonSqueezyButtonProps) => {
 	if (!userId && !email) {
 		return signInButton;
 	}
 
 	try {
-		const hasPaid = userId
-			? await PaymentService.getUserPaymentStatus(userId)
-			: false;
+		const hasPaid = userId ? await PaymentService.getUserPaymentStatus(userId) : false;
 
 		if (!hasPaid) {
 			return (

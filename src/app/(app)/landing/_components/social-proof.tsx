@@ -1,9 +1,9 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { Section, SectionBadge } from "@/components/primitives/section";
 import { Separator } from "@/components/ui/separator";
 import { siteConfig } from "@/config/site-config";
-import { motion } from "framer-motion";
 import { BrandLogos } from "./brand-logos";
 import { CustomerAvatars } from "./customer-avatars";
 
@@ -11,7 +11,7 @@ const stats = [
 	{
 		value: "$100k+",
 		label: "Saved",
-		description: `in development costs`,
+		description: "in development costs",
 	},
 	{
 		value: "100+",
@@ -44,13 +44,9 @@ export const SocialProof = () => {
 						transition={{ delay: idx * 0.2 }}
 						className="text-center"
 					>
-						<div className="text-4xl font-bold tracking-tight">
-							{stat.value}
-						</div>
+						<div className="text-4xl font-bold tracking-tight">{stat.value}</div>
 						<div className="mt-2 text-base font-semibold">{stat.label}</div>
-						<div className="mt-1 text-sm text-muted-foreground">
-							{stat.description}
-						</div>
+						<div className="mt-1 text-sm text-muted-foreground">{stat.description}</div>
 					</motion.div>
 				))}
 			</div>

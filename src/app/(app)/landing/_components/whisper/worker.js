@@ -1,11 +1,11 @@
 // @ts-nocheck
 
 import {
-	AutoTokenizer,
 	AutoProcessor,
-	WhisperForConditionalGeneration,
-	TextStreamer,
+	AutoTokenizer,
 	full,
+	TextStreamer,
+	WhisperForConditionalGeneration,
 } from "@huggingface/transformers";
 
 const MAX_NEW_TOKENS = 64;
@@ -20,15 +20,21 @@ class AutomaticSpeechRecognitionPipeline {
 	static model = null;
 
 	static async getInstance(progress_callback = null) {
-		this.tokenizer ??= AutoTokenizer.from_pretrained(this.model_id, {
-			progress_callback,
-		});
-		this.processor ??= AutoProcessor.from_pretrained(this.model_id, {
-			progress_callback,
-		});
+		AutomaticSpeechRecognitionPipeline.tokenizer ??= AutoTokenizer.from_pretrained(
+			AutomaticSpeechRecognitionPipeline.model_id,
+			{
+				progress_callback,
+			}
+		);
+		AutomaticSpeechRecognitionPipeline.processor ??= AutoProcessor.from_pretrained(
+			AutomaticSpeechRecognitionPipeline.model_id,
+			{
+				progress_callback,
+			}
+		);
 
-		this.model ??= WhisperForConditionalGeneration.from_pretrained(
-			this.model_id,
+		AutomaticSpeechRecognitionPipeline.model ??= WhisperForConditionalGeneration.from_pretrained(
+			AutomaticSpeechRecognitionPipeline.model_id,
 			{
 				dtype: {
 					encoder_model: "fp32", // 'fp16' works too
@@ -36,10 +42,14 @@ class AutomaticSpeechRecognitionPipeline {
 				},
 				device: "webgpu",
 				progress_callback,
-			},
+			}
 		);
 
-		return Promise.all([this.tokenizer, this.processor, this.model]);
+		return Promise.all([
+			AutomaticSpeechRecognitionPipeline.tokenizer,
+			AutomaticSpeechRecognitionPipeline.processor,
+			AutomaticSpeechRecognitionPipeline.model,
+		]);
 	}
 }
 
@@ -52,8 +62,7 @@ async function generate({ audio, language }) {
 	self.postMessage({ status: "start" });
 
 	// Retrieve the text-generation pipeline.
-	const [tokenizer, processor, model] =
-		await AutomaticSpeechRecognitionPipeline.getInstance();
+	const [tokenizer, processor, model] = await AutomaticSpeechRecognitionPipeline.getInstance();
 
 	let startTime;
 	let numTokens = 0;
@@ -109,12 +118,13 @@ async function load() {
 	});
 
 	// Load the pipeline and save it for future use.
-	const [tokenizer, processor, model] =
-		await AutomaticSpeechRecognitionPipeline.getInstance((x) => {
+	const [tokenizer, processor, model] = await AutomaticSpeechRecognitionPipeline.getInstance(
+		(x) => {
 			// We also add a progress callback to the pipeline so that we can
 			// track model loading.
 			self.postMessage(x);
-		});
+		}
+	);
 
 	self.postMessage({
 		status: "loading",

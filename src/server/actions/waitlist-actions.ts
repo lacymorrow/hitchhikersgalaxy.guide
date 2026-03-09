@@ -2,10 +2,7 @@
 
 import { env } from "@/env";
 import { resend } from "@/lib/resend";
-import {
-	addWaitlistEntry,
-	isEmailOnWaitlist,
-} from "@/server/services/waitlist-service";
+import { addWaitlistEntry, isEmailOnWaitlist } from "@/server/services/waitlist-service";
 
 export interface WaitlistFormData {
 	email: string;
@@ -126,4 +123,3 @@ export const addToWaitlistSimple = async (email: string) => {
 		name, // Use email prefix as fallback name
 	});
 };
-

@@ -105,18 +105,14 @@ export class VercelAPIService {
 				await this.addDomains(response.id, config.domains);
 			}
 
-			const accountSlug = await this.resolveAccountSlug(
-				response.accountId ?? this.teamId
-			);
+			const accountSlug = await this.resolveAccountSlug(response.accountId ?? this.teamId);
 			const accountPath = accountSlug ?? response.accountId;
 
 			return {
 				success: true,
 				projectId: response.id,
 				// Vercel project URLs use account slug (team/user), not accountId.
-				projectUrl: accountPath
-					? `https://vercel.com/${accountPath}/${response.name}`
-					: undefined,
+				projectUrl: accountPath ? `https://vercel.com/${accountPath}/${response.name}` : undefined,
 				details: response,
 			};
 		} catch (error: any) {
@@ -495,11 +491,7 @@ export class VercelAPIService {
 		}
 
 		try {
-			const userResponse = await this.makeRequest(
-				"/v2/user",
-				{},
-				{ skipTeamId: true }
-			);
+			const userResponse = await this.makeRequest("/v2/user", {}, { skipTeamId: true });
 			return userResponse?.user?.username;
 		} catch {
 			return undefined;

@@ -382,7 +382,9 @@ export function IntroDisclosure({
 	initialCompletedSteps,
 }: FeatureDisclosureProps) {
 	const [currentStep, setCurrentStep] = React.useState(initialStep ?? 0);
-	const [completedSteps, setCompletedSteps] = React.useState<number[]>(initialCompletedSteps ?? [0]);
+	const [completedSteps, setCompletedSteps] = React.useState<number[]>(
+		initialCompletedSteps ?? [0]
+	);
 	const [direction, setDirection] = React.useState<1 | -1>(1);
 	const isDesktopQuery = useMediaQuery("(min-width: 768px)");
 	const isDesktop = forceVariant ? forceVariant === "desktop" : isDesktopQuery;
@@ -517,7 +519,9 @@ export function IntroDisclosure({
 							/>
 						</div>
 						<AnimatePresence mode="wait" initial={false}>
-							{steps[currentStep] && <StepPreview key={currentStep} step={steps[currentStep]} direction={direction} />}
+							{steps[currentStep] && (
+								<StepPreview key={currentStep} step={steps[currentStep]} direction={direction} />
+							)}
 						</AnimatePresence>
 					</div>
 				</DialogContent>
@@ -558,7 +562,9 @@ export function IntroDisclosure({
 							</div>
 							{/* Preview */}
 							<div className="relative aspect-[16/9] ring-2 ring-border ring-offset-8 ring-offset-background rounded-lg overflow-hidden">
-								{steps[currentStep] && <StepPreview step={steps[currentStep]} direction={direction} />}
+								{steps[currentStep] && (
+									<StepPreview step={steps[currentStep]} direction={direction} />
+								)}
 							</div>
 
 							{/* Step content */}

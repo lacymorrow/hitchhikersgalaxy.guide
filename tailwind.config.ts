@@ -17,8 +17,9 @@ const config = {
 	safelist: [
 		// Add any dynamic classes that might not be detected during build
 		{
-			pattern: /^(bg-|text-|border-)(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-[0-9]+$/,
-			variants: ['hover', 'focus', 'active', 'disabled'],
+			pattern:
+				/^(bg-|text-|border-)(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-[0-9]+$/,
+			variants: ["hover", "focus", "active", "disabled"],
 		},
 	],
 	prefix: "",

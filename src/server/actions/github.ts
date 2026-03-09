@@ -148,12 +148,7 @@ export async function disconnectGitHub() {
 		// This is required for getGitHubConnectionStatus() to return isConnected: false
 		await db
 			?.delete(accounts)
-			.where(
-				and(
-					eq(accounts.userId, session.user.id),
-					eq(accounts.provider, "github")
-				)
-			);
+			.where(and(eq(accounts.userId, session.user.id), eq(accounts.provider, "github")));
 
 		// Get current user to update metadata
 		const currentUser = await db?.query.users.findFirst({

@@ -518,7 +518,7 @@ const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
 									disabled ||
 									selected.length < 1 ||
 									selected.filter((s) => s.fixed).length === selected.length) &&
-								"hidden"
+									"hidden"
 							)}
 						>
 							<X />

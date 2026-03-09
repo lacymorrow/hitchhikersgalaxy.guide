@@ -35,7 +35,7 @@ export async function runInstallCommand(
 	displayCommand?: string
 ): Promise<number> {
 	try {
-		let packageManager: string = "npx";
+		let packageManager = "npx";
 		let command: string[] = [];
 		let fullCommand: string;
 

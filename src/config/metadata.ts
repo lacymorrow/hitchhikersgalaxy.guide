@@ -141,7 +141,7 @@ export const constructMetadata = ({
 			// Assign the extracted title string or fallback
 			title: metaTitleString ?? defaultMetaTitleString,
 			// Ensure description is not null
-			description: (metadata.description ?? defaultMetadata.description) ?? undefined,
+			description: metadata.description ?? defaultMetadata.description ?? undefined,
 			images: images.length > 0 ? images : defaultOpenGraph.images,
 		},
 		twitter: {
@@ -149,7 +149,7 @@ export const constructMetadata = ({
 			// Assign the extracted title string or fallback
 			title: metaTitleString ?? defaultMetaTitleString,
 			// Ensure description is not null
-			description: (metadata.description ?? defaultMetadata.description) ?? undefined,
+			description: metadata.description ?? defaultMetadata.description ?? undefined,
 			images: images.length > 0 ? images : defaultTwitter.images,
 		},
 		robots: noIndex ? { index: false, follow: true } : defaultMetadata.robots,

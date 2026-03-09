@@ -1,7 +1,13 @@
 "use client";
 
 import type { DialogProps } from "@radix-ui/react-dialog";
-import { FileIcon, LaptopIcon, MagnifyingGlassIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
+import {
+	FileIcon,
+	LaptopIcon,
+	MagnifyingGlassIcon,
+	MoonIcon,
+	SunIcon,
+} from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import * as React from "react";
@@ -118,23 +124,16 @@ export function SearchMenu({
 				variant={buttonVariant}
 				className={cn(
 					"relative bg-muted/50 text-sm font-normal text-muted-foreground shadow-none",
-					collapsible
-						? "justify-center lg:justify-start lg:pr-12"
-						: "justify-start sm:pr-12",
+					collapsible ? "justify-center lg:justify-start lg:pr-12" : "justify-start sm:pr-12",
 					buttonClassName
 				)}
 				size="sm"
 				onClick={() => setOpen(true)}
 				{...props}
 			>
-				{collapsible && (
-					<MagnifyingGlassIcon className="h-4 w-4 shrink-0 lg:mr-2" />
-				)}
+				{collapsible && <MagnifyingGlassIcon className="h-4 w-4 shrink-0 lg:mr-2" />}
 				<span
-					className={cn(
-						"text-xs truncate",
-						collapsible ? "hidden lg:inline-flex" : "inline-flex"
-					)}
+					className={cn("text-xs truncate", collapsible ? "hidden lg:inline-flex" : "inline-flex")}
 				>
 					{buttonText}
 				</span>

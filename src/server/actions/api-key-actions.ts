@@ -7,8 +7,8 @@
  */
 
 import { revalidatePath } from "next/cache";
-import { routes } from "@/config/routes";
 import { z } from "zod";
+import { routes } from "@/config/routes";
 import { auth } from "@/server/auth";
 import { apiKeyService } from "@/server/services/api-key-service";
 import { ErrorService } from "@/server/services/error-service";
@@ -116,4 +116,3 @@ export async function deleteApiKey(apiKeyId: string) {
 		throw ErrorService.handleError(error);
 	}
 }
-

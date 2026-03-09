@@ -9,15 +9,10 @@ export async function GET(_request: NextRequest) {
 			return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 		}
 
-		const deployments = await deploymentService.getUserDeployments(
-			session.user.id,
-		);
+		const deployments = await deploymentService.getUserDeployments(session.user.id);
 		return NextResponse.json({ deployments });
 	} catch (error) {
 		console.error("Failed to fetch deployments:", error);
-		return NextResponse.json(
-			{ error: "Failed to fetch deployments" },
-			{ status: 500 },
-		);
+		return NextResponse.json({ error: "Failed to fetch deployments" }, { status: 500 });
 	}
 }

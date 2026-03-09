@@ -120,8 +120,9 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
 									<li key={file.path}>
 										<button
 											type="button"
-											className={`w-full text-left px-3 py-2 text-sm flex items-center space-x-2 hover:bg-accent/50 ${activeFile === file.path ? "bg-accent" : ""
-												}`}
+											className={`w-full text-left px-3 py-2 text-sm flex items-center space-x-2 hover:bg-accent/50 ${
+												activeFile === file.path ? "bg-accent" : ""
+											}`}
 											onClick={() => setActiveFile(file.path)}
 										>
 											{file.path.endsWith("/") ? (

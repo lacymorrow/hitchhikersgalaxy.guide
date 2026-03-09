@@ -1,6 +1,6 @@
 import { trace as otelTrace, type Span, SpanStatusCode, type Tracer } from "@opentelemetry/api";
-import pc from "./utils/pico-colors";
 import type { LogData, LogLevel } from "../types/logger";
+import pc from "./utils/pico-colors";
 
 const tracer: Tracer = otelTrace.getTracer("bones-nextjs-app");
 

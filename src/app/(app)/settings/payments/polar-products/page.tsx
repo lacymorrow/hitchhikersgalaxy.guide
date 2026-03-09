@@ -1,12 +1,6 @@
 import type { Metadata } from "next";
 import { PolarProductStatus } from "@/components/modules/payments/polar-product-status";
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { constructMetadata } from "@/config/metadata";
 import { env } from "@/env";
 import { auth } from "@/server/auth";
@@ -14,8 +8,7 @@ import { PaymentService } from "@/server/services/payment-service";
 
 export const metadata: Metadata = constructMetadata({
 	title: "Polar Products",
-	description:
-		"View and manage your Polar product purchases and subscriptions.",
+	description: "View and manage your Polar product purchases and subscriptions.",
 });
 
 export default async function PolarProductsPage() {
@@ -42,10 +35,7 @@ export default async function PolarProductsPage() {
 	// Get user's purchased products if logged in
 	let userProducts: any[] = [];
 	if (session?.user?.id) {
-		userProducts = await PaymentService.getUserPurchasedProducts(
-			session.user.id,
-			"polar",
-		);
+		userProducts = await PaymentService.getUserPurchasedProducts(session.user.id, "polar");
 	}
 
 	return (
@@ -53,9 +43,7 @@ export default async function PolarProductsPage() {
 			<div className="flex flex-col gap-8">
 				<div>
 					<h1 className="text-3xl font-bold tracking-tight">Polar Products</h1>
-					<p className="text-muted-foreground">
-						View and purchase products through Polar
-					</p>
+					<p className="text-muted-foreground">View and purchase products through Polar</p>
 				</div>
 
 				{polarProducts.length > 0 ? (
@@ -79,9 +67,7 @@ export default async function PolarProductsPage() {
 											successText="Purchased ✓"
 										/>
 									) : (
-										<div className="text-sm text-muted-foreground">
-											Please log in to purchase
-										</div>
+										<div className="text-sm text-muted-foreground">Please log in to purchase</div>
 									)}
 								</CardContent>
 							</Card>
@@ -90,10 +76,8 @@ export default async function PolarProductsPage() {
 				) : (
 					<div className="bg-muted p-4 rounded-md">
 						<p className="text-muted-foreground">
-							No Polar products configured. Add
-							NEXT_PUBLIC_POLAR_ONE_TIME_PRICE_ID and/or
-							NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID to your environment
-							variables.
+							No Polar products configured. Add NEXT_PUBLIC_POLAR_ONE_TIME_PRICE_ID and/or
+							NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID to your environment variables.
 						</p>
 					</div>
 				)}
@@ -109,8 +93,7 @@ export default async function PolarProductsPage() {
 											<div>
 												<h3 className="font-semibold">{product.name}</h3>
 												<p className="text-sm text-muted-foreground">
-													Purchased on{" "}
-													{new Date(product.purchaseDate).toLocaleDateString()}
+													Purchased on {new Date(product.purchaseDate).toLocaleDateString()}
 												</p>
 											</div>
 											<div className="flex items-center text-green-600">

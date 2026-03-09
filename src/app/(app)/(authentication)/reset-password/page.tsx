@@ -1,5 +1,5 @@
-import { AuthBranding } from "@/app/(app)/(authentication)/_components/auth-branding";
 import type { Metadata } from "next";
+import { AuthBranding } from "@/app/(app)/(authentication)/_components/auth-branding";
 import { AuthenticationCard } from "@/app/(app)/(authentication)/_components/authentication-card";
 import { ResetPasswordForm } from "@/app/(app)/(authentication)/reset-password/_components/reset-password-form";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";

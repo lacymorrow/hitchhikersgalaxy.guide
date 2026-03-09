@@ -102,7 +102,9 @@ export function RestartOnboardingButton({
 		if (user?.id) {
 			try {
 				localStorage.removeItem(`feature_onboarding-${user.id}`);
-			} catch (e) { console.error("Failed to remove onboarding state from localStorage:", e); }
+			} catch (e) {
+				console.error("Failed to remove onboarding state from localStorage:", e);
+			}
 		}
 
 		// Reset the onboarding state to initial values

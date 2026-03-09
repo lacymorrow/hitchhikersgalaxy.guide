@@ -11,19 +11,13 @@ export async function GET(_request: NextRequest) {
 	try {
 		const session = await auth();
 		if (!session?.user?.id) {
-			return NextResponse.json(
-				{ error: "Authentication required" },
-				{ status: 401 },
-			);
+			return NextResponse.json({ error: "Authentication required" }, { status: 401 });
 		}
 
 		const teams = await teamService.getUserTeams(session.user.id);
 		return NextResponse.json({ teams });
 	} catch (error) {
 		console.error("Failed to fetch teams:", error);
-		return NextResponse.json(
-			{ error: "Failed to fetch teams" },
-			{ status: 500 },
-		);
+		return NextResponse.json({ error: "Failed to fetch teams" }, { status: 500 });
 	}
 }

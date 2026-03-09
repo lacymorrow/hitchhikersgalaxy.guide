@@ -6,11 +6,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { env } from "@/env";
 import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { disconnectAccount, markVercelConnectionAttempt } from "@/server/actions/settings";
 import type { User } from "@/types/user";
-import { env } from "@/env";
 
 interface VercelConnectButtonProps {
 	className?: string;
@@ -19,7 +19,11 @@ interface VercelConnectButtonProps {
 	isConnected?: boolean;
 }
 
-export const VercelConnectButton = ({ className, user, isConnected: isConnectedProp }: VercelConnectButtonProps) => {
+export const VercelConnectButton = ({
+	className,
+	user,
+	isConnected: isConnectedProp,
+}: VercelConnectButtonProps) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const router = useRouter();
 	const { toast: legacyToast } = useToast();

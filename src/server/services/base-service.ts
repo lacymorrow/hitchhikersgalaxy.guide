@@ -263,10 +263,7 @@ export class BaseService<T extends PgTable> {
 			.from(this.table as any)
 			.where(whereClause);
 
-		const [records, countResult] = await Promise.all([
-			recordsQuery,
-			countQuery,
-		]);
+		const [records, countResult] = await Promise.all([recordsQuery, countQuery]);
 
 		const count = countResult?.[0]?.count || 0;
 

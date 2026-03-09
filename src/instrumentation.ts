@@ -13,20 +13,20 @@ import { displayLaunchMessage } from "@/lib/utils/kit-launch-message";
  * This function is called once when a new Next.js server instance is initiated.
  */
 export function register() {
-  if (process.env.NEXT_RUNTIME === "nodejs") {
-    // Initialize payment providers once on server startup
-    // await import("./instrumentation-node");
-  }
+	if (process.env.NEXT_RUNTIME === "nodejs") {
+		// Initialize payment providers once on server startup
+		// await import("./instrumentation-node");
+	}
 
-  if (process.env.NEXT_RUNTIME === "edge") {
-    // await import('./instrumentation-edge')
-  }
+	if (process.env.NEXT_RUNTIME === "edge") {
+		// await import('./instrumentation-edge')
+	}
 
-  displayLaunchMessage();
-  registerOTel({
-    serviceName: "shipkit",
-    // Add any additional configuration options here
-  });
+	displayLaunchMessage();
+	registerOTel({
+		serviceName: "shipkit",
+		// Add any additional configuration options here
+	});
 }
 
 /**
@@ -37,23 +37,19 @@ export function register() {
  * @param request - Information about the request that caused the error.
  * @param context - The context in which the error occurred.
  */
-export const onRequestError: Instrumentation.onRequestError = (
-  error,
-  request,
-  context,
-) => {
-  console.debug("error", error);
-  console.debug("request", request);
-  console.debug("context", context);
-  // await fetch("https://your-observability-endpoint/report-error", {
-  //   method: "POST",
-  //   body: JSON.stringify({
-  //     message: error.message,
-  //     request,
-  //     context,
-  //   }),
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  // });
+export const onRequestError: Instrumentation.onRequestError = (error, request, context) => {
+	console.debug("error", error);
+	console.debug("request", request);
+	console.debug("context", context);
+	// await fetch("https://your-observability-endpoint/report-error", {
+	//   method: "POST",
+	//   body: JSON.stringify({
+	//     message: error.message,
+	//     request,
+	//     context,
+	//   }),
+	//   headers: {
+	//     "Content-Type": "application/json",
+	//   },
+	// });
 };

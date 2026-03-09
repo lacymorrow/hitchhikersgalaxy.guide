@@ -1,8 +1,8 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
 import { getUserPaymentStatus } from "@/server/actions/payments";
-import { useSession } from "next-auth/react";
 
 export function LemonSqueezyCheckoutButton() {
 	const { data: session } = useSession();

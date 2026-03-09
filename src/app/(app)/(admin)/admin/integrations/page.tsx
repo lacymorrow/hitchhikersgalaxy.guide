@@ -1,7 +1,7 @@
 export const dynamic = "force-dynamic";
 
-import type { Metadata } from "next";
 import { Settings, XCircle } from "lucide-react";
+import type { Metadata } from "next";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { constructMetadata } from "@/config/metadata";
 import { getIntegrationStatuses } from "@/server/services/integration-service";

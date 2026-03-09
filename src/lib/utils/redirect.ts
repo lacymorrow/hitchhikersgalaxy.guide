@@ -1,6 +1,6 @@
+import type { Route } from "next";
 import { redirect as nextRedirect } from "next/navigation";
 import { NextResponse } from "next/server";
-import type { Route } from "next";
 import { BASE_URL } from "../../config/base-url";
 import { SEARCH_PARAM_KEYS } from "../../config/search-param-keys";
 import { logger } from "../logger";

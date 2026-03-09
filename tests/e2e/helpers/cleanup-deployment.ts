@@ -2,24 +2,21 @@
  * API-level cleanup for deployments created during E2E tests.
  * Runs in teardown even if tests fail — deletes GitHub repo, Vercel project, and DB records.
  */
-import { eq, and, like } from "drizzle-orm";
-import { drizzle } from "drizzle-orm/postgres-js";
+import { and, eq, like } from "drizzle-orm";
 import { pgTableCreator, text } from "drizzle-orm/pg-core";
+import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
 const DB_PREFIX = process.env.DB_PREFIX ?? "db";
 const createTable = pgTableCreator((name) => `${DB_PREFIX}_${name}`);
 
-const deployments = createTable(
-	"deployments",
-	{
-		id: text("id").notNull().primaryKey(),
-		userId: text("user_id").notNull(),
-		projectName: text("project_name").notNull(),
-		vercelProjectId: text("vercel_project_id"),
-		status: text("status").notNull(),
-	},
-);
+const deployments = createTable("deployments", {
+	id: text("id").notNull().primaryKey(),
+	userId: text("user_id").notNull(),
+	projectName: text("project_name").notNull(),
+	vercelProjectId: text("vercel_project_id"),
+	status: text("status").notNull(),
+});
 
 // Lazy singleton DB connection
 let _client: ReturnType<typeof postgres> | undefined;
@@ -65,10 +62,12 @@ export async function cleanupDeployment(opts: CleanupOptions) {
 						Authorization: `token ${githubToken}`,
 						Accept: "application/vnd.github.v3+json",
 					},
-				},
+				}
 			);
 			if (res.ok || res.status === 404) {
-				console.log(`GitHub repo ${opts.githubOwner}/${opts.githubRepoName} deleted (or already gone)`);
+				console.log(
+					`GitHub repo ${opts.githubOwner}/${opts.githubRepoName} deleted (or already gone)`
+				);
 			} else {
 				console.warn(`Failed to delete GitHub repo: ${res.status} ${res.statusText}`);
 			}
@@ -80,15 +79,12 @@ export async function cleanupDeployment(opts: CleanupOptions) {
 	// Delete Vercel project
 	if (vercelToken && opts.vercelProjectId) {
 		try {
-			const res = await fetch(
-				`https://api.vercel.com/v9/projects/${opts.vercelProjectId}`,
-				{
-					method: "DELETE",
-					headers: {
-						Authorization: `Bearer ${vercelToken}`,
-					},
+			const res = await fetch(`https://api.vercel.com/v9/projects/${opts.vercelProjectId}`, {
+				method: "DELETE",
+				headers: {
+					Authorization: `Bearer ${vercelToken}`,
 				},
-			);
+			});
 			if (res.ok || res.status === 404) {
 				console.log(`Vercel project ${opts.vercelProjectId} deleted (or already gone)`);
 			} else {
@@ -103,12 +99,14 @@ export async function cleanupDeployment(opts: CleanupOptions) {
 	if (opts.userId && opts.projectNamePrefix) {
 		try {
 			const db = getDb();
-			await db.delete(deployments).where(
-				and(
-					eq(deployments.userId, opts.userId),
-					like(deployments.projectName, `${opts.projectNamePrefix}%`),
-				),
-			);
+			await db
+				.delete(deployments)
+				.where(
+					and(
+						eq(deployments.userId, opts.userId),
+						like(deployments.projectName, `${opts.projectNamePrefix}%`)
+					)
+				);
 			console.log(`DB deployment records cleaned up for prefix: ${opts.projectNamePrefix}`);
 		} catch (err) {
 			console.warn("DB deployment cleanup error:", err);
@@ -125,19 +123,19 @@ export async function cleanupStaleTestResources(githubOwner: string) {
 
 	try {
 		const res = await fetch(
-			`https://api.github.com/user/repos?per_page=100&sort=created&direction=desc`,
+			"https://api.github.com/user/repos?per_page=100&sort=created&direction=desc",
 			{
 				headers: {
 					Authorization: `token ${githubToken}`,
 					Accept: "application/vnd.github.v3+json",
 				},
-			},
+			}
 		);
 		if (!res.ok) return;
 
-		const repos = await res.json() as Array<{ name: string; owner: { login: string } }>;
+		const repos = (await res.json()) as Array<{ name: string; owner: { login: string } }>;
 		const staleRepos = repos.filter(
-			(r) => r.name.startsWith("e2e-test-") && r.owner.login === githubOwner,
+			(r) => r.name.startsWith("e2e-test-") && r.owner.login === githubOwner
 		);
 
 		for (const repo of staleRepos) {

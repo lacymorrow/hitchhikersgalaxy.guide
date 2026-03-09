@@ -97,6 +97,8 @@ export const Header: React.FC<HeaderProps> = ({
 	const isOpaque =
 		variant === "floating" && typeof opaqueOnScroll === "number" && scrollY > opaqueOnScroll;
 
+	// console.log("Header scroll:", { scrollY, isOpaque, variant, opaqueOnScroll });
+
 	return (
 		<header
 			className={cn(
@@ -105,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
 				variant === "floating" && isOpaque && styles.opaque,
 				variant === "floating" &&
 					isOpaque &&
-					"-top-[12px] [--background:#fafafc70] dark:[--background:#1c1c2270]",
+					"-top-[12px] [--header-background:#fafafc70] dark:[--header-background:#1c1c2270]",
 				className
 			)}
 		>

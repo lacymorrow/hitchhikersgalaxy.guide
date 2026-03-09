@@ -332,7 +332,6 @@ const nextConfig: NextConfig = {
 			"**/node_modules/@doubletie/**",
 			"**/node_modules/mathjax-full/**",
 			"**/node_modules/@sentry/**",
-
 			"**/node_modules/@webcontainer/**",
 			"**/node_modules/.cache/**",
 			"**/node_modules/.store/**",

@@ -35,7 +35,7 @@
 }
 
 .opaque {
-	background: var(--background);
+	background: var(--header-background);
 	-webkit-backdrop-filter: saturate(180%) blur(10px);
 	backdrop-filter: saturate(180%) blur(10px);
 	-webkit-backface-visibility: hidden;

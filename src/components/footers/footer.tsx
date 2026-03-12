@@ -9,6 +9,7 @@ import {
 	AccordionTrigger,
 } from "@/components/ui/accordion";
 import { buttonVariants } from "@/components/ui/button";
+import { GithubVersionBadge } from "@/components/ui/github-version-badge";
 import { SocialLinks } from "@/components/ui/social-links";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
@@ -138,6 +139,7 @@ export const Footer: FC<FooterProps> = ({
 						<Link href={routes.home}>
 							<h1 className="text-4xl font-bold">{siteConfig.title}</h1>
 						</Link>
+						<GithubVersionBadge owner="lacymorrow" repo="shipkit" />
 						<SocialLinks labelled className="" />
 					</div>
 					{/* Desktop Layout */}

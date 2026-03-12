@@ -71,7 +71,14 @@
     "browser:act": "URL=\"http://localhost:3000\" ACTION=\"interactive elements\" vibe-tools browser act \"$ACTION\" --url=$URL --html --network --screenshot=.tmp/act.png",
     "form-monitor": "tsx scripts/form-monitor.ts",
     "form-monitor:status": "tsx scripts/form-monitor.ts status",
-    "form-monitor:test": "tsx scripts/form-monitor.ts test"
+    "form-monitor:test": "tsx scripts/form-monitor.ts test",
+    "sweetlink:daemon": "sweetlink daemon",
+    "sweetlink:open": "sweetlink open --controlled",
+    "sweetlink:smoke": "sweetlink smoke",
+    "sweetlink:smoke:admin": "sweetlink smoke --routes admin",
+    "sweetlink:smoke:kit": "sweetlink smoke --routes kit",
+    "verify": "tsx scripts/verify.ts",
+    "verify:quick": "tsx scripts/verify.ts --quick"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "1.11.1",

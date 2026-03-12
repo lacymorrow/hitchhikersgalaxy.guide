@@ -9,6 +9,7 @@ import { MobileToc } from "@/components/modules/blog/mobile-toc";
 import { MobileTOCSkeleton, TOCSkeleton } from "@/components/modules/blog/skeleton";
 import { TableOfContents } from "@/components/modules/blog/table-of-contents";
 import { H1, H2, H3, H4, H5, H6 } from "@/components/modules/mdx/heading";
+import { AskAiButtons } from "@/components/primitives/ask-ai-buttons";
 import { buttonVariants } from "@/components/ui/button";
 import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
@@ -172,6 +173,15 @@ const BlogPostPage = async ({ params }: Props) => {
 							<BlogImage src={post.image} alt={post.title} className="mb-8" priority={true} />
 						)}
 						<MDXRemote source={post.content} components={components} />
+					</div>
+
+					{/* AI summary buttons */}
+					<div className="mt-12 pt-8 border-t">
+						<p className="text-sm text-muted-foreground mb-3">Read with AI</p>
+						<AskAiButtons
+							goal={`Summarize this article: ${post.title}`}
+							content={[post.title, post.description, post.content].filter(Boolean).join("\n\n")}
+						/>
 					</div>
 				</article>
 

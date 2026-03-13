@@ -4,17 +4,17 @@ import type { MDXComponents } from "mdx/types";
 import { isValidElementType } from "react-is";
 import { Card } from "@/components/modules/mdx/card";
 import { CardGroup } from "@/components/modules/mdx/card-group";
-import { H1, H2, H3, H4, H5, H6 } from "@/components/modules/mdx/heading";
 import { SecretGenerator } from "@/components/modules/mdx/secret-generator";
+import { AskAiButtons } from "@/components/primitives/ask-ai-buttons";
 import { Prose } from "@/components/primitives/prose";
 import * as AlertComponents from "@/components/ui/alert";
 import { FileTree } from "@/components/ui/file-tree";
 import { siteConfig } from "@/config/site-config";
 
 // Filter the icon libraries to only include valid React components
-function filterForMDXComponents(module: Record<string, unknown>): MDXComponents {
+function filterForMDXComponents(module: Record<string, any>): MDXComponents {
 	return Object.fromEntries(
-		Object.entries(module).filter(([, value]) => {
+		Object.entries(module).filter(([key, value]) => {
 			// Only include valid React component types
 			return isValidElementType(value);
 		})
@@ -34,26 +34,16 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		wrapper,
 		// ...filterForMDXComponents(fumadocsComponents),
 
-		// Icon libraries
 		...filterForMDXComponents(LucideIcons),
 		...filterForMDXComponents(RadixIcons),
 
-		// UI primitives
 		...AlertComponents,
+		AskAiButtons,
 		Card,
 		CardGroup,
 		FileTree,
 		SecretGenerator,
 		SiteName: () => <>{siteConfig.title}</>,
-
-		// Headings with automatic ids for deep-linking and TOC
-		h1: H1,
-		h2: H2,
-		h3: H3,
-		h4: H4,
-		h5: H5,
-		h6: H6,
-
 		...components,
 	};
 }

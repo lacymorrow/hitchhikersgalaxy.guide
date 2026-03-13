@@ -1,8 +1,6 @@
 import type { ReactNode } from "react";
 import { Header } from "@/components/headers/header";
-import { GithubVersionBadge } from "@/components/ui/github-version-badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { siteConfig } from "@/config/site-config";
 import { getDocsNavigation } from "@/lib/docs";
 import { DocsSidebar } from "./_components/docs-sidebar";
 import "./styles.css";
@@ -22,37 +20,22 @@ export default async function DocsLayout({ children }: DocsLayoutProps) {
 
 	return (
 		<>
-			<div className="w-full border-b bg-background">
-				<div className="container mx-auto flex h-9 items-center justify-end">
-					<GithubVersionBadge
-						owner={siteConfig.repo.owner}
-						repo={siteConfig.repo.name}
-						className="text-xs"
-					/>
-				</div>
-			</div>
-			<Header
-				navLinks={navLinks}
-				variant="sticky"
-				searchVariant="menu"
-				searchPlaceholder="Search Shipkit or press ⌘K"
-			/>
-			<div className="container mx-auto flex-1 items-start gap-6 py-6 lg:py-8 md:grid md:grid-cols-[260px_minmax(0,1fr)] xl:grid-cols-[260px_minmax(0,1fr)_260px]">
+			<Header navLinks={navLinks} variant="sticky" />
+			<div className="flex-1 items-start md:grid md:grid-cols-[220px_minmax(0,1fr)_220px] lg:grid-cols-[256px_minmax(0,1fr)_256px]">
 				{/* Sidebar */}
-				<aside className="hidden md:block">
-					<div className="sticky top-24 h-[calc(100vh-6rem)] overflow-y-auto pr-4">
-						<ScrollArea className="h-full">
-							<div className="pb-8">
-								<DocsSidebar navigation={navigation} />
-							</div>
-						</ScrollArea>
-					</div>
+				<aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100vh-3.5rem)] w-full shrink-0 overflow-y-auto border-r md:sticky md:block">
+					<ScrollArea className="h-full py-6">
+						<div className="pl-8 pr-6 lg:pl-10">
+							<DocsSidebar navigation={navigation} />
+						</div>
+					</ScrollArea>
 				</aside>
 
 				{/* Main content */}
-				<main className="relative min-w-0">{children}</main>
-
-				{/* Right rail is provided by the docs page (table of contents) */}
+				<main className="relative py-6 lg:py-8 container mx-auto w-full min-w-0">
+					{/* Content */}
+					{children}
+				</main>
 			</div>
 		</>
 	);

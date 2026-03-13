@@ -2,11 +2,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Suspense } from "react";
+import { MobileToc } from "@/components/modules/blog/mobile-toc";
+import { TOCSkeleton } from "@/components/modules/blog/skeleton";
+import { TableOfContents } from "@/components/modules/blog/table-of-contents";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { constructMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
 import { getAllDocSlugsFromFileSystem, getDocFromParams } from "@/lib/docs";
+import { extractHeadings, filterHeadingsByLevel } from "@/lib/utils/extract-headings";
 import { useMDXComponents } from "@/mdx-components";
+import "@/styles/blog.css";
 
 interface PageProps {
 	params: Promise<{
@@ -58,7 +63,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 				locale: "en_US",
 			},
 		});
-	} catch (error) {
+	} catch {
 		return defaultMetadata;
 	}
 }
@@ -70,11 +75,33 @@ export default async function DocsPage({ params }: PageProps) {
 		notFound();
 	}
 
+	const allHeadings = extractHeadings(doc.content);
+	const tocHeadings = filterHeadingsByLevel(allHeadings, 2, 4);
+
 	return (
-		<article className="docs-content">
-			<Suspense fallback={<SuspenseFallback />}>
-				<MDXRemote source={doc.content} components={useMDXComponents({})} />
-			</Suspense>
-		</article>
+		<div className="flex flex-col gap-8 lg:flex-row lg:items-start">
+			{/* Main documentation content */}
+			<article className="docs-content flex-1 min-w-0">
+				<Suspense fallback={<SuspenseFallback />}>
+					{/* Mobile table of contents */}
+					<Suspense fallback={<TOCSkeleton />}>
+						<MobileToc headings={tocHeadings} />
+					</Suspense>
+
+					<MDXRemote source={doc.content} components={useMDXComponents({})} />
+				</Suspense>
+			</article>
+
+			{/* Desktop table of contents */}
+			{tocHeadings.length > 0 && (
+				<aside className="hidden xl:block w-64 shrink-0">
+					<div className="blog-toc">
+						<Suspense fallback={<TOCSkeleton />}>
+							<TableOfContents headings={tocHeadings} />
+						</Suspense>
+					</div>
+				</aside>
+			)}
+		</div>
 	);
 }

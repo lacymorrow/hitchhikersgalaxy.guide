@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { Header } from "@/components/headers/header";
+import { GithubVersionBadge } from "@/components/ui/github-version-badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { siteConfig } from "@/config/site-config";
 import { getDocsNavigation } from "@/lib/docs";
 import { DocsSidebar } from "./_components/docs-sidebar";
 import "./styles.css";
@@ -20,6 +22,15 @@ export default async function DocsLayout({ children }: DocsLayoutProps) {
 
 	return (
 		<>
+			<div className="w-full border-b bg-background">
+				<div className="container mx-auto flex h-9 items-center justify-end">
+					<GithubVersionBadge
+						owner={siteConfig.repo.owner}
+						repo={siteConfig.repo.name}
+						className="text-xs"
+					/>
+				</div>
+			</div>
 			<Header
 				navLinks={navLinks}
 				variant="sticky"
@@ -39,9 +50,7 @@ export default async function DocsLayout({ children }: DocsLayoutProps) {
 				</aside>
 
 				{/* Main content */}
-				<main className="relative min-w-0">
-					{children}
-				</main>
+				<main className="relative min-w-0">{children}</main>
 
 				{/* Right rail is provided by the docs page (table of contents) */}
 			</div>

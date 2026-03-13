@@ -28,6 +28,10 @@ export async function deploy(opts: DeployOptions): Promise<void> {
 		process.exit(1);
 	}
 	const repoSlug = match[1];
+	if (!repoSlug) {
+		p.log.error(`Could not parse GitHub repo from origin: ${origin}`);
+		process.exit(1);
+	}
 
 	// Option 1: Vercel CLI
 	const hasVercel = await commandExists("vercel");

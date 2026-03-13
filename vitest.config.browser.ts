@@ -1,5 +1,5 @@
+import path from "node:path";
 import react from "@vitejs/plugin-react";
-import path from "path";
 import tsconfigPaths from "vite-tsconfig-paths";
 import { defineConfig } from "vitest/config";
 
@@ -8,6 +8,9 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"),
+			"server-only": path.resolve(__dirname, "./tests/shims/server-only.ts"),
+			"next/server": path.resolve(__dirname, "./tests/shims/next-server.ts"),
+			"next/link": path.resolve(__dirname, "./tests/shims/next-link.tsx"),
 		},
 	},
 	test: {
@@ -17,6 +20,7 @@ export default defineConfig({
 		browser: {
 			enabled: true,
 			name: "chromium",
+			// @ts-expect-error - Vitest v4 browser providers are optional deps; this project may not have the provider installed.
 			provider: "playwright",
 		},
 	},

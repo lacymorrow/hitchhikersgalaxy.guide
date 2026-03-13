@@ -37,14 +37,12 @@ describe("DashboardVercelDeploy", () => {
 	let originalFetch: typeof global.fetch;
 
 	beforeEach(() => {
-		vi.useFakeTimers();
 		originalFetch = global.fetch;
 		fetchMock = vi.fn<Promise<MockResponse>, FetchArgs>();
 		global.fetch = fetchMock as unknown as typeof fetch;
 	});
 
 	afterEach(() => {
-		vi.useRealTimers();
 		vi.clearAllMocks();
 		global.fetch = originalFetch;
 	});
@@ -83,17 +81,16 @@ describe("DashboardVercelDeploy", () => {
 		const input = await screen.findByLabelText("Project Name");
 
 		fireEvent.change(input, { target: { value: "bad-repo" } });
-		await vi.advanceTimersByTimeAsync(300);
+		await new Promise((resolve) => setTimeout(resolve, 310));
 
 		fireEvent.change(input, { target: { value: "good-repo" } });
-		await vi.advanceTimersByTimeAsync(300);
-		await vi.advanceTimersByTimeAsync(10);
+		await new Promise((resolve) => setTimeout(resolve, 350));
 
 		await waitFor(() => {
 			expect(screen.getByText("✓ Name available")).toBeInTheDocument();
 		});
 
-		await vi.advanceTimersByTimeAsync(100);
+		await new Promise((resolve) => setTimeout(resolve, 120));
 
 		expect(screen.queryByText(/repository name not available/i)).not.toBeInTheDocument();
 	});

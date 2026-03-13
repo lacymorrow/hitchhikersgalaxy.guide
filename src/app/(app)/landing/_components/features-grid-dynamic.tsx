@@ -19,11 +19,12 @@ export async function FeaturesGridDynamic() {
 	let features: PayloadFeature[] = [];
 
 	try {
-		features = await getPayloadContent<"features", PayloadFeature[]>({
+		const content = await getPayloadContent<"features", PayloadFeature[]>({
 			collection: "features",
 			options: { sort: "-order" },
 			fallbackImport: () => import("@/content/features/features-content"),
 		});
+		features = content as PayloadFeature[];
 	} catch (error) {
 		console.error("Error loading features:", error);
 		return null;

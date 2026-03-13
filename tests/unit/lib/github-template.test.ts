@@ -4,14 +4,14 @@ import { GitHubTemplateService } from "@/lib/github-template";
 const mockCreateWorkflowDispatch = vi.fn();
 
 vi.mock("@octokit/rest", () => ({
-	Octokit: vi.fn(() => ({
-		repos: {
+	Octokit: class Octokit {
+		repos = {
 			replaceAllTopics: vi.fn(),
-		},
-		actions: {
+		};
+		actions = {
 			createWorkflowDispatch: mockCreateWorkflowDispatch,
-		},
-	})),
+		};
+	},
 }));
 
 describe("GitHubTemplateService", () => {

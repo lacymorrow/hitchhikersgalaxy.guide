@@ -1,7 +1,7 @@
 "use client";
 
 import { type KeyboardEvent, useCallback, useEffect, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { cn } from "@/lib/utils";
 import { TOCSkeleton } from "./skeleton";
 
@@ -131,13 +131,7 @@ function TableOfContentsInner({ headings }: TableOfContentsProps) {
 /**
  * Error fallback component for TOC
  */
-function TOCErrorFallback({
-	error,
-	resetErrorBoundary,
-}: {
-	error: Error;
-	resetErrorBoundary: () => void;
-}) {
+function TOCErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 	return (
 		<div className="blog-toc">
 			<div className="px-4 py-3 border-b border-border">
@@ -147,6 +141,9 @@ function TOCErrorFallback({
 			</div>
 			<div className="p-4 text-center">
 				<p className="text-sm text-muted-foreground mb-2">Failed to load table of contents</p>
+				{error instanceof Error && (
+					<p className="text-xs text-muted-foreground mb-3">{error.message}</p>
+				)}
 				<button onClick={resetErrorBoundary} className="text-xs text-primary hover:underline">
 					Try again
 				</button>

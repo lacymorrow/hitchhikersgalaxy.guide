@@ -3,6 +3,8 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 
+process.env.NEXT_PUBLIC_HAS_BLOG = "true";
+
 vi.mock("@/lib/blog", () => ({
 	getBlogPosts: vi.fn(),
 }));

@@ -241,9 +241,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
 		message: githubToken
 			? "Configured (GITHUB_ACCESS_TOKEN set)."
 			: "Disabled (Missing GITHUB_ACCESS_TOKEN).",
-		adminUrl: githubToken
-			? `https://github.com/${githubOwner}/${githubRepo}`
-			: undefined,
+		adminUrl: githubToken ? `https://github.com/${githubOwner}/${githubRepo}` : undefined,
 	});
 
 	const googleEmail = !!env.GOOGLE_CLIENT_EMAIL;

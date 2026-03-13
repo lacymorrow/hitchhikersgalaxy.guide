@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { haptic, useHaptics } from "@/hooks/use-haptics";
 import type { HapticPattern } from "@/hooks/use-haptics";
+import { haptic, useHaptics } from "@/hooks/use-haptics";
 
 /**
  * Mounts the web-haptics singleton so the imperative `haptic()` function

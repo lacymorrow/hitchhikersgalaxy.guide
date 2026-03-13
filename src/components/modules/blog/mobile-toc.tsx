@@ -2,7 +2,7 @@
 
 import { ChevronDown, List } from "lucide-react";
 import { type KeyboardEvent, useCallback, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
+import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import type { Heading } from "@/lib/utils/extract-headings";
@@ -70,18 +70,15 @@ function MobileTocInner({ headings }: MobileTocProps) {
 /**
  * Error fallback component for Mobile TOC
  */
-function MobileTocErrorFallback({
-	error,
-	resetErrorBoundary,
-}: {
-	error: Error;
-	resetErrorBoundary: () => void;
-}) {
+function MobileTocErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 	return (
 		<div className="xl:hidden mb-8">
 			<div className="border rounded-lg p-4 bg-muted/30">
 				<div className="text-center">
 					<p className="text-sm text-muted-foreground mb-2">Failed to load table of contents</p>
+					{error instanceof Error && (
+						<p className="text-xs text-muted-foreground mb-3">{error.message}</p>
+					)}
 					<button
 						onClick={resetErrorBoundary}
 						className="text-xs text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"

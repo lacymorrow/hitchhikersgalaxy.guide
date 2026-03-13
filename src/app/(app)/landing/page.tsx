@@ -28,6 +28,7 @@ import { Spotlight } from "@/app/(app)/landing/_components/spotlight";
 import { Icon } from "@/components/assets/icon";
 import { Icons } from "@/components/assets/icons";
 import { PricingSectionSingle } from "@/components/blocks/pricing-section-single";
+import { AskAiButtons } from "@/components/primitives/ask-ai-buttons";
 import { JsonLd } from "@/components/primitives/json-ld";
 import { Link } from "@/components/primitives/link";
 import ExampleMasonry from "@/components/primitives/masonry";
@@ -85,6 +86,8 @@ export const metadata: Metadata = constructMetadata({
 const LAUNCH_END_DATE = "2025-09-10T23:59:59";
 
 export default async function Home() {
+	const landingAiContent = `${siteConfig.title}\n\n${siteConfig.description}`;
+
 	return (
 		<>
 			<JsonLd organization website />
@@ -1064,6 +1067,14 @@ export default async function Home() {
 							<div className="mt-4 flex flex-col items-center justify-center gap-2">
 								<p className="text-sm text-muted-foreground">Downloads</p>
 								<AnimatedCounter />
+							</div>
+
+							<div className="mt-16 flex flex-col items-center gap-3 border-t pt-8">
+								<p className="text-sm font-medium">Ask AI</p>
+								<AskAiButtons
+									goal={`Summarize the ${siteConfig.title} landing page`}
+									content={landingAiContent}
+								/>
 							</div>
 						</>
 					)}

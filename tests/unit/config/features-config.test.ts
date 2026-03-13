@@ -196,5 +196,4 @@ describe("Feature flag generation", () => {
 			}
 		});
 	});
-
 });

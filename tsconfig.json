@@ -69,9 +69,11 @@
   "exclude": [
     ".next",
     "node_modules",
+    ".vercel",
     "tests",
     "public",
     "packages",
+    "cli/dist",
     "debug/**/*.ts",
     "src/app/(app)/(demo)/examples/**/*",
     "src/workers/**/*.ts"

@@ -176,13 +176,14 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 						<span className="text-muted-foreground">
 							{row.original.description ?? "No description"}
 						</span>
-						{(row.original.status === "failed" || row.original.status === "timeout") && row.original.error && (
-							<div className="mt-1">
-								<span className="text-xs text-red-600 dark:text-red-400">
-									Error: {row.original.error}
-								</span>
-							</div>
-						)}
+						{(row.original.status === "failed" || row.original.status === "timeout") &&
+							row.original.error && (
+								<div className="mt-1">
+									<span className="text-xs text-red-600 dark:text-red-400">
+										Error: {row.original.error}
+									</span>
+								</div>
+							)}
 					</div>
 				),
 			},

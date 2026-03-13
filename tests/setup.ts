@@ -2,6 +2,7 @@ import "@testing-library/jest-dom";
 import * as matchers from "@testing-library/jest-dom/matchers";
 import { cleanup } from "@testing-library/react";
 import { afterEach, beforeAll, expect, vi } from "vitest";
+import { siteConfig } from "@/config/site-config";
 
 // Augment the global namespace for TypeScript
 declare global {
@@ -31,6 +32,8 @@ vi.mock("@/server/db", () => ({
 
 // Suppress specific console errors during tests
 beforeAll(async () => {
+	siteConfig.behavior.pageTransitions = false;
+
 	const originalError = console.error;
 	console.error = (...args: unknown[]) => {
 		if (

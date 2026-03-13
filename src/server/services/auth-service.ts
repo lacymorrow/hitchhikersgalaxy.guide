@@ -1021,6 +1021,10 @@ export const AuthService = {
 					data: { email, password },
 				});
 
+				if (!result.user || !result.token) {
+					return { error: "Invalid credentials" };
+				}
+
 				// Create a user object to return
 				const user = {
 					id: String(result.user.id),

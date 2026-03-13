@@ -1,6 +1,6 @@
 import { sql } from "drizzle-orm";
-import { generateFeedbackMailto } from "@/lib/utils/email-utils";
 import { resend } from "@/lib/resend";
+import { generateFeedbackMailto } from "@/lib/utils/email-utils";
 import { db } from "@/server/db";
 import { feedback } from "@/server/db/schema";
 import { sendFeedbackEmail } from "@/server/services/resend-service";

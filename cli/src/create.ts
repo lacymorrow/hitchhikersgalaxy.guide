@@ -33,8 +33,14 @@ async function resolveTemplate(
 			return null;
 		}
 		const parts = preferred.split("/");
+		const owner = parts[0];
+		const name = parts[1];
+		if (!owner || !name) {
+			p.log.error("Template must be in format 'owner/repo'");
+			return null;
+		}
 		const accessible = await canAccessRepo(`https://github.com/${preferred}.git`);
-		if (accessible) return { owner: parts[0], name: parts[1], label: preferred };
+		if (accessible) return { owner, name, label: preferred };
 		p.log.warn(`Cannot access ${preferred}, trying defaults...`);
 	}
 
@@ -85,7 +91,7 @@ export async function create(projectName: string | undefined, opts: CreateOption
 		const input = await p.text({
 			message: "What is your project name?",
 			placeholder: "my-shipkit-app",
-			validate: validateProjectName,
+			validate: (value) => (value ? validateProjectName(value) : "Project name is required"),
 		});
 		if (p.isCancel(input)) {
 			p.cancel("Cancelled.");

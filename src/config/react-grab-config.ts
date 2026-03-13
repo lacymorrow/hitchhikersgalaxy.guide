@@ -21,7 +21,7 @@ const REACT_GRAB_PROVIDER_MAP = {
 } as const;
 
 export const reactGrabConfig = {
-	enabled: buildTimeFeatures.DEVTOOLS_REACT_GRAB_ENABLED ?? false,
+	enabled: buildTimeFeatures.DEVTOOLS_REACT_GRAB_ENABLED ?? true,
 	provider: preferredAiProvider
 		? {
 				...REACT_GRAB_PROVIDER_MAP[preferredAiProvider.id],

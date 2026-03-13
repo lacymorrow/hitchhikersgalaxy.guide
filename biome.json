@@ -1,5 +1,5 @@
 {
-	"$schema": "https://biomejs.dev/schemas/2.2.2/schema.json",
+	"$schema": "https://biomejs.dev/schemas/2.4.0/schema.json",
 	"files": {
 		"ignoreUnknown": false,
 		"includes": [
@@ -9,6 +9,11 @@
 			"**/*.jsx",
 			"!**/node_modules",
 			"!**/.next",
+			"!**/.vercel",
+			"!**/cli/dist",
+			"!**/public/workers",
+			"!**/public/**/*.js",
+			"!**/public/**/*.mjs",
 			"!**/*.css"
 		]
 	},
@@ -41,7 +46,10 @@
 				"noExplicitAny": "warn",
 				"noControlCharactersInRegex": "off",
 				"noShadowRestrictedNames": "off",
-				"noConsole": { "level": "warn", "options": { "allow": ["log"] } }
+				"noConsole": {
+					"level": "warn",
+					"options": { "allow": ["log", "warn", "error", "info"] }
+				}
 			},
 			"style": {
 				"noNonNullAssertion": "warn",
@@ -65,6 +73,41 @@
 	},
 	"assist": { "actions": { "source": { "organizeImports": "on" } } },
 	"overrides": [
+		{
+			"includes": ["**/scripts/**/*", "playwright.config.ts", "vitest.config*.ts"],
+			"linter": {
+				"rules": {
+					"style": {
+						"useNodejsImportProtocol": "off",
+						"noNonNullAssertion": "off"
+					},
+					"suspicious": {
+						"noConsole": "off",
+						"noExplicitAny": "off",
+						"useIterableCallbackReturn": "off"
+					},
+					"correctness": {
+						"noUnusedVariables": "off",
+						"noUnusedFunctionParameters": "off"
+					}
+				}
+			}
+		},
+		{
+			"includes": ["**/tests/**/*"],
+			"linter": {
+				"rules": {
+					"correctness": {
+						"noUnusedVariables": "off",
+						"noUnusedFunctionParameters": "off"
+					},
+					"suspicious": {
+						"noConsole": "off",
+						"noExplicitAny": "off"
+					}
+				}
+			}
+		},
 		{
 			"includes": ["**/src/components/ui/**/*"],
 			"linter": {

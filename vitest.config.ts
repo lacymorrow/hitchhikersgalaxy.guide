@@ -30,13 +30,21 @@ export default defineConfig({
 	resolve: {
 		alias: {
 			"@": path.resolve(__dirname, "./src"), // Resolve @/* imports to src/*
+			"server-only": path.resolve(__dirname, "./tests/shims/server-only.ts"),
 			// Alias next/server to a test shim to avoid ESM resolution issues in next-auth during unit tests
 			"next/server": path.resolve(__dirname, "./tests/shims/next-server.ts"),
+			"next/link": path.resolve(__dirname, "./tests/shims/next-link.tsx"),
 		},
 	},
 	test: {
 		environment: "jsdom", // DOM environment for React component testing
 		globals: true, // Enable global test functions (describe, it, expect)
+		server: {
+			deps: {
+				// Inline next-auth so Vite aliases (e.g. next/server shim) apply during unit tests.
+				inline: ["next-auth", "next-view-transitions"],
+			},
+		},
 		setupFiles: [
 			"./tests/setup-env.ts", // Environment variables for testing
 			"./tests/setup.ts", // Testing utilities and global setup

@@ -5,6 +5,7 @@ import { isValidElementType } from "react-is";
 import { Card } from "@/components/modules/mdx/card";
 import { CardGroup } from "@/components/modules/mdx/card-group";
 import { SecretGenerator } from "@/components/modules/mdx/secret-generator";
+import { AskAiButtons } from "@/components/primitives/ask-ai-buttons";
 import { Prose } from "@/components/primitives/prose";
 import * as AlertComponents from "@/components/ui/alert";
 import { FileTree } from "@/components/ui/file-tree";
@@ -37,6 +38,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
 		...filterForMDXComponents(RadixIcons),
 
 		...AlertComponents,
+		AskAiButtons,
 		Card,
 		CardGroup,
 		FileTree,

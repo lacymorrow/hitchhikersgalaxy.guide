@@ -1,22 +1,30 @@
 import { buildTimeFeatures, preferredAiProvider } from "./features-config";
 
-/*
+/**
  * React Grab provider metadata, keyed by AI provider id.
- * Only the client script URL and npm package name are stored here —
- * everything else (env key, resolved value) comes from `preferredAiProvider`.
+ *
+ * Each provider has:
+ * - `packageName`: npm package (already in dependencies)
+ * - `clientScriptUrl`: browser-side WebSocket relay loaded via `<Script>`
+ * - `serverBin`: CLI that starts the local agent server (spawned by `dev:react-grab`)
+ *
+ * @see https://react-grab.com/blog/agent
  */
 const REACT_GRAB_PROVIDER_MAP = {
 	"claude-code": {
 		packageName: "@react-grab/claude-code",
-		clientScriptUrl: "https://unpkg.com/@react-grab/claude-code/dist/client.global.js",
+		clientScriptUrl: "https://unpkg.com/@react-grab/claude-code@0.1.27/dist/client.global.js",
+		serverBin: "react-grab-claude-code",
 	},
 	codex: {
 		packageName: "@react-grab/codex",
-		clientScriptUrl: "https://unpkg.com/@react-grab/codex/dist/client.global.js",
+		clientScriptUrl: "https://unpkg.com/@react-grab/codex@0.1.27/dist/client.global.js",
+		serverBin: "react-grab-codex",
 	},
 	gemini: {
 		packageName: "@react-grab/gemini",
-		clientScriptUrl: "https://unpkg.com/@react-grab/gemini/dist/client.global.js",
+		clientScriptUrl: "https://unpkg.com/@react-grab/gemini@0.1.27/dist/client.global.js",
+		serverBin: "react-grab-gemini",
 	},
 } as const;
 

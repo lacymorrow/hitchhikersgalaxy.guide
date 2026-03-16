@@ -60,7 +60,6 @@ export default async function Layout({
 						src="https://tweakcn.com/live-preview.min.js"
 					/>
 				)}
-				<ReactGrab />
 			</head>
 			{/* Ensure portaled UI (e.g. Radix primitives) inherits the sans-serif family */}
 			<body
@@ -81,8 +80,8 @@ export default async function Layout({
 					{/*<BrickMarquee />*/}
 				</AppRouterLayout>
 
-				{/* React Grab — select elements and edit with AI agents */}
-				{process.env.NODE_ENV === "development" && <ReactGrab />}
+				{/* React Grab — select elements and edit with AI agents (dev-only, self-gates) */}
+				<ReactGrab />
 
 				{/* Add FontSelector only in development */}
 				{process.env.NODE_ENV === "development" &&

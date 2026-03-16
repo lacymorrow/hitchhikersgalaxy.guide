@@ -167,8 +167,13 @@ const nextConfig: NextConfig = {
 	// Configure `pageExtensions` to include markdown and MDX files
 	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 
-	// Force-bundle packages that Next.js auto-externalizes but aren't available at runtime on Vercel
-	// transpilePackages: ["@aws-sdk/client-s3", "@aws-sdk/s3-request-presigner"],
+	// Force-bundle ESM-only packages that Next.js auto-externalizes but fail require() on Vercel
+	// estree-walker has no CJS entry (type: "module", exports only "import") — causes 500 on /docs
+	transpilePackages: [
+		"estree-walker",
+		"estree-util-build-jsx",
+		"estree-util-scope",
+	],
 
 	/*
 	 * Server External Packages

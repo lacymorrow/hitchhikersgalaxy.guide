@@ -137,11 +137,15 @@ async function main() {
 
 	// Simple key replacements
 	afterConfig = afterConfig.replace(
-		/\n\s*name: "([^"]+)"/,
+		/\n\tname: "([^"]+)"/,
 		'\n\tname: "' + projectName + '"',
 	);
 	afterConfig = afterConfig.replace(
-		/\n\s*url: "([^"]+)"/,
+		/\n\ttitle: "([^"]+)"/,
+		'\n\ttitle: "' + projectName + '"',
+	);
+	afterConfig = afterConfig.replace(
+		/\n\turl: "([^"]+)"/,
 		'\n\turl: "https://' + domain + '"',
 	);
 	afterConfig = afterConfig.replace(
@@ -220,6 +224,51 @@ async function main() {
 		tsLine("\t\t", "bio", "Creator and developer.") +
 		"\n\t},";
 	afterConfig = afterConfig.replace(creatorPattern, newCreator);
+
+	// Social section
+	const socialPattern = sectionPattern("social");
+	const newSocial =
+		"\n\tsocial: {" +
+		tsLine("\t\t", "github", "https://github.com/" + githubOrg) +
+		tsLine("\t\t", "x", "https://x.com/" + creatorTwitter) +
+		tsLine("\t\t", "linkedin", "") +
+		tsLine("\t\t", "instagram", "") +
+		tsLine("\t\t", "facebook", "") +
+		tsLine("\t\t", "youtube", "") +
+		tsLine("\t\t", "tiktok", "") +
+		tsLine("\t\t", "discord", "") +
+		tsLine("\t\t", "dribbble", "") +
+		tsLine("\t\t", "threads", "") +
+		"\n\t},";
+	afterConfig = afterConfig.replace(socialPattern, newSocial);
+
+	// Store section (reset product IDs)
+	const storePattern = sectionPattern("store");
+	const newStore =
+		"\n\tstore: {" +
+		tsLine("\t\t", "id", projectSlug) +
+		"\n\t\tproducts: {" +
+		"\n\t\t\t// LemonSqueezy Checkout URLs use Variant IDs (not Product IDs)" +
+		"\n\t\t\t// Format: variant UUID from LemonSqueezy dashboard" +
+		'\n\t\t\t"' + projectSlug + '": "",' +
+		"\n\t\t\t// Examples:" +
+		tsLine("\t\t\t", "bones", "") +
+		tsLine("\t\t\t", "brains", "") +
+		"\n\t\t}," +
+		"\n\t},";
+	afterConfig = afterConfig.replace(storePattern, newStore);
+
+	// Links section (update GitHub URL to new repo)
+	const linksPattern = sectionPattern("links");
+	const newLinks =
+		"\n\tlinks: {" +
+		tsLine("\t\t", "twitter", "https://twitter.com/" + creatorTwitter) +
+		tsLine("\t\t", "twitter_follow", "https://twitter.com/intent/follow?screen_name=" + creatorTwitter) +
+		tsLine("\t\t", "x", "https://x.com/" + creatorTwitter) +
+		tsLine("\t\t", "x_follow", "https://x.com/intent/follow?screen_name=" + creatorTwitter) +
+		tsLine("\t\t", "github", "https://github.com/" + githubOrg + "/" + githubRepo) +
+		"\n\t},";
+	afterConfig = afterConfig.replace(linksPattern, newLinks);
 
 	// Keywords
 	const keywordsPattern = /\n\s*keywords: \[\s*["\s\S]*?\n\s*\]/;

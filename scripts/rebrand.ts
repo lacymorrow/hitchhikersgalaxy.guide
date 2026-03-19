@@ -149,18 +149,32 @@ async function main() {
 
 	afterConfig = afterConfig.replace(brandingPattern, newBranding);
 
-	// Repository section - use string concatenation to produce valid backtick template literals
+	// Repository section - use \x60 for backtick to avoid esbuild/tsx parse issues
 	const repoPattern = /\n\s*repo: \{[\s\S]*?\n\s*\},/;
-	const bt = "`"; // backtick character
-	const newRepo = `
-	repo: {\n\t\towner: "${githubOrg}",\n\t\tname: "${githubRepo}",\n\t\turl: "https://github.com/${githubOrg}/${githubRepo}",\n\t\tformat: {\n\t\t\tclone: () => ${bt}https://github.com/${githubOrg}/${githubRepo}.git${bt},\n\t\t\tssh: () => ${bt}git@github.com:${githubOrg}/${githubRepo}.git${bt},\n\t\t}\n\t},`;
+	const bt = "\x60"; // backtick character
+	const newRepo = "\n\trepo: {" +
+		'\n\t\towner: "' + githubOrg + '",' +
+		'\n\t\tname: "' + githubRepo + '",' +
+		'\n\t\turl: "https://github.com/' + githubOrg + "/" + githubRepo + '",' +
+		"\n\t\tformat: {" +
+		"\n\t\t\tclone: () => " + bt + "https://github.com/" + githubOrg + "/" + githubRepo + ".git" + bt + "," +
+		"\n\t\t\tssh: () => " + bt + "git@github.com:" + githubOrg + "/" + githubRepo + ".git" + bt + "," +
+		"\n\t\t}" +
+		"\n\t},";
 
 	afterConfig = afterConfig.replace(repoPattern, newRepo);
 
 	// Email section - format returns a typed address string, not a self-reference
 	const emailPattern = /\n\s*email: \{[\s\S]*?\n\s*\},/;
-	const newEmail = `
-	email: {\n\t\tsupport: "support@${domain}",\n\t\tteam: "team@${domain}",\n\t\tnoreply: "noreply@${domain}",\n\t\tdomain: "${domain}",\n\t\tlegal: "legal@${domain}",\n\t\tprivacy: "privacy@${domain}",\n\t\tformat: (type: string) => ${bt}\${type}@${domain}${bt},\n\t},`;
+	const newEmail = "\n\temail: {" +
+		'\n\t\tsupport: "support@' + domain + '",' +
+		'\n\t\tteam: "team@' + domain + '",' +
+		'\n\t\tnoreply: "noreply@' + domain + '",' +
+		'\n\t\tdomain: "' + domain + '",' +
+		'\n\t\tlegal: "legal@' + domain + '",' +
+		'\n\t\tprivacy: "privacy@' + domain + '",' +
+		"\n\t\tformat: (type: string) => " + bt + "${type}@" + domain + bt + "," +
+		"\n\t},";
 
 	afterConfig = afterConfig.replace(emailPattern, newEmail);
 

@@ -22,21 +22,6 @@ import fs from "fs";
 import path from "path";
 import readline from "readline";
 
-// Create readline interface for prompting
-const rl = readline.createInterface({
-	input: process.stdin,
-	output: process.stdout,
-});
-
-// Helper function to prompt for input
-const prompt = (question: string, defaultValue?: string): Promise<string> => {
-	return new Promise((resolve) => {
-		rl.question(`${question}${defaultValue ? ` (default: ${defaultValue})` : ""}: `, (answer) => {
-			resolve(answer || defaultValue || "");
-		});
-	});
-};
-
 // Parse command line arguments
 const args = process.argv.slice(2);
 const argMap: Record<string, string> = {};
@@ -58,6 +43,31 @@ for (let i = 0; i < args.length; i++) {
 // Check for dry run flag
 const isDryRun = flags["dry-run"] || false;
 
+// Determine if we need interactive prompts
+const needsPrompt = !argMap.name || !argMap.slug || !argMap.domain;
+
+// Create readline interface only if we need prompts
+let rl: readline.Interface | null = null;
+
+if (needsPrompt) {
+	rl = readline.createInterface({
+		input: process.stdin,
+		output: process.stdout,
+	});
+}
+
+// Helper function to prompt for input
+const prompt = (question: string, defaultValue?: string): Promise<string> => {
+	if (!rl) {
+		return Promise.resolve(defaultValue || "");
+	}
+	return new Promise((resolve) => {
+		rl!.question(`${question}${defaultValue ? ` (default: ${defaultValue})` : ""}: `, (answer) => {
+			resolve(answer || defaultValue || "");
+		});
+	});
+};
+
 // Main function
 async function main() {
 	console.log("🚀 Rebranding Script");
@@ -75,7 +85,13 @@ async function main() {
 	const domain = argMap.domain || (await prompt("Domain", `${projectSlug}.com`));
 
 	// Get creator information (optional)
-	const creatorName = argMap["creator-name"] || (await prompt("Your Name (optional)", ""));
+	const creatorName = argMap["creator-name"] || (needsPrompt ? await prompt("Your Name (optional)", "") : "");
+
+	// Close readline as soon as prompts are done
+	if (rl) {
+		rl.close();
+		rl = null;
+	}
 
 	// Derive other values from the essential information
 	const githubOrg = `${projectSlug}-org`;
@@ -129,30 +145,32 @@ async function main() {
 	// Branding section
 	const brandingPattern = /\n\s*branding: \{[\s\S]*?\n\s*\},/;
 	const newBranding = `
-	branding: {\n\t\tprojectName: "${projectName}",\n\t\tprojectSlug: "${projectSlug}",\n\t\tproductNames: {\n\t\t\tbones: "${bonesName}",\n\t\t\tbrains: "${brainsName}",\n\t\t\tmain: "${projectName}",\n\t\t},\n\t\tdomain: "${domain}",\n\t\tprotocol: "web+${projectSlug}",\n\t\tgithubOrg: "${githubOrg}",\n\t\tgithubRepo: "${githubRepo}",\n\t\tvercelProjectName: "${vercelProjectName}",\n\t\tdatabaseName: "${databaseName}",\n	},`;
+	branding: {\n\t\tprojectName: "${projectName}",\n\t\tprojectSlug: "${projectSlug}",\n\t\tproductNames: {\n\t\t\tbones: "${bonesName}",\n\t\t\tbrains: "${brainsName}",\n\t\t\tmain: "${projectName}",\n\t\t},\n\t\tdomain: "${domain}",\n\t\tprotocol: "web+${projectSlug}",\n\t\tgithubOrg: "${githubOrg}",\n\t\tgithubRepo: "${githubRepo}",\n\t\tvercelProjectName: "${vercelProjectName}",\n\t\tdatabaseName: "${databaseName}",\n\t},
 
 	afterConfig = afterConfig.replace(brandingPattern, newBranding);
 
-	// Repository section
+	// Repository section - use string concatenation to produce valid backtick template literals
 	const repoPattern = /\n\s*repo: \{[\s\S]*?\n\s*\},/;
+	const bt = "`"; // backtick character
 	const newRepo = `
-	repo: {\n\t\towner: "${githubOrg}",\n\t\tname: "${githubRepo}",\n\t\turl: "https://github.com/${githubOrg}/${githubRepo}",\n\t\tformat: {\n\t\t\tclone: () => acktickhttps://github.com/${githubOrg}/${githubRepo}.gitacktick,\n\t\t\tssh: () => acktickgit@github.com:${githubOrg}/${githubRepo}.gitacktick,\n\t\t\t\n\t\t}
-	},`;
+	repo: {\n\t\towner: "${githubOrg}",\n\t\tname: "${githubRepo}",\n\t\turl: "https://github.com/${githubOrg}/${githubRepo}",\n\t\tformat: {\n\t\t\tclone: () => ${bt}https://github.com/${githubOrg}/${githubRepo}.git${bt},\n\t\t\tssh: () => ${bt}git@github.com:${githubOrg}/${githubRepo}.git${bt},\n\t\t}\n\t},`;
 
 	afterConfig = afterConfig.replace(repoPattern, newRepo);
 
-	// Email section
+	// Email section - format returns a typed address string, not a self-reference
 	const emailPattern = /\n\s*email: \{[\s\S]*?\n\s*\},/;
 	const newEmail = `
-	email: {\n\t\tsupport: "support@${domain}",\n\t\tteam: "team@${domain}",\n\t\tnoreply: "noreply@${domain}",\n\t\tdomain: "${domain}",\n\t\tlegal: "legal@${domain}",\n\t\tprivacy: "privacy@${domain}",\n\t\tformat: (type) => siteConfig.email[type],
-	},`;
+	email: {\n\t\tsupport: "support@${domain}",\n\t\tteam: "team@${domain}",\n\t\tnoreply: "noreply@${domain}",\n\t\tdomain: "${domain}",\n\t\tlegal: "legal@${domain}",\n\t\tprivacy: "privacy@${domain}",\n\t\tformat: (type: string) => ${bt}\${type}@${domain}${bt},\n\t},`;
 
 	afterConfig = afterConfig.replace(emailPattern, newEmail);
 
-	// Creator section
+	// Creator section - derive avatar from GitHub username when possible
 	const creatorPattern = /\n\s*creator: \{[\s\S]*?\n\s*\},/;
+	const creatorAvatar = creatorName
+		? `https://github.com/${creatorUsername}.png`
+		: `https://${domain}/icon.png`;
 	const newCreator = `
-	creator: {\n\t\tname: "${creatorUsername}",\n\t\temail: "${creatorEmail}",\n\t\turl: "https://${creatorDomain}",\n\t\ttwitter: "@${creatorTwitter}",\n\t\ttwitter_handle: "${creatorTwitter}",\n\t\tdomain: "${creatorDomain}",\n\t\tfullName: "${creatorName || `${projectName} Team`}",\n\t\trole: "Developer",\n\t\tavatar: "https://avatars.githubusercontent.com/u/1311301?v=4",\n\t\tlocation: "San Francisco, CA",\n\t\tbio: "Creator and developer.",\n	},`;
+	creator: {\n\t\tname: "${creatorUsername}",\n\t\temail: "${creatorEmail}",\n\t\turl: "https://${creatorDomain}",\n\t\ttwitter: "@${creatorTwitter}",\n\t\ttwitter_handle: "${creatorTwitter}",\n\t\tdomain: "${creatorDomain}",\n\t\tfullName: "${creatorName || `${projectName} Team`}",\n\t\trole: "Developer",\n\t\tavatar: "${creatorAvatar}",\n\t\tlocation: "",\n\t\tbio: "Creator and developer.",\n\t},`;
 
 	afterConfig = afterConfig.replace(creatorPattern, newCreator);
 
@@ -167,7 +185,7 @@ async function main() {
 			"${projectName}",
 			"Shadcn",
 			"UI Components",
-		],`;
+		]`;
 
 	afterConfig = afterConfig.replace(keywordsPattern, newKeywords);
 
@@ -239,12 +257,10 @@ async function main() {
 	} else {
 		console.log("\nTo apply these changes, run the script without the --dry-run flag.");
 	}
-
-	rl.close();
 }
 
 main().catch((error) => {
 	console.error("Error:", error);
-	rl.close();
+	if (rl) rl.close();
 	process.exit(1);
 });

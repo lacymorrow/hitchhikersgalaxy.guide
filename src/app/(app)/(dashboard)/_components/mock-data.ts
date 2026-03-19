@@ -149,6 +149,24 @@ export const statusVariant = (status: TeamStatus) => {
 };
 
 // ---------------------------------------------------------------------------
+// Revenue chart
+// ---------------------------------------------------------------------------
+export const revenueChartData = [
+	{ month: "Jan", revenue: 4200, expenses: 2800 },
+	{ month: "Feb", revenue: 3800, expenses: 2600 },
+	{ month: "Mar", revenue: 5100, expenses: 3200 },
+	{ month: "Apr", revenue: 4600, expenses: 2900 },
+	{ month: "May", revenue: 5800, expenses: 3400 },
+	{ month: "Jun", revenue: 6200, expenses: 3100 },
+	{ month: "Jul", revenue: 5900, expenses: 3300 },
+	{ month: "Aug", revenue: 7100, expenses: 3600 },
+	{ month: "Sep", revenue: 6800, expenses: 3500 },
+	{ month: "Oct", revenue: 7400, expenses: 3800 },
+	{ month: "Nov", revenue: 8200, expenses: 4100 },
+	{ month: "Dec", revenue: 9100, expenses: 4300 },
+];
+
+// ---------------------------------------------------------------------------
 // Page analytics
 // ---------------------------------------------------------------------------
 export const pageViewsData = [

@@ -145,7 +145,7 @@ async function main() {
 	// Branding section
 	const brandingPattern = /\n\s*branding: \{[\s\S]*?\n\s*\},/;
 	const newBranding = `
-	branding: {\n\t\tprojectName: "${projectName}",\n\t\tprojectSlug: "${projectSlug}",\n\t\tproductNames: {\n\t\t\tbones: "${bonesName}",\n\t\t\tbrains: "${brainsName}",\n\t\t\tmain: "${projectName}",\n\t\t},\n\t\tdomain: "${domain}",\n\t\tprotocol: "web+${projectSlug}",\n\t\tgithubOrg: "${githubOrg}",\n\t\tgithubRepo: "${githubRepo}",\n\t\tvercelProjectName: "${vercelProjectName}",\n\t\tdatabaseName: "${databaseName}",\n\t},`;
+	branding: {\n\t\tprojectName: "${projectName}",\n\t\tprojectSlug: "${projectSlug}",\n\t\tproductNames: {\n\t\t\tbones: "${bonesName}",\n\t\t\tbrains: "${brainsName}",\n\t\t\tmain: "${projectName}",\n\t\t},\n\t\tdomain: "${domain}",\n\t\tprotocol: "web+${projectSlug}",\n\t\tgithubOrg: "${githubOrg}",\n\t\tgithubRepo: "${githubRepo}",\n\t\tvercelProjectName: "${vercelProjectName}",\n\t\tdatabaseName: "${databaseName}",\n\t},
 
 	afterConfig = afterConfig.replace(brandingPattern, newBranding);
 

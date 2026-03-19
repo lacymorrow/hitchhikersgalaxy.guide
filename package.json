@@ -1,5 +1,5 @@
 {
-  "name": "shipkit",
+  "name": "testapp",
   "version": "0.2.1",
   "homepage": "https://shipkit.io",
   "repository": {
@@ -278,7 +278,7 @@
     "cross-env": "^10.1.0",
     "dotenv": "^17.3.1",
     "dotenv-cli": "^11.0.0",
-    "eslint": "^10",
+    "eslint": "^9",
     "eslint-config-next": "16.1.6",
     "jsdom": "^28.1.0",
     "lighthouse": "^13.0.3",

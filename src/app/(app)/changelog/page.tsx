@@ -1,60 +1,85 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
-import { BlogPostComponent } from "@/components/modules/blog/post";
-import { BlogPostListSkeleton } from "@/components/modules/blog/skeleton";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 import { constructMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
-import { type BlogPost, getBlogPosts } from "@/lib/blog";
+import { getChangelogEntries } from "@/lib/changelog";
 import { formatDate } from "@/lib/utils/format-date";
 
+export const revalidate = 3600;
+
 export const metadata: Metadata = constructMetadata({
-	title: "Blog - Latest Updates & Guides | Shipkit",
-	description:
-		"Stay up to date with the latest app development trends, tutorials, and best practices. Learn how to build better apps faster with Shipkit's expert guides and tips.",
+	title: `Changelog | ${siteConfig.title}`,
+	description: `See what's new in ${siteConfig.title}. Latest updates, features, and fixes.`,
 });
 
-// Enhanced BlogPost type with LogSpot-style fields
-interface EnhancedBlogPost extends BlogPost {
-	badge?: string;
-	authors?: { name: string; avatar: string }[];
-}
-
-const BlogPage = async () => {
-	const posts: BlogPost[] = await getBlogPosts();
-
-	// Transform posts to LogSpot format with demo data
-	const logSpotPosts: EnhancedBlogPost[] = posts.map((post, index) => ({
-		...post,
-		badge: post.badge || `v1.${index.toString().padStart(2, "0")}`,
-		authors: post.authors || [
-			{
-				name: siteConfig.creator.fullName,
-				avatar: siteConfig.creator.avatar,
-			},
-		],
-	}));
+export default async function ChangelogPage() {
+	const entries = await getChangelogEntries();
 
 	return (
-		<div className="w-full">
-			{/* Timeline container with proper spacing */}
-			<Suspense fallback={<BlogPostListSkeleton count={3} />}>
-				<div className="space-y-8">
-					{logSpotPosts.map((post) => {
-						const formattedDate = formatDate(post.publishedAt);
+		<div className="w-full max-w-3xl mx-auto">
+			<header className="mb-12">
+				<h1 className="text-4xl font-bold tracking-tight">Changelog</h1>
+				<p className="mt-2 text-lg text-muted-foreground">
+					New updates, features, and fixes.
+				</p>
+			</header>
 
-						return (
-							<BlogPostComponent key={post.slug} post={post}>
-								{post.description && <p>{post.description}</p>}
-								{formattedDate && (
-									<p className="text-sm text-muted-foreground">Published on {formattedDate}</p>
+			<div className="relative space-y-0">
+				<div className="absolute left-[7px] top-2 bottom-2 w-px bg-border" />
+
+				{entries.map((entry) => {
+					const date = formatDate(entry.publishedAt);
+					return (
+						<div key={entry.slug} className="relative pl-8 pb-10">
+							<div className="absolute left-0 top-1.5 h-[15px] w-[15px] rounded-full border-2 border-primary bg-background" />
+
+							<div className="flex items-center gap-3 mb-1">
+								{entry.badge && (
+									<Badge variant="secondary" className="text-xs font-mono">
+										{entry.badge}
+									</Badge>
 								)}
-							</BlogPostComponent>
-						);
-					})}
-				</div>
-			</Suspense>
+								{date && (
+									<span className="text-sm text-muted-foreground">
+										{date}
+									</span>
+								)}
+								<span className="text-xs text-muted-foreground">
+									{entry.commitCount} commit
+									{entry.commitCount !== 1 ? "s" : ""}
+								</span>
+							</div>
+
+							<Link href={`/changelog/${entry.slug}`} className="group">
+								<h2 className="text-xl font-semibold group-hover:text-primary transition-colors">
+									{entry.title}
+								</h2>
+							</Link>
+
+							{entry.description && (
+								<p className="mt-1 text-muted-foreground">
+									{entry.description}
+								</p>
+							)}
+
+							{entry.categories.length > 0 && (
+								<div className="flex gap-1.5 mt-2 flex-wrap">
+									{entry.categories.map((cat) => (
+										<Badge
+											key={cat}
+											variant="outline"
+											className="text-[10px] px-1.5 py-0"
+										>
+											{cat}
+										</Badge>
+									))}
+								</div>
+							)}
+						</div>
+					);
+				})}
+			</div>
 		</div>
 	);
-};
-
-export default BlogPage;
+}

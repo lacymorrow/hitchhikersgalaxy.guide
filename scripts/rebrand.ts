@@ -149,9 +149,9 @@ async function main() {
 
 	afterConfig = afterConfig.replace(brandingPattern, newBranding);
 
-	// Repository section - use \x60 for backtick to avoid esbuild/tsx parse issues
+	// Repository section - use String.fromCharCode to avoid esbuild/tsx backtick parse issues
 	const repoPattern = /\n\s*repo: \{[\s\S]*?\n\s*\},/;
-	const bt = "\x60"; // backtick character
+	const bt = String.fromCharCode(96); // backtick character
 	const newRepo = "\n\trepo: {" +
 		'\n\t\towner: "' + githubOrg + '",' +
 		'\n\t\tname: "' + githubRepo + '",' +

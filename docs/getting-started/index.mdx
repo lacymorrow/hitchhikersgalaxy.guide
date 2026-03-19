@@ -22,10 +22,12 @@ AUTH_URL=               # Your deployed URL (e.g. https://myapp.vercel.app)
 ## Local Development
 
 ```bash
-# Clone and install
-git clone https://github.com/shipkit-io/shipkit.git my-app
+# Create a new project (clones template, sets upstream, installs deps)
+npx create-shipkit my-app
 cd my-app
-bun install
+
+# Rebrand to your project
+bunx tsx scripts/rebrand.ts --name "My App" --domain "myapp.com" --creator-name "Your Name"
 
 # Configure environment
 cp .env.example .env.local
@@ -55,8 +57,13 @@ Everything is controlled by feature flags. If an env var isn't set, the feature 
 
 ## First Customization
 
-1. Edit `src/config/site-config.ts` to change your site name, URL, and branding
-2. Or run the rebrand script: `bunx tsx scripts/rebrand.ts --name "My App" --domain "myapp.com"`
+Run the rebrand script to update all config references at once:
+
+```bash
+bunx tsx scripts/rebrand.ts --name "My App" --slug "my-app" --domain "myapp.com" --creator-name "Your Name"
+```
+
+See the [rebranding guide](/docs/guides/rebranding) for what gets updated and manual steps.
 
 ## Next Steps
 

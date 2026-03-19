@@ -1,103 +1,103 @@
 ---
 title: "Rebranding Guide"
-description: "A comprehensive guide for customizing and rebranding your Shipkit application, including logos, colors, fonts, and content updates."
+description: "Rename your ShipKit project, update all config references, and make it yours."
 ---
 
 # Rebranding Guide
 
-This guide explains how to rebrand the Shipkit boilerplate to your own project name and branding.
+After creating a new project with `shipkit create`, run the rebrand script to replace all ShipKit branding with your own.
 
-## Automated Rebranding
-
-The easiest way to rebrand is to use the automated rebranding script:
+## Quick Start
 
 ```bash
-bunx tsx scripts/rebrand.ts
+bunx tsx scripts/rebrand.ts --name "MyApp" --slug "my-app" --domain "myapp.com" --creator-name "Jane Smith"
 ```
 
-This script will prompt you for essential branding information and update the necessary files automatically.
+That's it. The script updates `src/config/site-config.ts`, `.env.example`, and `package.json`, then formats the config with ESLint.
 
-### Dry Run Mode
+## Options
 
-If you want to preview the changes without actually modifying any files, use the `--dry-run` flag:
+| Flag | Description | Default |
+|------|-------------|---------|
+| `--name` | Display name (e.g. "My App") | Prompted |
+| `--slug` | URL/package slug (e.g. "my-app") | Derived from name |
+| `--domain` | Production domain (e.g. "myapp.com") | `{slug}.com` |
+| `--creator-name` | Your full name (optional) | Empty |
+| `--dry-run` | Preview changes without writing files | Off |
+
+If you omit `--name`, `--slug`, or `--domain`, the script prompts for them interactively.
+
+### Dry Run
+
+Preview what will change before committing:
 
 ```bash
-bunx tsx scripts/rebrand.ts --dry-run
+bunx tsx scripts/rebrand.ts --name "MyApp" --domain "myapp.com" --dry-run
 ```
 
-This will show you what changes would be made without actually writing to any files.
+Output shows old vs. new values for every field without touching any files.
 
-### Command Line Arguments
+## What Gets Updated
 
-You can also provide the branding information as command line arguments:
+### `src/config/site-config.ts`
 
-```bash
-bunx tsx scripts/rebrand.ts --name "MyApp" --domain "myapp.com" --creator-name "John Doe"
-```
+The script replaces these sections in `siteConfig`:
 
-Available arguments:
+| Section | Fields updated |
+|---------|---------------|
+| Top-level | `name`, `title`, `url`, `ogImage` |
+| `branding` | `projectName`, `projectSlug`, `domain`, `protocol`, `githubOrg`, `githubRepo`, `vercelProjectName`, `databaseName`, `productNames.main` |
+| `repo` | `owner`, `name`, `url`, `format.clone()`, `format.ssh()` |
+| `email` | `support`, `team`, `noreply`, `domain`, `legal`, `privacy`, `format()` |
+| `creator` | `name`, `email`, `url`, `twitter`, `domain`, `fullName`, `avatar` |
+| `social` | `github`, `x` (other social fields reset to empty) |
+| `links` | `twitter`, `x`, `github` URLs |
+| `store` | `id`, product keys (variant IDs reset to empty for you to fill in) |
+| `metadata.keywords` | Replaces "Shipkit" with your project name |
 
-- `--name`: Project name (e.g., "MyApp")
-- `--slug`: Project slug, lowercase and hyphenated (e.g., "my-app")
-- `--domain`: Domain without protocol (e.g., "myapp.com")
-- `--creator-name`: Your name (optional)
+### `.env.example`
 
-The script will automatically derive sensible defaults for other values based on these inputs.
+Updates the `DATABASE_URL` database name from `shipkit` to your slug.
 
-## Manual Rebranding
+### `package.json`
 
-If you prefer to rebrand manually, you can update the following files:
+Updates the `"name"` field to your slug.
 
-1. `src/config/site-config.ts`: This is the main configuration file that contains most of the branding information.
-2. `.env.example`: Update the database name.
-3. `package.json`: Update the project name.
+## Derived Values
 
-### Site Configuration
+When you provide `--creator-name "Jane Smith"`, the script derives:
 
-The `src/config/site-config.ts` file contains a `branding` section that centralizes most of the branding information:
+- **Username**: `janesmith` (lowercased, spaces removed)
+- **Creator domain**: `janesmith.com`
+- **Twitter handle**: `@janesmith`
+- **Avatar**: `https://github.com/janesmith.png`
+- **GitHub org**: `{slug}-org`
 
-```typescript
-branding: {
-    projectName: "Shipkit", // Change this to your project name
-    projectSlug: "shipkit", // Change this to your project slug
-    productNames: {
-        bones: "Bones", // Product tiers
-        brains: "Brains",
-        main: "Shipkit",
-    },
-    domain: "shipkit.io", // Change this to your domain
-    protocol: "web+shipkit", // Change this to your protocol
-    githubOrg: "shipkit-io", // Change this to your GitHub organization
-    githubRepo: "bones", // Change this to your GitHub repository
-    vercelProjectName: "bones-app", // Change this to your Vercel project name
-    databaseName: "shipkit", // Change this to your database name
-},
-```
-
-You should also update the following sections:
-
-- `name`: The project name
-- `url`: The project URL
-- `ogImage`: The Open Graph image URL
-- `email`: Email addresses
-- `creator`: Creator information
-- `repo`: Repository information
-- `metadata.keywords`: Keywords for SEO
+Without `--creator-name`, the creator fields default to your project name/domain.
 
 ## After Rebranding
 
-After rebranding, you should:
+1. Copy `.env.example` to `.env` if you haven't already
+2. Update `DATABASE_URL` in `.env` with the new database name
+3. Fill in your LemonSqueezy variant IDs in the `store.products` section
+4. Add your social links in the `social` section (Discord, LinkedIn, etc.)
+5. Replace `public/favicon.ico` and `public/og.png` with your own assets
+6. Restart your dev server
 
-1. Update your `.env` file with the new database name
-2. Restart your development server
-3. Check that all branding references have been updated correctly
+## Manual Changes
+
+The rebrand script handles config values. You'll still want to update:
+
+- **Logo/favicon**: Replace files in `public/`
+- **Colors/theme**: Edit `tailwind.config.ts` or your CSS variables
+- **Content**: Update landing page copy, footer text, etc.
+- **Social links**: Fill in the empty fields in `siteConfig.social`
+- **Store products**: Add your LemonSqueezy variant IDs
 
 ## Troubleshooting
 
-If you encounter any issues during rebranding:
+**ESLint formatting fails**: The script runs `bunx eslint --fix` on the config file after writing. If it fails, the rebrand still completes. Run `bunx eslint --fix src/config/site-config.ts` manually to debug.
 
-1. Check the `src/config/site-config.ts` file to ensure all branding information has been updated correctly
-2. Look for any hardcoded references to "Shipkit" or "bones" in the codebase
-3. Update any references that weren't caught by the rebranding script
+**Script hangs**: Make sure you're passing all three required args (`--name`, `--slug`, `--domain`) if running non-interactively. Without them, the script opens a prompt that may not display in some environments.
 
-If you find any hardcoded references that weren't updated by the rebranding script, please consider contributing to improve the script.
+**Template literal errors**: The script uses `String.fromCharCode(96)` for backticks in output to avoid esbuild/tsx parse conflicts. If you see `TransformError`, make sure you're running with `bunx tsx` or `npx tsx`, not `ts-node`.

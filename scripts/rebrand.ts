@@ -3,16 +3,15 @@
 /**
  * Rebranding Script
  *
- * This script updates the site configuration with new branding information.
- * It modifies the site-config.ts file to replace all branding references with new values.
+ * Updates site configuration with new branding information.
+ * Modifies site-config.ts, .env.example, and package.json.
  *
  * Usage:
- * ```
- * bunx tsx scripts/rebrand.ts --name "MyApp" --domain "myapp.com"
- * ```
+ *   bunx tsx scripts/rebrand.ts --name "MyApp" --domain "myapp.com"
+ *   bunx tsx scripts/rebrand.ts --name "MyApp" --slug "myapp" --domain "myapp.com" --dry-run
  *
  * Options:
- * --dry-run: Preview changes without writing to files
+ *   --dry-run: Preview changes without writing to files
  *
  * All arguments are optional. If not provided, the script will prompt for them.
  */
@@ -30,7 +29,6 @@ const flags: Record<string, boolean> = {};
 for (let i = 0; i < args.length; i++) {
 	if (args[i] && args[i]!.startsWith("--")) {
 		const arg = args[i]!.substring(2);
-		// Check if it's a flag (no value)
 		if (i + 1 >= args.length || (args[i + 1] && args[i + 1]!.startsWith("--"))) {
 			flags[arg] = true;
 		} else if (args[i + 1]) {
@@ -40,13 +38,10 @@ for (let i = 0; i < args.length; i++) {
 	}
 }
 
-// Check for dry run flag
 const isDryRun = flags["dry-run"] || false;
 
-// Determine if we need interactive prompts
+// Only create readline when we actually need to prompt
 const needsPrompt = !argMap.name || !argMap.slug || !argMap.domain;
-
-// Create readline interface only if we need prompts
 let rl: readline.Interface | null = null;
 
 if (needsPrompt) {
@@ -56,65 +51,70 @@ if (needsPrompt) {
 	});
 }
 
-// Helper function to prompt for input
 const prompt = (question: string, defaultValue?: string): Promise<string> => {
 	if (!rl) {
 		return Promise.resolve(defaultValue || "");
 	}
 	return new Promise((resolve) => {
-		rl!.question(`${question}${defaultValue ? ` (default: ${defaultValue})` : ""}: `, (answer) => {
-			resolve(answer || defaultValue || "");
-		});
+		rl!.question(
+			question + (defaultValue ? " (default: " + defaultValue + ")" : "") + ": ",
+			(answer) => {
+				resolve(answer || defaultValue || "");
+			},
+		);
 	});
 };
 
-// Main function
+// Helper: build a line of TypeScript source like:   key: "value",
+function tsLine(indent: string, key: string, value: string): string {
+	return "\n" + indent + key + ': "' + value + '",';
+}
+
+// Backtick as a runtime value so esbuild never sees an unmatched literal
+const BACKTICK = String.fromCharCode(96);
+
 async function main() {
-	console.log("🚀 Rebranding Script");
+	console.log("Rebranding Script");
 	console.log("====================");
 	console.log("This script will update your site configuration with new branding information.");
 	if (isDryRun) {
-		console.log("\n⚠️ DRY RUN MODE: No files will be modified");
+		console.log("\nDRY RUN MODE: No files will be modified");
 	}
 	console.log("");
 
-	// Get essential branding information
+	// Gather inputs
 	const projectName = argMap.name || (await prompt("Project Name", "Shipkit"));
 	const projectSlug =
-		argMap.slug || (await prompt("Project Slug", projectName.toLowerCase().replace(/\s+/g, "-")));
-	const domain = argMap.domain || (await prompt("Domain", `${projectSlug}.com`));
+		argMap.slug ||
+		(await prompt("Project Slug", projectName.toLowerCase().replace(/\s+/g, "-")));
+	const domain = argMap.domain || (await prompt("Domain", projectSlug + ".com"));
+	const creatorName =
+		argMap["creator-name"] || (needsPrompt ? await prompt("Your Name (optional)", "") : "");
 
-	// Get creator information (optional)
-	const creatorName = argMap["creator-name"] || (needsPrompt ? await prompt("Your Name (optional)", "") : "");
-
-	// Close readline as soon as prompts are done
+	// Done prompting - close readline immediately
 	if (rl) {
 		rl.close();
 		rl = null;
 	}
 
-	// Derive other values from the essential information
-	const githubOrg = `${projectSlug}-org`;
+	// Derive values
+	const githubOrg = projectSlug + "-org";
 	const githubRepo = projectSlug;
 	const creatorUsername = creatorName ? creatorName.toLowerCase().replace(/\s+/g, "") : projectSlug;
-	const creatorEmail = `hello@${domain}`;
-	const creatorDomain = creatorName ? `${creatorUsername}.com` : domain;
+	const creatorEmail = "hello@" + domain;
+	const creatorDomain = creatorName ? creatorUsername + ".com" : domain;
 	const creatorTwitter = creatorUsername;
 	const databaseName = projectSlug;
-	const vercelProjectName = `${projectSlug}-app`;
-
-	// Product names - consolidated tiers: Bones (free) and Brains (paid)
+	const vercelProjectName = projectSlug + "-app";
 	const bonesName = "Bones";
 	const brainsName = "Brains";
 
-	// Update site-config.ts
+	// ── Update site-config.ts ──
 	console.log("\nUpdating site configuration...");
 
 	const siteConfigPath = path.join(process.cwd(), "src", "config", "site-config.ts");
 	let siteConfig = fs.readFileSync(siteConfigPath, "utf8");
 
-	// We need to identify the export declaration and handle the branding info correctly
-	// Find where the actual siteConfig object starts
 	const siteConfigStartPattern = /export const siteConfig: SiteConfig = \{/;
 	const siteConfigMatch = siteConfigStartPattern.exec(siteConfig);
 
@@ -127,141 +127,157 @@ async function main() {
 	const beforeConfig = siteConfig.substring(0, siteConfigStart + siteConfigMatch[0].length);
 	let afterConfig = siteConfig.substring(siteConfigStart + siteConfigMatch[0].length);
 
-	// Handle replacement of individual keys in the object
-	// Name
-	afterConfig = afterConfig.replace(/\n\s*name: "([^"]+)"/, `\n\tname: "${projectName}"`);
-
-	// URL
-	afterConfig = afterConfig.replace(/\n\s*url: "([^"]+)"/, `\n\turl: "https://${domain}"`);
-
-	// OG Image
+	// Simple key replacements
+	afterConfig = afterConfig.replace(
+		/\n\s*name: "([^"]+)"/,
+		'\n\tname: "' + projectName + '"',
+	);
+	afterConfig = afterConfig.replace(
+		/\n\s*url: "([^"]+)"/,
+		'\n\turl: "https://' + domain + '"',
+	);
 	afterConfig = afterConfig.replace(
 		/\n\s*ogImage: "([^"]+)"/,
-		`\n\togImage: "https://${domain}/og"`
+		'\n\togImage: "https://' + domain + '/og"',
 	);
-
-	// Description - keep original but update if needed
 
 	// Branding section
 	const brandingPattern = /\n\s*branding: \{[\s\S]*?\n\s*\},/;
-	const newBranding = `
-	branding: {\n\t\tprojectName: "${projectName}",\n\t\tprojectSlug: "${projectSlug}",\n\t\tproductNames: {\n\t\t\tbones: "${bonesName}",\n\t\t\tbrains: "${brainsName}",\n\t\t\tmain: "${projectName}",\n\t\t},\n\t\tdomain: "${domain}",\n\t\tprotocol: "web+${projectSlug}",\n\t\tgithubOrg: "${githubOrg}",\n\t\tgithubRepo: "${githubRepo}",\n\t\tvercelProjectName: "${vercelProjectName}",\n\t\tdatabaseName: "${databaseName}",\n\t},
-
+	const newBranding =
+		"\n\tbranding: {" +
+		tsLine("\t\t", "projectName", projectName) +
+		tsLine("\t\t", "projectSlug", projectSlug) +
+		"\n\t\tproductNames: {" +
+		tsLine("\t\t\t", "bones", bonesName) +
+		tsLine("\t\t\t", "brains", brainsName) +
+		tsLine("\t\t\t", "main", projectName) +
+		"\n\t\t}," +
+		tsLine("\t\t", "domain", domain) +
+		tsLine("\t\t", "protocol", "web+" + projectSlug) +
+		tsLine("\t\t", "githubOrg", githubOrg) +
+		tsLine("\t\t", "githubRepo", githubRepo) +
+		tsLine("\t\t", "vercelProjectName", vercelProjectName) +
+		tsLine("\t\t", "databaseName", databaseName) +
+		"\n\t},";
 	afterConfig = afterConfig.replace(brandingPattern, newBranding);
 
-	// Repository section - use String.fromCharCode to avoid esbuild/tsx backtick parse issues
+	// Repository section (needs backtick template literals in output)
 	const repoPattern = /\n\s*repo: \{[\s\S]*?\n\s*\},/;
-	const bt = String.fromCharCode(96); // backtick character
-	const newRepo = "\n\trepo: {" +
-		'\n\t\towner: "' + githubOrg + '",' +
-		'\n\t\tname: "' + githubRepo + '",' +
-		'\n\t\turl: "https://github.com/' + githubOrg + "/" + githubRepo + '",' +
+	const cloneUrl = "https://github.com/" + githubOrg + "/" + githubRepo + ".git";
+	const sshUrl = "git@github.com:" + githubOrg + "/" + githubRepo + ".git";
+	const newRepo =
+		"\n\trepo: {" +
+		tsLine("\t\t", "owner", githubOrg) +
+		tsLine("\t\t", "name", githubRepo) +
+		tsLine("\t\t", "url", "https://github.com/" + githubOrg + "/" + githubRepo) +
 		"\n\t\tformat: {" +
-		"\n\t\t\tclone: () => " + bt + "https://github.com/" + githubOrg + "/" + githubRepo + ".git" + bt + "," +
-		"\n\t\t\tssh: () => " + bt + "git@github.com:" + githubOrg + "/" + githubRepo + ".git" + bt + "," +
+		"\n\t\t\tclone: () => " + BACKTICK + cloneUrl + BACKTICK + "," +
+		"\n\t\t\tssh: () => " + BACKTICK + sshUrl + BACKTICK + "," +
 		"\n\t\t}" +
 		"\n\t},";
-
 	afterConfig = afterConfig.replace(repoPattern, newRepo);
 
-	// Email section - format returns a typed address string, not a self-reference
+	// Email section (format generates address string, not a self-reference)
 	const emailPattern = /\n\s*email: \{[\s\S]*?\n\s*\},/;
-	const newEmail = "\n\temail: {" +
-		'\n\t\tsupport: "support@' + domain + '",' +
-		'\n\t\tteam: "team@' + domain + '",' +
-		'\n\t\tnoreply: "noreply@' + domain + '",' +
-		'\n\t\tdomain: "' + domain + '",' +
-		'\n\t\tlegal: "legal@' + domain + '",' +
-		'\n\t\tprivacy: "privacy@' + domain + '",' +
-		"\n\t\tformat: (type: string) => " + bt + "${type}@" + domain + bt + "," +
+	const newEmail =
+		"\n\temail: {" +
+		tsLine("\t\t", "support", "support@" + domain) +
+		tsLine("\t\t", "team", "team@" + domain) +
+		tsLine("\t\t", "noreply", "noreply@" + domain) +
+		tsLine("\t\t", "domain", domain) +
+		tsLine("\t\t", "legal", "legal@" + domain) +
+		tsLine("\t\t", "privacy", "privacy@" + domain) +
+		"\n\t\tformat: (type: string) => " + BACKTICK + "${type}@" + domain + BACKTICK + "," +
 		"\n\t},";
-
 	afterConfig = afterConfig.replace(emailPattern, newEmail);
 
-	// Creator section - derive avatar from GitHub username when possible
+	// Creator section (avatar derived from GitHub username, not hardcoded)
 	const creatorPattern = /\n\s*creator: \{[\s\S]*?\n\s*\},/;
 	const creatorAvatar = creatorName
-		? `https://github.com/${creatorUsername}.png`
-		: `https://${domain}/icon.png`;
-	const newCreator = `
-	creator: {\n\t\tname: "${creatorUsername}",\n\t\temail: "${creatorEmail}",\n\t\turl: "https://${creatorDomain}",\n\t\ttwitter: "@${creatorTwitter}",\n\t\ttwitter_handle: "${creatorTwitter}",\n\t\tdomain: "${creatorDomain}",\n\t\tfullName: "${creatorName || `${projectName} Team`}",\n\t\trole: "Developer",\n\t\tavatar: "${creatorAvatar}",\n\t\tlocation: "",\n\t\tbio: "Creator and developer.",\n\t},`;
-
+		? "https://github.com/" + creatorUsername + ".png"
+		: "https://" + domain + "/icon.png";
+	const creatorFullName = creatorName || projectName + " Team";
+	const newCreator =
+		"\n\tcreator: {" +
+		tsLine("\t\t", "name", creatorUsername) +
+		tsLine("\t\t", "email", creatorEmail) +
+		tsLine("\t\t", "url", "https://" + creatorDomain) +
+		tsLine("\t\t", "twitter", "@" + creatorTwitter) +
+		tsLine("\t\t", "twitter_handle", creatorTwitter) +
+		tsLine("\t\t", "domain", creatorDomain) +
+		tsLine("\t\t", "fullName", creatorFullName) +
+		tsLine("\t\t", "role", "Developer") +
+		tsLine("\t\t", "avatar", creatorAvatar) +
+		tsLine("\t\t", "location", "") +
+		tsLine("\t\t", "bio", "Creator and developer.") +
+		"\n\t},";
 	afterConfig = afterConfig.replace(creatorPattern, newCreator);
 
-	// Metadata keywords
+	// Keywords
 	const keywordsPattern = /\n\s*keywords: \[\s*["\s\S]*?\n\s*\]/;
-	const newKeywords = `
-		keywords: [
-			"Next.js",
-			"React",
-			"Tailwind CSS",
-			"Server Components",
-			"${projectName}",
-			"Shadcn",
-			"UI Components",
-		]`;
-
+	const newKeywords =
+		'\n\t\tkeywords: [\n\t\t\t"Next.js",\n\t\t\t"React",\n\t\t\t"Tailwind CSS",' +
+		'\n\t\t\t"Server Components",\n\t\t\t"' + projectName + '",' +
+		'\n\t\t\t"Shadcn",\n\t\t\t"UI Components",\n\t\t]';
 	afterConfig = afterConfig.replace(keywordsPattern, newKeywords);
 
-	// Put the file back together
+	// Reassemble
 	siteConfig = beforeConfig + afterConfig;
 
-	// Read .env.example and package.json
+	// ── Update .env.example ──
 	const envExamplePath = path.join(process.cwd(), ".env.example");
 	let envExample = fs.readFileSync(envExamplePath, "utf8");
-
 	envExample = envExample.replace(
 		/DATABASE_URL="postgresql:\/\/postgres:password@localhost:5432\/([^"]+)"/,
-		`DATABASE_URL="postgresql://postgres:password@localhost:5432/${databaseName}"`
+		'DATABASE_URL="postgresql://postgres:password@localhost:5432/' + databaseName + '"',
 	);
 
+	// ── Update package.json ──
 	const packageJsonPath = path.join(process.cwd(), "package.json");
 	let packageJson = fs.readFileSync(packageJsonPath, "utf8");
+	packageJson = packageJson.replace(
+		/"name":\s*"([^"]+)"/,
+		'"name": "' + projectSlug + '"',
+	);
 
-	packageJson = packageJson.replace(/"name":\s*"([^"]+)"/, `"name": "${projectSlug}"`);
-
-	// If dry run, just show what would be changed
+	// ── Output ──
 	if (isDryRun) {
-		console.log("\n📝 Changes that would be made:");
+		console.log("\nChanges that would be made:");
 		console.log("\n1. src/config/site-config.ts:");
-		console.log(`  - Project name: Shipkit -> ${projectName}`);
-		console.log(`  - Domain: shipkit.io -> ${domain}`);
-		console.log(`  - GitHub: lacymorrow/shipkit -> ${githubOrg}/${githubRepo}`);
-		console.log(`  - Creator: Lacy Morrow -> ${creatorName || `${projectName} Team`}`);
+		console.log("  - Project name: Shipkit -> " + projectName);
+		console.log("  - Domain: shipkit.io -> " + domain);
+		console.log("  - GitHub: lacymorrow/shipkit -> " + githubOrg + "/" + githubRepo);
+		console.log("  - Creator: Lacy Morrow -> " + creatorFullName);
 
 		console.log("\n2. .env.example:");
-		console.log(`  - Database name: shipkit -> ${databaseName}`);
+		console.log("  - Database name: shipkit -> " + databaseName);
 
 		console.log("\n3. package.json:");
-		console.log(`  - Package name: ship-kit -> ${projectSlug}`);
+		console.log("  - Package name: ship-kit -> " + projectSlug);
 
-		console.log("\n⚠️ No files were modified (dry run)");
+		console.log("\nNo files were modified (dry run)");
 	} else {
-		// Write updated files
 		fs.writeFileSync(siteConfigPath, siteConfig);
-		console.log("✅ Updated src/config/site-config.ts");
+		console.log("Updated src/config/site-config.ts");
 
 		fs.writeFileSync(envExamplePath, envExample);
-		console.log("✅ Updated .env.example");
+		console.log("Updated .env.example");
 
 		fs.writeFileSync(packageJsonPath, packageJson);
-		console.log("✅ Updated package.json");
+		console.log("Updated package.json");
 
-		// Run formatter
 		console.log("\nFormatting files...");
 		try {
 			execSync('bunx eslint --fix src/config/site-config.ts || echo "Formatting skipped"', {
 				stdio: "inherit",
 			});
-		} catch (error) {
-			console.error("Error formatting files:", error);
+		} catch {
+			// eslint errors are non-fatal
 		}
 	}
 
-	console.log("\n✅ Rebranding complete!");
-	console.log(
-		`Your project has been ${isDryRun ? "prepared to be" : ""} rebranded to "${projectName}".`
-	);
+	console.log("\nRebranding complete!");
+	console.log("Your project has been " + (isDryRun ? "prepared to be " : "") + "rebranded to " + projectName + ".");
 
 	if (!isDryRun) {
 		console.log("\nNext steps:");
@@ -271,6 +287,8 @@ async function main() {
 	} else {
 		console.log("\nTo apply these changes, run the script without the --dry-run flag.");
 	}
+
+	process.exit(0);
 }
 
 main().catch((error) => {

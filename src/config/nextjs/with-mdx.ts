@@ -1,5 +1,6 @@
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
+import remarkGfm from "remark-gfm";
 
 /**
  * Applies PWA configuration to the Next.js config.
@@ -11,6 +12,7 @@ export default function withMDXConfig(nextConfig: NextConfig): NextConfig {
 		extension: /\.mdx?$/,
 		options: {
 			remarkPlugins: [
+				remarkGfm,
 				[
 					"remark-frontmatter",
 					{

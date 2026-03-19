@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Suspense } from "react";
+import remarkGfm from "remark-gfm";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { constructMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
@@ -73,7 +74,7 @@ export default async function DocsPage({ params }: PageProps) {
 	return (
 		<article className="docs-content">
 			<Suspense fallback={<SuspenseFallback />}>
-				<MDXRemote source={doc.content} components={useMDXComponents({})} />
+				<MDXRemote source={doc.content} components={useMDXComponents({})} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
 			</Suspense>
 		</article>
 	);

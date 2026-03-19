@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { MDXRemote } from "next-mdx-remote/rsc";
 import { Suspense } from "react";
+import remarkGfm from "remark-gfm";
 import { BlogImage } from "@/components/modules/blog/image";
 import { MobileToc } from "@/components/modules/blog/mobile-toc";
 import { MobileTOCSkeleton, TOCSkeleton } from "@/components/modules/blog/skeleton";
@@ -171,7 +172,7 @@ const BlogPostPage = async ({ params }: Props) => {
 						{post.image && (
 							<BlogImage src={post.image} alt={post.title} className="mb-8" priority={true} />
 						)}
-						<MDXRemote source={post.content} components={components} />
+						<MDXRemote source={post.content} components={components} options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }} />
 					</div>
 				</article>
 

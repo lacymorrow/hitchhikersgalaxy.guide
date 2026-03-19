@@ -70,6 +70,14 @@ function tsLine(indent: string, key: string, value: string): string {
 	return "\n" + indent + key + ': "' + value + '",';
 }
 
+// Match a top-level section like `\n\tkey: {\n...\n\t},` handling nested braces
+// by counting depth instead of using non-greedy [\s\S]*? which stops at inner `},`
+function sectionPattern(key: string): RegExp {
+	// Match key: { ... }, where the closing }, is at the same indent level (\t)
+	// We look for \n\t}, that isn't preceded by deeper indentation
+	return new RegExp("\\n\\t" + key + ": \\{[\\s\\S]*?\\n\\t\\},");
+}
+
 // Backtick as a runtime value so esbuild never sees an unmatched literal
 const BACKTICK = String.fromCharCode(96);
 
@@ -142,7 +150,7 @@ async function main() {
 	);
 
 	// Branding section
-	const brandingPattern = /\n\s*branding: \{[\s\S]*?\n\s*\},/;
+	const brandingPattern = sectionPattern("branding");
 	const newBranding =
 		"\n\tbranding: {" +
 		tsLine("\t\t", "projectName", projectName) +
@@ -162,7 +170,7 @@ async function main() {
 	afterConfig = afterConfig.replace(brandingPattern, newBranding);
 
 	// Repository section (needs backtick template literals in output)
-	const repoPattern = /\n\s*repo: \{[\s\S]*?\n\s*\},/;
+	const repoPattern = sectionPattern("repo");
 	const cloneUrl = "https://github.com/" + githubOrg + "/" + githubRepo + ".git";
 	const sshUrl = "git@github.com:" + githubOrg + "/" + githubRepo + ".git";
 	const newRepo =
@@ -178,7 +186,7 @@ async function main() {
 	afterConfig = afterConfig.replace(repoPattern, newRepo);
 
 	// Email section (format generates address string, not a self-reference)
-	const emailPattern = /\n\s*email: \{[\s\S]*?\n\s*\},/;
+	const emailPattern = sectionPattern("email");
 	const newEmail =
 		"\n\temail: {" +
 		tsLine("\t\t", "support", "support@" + domain) +
@@ -192,7 +200,7 @@ async function main() {
 	afterConfig = afterConfig.replace(emailPattern, newEmail);
 
 	// Creator section (avatar derived from GitHub username, not hardcoded)
-	const creatorPattern = /\n\s*creator: \{[\s\S]*?\n\s*\},/;
+	const creatorPattern = sectionPattern("creator");
 	const creatorAvatar = creatorName
 		? "https://github.com/" + creatorUsername + ".png"
 		: "https://" + domain + "/icon.png";

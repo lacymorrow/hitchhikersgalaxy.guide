@@ -15,6 +15,7 @@ import {
 } from "@/config/metadata";
 import { env } from "@/env";
 import { initializePaymentProviders } from "@/server/providers";
+import Script from "next/script";
 
 export const fetchCache = "default-cache";
 export const metadata: Metadata = defaultMetadata;
@@ -60,10 +61,22 @@ export default async function Layout({
             src="https://tweakcn.com/live-preview.min.js"
           />
         )}
+        {process.env.NODE_ENV === "development" && (
+          <>
+            <Script
+              src="//unpkg.com/react-grab/dist/index.global.js"
+              strategy="beforeInteractive"
+            />
+            <Script
+              src="//unpkg.com/@react-grab/claude-code/dist/client.global.js"
+              strategy="lazyOnload"
+            />
+          </>
+        )}
       </head>
       {/* Ensure portaled UI (e.g. Radix primitives) inherits the sans-serif family */}
       <body
-        className={`${fontSans.variable} ${fontSerif.variable} min-h-screen antialiased font-sans`}
+        className={`${fontSans.variable} ${fontSerif.variable} min-h-screen font-sans antialiased`}
       >
         <AppRouterLayout>
           <main>{children}</main>
@@ -81,7 +94,7 @@ export default async function Layout({
         </AppRouterLayout>
 
         {/* React Grab — select elements and edit with AI agents (dev-only, self-gates) */}
-        <ReactGrab />
+        {/*<ReactGrab />*/}
 
         {/* Add FontSelector only in development */}
         {process.env.NODE_ENV === "development" &&

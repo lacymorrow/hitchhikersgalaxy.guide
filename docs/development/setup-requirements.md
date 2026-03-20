@@ -8,7 +8,7 @@ Everything you need to get a Shipkit downstream project fully operational.
 
 Automatically opens PRs when the upstream Shipkit repo is updated.
 
-- **Install:** <https://github.com/apps/pull>
+- **Install:** [github.com/apps/pull](https://github.com/apps/pull)
 - **Grant access** to your fork/downstream repo
 - Config is already included at `.github/pull.yml` — no additional setup needed
 - [Documentation](https://github.com/wei/pull)
@@ -28,7 +28,6 @@ AI coding agent from Anthropic. Works with the `CLAUDE.md` file in the repo root
 
 Google's AI coding assistant.
 
-- **Install:** `npm install -g @anthropic-ai/claude-code` is separate; for Gemini: `npm install -g @anthropic-ai/claude-code` — actually: `npm install -g @anthropic-ai/claude-code`
 - **Install:** `npm install -g @google/gemini-cli`
 - **Auth:** `gemini` (follow the OAuth flow)
 - **Usage:** `gemini` in the repo root — reads `GEMINI.md` if present

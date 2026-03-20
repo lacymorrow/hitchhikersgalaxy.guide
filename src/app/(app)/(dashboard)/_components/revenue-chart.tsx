@@ -112,7 +112,7 @@ export const RevenueChart = () => {
 							strokeOpacity={0.5}
 						/>
 						<XAxis
-							dataKey="date"
+							dataKey="month"
 							tickLine={false}
 							axisLine={false}
 							tickMargin={8}

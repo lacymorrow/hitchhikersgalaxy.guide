@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { DownloadSection } from "@/app/(app)/(dashboard)/_components/download-section";
 import { OverviewTabs } from "@/app/(app)/(dashboard)/_components/overview-tabs";
 import { RecentSales } from "@/app/(app)/(dashboard)/_components/recent-sales";
 import { RevenueChart } from "@/app/(app)/(dashboard)/_components/revenue-chart";
@@ -20,14 +21,28 @@ export const metadata: Metadata = constructMetadata({
 });
 
 export default async function DashboardPage() {
-	const { session } = await getDashboardData();
+	const {
+		session,
+		isUserAdmin,
+		hasGitHubConnection,
+		githubUsername,
+		hasVercelConnection,
+		isCustomer,
+	} = await getDashboardData();
 
 	return (
 		<div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
-			<div className="flex items-center justify-between">
+			<div className="flex flex-wrap items-center justify-between gap-4">
 				<h2 className="text-3xl font-bold tracking-tight">
 					Welcome back, {session.user.name ?? "friend"}
 				</h2>
+				<DownloadSection
+					isAuthenticated={!!session.user?.id}
+					isCustomer={isCustomer || isUserAdmin}
+					hasGitHubConnection={hasGitHubConnection}
+					githubUsername={githubUsername}
+					hasVercelConnection={hasVercelConnection}
+				/>
 			</div>
 
 			<StatsCards />

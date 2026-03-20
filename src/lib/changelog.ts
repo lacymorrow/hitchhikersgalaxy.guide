@@ -157,12 +157,12 @@ function groupCommits(
 	for (const commit of commits) {
 		const tag = tagMap.get(commit.sha);
 		if (tag && currentGroup.length > 0) {
-			// Close previous group
+			// Close previous group as "Recent Updates"
 			const newestDate = currentGroup[0]!.commit.author.date;
-			const groupLabel = currentTag ?? weekLabel(newestDate);
+			const groupLabel = currentTag ?? "Recent Updates";
 			const groupSlug = currentTag
 				? currentTag.replace(/[^a-zA-Z0-9.-]/g, "-").toLowerCase()
-				: weekSlug(newestDate);
+				: `updates-${newestDate.slice(0, 10)}`;
 
 			groups.push({
 				label: groupLabel,
@@ -180,10 +180,10 @@ function groupCommits(
 	// Final group
 	if (currentGroup.length > 0) {
 		const newestDate = currentGroup[0]!.commit.author.date;
-		const groupLabel = currentTag ?? weekLabel(newestDate);
+		const groupLabel = currentTag ?? "Recent Updates";
 		const groupSlug = currentTag
 			? currentTag.replace(/[^a-zA-Z0-9.-]/g, "-").toLowerCase()
-			: weekSlug(newestDate);
+			: `updates-${newestDate.slice(0, 10)}`;
 
 		groups.push({
 			label: groupLabel,
@@ -194,50 +194,19 @@ function groupCommits(
 		});
 	}
 
-	// If no tags at all, group by week
-	if (tagMap.size === 0) {
-		return groupByWeek(commits);
-	}
-
-	// For the unreleased group (first, before any tag), split by week if large
-	if (groups.length > 0 && !groups[0]!.isRelease && groups[0]!.commits.length > 15) {
-		const unreleased = groups.shift()!;
-		const weekGroups = groupByWeek(unreleased.commits);
-		groups.unshift(...weekGroups);
+	// If no tags at all, keep everything as one "Recent Updates" group
+	if (tagMap.size === 0 && commits.length > 0) {
+		const newestDate = commits[0]!.commit.author.date;
+		return [{
+			label: "Recent Updates",
+			slug: `updates-${newestDate.slice(0, 10)}`,
+			date: newestDate,
+			commits,
+			isRelease: false,
+		}];
 	}
 
 	return groups;
-}
-
-function groupByWeek(commits: GitHubCommit[]): CommitGroup[] {
-	const weeks = new Map<string, GitHubCommit[]>();
-	for (const c of commits) {
-		const key = weekSlug(c.commit.author.date);
-		if (!weeks.has(key)) weeks.set(key, []);
-		weeks.get(key)!.push(c);
-	}
-
-	return Array.from(weeks.entries()).map(([slug, wCommits]) => ({
-		label: weekLabel(wCommits[0]!.commit.author.date),
-		slug,
-		date: wCommits[0]!.commit.author.date,
-		commits: wCommits,
-		isRelease: false,
-	}));
-}
-
-function weekSlug(isoDate: string): string {
-	const d = new Date(isoDate);
-	const monday = new Date(d);
-	monday.setDate(d.getDate() - d.getDay() + 1);
-	return `week-${monday.toISOString().slice(0, 10)}`;
-}
-
-function weekLabel(isoDate: string): string {
-	const d = new Date(isoDate);
-	const monday = new Date(d);
-	monday.setDate(d.getDate() - d.getDay() + 1);
-	return `Week of ${monday.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}`;
 }
 
 // ---------------------------------------------------------------------------
@@ -314,7 +283,9 @@ async function _getChangelogEntries(): Promise<ChangelogEntry[]> {
 	try {
 		const [commits, tagMap] = await Promise.all([fetchCommits(), fetchTagMap()]);
 		const groups = groupCommits(commits, tagMap);
-		return groups.map(renderEntry);
+		return groups
+			.map(renderEntry)
+			.filter((e) => e.commitCount > 0 && e.content !== "Maintenance and internal improvements.");
 	} catch (err) {
 		console.error("[changelog] Failed to fetch from GitHub:", err);
 		return [];

@@ -40,7 +40,7 @@ interface HeaderProps {
    * - "none": renders no search control
    */
   searchVariant?: "ai" | "menu" | "none";
-  variant?: "default" | "sticky" | "floating" | "logo-only";
+  variant?: "default" | "sticky" | "floating" | "logo-only" | "minimal";
   /**
    * When set, shows an animated CTA that switches after the given scroll threshold (in px).
    * If undefined, shows the default static CTA.
@@ -67,6 +67,7 @@ const headerVariants = cva("translate-z-0 z-50 p-md", {
       sticky:
         "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
       "logo-only": "relative",
+      minimal: "relative",
     },
   },
   defaultVariants: {
@@ -97,7 +98,44 @@ export const Header: React.FC<HeaderProps> = ({
   const isOpaque =
     variant === "floating" && typeof opaqueOnScroll === "number" && scrollY > opaqueOnScroll;
 
-  // console.log("Header scroll:", { scrollY, isOpaque, variant, opaqueOnScroll });
+  // Minimal variant: logo + a few text links + theme toggle
+  if (variant === "minimal") {
+    const minimalLinks: NavLink[] = [
+      { href: routes.blog, label: "Blog" },
+      { href: "/changelog", label: "Changelog" },
+      { href: routes.docs, label: "Docs" },
+    ];
+
+    return (
+      <header className={cn(headerVariants({ variant: "minimal" }), className)}>
+        <nav className="container flex items-center justify-between gap-md">
+          <div className="flex items-center gap-2 md:gap-4 shrink-0">
+            <Link
+              href={logoHref}
+              className="flex items-center gap-2 text-lg font-semibold md:mr-6 md:text-base"
+            >
+              {logoIcon}
+              <span className="block whitespace-nowrap">{logoText}</span>
+            </Link>
+
+            <div className="flex items-center gap-md text-sm">
+              {minimalLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className="text-muted-foreground transition-colors hover:text-foreground"
+                >
+                  {link.label}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          <ThemeToggle variant="ghost" size="icon" className="rounded-full" />
+        </nav>
+      </header>
+    );
+  }
 
   return (
     <header

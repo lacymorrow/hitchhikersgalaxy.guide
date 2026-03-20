@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { GOOGLE_FONTS } from "@/config/fonts";
+import { GOOGLE_FONTS, type FontCategory } from "@/config/fonts";
 import { env } from "@/env";
 
 interface GoogleFontApiItem {
@@ -18,42 +18,53 @@ interface GoogleFontApiResponse {
   items: GoogleFontApiItem[];
 }
 
-// Use a reasonable default or fetch from config if needed elsewhere
-const DEFAULT_FALLBACK_FONTS = [
-  "ui-sans-serif",
-  "system-ui",
-  "-apple-system",
-  "BlinkMacSystemFont",
-  '"Segoe UI"',
-  "Roboto",
-  '"Helvetica Neue"',
-  "Arial",
-  '"Noto Sans"',
-  "sans-serif",
-  '"Apple Color Emoji"',
-  '"Segoe UI Emoji"',
-  '"Segoe UI Symbol"',
-  '"Noto Color Emoji"',
-].join(", ");
+export interface FontWithCategory {
+  family: string;
+  category: FontCategory;
+}
+
+const FALLBACK_STACKS: Record<string, string> = {
+  "sans-serif": [
+    "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont",
+    '"Segoe UI"', "Roboto", '"Helvetica Neue"', "Arial", '"Noto Sans"', "sans-serif",
+    '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"',
+  ].join(", "),
+  serif: [
+    "ui-serif", "Georgia", "Cambria", '"Times New Roman"', "Times", "serif",
+    '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"',
+  ].join(", "),
+  monospace: [
+    "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas",
+    '"Liberation Mono"', '"Courier New"', "monospace",
+  ].join(", "),
+  display: [
+    "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont",
+    '"Segoe UI"', "Roboto", '"Helvetica Neue"', "Arial", "sans-serif",
+  ].join(", "),
+  handwriting: [
+    "cursive", "ui-sans-serif", "system-ui", "sans-serif",
+  ].join(", "),
+};
+
+const DEFAULT_FALLBACK = FALLBACK_STACKS["sans-serif"];
 
 const MAX_SEARCH_RESULTS = 25;
-const BROWSE_PAGE_LIMIT = 50; // Number of fonts to return per browse page
+const BROWSE_PAGE_LIMIT = 50;
 
-// Cache for the full font list to avoid repeated API calls within the revalidation period
-let fullFontListCache: string[] | null = null;
+// Cache for the full font list with categories
+let fullFontListCache: FontWithCategory[] | null = null;
 let lastFetchTime: number | null = null;
-const CACHE_DURATION = 60 * 60 * 24 * 1000; // 24 hours in milliseconds
+const CACHE_DURATION = 60 * 60 * 24 * 1000; // 24 hours
 
-async function fetchAndCacheFullFontList(apiKey: string): Promise<string[]> {
+async function fetchAndCacheFullFontList(apiKey: string): Promise<FontWithCategory[]> {
   const now = Date.now();
   if (fullFontListCache && lastFetchTime && now - lastFetchTime < CACHE_DURATION) {
-    // console.log('Using cached full font list.');
     return fullFontListCache;
   }
 
   console.log("Fetching fresh full font list from Google Fonts API...");
   const url = `https://www.googleapis.com/webfonts/v1/webfonts?key=${apiKey}&sort=popularity`;
-  const response = await fetch(url, { next: { revalidate: 0 } }); // Use fetch cache, but revalidate immediately if stale
+  const response = await fetch(url, { next: { revalidate: 0 } });
 
   if (!response.ok) {
     const errorText = await response.text();
@@ -62,7 +73,10 @@ async function fetchAndCacheFullFontList(apiKey: string): Promise<string[]> {
   }
 
   const data: GoogleFontApiResponse = await response.json();
-  fullFontListCache = data.items.map((font) => font.family);
+  fullFontListCache = data.items.map((font) => ({
+    family: font.family,
+    category: font.category as FontCategory,
+  }));
   lastFetchTime = now;
   console.log(`Successfully fetched and cached ${fullFontListCache.length} Google Font families.`);
   return fullFontListCache;
@@ -76,50 +90,52 @@ export async function GET(request: NextRequest) {
   const limit = Number.parseInt(searchParams.get("limit") || String(BROWSE_PAGE_LIMIT), 10);
 
   if (!apiKey) {
-    // If no API key, return the curated list as a fallback
     console.warn(
       "Google Fonts API key is missing. Falling back to curated list. Add GOOGLE_FONTS_API_KEY to .env.local to enable full font search."
     );
-    const curatedFonts = GOOGLE_FONTS.map((font) => font.family);
     return NextResponse.json({
-      families: curatedFonts,
-      fallback: DEFAULT_FALLBACK_FONTS,
+      fonts: GOOGLE_FONTS,
+      families: GOOGLE_FONTS.map((f) => f.family),
+      fallbackStacks: FALLBACK_STACKS,
+      fallback: DEFAULT_FALLBACK,
       hasMore: false,
-      isCurated: true, // Add a flag to indicate fallback mode
+      isCurated: true,
     });
   }
 
   try {
-    const allFamilies = await fetchAndCacheFullFontList(apiKey);
+    const allFonts = await fetchAndCacheFullFontList(apiKey);
 
-    let responseFamilies: string[] = [];
+    let responseFonts: FontWithCategory[] = [];
     let hasMore = false;
 
     if (searchQuery && searchQuery.length > 0) {
-      // --- Handle Search ---
-      responseFamilies = allFamilies
-        .filter((family) => family.toLowerCase().includes(searchQuery))
+      responseFonts = allFonts
+        .filter((font) => font.family.toLowerCase().includes(searchQuery))
         .slice(0, MAX_SEARCH_RESULTS);
-      hasMore = false; // No pagination for search results
+      hasMore = false;
     } else {
-      // --- Handle Browse/Pagination ---
       const startIndex = (page - 1) * limit;
       const endIndex = startIndex + limit;
-      responseFamilies = allFamilies.slice(startIndex, endIndex);
-      hasMore = endIndex < allFamilies.length;
+      responseFonts = allFonts.slice(startIndex, endIndex);
+      hasMore = endIndex < allFonts.length;
     }
 
     return NextResponse.json({
-      families: responseFamilies,
-      fallback: DEFAULT_FALLBACK_FONTS,
-      hasMore, // Include pagination info
+      fonts: responseFonts,
+      families: responseFonts.map((f) => f.family),
+      fallbackStacks: FALLBACK_STACKS,
+      fallback: DEFAULT_FALLBACK,
+      hasMore,
     });
   } catch (error) {
     console.error("Error processing font request:", error);
     return NextResponse.json(
       {
+        fonts: [],
         families: [],
-        fallback: DEFAULT_FALLBACK_FONTS,
+        fallbackStacks: FALLBACK_STACKS,
+        fallback: DEFAULT_FALLBACK,
         error: "Failed to fetch or process fonts",
         hasMore: false,
       },

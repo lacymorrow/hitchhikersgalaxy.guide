@@ -14,43 +14,85 @@ import {
   CommandSeparator,
 } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { GOOGLE_FONTS } from "@/config/fonts"; // Initial curated list
+import { GOOGLE_FONTS, type FontCategory } from "@/config/fonts";
 import { env } from "@/env";
 import { cn } from "@/lib/utils";
 
+interface FontWithCategory {
+  family: string;
+  category: FontCategory;
+}
+
 interface FontsApiResponse {
+  fonts: FontWithCategory[];
   families: string[];
+  fallbackStacks: Record<string, string>;
   fallback: string;
-  hasMore?: boolean; // Add hasMore for pagination
+  hasMore?: boolean;
   isCurated?: boolean;
   error?: string;
 }
 
-const DEBOUNCE_DELAY = 300; // milliseconds
-const BROWSE_LIMIT = 50; // Number of fonts per browse page
+// Map font category to the CSS custom property it should target
+function getCssVar(category: FontCategory): string {
+  switch (category) {
+    case "serif":
+      return "--font-serif";
+    case "monospace":
+      return "--font-mono";
+    default:
+      // sans-serif, display, handwriting all go to --font-sans
+      return "--font-sans";
+  }
+}
+
+// Map font category to the Tailwind utility class to apply
+function getTailwindClass(category: FontCategory): string {
+  switch (category) {
+    case "serif":
+      return "font-serif";
+    case "monospace":
+      return "font-mono";
+    default:
+      return "font-sans";
+  }
+}
+
+const DEBOUNCE_DELAY = 300;
+const BROWSE_LIMIT = 50;
 const FONT_API_PATH = "/dev/api/fonts";
 
+const DEFAULT_SANS_FALLBACK = [
+  "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont",
+  '"Segoe UI"', "Roboto", '"Helvetica Neue"', "Arial", '"Noto Sans"', "sans-serif",
+  '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"',
+].join(", ");
+
 /**
- * Font selector with suggestions, server-side search, and paginated browsing.
- * Only intended for use in NODE_ENV=development.
+ * Font selector with category-aware CSS variable targeting.
+ * Serif fonts update --font-serif, sans-serif/display/handwriting update --font-sans,
+ * monospace updates --font-mono. Also switches the body's Tailwind font class accordingly.
  */
 export function FontSelector() {
   const fontSelectorEnabled = env.NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED;
   const [open, setOpen] = React.useState(false);
   const [selectedFont, setSelectedFont] = React.useState<string>("");
-  const [fallbackFonts, setFallbackFonts] = React.useState<string>("");
+  const [fallbackStacks, setFallbackStacks] = React.useState<Record<string, string>>({});
   const [initialLoading, setInitialLoading] = React.useState(true);
   const [initialError, setInitialError] = React.useState<string | null>(null);
+
+  // Font category lookup: family -> category
+  const [fontCategories, setFontCategories] = React.useState<Map<string, FontCategory>>(new Map());
 
   // Search state
   const [searchQuery, setSearchQuery] = React.useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, DEBOUNCE_DELAY);
-  const [searchResults, setSearchResults] = React.useState<string[]>([]);
+  const [searchResults, setSearchResults] = React.useState<FontWithCategory[]>([]);
   const [searchLoading, setSearchLoading] = React.useState(false);
   const [searchError, setSearchError] = React.useState<string | null>(null);
 
   // Browse state
-  const [browsedFonts, setBrowsedFonts] = React.useState<string[]>([]);
+  const [browsedFonts, setBrowsedFonts] = React.useState<FontWithCategory[]>([]);
   const [browsePage, setBrowsePage] = React.useState(1);
   const [browseHasMore, setBrowseHasMore] = React.useState(false);
   const [browseLoading, setBrowseLoading] = React.useState(false);
@@ -59,30 +101,92 @@ export function FontSelector() {
   const [isCuratedList, setIsCuratedList] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
 
-  // Apply Font Function (Memoized)
-  const applyFont = React.useCallback((fontFamily: string, fallbacks: string) => {
-    if (!fallbacks || typeof window === "undefined") return;
-    const existingLink = document.head.querySelector('link[data-font-selector="true"]');
-    if (existingLink) document.head.removeChild(existingLink);
+  // Track which CSS var/class we last applied so we can clean up on change
+  const lastAppliedRef = React.useRef<{ cssVar: string; tailwindClass: string } | null>(null);
 
-    if (fontFamily) {
-      const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, "+")}:wght@400;700&display=swap`;
-      const link = document.createElement("link");
-      link.href = fontUrl;
-      link.rel = "stylesheet";
-      link.setAttribute("data-font-selector", "true");
-      document.head.appendChild(link);
-    }
+  // Store original CSS variable values for restoration
+  const originalsRef = React.useRef<Map<string, string>>(new Map());
 
-    const fontName = fontFamily
-      ? fontFamily.includes(" ")
-        ? `"${fontFamily}"`
-        : fontFamily
-      : null;
-    document.body.style.fontFamily = fontName ? `${fontName}, ${fallbacks}` : fallbacks;
+  // Apply font: sets the right CSS variable based on category, swaps Tailwind class on body
+  const applyFont = React.useCallback(
+    (fontFamily: string, category: FontCategory | undefined) => {
+      if (typeof window === "undefined") return;
+
+      const resolvedCategory = category || "sans-serif";
+      const cssVar = getCssVar(resolvedCategory);
+      const tailwindClass = getTailwindClass(resolvedCategory);
+      const fallback = fallbackStacks[resolvedCategory] || DEFAULT_SANS_FALLBACK;
+
+      // Save original value if we haven't yet
+      if (!originalsRef.current.has(cssVar)) {
+        const original = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
+        if (original) {
+          originalsRef.current.set(cssVar, original);
+        }
+      }
+
+      // Clean up previous application if targeting a different var/class
+      if (lastAppliedRef.current && lastAppliedRef.current.cssVar !== cssVar) {
+        // Restore the previous CSS variable to its original value
+        const prevOriginal = originalsRef.current.get(lastAppliedRef.current.cssVar);
+        if (prevOriginal) {
+          document.documentElement.style.setProperty(lastAppliedRef.current.cssVar, prevOriginal);
+        } else {
+          document.documentElement.style.removeProperty(lastAppliedRef.current.cssVar);
+        }
+      }
+
+      // Remove old font stylesheet
+      const existingLink = document.head.querySelector('link[data-font-selector="true"]');
+      if (existingLink) document.head.removeChild(existingLink);
+
+      // Load new font from Google Fonts CDN
+      if (fontFamily) {
+        const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, "+")}:wght@400;700&display=swap`;
+        const link = document.createElement("link");
+        link.href = fontUrl;
+        link.rel = "stylesheet";
+        link.setAttribute("data-font-selector", "true");
+        document.head.appendChild(link);
+      }
+
+      // Build the font-family value
+      const fontName = fontFamily
+        ? fontFamily.includes(" ")
+          ? `"${fontFamily}"`
+          : fontFamily
+        : null;
+      const fontValue = fontName ? `${fontName}, ${fallback}` : fallback;
+
+      // Set the CSS custom property
+      document.documentElement.style.setProperty(cssVar, fontValue);
+
+      // Swap the Tailwind font class on <body>
+      const body = document.body;
+      if (lastAppliedRef.current) {
+        body.classList.remove(lastAppliedRef.current.tailwindClass);
+      }
+      // Remove all font-* classes first to avoid conflicts
+      body.classList.remove("font-sans", "font-serif", "font-mono");
+      body.classList.add(tailwindClass);
+
+      lastAppliedRef.current = { cssVar, tailwindClass };
+    },
+    [fallbackStacks]
+  );
+
+  // Register font categories from API responses
+  const registerCategories = React.useCallback((fonts: FontWithCategory[]) => {
+    setFontCategories((prev) => {
+      const next = new Map(prev);
+      for (const font of fonts) {
+        next.set(font.family, font.category);
+      }
+      return next;
+    });
   }, []);
 
-  // Fetch initial data (fallbacks + first browse page)
+  // Fetch initial data
   React.useEffect(() => {
     setMounted(true);
     const fetchInitialData = async () => {
@@ -97,64 +201,44 @@ export function FontSelector() {
           throw new Error(data.error || `HTTP error! status: ${response.status}`);
         }
         const data: FontsApiResponse = await response.json();
-        setFallbackFonts(data.fallback);
-        setBrowsedFonts(data.families);
+        setFallbackStacks(data.fallbackStacks || {});
+        setBrowsedFonts(data.fonts || []);
         setBrowseHasMore(data.hasMore ?? false);
         setBrowsePage(1);
         setIsCuratedList(data.isCurated ?? false);
+        registerCategories(data.fonts || []);
       } catch (e: unknown) {
         console.error("Failed to fetch initial font data:", e);
         const errorMsg = e instanceof Error ? e.message : "Failed to load initial data";
         setInitialError(errorMsg);
         setBrowseError(errorMsg);
-        setFallbackFonts(
-          [
-            "ui-sans-serif",
-            "system-ui",
-            "-apple-system",
-            "BlinkMacSystemFont",
-            '"Segoe UI"',
-            "Roboto",
-            '"Helvetica Neue"',
-            "Arial",
-            '"Noto Sans"',
-            "sans-serif",
-            '"Apple Color Emoji"',
-            '"Segoe UI Emoji"',
-            '"Segoe UI Symbol"',
-            '"Noto Color Emoji"',
-          ].join(", ")
-        );
+        // Fall back to curated list categories
+        registerCategories(GOOGLE_FONTS);
       } finally {
         setInitialLoading(false);
         setBrowseLoading(false);
       }
     };
     fetchInitialData();
-  }, []);
+  }, [registerCategories]);
 
-  // Set and apply initial font once fallbacks are loaded
+  // Set initial font once loaded
   React.useEffect(() => {
-    if (!mounted || initialLoading || !fallbackFonts || selectedFont) return;
-    const getInitialFont = () => {
-      const currentStyle = document.body.style.fontFamily;
-      if (currentStyle) {
-        const fontParts = currentStyle.split(",");
-        const firstFont = fontParts[0]?.trim().replace(/['"]/g, "");
-        if (firstFont && GOOGLE_FONTS.some((f) => f.family === firstFont)) return firstFont;
-        if (firstFont && browsedFonts.includes(firstFont)) return firstFont;
+    if (!mounted || initialLoading || selectedFont) return;
+    const currentStyle = document.body.style.fontFamily;
+    if (currentStyle) {
+      const fontParts = currentStyle.split(",");
+      const firstFont = fontParts[0]?.trim().replace(/['"]/g, "");
+      if (firstFont && fontCategories.has(firstFont)) {
+        setSelectedFont(firstFont);
+        return;
       }
-      const defaultFont = GOOGLE_FONTS.find((f) => f.family === "Inter")?.family || "";
-      if (!currentStyle && defaultFont) {
-        document.body.style.fontFamily = `${defaultFont}, ${fallbackFonts}`;
-      }
-      return defaultFont;
-    };
-    const initial = getInitialFont();
-    setSelectedFont(initial);
-  }, [mounted, initialLoading, fallbackFonts, browsedFonts]);
+    }
+    const defaultFont = GOOGLE_FONTS.find((f) => f.family === "Inter")?.family || "";
+    setSelectedFont(defaultFont);
+  }, [mounted, initialLoading, fontCategories]);
 
-  // Function to load more browse fonts
+  // Load more browse fonts
   const loadMoreFonts = React.useCallback(async () => {
     if (browseLoading || !browseHasMore) return;
     setBrowseLoading(true);
@@ -167,18 +251,20 @@ export function FontSelector() {
         throw new Error(data.error || `HTTP error! status: ${response.status}`);
       }
       const data: FontsApiResponse = await response.json();
-      setBrowsedFonts((prev) => [...prev, ...data.families]);
+      const newFonts = data.fonts || [];
+      setBrowsedFonts((prev) => [...prev, ...newFonts]);
       setBrowseHasMore(data.hasMore ?? false);
       setBrowsePage(nextPage);
+      registerCategories(newFonts);
     } catch (e: unknown) {
       console.error("Failed to load more fonts:", e);
       setBrowseError(e instanceof Error ? e.message : "Failed to load more fonts");
     } finally {
       setBrowseLoading(false);
     }
-  }, [browseLoading, browseHasMore, browsePage]);
+  }, [browseLoading, browseHasMore, browsePage, registerCategories]);
 
-  // Effect to perform search
+  // Search effect
   React.useEffect(() => {
     if (!debouncedSearchQuery) {
       setSearchResults([]);
@@ -196,7 +282,9 @@ export function FontSelector() {
           throw new Error(data.error || `HTTP error! status: ${response.status}`);
         }
         const data: FontsApiResponse = await response.json();
-        setSearchResults(data.families);
+        const fonts = data.fonts || [];
+        setSearchResults(fonts);
+        registerCategories(fonts);
       } catch (e: unknown) {
         console.error("Failed to search fonts:", e);
         setSearchError(e instanceof Error ? e.message : "Failed to search fonts");
@@ -206,14 +294,15 @@ export function FontSelector() {
       }
     };
     searchFonts();
-  }, [debouncedSearchQuery]);
+  }, [debouncedSearchQuery, registerCategories]);
 
-  // Apply selected font
+  // Apply selected font whenever it changes
   React.useEffect(() => {
-    if (mounted && fallbackFonts) {
-      applyFont(selectedFont, fallbackFonts);
+    if (mounted) {
+      const category = fontCategories.get(selectedFont);
+      applyFont(selectedFont, category);
     }
-  }, [selectedFont, fallbackFonts, mounted, applyFont]);
+  }, [selectedFont, fontCategories, mounted, applyFont]);
 
   if (!fontSelectorEnabled) return null;
   if (!mounted) return null;
@@ -228,8 +317,17 @@ export function FontSelector() {
     setOpen(false);
   };
 
-  const isReady = mounted && !initialLoading && !!fallbackFonts;
+  const isReady = mounted && !initialLoading;
   const hasError = !!initialError;
+
+  // Helper to render a category badge
+  const categoryBadge = (category: FontCategory | undefined) => {
+    if (!category || category === "sans-serif") return null;
+    const short = category === "handwriting" ? "hand" : category;
+    return (
+      <span className="ml-auto text-[10px] text-muted-foreground opacity-60">{short}</span>
+    );
+  };
 
   return (
     <div className="fixed bottom-4 right-4 z-[1000]">
@@ -270,7 +368,6 @@ export function FontSelector() {
             />
             <CommandList>
               {searchQuery ? (
-                /* --- Search View --- */
                 <CommandGroup heading="Search Results">
                   {searchLoading && (
                     <div className="flex items-center justify-center p-2 text-sm text-muted-foreground">
@@ -283,30 +380,30 @@ export function FontSelector() {
                     </div>
                   )}
                   {!searchLoading && !searchError && searchResults.length === 0 && (
-                    <CommandEmpty>No results for "{searchQuery}".</CommandEmpty>
+                    <CommandEmpty>No results for &quot;{searchQuery}&quot;.</CommandEmpty>
                   )}
                   {!searchLoading &&
                     !searchError &&
                     searchResults.length > 0 &&
-                    searchResults.map((fontFamily) => (
+                    searchResults.map((font) => (
                       <CommandItem
-                        key={`search-${fontFamily}`}
-                        value={fontFamily}
+                        key={`search-${font.family}`}
+                        value={font.family}
                         onSelect={handleSelectFont}
                       >
                         <Check
                           className={cn(
                             "mr-2 h-4 w-4",
-                            selectedFont === fontFamily ? "opacity-100" : "opacity-0"
+                            selectedFont === font.family ? "opacity-100" : "opacity-0"
                           )}
                           aria-hidden="true"
                         />
-                        <span>{fontFamily}</span>
+                        <span>{font.family}</span>
+                        {categoryBadge(font.category)}
                       </CommandItem>
                     ))}
                 </CommandGroup>
               ) : (
-                /* --- Browse View --- */
                 <>
                   <CommandGroup heading="Suggestions">
                     {GOOGLE_FONTS.length > 0 ? (
@@ -324,6 +421,7 @@ export function FontSelector() {
                             aria-hidden="true"
                           />
                           <span>{font.family}</span>
+                          {categoryBadge(font.category)}
                         </CommandItem>
                       ))
                     ) : (
@@ -336,25 +434,25 @@ export function FontSelector() {
                   {!isCuratedList && (
                     <CommandGroup heading="Browse Fonts">
                       {browsedFonts.length > 0
-                        ? browsedFonts.map((fontFamily) => (
+                        ? browsedFonts.map((font) => (
                             <CommandItem
-                              key={`browse-${fontFamily}`}
-                              value={fontFamily}
+                              key={`browse-${font.family}`}
+                              value={font.family}
                               onSelect={handleSelectFont}
                             >
                               <Check
                                 className={cn(
                                   "mr-2 h-4 w-4",
-                                  selectedFont === fontFamily ? "opacity-100" : "opacity-0"
+                                  selectedFont === font.family ? "opacity-100" : "opacity-0"
                                 )}
                                 aria-hidden="true"
                               />
-                              <span>{fontFamily}</span>
+                              <span>{font.family}</span>
+                              {categoryBadge(font.category)}
                             </CommandItem>
                           ))
                         : null}
 
-                      {/* Loading/Error/Load More Section */}
                       {browseLoading && (
                         <div className="flex items-center justify-center p-2 text-sm text-muted-foreground">
                           <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Loading more...
@@ -380,7 +478,6 @@ export function FontSelector() {
                         !browseError &&
                         !browseHasMore &&
                         browsedFonts.length === 0 && (
-                          // This state means initial load succeeded (no error) but returned no fonts
                           <CommandEmpty>No fonts found to browse.</CommandEmpty>
                         )}
                     </CommandGroup>

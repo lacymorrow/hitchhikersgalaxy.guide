@@ -61,18 +61,6 @@ export default async function Layout({
             src="https://tweakcn.com/live-preview.min.js"
           />
         )}
-        {process.env.NODE_ENV === "development" && (
-          <>
-            <Script
-              src="//unpkg.com/react-grab/dist/index.global.js"
-              strategy="beforeInteractive"
-            />
-            <Script
-              src="//unpkg.com/@react-grab/claude-code/dist/client.global.js"
-              strategy="lazyOnload"
-            />
-          </>
-        )}
       </head>
       {/* Ensure portaled UI (e.g. Radix primitives) inherits the sans-serif family */}
       <body
@@ -93,15 +81,19 @@ export default async function Layout({
           {/*<BrickMarquee />*/}
         </AppRouterLayout>
 
-        {/* React Grab — select elements and edit with AI agents (dev-only, self-gates) */}
-        {/*<ReactGrab />*/}
-
-        {/* Add FontSelector only in development */}
+        {/* Add devtools only in development */}
         {process.env.NODE_ENV === "development" &&
           env.NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED && (
-            <Suspense fallback={null}>
-              <FontSelector />
-            </Suspense>
+            <>
+              {/* React Grab — select elements and edit with AI agents */}
+              <Suspense fallback={null}>
+                <ReactGrab />
+              </Suspense>
+
+              <Suspense fallback={null}>
+                <FontSelector />
+              </Suspense>
+            </>
           )}
       </body>
     </html>

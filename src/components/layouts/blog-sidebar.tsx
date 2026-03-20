@@ -67,7 +67,7 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
       {/* Header */}
       <div className="flex items-center gap-3 px-2 py-4">
         <div>
-          <h2 className="font-semibold text-foreground">{siteConfig.name} Blog</h2>
+          <h2 className="font-semibold text-foreground">{siteConfig.name} Posts</h2>
         </div>
       </div>
 

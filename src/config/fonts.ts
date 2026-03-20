@@ -16,30 +16,32 @@ export const fontSans = FontSans({
   display: "swap",
 });
 
+export type FontCategory = "sans-serif" | "serif" | "display" | "handwriting" | "monospace";
+
 export interface GoogleFont {
   family: string;
-  // Add other properties if needed, e.g., category, variants
+  category: FontCategory;
 }
 
 // A curated list of popular Google Fonts
 // See: https://fonts.google.com/
 export const GOOGLE_FONTS: GoogleFont[] = [
-  { family: "Inter" }, // Default likely
-  { family: "Roboto" },
-  { family: "Open Sans" },
-  { family: "Lato" },
-  { family: "Montserrat" },
-  { family: "Poppins" },
-  { family: "Source Sans Pro" },
-  { family: "Oswald" },
-  { family: "Raleway" },
-  { family: "Nunito" },
-  { family: "Merriweather" },
-  { family: "Playfair Display" },
-  { family: "Ubuntu" },
-  { family: "Work Sans" },
-  { family: "Fira Sans" },
-  { family: "Noto Sans JP" }, // Example CJK font
-  { family: "Roboto Mono" }, // Example Monospace font
-  { family: "Comic Neue" }, // Example fun font
+  { family: "Inter", category: "sans-serif" },
+  { family: "Roboto", category: "sans-serif" },
+  { family: "Open Sans", category: "sans-serif" },
+  { family: "Lato", category: "sans-serif" },
+  { family: "Montserrat", category: "sans-serif" },
+  { family: "Poppins", category: "sans-serif" },
+  { family: "Source Sans Pro", category: "sans-serif" },
+  { family: "Oswald", category: "sans-serif" },
+  { family: "Raleway", category: "sans-serif" },
+  { family: "Nunito", category: "sans-serif" },
+  { family: "Merriweather", category: "serif" },
+  { family: "Playfair Display", category: "serif" },
+  { family: "Ubuntu", category: "sans-serif" },
+  { family: "Work Sans", category: "sans-serif" },
+  { family: "Fira Sans", category: "sans-serif" },
+  { family: "Noto Sans JP", category: "sans-serif" },
+  { family: "Roboto Mono", category: "monospace" },
+  { family: "Comic Neue", category: "handwriting" },
 ];

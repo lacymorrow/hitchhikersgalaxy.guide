@@ -35,7 +35,7 @@ export const reactGrabConfig = {
         ...REACT_GRAB_PROVIDER_MAP[preferredAiProvider.id],
         id: preferredAiProvider.id,
         /** Resolved API key value — already set in process.env by loadEnvConfig. Used to validate presence. */
-        // env: preferredAiProvider.env,
+        env: preferredAiProvider.env,
       }
     : undefined,
 } as const;

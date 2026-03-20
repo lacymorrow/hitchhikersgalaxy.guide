@@ -8,24 +8,24 @@ import type { NextConfig } from "next";
  * @returns The modified Next.js configuration object.
  */
 export default function withBlog(nextConfig: NextConfig): NextConfig {
-	const blogContentPath = path.join(process.cwd(), "src/content/blog");
-	let hasBlog = false;
-	try {
-		const blogFiles = fs.readdirSync(blogContentPath);
-		if (blogFiles.some((file) => file.endsWith(".mdx") || file.endsWith(".md"))) {
-			hasBlog = true;
-		}
-	} catch (error) {
-		// If the directory doesn't exist, we can ignore the error.
-	}
+  const blogContentPath = path.join(process.cwd(), "src/content/blog");
+  let hasBlog = false;
+  try {
+    const blogFiles = fs.readdirSync(blogContentPath);
+    if (blogFiles.some((file) => file.endsWith(".mdx") || file.endsWith(".md"))) {
+      hasBlog = true;
+    }
+  } catch (error) {
+    // If the directory doesn't exist, we can ignore the error.
+  }
 
-	const existingEnv = nextConfig.env ?? {};
+  const existingEnv = nextConfig.env ?? {};
 
-	return {
-		...nextConfig,
-		env: {
-			...existingEnv,
-			NEXT_PUBLIC_HAS_BLOG: String(hasBlog),
-		},
-	};
+  return {
+    ...nextConfig,
+    env: {
+      ...existingEnv,
+      NEXT_PUBLIC_HAS_BLOG: String(hasBlog),
+    },
+  };
 }

@@ -2,14 +2,14 @@ import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
 interface PermissionContext {
-	teamId?: string;
-	projectId?: string;
+  teamId?: string;
+  projectId?: string;
 }
 
 interface UsePermissionOptions {
-	resource: string;
-	action: string;
-	context?: PermissionContext;
+  resource: string;
+  action: string;
+  context?: PermissionContext;
 }
 
 /**
@@ -33,56 +33,56 @@ interface UsePermissionOptions {
  * ```
  */
 export const usePermission = ({ resource, action, context }: UsePermissionOptions) => {
-	const { data: session, status } = useSession();
-	const [hasPermission, setHasPermission] = useState(false);
-	const [isLoading, setIsLoading] = useState(true);
-	const [error, setError] = useState<Error | null>(null);
+  const { data: session, status } = useSession();
+  const [hasPermission, setHasPermission] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-	const checkPermission = useCallback(async () => {
-		if (!session?.user?.id) {
-			setHasPermission(false);
-			setIsLoading(false);
-			return;
-		}
+  const checkPermission = useCallback(async () => {
+    if (!session?.user?.id) {
+      setHasPermission(false);
+      setIsLoading(false);
+      return;
+    }
 
-		try {
-			setError(null);
-			const params = new URLSearchParams();
-			params.append("resource", resource);
-			params.append("action", action);
+    try {
+      setError(null);
+      const params = new URLSearchParams();
+      params.append("resource", resource);
+      params.append("action", action);
 
-			if (context?.teamId) {
-				params.append("teamId", context.teamId);
-			}
+      if (context?.teamId) {
+        params.append("teamId", context.teamId);
+      }
 
-			if (context?.projectId) {
-				params.append("projectId", context.projectId);
-			}
+      if (context?.projectId) {
+        params.append("projectId", context.projectId);
+      }
 
-			const response = await fetch(`/api/permissions/check?${params.toString()}`);
+      const response = await fetch(`/api/permissions/check?${params.toString()}`);
 
-			setHasPermission(response.ok);
-		} catch (error) {
-			console.error("Error checking permission:", error);
-			setError(error instanceof Error ? error : new Error(String(error)));
-			setHasPermission(false);
-		} finally {
-			setIsLoading(false);
-		}
-	}, [session?.user?.id, resource, action, context]);
+      setHasPermission(response.ok);
+    } catch (error) {
+      console.error("Error checking permission:", error);
+      setError(error instanceof Error ? error : new Error(String(error)));
+      setHasPermission(false);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [session?.user?.id, resource, action, context]);
 
-	useEffect(() => {
-		if (status === "loading") {
-			return;
-		}
+  useEffect(() => {
+    if (status === "loading") {
+      return;
+    }
 
-		void checkPermission();
-	}, [status, checkPermission]);
+    void checkPermission();
+  }, [status, checkPermission]);
 
-	return {
-		hasPermission,
-		isLoading,
-		error,
-		refresh: checkPermission,
-	};
+  return {
+    hasPermission,
+    isLoading,
+    error,
+    refresh: checkPermission,
+  };
 };

@@ -1,13 +1,13 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 
 interface SidebarLayoutProps {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 export function SidebarLayout({ children }: SidebarLayoutProps) {
-	return (
-		<>
-			<SidebarProvider>{children}</SidebarProvider>
-		</>
-	);
+  return (
+    <>
+      <SidebarProvider>{children}</SidebarProvider>
+    </>
+  );
 }

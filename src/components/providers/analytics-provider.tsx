@@ -9,24 +9,24 @@ import { ShipkitStatsigProvider } from "@/lib/statsig/statsig-provider";
 import { UmamiAnalytics } from "@/lib/umami/umami-analytics";
 
 export const AnalyticsProvider = ({ children }: { children: ReactNode }) => {
-	return (
-		<>
-			<ShipkitStatsigProvider>
-				{/* Web Vitals - Above children to track page metrics */}
-				<WebVitals />
+  return (
+    <>
+      <ShipkitStatsigProvider>
+        {/* Web Vitals - Above children to track page metrics */}
+        <WebVitals />
 
-				{children}
+        {children}
 
-				{/* Metrics - Below children to avoid blocking */}
-				<SpeedInsights />
+        {/* Metrics - Below children to avoid blocking */}
+        <SpeedInsights />
 
-				{/* Analytics */}
-				<GoogleAnalytics />
-				<GoogleTagManager />
-				<UmamiAnalytics />
-				<DataFastAnalytics />
-				<VercelAnalytics />
-			</ShipkitStatsigProvider>
-		</>
-	);
+        {/* Analytics */}
+        <GoogleAnalytics />
+        <GoogleTagManager />
+        <UmamiAnalytics />
+        <DataFastAnalytics />
+        <VercelAnalytics />
+      </ShipkitStatsigProvider>
+    </>
+  );
 };

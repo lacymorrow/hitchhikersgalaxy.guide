@@ -4,94 +4,94 @@ import { useEffect, useRef, useState } from "react";
 
 // Define the list of links
 const links = [
-	{ name: "shipkit.io", href: "https://shipkit.io" },
-	{ name: "bones.sh", href: "https://bones.sh" },
-	{ name: "uibrary.com", href: "https://uibrary.com" },
-	{ name: "cloud0.dev", href: "https://cloud0.dev" },
-	{ name: "junebug.ai", href: "https://junebug.ai" },
-	{ name: "thneed.ai", href: "https://thneed.ai" },
-	{ name: "lacy.sh", href: "https://lacy.sh" },
-	{ name: "lacy.is", href: "https://lacy.is" },
-	{ name: "lacymorrow.com", href: "https://lacymorrow.com" },
+  { name: "shipkit.io", href: "https://shipkit.io" },
+  { name: "bones.sh", href: "https://bones.sh" },
+  { name: "uibrary.com", href: "https://uibrary.com" },
+  { name: "cloud0.dev", href: "https://cloud0.dev" },
+  { name: "junebug.ai", href: "https://junebug.ai" },
+  { name: "thneed.ai", href: "https://thneed.ai" },
+  { name: "lacy.sh", href: "https://lacy.sh" },
+  { name: "lacy.is", href: "https://lacy.is" },
+  { name: "lacymorrow.com", href: "https://lacymorrow.com" },
 ];
 
 export function BrickMarquee() {
-	const [isNearby, setIsNearby] = useState(false);
-	const [isExpanded, setIsExpanded] = useState(false);
-	const barRef = useRef<HTMLLabelElement>(null);
-	const checkboxRef = useRef<HTMLInputElement>(null);
-	const containerRef = useRef<HTMLDivElement>(null);
+  const [isNearby, setIsNearby] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const barRef = useRef<HTMLLabelElement>(null);
+  const checkboxRef = useRef<HTMLInputElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
-	// Handle mouse movement for magnetic effect
-	useEffect(() => {
-		const handleMouseMove = (e: MouseEvent) => {
-			if (checkboxRef.current?.checked) return;
+  // Handle mouse movement for magnetic effect
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (checkboxRef.current?.checked) return;
 
-			const threshold = 80; // Distance threshold to detect mouse
+      const threshold = 80; // Distance threshold to detect mouse
 
-			if (barRef.current) {
-				const rect = barRef.current.getBoundingClientRect();
-				const cornerX = rect.right - 10;
-				const cornerY = window.innerHeight;
+      if (barRef.current) {
+        const rect = barRef.current.getBoundingClientRect();
+        const cornerX = rect.right - 10;
+        const cornerY = window.innerHeight;
 
-				// Calculate distance from mouse to detection point
-				const distance = Math.sqrt((e.clientX - cornerX) ** 2 + (e.clientY - cornerY) ** 2);
+        // Calculate distance from mouse to detection point
+        const distance = Math.sqrt((e.clientX - cornerX) ** 2 + (e.clientY - cornerY) ** 2);
 
-				// Set nearby state based on distance threshold
-				setIsNearby(distance < threshold);
-			}
-		};
+        // Set nearby state based on distance threshold
+        setIsNearby(distance < threshold);
+      }
+    };
 
-		// Add mousemove event listener
-		window.addEventListener("mousemove", handleMouseMove);
+    // Add mousemove event listener
+    window.addEventListener("mousemove", handleMouseMove);
 
-		return () => {
-			window.removeEventListener("mousemove", handleMouseMove);
-		};
-	}, []);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
 
-	// Handle checkbox state change
-	useEffect(() => {
-		const handleChange = () => {
-			if (checkboxRef.current) {
-				setIsExpanded(checkboxRef.current.checked);
-			}
-		};
+  // Handle checkbox state change
+  useEffect(() => {
+    const handleChange = () => {
+      if (checkboxRef.current) {
+        setIsExpanded(checkboxRef.current.checked);
+      }
+    };
 
-		if (checkboxRef.current) {
-			checkboxRef.current.addEventListener("change", handleChange);
-		}
+    if (checkboxRef.current) {
+      checkboxRef.current.addEventListener("change", handleChange);
+    }
 
-		return () => {
-			if (checkboxRef.current) {
-				checkboxRef.current.removeEventListener("change", handleChange);
-			}
-		};
-	}, []);
+    return () => {
+      if (checkboxRef.current) {
+        checkboxRef.current.removeEventListener("change", handleChange);
+      }
+    };
+  }, []);
 
-	// Handle click outside to close
-	useEffect(() => {
-		const handleClickOutside = (e: MouseEvent) => {
-			if (
-				checkboxRef.current?.checked &&
-				containerRef.current &&
-				!containerRef.current.contains(e.target as Node)
-			) {
-				checkboxRef.current.checked = false;
-				setIsExpanded(false);
-			}
-		};
+  // Handle click outside to close
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (
+        checkboxRef.current?.checked &&
+        containerRef.current &&
+        !containerRef.current.contains(e.target as Node)
+      ) {
+        checkboxRef.current.checked = false;
+        setIsExpanded(false);
+      }
+    };
 
-		document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
 
-		return () => {
-			document.removeEventListener("mousedown", handleClickOutside);
-		};
-	}, []);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
-	return (
-		<>
-			<style jsx>{`
+  return (
+    <>
+      <style jsx>{`
   /* Base styles */
   .dev-tools-container {
     position: fixed;
@@ -182,43 +182,43 @@ export function BrickMarquee() {
   }
 `}</style>
 
-			<div ref={containerRef} className="dev-tools-container">
-				{/* Hidden checkbox for state */}
-				<input
-					ref={checkboxRef}
-					type="checkbox"
-					id="bar-toggle"
-					className="sr-only peer"
-					aria-label="Toggle animation"
-				/>
+      <div ref={containerRef} className="dev-tools-container">
+        {/* Hidden checkbox for state */}
+        <input
+          ref={checkboxRef}
+          type="checkbox"
+          id="bar-toggle"
+          className="sr-only peer"
+          aria-label="Toggle animation"
+        />
 
-				{/* Single element for both bar and square */}
-				<label
-					ref={barRef}
-					htmlFor="bar-toggle"
-					className={`bar bg-primary [mask-image:linear-gradient(to_right,transparent,white_7%)] ${isNearby ? "nearby" : ""} ${isExpanded ? "expanded" : ""}`}
-				>
-					{/* Marquee container */}
-					<div className={`marquee-container ${isExpanded ? "visible" : ""}`}>
-						{/* Marquee of websites */}
-						<div className={`marquee animate-marquee ${isExpanded ? "pointer-events-none" : ""}`}>
-							{/* Map over the links array */}
-							{links.map((link) => (
-								<a
-									key={link.name}
-									href={link.href}
-									target="_blank"
-									rel="noopener noreferrer"
-									className="inline-block transform transition-transform duration-300 ease-in-out hover:scale-120 text-primary-foreground hover:text-primary-foreground/80 mx-2"
-									style={{ textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}
-								>
-									<span>{link.name}</span>
-								</a>
-							))}
-						</div>
-					</div>
-				</label>
-			</div>
-		</>
-	);
+        {/* Single element for both bar and square */}
+        <label
+          ref={barRef}
+          htmlFor="bar-toggle"
+          className={`bar bg-primary [mask-image:linear-gradient(to_right,transparent,white_7%)] ${isNearby ? "nearby" : ""} ${isExpanded ? "expanded" : ""}`}
+        >
+          {/* Marquee container */}
+          <div className={`marquee-container ${isExpanded ? "visible" : ""}`}>
+            {/* Marquee of websites */}
+            <div className={`marquee animate-marquee ${isExpanded ? "pointer-events-none" : ""}`}>
+              {/* Map over the links array */}
+              {links.map((link) => (
+                <a
+                  key={link.name}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-block transform transition-transform duration-300 ease-in-out hover:scale-120 text-primary-foreground hover:text-primary-foreground/80 mx-2"
+                  style={{ textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}
+                >
+                  <span>{link.name}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        </label>
+      </div>
+    </>
+  );
 }

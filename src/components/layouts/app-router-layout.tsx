@@ -18,28 +18,28 @@ import { ThemeProvider } from "@/components/ui/shipkit/theme";
  * dashboard layout where it's actually consumed.
  */
 export function AppRouterLayout({
-	children,
-	themeProvider: ThemeProviderWrapper = ThemeProvider,
+  children,
+  themeProvider: ThemeProviderWrapper = ThemeProvider,
 }: {
-	children: ReactNode;
-	themeProvider?: typeof ThemeProvider;
+  children: ReactNode;
+  themeProvider?: typeof ThemeProvider;
 }) {
-	return (
-		<ViewTransitions>
-			{/* PageTracker - Track page views */}
-			<PageTracker />
+  return (
+    <ViewTransitions>
+      {/* PageTracker - Track page views */}
+      <PageTracker />
 
-			{/* ThemeProvider should wrap providers that might need theme context */}
-			<ThemeProviderWrapper>
-				{/* KitProvider - Manage all core providers (session fetched client-side) */}
-				<KitProvider session={null}>
-					<NuqsAdapter>
-						<TeamProvider initialTeams={[{ id: "personal", name: "Personal" }]}>
-							{children}
-						</TeamProvider>
-					</NuqsAdapter>
-				</KitProvider>
-			</ThemeProviderWrapper>
-		</ViewTransitions>
-	);
+      {/* ThemeProvider should wrap providers that might need theme context */}
+      <ThemeProviderWrapper>
+        {/* KitProvider - Manage all core providers (session fetched client-side) */}
+        <KitProvider session={null}>
+          <NuqsAdapter>
+            <TeamProvider initialTeams={[{ id: "personal", name: "Personal" }]}>
+              {children}
+            </TeamProvider>
+          </NuqsAdapter>
+        </KitProvider>
+      </ThemeProviderWrapper>
+    </ViewTransitions>
+  );
 }

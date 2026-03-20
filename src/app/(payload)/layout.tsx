@@ -14,16 +14,16 @@ import type React from "react";
 import { env } from "@/env";
 
 interface Args {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const Layout = async ({ children }: Args) => {
-	if (!env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED) {
-		return <>{children}</>;
-	}
+  if (!env.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED) {
+    return <>{children}</>;
+  }
 
-	const { default: PayloadRootLayout } = await import("./payload-root-layout");
-	return <PayloadRootLayout>{children}</PayloadRootLayout>;
+  const { default: PayloadRootLayout } = await import("./payload-root-layout");
+  return <PayloadRootLayout>{children}</PayloadRootLayout>;
 };
 
 export default Layout;

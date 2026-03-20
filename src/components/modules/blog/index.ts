@@ -6,12 +6,12 @@ export { BlogImage } from "./image";
 export { MobileToc } from "./mobile-toc";
 export { BlogPostComponent } from "./post";
 export {
-	BlogAuthorSkeleton,
-	BlogCategoriesSkeleton,
-	BlogPostListItemSkeleton,
-	BlogPostListSkeleton,
-	BlogPostSkeleton,
-	MobileTOCSkeleton,
-	TOCSkeleton,
+  BlogAuthorSkeleton,
+  BlogCategoriesSkeleton,
+  BlogPostListItemSkeleton,
+  BlogPostListSkeleton,
+  BlogPostSkeleton,
+  MobileTOCSkeleton,
+  TOCSkeleton,
 } from "./skeleton";
 export { TableOfContents } from "./table-of-contents";

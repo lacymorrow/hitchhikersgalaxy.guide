@@ -19,28 +19,28 @@ import { haptic, useHaptics } from "@/hooks/use-haptics";
  * Place once near the root of your app (e.g. in layout.tsx or providers.tsx).
  */
 export function HapticsProvider({ children }: { children: React.ReactNode }) {
-	// Calling the hook registers the singleton trigger
-	useHaptics();
+  // Calling the hook registers the singleton trigger
+  useHaptics();
 
-	useEffect(() => {
-		// Bail out if haptics are disabled at build time
-		if (process.env.NEXT_PUBLIC_FEATURE_HAPTICS_ENABLED === "false") return;
+  useEffect(() => {
+    // Bail out if haptics are disabled at build time
+    if (process.env.NEXT_PUBLIC_FEATURE_HAPTICS_ENABLED === "false") return;
 
-		const handler = (e: PointerEvent) => {
-			const target = e.target as Element | null;
-			if (!target) return;
+    const handler = (e: PointerEvent) => {
+      const target = e.target as Element | null;
+      if (!target) return;
 
-			// Only fire for elements that explicitly opt in via data-haptic
-			const el = target.closest("[data-haptic]");
-			if (!el) return;
+      // Only fire for elements that explicitly opt in via data-haptic
+      const el = target.closest("[data-haptic]");
+      if (!el) return;
 
-			const pattern = el.getAttribute("data-haptic") as HapticPattern | null;
-			if (pattern) haptic(pattern);
-		};
+      const pattern = el.getAttribute("data-haptic") as HapticPattern | null;
+      if (pattern) haptic(pattern);
+    };
 
-		document.addEventListener("pointerdown", handler);
-		return () => document.removeEventListener("pointerdown", handler);
-	}, []);
+    document.addEventListener("pointerdown", handler);
+    return () => document.removeEventListener("pointerdown", handler);
+  }, []);
 
-	return <>{children}</>;
+  return <>{children}</>;
 }

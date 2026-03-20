@@ -14,23 +14,23 @@ import { reactGrabConfig } from "@/config/react-grab-config";
  * @see https://react-grab.com/blog/agent
  */
 export function ReactGrab() {
-	if (process.env.NODE_ENV !== "development") return null;
-	if (!reactGrabConfig.enabled || !reactGrabConfig.provider) return null;
+  if (process.env.NODE_ENV !== "development") return null;
+  if (!reactGrabConfig.enabled || !reactGrabConfig.provider) return null;
 
-	return (
-		<>
-			<Script
-				id="react-grab-core"
-				src="https://unpkg.com/react-grab@0.1.28/dist/index.global.js"
-				crossOrigin="anonymous"
-				strategy="beforeInteractive"
-			/>
-			<Script
-				id={`react-grab-provider-${reactGrabConfig.provider.id}`}
-				src={reactGrabConfig.provider.clientScriptUrl}
-				crossOrigin="anonymous"
-				strategy="beforeInteractive"
-			/>
-		</>
-	);
+  return (
+    <>
+      <Script
+        id="react-grab-core"
+        src="https://unpkg.com/react-grab@0.1.28/dist/index.global.js"
+        crossOrigin="anonymous"
+        strategy="beforeInteractive"
+      />
+      <Script
+        id={`react-grab-provider-${reactGrabConfig.provider.id}`}
+        src={reactGrabConfig.provider.clientScriptUrl}
+        crossOrigin="anonymous"
+        strategy="beforeInteractive"
+      />
+    </>
+  );
 }

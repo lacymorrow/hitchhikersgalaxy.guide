@@ -22,95 +22,95 @@ let hasInitialized = false;
  * This function should be called explicitly once during application startup.
  */
 export async function initializePaymentProviders(): Promise<void> {
-	// Prevent re-initialization
-	if (hasInitialized) {
-		return;
-	}
+  // Prevent re-initialization
+  if (hasInitialized) {
+    return;
+  }
 
-	const initializers: Promise<void>[] = [];
+  const initializers: Promise<void>[] = [];
 
-	// Conditionally register and initialize LemonSqueezy
-	if (env.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED) {
-		initializers.push(
-			(async () => {
-				try {
-					// Dynamically import the provider
-					const { lemonSqueezyProvider } = await import("./lemonsqueezy-provider");
-					paymentProviderRegistry.register(lemonSqueezyProvider);
+  // Conditionally register and initialize LemonSqueezy
+  if (env.NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED) {
+    initializers.push(
+      (async () => {
+        try {
+          // Dynamically import the provider
+          const { lemonSqueezyProvider } = await import("./lemonsqueezy-provider");
+          paymentProviderRegistry.register(lemonSqueezyProvider);
 
-					// The provider auto-initializes in its constructor, but ensure it's properly configured
-					if (!lemonSqueezyProvider.isConfigured) {
-						lemonSqueezyProvider.initialize({
-							apiKey: env.LEMONSQUEEZY_API_KEY,
-							// Pass other config like sandbox if needed
-							// sandbox: env.LEMONSQUEEZY_SANDBOX === 'true',
-						});
-					}
-				} catch (error) {
-					console.error("❌ Failed to initialize LemonSqueezy Provider", { error });
-				}
-			})()
-		);
-	}
+          // The provider auto-initializes in its constructor, but ensure it's properly configured
+          if (!lemonSqueezyProvider.isConfigured) {
+            lemonSqueezyProvider.initialize({
+              apiKey: env.LEMONSQUEEZY_API_KEY,
+              // Pass other config like sandbox if needed
+              // sandbox: env.LEMONSQUEEZY_SANDBOX === 'true',
+            });
+          }
+        } catch (error) {
+          console.error("❌ Failed to initialize LemonSqueezy Provider", { error });
+        }
+      })()
+    );
+  }
 
-	// Conditionally register and initialize Polar
-	if (env.NEXT_PUBLIC_FEATURE_POLAR_ENABLED) {
-		initializers.push(
-			(async () => {
-				try {
-					// Dynamically import the provider
-					const { polarProvider } = await import("./polar-provider");
-					// Register the Polar provider
-					paymentProviderRegistry.register(polarProvider);
+  // Conditionally register and initialize Polar
+  if (env.NEXT_PUBLIC_FEATURE_POLAR_ENABLED) {
+    initializers.push(
+      (async () => {
+        try {
+          // Dynamically import the provider
+          const { polarProvider } = await import("./polar-provider");
+          // Register the Polar provider
+          paymentProviderRegistry.register(polarProvider);
 
-					// Initialize Polar with the API key from environment variables
-					polarProvider.initialize({
-						apiKey: env.POLAR_ACCESS_TOKEN, // Use the validated env var
-						// Pass other config like sandbox if needed
-					});
-					console.info("✅ Polar Provider Initialized");
-				} catch (error) {
-					console.error("❌ Failed to initialize Polar Provider", { error });
-				}
-			})()
-		);
-	}
+          // Initialize Polar with the API key from environment variables
+          polarProvider.initialize({
+            apiKey: env.POLAR_ACCESS_TOKEN, // Use the validated env var
+            // Pass other config like sandbox if needed
+          });
+          console.info("✅ Polar Provider Initialized");
+        } catch (error) {
+          console.error("❌ Failed to initialize Polar Provider", { error });
+        }
+      })()
+    );
+  }
 
-	// Conditionally register and initialize Stripe
-	if (env.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED) {
-		initializers.push(
-			(async () => {
-				try {
-					// Dynamically import the provider
-					const { stripeProvider } = await import("./stripe-provider");
-					// Register the Stripe provider
-					paymentProviderRegistry.register(stripeProvider);
+  // Conditionally register and initialize Stripe
+  if (env.NEXT_PUBLIC_FEATURE_STRIPE_ENABLED) {
+    initializers.push(
+      (async () => {
+        try {
+          // Dynamically import the provider
+          const { stripeProvider } = await import("./stripe-provider");
+          // Register the Stripe provider
+          paymentProviderRegistry.register(stripeProvider);
 
-					// Initialize Stripe with the API key from environment variables
-					stripeProvider.initialize({
-						apiKey: env.STRIPE_SECRET_KEY,
-						publishableKey: env.STRIPE_PUBLISHABLE_KEY,
-						webhookSecret: env.STRIPE_WEBHOOK_SECRET,
-						// Pass other config like sandbox if needed
-					} as any); // Cast to any since StripeProviderConfig extends ProviderConfig
-					console.info("✅ Stripe Provider Initialized");
-				} catch (error) {
-					console.error("❌ Failed to initialize Stripe Provider", { error });
-				}
-			})()
-		);
-	}
+          // Initialize Stripe with the API key from environment variables
+          stripeProvider.initialize({
+            apiKey: env.STRIPE_SECRET_KEY,
+            publishableKey: env.STRIPE_PUBLISHABLE_KEY,
+            webhookSecret: env.STRIPE_WEBHOOK_SECRET,
+            // Pass other config like sandbox if needed
+          } as any); // Cast to any since StripeProviderConfig extends ProviderConfig
+          console.info("✅ Stripe Provider Initialized");
+        } catch (error) {
+          console.error("❌ Failed to initialize Stripe Provider", { error });
+        }
+      })()
+    );
+  }
 
-	// Wait for all initializations to complete
-	await Promise.all(initializers);
+  // Wait for all initializations to complete
+  await Promise.all(initializers);
 
-	// console.info("Payment providers initialization complete\n", {
-	// 	totalRegistered: paymentProviderRegistry.count,
-	// 	enabled: paymentProviderRegistry.enabledCount, // Note: This relies on initialize() setting isEnabled correctly
-	// });
+  // console.info("Payment providers initialization complete\n", {
+  // 	totalRegistered: paymentProviderRegistry.count,
+  // 	enabled: paymentProviderRegistry.enabledCount, // Note: This relies on initialize() setting isEnabled correctly
+  // });
 
-	// Mark as initialized
-	hasInitialized = true;
+  // Mark as initialized
+  hasInitialized = true;
 }
 
 /**
@@ -118,8 +118,8 @@ export async function initializePaymentProviders(): Promise<void> {
  * @returns Array of enabled providers
  */
 export function getEnabledProviders(): PaymentProvider[] {
-	// Filter based on the isEnabled flag set during initialize
-	return paymentProviderRegistry.getAll().filter((provider) => provider.isEnabled);
+  // Filter based on the isEnabled flag set during initialize
+  return paymentProviderRegistry.getAll().filter((provider) => provider.isEnabled);
 }
 
 /**
@@ -128,7 +128,7 @@ export function getEnabledProviders(): PaymentProvider[] {
  * @returns The provider if found, undefined otherwise
  */
 export function getProvider(id: string): PaymentProvider | undefined {
-	return paymentProviderRegistry.get(id);
+  return paymentProviderRegistry.get(id);
 }
 
 /**
@@ -137,7 +137,7 @@ export function getProvider(id: string): PaymentProvider | undefined {
  * @returns Whether the provider is registered
  */
 export function hasProvider(id: string): boolean {
-	return paymentProviderRegistry.has(id);
+  return paymentProviderRegistry.has(id);
 }
 
 /**
@@ -146,7 +146,7 @@ export function hasProvider(id: string): boolean {
  * @returns Whether the provider is enabled
  */
 export function isProviderEnabled(id: string): boolean {
-	const provider = paymentProviderRegistry.get(id);
-	// Ensure provider exists and its isEnabled flag is true
-	return !!provider?.isEnabled;
+  const provider = paymentProviderRegistry.get(id);
+  // Ensure provider exists and its isEnabled flag is true
+  return !!provider?.isEnabled;
 }

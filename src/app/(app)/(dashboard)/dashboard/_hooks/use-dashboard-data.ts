@@ -8,35 +8,35 @@ import { PaymentService } from "@/server/services/payment-service";
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
 
 export async function getDashboardData() {
-	const session = await auth();
+  const session = await auth();
 
-	if (!session?.user?.id) {
-		redirect(routes.auth.signIn); // Simplified redirect as per new redirect utility
-	}
+  if (!session?.user?.id) {
+    redirect(routes.auth.signIn); // Simplified redirect as per new redirect utility
+  }
 
-	const userId = session.user.id;
+  const userId = session.user.id;
 
-	// Run all async operations in parallel
-	const [isUserAdmin, gitHubStatus, hasVercelConnection, isCustomer, isSubscribed] =
-		await Promise.all([
-			isAdmin({ email: session.user.email || "" }),
-			getGitHubConnectionStatus(userId),
-			checkVercelConnection(userId),
-			PaymentService.hasUserPurchasedVariant({
-				userId,
-				variantId: siteConfig.store.products.shipkit || "",
-				provider: "lemonsqueezy",
-			}),
-			PaymentService.hasUserActiveSubscription({ userId }),
-		]);
+  // Run all async operations in parallel
+  const [isUserAdmin, gitHubStatus, hasVercelConnection, isCustomer, isSubscribed] =
+    await Promise.all([
+      isAdmin({ email: session.user.email || "" }),
+      getGitHubConnectionStatus(userId),
+      checkVercelConnection(userId),
+      PaymentService.hasUserPurchasedVariant({
+        userId,
+        variantId: siteConfig.store.products.shipkit || "",
+        provider: "lemonsqueezy",
+      }),
+      PaymentService.hasUserActiveSubscription({ userId }),
+    ]);
 
-	return {
-		session,
-		isUserAdmin,
-		hasGitHubConnection: gitHubStatus.isConnected,
-		githubUsername: gitHubStatus.username,
-		hasVercelConnection,
-		isCustomer,
-		isSubscribed,
-	};
+  return {
+    session,
+    isUserAdmin,
+    hasGitHubConnection: gitHubStatus.isConnected,
+    githubUsername: gitHubStatus.username,
+    hasVercelConnection,
+    isCustomer,
+    isSubscribed,
+  };
 }

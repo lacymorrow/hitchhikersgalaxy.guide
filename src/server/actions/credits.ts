@@ -11,10 +11,10 @@ import type { NewCreditTransaction } from "@/server/db/schema";
 import { updateUserCredits } from "@/server/services/credits";
 
 interface SpendCreditsParams {
-	amount: number; // Must be positive, represents the amount to spend
-	type: NewCreditTransaction["type"];
-	description?: string;
-	metadata?: Record<string, unknown>;
+  amount: number; // Must be positive, represents the amount to spend
+  type: NewCreditTransaction["type"];
+  description?: string;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -23,33 +23,33 @@ interface SpendCreditsParams {
  * @throws Error if user not authenticated, amount is not positive, or insufficient credits.
  */
 export async function spendUserCredits({
-	amount,
-	type,
-	description,
-	metadata,
+  amount,
+  type,
+  description,
+  metadata,
 }: SpendCreditsParams): Promise<void> {
-	const session = await auth();
-	if (!session?.user?.id) {
-		throw new Error("User not authenticated");
-	}
-	if (amount <= 0) {
-		throw new Error("Amount to spend must be positive.");
-	}
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("User not authenticated");
+  }
+  if (amount <= 0) {
+    throw new Error("Amount to spend must be positive.");
+  }
 
-	await updateUserCredits({
-		userId: session.user.id,
-		amount: -amount, // Convert to negative for spending
-		type,
-		description,
-		metadata,
-	});
+  await updateUserCredits({
+    userId: session.user.id,
+    amount: -amount, // Convert to negative for spending
+    type,
+    description,
+    metadata,
+  });
 }
 
 interface AddCreditsParams {
-	amount: number; // Must be positive
-	type: NewCreditTransaction["type"]; // e.g., 'purchase', 'bonus'
-	description?: string;
-	metadata?: Record<string, unknown>;
+  amount: number; // Must be positive
+  type: NewCreditTransaction["type"]; // e.g., 'purchase', 'bonus'
+  description?: string;
+  metadata?: Record<string, unknown>;
 }
 
 /**
@@ -59,24 +59,24 @@ interface AddCreditsParams {
  * @throws Error if user not authenticated or amount is not positive.
  */
 export async function addUserCredits({
-	amount,
-	type,
-	description,
-	metadata,
+  amount,
+  type,
+  description,
+  metadata,
 }: AddCreditsParams): Promise<void> {
-	const session = await auth();
-	if (!session?.user?.id) {
-		throw new Error("User not authenticated");
-	}
-	if (amount <= 0) {
-		throw new Error("Amount to add must be positive.");
-	}
+  const session = await auth();
+  if (!session?.user?.id) {
+    throw new Error("User not authenticated");
+  }
+  if (amount <= 0) {
+    throw new Error("Amount to add must be positive.");
+  }
 
-	await updateUserCredits({
-		userId: session.user.id,
-		amount: amount, // Positive amount
-		type,
-		description,
-		metadata,
-	});
+  await updateUserCredits({
+    userId: session.user.id,
+    amount: amount, // Positive amount
+    type,
+    description,
+    metadata,
+  });
 }

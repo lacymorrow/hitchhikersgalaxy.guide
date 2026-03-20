@@ -12,62 +12,62 @@ const TEMPLATE_SPECIFIC_DIR = path.join("packages", "create-shipkit-app", "templ
  * Get all files in a directory with caching
  */
 async function getDirectoryContents(directoryPath: string) {
-	try {
-		// Check cache first
-		if (directoryCache.has(directoryPath)) {
-			console.log(`Using cached directory listing for: ${directoryPath}`);
-			return directoryCache.get(directoryPath) || [];
-		}
+  try {
+    // Check cache first
+    if (directoryCache.has(directoryPath)) {
+      console.log(`Using cached directory listing for: ${directoryPath}`);
+      return directoryCache.get(directoryPath) || [];
+    }
 
-		// Use the specific template directory instead of potentially the entire project
-		const fullPath = path.join(process.cwd(), TEMPLATE_SPECIFIC_DIR, directoryPath);
+    // Use the specific template directory instead of potentially the entire project
+    const fullPath = path.join(process.cwd(), TEMPLATE_SPECIFIC_DIR, directoryPath);
 
-		// Log the resolved path for debugging
-		console.log(`Reading directory from: ${fullPath}`);
+    // Log the resolved path for debugging
+    console.log(`Reading directory from: ${fullPath}`);
 
-		try {
-			const entries = await fs.readdir(fullPath, { withFileTypes: true });
+    try {
+      const entries = await fs.readdir(fullPath, { withFileTypes: true });
 
-			// Map entries to consistent format
-			const mappedEntries = entries.map((entry) => ({
-				name: entry.name,
-				isDirectory: entry.isDirectory(),
-			}));
+      // Map entries to consistent format
+      const mappedEntries = entries.map((entry) => ({
+        name: entry.name,
+        isDirectory: entry.isDirectory(),
+      }));
 
-			// Cache the result
-			directoryCache.set(directoryPath, mappedEntries);
+      // Cache the result
+      directoryCache.set(directoryPath, mappedEntries);
 
-			return mappedEntries;
-		} catch (readError) {
-			console.warn(`Directory not found: ${fullPath}`, readError);
-			// Return empty array for non-existent directories
-			return [];
-		}
-	} catch (error) {
-		console.error(`Error reading directory: ${directoryPath}`, error);
-		return [];
-	}
+      return mappedEntries;
+    } catch (readError) {
+      console.warn(`Directory not found: ${fullPath}`, readError);
+      // Return empty array for non-existent directories
+      return [];
+    }
+  } catch (error) {
+    console.error(`Error reading directory: ${directoryPath}`, error);
+    return [];
+  }
 }
 
 export async function GET(request: NextRequest) {
-	try {
-		const { searchParams } = new URL(request.url);
-		let dirPath = searchParams.get("path") || "";
+  try {
+    const { searchParams } = new URL(request.url);
+    let dirPath = searchParams.get("path") || "";
 
-		// Sanitize the path to prevent directory traversal attacks
-		dirPath = sanitizePath(dirPath);
+    // Sanitize the path to prevent directory traversal attacks
+    dirPath = sanitizePath(dirPath);
 
-		// Log all requests for debugging
-		console.log(`Directory listing request for path: "${dirPath}"`);
+    // Log all requests for debugging
+    console.log(`Directory listing request for path: "${dirPath}"`);
 
-		const entries = await getDirectoryContents(dirPath);
+    const entries = await getDirectoryContents(dirPath);
 
-		// Log the response for debugging
-		console.log(`Returning ${entries.length} entries for path: "${dirPath}"`);
+    // Log the response for debugging
+    console.log(`Returning ${entries.length} entries for path: "${dirPath}"`);
 
-		return NextResponse.json(entries);
-	} catch (error) {
-		console.error("Error listing template files:", error);
-		return NextResponse.json({ error: "Failed to list template files" }, { status: 500 });
-	}
+    return NextResponse.json(entries);
+  } catch (error) {
+    console.error("Error listing template files:", error);
+    return NextResponse.json({ error: "Failed to list template files" }, { status: 500 });
+  }
 }

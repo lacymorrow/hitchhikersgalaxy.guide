@@ -21,12 +21,12 @@ export { createAnonServerClient, createServerClient } from "./server";
 
 // Types and utilities
 export type {
-	AuthError,
-	AuthResponse,
-	AuthSession,
-	AuthUser,
-	Database,
-	SupabaseClient,
+  AuthError,
+  AuthResponse,
+  AuthSession,
+  AuthUser,
+  Database,
+  SupabaseClient,
 } from "./types";
 
 export { isSupabaseConfigured } from "./types";

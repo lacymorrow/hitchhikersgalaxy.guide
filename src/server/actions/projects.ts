@@ -8,9 +8,9 @@ import { projectService } from "@/server/services/project-service";
  * @returns The created project with its members
  */
 export async function createProject(name: string, teamId: string, userId: string) {
-	const project = await projectService.createProject(teamId, name, userId);
-	revalidatePath("/");
-	return project;
+  const project = await projectService.createProject(teamId, name, userId);
+  revalidatePath("/");
+  return project;
 }
 
 /**
@@ -18,9 +18,9 @@ export async function createProject(name: string, teamId: string, userId: string
  * @returns The updated project with its members
  */
 export async function updateProject(projectId: string, name: string) {
-	const project = await projectService.updateProject(projectId, name);
-	revalidatePath("/");
-	return project;
+  const project = await projectService.updateProject(projectId, name);
+  revalidatePath("/");
+  return project;
 }
 
 /**
@@ -28,9 +28,9 @@ export async function updateProject(projectId: string, name: string) {
  * @returns True if deleted successfully
  */
 export async function deleteProject(projectId: string) {
-	const success = await projectService.deleteProject(projectId);
-	revalidatePath("/");
-	return success;
+  const success = await projectService.deleteProject(projectId);
+  revalidatePath("/");
+  return success;
 }
 
 /**
@@ -38,9 +38,9 @@ export async function deleteProject(projectId: string) {
  * @returns The created project member
  */
 export async function addProjectMember(projectId: string, userId: string, role: string) {
-	const member = await projectService.addProjectMember(projectId, userId, role);
-	revalidatePath("/");
-	return member;
+  const member = await projectService.addProjectMember(projectId, userId, role);
+  revalidatePath("/");
+  return member;
 }
 
 /**
@@ -48,9 +48,9 @@ export async function addProjectMember(projectId: string, userId: string, role: 
  * @returns True if removed successfully
  */
 export async function removeProjectMember(projectId: string, userId: string) {
-	const success = await projectService.removeProjectMember(projectId, userId);
-	revalidatePath("/");
-	return success;
+  const success = await projectService.removeProjectMember(projectId, userId);
+  revalidatePath("/");
+  return success;
 }
 
 /**
@@ -58,7 +58,7 @@ export async function removeProjectMember(projectId: string, userId: string) {
  * @returns The updated project member
  */
 export async function updateProjectMemberRole(projectId: string, userId: string, role: string) {
-	const member = await projectService.updateProjectMemberRole(projectId, userId, role);
-	revalidatePath("/");
-	return member;
+  const member = await projectService.updateProjectMemberRole(projectId, userId, role);
+  revalidatePath("/");
+  return member;
 }

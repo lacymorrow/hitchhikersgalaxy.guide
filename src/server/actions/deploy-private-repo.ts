@@ -9,9 +9,9 @@
 import { generateProjectNameSuggestions } from "@/lib/utils";
 import { auth } from "@/server/auth";
 import {
-	type DeploymentResult,
-	deploymentService,
-	type DeploymentConfig as ServiceDeploymentConfig,
+  type DeploymentResult,
+  deploymentService,
+  type DeploymentConfig as ServiceDeploymentConfig,
 } from "@/server/services/deployment-service";
 
 // Re-export from utils for backwards compatibility
@@ -21,52 +21,52 @@ export { generateProjectNameSuggestions };
 type EnvVarTarget = readonly ("production" | "preview" | "development")[];
 
 export interface DeploymentConfig {
-	templateRepo: string;
-	projectName: string;
-	newRepoName?: string; // Deprecated - use projectName
-	description?: string;
-	environmentVariables?: {
-		key: string;
-		value: string;
-		target: EnvVarTarget;
-	}[];
-	domains?: string[];
-	includeAllBranches?: boolean;
-	githubToken?: string;
-	deploymentId?: string;
-	userId?: string;
+  templateRepo: string;
+  projectName: string;
+  newRepoName?: string; // Deprecated - use projectName
+  description?: string;
+  environmentVariables?: {
+    key: string;
+    value: string;
+    target: EnvVarTarget;
+  }[];
+  domains?: string[];
+  includeAllBranches?: boolean;
+  githubToken?: string;
+  deploymentId?: string;
+  userId?: string;
 }
 
 /**
  * Deploy a private repository template to user's GitHub and Vercel accounts
  */
 export async function deployPrivateRepository(config: DeploymentConfig): Promise<DeploymentResult> {
-	// Get userId from config or auth
-	let userId = config.userId;
+  // Get userId from config or auth
+  let userId = config.userId;
 
-	if (!userId) {
-		const session = await auth();
-		if (!session?.user?.id) {
-			return {
-				success: false,
-				error: "Authentication required. Please log in to continue.",
-			};
-		}
-		userId = session.user.id;
-	}
+  if (!userId) {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return {
+        success: false,
+        error: "Authentication required. Please log in to continue.",
+      };
+    }
+    userId = session.user.id;
+  }
 
-	// Map old config format to new service format
-	const serviceConfig: ServiceDeploymentConfig = {
-		templateRepo: config.templateRepo,
-		projectName: config.projectName || config.newRepoName || "",
-		description: config.description,
-		environmentVariables: config.environmentVariables,
-		domains: config.domains,
-		includeAllBranches: config.includeAllBranches,
-		githubToken: config.githubToken,
-		deploymentId: config.deploymentId,
-		userId,
-	};
+  // Map old config format to new service format
+  const serviceConfig: ServiceDeploymentConfig = {
+    templateRepo: config.templateRepo,
+    projectName: config.projectName || config.newRepoName || "",
+    description: config.description,
+    environmentVariables: config.environmentVariables,
+    domains: config.domains,
+    includeAllBranches: config.includeAllBranches,
+    githubToken: config.githubToken,
+    deploymentId: config.deploymentId,
+    userId,
+  };
 
-	return deploymentService.deployPrivateRepository(serviceConfig);
+  return deploymentService.deployPrivateRepository(serviceConfig);
 }

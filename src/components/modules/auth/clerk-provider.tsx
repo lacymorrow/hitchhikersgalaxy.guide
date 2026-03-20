@@ -13,29 +13,29 @@ import { clerkConfig, getClerkPublishableKey, isClerkConfigured } from "@/lib/au
  */
 
 interface ClerkProviderWrapperProps {
-	children: ReactNode;
+  children: ReactNode;
 }
 
 export function ClerkProviderWrapper({ children }: ClerkProviderWrapperProps) {
-	// Check if Clerk is the active authentication strategy
-	const authStrategy = getAuthStrategy();
+  // Check if Clerk is the active authentication strategy
+  const authStrategy = getAuthStrategy();
 
-	// Only wrap with ClerkProvider when Clerk is active and properly configured
-	if (authStrategy === "clerk" && isClerkConfigured()) {
-		return (
-			<ClerkProvider
-				publishableKey={getClerkPublishableKey()}
-				appearance={clerkConfig.appearance}
-				signInUrl={clerkConfig.signInUrl}
-				signUpUrl={clerkConfig.signUpUrl}
-				afterSignInUrl={clerkConfig.afterSignInUrl}
-				afterSignUpUrl={clerkConfig.afterSignUpUrl}
-			>
-				{children}
-			</ClerkProvider>
-		);
-	}
+  // Only wrap with ClerkProvider when Clerk is active and properly configured
+  if (authStrategy === "clerk" && isClerkConfigured()) {
+    return (
+      <ClerkProvider
+        publishableKey={getClerkPublishableKey()}
+        appearance={clerkConfig.appearance}
+        signInUrl={clerkConfig.signInUrl}
+        signUpUrl={clerkConfig.signUpUrl}
+        afterSignInUrl={clerkConfig.afterSignInUrl}
+        afterSignUpUrl={clerkConfig.afterSignUpUrl}
+      >
+        {children}
+      </ClerkProvider>
+    );
+  }
 
-	// For Auth.js or guest mode, render children directly
-	return <>{children}</>;
+  // For Auth.js or guest mode, render children directly
+  return <>{children}</>;
 }

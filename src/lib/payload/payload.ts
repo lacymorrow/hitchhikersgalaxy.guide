@@ -10,23 +10,23 @@ const payloadWarningLogged = false;
 
 // Initialize Payload
 export const getPayloadClient = async () => {
-	if (!env?.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED) {
-		// logger.debug("Payload not initialized: DATABASE_URL is missing or Payload is not enabled");
-		return null;
-	}
+  if (!env?.NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED) {
+    // logger.debug("Payload not initialized: DATABASE_URL is missing or Payload is not enabled");
+    return null;
+  }
 
-	try {
-		// Initialize Payload
-		const payload = await getPayload({
-			// Pass in the config
-			config: payloadConfig,
-		});
+  try {
+    // Initialize Payload
+    const payload = await getPayload({
+      // Pass in the config
+      config: payloadConfig,
+    });
 
-		return payload;
-	} catch (error) {
-		console.warn("Payload failed to initialize", error);
-		return null;
-	}
+    return payload;
+  } catch (error) {
+    console.warn("Payload failed to initialize", error);
+    return null;
+  }
 };
 
 // Export a singleton instance

@@ -9,14 +9,14 @@
  * @param details Optional details object or message
  */
 export function logInfo(message: string, details?: unknown): void {
-	if (details) {
-		console.info(`[Install] ${message}:`, details);
-	} else {
-		console.info(`[Install] ${message}`);
-	}
+  if (details) {
+    console.info(`[Install] ${message}:`, details);
+  } else {
+    console.info(`[Install] ${message}`);
+  }
 
-	// Store logs in global variable for display in UI if in browser
-	appendToLogHistory("info", message, details);
+  // Store logs in global variable for display in UI if in browser
+  appendToLogHistory("info", message, details);
 }
 
 /**
@@ -25,14 +25,14 @@ export function logInfo(message: string, details?: unknown): void {
  * @param details Optional details object or message
  */
 export function logWarning(message: string, details?: unknown): void {
-	if (details) {
-		console.warn(`[Install] ${message}:`, details);
-	} else {
-		console.warn(`[Install] ${message}`);
-	}
+  if (details) {
+    console.warn(`[Install] ${message}:`, details);
+  } else {
+    console.warn(`[Install] ${message}`);
+  }
 
-	// Store logs in global variable for display in UI if in browser
-	appendToLogHistory("warning", message, details);
+  // Store logs in global variable for display in UI if in browser
+  appendToLogHistory("warning", message, details);
 }
 
 /**
@@ -41,34 +41,34 @@ export function logWarning(message: string, details?: unknown): void {
  * @param details Optional details object or message
  */
 export function logError(message: string, details?: unknown): void {
-	if (details) {
-		console.error(`[Install] ${message}:`, details);
-	} else {
-		console.error(`[Install] ${message}`);
-	}
+  if (details) {
+    console.error(`[Install] ${message}:`, details);
+  } else {
+    console.error(`[Install] ${message}`);
+  }
 
-	// Store logs in global variable for display in UI if in browser
-	appendToLogHistory("error", message, details);
+  // Store logs in global variable for display in UI if in browser
+  appendToLogHistory("error", message, details);
 }
 
 /**
  * Append a log entry to the global log history
  */
 function appendToLogHistory(
-	type: "info" | "warning" | "error",
-	message: string,
-	data?: unknown
+  type: "info" | "warning" | "error",
+  message: string,
+  data?: unknown
 ): void {
-	if (typeof window !== "undefined") {
-		if (!window.webContainerLogs) {
-			window.webContainerLogs = [];
-		}
+  if (typeof window !== "undefined") {
+    if (!window.webContainerLogs) {
+      window.webContainerLogs = [];
+    }
 
-		window.webContainerLogs.push({
-			type,
-			message,
-			data,
-			timestamp: new Date().toISOString(),
-		});
-	}
+    window.webContainerLogs.push({
+      type,
+      message,
+      data,
+      timestamp: new Date().toISOString(),
+    });
+  }
 }

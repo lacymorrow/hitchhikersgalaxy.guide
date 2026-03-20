@@ -7,22 +7,22 @@ import type { NextConfig } from "next";
  * @returns The modified Next.js configuration object with PWA support.
  */
 export default function withMDXConfig(nextConfig: NextConfig): NextConfig {
-	const withMDX = createMDX({
-		extension: /\.mdx?$/,
-		options: {
-			remarkPlugins: [
-				"remark-gfm",
-				[
-					"remark-frontmatter",
-					{
-						type: "yaml",
-						marker: "-",
-					},
-				],
-				["remark-mdx-frontmatter", {}],
-			],
-			rehypePlugins: [],
-		},
-	});
-	return withMDX(nextConfig);
+  const withMDX = createMDX({
+    extension: /\.mdx?$/,
+    options: {
+      remarkPlugins: [
+        "remark-gfm",
+        [
+          "remark-frontmatter",
+          {
+            type: "yaml",
+            marker: "-",
+          },
+        ],
+        ["remark-mdx-frontmatter", {}],
+      ],
+      rehypePlugins: [],
+    },
+  });
+  return withMDX(nextConfig);
 }

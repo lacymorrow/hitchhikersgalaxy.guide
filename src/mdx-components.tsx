@@ -7,7 +7,12 @@ import { CardGroup } from "@/components/modules/mdx/card-group";
 import { SecretGenerator } from "@/components/modules/mdx/secret-generator";
 import { AskAiButtons } from "@/components/primitives/ask-ai-buttons";
 import { Prose } from "@/components/primitives/prose";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import * as AlertComponents from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { BlockQuote } from "@/components/ui/blockquote";
@@ -17,89 +22,98 @@ import { CopyButton } from "@/components/ui/copy-button";
 import { FileTree } from "@/components/ui/file-tree";
 import { HoverInfo } from "@/components/ui/hover-info";
 import { Step, Steps } from "@/components/ui/steps";
-import { Table, TableBody, TableCaption, TableCell, TableFooter, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { siteConfig } from "@/config/site-config";
 
 // Filter the icon libraries to only include valid React components
 function filterForMDXComponents(module: Record<string, any>): MDXComponents {
-	return Object.fromEntries(
-		Object.entries(module).filter(([key, value]) => {
-			// Only include valid React component types
-			return isValidElementType(value);
-		})
-	) as MDXComponents;
+  return Object.fromEntries(
+    Object.entries(module).filter(([key, value]) => {
+      // Only include valid React component types
+      return isValidElementType(value);
+    })
+  ) as MDXComponents;
 }
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
-	<Prose id="sk-mdx-wrapper" className="container mx-auto py-10">
-		{children}
-	</Prose>
+  <Prose id="sk-mdx-wrapper" className="container mx-auto py-10">
+    {children}
+  </Prose>
 );
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
-	// const fumadocsComponents = await import('fumadocs-ui/mdx');
+  // const fumadocsComponents = await import('fumadocs-ui/mdx');
 
-	return {
-		wrapper,
-		// ...filterForMDXComponents(fumadocsComponents),
+  return {
+    wrapper,
+    // ...filterForMDXComponents(fumadocsComponents),
 
-		...filterForMDXComponents(LucideIcons),
-		...filterForMDXComponents(RadixIcons),
+    ...filterForMDXComponents(LucideIcons),
+    ...filterForMDXComponents(RadixIcons),
 
-		...AlertComponents,
+    ...AlertComponents,
 
-		// Tabs
-		Tabs,
-		TabsList,
-		TabsTrigger,
-		TabsContent,
+    // Tabs
+    Tabs,
+    TabsList,
+    TabsTrigger,
+    TabsContent,
 
-		// Code
-		CodeWindow,
-		CopyButton,
+    // Code
+    CodeWindow,
+    CopyButton,
 
-		// Accordion
-		Accordion,
-		AccordionItem,
-		AccordionTrigger,
-		AccordionContent,
+    // Accordion
+    Accordion,
+    AccordionItem,
+    AccordionTrigger,
+    AccordionContent,
 
-		// Badge
-		Badge,
+    // Badge
+    Badge,
 
-		// BlockQuote
-		BlockQuote,
+    // BlockQuote
+    BlockQuote,
 
-		// Collapsible
-		Collapsible,
-		CollapsibleTrigger,
-		CollapsibleContent,
+    // Collapsible
+    Collapsible,
+    CollapsibleTrigger,
+    CollapsibleContent,
 
-		// Hover
-		HoverInfo,
+    // Hover
+    HoverInfo,
 
-		// Steps
-		Steps,
-		Step,
+    // Steps
+    Steps,
+    Step,
 
-		// Table (shadcn)
-		Table,
-		TableHeader,
-		TableBody,
-		TableFooter,
-		TableRow,
-		TableHead,
-		TableCell,
-		TableCaption,
+    // Table (shadcn)
+    Table,
+    TableHeader,
+    TableBody,
+    TableFooter,
+    TableRow,
+    TableHead,
+    TableCell,
+    TableCaption,
 
-		// Existing
-		AskAiButtons,
-		Card,
-		CardGroup,
-		FileTree,
-		SecretGenerator,
-		SiteName: () => <>{siteConfig.title}</>,
-		...components,
-	};
+    // Existing
+    AskAiButtons,
+    Card,
+    CardGroup,
+    FileTree,
+    SecretGenerator,
+    SiteName: () => <>{siteConfig.title}</>,
+    ...components,
+  };
 }

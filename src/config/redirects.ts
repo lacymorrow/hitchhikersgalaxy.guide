@@ -7,16 +7,16 @@ import { routes } from "./routes";
  * pulls in next/navigation — unavailable during config transpilation.
  */
 export interface Redirect {
-	source: Route;
-	destination: Route;
-	permanent: boolean;
+  source: Route;
+  destination: Route;
+  permanent: boolean;
 }
 
 const createRedirects = (sources: Route[], destination: Route, permanent = false): Redirect[] => {
-	if (!sources.length) return [];
-	return sources
-		.filter((source) => source !== destination)
-		.map((source) => ({ source, destination, permanent }));
+  if (!sources.length) return [];
+  return sources
+    .filter((source) => source !== destination)
+    .map((source) => ({ source, destination, permanent }));
 };
 
 /**
@@ -25,15 +25,15 @@ const createRedirects = (sources: Route[], destination: Route, permanent = false
  */
 /* eslint-disable-next-line @typescript-eslint/require-await */
 export const redirects = async (): Promise<Redirect[]> => {
-	return [
-		...createRedirects(["/doc", "/docs", "/documentation"], routes.docs, true),
-		...createRedirects(
-			["/account", "/accounts", "/settings/accounts"],
-			routes.settings.account,
-			true
-		),
-		...createRedirects(["/join", "/signup", "/sign-up"], routes.auth.signUp, true),
-		...createRedirects(["/login", "/log-in", "/signin", "/sign-in"], routes.auth.signIn),
-		...createRedirects(["/logout", "/log-out", "/signout", "/sign-out"], routes.auth.signOut),
-	];
+  return [
+    ...createRedirects(["/doc", "/docs", "/documentation"], routes.docs, true),
+    ...createRedirects(
+      ["/account", "/accounts", "/settings/accounts"],
+      routes.settings.account,
+      true
+    ),
+    ...createRedirects(["/join", "/signup", "/sign-up"], routes.auth.signUp, true),
+    ...createRedirects(["/login", "/log-in", "/signin", "/sign-in"], routes.auth.signIn),
+    ...createRedirects(["/logout", "/log-out", "/signout", "/sign-out"], routes.auth.signOut),
+  ];
 };

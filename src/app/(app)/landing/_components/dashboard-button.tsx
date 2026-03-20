@@ -7,35 +7,35 @@ import { cn } from "@/lib/utils";
 import { auth } from "@/server/auth";
 
 export const DashboardButton = async () => {
-	const session = await auth();
+  const session = await auth();
 
-	if (!session?.user) {
-		return (
-			<Link
-				href={routes.auth.signIn}
-				className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-			>
-				Sign In
-			</Link>
-		);
-	}
+  if (!session?.user) {
+    return (
+      <Link
+        href={routes.auth.signIn}
+        className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+      >
+        Sign In
+      </Link>
+    );
+  }
 
-	const orders = session.user.email ? await getOrdersByEmail(session.user.email) : [];
+  const orders = session.user.email ? await getOrdersByEmail(session.user.email) : [];
 
-	if (orders.length === 0) {
-		return (
-			<Link href={routes.launch} className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
-				Get {siteConfig.title}
-			</Link>
-		);
-	}
+  if (orders.length === 0) {
+    return (
+      <Link href={routes.launch} className={cn(buttonVariants({ variant: "outline", size: "sm" }))}>
+        Get {siteConfig.title}
+      </Link>
+    );
+  }
 
-	return (
-		<Link
-			href={routes.app.dashboard}
-			className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
-		>
-			Dashboard
-		</Link>
-	);
+  return (
+    <Link
+      href={routes.app.dashboard}
+      className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+    >
+      Dashboard
+    </Link>
+  );
 };

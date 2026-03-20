@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { env } from "@/env";
 
 interface BetterAuthProviderProps {
-	children: ReactNode;
+  children: ReactNode;
 }
 
 /**
@@ -17,40 +17,40 @@ interface BetterAuthProviderProps {
  * Only renders when Better Auth is enabled via environment variables.
  */
 export function BetterAuthProvider({ children }: BetterAuthProviderProps) {
-	// For now, just render children - Better Auth client is available globally
-	return <>{children}</>;
+  // For now, just render children - Better Auth client is available globally
+  return <>{children}</>;
 }
 
 /**
  * Hook to check if Better Auth is enabled and available
  */
 export function useBetterAuthEnabled() {
-	return env.NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED;
+  return env.NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED;
 }
 
 /**
  * Hook to get Better Auth providers that are enabled
  */
 export function useBetterAuthProviders() {
-	const isBetterAuthEnabled = useBetterAuthEnabled();
+  const isBetterAuthEnabled = useBetterAuthEnabled();
 
-	if (!isBetterAuthEnabled) {
-		return [];
-	}
+  if (!isBetterAuthEnabled) {
+    return [];
+  }
 
-	const providers = [];
+  const providers = [];
 
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED) {
-		providers.push("google");
-	}
+  if (env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED) {
+    providers.push("google");
+  }
 
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED) {
-		providers.push("github");
-	}
+  if (env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED) {
+    providers.push("github");
+  }
 
-	if (env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED) {
-		providers.push("discord");
-	}
+  if (env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED) {
+    providers.push("discord");
+  }
 
-	return providers;
+  return providers;
 }

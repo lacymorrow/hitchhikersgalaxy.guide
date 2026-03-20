@@ -10,8 +10,8 @@ import { buildTimeFeatures } from "../features-config";
 
 const builderConfig = {};
 export function withBuilderConfig(nextConfig: NextConfig): NextConfig {
-	if (buildTimeFeatures.BUILDER_ENABLED) {
-		return BuilderDevTools(builderConfig)(nextConfig);
-	}
-	return nextConfig;
+  if (buildTimeFeatures.BUILDER_ENABLED) {
+    return BuilderDevTools(builderConfig)(nextConfig);
+  }
+  return nextConfig;
 }

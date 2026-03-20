@@ -43,85 +43,85 @@ import type { UserRole } from "@/types/user";
 const shouldUseDatabaseAdapter = env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED && db && !isGuestOnlyMode;
 
 const {
-	auth: nextAuthAuth,
-	handlers,
-	signIn,
-	signOut,
-	unstable_update: update,
+  auth: nextAuthAuth,
+  handlers,
+  signIn,
+  signOut,
+  unstable_update: update,
 } = buildTimeFeatures.AUTH_ENABLED
-	? NextAuth({
-			...authOptions,
-			secret: env.AUTH_SECRET ?? "supersecretshipkit",
-			// Override session strategy based on adapter usage
-			session: {
-				...authOptions.session,
-				strategy: shouldUseDatabaseAdapter ? "database" : "jwt",
-			},
-			// Use database adapter only when not in guest-only mode and database is available
-			adapter: shouldUseDatabaseAdapter
-				? DrizzleAdapter(db as any, {
-						usersTable: users,
-						accountsTable: accounts,
-						sessionsTable: sessions,
-						verificationTokensTable: verificationTokens,
-					})
-				: undefined,
-			logger: {
-				error: (code: Error, ...message: unknown[]) => {
-					logger.error(code, message);
-				},
-				warn: (code: string, ...message: unknown[]) => {
-					logger.warn(code, message);
-				},
-				debug: (code: string, ...message: unknown[]) => {
-					logger.debug(code, message);
-				},
-			},
-		})
-	: {
-			auth: () => Promise.resolve(null),
-			handlers: {
-				GET: async (request: Request) => {
-					const url = new URL(request.url);
-					const path = url.pathname;
-					if (path.includes("/auth/session")) {
-						// Gracefully indicate no active session when auth is disabled
-						return Response.json(null, { status: 200 });
-					}
-					return Response.json(
-						{
-							ok: false,
-							error: "AUTH_DISABLED",
-							message:
-								"Authentication is not configured. Add database and/or auth provider environment variables to enable sign-in.",
-							docs: "https://errors.authjs.dev#autherror",
-						},
-						{ status: 503 }
-					);
-				},
-				POST: async () =>
-					Response.json(
-						{
-							ok: false,
-							error: "AUTH_DISABLED",
-							message:
-								"Authentication is not configured. Add database and/or auth provider environment variables to enable sign-in.",
-							docs: "https://errors.authjs.dev#autherror",
-						},
-						{ status: 503 }
-					),
-			},
-			signIn: () => Promise.resolve(),
-			signOut: () => Promise.resolve(),
-			unstable_update: () => Promise.resolve({} as any),
-		};
+  ? NextAuth({
+      ...authOptions,
+      secret: env.AUTH_SECRET ?? "supersecretshipkit",
+      // Override session strategy based on adapter usage
+      session: {
+        ...authOptions.session,
+        strategy: shouldUseDatabaseAdapter ? "database" : "jwt",
+      },
+      // Use database adapter only when not in guest-only mode and database is available
+      adapter: shouldUseDatabaseAdapter
+        ? DrizzleAdapter(db as any, {
+            usersTable: users,
+            accountsTable: accounts,
+            sessionsTable: sessions,
+            verificationTokensTable: verificationTokens,
+          })
+        : undefined,
+      logger: {
+        error: (code: Error, ...message: unknown[]) => {
+          logger.error(code, message);
+        },
+        warn: (code: string, ...message: unknown[]) => {
+          logger.warn(code, message);
+        },
+        debug: (code: string, ...message: unknown[]) => {
+          logger.debug(code, message);
+        },
+      },
+    })
+  : {
+      auth: () => Promise.resolve(null),
+      handlers: {
+        GET: async (request: Request) => {
+          const url = new URL(request.url);
+          const path = url.pathname;
+          if (path.includes("/auth/session")) {
+            // Gracefully indicate no active session when auth is disabled
+            return Response.json(null, { status: 200 });
+          }
+          return Response.json(
+            {
+              ok: false,
+              error: "AUTH_DISABLED",
+              message:
+                "Authentication is not configured. Add database and/or auth provider environment variables to enable sign-in.",
+              docs: "https://errors.authjs.dev#autherror",
+            },
+            { status: 503 }
+          );
+        },
+        POST: async () =>
+          Response.json(
+            {
+              ok: false,
+              error: "AUTH_DISABLED",
+              message:
+                "Authentication is not configured. Add database and/or auth provider environment variables to enable sign-in.",
+              docs: "https://errors.authjs.dev#autherror",
+            },
+            { status: 503 }
+          ),
+      },
+      signIn: () => Promise.resolve(),
+      signOut: () => Promise.resolve(),
+      unstable_update: () => Promise.resolve({} as any),
+    };
 interface AuthProps {
-	errorCode?: string;
-	nextUrl?: string;
-	protect?: boolean;
-	redirect?: boolean;
-	redirectTo?: string;
-	role?: UserRole;
+  errorCode?: string;
+  nextUrl?: string;
+  protect?: boolean;
+  redirect?: boolean;
+  redirectTo?: string;
+  role?: UserRole;
 }
 type ProtectedSession = Session & { user: NonNullable<Session["user"]> };
 
@@ -129,60 +129,60 @@ type ProtectedSession = Session & { user: NonNullable<Session["user"]> };
 function authWithOptions(props: { protect: true } & AuthProps): Promise<ProtectedSession>;
 function authWithOptions(props?: AuthProps): Promise<Session | null>;
 async function authWithOptions(props?: AuthProps) {
-	const session = await nextAuthAuth();
-	const { errorCode, redirect: shouldRedirect, nextUrl } = props ?? {};
+  const session = await nextAuthAuth();
+  const { errorCode, redirect: shouldRedirect, nextUrl } = props ?? {};
 
-	// Route protected
-	// Use clear boolean logic without nullish coalescing on non-nullish expressions
-	const protect =
-		(props?.protect ?? false) || props?.redirectTo !== undefined || (shouldRedirect ?? false);
-	const redirectTo = props?.redirectTo ?? routes.auth.signIn;
+  // Route protected
+  // Use clear boolean logic without nullish coalescing on non-nullish expressions
+  const protect =
+    (props?.protect ?? false) || props?.redirectTo !== undefined || (shouldRedirect ?? false);
+  const redirectTo = props?.redirectTo ?? routes.auth.signIn;
 
-	const handleRedirect = (code: string) => {
-		logger.warn(`[authWithOptions] Redirecting to ${redirectTo} with code ${code}`);
+  const handleRedirect = (code: string) => {
+    logger.warn(`[authWithOptions] Redirecting to ${redirectTo} with code ${code}`);
 
-		// Determine if we're in a route handler context
-		const isFromRouteHandler = typeof Response !== "undefined" && typeof window === "undefined";
+    // Determine if we're in a route handler context
+    const isFromRouteHandler = typeof Response !== "undefined" && typeof window === "undefined";
 
-		if (isFromRouteHandler) {
-			return routeRedirect(redirectTo, {
-				code,
-				nextUrl,
-			});
-		}
+    if (isFromRouteHandler) {
+      return routeRedirect(redirectTo, {
+        code,
+        nextUrl,
+      });
+    }
 
-		return redirect(redirectTo, {
-			code,
-			nextUrl,
-		});
-	};
+    return redirect(redirectTo, {
+      code,
+      nextUrl,
+    });
+  };
 
-	// TODO: Handle refresh token error
-	// if (session?.error === "RefreshTokenError") {
-	//   return handleRedirect(STATUS_CODES.AUTH_REFRESH.code);
-	// }
+  // TODO: Handle refresh token error
+  // if (session?.error === "RefreshTokenError") {
+  //   return handleRedirect(STATUS_CODES.AUTH_REFRESH.code);
+  // }
 
-	if (protect && !session?.user?.id) {
-		return handleRedirect(errorCode ?? STATUS_CODES.AUTH.code);
-	}
+  if (protect && !session?.user?.id) {
+    return handleRedirect(errorCode ?? STATUS_CODES.AUTH.code);
+  }
 
-	// TODO: RBAC
-	// if (role && session?.user?.role !== role) {
-	//   return handleRedirect(errorCode ?? STATUS_CODES.AUTH_ROLE.code); // TODO: We shouldn't sign them out
-	// }
+  // TODO: RBAC
+  // if (role && session?.user?.role !== role) {
+  //   return handleRedirect(errorCode ?? STATUS_CODES.AUTH_ROLE.code); // TODO: We shouldn't sign them out
+  // }
 
-	return session;
+  return session;
 }
 
 const cachedAuth = cache(authWithOptions);
 
 export {
-	// authWithOptions as auth,
-	cachedAuth as auth,
-	handlers,
-	signIn,
-	signOut,
-	update,
+  // authWithOptions as auth,
+  cachedAuth as auth,
+  handlers,
+  signIn,
+  signOut,
+  update,
 };
 
 // export {

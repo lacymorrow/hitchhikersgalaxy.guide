@@ -5,12 +5,12 @@ import { resend } from "@/lib/resend";
 import { sendFeedbackEmail } from "@/server/services/resend-service";
 
 export const sendFeedback = async (content: string): Promise<void> => {
-	try {
-		await sendFeedbackEmail(content);
-	} catch (error) {
-		console.error("Error in sendFeedback action:", error);
-		throw error;
-	}
+  try {
+    await sendFeedbackEmail(content);
+  } catch (error) {
+    console.error("Error in sendFeedback action:", error);
+    throw error;
+  }
 };
 
 /**
@@ -19,27 +19,27 @@ export const sendFeedback = async (content: string): Promise<void> => {
  * @returns A promise that resolves when the contact is added.
  */
 export const addAudienceUser = async (email: string) => {
-	try {
-		if (!env.RESEND_AUDIENCE_ID) {
-			throw new Error("Missing Resend API key or audience ID");
-		}
+  try {
+    if (!env.RESEND_AUDIENCE_ID) {
+      throw new Error("Missing Resend API key or audience ID");
+    }
 
-		if (!resend) {
-			throw new Error("Resend client not initialized");
-		}
+    if (!resend) {
+      throw new Error("Resend client not initialized");
+    }
 
-		const result = await resend.contacts.create({
-			email,
-			audienceId: env.RESEND_AUDIENCE_ID,
-		});
+    const result = await resend.contacts.create({
+      email,
+      audienceId: env.RESEND_AUDIENCE_ID,
+    });
 
-		return { success: true };
-	} catch (error: unknown) {
-		if (error instanceof Error) {
-			console.error("Error adding contact:", error.message);
-			return { success: false, error: error.message };
-		}
-		console.error("Error adding contact:", error);
-		return { success: false, error: "An unknown error occurred" };
-	}
+    return { success: true };
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error adding contact:", error.message);
+      return { success: false, error: error.message };
+    }
+    console.error("Error adding contact:", error);
+    return { success: false, error: "An unknown error occurred" };
+  }
 };

@@ -3,11 +3,11 @@ import { adminConfig } from "@/config/admin-config";
 import { env } from "@/env";
 
 interface MailtoOptions {
-	to?: string | string[];
-	subject?: string;
-	body?: string;
-	cc?: string | string[];
-	bcc?: string | string[];
+  to?: string | string[];
+  subject?: string;
+  body?: string;
+  cc?: string | string[];
+  bcc?: string | string[];
 }
 
 /**
@@ -16,41 +16,41 @@ interface MailtoOptions {
  * @returns Formatted mailto URL
  */
 export function generateMailtoLink(options: MailtoOptions): string {
-	const params = new URLSearchParams();
+  const params = new URLSearchParams();
 
-	// Handle recipients (to)
-	if (options.to) {
-		const recipients = Array.isArray(options.to) ? options.to.join(",") : options.to;
-		params.set("to", recipients);
-	}
+  // Handle recipients (to)
+  if (options.to) {
+    const recipients = Array.isArray(options.to) ? options.to.join(",") : options.to;
+    params.set("to", recipients);
+  }
 
-	// Handle subject
-	if (options.subject) {
-		params.set("subject", options.subject);
-	}
+  // Handle subject
+  if (options.subject) {
+    params.set("subject", options.subject);
+  }
 
-	// Handle body
-	if (options.body) {
-		params.set("body", options.body);
-	}
+  // Handle body
+  if (options.body) {
+    params.set("body", options.body);
+  }
 
-	// Handle CC
-	if (options.cc) {
-		const ccRecipients = Array.isArray(options.cc) ? options.cc.join(",") : options.cc;
-		params.set("cc", ccRecipients);
-	}
+  // Handle CC
+  if (options.cc) {
+    const ccRecipients = Array.isArray(options.cc) ? options.cc.join(",") : options.cc;
+    params.set("cc", ccRecipients);
+  }
 
-	// Handle BCC
-	if (options.bcc) {
-		const bccRecipients = Array.isArray(options.bcc) ? options.bcc.join(",") : options.bcc;
-		params.set("bcc", bccRecipients);
-	}
+  // Handle BCC
+  if (options.bcc) {
+    const bccRecipients = Array.isArray(options.bcc) ? options.bcc.join(",") : options.bcc;
+    params.set("bcc", bccRecipients);
+  }
 
-	// Build the mailto URL
-	const baseMailto = "mailto:";
-	const queryString = params.toString();
+  // Build the mailto URL
+  const baseMailto = "mailto:";
+  const queryString = params.toString();
 
-	return queryString ? `${baseMailto}?${queryString}` : baseMailto;
+  return queryString ? `${baseMailto}?${queryString}` : baseMailto;
 }
 
 /**
@@ -60,15 +60,15 @@ export function generateMailtoLink(options: MailtoOptions): string {
  * @returns Formatted mailto URL for feedback
  */
 export function generateFeedbackMailto(content: string, source: string): string {
-	const adminEmails = adminConfig.emails;
-	const subject = `Feedback from ${source} - Shipkit`;
+  const adminEmails = adminConfig.emails;
+  const subject = `Feedback from ${source} - Shipkit`;
 
-	return generateMailtoLink({
-		to: adminEmails[0], // Use first admin email as primary recipient
-		cc: adminEmails.length > 1 ? adminEmails.slice(1) : undefined,
-		subject,
-		body: content,
-	});
+  return generateMailtoLink({
+    to: adminEmails[0], // Use first admin email as primary recipient
+    cc: adminEmails.length > 1 ? adminEmails.slice(1) : undefined,
+    subject,
+    body: content,
+  });
 }
 
 /**
@@ -77,5 +77,5 @@ export function generateFeedbackMailto(content: string, source: string): string 
  * @returns Boolean indicating if email service is available
  */
 export function isEmailServiceAvailable(): boolean {
-	return !!env.RESEND_API_KEY;
+  return !!env.RESEND_API_KEY;
 }

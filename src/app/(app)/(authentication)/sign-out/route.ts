@@ -13,41 +13,41 @@ import { routeRedirect } from "@/lib/utils/redirect";
 import { signOut } from "@/server/auth";
 
 const querySchema = z.object({
-	[SEARCH_PARAM_KEYS.statusCode]: z
-		.enum(
-			Object.keys(STATUS_CODES) as [keyof typeof STATUS_CODES, ...(keyof typeof STATUS_CODES)[]]
-		)
-		.optional(),
-	[SEARCH_PARAM_KEYS.nextUrl]: z.string().optional(),
+  [SEARCH_PARAM_KEYS.statusCode]: z
+    .enum(
+      Object.keys(STATUS_CODES) as [keyof typeof STATUS_CODES, ...(keyof typeof STATUS_CODES)[]]
+    )
+    .optional(),
+  [SEARCH_PARAM_KEYS.nextUrl]: z.string().optional(),
 });
 
 export const GET = async (request: NextRequest): Promise<NextResponse> => {
-	const { searchParams } = new URL(request.url);
+  const { searchParams } = new URL(request.url);
 
-	// Parse any parameters from the URL
-	const result = querySchema.safeParse({
-		[SEARCH_PARAM_KEYS.statusCode]: searchParams.get(SEARCH_PARAM_KEYS.statusCode),
-		[SEARCH_PARAM_KEYS.nextUrl]: searchParams.get(SEARCH_PARAM_KEYS.nextUrl),
-	});
+  // Parse any parameters from the URL
+  const result = querySchema.safeParse({
+    [SEARCH_PARAM_KEYS.statusCode]: searchParams.get(SEARCH_PARAM_KEYS.statusCode),
+    [SEARCH_PARAM_KEYS.nextUrl]: searchParams.get(SEARCH_PARAM_KEYS.nextUrl),
+  });
 
-	await signOut({ redirect: false }).catch((error: Error) => {
-		logger.error(`sign-out/route.ts - Sign out error: ${error.message}`);
-	});
+  await signOut({ redirect: false }).catch((error: Error) => {
+    logger.error(`sign-out/route.ts - Sign out error: ${error.message}`);
+  });
 
-	// If the parameters are not valid, redirect to the sign in page
-	if (!result.success) {
-		return routeRedirect(routes.auth.signIn, {
-			code: STATUS_CODES.AUTH_REFRESH.code,
-			request,
-		});
-	}
+  // If the parameters are not valid, redirect to the sign in page
+  if (!result.success) {
+    return routeRedirect(routes.auth.signIn, {
+      code: STATUS_CODES.AUTH_REFRESH.code,
+      request,
+    });
+  }
 
-	const { code = STATUS_CODES.AUTH_REFRESH.code, nextUrl } = result.data;
+  const { code = STATUS_CODES.AUTH_REFRESH.code, nextUrl } = result.data;
 
-	logger.info(`sign-out/route.ts - Signing out with code: ${code}`);
+  logger.info(`sign-out/route.ts - Signing out with code: ${code}`);
 
-	return routeRedirect(nextUrl ?? routes.auth.signIn, {
-		code,
-		request,
-	});
+  return routeRedirect(nextUrl ?? routes.auth.signIn, {
+    code,
+    request,
+  });
 };

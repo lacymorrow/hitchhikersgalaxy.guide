@@ -10,33 +10,33 @@ import { accounts } from "@/server/db/schema";
  * @returns True if the user has connected their Vercel account, false otherwise
  */
 export async function checkVercelConnection(userId: string): Promise<boolean> {
-	logger.info("Checking Vercel connection", { userId });
+  logger.info("Checking Vercel connection", { userId });
 
-	if (!userId) {
-		logger.warn("No user ID provided for Vercel connection check");
-		return false;
-	}
+  if (!userId) {
+    logger.warn("No user ID provided for Vercel connection check");
+    return false;
+  }
 
-	try {
-		const vercelAccount = await db?.query.accounts.findFirst({
-			where: and(eq(accounts.userId, userId), eq(accounts.provider, "vercel")),
-		});
+  try {
+    const vercelAccount = await db?.query.accounts.findFirst({
+      where: and(eq(accounts.userId, userId), eq(accounts.provider, "vercel")),
+    });
 
-		const hasVercelConnection = !!vercelAccount;
+    const hasVercelConnection = !!vercelAccount;
 
-		logger.info("Vercel connection status", {
-			userId,
-			hasVercelConnection,
-		});
+    logger.info("Vercel connection status", {
+      userId,
+      hasVercelConnection,
+    });
 
-		return hasVercelConnection;
-	} catch (error) {
-		logger.error("Error checking Vercel connection", {
-			userId,
-			error: error instanceof Error ? error.message : "Unknown error",
-		});
-		return false;
-	}
+    return hasVercelConnection;
+  } catch (error) {
+    logger.error("Error checking Vercel connection", {
+      userId,
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+    return false;
+  }
 }
 
 /**
@@ -46,32 +46,32 @@ export async function checkVercelConnection(userId: string): Promise<boolean> {
  * @returns The Vercel account for the user, or null if not connected
  */
 export async function getVercelAccount(userId: string) {
-	logger.info("Getting Vercel account", { userId });
+  logger.info("Getting Vercel account", { userId });
 
-	if (!userId) {
-		logger.warn("No user ID provided for Vercel account");
-		return null;
-	}
+  if (!userId) {
+    logger.warn("No user ID provided for Vercel account");
+    return null;
+  }
 
-	try {
-		const vercelAccount = await db?.query.accounts.findFirst({
-			where: and(eq(accounts.userId, userId), eq(accounts.provider, "vercel")),
-		});
+  try {
+    const vercelAccount = await db?.query.accounts.findFirst({
+      where: and(eq(accounts.userId, userId), eq(accounts.provider, "vercel")),
+    });
 
-		if (!vercelAccount) {
-			logger.info("No Vercel account found for user", { userId });
-			return null;
-		}
+    if (!vercelAccount) {
+      logger.info("No Vercel account found for user", { userId });
+      return null;
+    }
 
-		logger.info("Vercel account found for user", { userId });
-		return vercelAccount;
-	} catch (error) {
-		logger.error("Error getting Vercel account", {
-			userId,
-			error: error instanceof Error ? error.message : "Unknown error",
-		});
-		return null;
-	}
+    logger.info("Vercel account found for user", { userId });
+    return vercelAccount;
+  } catch (error) {
+    logger.error("Error getting Vercel account", {
+      userId,
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+    return null;
+  }
 }
 
 /**
@@ -81,41 +81,41 @@ export async function getVercelAccount(userId: string) {
  * @returns The Vercel access token for the user, or null if not connected
  */
 export async function getVercelAccessToken(userId: string): Promise<string | null> {
-	logger.info("Getting Vercel access token", { userId });
+  logger.info("Getting Vercel access token", { userId });
 
-	if (!userId) {
-		logger.warn("No user ID provided for Vercel access token");
-		return null;
-	}
+  if (!userId) {
+    logger.warn("No user ID provided for Vercel access token");
+    return null;
+  }
 
-	try {
-		const vercelAccount = await getVercelAccount(userId);
+  try {
+    const vercelAccount = await getVercelAccount(userId);
 
-		if (!vercelAccount?.access_token) {
-			logger.info("No Vercel access token found for user", { userId });
-			return null;
-		}
+    if (!vercelAccount?.access_token) {
+      logger.info("No Vercel access token found for user", { userId });
+      return null;
+    }
 
-		// Check if token is expired
-		if (vercelAccount.expires_at) {
-			const now = Math.floor(Date.now() / 1000);
-			if (vercelAccount.expires_at < now) {
-				logger.warn("Vercel access token has expired", {
-					userId,
-					expiresAt: vercelAccount.expires_at,
-					now,
-				});
-				return null;
-			}
-		}
+    // Check if token is expired
+    if (vercelAccount.expires_at) {
+      const now = Math.floor(Date.now() / 1000);
+      if (vercelAccount.expires_at < now) {
+        logger.warn("Vercel access token has expired", {
+          userId,
+          expiresAt: vercelAccount.expires_at,
+          now,
+        });
+        return null;
+      }
+    }
 
-		logger.info("Vercel access token retrieved for user", { userId });
-		return vercelAccount.access_token;
-	} catch (error) {
-		logger.error("Error getting Vercel access token", {
-			userId,
-			error: error instanceof Error ? error.message : "Unknown error",
-		});
-		return null;
-	}
+    logger.info("Vercel access token retrieved for user", { userId });
+    return vercelAccount.access_token;
+  } catch (error) {
+    logger.error("Error getting Vercel access token", {
+      userId,
+      error: error instanceof Error ? error.message : "Unknown error",
+    });
+    return null;
+  }
 }

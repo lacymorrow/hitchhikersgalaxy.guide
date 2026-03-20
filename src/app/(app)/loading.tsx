@@ -5,11 +5,11 @@
 import { Loader } from "@/components/primitives/loader";
 
 export default function LoadingComponent() {
-	return (
-		<Loader
-			fullPage // Makes the loading spinner take up the full viewport
-			backdrop // Adds a semi-transparent background overlay
-			fade // Enables a smooth fade in/out animation
-		/>
-	);
+  return (
+    <Loader
+      fullPage // Makes the loading spinner take up the full viewport
+      backdrop // Adds a semi-transparent background overlay
+      fade // Enables a smooth fade in/out animation
+    />
+  );
 }

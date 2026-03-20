@@ -4,8 +4,8 @@ import { env } from "@/env";
 const TURNSTILE_VERIFY_URL = "https://challenges.cloudflare.com/turnstile/v0/siteverify";
 
 interface TurnstileResponse {
-	success: boolean;
-	"error-codes"?: string[];
+  success: boolean;
+  "error-codes"?: string[];
 }
 
 /**
@@ -14,7 +14,7 @@ interface TurnstileResponse {
  * Call this from Server Components only.
  */
 export function isTurnstileConfigured(): boolean {
-	return buildTimeFeatures.TURNSTILE_ENABLED === true;
+  return buildTimeFeatures.TURNSTILE_ENABLED === true;
 }
 
 /**
@@ -23,41 +23,41 @@ export function isTurnstileConfigured(): boolean {
  * @returns Promise<boolean> - Whether the token is valid
  */
 export async function verifyTurnstileToken(token: string): Promise<boolean> {
-	const secretKey = env.TURNSTILE_SECRET_KEY;
+  const secretKey = env.TURNSTILE_SECRET_KEY;
 
-	if (!secretKey) {
-		console.error("Turnstile secret key not configured");
-		return false;
-	}
+  if (!secretKey) {
+    console.error("Turnstile secret key not configured");
+    return false;
+  }
 
-	try {
-		const response = await fetch(TURNSTILE_VERIFY_URL, {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/x-www-form-urlencoded",
-			},
-			body: new URLSearchParams({
-				secret: secretKey,
-				response: token,
-			}),
-		});
+  try {
+    const response = await fetch(TURNSTILE_VERIFY_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: new URLSearchParams({
+        secret: secretKey,
+        response: token,
+      }),
+    });
 
-		if (!response.ok) {
-			console.error(
-				`Turnstile verification request failed: ${response.status} ${response.statusText}`
-			);
-			return false;
-		}
+    if (!response.ok) {
+      console.error(
+        `Turnstile verification request failed: ${response.status} ${response.statusText}`
+      );
+      return false;
+    }
 
-		const data = (await response.json()) as TurnstileResponse;
+    const data = (await response.json()) as TurnstileResponse;
 
-		if (!data.success) {
-			console.warn("Turnstile verification failed with error codes:", data["error-codes"]);
-		}
+    if (!data.success) {
+      console.warn("Turnstile verification failed with error codes:", data["error-codes"]);
+    }
 
-		return data.success === true;
-	} catch (error) {
-		console.error("Error verifying Turnstile token:", error);
-		return false;
-	}
+    return data.success === true;
+  } catch (error) {
+    console.error("Error verifying Turnstile token:", error);
+    return false;
+  }
 }

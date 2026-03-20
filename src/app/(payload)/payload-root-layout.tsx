@@ -16,18 +16,18 @@ import type React from "react";
 import { importMap } from "./cms/importMap.js";
 
 const serverFunction: ServerFunctionClient = async (args) => {
-	"use server";
-	return handleServerFunctions({
-		...args,
-		config,
-		importMap,
-	});
+  "use server";
+  return handleServerFunctions({
+    ...args,
+    config,
+    importMap,
+  });
 };
 
 export default function PayloadRootLayout({ children }: { children: React.ReactNode }) {
-	return (
-		<RootLayout config={config} importMap={importMap} serverFunction={serverFunction}>
-			{children}
-		</RootLayout>
-	);
+  return (
+    <RootLayout config={config} importMap={importMap} serverFunction={serverFunction}>
+      {children}
+    </RootLayout>
+  );
 }

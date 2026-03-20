@@ -4,63 +4,63 @@ import { useEffect, useRef } from "react";
 
 const TYPES = ["circle", "semi-circle", "square", "triangle", "triangle-2", "rectangle"];
 const COLORS = [
-	"#836ee5",
-	"#fe94b4",
-	"#49d2f5",
-	"#ff5354",
-	"#00b1b4",
-	"#ffe465",
-	"#0071ff",
-	"#03274b",
+  "#836ee5",
+  "#fe94b4",
+  "#49d2f5",
+  "#ff5354",
+  "#00b1b4",
+  "#ffe465",
+  "#0071ff",
+  "#03274b",
 ];
 
 export const LoaderBouncingShapes = () => {
-	const shapesRef = useRef<(HTMLDivElement | null)[]>([]);
+  const shapesRef = useRef<(HTMLDivElement | null)[]>([]);
 
-	useEffect(() => {
-		const shapes = shapesRef.current.filter(Boolean);
+  useEffect(() => {
+    const shapes = shapesRef.current.filter(Boolean);
 
-		shapes.forEach((shape, index) => {
-			if (!shape) return;
+    shapes.forEach((shape, index) => {
+      if (!shape) return;
 
-			const interval = setInterval(() => {
-				const classList = shape.classList;
-				shape.className = "shape";
+      const interval = setInterval(() => {
+        const classList = shape.classList;
+        shape.className = "shape";
 
-				// Assign styles
-				const randomType = TYPES[Math.floor(Math.random() * TYPES.length)];
-				if (randomType) classList.add(randomType);
-				const offset = Math.random() * 4 - 2;
-				const opp = offset >= 0 ? "+ " : "- ";
-				const styles = [
-					["left", `calc(50% ${opp}${Math.abs(offset)}vw)`],
-					["--bounce-variance", `${Math.random() * 20 - 10}vh`],
-					["--base_scale", `${Math.random() * 6 + 4}vh`],
-					["--rotation", `${Math.random() * 180 - 90}deg`],
-					["--color", COLORS[Math.floor(Math.random() * COLORS.length)] || ""],
-				];
+        // Assign styles
+        const randomType = TYPES[Math.floor(Math.random() * TYPES.length)];
+        if (randomType) classList.add(randomType);
+        const offset = Math.random() * 4 - 2;
+        const opp = offset >= 0 ? "+ " : "- ";
+        const styles = [
+          ["left", `calc(50% ${opp}${Math.abs(offset)}vw)`],
+          ["--bounce-variance", `${Math.random() * 20 - 10}vh`],
+          ["--base_scale", `${Math.random() * 6 + 4}vh`],
+          ["--rotation", `${Math.random() * 180 - 90}deg`],
+          ["--color", COLORS[Math.floor(Math.random() * COLORS.length)] || ""],
+        ];
 
-				styles.forEach(([property, value]) => {
-					if (value && property) shape.style.setProperty(property, value);
-				});
+        styles.forEach(([property, value]) => {
+          if (value && property) shape.style.setProperty(property, value);
+        });
 
-				// Animate
-				if (!classList.contains("bounce-up")) {
-					classList.add("bounce-up");
-				}
-				classList.replace("bounce-down", "bounce-up");
-				setTimeout(() => {
-					classList.replace("bounce-up", "bounce-down");
-				}, 400);
-			}, 740);
+        // Animate
+        if (!classList.contains("bounce-up")) {
+          classList.add("bounce-up");
+        }
+        classList.replace("bounce-down", "bounce-up");
+        setTimeout(() => {
+          classList.replace("bounce-up", "bounce-down");
+        }, 400);
+      }, 740);
 
-			return () => clearInterval(interval);
-		});
-	}, []);
+      return () => clearInterval(interval);
+    });
+  }, []);
 
-	return (
-		<>
-			<style jsx global>{`
+  return (
+    <>
+      <style jsx global>{`
 				:root {
 					--base_scale: 5vh;
 					--floor: 15vh;
@@ -139,19 +139,19 @@ export const LoaderBouncingShapes = () => {
 					transform: translateY(0) rotate(var(--rotation));
 				}
 			`}</style>
-			<div className="loader">
-				{[...Array(3)].map((_, i) => (
-					<div
-						key={i}
-						ref={(el) => {
-							if (el) {
-								shapesRef.current[i] = el;
-							}
-						}}
-						className="shape"
-					/>
-				))}
-			</div>
-		</>
-	);
+      <div className="loader">
+        {[...Array(3)].map((_, i) => (
+          <div
+            key={i}
+            ref={(el) => {
+              if (el) {
+                shapesRef.current[i] = el;
+              }
+            }}
+            className="shape"
+          />
+        ))}
+      </div>
+    </>
+  );
 };

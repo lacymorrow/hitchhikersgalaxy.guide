@@ -2,7 +2,7 @@
  * Check if the value is an object.
  */
 function isObject(value: unknown): value is Record<string, unknown> {
-	return typeof value === "object" && value !== null;
+  return typeof value === "object" && value !== null;
 }
 
 /**
@@ -10,13 +10,13 @@ function isObject(value: unknown): value is Record<string, unknown> {
  * and that the 'meta' property has the correct shape.
  */
 export interface LemonSqueezyWebhookMeta {
-	meta: {
-		test_mode: boolean;
-	};
+  meta: {
+    test_mode: boolean;
+  };
 }
 
 export function webhookHasMeta(data: any): data is LemonSqueezyWebhookMeta {
-	return data && typeof data === "object" && "meta" in data;
+  return data && typeof data === "object" && "meta" in data;
 }
 
 /**
@@ -35,18 +35,18 @@ export function webhookHasMeta(data: any): data is LemonSqueezyWebhookMeta {
  * This is what customers actually purchase
  */
 export interface LemonSqueezyVariant {
-	id: string; // Variant ID (UUID) - used for checkout
-	attributes: {
-		name: string;
-		description: string;
-		price_formatted: string;
-		price: number; // in cents
-		is_subscription: boolean;
-		interval?: string; // for subscriptions
-		interval_count?: number;
-		created_at: string;
-		updated_at: string;
-	};
+  id: string; // Variant ID (UUID) - used for checkout
+  attributes: {
+    name: string;
+    description: string;
+    price_formatted: string;
+    price: number; // in cents
+    is_subscription: boolean;
+    interval?: string; // for subscriptions
+    interval_count?: number;
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 /**
@@ -54,15 +54,15 @@ export interface LemonSqueezyVariant {
  * Products contain multiple variants
  */
 export interface LemonSqueezyProduct {
-	id: string; // Product ID (UUID) - NOT used for checkout
-	attributes: {
-		name: string;
-		description: string;
-		price_formatted?: string; // May not be present on products
-		buy_now_url?: string; // Generic buy URL - prefer variant-specific URLs
-		created_at: string;
-		updated_at: string;
-	};
+  id: string; // Product ID (UUID) - NOT used for checkout
+  attributes: {
+    name: string;
+    description: string;
+    price_formatted?: string; // May not be present on products
+    buy_now_url?: string; // Generic buy URL - prefer variant-specific URLs
+    created_at: string;
+    updated_at: string;
+  };
 }
 
 /**
@@ -70,93 +70,93 @@ export interface LemonSqueezyProduct {
  * This combines variant data with our site configuration
  */
 export interface ConfiguredLemonSqueezyProduct {
-	id: string; // Variant ID (for checkout)
-	productKey?: string; // Key from site config (e.g., 'shipkit', 'bones')
-	attributes: {
-		name: string;
-		description: string;
-		price_formatted: string;
-		buy_now_url: string; // Generated from site config with correct variant ID
-		is_subscription?: boolean;
-		interval?: string;
-		interval_count?: number;
-	};
+  id: string; // Variant ID (for checkout)
+  productKey?: string; // Key from site config (e.g., 'shipkit', 'bones')
+  attributes: {
+    name: string;
+    description: string;
+    price_formatted: string;
+    buy_now_url: string; // Generated from site config with correct variant ID
+    is_subscription?: boolean;
+    interval?: string;
+    interval_count?: number;
+  };
 }
 
 /**
  * Type for Lemon Squeezy order attributes
  */
 export interface LemonSqueezyOrderAttributes {
-	store_id: number;
-	identifier: string;
-	order_number: number;
-	user_name: string | null;
-	user_email: string | null;
-	currency: string;
-	currency_rate: string;
-	subtotal: number;
-	discount_total: number;
-	tax: number;
-	total: number;
-	subtotal_usd: number;
-	discount_total_usd: number;
-	tax_usd: number;
-	total_usd: number;
-	tax_name: string | null;
-	tax_rate: string | null;
-	status: string;
-	status_formatted: string;
-	refunded: boolean;
-	refunded_at: string | null;
-	subtotal_formatted: string;
-	discount_total_formatted: string;
-	tax_formatted: string;
-	total_formatted: string;
-	first_order_item: {
-		id: number;
-		order_id: number;
-		product_id: number; // Numeric product ID
-		variant_id: number; // Numeric variant ID
-		product_name: string;
-		variant_name: string;
-		price: number;
-		created_at: string;
-		updated_at: string;
-	};
-	urls: {
-		receipt: string;
-	};
-	created_at: string;
-	updated_at: string;
-	test_mode: boolean;
-	custom_data?: Record<string, unknown>;
+  store_id: number;
+  identifier: string;
+  order_number: number;
+  user_name: string | null;
+  user_email: string | null;
+  currency: string;
+  currency_rate: string;
+  subtotal: number;
+  discount_total: number;
+  tax: number;
+  total: number;
+  subtotal_usd: number;
+  discount_total_usd: number;
+  tax_usd: number;
+  total_usd: number;
+  tax_name: string | null;
+  tax_rate: string | null;
+  status: string;
+  status_formatted: string;
+  refunded: boolean;
+  refunded_at: string | null;
+  subtotal_formatted: string;
+  discount_total_formatted: string;
+  tax_formatted: string;
+  total_formatted: string;
+  first_order_item: {
+    id: number;
+    order_id: number;
+    product_id: number; // Numeric product ID
+    variant_id: number; // Numeric variant ID
+    product_name: string;
+    variant_name: string;
+    price: number;
+    created_at: string;
+    updated_at: string;
+  };
+  urls: {
+    receipt: string;
+  };
+  created_at: string;
+  updated_at: string;
+  test_mode: boolean;
+  custom_data?: Record<string, unknown>;
 }
 
 /**
  * Webhook payload structure
  */
 export interface LemonSqueezyWebhookPayload {
-	meta: {
-		event_name: string;
-		custom_data?: Record<string, unknown>;
-		test_mode: boolean;
-	};
-	data: {
-		type: string;
-		id: string;
-		attributes: LemonSqueezyOrderAttributes;
-	};
+  meta: {
+    event_name: string;
+    custom_data?: Record<string, unknown>;
+    test_mode: boolean;
+  };
+  data: {
+    type: string;
+    id: string;
+    attributes: LemonSqueezyOrderAttributes;
+  };
 }
 
 /**
  * Payment verification result
  */
 export interface PaymentVerificationResult {
-	success: boolean;
-	purchased: boolean;
-	message?: string;
-	variantId?: string;
-	productKey?: string;
+  success: boolean;
+  purchased: boolean;
+  message?: string;
+  variantId?: string;
+  productKey?: string;
 }
 
 /**
@@ -173,53 +173,53 @@ export type VariantId = string;
  * User purchase summary
  */
 export interface UserPurchaseSummary {
-	userId: string;
-	hasPaidAnyProduct: boolean;
-	purchasedProducts: ProductKey[];
-	purchasedVariants: VariantId[];
-	totalPurchases: number;
-	lastPurchaseDate?: Date;
+  userId: string;
+  hasPaidAnyProduct: boolean;
+  purchasedProducts: ProductKey[];
+  purchasedVariants: VariantId[];
+  totalPurchases: number;
+  lastPurchaseDate?: Date;
 }
 
 /**
  * Configuration for Lemon Squeezy integration
  */
 export interface LemonSqueezyConfig {
-	apiKey: string;
-	storeId: string;
-	webhookSecret: string;
-	enabled: boolean;
-	testMode?: boolean;
+  apiKey: string;
+  storeId: string;
+  webhookSecret: string;
+  enabled: boolean;
+  testMode?: boolean;
 }
 
 /**
  * Checkout options for creating payment links
  */
 export interface LemonSqueezyCheckoutOptions {
-	variantId: VariantId; // Required: Variant to purchase
-	email?: string; // Pre-fill customer email
-	userId?: string; // Track user for webhook processing
-	customData?: Record<string, unknown>; // Additional data for webhook
-	successUrl?: string; // Redirect after successful payment
-	cancelUrl?: string; // Redirect after cancelled payment
-	dark?: boolean; // Use dark theme
+  variantId: VariantId; // Required: Variant to purchase
+  email?: string; // Pre-fill customer email
+  userId?: string; // Track user for webhook processing
+  customData?: Record<string, unknown>; // Additional data for webhook
+  successUrl?: string; // Redirect after successful payment
+  cancelUrl?: string; // Redirect after cancelled payment
+  dark?: boolean; // Use dark theme
 }
 
 /**
  * Payment metadata stored in database
  */
 export interface LemonSqueezyPaymentMetadata {
-	order_identifier: string;
-	order_number: number;
-	customer_id?: number;
-	product_id: number; // Numeric product ID from API
-	variant_id: number; // Numeric variant ID from API
-	product_name: string;
-	variant_name: string;
-	currency: string;
-	test_mode: boolean;
-	custom_data?: Record<string, unknown>;
-	webhook_event: string;
+  order_identifier: string;
+  order_number: number;
+  customer_id?: number;
+  product_id: number; // Numeric product ID from API
+  variant_id: number; // Numeric variant ID from API
+  product_name: string;
+  variant_name: string;
+  currency: string;
+  test_mode: boolean;
+  custom_data?: Record<string, unknown>;
+  webhook_event: string;
 }
 
 /**
@@ -229,16 +229,16 @@ export interface LemonSqueezyPaymentMetadata {
  * @returns True if the object has a 'data' property.
  */
 export function webhookHasData(obj: unknown): obj is {
-	data: {
-		attributes: LemonSqueezyOrderAttributes & {
-			first_subscription_item: {
-				id: number;
-				price_id: number;
-				is_usage_based: boolean;
-			};
-		};
-		id: string;
-	};
+  data: {
+    attributes: LemonSqueezyOrderAttributes & {
+      first_subscription_item: {
+        id: number;
+        price_id: number;
+        is_usage_based: boolean;
+      };
+    };
+    id: string;
+  };
 } {
-	return isObject(obj) && "data" in obj && isObject(obj.data) && "attributes" in obj.data;
+  return isObject(obj) && "data" in obj && isObject(obj.data) && "attributes" in obj.data;
 }

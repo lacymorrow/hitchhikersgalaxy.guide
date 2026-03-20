@@ -19,20 +19,20 @@ import { redirect } from "@/lib/utils/redirect";
  */
 
 export const useRedirectAfterSignIn = (error?: Error) => {
-	const router = useRouter();
-	const pathname = usePathname();
+  const router = useRouter();
+  const pathname = usePathname();
 
-	useEffect(() => {
-		const redirectToSignIn = () => {
-			redirect(routes.auth.signIn, {
-				code: STATUS_CODES.AUTH.code,
-				nextUrl: pathname ?? undefined,
-			});
-		};
+  useEffect(() => {
+    const redirectToSignIn = () => {
+      redirect(routes.auth.signIn, {
+        code: STATUS_CODES.AUTH.code,
+        nextUrl: pathname ?? undefined,
+      });
+    };
 
-		if (error instanceof AuthenticationError) {
-			logger.info("ErrorBoundary: Authentication error, redirecting to sign in");
-			redirectToSignIn();
-		}
-	}, [error, router, pathname]);
+    if (error instanceof AuthenticationError) {
+      logger.info("ErrorBoundary: Authentication error, redirecting to sign in");
+      redirectToSignIn();
+    }
+  }, [error, router, pathname]);
 };

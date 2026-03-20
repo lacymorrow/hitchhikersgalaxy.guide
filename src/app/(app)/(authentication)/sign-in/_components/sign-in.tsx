@@ -6,30 +6,30 @@ import { env } from "@/env";
 // Compute guest-only on server component via build flags
 
 export const SignIn = () => {
-	// Special handling for guest-only mode
-	const isGuestOnlyMode =
-		!!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
-	if (isGuestOnlyMode) {
-		return (
-			<AuthForm
-				mode="sign-in"
-				withFooter={false}
-				title="Welcome"
-				description="Enter your name to get started"
-			>
-				<GuestForm />
-			</AuthForm>
-		);
-	}
+  // Special handling for guest-only mode
+  const isGuestOnlyMode =
+    !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
+  if (isGuestOnlyMode) {
+    return (
+      <AuthForm
+        mode="sign-in"
+        withFooter={false}
+        title="Welcome"
+        description="Enter your name to get started"
+      >
+        <GuestForm />
+      </AuthForm>
+    );
+  }
 
-	return (
-		<AuthForm mode="sign-in" withFooter={false}>
-			{env.NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED && (
-				<>
-					<Divider text="Or continue with email" />
-					<CredentialsForm />
-				</>
-			)}
-		</AuthForm>
-	);
+  return (
+    <AuthForm mode="sign-in" withFooter={false}>
+      {env.NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED && (
+        <>
+          <Divider text="Or continue with email" />
+          <CredentialsForm />
+        </>
+      )}
+    </AuthForm>
+  );
 };

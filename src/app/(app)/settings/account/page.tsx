@@ -5,12 +5,12 @@ import { DeleteAccountCard } from "@/app/(app)/settings/_components/delete-accou
 import { GitHubOAuthButton } from "@/components/buttons/github-oauth-button";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
 import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { constructMetadata } from "@/config/metadata";
@@ -21,116 +21,116 @@ import { getGitHubConnectionStatus } from "@/server/services/github/github-token
 import { checkVercelConnection } from "@/server/services/vercel/vercel-service";
 
 export const metadata: Metadata = constructMetadata({
-	title: "Account Settings",
-	description: "Manage your account connections, linked services, and account preferences.",
+  title: "Account Settings",
+  description: "Manage your account connections, linked services, and account preferences.",
 });
 
 export default async function AccountPage() {
-	const session = await auth();
-	if (!session?.user) redirect(routes.auth.signIn);
+  const session = await auth();
+  if (!session?.user) redirect(routes.auth.signIn);
 
-	const userId = session.user.id;
+  const userId = session.user.id;
 
-	// Check connections using server-side functions
-	// Using unified getGitHubConnectionStatus() ensures isConnected and username are always consistent
-	const [hasVercel, gitHubStatus] = await Promise.all([
-		env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED
-			? checkVercelConnection(userId)
-			: Promise.resolve(false),
-		getGitHubConnectionStatus(userId),
-	]);
+  // Check connections using server-side functions
+  // Using unified getGitHubConnectionStatus() ensures isConnected and username are always consistent
+  const [hasVercel, gitHubStatus] = await Promise.all([
+    env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED
+      ? checkVercelConnection(userId)
+      : Promise.resolve(false),
+    getGitHubConnectionStatus(userId),
+  ]);
 
-	const hasGitHub = gitHubStatus.isConnected;
-	const gitHubUsername = gitHubStatus.username;
+  const hasGitHub = gitHubStatus.isConnected;
+  const gitHubUsername = gitHubStatus.username;
 
-	// Define the connected accounts based on unified connection status
-	const connectedAccounts = [
-		{
-			name: "GitHub",
-			connected: hasGitHub,
-			username: gitHubUsername,
-		},
-		{
-			name: "GitLab",
-			connected: false,
-			username: null,
-		},
-		{
-			name: "Bitbucket",
-			connected: false,
-			username: null,
-		},
-		// Add more providers here as they become available
-	];
+  // Define the connected accounts based on unified connection status
+  const connectedAccounts = [
+    {
+      name: "GitHub",
+      connected: hasGitHub,
+      username: gitHubUsername,
+    },
+    {
+      name: "GitLab",
+      connected: false,
+      username: null,
+    },
+    {
+      name: "Bitbucket",
+      connected: false,
+      username: null,
+    },
+    // Add more providers here as they become available
+  ];
 
-	return (
-		<div className="space-y-6">
-			<div>
-				<h3 className="text-lg font-medium">Account</h3>
-				<p className="text-sm text-muted-foreground">Manage your account settings.</p>
-			</div>
-			<Separator />
+  return (
+    <div className="space-y-6">
+      <div>
+        <h3 className="text-lg font-medium">Account</h3>
+        <p className="text-sm text-muted-foreground">Manage your account settings.</p>
+      </div>
+      <Separator />
 
-			{/* Vercel Connection — only show when the integration feature is enabled */}
-			{env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED && (
-				<ConnectionHighlightWrapper connectionType="vercel">
-					<Card>
-						<CardHeader>
-							<CardTitle>Vercel Connection</CardTitle>
-							<CardDescription>
-								Connect your Vercel account to deploy projects directly.
-							</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<div className="space-y-2">
-								<p>
-									{hasVercel
-										? "Your Vercel account is connected. You can now deploy projects directly to Vercel."
-										: "Connect your Vercel account to deploy projects directly from Shipkit."}
-								</p>
-							</div>
-						</CardContent>
-						<CardFooter>
-							<VercelConnectButton
-								user={session?.user}
-								isConnected={hasVercel}
-								className="w-full"
-							/>
-						</CardFooter>
-					</Card>
-				</ConnectionHighlightWrapper>
-			)}
+      {/* Vercel Connection — only show when the integration feature is enabled */}
+      {env.NEXT_PUBLIC_FEATURE_VERCEL_INTEGRATION_ENABLED && (
+        <ConnectionHighlightWrapper connectionType="vercel">
+          <Card>
+            <CardHeader>
+              <CardTitle>Vercel Connection</CardTitle>
+              <CardDescription>
+                Connect your Vercel account to deploy projects directly.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <p>
+                  {hasVercel
+                    ? "Your Vercel account is connected. You can now deploy projects directly to Vercel."
+                    : "Connect your Vercel account to deploy projects directly from Shipkit."}
+                </p>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <VercelConnectButton
+                user={session?.user}
+                isConnected={hasVercel}
+                className="w-full"
+              />
+            </CardFooter>
+          </Card>
+        </ConnectionHighlightWrapper>
+      )}
 
-			<ConnectionHighlightWrapper connectionType="github">
-				<Card>
-					<CardHeader>
-						<CardTitle>GitHub Connection</CardTitle>
-						<CardDescription>
-							Connect your GitHub account with OAuth to enable repository creation and deployments.
-						</CardDescription>
-					</CardHeader>
-					<CardContent>
-						<div className="space-y-2">
-							<p>
-								{hasGitHub
-									? "Your GitHub account is connected via OAuth. You can now create repositories and deploy projects."
-									: "Connect your GitHub account with OAuth to create repositories and deploy projects directly from Shipkit."}
-							</p>
-						</div>
-					</CardContent>
-					<CardFooter>
-						<GitHubOAuthButton
-							user={session?.user}
-							isConnected={hasGitHub}
-							githubUsername={gitHubUsername}
-							className="w-full"
-						/>
-					</CardFooter>
-				</Card>
-			</ConnectionHighlightWrapper>
+      <ConnectionHighlightWrapper connectionType="github">
+        <Card>
+          <CardHeader>
+            <CardTitle>GitHub Connection</CardTitle>
+            <CardDescription>
+              Connect your GitHub account with OAuth to enable repository creation and deployments.
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <p>
+                {hasGitHub
+                  ? "Your GitHub account is connected via OAuth. You can now create repositories and deploy projects."
+                  : "Connect your GitHub account with OAuth to create repositories and deploy projects directly from Shipkit."}
+              </p>
+            </div>
+          </CardContent>
+          <CardFooter>
+            <GitHubOAuthButton
+              user={session?.user}
+              isConnected={hasGitHub}
+              githubUsername={gitHubUsername}
+              className="w-full"
+            />
+          </CardFooter>
+        </Card>
+      </ConnectionHighlightWrapper>
 
-			{/* Connected Accounts */}
-			{/* <Card>
+      {/* Connected Accounts */}
+      {/* <Card>
 				<CardHeader>
 					<CardTitle>Connected Accounts</CardTitle>
 					<CardDescription>
@@ -169,8 +169,8 @@ export default async function AccountPage() {
 				</CardContent>
 			</Card> */}
 
-			{/* Delete Account */}
-			<DeleteAccountCard />
-		</div>
-	);
+      {/* Delete Account */}
+      <DeleteAccountCard />
+    </div>
+  );
 }

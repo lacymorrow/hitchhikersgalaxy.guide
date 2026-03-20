@@ -13,39 +13,39 @@ const rateLimitService = new RateLimitService();
  * Rate limited to prevent abuse of GitHub API.
  */
 export async function GET(_request: NextRequest) {
-	try {
-		const session = await auth();
-		if (!session?.user?.id) {
-			return NextResponse.json(
-				{ hasPendingInvitation: false, error: "Authentication required" },
-				{ status: 401 }
-			);
-		}
+  try {
+    const session = await auth();
+    if (!session?.user?.id) {
+      return NextResponse.json(
+        { hasPendingInvitation: false, error: "Authentication required" },
+        { status: 401 }
+      );
+    }
 
-		// Rate limit: 30 checks per minute per user
-		await rateLimitService.checkLimit(
-			session.user.id,
-			"checkGitHubInvitation",
-			rateLimits.deployments.status
-		);
+    // Rate limit: 30 checks per minute per user
+    await rateLimitService.checkLimit(
+      session.user.id,
+      "checkGitHubInvitation",
+      rateLimits.deployments.status
+    );
 
-		const result = await deploymentService.checkPendingGitHubInvitation(session.user.id);
-		return NextResponse.json(result);
-	} catch (error) {
-		// Handle rate limit errors
-		if (error instanceof Error && error.message.includes("Too many requests")) {
-			return NextResponse.json(
-				{ hasPendingInvitation: false, error: "Rate limit exceeded" },
-				{ status: 429 }
-			);
-		}
-		console.error("Failed to check GitHub invitation:", error);
-		return NextResponse.json(
-			{
-				hasPendingInvitation: false,
-				error: "Failed to check invitation status",
-			},
-			{ status: 500 }
-		);
-	}
+    const result = await deploymentService.checkPendingGitHubInvitation(session.user.id);
+    return NextResponse.json(result);
+  } catch (error) {
+    // Handle rate limit errors
+    if (error instanceof Error && error.message.includes("Too many requests")) {
+      return NextResponse.json(
+        { hasPendingInvitation: false, error: "Rate limit exceeded" },
+        { status: 429 }
+      );
+    }
+    console.error("Failed to check GitHub invitation:", error);
+    return NextResponse.json(
+      {
+        hasPendingInvitation: false,
+        error: "Failed to check invitation status",
+      },
+      { status: 500 }
+    );
+  }
 }

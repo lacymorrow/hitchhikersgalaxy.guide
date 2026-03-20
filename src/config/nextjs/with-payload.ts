@@ -7,8 +7,8 @@ import { buildTimeFeatures } from "../features-config";
  * @returns The modified Next.js configuration object with Payload support.
  */
 export default function withPayloadConfig(nextConfig: NextConfig): NextConfig {
-	if (buildTimeFeatures.PAYLOAD_ENABLED) {
-		return withPayload(nextConfig);
-	}
-	return nextConfig;
+  if (buildTimeFeatures.PAYLOAD_ENABLED) {
+    return withPayload(nextConfig);
+  }
+  return nextConfig;
 }

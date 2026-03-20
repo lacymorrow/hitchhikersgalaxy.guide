@@ -20,15 +20,15 @@ import { isAuthenticationAvailable } from "@/lib/auth/auth-strategy";
 import "@/styles/globals.css";
 
 interface KitProviderProps {
-	children: ReactNode;
-	/**
-	 * Session data for Next Auth
-	 */
-	session?: any;
-	/**
-	 * Page props for TRPC
-	 */
-	pageProps?: any;
+  children: ReactNode;
+  /**
+   * Session data for Next Auth
+   */
+  session?: any;
+  /**
+   * Page props for TRPC
+   */
+  pageProps?: any;
 }
 
 /**
@@ -36,56 +36,56 @@ interface KitProviderProps {
  * Can be used in both App Router and Pages Router
  */
 export function KitProvider({ children, session, pageProps }: KitProviderProps) {
-	const authEnabled = isAuthenticationAvailable();
-	const sessionProviderProps = authEnabled
-		? { session }
-		: {
-				session: null,
-				refetchOnWindowFocus: false,
-				refetchInterval: 0,
-				refetchWhenOffline: false,
-				refetchOnMount: false,
-			};
+  const authEnabled = isAuthenticationAvailable();
+  const sessionProviderProps = authEnabled
+    ? { session }
+    : {
+        session: null,
+        refetchOnWindowFocus: false,
+        refetchInterval: 0,
+        refetchWhenOffline: false,
+        refetchOnMount: false,
+      };
 
-	return (
-		<>
-			<JsonLd organization website />
-			<HolyLoader
-				showSpinner
-				height={"4px"}
-				color={"linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8)"}
-			/>
-			<ShipkitThemeProvider>
-				<SessionProvider {...(sessionProviderProps as any)}>
-					<TRPCReactProvider {...pageProps}>
-						<TooltipProvider delayDuration={100}>
-							<AnalyticsProvider>
-								{/* <ConsentProvider> */}
+  return (
+    <>
+      <JsonLd organization website />
+      <HolyLoader
+        showSpinner
+        height={"4px"}
+        color={"linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8)"}
+      />
+      <ShipkitThemeProvider>
+        <SessionProvider {...(sessionProviderProps as any)}>
+          <TRPCReactProvider {...pageProps}>
+            <TooltipProvider delayDuration={100}>
+              <AnalyticsProvider>
+                {/* <ConsentProvider> */}
 
-								<HapticsProvider>
-									<KeyboardShortcutProvider>
-										<FontProvider>
-											{/* Content */}
-											{children}
+                <HapticsProvider>
+                  <KeyboardShortcutProvider>
+                    <FontProvider>
+                      {/* Content */}
+                      {children}
 
-											{/* Toast - Display messages to the user */}
-											<Toaster />
+                      {/* Toast - Display messages to the user */}
+                      <Toaster />
 
-											<LegacyToaster />
+                      <LegacyToaster />
 
-											{/* Error Toast - Display error messages to the user based on search params */}
-											<Suspense>
-												<ErrorToast />
-											</Suspense>
-										</FontProvider>
-									</KeyboardShortcutProvider>
-								</HapticsProvider>
-								{/* </ConsentProvider> */}
-							</AnalyticsProvider>
-						</TooltipProvider>
-					</TRPCReactProvider>
-				</SessionProvider>
-			</ShipkitThemeProvider>
-		</>
-	);
+                      {/* Error Toast - Display error messages to the user based on search params */}
+                      <Suspense>
+                        <ErrorToast />
+                      </Suspense>
+                    </FontProvider>
+                  </KeyboardShortcutProvider>
+                </HapticsProvider>
+                {/* </ConsentProvider> */}
+              </AnalyticsProvider>
+            </TooltipProvider>
+          </TRPCReactProvider>
+        </SessionProvider>
+      </ShipkitThemeProvider>
+    </>
+  );
 }

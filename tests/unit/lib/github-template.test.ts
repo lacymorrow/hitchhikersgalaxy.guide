@@ -4,42 +4,42 @@ import { GitHubTemplateService } from "@/lib/github-template";
 const mockCreateWorkflowDispatch = vi.fn();
 
 vi.mock("@octokit/rest", () => ({
-	Octokit: class Octokit {
-		repos = {
-			replaceAllTopics: vi.fn(),
-		};
-		actions = {
-			createWorkflowDispatch: mockCreateWorkflowDispatch,
-		};
-	},
+  Octokit: class Octokit {
+    repos = {
+      replaceAllTopics: vi.fn(),
+    };
+    actions = {
+      createWorkflowDispatch: mockCreateWorkflowDispatch,
+    };
+  },
 }));
 
 describe("GitHubTemplateService", () => {
-	beforeEach(() => {
-		mockCreateWorkflowDispatch.mockReset();
-	});
+  beforeEach(() => {
+    mockCreateWorkflowDispatch.mockReset();
+  });
 
-	afterEach(() => {
-		vi.useRealTimers();
-	});
+  afterEach(() => {
+    vi.useRealTimers();
+  });
 
-	it("dispatches init-upstream workflow on provided ref", async () => {
-		vi.useFakeTimers();
-		mockCreateWorkflowDispatch.mockResolvedValue({});
+  it("dispatches init-upstream workflow on provided ref", async () => {
+    vi.useFakeTimers();
+    mockCreateWorkflowDispatch.mockResolvedValue({});
 
-		const service = new GitHubTemplateService({ accessToken: "token" });
+    const service = new GitHubTemplateService({ accessToken: "token" });
 
-		const result = service.initializeUpstreamHistory("ship-kit", "repo-name", "develop");
-		await vi.advanceTimersByTimeAsync(3000);
-		await result;
+    const result = service.initializeUpstreamHistory("ship-kit", "repo-name", "develop");
+    await vi.advanceTimersByTimeAsync(3000);
+    await result;
 
-		expect(mockCreateWorkflowDispatch).toHaveBeenCalledWith(
-			expect.objectContaining({
-				owner: "ship-kit",
-				repo: "repo-name",
-				workflow_id: "init-upstream.yml",
-				ref: "develop",
-			})
-		);
-	});
+    expect(mockCreateWorkflowDispatch).toHaveBeenCalledWith(
+      expect.objectContaining({
+        owner: "ship-kit",
+        repo: "repo-name",
+        workflow_id: "init-upstream.yml",
+        ref: "develop",
+      })
+    );
+  });
 });

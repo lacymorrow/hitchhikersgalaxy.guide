@@ -12,9 +12,9 @@ export type ImportProvider = PaymentProcessor | "all";
  * Import statistics
  */
 export interface ImportStats {
-	total: number;
-	imported: number;
-	skipped: number;
-	errors: number;
-	usersCreated: number;
+  total: number;
+  imported: number;
+  skipped: number;
+  errors: number;
+  usersCreated: number;
 }

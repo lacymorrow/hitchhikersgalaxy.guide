@@ -20,40 +20,40 @@ import { createTeamSchema, teamIdSchema, teamMemberSchema, updateTeamSchema } fr
  * @returns The created team with its members
  */
 export async function createTeam(userId: string, name: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(userId, "createTeam", rateLimits.web.forms);
+  try {
+    // Rate limiting
+    await rateLimitService.checkLimit(userId, "createTeam", rateLimits.web.forms);
 
-		// Validation
-		await ValidationService.validateOrThrow(createTeamSchema, { userId, name });
+    // Validation
+    await ValidationService.validateOrThrow(createTeamSchema, { userId, name });
 
-		// Metrics start
-		const startTime = Date.now();
+    // Metrics start
+    const startTime = Date.now();
 
-		// Create team
-		const team = await teamService.createTeam(userId, name);
-		if (!team) {
-			throw new Error("Failed to create team");
-		}
+    // Create team
+    const team = await teamService.createTeam(userId, name);
+    if (!team) {
+      throw new Error("Failed to create team");
+    }
 
-		// Metrics end
-		await metricsService.recordTiming(metrics.api.latency, startTime);
-		await metricsService.incrementCounter(metrics.api.requests);
+    // Metrics end
+    await metricsService.recordTiming(metrics.api.latency, startTime);
+    await metricsService.incrementCounter(metrics.api.requests);
 
-		// Invalidate cache
-		await cacheService.delete(`team:${team.id}`);
-		await cacheService.delete(`user:${userId}:teams`);
+    // Invalidate cache
+    await cacheService.delete(`team:${team.id}`);
+    await cacheService.delete(`user:${userId}:teams`);
 
-		// Revalidate Next.js cache using tags
-		revalidateTag(`user-teams-${userId}`, "max");
-		revalidateTag("teams", "max");
-		revalidatePath("/");
+    // Revalidate Next.js cache using tags
+    revalidateTag(`user-teams-${userId}`, "max");
+    revalidateTag("teams", "max");
+    revalidatePath("/");
 
-		return team;
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
+    return team;
+  } catch (error) {
+    await metricsService.incrementCounter(metrics.api.errors);
+    throw ErrorService.handleError(error);
+  }
 }
 
 /**
@@ -61,40 +61,40 @@ export async function createTeam(userId: string, name: string) {
  * @returns The updated team with its details
  */
 export async function updateTeam(teamId: string, data: { name?: string }) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(teamId, "updateTeam", rateLimits.web.forms);
+  try {
+    // Rate limiting
+    await rateLimitService.checkLimit(teamId, "updateTeam", rateLimits.web.forms);
 
-		// Validation
-		await ValidationService.validateOrThrow(updateTeamSchema, { teamId, ...data });
+    // Validation
+    await ValidationService.validateOrThrow(updateTeamSchema, { teamId, ...data });
 
-		// Metrics start
-		const startTime = Date.now();
+    // Metrics start
+    const startTime = Date.now();
 
-		// Update team
-		const team = await teamService.updateTeam(teamId, data);
+    // Update team
+    const team = await teamService.updateTeam(teamId, data);
 
-		// Metrics end
-		await metricsService.recordTiming(metrics.api.latency, startTime);
-		await metricsService.incrementCounter(metrics.api.requests);
+    // Metrics end
+    await metricsService.recordTiming(metrics.api.latency, startTime);
+    await metricsService.incrementCounter(metrics.api.requests);
 
-		// Invalidate cache
-		await cacheService.delete(`team:${teamId}`);
+    // Invalidate cache
+    await cacheService.delete(`team:${teamId}`);
 
-		// Revalidate Next.js cache using tags
-		revalidateTag("teams", "max");
-		// Revalidate for all users who are members of this team
-		const teamMembers = await teamService.getTeamMembers(teamId);
-		for (const member of teamMembers || []) {
-			revalidateTag(`user-teams-${member.userId}`, "max");
-		}
-		revalidatePath("/");
+    // Revalidate Next.js cache using tags
+    revalidateTag("teams", "max");
+    // Revalidate for all users who are members of this team
+    const teamMembers = await teamService.getTeamMembers(teamId);
+    for (const member of teamMembers || []) {
+      revalidateTag(`user-teams-${member.userId}`, "max");
+    }
+    revalidatePath("/");
 
-		return team;
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
+    return team;
+  } catch (error) {
+    await metricsService.incrementCounter(metrics.api.errors);
+    throw ErrorService.handleError(error);
+  }
 }
 
 /**
@@ -102,42 +102,42 @@ export async function updateTeam(teamId: string, data: { name?: string }) {
  * @returns True if deleted successfully
  */
 export async function deleteTeam(teamId: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(teamId, "deleteTeam", rateLimits.web.forms);
+  try {
+    // Rate limiting
+    await rateLimitService.checkLimit(teamId, "deleteTeam", rateLimits.web.forms);
 
-		// Validation
-		await ValidationService.validateOrThrow(teamIdSchema, { teamId });
+    // Validation
+    await ValidationService.validateOrThrow(teamIdSchema, { teamId });
 
-		// Get team members before deletion for cache invalidation
-		const teamMembers = await teamService.getTeamMembers(teamId);
+    // Get team members before deletion for cache invalidation
+    const teamMembers = await teamService.getTeamMembers(teamId);
 
-		// Metrics start
-		const startTime = Date.now();
+    // Metrics start
+    const startTime = Date.now();
 
-		// Delete team
-		const success = await teamService.deleteTeam(teamId);
+    // Delete team
+    const success = await teamService.deleteTeam(teamId);
 
-		// Metrics end
-		await metricsService.recordTiming(metrics.api.latency, startTime);
-		await metricsService.incrementCounter(metrics.api.requests);
+    // Metrics end
+    await metricsService.recordTiming(metrics.api.latency, startTime);
+    await metricsService.incrementCounter(metrics.api.requests);
 
-		// Invalidate cache
-		await cacheService.delete(`team:${teamId}`);
+    // Invalidate cache
+    await cacheService.delete(`team:${teamId}`);
 
-		// Revalidate Next.js cache using tags
-		revalidateTag("teams", "max");
-		// Revalidate for all users who were members of this team
-		for (const member of teamMembers || []) {
-			revalidateTag(`user-teams-${member.userId}`, "max");
-		}
-		revalidatePath("/");
+    // Revalidate Next.js cache using tags
+    revalidateTag("teams", "max");
+    // Revalidate for all users who were members of this team
+    for (const member of teamMembers || []) {
+      revalidateTag(`user-teams-${member.userId}`, "max");
+    }
+    revalidatePath("/");
 
-		return success;
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
+    return success;
+  } catch (error) {
+    await metricsService.incrementCounter(metrics.api.errors);
+    throw ErrorService.handleError(error);
+  }
 }
 
 /**
@@ -145,37 +145,37 @@ export async function deleteTeam(teamId: string) {
  * @returns The created team member
  */
 export async function addTeamMember(teamId: string, userId: string, role: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(teamId, "addTeamMember", rateLimits.web.forms);
+  try {
+    // Rate limiting
+    await rateLimitService.checkLimit(teamId, "addTeamMember", rateLimits.web.forms);
 
-		// Validation
-		await ValidationService.validateOrThrow(teamMemberSchema, {
-			teamId,
-			userId,
-			role,
-		});
+    // Validation
+    await ValidationService.validateOrThrow(teamMemberSchema, {
+      teamId,
+      userId,
+      role,
+    });
 
-		// Metrics start
-		const startTime = Date.now();
+    // Metrics start
+    const startTime = Date.now();
 
-		// Add member
-		const member = await teamService.addTeamMember(teamId, userId, role);
+    // Add member
+    const member = await teamService.addTeamMember(teamId, userId, role);
 
-		// Metrics end
-		await metricsService.recordTiming(metrics.api.latency, startTime);
-		await metricsService.incrementCounter(metrics.api.requests);
+    // Metrics end
+    await metricsService.recordTiming(metrics.api.latency, startTime);
+    await metricsService.incrementCounter(metrics.api.requests);
 
-		// Invalidate cache
-		await cacheService.delete(`team:${teamId}:members`);
-		await cacheService.delete(`user:${userId}:teams`);
+    // Invalidate cache
+    await cacheService.delete(`team:${teamId}:members`);
+    await cacheService.delete(`user:${userId}:teams`);
 
-		revalidatePath("/");
-		return member;
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
+    revalidatePath("/");
+    return member;
+  } catch (error) {
+    await metricsService.incrementCounter(metrics.api.errors);
+    throw ErrorService.handleError(error);
+  }
 }
 
 /**
@@ -183,41 +183,41 @@ export async function addTeamMember(teamId: string, userId: string, role: string
  * @returns True if removed successfully
  */
 export async function removeTeamMember(teamId: string, userId: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(teamId, "removeTeamMember", rateLimits.web.forms);
+  try {
+    // Rate limiting
+    await rateLimitService.checkLimit(teamId, "removeTeamMember", rateLimits.web.forms);
 
-		// Validation
-		await ValidationService.validateOrThrow(teamMemberSchema, {
-			teamId,
-			userId,
-			role: "member", // Role is required by schema but not needed for removal
-		});
+    // Validation
+    await ValidationService.validateOrThrow(teamMemberSchema, {
+      teamId,
+      userId,
+      role: "member", // Role is required by schema but not needed for removal
+    });
 
-		// Metrics start
-		const startTime = Date.now();
+    // Metrics start
+    const startTime = Date.now();
 
-		// Remove member
-		const success = await teamService.removeTeamMember(teamId, userId);
+    // Remove member
+    const success = await teamService.removeTeamMember(teamId, userId);
 
-		// Metrics end
-		await metricsService.recordTiming(metrics.api.latency, startTime);
-		await metricsService.incrementCounter(metrics.api.requests);
+    // Metrics end
+    await metricsService.recordTiming(metrics.api.latency, startTime);
+    await metricsService.incrementCounter(metrics.api.requests);
 
-		// Invalidate cache
-		await cacheService.delete(`team:${teamId}:members`);
-		await cacheService.delete(`user:${userId}:teams`);
+    // Invalidate cache
+    await cacheService.delete(`team:${teamId}:members`);
+    await cacheService.delete(`user:${userId}:teams`);
 
-		// Revalidate Next.js cache using tags
-		revalidateTag(`user-teams-${userId}`, "max");
-		revalidateTag("teams", "max");
-		revalidatePath("/");
+    // Revalidate Next.js cache using tags
+    revalidateTag(`user-teams-${userId}`, "max");
+    revalidateTag("teams", "max");
+    revalidatePath("/");
 
-		return success;
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
+    return success;
+  } catch (error) {
+    await metricsService.incrementCounter(metrics.api.errors);
+    throw ErrorService.handleError(error);
+  }
 }
 
 /**
@@ -225,34 +225,34 @@ export async function removeTeamMember(teamId: string, userId: string) {
  * @returns The updated team member
  */
 export async function updateTeamMemberRole(teamId: string, userId: string, role: string) {
-	try {
-		// Rate limiting
-		await rateLimitService.checkLimit(teamId, "updateTeamMemberRole", rateLimits.web.forms);
+  try {
+    // Rate limiting
+    await rateLimitService.checkLimit(teamId, "updateTeamMemberRole", rateLimits.web.forms);
 
-		// Validation
-		await ValidationService.validateOrThrow(teamMemberSchema, {
-			teamId,
-			userId,
-			role,
-		});
+    // Validation
+    await ValidationService.validateOrThrow(teamMemberSchema, {
+      teamId,
+      userId,
+      role,
+    });
 
-		// Metrics start
-		const startTime = Date.now();
+    // Metrics start
+    const startTime = Date.now();
 
-		// Update member role
-		const member = await teamService.updateTeamMemberRole(teamId, userId, role);
+    // Update member role
+    const member = await teamService.updateTeamMemberRole(teamId, userId, role);
 
-		// Metrics end
-		await metricsService.recordTiming(metrics.api.latency, startTime);
-		await metricsService.incrementCounter(metrics.api.requests);
+    // Metrics end
+    await metricsService.recordTiming(metrics.api.latency, startTime);
+    await metricsService.incrementCounter(metrics.api.requests);
 
-		// Invalidate cache
-		await cacheService.delete(`team:${teamId}:members`);
+    // Invalidate cache
+    await cacheService.delete(`team:${teamId}:members`);
 
-		revalidatePath("/");
-		return member;
-	} catch (error) {
-		await metricsService.incrementCounter(metrics.api.errors);
-		throw ErrorService.handleError(error);
-	}
+    revalidatePath("/");
+    return member;
+  } catch (error) {
+    await metricsService.incrementCounter(metrics.api.errors);
+    throw ErrorService.handleError(error);
+  }
 }

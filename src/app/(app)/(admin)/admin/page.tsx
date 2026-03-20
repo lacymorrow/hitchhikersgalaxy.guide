@@ -5,5 +5,5 @@ import { routes } from "@/config/routes";
  * Admin page
  */
 export default async function AdminPage() {
-	redirect(routes.admin.users);
+  redirect(routes.admin.users);
 }

@@ -43,10 +43,8 @@ import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import AnimatedGradientText from "@/components/ui/animated-gradient-text";
 import BlurFade from "@/components/ui/blur-fade";
 import { buttonVariants } from "@/components/ui/button";
-import { Countdown } from "@/components/ui/countdown";
 import { FeaturesTimed } from "@/components/ui/cui/features-timed";
 import { SimpleFeaturesCards } from "@/components/ui/cui/simple-features-cards";
-import { HoverInfo } from "@/components/ui/hover-info";
 import Meteors from "@/components/ui/meteors";
 import NumberTicker from "@/components/ui/number-ticker";
 import { ShinyButton } from "@/components/ui/shiny-button";
@@ -67,23 +65,14 @@ import { SocialDock } from "./_components/social-dock";
 import { SocialMarquee } from "./_components/social-marquee";
 import { SocialProof } from "./_components/social-proof";
 
-const headings = [
-  "The Next.js Stack for Startups",
-  "A website that builds itself",
-  "The Starter Kit for Cursor and v0",
-  "The Best Next.js Stack for Building With AI",
-  "The Next.js Stack for Building With AI",
-  "From Idea to Launch in Days",
-  "The Ultimate Dev Toolkit",
-  "Enterprise-Ready in Minutes",
-];
+const headings = ["Ship your Next.js app this week"];
 
 export const metadata: Metadata = constructMetadata({
   title: `${siteConfig.name} - Launch Your SaaS in Days`,
-  description: `Join top startups using ${siteConfig.name} to launch faster. Get a production-ready Next.js stack with auth, AI, payments & more. Save $50k+ in development costs.`,
+  description: "The complete Next.js stack with auth, payments, database, CMS, AI, and 100+ components. $249, lifetime updates.",
 });
 
-const LAUNCH_END_DATE = "2025-09-10T23:59:59";
+// const LAUNCH_END_DATE = "2025-09-10T23:59:59";
 
 export default async function Home() {
   const landingAiContent = `${siteConfig.title}\n\n${siteConfig.description}`;
@@ -129,28 +118,9 @@ export default async function Home() {
 
               <BlurFade delay={1} duration={1}>
                 <div className="mb-8 text-balance text-lg tracking-tight md:text-xl">
-                  <span className="lg:hidden">
-                    Join the ranks of founders launching together—deploy in minutes without code.
-                  </span>
-                  <HoverInfo
-                    className="hidden lg:inline-block"
-                    content={
-                      <>
-                        <h4 className="mb-2 font-medium">The best stack for building with AI</h4>
-                        <ul className="text-sm list-disc list-inside text-left">
-                          <li>Join a growing community launching production sites in minutes</li>
-                          <li>Ship powerful, AI-ready experiences with zero coding grind</li>
-                          <li>Share playbooks, momentum, and social proof with peers</li>
-                        </ul>
-                      </>
-                    }
-                  >
-                    Join founders shipping enterprise-ready sites in minutes
-                    <br />
-                  </HoverInfo>{" "}
-                  without touching code.
+                  Auth, payments, database, CMS, AI, and 100+ components. Already wired together.
                   <br />
-                  <b>Build together, succeed together.</b> Skip the grind and launch now.
+                  Clone the repo. Start building your thing.
                 </div>
               </BlurFade>
 
@@ -185,14 +155,12 @@ export default async function Home() {
             </div>
           </BlurFade>
           <BlurFade delay={0.5} duration={1} inView>
-            <SectionHeader>Stop Reinventing the Wheel</SectionHeader>
+            <SectionHeader>Everything except your idea</SectionHeader>
           </BlurFade>
 
           <BlurFade delay={1} duration={1} inView>
             <SectionCopy>
-              {siteConfig.name} is a production-ready codebase <b>powering real companies today</b>.
-              Start with a full dashboard, pre-built payment and user management, and a CMS, so you
-              can focus on your product.
+              You don't need to build auth again. Or wire up payments. Or configure a CMS. Or set up email templates. Shipkit handles the first three months of infrastructure work so you can focus on the part that actually matters.
             </SectionCopy>
           </BlurFade>
         </Section>
@@ -205,9 +173,9 @@ export default async function Home() {
           </div>
 
           <Section>
-            <SectionHeader>Choose Your Launch Plan</SectionHeader>
+            <SectionHeader>One price. Everything included.</SectionHeader>
             <SectionCopy>
-              Join these successful founders and launch your product in days, not months.
+              No tiers. No feature gates. $249 for the full stack. Updates forever.
             </SectionCopy>
 
             <PricingSectionSingle plan={singlePlan}>
@@ -224,14 +192,7 @@ export default async function Home() {
               </div>
             </PricingSectionSingle>
 
-            <Countdown targetDate={LAUNCH_END_DATE} variant="default" className="justify-center" />
             <div className="mt-6 text-center">
-              <div className="mb-8">
-                <p className="text-sm font-medium text-primary mb-2">Limited Time Launch Offer</p>
-                <p className="text-sm text-gray-500">
-                  Lock in our special launch pricing before it's gone.
-                </p>
-              </div>
               <p className="text-sm text-gray-500 mb-4">
                 Everything included: Next.js 15, TypeScript, Authentication, Database, UI
                 Components, and more
@@ -258,7 +219,7 @@ export default async function Home() {
               <Calculator className="h-4 w-4" />
               <span>$ Saved</span>
             </SectionBadge>
-            <SectionHeader>How much will you save?</SectionHeader>
+            <SectionHeader>How long would this take to build yourself?</SectionHeader>
             <SectionContent>
               <div className="max-w-4xl mx-auto">
                 <div className="text-center mb-8">
@@ -267,7 +228,7 @@ export default async function Home() {
                     <span>ROI Calculator</span>
                   </div>
                   <p className="text-lg text-gray-600 dark:text-gray-300">
-                    See exactly how much time and money you'll save with {siteConfig.name}
+                    Auth setup, payment integration, CMS, email system, dashboard UI, AI hooks. That's 2-3 months of plumbing before you write a single line of product code. Or just clone Shipkit.
                   </p>
                 </div>
                 <ROICalculator />
@@ -277,7 +238,7 @@ export default async function Home() {
 
           <Section className="max-w-3xl">
             <SectionBadge>Common Questions</SectionBadge>
-            <SectionHeader>Everything You Need to Know</SectionHeader>
+            <SectionHeader>Common questions</SectionHeader>
             <SectionCopy>
               Can't find what you're looking for? Reach out on
               <Link

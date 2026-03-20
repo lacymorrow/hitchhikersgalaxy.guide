@@ -1,46 +1,50 @@
-import { siteConfig } from "@/config/site-config";
-
 export const content = [
   {
-    question: `How is ${siteConfig.title} different from other starter kits?`,
-    answer: `Unlike basic templates, ${siteConfig.title} is a complete production-ready solution used by real companies. You get enterprise features like authentication, database, AI integration, and DevOps - all pre-configured and battle-tested. Our customers typically save 3-6 months of development time.`,
+    question: "What do I actually get?",
+    answer:
+      "A full Next.js 15 codebase. Auth (Auth.js v5), database (Postgres + Drizzle), payments (LemonSqueezy), CMS (Payload), email (Resend), 100+ UI components (shadcn/ui), AI integrations, and deployment configs. You clone the repo and own the code forever.",
     category: "general",
   },
   {
-    question: "Will this work for my specific use case?",
-    answer: `${siteConfig.title} is highly flexible and powers everything from SaaS apps to e-commerce sites. It's built with industry-standard tools like Next.js, TypeScript, and PostgreSQL, making it adaptable to any business need. If you're unsure, our support team can evaluate your specific requirements.`,
-    category: "technical",
-  },
-  {
-    question: "How much money will this save my company?",
+    question: "Is this a template or a framework?",
     answer:
-      "Our customers typically save $50,000-$150,000 in development costs and 3-6 months of time. Instead of building basic features from scratch, your team can focus on your unique business logic from day one. Plus, our enterprise-grade architecture helps prevent costly rewrites down the line.",
-    category: "pricing",
-  },
-  {
-    question: "What happens if I need help?",
-    answer:
-      "You get direct access to our engineering team through private Discord channels. We typically respond within hours, not days. Our detailed documentation covers everything from setup to deployment, and we regularly release video tutorials for new features.",
-    category: "support",
-  },
-  {
-    question: "Is this just another template that will need heavy modification?",
-    answer: `No - ${siteConfig.title} is a production-ready platform that powers real applications today. It includes everything you need: authentication, database, file storage, emails, payments, and more. While you can customize everything, you don't have to modify anything to go live.`,
-    category: "technical",
-  },
-  {
-    question: "What if the tech stack becomes outdated?",
-    answer: `We maintain ${siteConfig.title} with weekly updates, ensuring you're always using the latest stable versions of Next.js, React, and other dependencies. Our semantic versioning and clear upgrade paths mean you'll never be stuck on an old version.`,
+      "Neither. It's a working app. Dashboard, landing pages, auth flows, admin panel. All built. Modify whatever you want, delete what you don't. There's no lock-in because it's just Next.js, TypeScript, and standard libraries.",
     category: "general",
   },
   {
-    question: "Can my team handle this technology?",
-    answer: `If your team knows React, they can use ${siteConfig.title}. We use mainstream technologies like Next.js, TypeScript, and Tailwind - no proprietary frameworks. Plus, our detailed documentation and support ensure your team never gets stuck.`,
+    question:
+      "I use Cursor, v0, or Windsurf. Does this work with AI coding tools?",
+    answer:
+      "Yes. Shipkit ships with Cursor rules, prompts, and project context files so AI tools understand the codebase from the start. Built for the AI-assisted workflow.",
     category: "technical",
   },
   {
-    question: "Is it worth the investment?",
-    answer: `Consider this: a single developer costs $10,000+ per month. ${siteConfig.title} saves 3-6 months of development time and includes enterprise features that would take even longer to build properly. Our customers typically see ROI within their first week of using ${siteConfig.title}.`,
+    question: "Can non-developers use this?",
+    answer:
+      "There's a visual editor (Builder.io) and CMS (Payload) for managing content without code. For the rest, AI tools like Cursor can handle most setup and customization if you give them the right context. Shipkit includes that context.",
+    category: "technical",
+  },
+  {
+    question: "What if I don't need all the features?",
+    answer:
+      "Delete what you don't need. Don't want the CMS? Remove the Payload config. No AI? Drop those routes. It's your code.",
+    category: "technical",
+  },
+  {
+    question: "Is there a free version?",
+    answer:
+      "Shipkit Bones is free and open source. Core Next.js setup with auth and basic components. The paid version adds the database, payments, CMS, AI, and premium components.",
     category: "pricing",
+  },
+  {
+    question: "Do I get updates?",
+    answer: "Forever. You own the code, so you merge updates when you want.",
+    category: "general",
+  },
+  {
+    question: "Who built this?",
+    answer:
+      "One developer who's shipped 10+ production apps with this exact stack. Fly5, FPV Bible, Lacy Shell, Vibe Rehab, and this site all run on Shipkit. Not a company with investors and a marketing department. Just someone who uses this every day.",
+    category: "general",
   },
 ];

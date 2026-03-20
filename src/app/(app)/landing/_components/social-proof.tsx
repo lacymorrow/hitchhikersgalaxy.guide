@@ -9,19 +9,19 @@ import { CustomerAvatars } from "./customer-avatars";
 
 const stats = [
   {
-    value: "$100k+",
-    label: "Saved",
-    description: "in development costs",
+    value: "10+",
+    label: "Production Sites",
+    description: "running on Shipkit right now",
   },
   {
     value: "100+",
     label: "Components",
-    description: "production-ready and fully tested",
+    description: "ready to use, not demos",
   },
   {
-    value: "100%",
-    label: "Satisfaction",
-    description: "from verified customers",
+    value: "30-Day",
+    label: "Refund Policy",
+    description: "no questions asked",
   },
 ];
 
@@ -56,7 +56,7 @@ export const SocialProof = () => {
         <div className="text-center">
           <CustomerAvatars />
           <p className="mt-4 text-sm text-muted-foreground">
-            Join hundreds of developers building with {siteConfig.title}
+            Real projects running on {siteConfig.title}
           </p>
         </div>
       </div>

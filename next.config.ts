@@ -19,7 +19,6 @@ if (process.env.NODE_ENV === "development" && reactGrabConfig.enabled && reactGr
 		(mod) => {
 			if (typeof mod.startServer === "function") {
 				mod.startServer();
-				console.log(`[react-grab] Started ${providerId} agent server`);
 			}
 		},
 		(err) => {

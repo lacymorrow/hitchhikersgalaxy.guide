@@ -19,7 +19,7 @@
     "doctor": "npm run clean && npm run payload generate:types && npm run payload generate:importmap",
     "dev": "next dev",
     "dev:https": "next dev --experimental-https",
-    "dev:react-grab": "concurrently \"npx react-grab-claude-code\" \"npm run dev\"",
+    "dev:react-grab": "next dev",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",

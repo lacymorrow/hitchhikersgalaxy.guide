@@ -21,7 +21,7 @@ export function ReactGrab() {
 		<>
 			<Script
 				id="react-grab-core"
-				src="https://unpkg.com/react-grab@0.1.27/dist/index.global.js"
+				src="https://unpkg.com/react-grab@0.1.28/dist/index.global.js"
 				crossOrigin="anonymous"
 				strategy="beforeInteractive"
 			/>

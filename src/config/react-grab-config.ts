@@ -13,17 +13,17 @@ import { buildTimeFeatures, preferredAiProvider } from "./features-config";
 const REACT_GRAB_PROVIDER_MAP = {
 	"claude-code": {
 		packageName: "@react-grab/claude-code",
-		clientScriptUrl: "https://unpkg.com/@react-grab/claude-code@0.1.27/dist/client.global.js",
+		clientScriptUrl: "https://unpkg.com/@react-grab/claude-code@0.1.28/dist/client.global.js",
 		serverBin: "react-grab-claude-code",
 	},
 	codex: {
 		packageName: "@react-grab/codex",
-		clientScriptUrl: "https://unpkg.com/@react-grab/codex@0.1.27/dist/client.global.js",
+		clientScriptUrl: "https://unpkg.com/@react-grab/codex@0.1.28/dist/client.global.js",
 		serverBin: "react-grab-codex",
 	},
 	gemini: {
 		packageName: "@react-grab/gemini",
-		clientScriptUrl: "https://unpkg.com/@react-grab/gemini@0.1.27/dist/client.global.js",
+		clientScriptUrl: "https://unpkg.com/@react-grab/gemini@0.1.28/dist/client.global.js",
 		serverBin: "react-grab-gemini",
 	},
 } as const;

@@ -5,10 +5,28 @@ import {
 	buildTimePublicEnv,
 } from "@/config/features-config";
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
+import { reactGrabConfig } from "@/config/react-grab-config";
 import { redirects } from "@/config/redirects";
 import { getDerivedSecrets } from "@/config/secrets";
 import { withPlugins } from "@/config/with-plugins";
 import { POSTHOG_RELAY_SLUG } from "@/lib/posthog/posthog-config";
+
+// Start React Grab agent server in development when enabled
+if (process.env.NODE_ENV === "development" && reactGrabConfig.enabled && reactGrabConfig.provider) {
+	const providerId = reactGrabConfig.provider.id;
+	const pkg = `@react-grab/${providerId === "claude-code" ? "claude-code" : providerId}`;
+	import(/* webpackIgnore: true */ `${pkg}/server`).then(
+		(mod) => {
+			if (typeof mod.startServer === "function") {
+				mod.startServer();
+				console.log(`[react-grab] Started ${providerId} agent server`);
+			}
+		},
+		(err) => {
+			console.warn(`[react-grab] Could not start ${providerId} server:`, err.message);
+		}
+	);
+}
 
 /** @type {import('next').NextConfig} */
 const nextConfig: NextConfig = {

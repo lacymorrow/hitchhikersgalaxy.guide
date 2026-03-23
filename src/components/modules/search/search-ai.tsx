@@ -111,6 +111,7 @@ export const SearchAi = ({
   const [isAIResponseExpanded, setIsAIResponseExpanded] = React.useState(true);
   const [isSearchResultsExpanded, setIsSearchResultsExpanded] = React.useState(true);
   const [isClient, setIsClient] = React.useState(false);
+  const [lastSubmittedQuery, setLastSubmittedQuery] = React.useState<string>("");
 
   const { textareaRef, adjustHeight } = useAutoResizeTextarea({
     minHeight: MIN_HEIGHT,
@@ -118,7 +119,13 @@ export const SearchAi = ({
   });
 
   const handleSearch = async () => {
-    if (!query.trim() || isSearchInProgress) return;
+    const trimmed = query.trim();
+    if (!trimmed || isSearchInProgress) return;
+
+    // Build the full query key including suggestion prefix
+    const fullQuery = `${selectedSuggestion ? `[${selectedSuggestion}] ` : ""}${trimmed}`;
+    if (fullQuery === lastSubmittedQuery) return;
+    setLastSubmittedQuery(fullQuery);
 
     setIsSearchInProgress(true);
     setIsLoading(true);
@@ -245,6 +252,7 @@ export const SearchAi = ({
     setAnswer("");
     setError(null);
     setSelectedSuggestion(null);
+    setLastSubmittedQuery("");
     // On larger screens, keep expanded. On smaller screens, start collapsed for preview
     setIsAIResponseExpanded(true);
     setIsSearchResultsExpanded(true);

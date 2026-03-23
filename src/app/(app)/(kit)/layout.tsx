@@ -12,7 +12,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
         <Header
           user={session?.user}
           variant="floating"
-          opaqueOnScroll={100}
+          opaqueOnScroll={0}
           animatedCTAOnScroll={700}
           searchVariant="ai"
         />

@@ -302,7 +302,7 @@ export const SearchAi = ({
       </Button>
 
       <Dialog open={open} onOpenChange={handleModalToggle}>
-        <DialogContent className="max-h-[90vh] sm:max-w-[1000px] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] sm:max-w-[1000px] overflow-hidden flex flex-col">
           <DialogHeader>
             <DialogTitle>Search Documentation</DialogTitle>
             <DialogDescription>
@@ -310,7 +310,7 @@ export const SearchAi = ({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="w-full py-4">
+          <div className="w-full py-4 shrink-0">
             <div className="relative mx-auto w-full max-w-full">
               <div className="relative rounded-2xl border border-black/10 bg-black/[0.03] focus-within:border-black/20 dark:border-white/10 dark:bg-white/[0.03] dark:focus-within:border-white/20">
                 <div className="flex flex-col">
@@ -410,7 +410,7 @@ export const SearchAi = ({
 
           {/* Results Section - Responsive Layout */}
           {(showResultsSection || error) && (
-            <>
+            <div className="min-h-0 flex-1 overflow-y-auto flex flex-col gap-4">
               {/* Mobile/Tablet: Preview Cards */}
               <div className="flex flex-col gap-4 lg:hidden">
                 {/* Search Results Preview Card */}
@@ -545,10 +545,10 @@ export const SearchAi = ({
               </div>
 
               {/* Desktop: Side by Side */}
-              <div className="hidden lg:flex lg:gap-6">
+              <div className="hidden lg:flex lg:gap-6 min-h-0 flex-1">
                 {/* Search Results Column */}
-                <div className="flex-1">
-                  <div className="rounded-lg border bg-white dark:bg-gray-900">
+                <div className="flex-1 min-h-0 flex flex-col">
+                  <div className="rounded-lg border bg-white dark:bg-gray-900 flex flex-col min-h-0 flex-1">
                     <div className="flex items-center justify-between border-b p-4">
                       <div className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4 text-blue-600" />
@@ -575,14 +575,14 @@ export const SearchAi = ({
                     </div>
 
                     {isSearchResultsExpanded && (
-                      <div className="p-4">
+                      <div className="p-4 min-h-0 flex-1 overflow-hidden">
                         {isLoading && searchResults.length === 0 ? (
                           <div className="flex items-center gap-3">
                             <Loader className="h-4 w-4 animate-spin text-blue-600" />
                             <span className="text-sm text-slate-500">Finding related docs...</span>
                           </div>
                         ) : searchResults.length > 0 ? (
-                          <ScrollArea className="max-h-[400px]">
+                          <ScrollArea className="h-full">
                             <ul className="space-y-2">
                               {searchResults.map((result) => (
                                 <li key={result.url}>
@@ -613,8 +613,8 @@ export const SearchAi = ({
                 </div>
 
                 {/* AI Response Column */}
-                <div className="flex-1">
-                  <div className="rounded-lg border bg-white dark:bg-gray-900">
+                <div className="flex-1 min-h-0 flex flex-col">
+                  <div className="rounded-lg border bg-white dark:bg-gray-900 flex flex-col min-h-0 flex-1">
                     <div className="flex items-center justify-between border-b p-4">
                       <div className="flex items-center gap-2">
                         <HelpCircle className="h-4 w-4 text-purple-600" />
@@ -641,14 +641,14 @@ export const SearchAi = ({
                     </div>
 
                     {isAIResponseExpanded && (
-                      <div className="p-4">
+                      <div className="p-4 min-h-0 flex-1 overflow-hidden">
                         {isLoading && !answer ? (
                           <div className="flex items-center gap-3">
                             <Loader className="h-4 w-4 animate-spin text-purple-600" />
                             <span className="text-sm text-slate-500">AI is thinking...</span>
                           </div>
                         ) : answer ? (
-                          <ScrollArea className="max-h-[400px]">
+                          <ScrollArea className="h-full">
                             <div className="prose max-w-none text-sm dark:prose-invert">
                               <ReactMarkdown>{answer}</ReactMarkdown>
                             </div>
@@ -668,7 +668,7 @@ export const SearchAi = ({
                   </div>
                 </div>
               </div>
-            </>
+            </div>
           )}
         </DialogContent>
       </Dialog>

@@ -302,7 +302,7 @@ export const SearchAi = ({
       </Button>
 
       <Dialog open={open} onOpenChange={handleModalToggle}>
-        <DialogContent className="max-h-[90vh] overflow-hidden sm:max-w-[1000px]">
+        <DialogContent className="max-h-[90vh] sm:max-w-[1000px] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Search Documentation</DialogTitle>
             <DialogDescription>
@@ -582,7 +582,7 @@ export const SearchAi = ({
                             <span className="text-sm text-slate-500">Finding related docs...</span>
                           </div>
                         ) : searchResults.length > 0 ? (
-                          <ScrollArea className={`max-h-[${MAX_SECTION_HEIGHT}px]`}>
+                          <ScrollArea className="max-h-[400px]">
                             <ul className="space-y-2">
                               {searchResults.map((result) => (
                                 <li key={result.url}>
@@ -648,7 +648,7 @@ export const SearchAi = ({
                             <span className="text-sm text-slate-500">AI is thinking...</span>
                           </div>
                         ) : answer ? (
-                          <ScrollArea className={`max-h-[${MAX_SECTION_HEIGHT}px]`}>
+                          <ScrollArea className="max-h-[400px]">
                             <div className="prose max-w-none text-sm dark:prose-invert">
                               <ReactMarkdown>{answer}</ReactMarkdown>
                             </div>

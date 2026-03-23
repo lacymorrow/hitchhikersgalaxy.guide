@@ -33,31 +33,6 @@ interface FontsApiResponse {
   error?: string;
 }
 
-// Map font category to the CSS custom property it should target
-function getCssVar(category: FontCategory): string {
-  switch (category) {
-    case "serif":
-      return "--font-serif";
-    case "monospace":
-      return "--font-mono";
-    default:
-      // sans-serif, display, handwriting all go to --font-sans
-      return "--font-sans";
-  }
-}
-
-// Map font category to the Tailwind utility class to apply
-function getTailwindClass(category: FontCategory): string {
-  switch (category) {
-    case "serif":
-      return "font-serif";
-    case "monospace":
-      return "font-mono";
-    default:
-      return "font-sans";
-  }
-}
-
 const DEBOUNCE_DELAY = 300;
 const BROWSE_LIMIT = 50;
 const FONT_API_PATH = "/dev/api/fonts";
@@ -71,8 +46,7 @@ export function FontSelector() {
   const fontSelectorEnabled = env.NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED;
   const [open, setOpen] = React.useState(false);
   const [selectedFont, setSelectedFont] = React.useState<string>("");
-  const [fallbackStacks, setFallbackStacks] = React.useState<Record<string, string>>({});
-  const [defaultFallback, setDefaultFallback] = React.useState<string>("");
+
   const [initialLoading, setInitialLoading] = React.useState(true);
   const [initialError, setInitialError] = React.useState<string | null>(null);
 
@@ -96,81 +70,46 @@ export function FontSelector() {
   const [isCuratedList, setIsCuratedList] = React.useState(false);
   const [mounted, setMounted] = React.useState(false);
 
-  // Track which CSS var/class we last applied so we can clean up on change
-  const lastAppliedRef = React.useRef<{ cssVar: string; tailwindClass: string } | null>(null);
-
-  // Store original CSS variable values for restoration
-  const originalsRef = React.useRef<Map<string, string>>(new Map());
-
-  // Apply font: sets the right CSS variable based on category, swaps Tailwind class on body
+  // Apply font globally: injects a <style> tag that forces font-family on all elements.
+  // This bypasses next/font scoped class names, Tailwind utilities, and CSS variable
+  // specificity issues by using !important on *, body, and common element selectors.
   const applyFont = React.useCallback(
-    (fontFamily: string, category: FontCategory | undefined) => {
+    (fontFamily: string) => {
       if (typeof window === "undefined") return;
 
-      const resolvedCategory = category || "sans-serif";
-      const cssVar = getCssVar(resolvedCategory);
-      const tailwindClass = getTailwindClass(resolvedCategory);
-      const fallback = fallbackStacks[resolvedCategory] || defaultFallback;
+      const fallback = "ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif";
 
-      // Save original value if we haven't yet
-      if (!originalsRef.current.has(cssVar)) {
-        const original = getComputedStyle(document.documentElement).getPropertyValue(cssVar).trim();
-        if (original) {
-          originalsRef.current.set(cssVar, original);
-        }
-      }
-
-      // Clean up previous application if targeting a different var/class
-      if (lastAppliedRef.current && lastAppliedRef.current.cssVar !== cssVar) {
-        const prevVar = lastAppliedRef.current.cssVar;
-        const prevOriginal = originalsRef.current.get(prevVar);
-        if (prevOriginal) {
-          document.documentElement.style.setProperty(prevVar, prevOriginal);
-        } else {
-          document.documentElement.style.removeProperty(prevVar);
-        }
-        document.body.style.removeProperty(prevVar);
-      }
-
-      // Remove old font stylesheet
+      // Remove old font link
       const existingLink = document.head.querySelector('link[data-font-selector="true"]');
       if (existingLink) document.head.removeChild(existingLink);
 
-      // Load new font from Google Fonts CDN
-      if (fontFamily) {
-        const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, "+")}:wght@400;700&display=swap`;
-        const link = document.createElement("link");
-        link.href = fontUrl;
-        link.rel = "stylesheet";
-        link.setAttribute("data-font-selector", "true");
-        document.head.appendChild(link);
-      }
+      // Remove old override style
+      const existingStyle = document.head.querySelector('style[data-font-selector-override="true"]');
+      if (existingStyle) document.head.removeChild(existingStyle);
+
+      if (!fontFamily) return;
+
+      // Load font from Google Fonts CDN
+      const fontUrl = `https://fonts.googleapis.com/css2?family=${fontFamily.replace(/ /g, "+")}:wght@100;200;300;400;500;600;700;800;900&display=swap`;
+      const link = document.createElement("link");
+      link.href = fontUrl;
+      link.rel = "stylesheet";
+      link.setAttribute("data-font-selector", "true");
+      document.head.appendChild(link);
 
       // Build the font-family value
-      const fontName = fontFamily
-        ? fontFamily.includes(" ")
-          ? `"${fontFamily}"`
-          : fontFamily
-        : null;
-      const fontValue = fontName ? `${fontName}, ${fallback}` : fallback;
+      const fontName = fontFamily.includes(" ") ? `"${fontFamily}"` : fontFamily;
+      const fontValue = `${fontName}, ${fallback}`;
 
-      // Set the CSS custom property on both html and body.
-      // Next.js font variable classes set --font-serif on <body>,
-      // so we must also set on body to override them (closer scope wins).
-      document.documentElement.style.setProperty(cssVar, fontValue);
-      document.body.style.setProperty(cssVar, fontValue);
-
-      // Swap the Tailwind font class on <body>
-      const body = document.body;
-      if (lastAppliedRef.current) {
-        body.classList.remove(lastAppliedRef.current.tailwindClass);
-      }
-      body.classList.remove("font-sans", "font-serif", "font-mono");
-      body.classList.add(tailwindClass);
-
-      lastAppliedRef.current = { cssVar, tailwindClass };
+      // Inject a <style> tag that forces the font on everything
+      const style = document.createElement("style");
+      style.setAttribute("data-font-selector-override", "true");
+      style.textContent = `
+        *, *::before, *::after { font-family: ${fontValue} !important; }
+      `;
+      document.head.appendChild(style);
     },
-    [fallbackStacks, defaultFallback]
+    []
   );
 
   // Register font categories from API responses
@@ -199,8 +138,7 @@ export function FontSelector() {
           throw new Error(data.error || `HTTP error! status: ${response.status}`);
         }
         const data: FontsApiResponse = await response.json();
-        setFallbackStacks(data.fallbackStacks || {});
-        if (data.fallback) setDefaultFallback(data.fallback);
+
         setBrowsedFonts(data.fonts || []);
         setBrowseHasMore(data.hasMore ?? false);
         setBrowsePage(1);
@@ -298,10 +236,9 @@ export function FontSelector() {
   // Apply selected font whenever it changes
   React.useEffect(() => {
     if (mounted) {
-      const category = fontCategories.get(selectedFont);
-      applyFont(selectedFont, category);
+      applyFont(selectedFont);
     }
-  }, [selectedFont, fontCategories, mounted, applyFont]);
+  }, [selectedFont, mounted, applyFont]);
 
   if (!fontSelectorEnabled) return null;
   if (!mounted) return null;

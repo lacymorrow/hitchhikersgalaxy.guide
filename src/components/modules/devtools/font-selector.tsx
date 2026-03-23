@@ -62,12 +62,6 @@ const DEBOUNCE_DELAY = 300;
 const BROWSE_LIMIT = 50;
 const FONT_API_PATH = "/dev/api/fonts";
 
-const DEFAULT_SANS_FALLBACK = [
-  "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont",
-  '"Segoe UI"', "Roboto", '"Helvetica Neue"', "Arial", '"Noto Sans"', "sans-serif",
-  '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"',
-].join(", ");
-
 /**
  * Font selector with category-aware CSS variable targeting.
  * Serif fonts update --font-serif, sans-serif/display/handwriting update --font-sans,
@@ -78,6 +72,7 @@ export function FontSelector() {
   const [open, setOpen] = React.useState(false);
   const [selectedFont, setSelectedFont] = React.useState<string>("");
   const [fallbackStacks, setFallbackStacks] = React.useState<Record<string, string>>({});
+  const [defaultFallback, setDefaultFallback] = React.useState<string>("");
   const [initialLoading, setInitialLoading] = React.useState(true);
   const [initialError, setInitialError] = React.useState<string | null>(null);
 
@@ -115,7 +110,7 @@ export function FontSelector() {
       const resolvedCategory = category || "sans-serif";
       const cssVar = getCssVar(resolvedCategory);
       const tailwindClass = getTailwindClass(resolvedCategory);
-      const fallback = fallbackStacks[resolvedCategory] || DEFAULT_SANS_FALLBACK;
+      const fallback = fallbackStacks[resolvedCategory] || defaultFallback;
 
       // Save original value if we haven't yet
       if (!originalsRef.current.has(cssVar)) {
@@ -127,13 +122,14 @@ export function FontSelector() {
 
       // Clean up previous application if targeting a different var/class
       if (lastAppliedRef.current && lastAppliedRef.current.cssVar !== cssVar) {
-        // Restore the previous CSS variable to its original value
-        const prevOriginal = originalsRef.current.get(lastAppliedRef.current.cssVar);
+        const prevVar = lastAppliedRef.current.cssVar;
+        const prevOriginal = originalsRef.current.get(prevVar);
         if (prevOriginal) {
-          document.documentElement.style.setProperty(lastAppliedRef.current.cssVar, prevOriginal);
+          document.documentElement.style.setProperty(prevVar, prevOriginal);
         } else {
-          document.documentElement.style.removeProperty(lastAppliedRef.current.cssVar);
+          document.documentElement.style.removeProperty(prevVar);
         }
+        document.body.style.removeProperty(prevVar);
       }
 
       // Remove old font stylesheet
@@ -158,21 +154,23 @@ export function FontSelector() {
         : null;
       const fontValue = fontName ? `${fontName}, ${fallback}` : fallback;
 
-      // Set the CSS custom property
+      // Set the CSS custom property on both html and body.
+      // Next.js font variable classes set --font-serif on <body>,
+      // so we must also set on body to override them (closer scope wins).
       document.documentElement.style.setProperty(cssVar, fontValue);
+      document.body.style.setProperty(cssVar, fontValue);
 
       // Swap the Tailwind font class on <body>
       const body = document.body;
       if (lastAppliedRef.current) {
         body.classList.remove(lastAppliedRef.current.tailwindClass);
       }
-      // Remove all font-* classes first to avoid conflicts
       body.classList.remove("font-sans", "font-serif", "font-mono");
       body.classList.add(tailwindClass);
 
       lastAppliedRef.current = { cssVar, tailwindClass };
     },
-    [fallbackStacks]
+    [fallbackStacks, defaultFallback]
   );
 
   // Register font categories from API responses
@@ -202,6 +200,7 @@ export function FontSelector() {
         }
         const data: FontsApiResponse = await response.json();
         setFallbackStacks(data.fallbackStacks || {});
+        if (data.fallback) setDefaultFallback(data.fallback);
         setBrowsedFonts(data.fonts || []);
         setBrowseHasMore(data.hasMore ?? false);
         setBrowsePage(1);

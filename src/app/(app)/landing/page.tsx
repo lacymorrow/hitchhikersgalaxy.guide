@@ -76,6 +76,7 @@ export const metadata: Metadata = constructMetadata({
 
 export default async function Home() {
   const landingAiContent = `${siteConfig.title}\n\n${siteConfig.description}`;
+  const isProduction = process.env.NEXT_PUBLIC_VERCEL_ENV === "production";
 
   return (
     <>
@@ -166,109 +167,125 @@ export default async function Home() {
         </Section>
 
         <Suspense fallback={<SuspenseFallback />}>
-          <SocialProof />
+          <BlurFade inView>
+            <SocialProof />
+          </BlurFade>
 
           <div className="hidden lg:block">
-            <AiDemoSection />
+            <BlurFade inView>
+              <AiDemoSection />
+            </BlurFade>
           </div>
 
           <Section>
-            <SectionHeader>One price. Everything included.</SectionHeader>
-            <SectionCopy>
-              No tiers. No feature gates. $249 for the full stack. Updates forever.
-            </SectionCopy>
+            <BlurFade inView>
+              <SectionHeader>One price. Everything included.</SectionHeader>
+            </BlurFade>
+            <BlurFade inView>
+              <SectionCopy>
+                No tiers. No feature gates. $249 for the full stack. Updates forever.
+              </SectionCopy>
+            </BlurFade>
 
-            <PricingSectionSingle plan={singlePlan}>
-              <div className="border-gray-800 pt-8 text-center text-sm text-gray-400">
-                <p>
-                  Prefer to build it yourself?{" "}
-                  <Link
-                    href={routes.external.buy}
-                    className={cn(buttonVariants({ variant: "link" }), "px-1")}
-                  >
-                    Shipkit Bones is always free
-                  </Link>
-                </p>
-              </div>
-            </PricingSectionSingle>
-
-            <div className="mt-6 text-center">
-              <p className="text-sm text-gray-500 mb-4">
-                Everything included: Next.js 15, TypeScript, Authentication, Database, UI
-                Components, and more
-              </p>
-              <div className="flex items-center justify-center gap-8">
-                <div className="flex items-center gap-2">
-                  <Shield className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">Secure Payment</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <RefreshCw className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">30-Day Refund</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Timer className="h-4 w-4 text-green-500" />
-                  <span className="text-sm">Instant Access</span>
-                </div>
-              </div>
-            </div>
-          </Section>
-
-          <Section>
-            <SectionBadge className="inline-flex items-center gap-2 px-4 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-medium mb-4">
-              <Calculator className="h-4 w-4" />
-              <span>$ Saved</span>
-            </SectionBadge>
-            <SectionHeader>How long would this take to build yourself?</SectionHeader>
-            <SectionContent>
-              <div className="max-w-4xl mx-auto">
-                <div className="text-center mb-8">
-                  <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-sm font-medium mb-6">
-                    <Calculator className="h-4 w-4" />
-                    <span>ROI Calculator</span>
-                  </div>
-                  <p className="text-lg text-gray-600 dark:text-gray-300">
-                    Auth setup, payment integration, CMS, email system, dashboard UI, AI hooks. That's 2-3 months of plumbing before you write a single line of product code. Or just clone Shipkit.
+            <BlurFade inView>
+              <PricingSectionSingle plan={singlePlan}>
+                <div className="border-gray-800 pt-8 text-center text-sm text-gray-400">
+                  <p>
+                    Prefer to build it yourself?{" "}
+                    <Link
+                      href={routes.external.buy}
+                      className={cn(buttonVariants({ variant: "link" }), "px-1")}
+                    >
+                      Shipkit Bones is always free
+                    </Link>
                   </p>
                 </div>
-                <ROICalculator />
+              </PricingSectionSingle>
+            </BlurFade>
+
+            <BlurFade inView>
+              <div className="mt-6 text-center">
+                <p className="text-sm text-gray-500 mb-4">
+                  Everything included: Next.js 15, TypeScript, Authentication, Database, UI
+                  Components, and more
+                </p>
+                <div className="flex items-center justify-center gap-8">
+                  <div className="flex items-center gap-2">
+                    <Shield className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Secure Payment</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <RefreshCw className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">30-Day Refund</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Timer className="h-4 w-4 text-green-500" />
+                    <span className="text-sm">Instant Access</span>
+                  </div>
+                </div>
               </div>
-            </SectionContent>
+            </BlurFade>
           </Section>
+
+          {!isProduction && (
+            <Section>
+              <SectionBadge className="inline-flex items-center gap-2 px-4 rounded-full bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm font-medium mb-4">
+                <Calculator className="h-4 w-4" />
+                <span>$ Saved</span>
+              </SectionBadge>
+              <SectionHeader>How long would this take to build yourself?</SectionHeader>
+              <SectionContent>
+                <div className="max-w-4xl mx-auto">
+                  <div className="text-center mb-8">
+                    <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 dark:bg-green-900/20 text-green-600 dark:text-green-400 text-sm font-medium mb-6">
+                      <Calculator className="h-4 w-4" />
+                      <span>ROI Calculator</span>
+                    </div>
+                    <p className="text-lg text-gray-600 dark:text-gray-300">
+                      Auth setup, payment integration, CMS, email system, dashboard UI, AI hooks. That's 2-3 months of plumbing before you write a single line of product code. Or just clone Shipkit.
+                    </p>
+                  </div>
+                  <ROICalculator />
+                </div>
+              </SectionContent>
+            </Section>
+          )}
 
           <Section className="max-w-3xl">
-            <SectionBadge>Common Questions</SectionBadge>
-            <SectionHeader>Common questions</SectionHeader>
-            <SectionCopy>
-              Can't find what you're looking for? Reach out on
-              <Link
-                className={cn(buttonVariants({ variant: "link", size: "lg" }), "px-1")}
-                href={routes.external.email}
-              >
-                email
-              </Link>
-              <Link
-                className={cn(buttonVariants({ variant: "link", size: "lg" }), "px-1")}
-                href={routes.external.x_follow}
-              >
-                or Twitter
-              </Link>
-            </SectionCopy>
-            <SectionContent>
-              <FAQ />
-            </SectionContent>
-            <SectionCopy className="text-sm text-gray-500">
-              Have a special requirement?{" "}
-              <Link
-                href={routes.external.email}
-                className={cn(buttonVariants({ variant: "link", size: "sm" }), "px-1")}
-              >
-                Let's chat →
-              </Link>
-            </SectionCopy>
+            <BlurFade inView>
+              <SectionBadge>Common Questions</SectionBadge>
+              <SectionHeader>Common questions</SectionHeader>
+              <SectionCopy>
+                Can't find what you're looking for? Reach out on
+                <Link
+                  className={cn(buttonVariants({ variant: "link", size: "lg" }), "px-1")}
+                  href={routes.external.email}
+                >
+                  email
+                </Link>
+                <Link
+                  className={cn(buttonVariants({ variant: "link", size: "lg" }), "px-1")}
+                  href={routes.external.x_follow}
+                >
+                  or Twitter
+                </Link>
+              </SectionCopy>
+              <SectionContent>
+                <FAQ />
+              </SectionContent>
+              <SectionCopy className="text-sm text-gray-500">
+                Have a special requirement?{" "}
+                <Link
+                  href={routes.external.email}
+                  className={cn(buttonVariants({ variant: "link", size: "sm" }), "px-1")}
+                >
+                  Let's chat →
+                </Link>
+              </SectionCopy>
+            </BlurFade>
           </Section>
 
-          {process.env.NEXT_PUBLIC_VERCEL_ENV !== "production" && (
+          {!isProduction && (
             <>
               <h2 className="mb-8 text-center text-3xl font-bold">DEVELOPMENT DEMO</h2>
 

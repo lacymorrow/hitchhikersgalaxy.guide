@@ -23,13 +23,12 @@ export function PricingSectionSingle({ plans, plan, children }: PricingSectionSi
 
   const price =
     selectedPlan.price.monthly || selectedPlan.price.annually || selectedPlan.price.oneTime || 0;
-  const originalPrice = price * 2; // Example: showing original price as double
 
   return (
     <div className="relative w-full text-white">
       {/* Background gradient effect */}
       <div className="container mx-auto p-4">
-        <Card className="relative mx-auto max-w-3xl overflow-hidden border-purple-500/50 backdrop-blur-sm">
+        <Card className="relative mx-auto max-w-3xl overflow-hidden border-purple-500/50 backdrop-blur-sm transition-shadow duration-300 hover:shadow-xl hover:shadow-purple-500/10">
           <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-transparent to-transparent" />
           <div className="absolute -right-32 -top-32 h-64 w-64 rounded-full bg-purple-500/10 blur-[100px]" />
 
@@ -41,13 +40,7 @@ export function PricingSectionSingle({ plans, plan, children }: PricingSectionSi
 
             <div className="space-y-2">
               <div className="flex items-center justify-center gap-3">
-                <span className="text-2xl font-bold text-gray-400 line-through sm:text-3xl">
-                  ${originalPrice}
-                </span>
-                <span className="text-4xl font-bold sm:text-5xl">${price}</span>
-              </div>
-              <div className="inline-block rounded-full bg-purple-500/10 px-4 py-1 text-purple-400">
-                50% OFF - Until My Wedding
+                <span className="text-5xl font-bold sm:text-6xl">${price}</span>
               </div>
               {selectedPlan.description && (
                 <div className="border-gray-800 pt-8 text-center text-sm text-gray-400">
@@ -81,7 +74,7 @@ export function PricingSectionSingle({ plans, plan, children }: PricingSectionSi
                   href={selectedPlan.href}
                   className={cn(
                     buttonVariants({ variant: "default" }),
-                    "w-full bg-purple-500 text-lg text-white hover:bg-purple-600"
+                    "w-full bg-purple-500 text-lg text-white transition-all duration-200 hover:bg-purple-600 hover:scale-[1.02] active:scale-[0.98]"
                   )}
                 >
                   Get {selectedPlan.title} Now

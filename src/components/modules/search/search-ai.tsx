@@ -150,11 +150,15 @@ export const SearchAi = ({
       }),
     });
 
+    // Track results locally to avoid stale closure reads
+    let localSearchResults: SearchResult[] = [];
+
     // Handle search results
     try {
       const searchResponse = await searchResultsPromise;
       if (searchResponse.ok) {
         const { results } = await searchResponse.json();
+        localSearchResults = results;
         setSearchResults(results);
       } else {
         console.warn("Failed to fetch search results, but continuing with AI response");
@@ -164,7 +168,6 @@ export const SearchAi = ({
     }
 
     // Handle AI streaming response
-    let hasAIResponse = false;
     try {
       const streamResponse = await aiStreamPromise;
 
@@ -194,14 +197,12 @@ export const SearchAi = ({
         accumulatedAnswer += chunk;
         setAnswer(accumulatedAnswer);
       }
-      hasAIResponse = true;
     } catch (err) {
       console.error("AI streaming error:", err);
-      // Only set error if we also don't have search results to show
-      if (searchResults.length === 0 && !hasAIResponse) {
+      // Only surface the error if we have no search results to fall back on
+      if (localSearchResults.length === 0) {
         setError(err instanceof Error ? err.message : "An error occurred");
       } else {
-        // We have search results, so just log the AI error but don't show it to user
         console.warn("AI response failed but search results are available");
       }
     } finally {
@@ -407,17 +408,8 @@ export const SearchAi = ({
             </div>
           </div>
 
-          {error && (
-            <div className="flex items-start gap-4">
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-red-100 p-2 dark:bg-red-900">
-                <Frown className="h-4 w-4 text-red-600 dark:text-red-400" />
-              </span>
-              <p className="mt-0.5 text-red-600 dark:text-red-400">{error}</p>
-            </div>
-          )}
-
           {/* Results Section - Responsive Layout */}
-          {showResultsSection && !error && (
+          {(showResultsSection || error) && (
             <>
               {/* Mobile/Tablet: Preview Cards */}
               <div className="flex flex-col gap-4 lg:hidden">
@@ -537,6 +529,11 @@ export const SearchAi = ({
                             <ReactMarkdown>{answer}</ReactMarkdown>
                           </div>
                         </ScrollArea>
+                      ) : error ? (
+                        <div className="flex items-start gap-3">
+                          <Frown className="h-4 w-4 shrink-0 text-red-500 mt-0.5" />
+                          <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                        </div>
                       ) : hasSearched ? (
                         <div className="flex items-center gap-3 text-slate-500">
                           <span className="text-sm">No AI response available</span>
@@ -656,6 +653,11 @@ export const SearchAi = ({
                               <ReactMarkdown>{answer}</ReactMarkdown>
                             </div>
                           </ScrollArea>
+                        ) : error ? (
+                          <div className="flex items-start gap-3">
+                            <Frown className="h-4 w-4 shrink-0 text-red-500 mt-0.5" />
+                            <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
+                          </div>
                         ) : hasSearched ? (
                           <div className="flex items-center gap-3 text-slate-500">
                             <span className="text-sm">No AI response available</span>

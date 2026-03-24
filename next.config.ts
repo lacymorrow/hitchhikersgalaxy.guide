@@ -370,11 +370,7 @@ const nextConfig: NextConfig = {
         loaders: ["raw-loader"],
         as: "*.js",
       },
-      // Handle MDX files for docs
-      "*.mdx": {
-        loaders: ["raw-loader"],
-        as: "*.js",
-      },
+      // MDX files are handled by @next/mdx plugin (with-mdx.ts), not raw-loader
     },
   },
 };

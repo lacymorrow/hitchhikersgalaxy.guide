@@ -258,7 +258,7 @@ export function NavMain({ items = data }: { items?: NavItem[] }) {
       </SidebarGroup>
 
       <SidebarGroup className="max-w-full">
-        <SidebarGroupLabel>Platform</SidebarGroupLabel>
+        <SidebarGroupLabel className="sr-only">Navigation</SidebarGroupLabel>
         <SidebarMenu className="max-w-full">
           {items.map((item) => renderMenuItem(item))}
         </SidebarMenu>

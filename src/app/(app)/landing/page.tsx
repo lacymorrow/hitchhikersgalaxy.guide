@@ -253,8 +253,8 @@ export default async function Home() {
 
           <Section className="max-w-3xl">
             <BlurFade inView>
-              <SectionBadge>Common Questions</SectionBadge>
-              <SectionHeader>Common questions</SectionHeader>
+              <SectionBadge>FAQ</SectionBadge>
+              <SectionHeader>Common Questions</SectionHeader>
               <SectionCopy>
                 Can't find what you're looking for? Reach out on
                 <Link
@@ -267,7 +267,7 @@ export default async function Home() {
                   className={cn(buttonVariants({ variant: "link", size: "lg" }), "px-1")}
                   href={routes.external.x_follow}
                 >
-                  or Twitter
+                  or X
                 </Link>
               </SectionCopy>
               <SectionContent>

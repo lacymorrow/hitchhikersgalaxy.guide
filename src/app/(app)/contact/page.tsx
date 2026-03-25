@@ -1,4 +1,4 @@
-import { MailIcon } from "lucide-react";
+import { ArrowLeft, MailIcon } from "lucide-react";
 import type { Metadata } from "next";
 import { ContactForm } from "@/components/forms/contact-form";
 import { Link } from "@/components/primitives/link";
@@ -27,6 +27,13 @@ export default function ContactPage() {
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col items-center justify-center px-4 py-20">
+        <Link
+          href={routes.home}
+          className="absolute left-4 top-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Home
+        </Link>
         <div className="mb-12 text-center">
           <h1 className="mb-4 text-4xl font-bold tracking-tight">Get in Touch</h1>
           <p className="text-lg text-muted-foreground">

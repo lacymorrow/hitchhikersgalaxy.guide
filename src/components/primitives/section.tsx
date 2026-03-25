@@ -69,7 +69,7 @@ export const SectionHeader = ({
 }) => (
   <h3
     className={cn(
-      "font-heading text-balance text-3xl font-semibold tracking-tight sm:text-4xl",
+      "font-heading text-balance text-center text-3xl font-semibold tracking-tight sm:text-4xl",
       className
     )}
   >

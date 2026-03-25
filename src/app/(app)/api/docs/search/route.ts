@@ -40,10 +40,6 @@ const searchRequestSchema = z.object({
 });
 
 export async function POST(req: Request) {
-  if (!openai) {
-    return NextResponse.json({ error: "OpenAI API key is not set." }, { status: 500 });
-  }
-
   try {
     // Extract client IP for rate limiting
     // Try to get IP from various headers in order of reliability
@@ -125,6 +121,11 @@ export async function POST(req: Request) {
     // Search documentation for streaming response
     const searchService = DocsSearchService.getInstance();
     const searchResults = await searchService.search(query, limit);
+
+    // If OpenAI isn't configured, fall back to returning JSON results
+    if (!openai) {
+      return NextResponse.json({ results: searchResults }, { headers: rateLimitHeaders });
+    }
 
     // Generate streaming AI response
     const response = await openai.chat.completions.create({

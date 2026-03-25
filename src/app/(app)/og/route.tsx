@@ -48,21 +48,31 @@ export async function GET(request: Request) {
   const title = searchParams.get("title") ?? siteConfig.title;
   const description = searchParams.get("description") ?? siteConfig.description;
   const url = searchParams.get("url") ?? siteConfig?.url.replace(/https?:\/\//, "");
+  const theme = searchParams.get("theme") === "light" ? "light" : "dark";
+
+  const isDark = theme === "dark";
+  const colors = {
+    bg: isDark ? "#000000" : "#ffffff",
+    fg: isDark ? "#ffffff" : "#000000",
+    border: isDark ? "#44403c" : "#d6d3d1",
+    muted: isDark ? "#78716c" : "#57534e",
+    body: isDark ? "#a8a29e" : "#57534e",
+  };
 
   const [fonts] = await Promise.all([loadAssets()]);
 
   return new ImageResponse(
-    <div tw="flex h-full w-full bg-black text-white" style={{ fontFamily: "Geist Sans" }}>
-      <div tw="flex border absolute border-stone-700 border-dashed inset-y-0 left-16 w-[1px]" />
-      <div tw="flex border absolute border-stone-700 border-dashed inset-y-0 right-16 w-[1px]" />
-      <div tw="flex border absolute border-stone-700 inset-x-0 h-[1px] top-16" />
-      <div tw="flex border absolute border-stone-700 inset-x-0 h-[1px] bottom-16" />
+    <div tw="flex h-full w-full" style={{ fontFamily: "Geist Sans", backgroundColor: colors.bg, color: colors.fg }}>
+      <div tw="flex absolute inset-y-0 left-16 w-[1px]" style={{ borderLeft: `1px dashed ${colors.border}` }} />
+      <div tw="flex absolute inset-y-0 right-16 w-[1px]" style={{ borderLeft: `1px dashed ${colors.border}` }} />
+      <div tw="flex absolute inset-x-0 h-[1px] top-16" style={{ borderTop: `1px solid ${colors.border}` }} />
+      <div tw="flex absolute inset-x-0 h-[1px] bottom-16" style={{ borderTop: `1px solid ${colors.border}` }} />
       <div tw="flex absolute bottom-24 right-24">
         <img src={`${origin}/app/og-logo.png`} width={80} height={80} alt="Logo" />
       </div>
       <div
-        tw="flex absolute bottom-24 left-24 text-stone-500 text-[32px]"
-        style={{ fontWeight: 400 }}
+        tw="flex absolute bottom-24 left-24 text-[32px]"
+        style={{ fontWeight: 400, color: colors.muted }}
       >
         {url}
       </div>
@@ -79,10 +89,11 @@ export async function GET(request: Request) {
           {title}
         </div>
         <div
-          tw="text-[40px] leading-[1.5] flex-grow-1 text-stone-400"
+          tw="text-[40px] leading-[1.5] flex-grow-1"
           style={{
             fontWeight: 500,
             textWrap: "balance",
+            color: colors.body,
           }}
         >
           {description}

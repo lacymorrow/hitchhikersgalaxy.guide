@@ -7,6 +7,7 @@ import { FontSelector } from "@/components/modules/devtools/font-selector";
 import { ReactGrab } from "@/components/modules/devtools/react-grab";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { fontSans, fontSerif } from "@/config/fonts";
+import { siteConfig } from "@/config/site-config";
 import {
   metadata as defaultMetadata,
   type HeadLinkHint,
@@ -49,6 +50,33 @@ export default async function Layout({
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "SoftwareApplication",
+              name: siteConfig.title,
+              description: siteConfig.description,
+              url: siteConfig.url,
+              applicationCategory: "DeveloperApplication",
+              operatingSystem: "Any",
+              offers: {
+                "@type": "Offer",
+                price: "0",
+                priceCurrency: "USD",
+              },
+              author: {
+                "@type": "Person",
+                name: siteConfig.creator.name,
+                url: siteConfig.creator.url,
+              },
+              codeRepository: siteConfig.repo.url,
+              programmingLanguage: ["TypeScript", "JavaScript"],
+              runtimePlatform: "Node.js",
+            }),
+          }}
+        />
         {headLinkHints.map((l: HeadLinkHint) => (
           <link key={`${l.rel}-${l.href}`} rel={l.rel} href={l.href} crossOrigin={l.crossOrigin} />
         ))}

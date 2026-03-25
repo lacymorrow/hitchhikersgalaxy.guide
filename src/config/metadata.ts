@@ -66,7 +66,17 @@ export const defaultMetadata: Metadata = {
   generator: siteConfig.metadata.generator,
   keywords: siteConfig.metadata.keywords,
   referrer: siteConfig.metadata.referrer,
-  robots: siteConfig.metadata.robots,
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-snippet": -1,
+      "max-image-preview": "large",
+      "max-video-preview": -1,
+    },
+  },
   alternates: siteConfig.metadata.alternates,
   openGraph: defaultOpenGraph,
   twitter: defaultTwitter,
@@ -81,6 +91,7 @@ export const defaultMetadata: Metadata = {
   other: {
     repository: siteConfig.repo.url,
     source: siteConfig.repo.url,
+    "ai:description": siteConfig.description,
   },
 };
 

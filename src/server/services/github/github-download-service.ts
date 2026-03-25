@@ -247,6 +247,53 @@ async function downloadFile(url: string, filePath: string): Promise<void> {
 }
 
 /**
+ * Repackage a GitHub zipball so the root directory uses a clean name
+ * instead of the default "owner-repo-sha" format.
+ *
+ * Uses JSZip for portability (no shell dependency on unzip/zip).
+ */
+async function repackageZip(filePath: string): Promise<void> {
+  const targetName = siteConfig.title.toLowerCase();
+
+  try {
+    const JSZip = (await import("jszip")).default;
+    const zipData = await readFile(filePath);
+    const zip = await JSZip.loadAsync(zipData);
+
+    // GitHub zipballs have a single root dir like "owner-repo-sha/"
+    const allPaths = Object.keys(zip.files);
+    const rootPrefix = allPaths[0]?.split("/")[0];
+
+    if (!rootPrefix || rootPrefix === targetName) {
+      return; // Already clean or can't determine root
+    }
+
+    // Rebuild zip with renamed root directory
+    const newZip = new JSZip();
+    for (const [path, file] of Object.entries(zip.files)) {
+      const newPath = path.replace(rootPrefix, targetName);
+      if (file.dir) {
+        newZip.folder(newPath);
+      } else {
+        const content = await file.async("nodebuffer");
+        newZip.file(newPath, content);
+      }
+    }
+
+    const output = await newZip.generateAsync({
+      type: "nodebuffer",
+      compression: "DEFLATE",
+      compressionOptions: { level: 6 },
+    });
+
+    await writeFile(filePath, output);
+    logger.info("Repackaged zip with clean root directory", { from: rootPrefix, to: targetName });
+  } catch (err) {
+    logger.warn("Failed to repackage zip, using original", { error: err });
+  }
+}
+
+/**
  * Downloads the latest release
  */
 async function downloadLatestRelease(): Promise<{
@@ -285,6 +332,9 @@ async function downloadLatestRelease(): Promise<{
 
     logger.info("Starting download", { url: downloadUrl });
     await downloadFile(downloadUrl, filePath);
+
+    // Repackage to use clean directory name instead of "lacymorrow-shipkit-<sha>"
+    await repackageZip(filePath);
 
     // Update metadata
     await writeMetadata({

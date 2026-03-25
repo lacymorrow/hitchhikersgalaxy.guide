@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
       headers: {
         "Content-Type": "application/zip",
         "Content-Length": stats.size.toString(),
-        "Content-Disposition": `attachment; filename="shipkit.zip"`,
+        "Content-Disposition": `attachment; filename="${siteConfig.title.toLowerCase()}.zip"`,
         "Cache-Control": "public, max-age=3600",
       },
     });

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { LayoutDashboard } from "lucide-react";
+import { buttonVariants } from "@/components/ui/button";
 import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
+import { cn } from "@/lib/utils";
 
 export const metadata: Metadata = constructMetadata({
   title: "Demo",
@@ -13,15 +15,18 @@ export const metadata: Metadata = constructMetadata({
 export default function DemoLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className="border-grid border-b">
+      <div className="border-grid border-b bg-muted/30">
         <div className="container-wrapper">
           <div className="container flex items-center gap-4 py-3">
             <Link
               href={routes.app.dashboard}
-              className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+              className={cn(
+                buttonVariants({ variant: "ghost", size: "sm" }),
+                "gap-1.5 text-muted-foreground hover:text-foreground"
+              )}
             >
-              <ArrowLeft className="h-4 w-4" />
-              Back to Dashboard
+              <LayoutDashboard className="h-4 w-4" />
+              Dashboard
             </Link>
           </div>
         </div>

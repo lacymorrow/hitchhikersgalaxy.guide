@@ -17,11 +17,21 @@ interface GradientCardsProps {
   className?: string;
 }
 
+const GRID_COLS: Record<number, string> = {
+  1: "md:grid-cols-1",
+  2: "md:grid-cols-2",
+  3: "md:grid-cols-3",
+  4: "md:grid-cols-4",
+};
+
 export const GradientCards: React.FC<GradientCardsProps> = ({ cards, className }) => {
+  const colsClass = GRID_COLS[Math.min(cards.length, 4)] ?? "md:grid-cols-4";
+
   return (
     <div
       className={cn(
-        `mx-auto relative grid w-5/6 grid-cols-1 gap-2 p-2 md:grid-cols-${Math.min(cards.length, 4)}`,
+        "mx-auto relative grid w-5/6 grid-cols-1 gap-2 p-2",
+        colsClass,
         className
       )}
     >

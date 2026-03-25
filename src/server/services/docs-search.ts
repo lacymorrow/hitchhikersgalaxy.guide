@@ -35,7 +35,19 @@ export class DocsSearchService {
     const rootDocsDir = join(process.cwd(), "docs");
     await this.loadDocFiles(rootDocsDir, "");
 
+    if (this.docsCache.size === 0) {
+      console.warn("DocsSearchService: No docs found in", rootDocsDir);
+    }
+
     this.initialized = true;
+  }
+
+  /**
+   * Force re-initialization (useful if docs were loaded after first access)
+   */
+  public reset() {
+    this.docsCache.clear();
+    this.initialized = false;
   }
 
   private async loadDocFiles(dir: string, baseReplacePath = "") {
@@ -66,6 +78,9 @@ export class DocsSearchService {
               .replace(/\.(mdx?|md)$/, "")
               .replace(/^\/+/, "");
           }
+
+          // Normalize index files: "getting-started/index" -> "getting-started"
+          relativePath = relativePath.replace(/\/index$/, "");
 
           // Avoid duplicates - prefer root docs over legacy
           if (!this.docsCache.has(relativePath)) {

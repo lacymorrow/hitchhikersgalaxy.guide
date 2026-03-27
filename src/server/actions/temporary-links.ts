@@ -1,32 +1,26 @@
 "use server";
 
-import { routes } from "@/config/routes";
-import { auth } from "@/server/auth";
-import {
-	createTemporaryLink,
-	getTemporaryLinkData,
-} from "@/server/services/temporary-links";
-import { redirect } from "next/navigation";
+/**
+ * @fileoverview Server actions for temporary link operations (mutations only)
+ * NOTE: For read operations, use the service directly:
+ * import { getTemporaryLinkData } from "@/server/services/temporary-links"
+ */
 
+import { createTemporaryLink } from "@/server/services/temporary-links";
+
+/**
+ * Generates a temporary download link for a user
+ */
 export const generateTemporaryLink = async ({
-	data = "hello",
-	userId,
+  data = "hello",
+  userId,
 }: {
-	data?: string;
-	userId: string;
+  data?: string;
+  userId: string;
 }) => {
-	const link = await createTemporaryLink({ data, userId, type: "download" });
-	if (!link || link.length === 0) {
-		throw new Error("Failed to create temporary link");
-	}
-	return link[0].id;
-};
-
-export const getTemporaryLink = async (linkId: string) => {
-	const session = await auth();
-	if (!session?.user?.id) {
-		redirect(routes.auth.signIn);
-	}
-
-	return await getTemporaryLinkData(linkId, session.user.id);
+  const link = await createTemporaryLink({ data, userId, type: "download" });
+  if (!link || link.length === 0 || !link[0]) {
+    throw new Error("Failed to create temporary link");
+  }
+  return link[0].id;
 };

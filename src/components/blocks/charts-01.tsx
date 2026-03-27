@@ -27,11 +27,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { Separator } from "@/components/ui/separator";
 
 export default function Charts() {
@@ -161,9 +157,8 @@ export default function Charts() {
               <span className="font-medium text-foreground">53,305</span> steps.
             </CardDescription>
             <CardDescription>
-              You need{" "}
-              <span className="font-medium text-foreground">12,584</span> more
-              steps to reach your goal.
+              You need <span className="font-medium text-foreground">12,584</span> more steps to
+              reach your goal.
             </CardDescription>
           </CardFooter>
         </Card>
@@ -305,9 +300,7 @@ export default function Charts() {
             <div className="grid auto-rows-min gap-2">
               <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                 12,453
-                <span className="text-sm font-normal text-muted-foreground">
-                  steps/day
-                </span>
+                <span className="text-sm font-normal text-muted-foreground">steps/day</span>
               </div>
               <ChartContainer
                 config={{
@@ -334,12 +327,7 @@ export default function Charts() {
                     },
                   ]}
                 >
-                  <Bar
-                    dataKey="steps"
-                    fill="var(--color-steps)"
-                    radius={4}
-                    barSize={32}
-                  >
+                  <Bar dataKey="steps" fill="var(--color-steps)" radius={4} barSize={32}>
                     <LabelList
                       position="insideLeft"
                       dataKey="date"
@@ -356,9 +344,7 @@ export default function Charts() {
             <div className="grid auto-rows-min gap-2">
               <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                 10,103
-                <span className="text-sm font-normal text-muted-foreground">
-                  steps/day
-                </span>
+                <span className="text-sm font-normal text-muted-foreground">steps/day</span>
               </div>
               <ChartContainer
                 config={{
@@ -385,12 +371,7 @@ export default function Charts() {
                     },
                   ]}
                 >
-                  <Bar
-                    dataKey="steps"
-                    fill="var(--color-steps)"
-                    radius={4}
-                    barSize={32}
-                  >
+                  <Bar dataKey="steps" fill="var(--color-steps)" radius={4} barSize={32}>
                     <LabelList
                       position="insideLeft"
                       dataKey="date"
@@ -413,16 +394,13 @@ export default function Charts() {
           <CardHeader className="p-4 pb-0">
             <CardTitle>Walking Distance</CardTitle>
             <CardDescription>
-              Over the last 7 days, your distance walked and run was 12.5 miles
-              per day.
+              Over the last 7 days, your distance walked and run was 12.5 miles per day.
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
             <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
               12.5
-              <span className="text-sm font-normal text-muted-foreground">
-                miles/day
-              </span>
+              <span className="text-sm font-normal text-muted-foreground">miles/day</span>
             </div>
             <ChartContainer
               config={{
@@ -472,21 +450,8 @@ export default function Charts() {
                   },
                 ]}
               >
-                <Bar
-                  dataKey="steps"
-                  fill="var(--color-steps)"
-                  radius={2}
-                  fillOpacity={0.2}
-                  activeIndex={6}
-                  activeBar={<Rectangle fillOpacity={0.8} />}
-                />
-                <XAxis
-                  dataKey="date"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={4}
-                  hide
-                />
+                <Bar dataKey="steps" fill="var(--color-steps)" radius={2} fillOpacity={0.2} />
+                <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={4} hide />
               </BarChart>
             </ChartContainer>
           </CardContent>
@@ -571,9 +536,7 @@ export default function Charts() {
                 <div className="text-xs text-muted-foreground">Move</div>
                 <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                   562
-                  <span className="text-sm font-normal text-muted-foreground">
-                    kcal
-                  </span>
+                  <span className="text-sm font-normal text-muted-foreground">kcal</span>
                 </div>
               </div>
               <Separator orientation="vertical" className="mx-2 h-10 w-px" />
@@ -581,9 +544,7 @@ export default function Charts() {
                 <div className="text-xs text-muted-foreground">Exercise</div>
                 <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                   73
-                  <span className="text-sm font-normal text-muted-foreground">
-                    min
-                  </span>
+                  <span className="text-sm font-normal text-muted-foreground">min</span>
                 </div>
               </div>
               <Separator orientation="vertical" className="mx-2 h-10 w-px" />
@@ -591,9 +552,7 @@ export default function Charts() {
                 <div className="text-xs text-muted-foreground">Stand</div>
                 <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
                   14
-                  <span className="text-sm font-normal text-muted-foreground">
-                    hr
-                  </span>
+                  <span className="text-sm font-normal text-muted-foreground">hr</span>
                 </div>
               </div>
             </div>
@@ -611,27 +570,21 @@ export default function Charts() {
                 <div className="text-sm text-muted-foreground">Move</div>
                 <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
                   562/600
-                  <span className="text-sm font-normal text-muted-foreground">
-                    kcal
-                  </span>
+                  <span className="text-sm font-normal text-muted-foreground">kcal</span>
                 </div>
               </div>
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-sm text-muted-foreground">Exercise</div>
                 <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
                   73/120
-                  <span className="text-sm font-normal text-muted-foreground">
-                    min
-                  </span>
+                  <span className="text-sm font-normal text-muted-foreground">min</span>
                 </div>
               </div>
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-sm text-muted-foreground">Stand</div>
                 <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
                   8/12
-                  <span className="text-sm font-normal text-muted-foreground">
-                    hr
-                  </span>
+                  <span className="text-sm font-normal text-muted-foreground">hr</span>
                 </div>
               </div>
             </div>
@@ -681,21 +634,13 @@ export default function Charts() {
                 startAngle={90}
                 endAngle={450}
               >
-                <PolarAngleAxis
-                  type="number"
-                  domain={[0, 100]}
-                  dataKey="value"
-                  tick={false}
-                />
+                <PolarAngleAxis type="number" domain={[0, 100]} dataKey="value" tick={false} />
                 <RadialBar dataKey="value" background cornerRadius={5} />
               </RadialBarChart>
             </ChartContainer>
           </CardContent>
         </Card>
-        <Card
-          x-chunk="A bar chart showing active energy in the past 7 days."
-          className="max-w-xs"
-        >
+        <Card x-chunk="A bar chart showing active energy in the past 7 days." className="max-w-xs">
           <CardHeader className="p-4 pb-0">
             <CardTitle>Active Energy</CardTitle>
             <CardDescription>
@@ -705,9 +650,7 @@ export default function Charts() {
           <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-2">
             <div className="flex items-baseline gap-2 text-3xl font-bold tabular-nums leading-none">
               1,254
-              <span className="text-sm font-normal text-muted-foreground">
-                kcal/day
-              </span>
+              <span className="text-sm font-normal text-muted-foreground">kcal/day</span>
             </div>
             <ChartContainer
               config={{
@@ -757,21 +700,8 @@ export default function Charts() {
                   },
                 ]}
               >
-                <Bar
-                  dataKey="calories"
-                  fill="var(--color-calories)"
-                  radius={2}
-                  fillOpacity={0.2}
-                  activeIndex={6}
-                  activeBar={<Rectangle fillOpacity={0.8} />}
-                />
-                <XAxis
-                  dataKey="date"
-                  tickLine={false}
-                  axisLine={false}
-                  tickMargin={4}
-                  hide
-                />
+                <Bar dataKey="calories" fill="var(--color-calories)" radius={2} fillOpacity={0.2} />
+                <XAxis dataKey="date" tickLine={false} axisLine={false} tickMargin={4} hide />
               </BarChart>
             </ChartContainer>
           </CardContent>
@@ -845,16 +775,8 @@ export default function Charts() {
                 <YAxis domain={["dataMin - 5", "dataMax + 2"]} hide />
                 <defs>
                   <linearGradient id="fillTime" x1="0" y1="0" x2="0" y2="1">
-                    <stop
-                      offset="5%"
-                      stopColor="var(--color-time)"
-                      stopOpacity={0.8}
-                    />
-                    <stop
-                      offset="95%"
-                      stopColor="var(--color-time)"
-                      stopOpacity={0.1}
-                    />
+                    <stop offset="5%" stopColor="var(--color-time)" stopOpacity={0.8} />
+                    <stop offset="95%" stopColor="var(--color-time)" stopOpacity={0.1} />
                   </linearGradient>
                 </defs>
                 <Area
@@ -872,9 +794,7 @@ export default function Charts() {
                       Time in bed
                       <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
                         {value}
-                        <span className="font-normal text-muted-foreground">
-                          hr
-                        </span>
+                        <span className="font-normal text-muted-foreground">hr</span>
                       </div>
                     </div>
                   )}

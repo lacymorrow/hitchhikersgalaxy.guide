@@ -22,11 +22,11 @@ const defaultProps: GradientBackgroundProps = {
 
 function hexToRgb(hex: string): [number, number, number] {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result
+  return result && result[1] && result[2] && result[3]
     ? [
-        parseInt(result[1], 16) / 255,
-        parseInt(result[2], 16) / 255,
-        parseInt(result[3], 16) / 255,
+        Number.parseInt(result[1], 16) / 255,
+        Number.parseInt(result[2], 16) / 255,
+        Number.parseInt(result[3], 16) / 255,
       ]
     : [0, 0, 0];
 }
@@ -90,7 +90,7 @@ export function StripeGradient(props: GradientBackgroundProps = {}) {
       gl_FragColor = vec4(color, 1.0);
     }
   `,
-    [],
+    []
   );
 
   const vertexShader = `
@@ -122,10 +122,7 @@ export function StripeGradient(props: GradientBackgroundProps = {}) {
     const colorBLocation = gl.getUniformLocation(program, "u_colorB");
     const colorCLocation = gl.getUniformLocation(program, "u_colorC");
     const colorDLocation = gl.getUniformLocation(program, "u_colorD");
-    const noiseIntensityLocation = gl.getUniformLocation(
-      program,
-      "u_noiseIntensity",
-    );
+    const noiseIntensityLocation = gl.getUniformLocation(program, "u_noiseIntensity");
 
     gl.enableVertexAttribArray(positionLocation);
     gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
@@ -139,8 +136,7 @@ export function StripeGradient(props: GradientBackgroundProps = {}) {
       gl.viewport(0, 0, width, height);
       gl.useProgram(program);
 
-      const time =
-        ((Date.now() - startTimeRef.current) / 1000) * mergedProps.speed;
+      const time = ((Date.now() - startTimeRef.current) / 1000) * mergedProps.speed;
       gl.uniform1f(timeLocation, time);
       gl.uniform2f(resolutionLocation, width, height);
       gl.uniform3fv(colorALocation, hexToRgb(mergedProps.colorA));
@@ -174,11 +170,7 @@ export function StripeGradient(props: GradientBackgroundProps = {}) {
   );
 }
 
-function createShaderProgram(
-  gl: WebGLRenderingContext,
-  vsSource: string,
-  fsSource: string,
-) {
+function createShaderProgram(gl: WebGLRenderingContext, vsSource: string, fsSource: string) {
   const vertexShader = gl.createShader(gl.VERTEX_SHADER);
   if (!vertexShader) return null;
   gl.shaderSource(vertexShader, vsSource);

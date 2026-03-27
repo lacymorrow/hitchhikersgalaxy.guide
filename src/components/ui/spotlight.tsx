@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import React from "react";
+import { cn } from "@/lib/utils";
 
 type SpotlightProps = {
   className?: string;
@@ -11,7 +11,7 @@ export const Spotlight = ({ className, fill }: SpotlightProps) => {
     <svg
       className={cn(
         "pointer-events-none absolute z-[1] h-[169%] w-[138%] animate-spotlight opacity-0 lg:w-[84%]",
-        className,
+        className
       )}
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 3787 2842"
@@ -26,7 +26,7 @@ export const Spotlight = ({ className, fill }: SpotlightProps) => {
           transform="matrix(-0.822377 -0.568943 -0.568943 0.822377 3631.88 2291.09)"
           fill={fill || "white"}
           fillOpacity="0.21"
-        ></ellipse>
+        />
       </g>
       <defs>
         <filter
@@ -38,17 +38,9 @@ export const Spotlight = ({ className, fill }: SpotlightProps) => {
           filterUnits="userSpaceOnUse"
           colorInterpolationFilters="sRGB"
         >
-          <feFlood floodOpacity="0" result="BackgroundImageFix"></feFlood>
-          <feBlend
-            mode="normal"
-            in="SourceGraphic"
-            in2="BackgroundImageFix"
-            result="shape"
-          ></feBlend>
-          <feGaussianBlur
-            stdDeviation="151"
-            result="effect1_foregroundBlur_1065_8"
-          ></feGaussianBlur>
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
+          <feBlend mode="normal" in="SourceGraphic" in2="BackgroundImageFix" result="shape" />
+          <feGaussianBlur stdDeviation="151" result="effect1_foregroundBlur_1065_8" />
         </filter>
       </defs>
     </svg>

@@ -1,11 +1,12 @@
+"use client";
+
+import { Minus, Plus } from "lucide-react";
+import type * as React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { Minus, Plus } from "lucide-react";
-import * as React from "react";
 
-interface NumberFieldProps
-  extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
+interface NumberFieldProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, "onChange"> {
   min?: number;
   max?: number;
   step?: number;
@@ -16,8 +17,8 @@ interface NumberFieldProps
 }
 
 export const NumberInput = ({
-  min = -Infinity,
-  max = Infinity,
+  min = Number.NEGATIVE_INFINITY,
+  max = Number.POSITIVE_INFINITY,
   step = 1,
   value = 0,
   onChange,

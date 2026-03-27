@@ -1,0 +1,14 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "use-copy-to-clipboard",
+  "title": "useCopyToClipboard",
+  "description": "A hook for copying text to the clipboard with a timeout reset.",
+  "files": [
+    {
+      "path": "src/hooks/use-copy-to-clipboard.ts",
+      "content": "\"use client\";\n\nimport * as React from \"react\";\n\nexport function useCopyToClipboard({\n  timeout = 2000,\n  onCopy,\n}: {\n  timeout?: number;\n  onCopy?: () => void;\n} = {}) {\n  const [isCopied, setIsCopied] = React.useState(false);\n\n  const copyToClipboard = async (value: string) => {\n    if (typeof window === \"undefined\" || !value) {\n      return;\n    }\n\n    try {\n      if (navigator?.clipboard) {\n        await navigator.clipboard.writeText(value);\n      } else {\n        // Fallback for browsers that don't support clipboard API\n        const textArea = document.createElement(\"textarea\");\n        textArea.value = value;\n        // Avoid scrolling to bottom\n        textArea.style.top = \"0\";\n        textArea.style.left = \"0\";\n        textArea.style.position = \"fixed\";\n\n        document.body.appendChild(textArea);\n        textArea.focus();\n        textArea.select();\n\n        try {\n          document.execCommand(\"copy\");\n        } catch (err) {\n          console.error(\"Failed to copy text:\", err);\n          return;\n        } finally {\n          document.body.removeChild(textArea);\n        }\n      }\n\n      setIsCopied(true);\n\n      if (onCopy) {\n        onCopy();\n      }\n\n      setTimeout(() => {\n        setIsCopied(false);\n      }, timeout);\n    } catch (error) {\n      console.error(\"Failed to copy text:\", error);\n    }\n  };\n\n  return { isCopied, copyToClipboard };\n}\n",
+      "type": "registry:hook"
+    }
+  ],
+  "type": "registry:hook"
+}

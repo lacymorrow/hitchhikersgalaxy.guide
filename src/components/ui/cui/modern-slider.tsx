@@ -18,9 +18,7 @@ export default function ModernSlider() {
       />
       <div className="relative">
         <p
-          className={
-            "absolute top-0 rounded-full text-xs font-medium text-neutral-500"
-          }
+          className={"absolute top-0 rounded-full text-xs font-medium text-neutral-500"}
           style={{
             left: `calc(${value}% - 0.5rem)`,
           }}

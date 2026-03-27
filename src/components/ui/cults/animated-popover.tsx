@@ -2,15 +2,11 @@
 
 import { AnimatePresence, MotionConfig, motion } from "framer-motion";
 import { X } from "lucide-react";
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useId,
-  useRef,
-  useState,
-} from "react";
+import type React from "react";
+import { createContext, useContext, useEffect, useId, useRef, useState } from "react";
 
+import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
+import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { cn } from "@/lib/utils";
 
 const TRANSITION = {
@@ -19,10 +15,7 @@ const TRANSITION = {
   duration: 0.3,
 };
 
-function useClickOutside(
-  ref: React.RefObject<HTMLElement>,
-  handler: () => void,
-) {
+function useClickOutside(ref: React.RefObject<HTMLElement>, handler: () => void) {
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
@@ -80,13 +73,8 @@ export function PopoverRoot({ children, className }: PopoverRootProps) {
 
   return (
     <PopoverContext.Provider value={popoverLogic}>
-      <MotionConfig transition={TRANSITION}>
-        <div
-          className={cn(
-            "relative isolate flex items-center justify-center",
-            className,
-          )}
-        >
+      <MotionConfig transition={TRANSITION as any}>
+        <div className={cn("relative isolate flex items-center justify-center", className)}>
           {children}
         </div>
       </MotionConfig>
@@ -100,11 +88,7 @@ interface PopoverTriggerProps {
   disabled?: boolean;
 }
 
-export function PopoverTrigger({
-  children,
-  className,
-  ...props
-}: PopoverTriggerProps) {
+export function PopoverTrigger({ children, className, ...props }: PopoverTriggerProps) {
   const { openPopover, uniqueId } = usePopover();
 
   return (
@@ -113,7 +97,7 @@ export function PopoverTrigger({
       layoutId={`popover-${uniqueId}`}
       className={cn(
         "flex h-9 items-center border border-zinc-950/10 bg-white px-3 text-zinc-950 dark:border-zinc-50/10 dark:bg-zinc-700 dark:text-zinc-50",
-        className,
+        className
       )}
       style={{
         borderRadius: 8,
@@ -131,30 +115,23 @@ export function PopoverTrigger({
 interface PopoverContentProps {
   children: React.ReactNode;
   className?: string;
+  align?: "start" | "end";
 }
 
-export function PopoverContent({ children, className }: PopoverContentProps) {
+export function PopoverContent({ children, className, align = "start" }: PopoverContentProps) {
   const { isOpen, closePopover, uniqueId } = usePopover();
   const formContainerRef = useRef<HTMLDivElement>(null);
 
-  useClickOutside(
-    formContainerRef as React.RefObject<HTMLElement>,
-    closePopover,
+  useClickOutside(formContainerRef as React.RefObject<HTMLElement>, closePopover);
+
+  useKeyboardShortcut(
+    ShortcutAction.CLOSE_POPOVER,
+    (event) => {
+      closePopover();
+    },
+    () => isOpen,
+    [closePopover, isOpen]
   );
-
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        closePopover();
-      }
-    };
-
-    document.addEventListener("keydown", handleKeyDown);
-
-    return () => {
-      document.removeEventListener("keydown", handleKeyDown);
-    };
-  }, [closePopover]);
 
   return (
     <AnimatePresence>
@@ -163,14 +140,15 @@ export function PopoverContent({ children, className }: PopoverContentProps) {
           ref={formContainerRef}
           layoutId={`popover-${uniqueId}`}
           className={cn(
-            "absolute z-50 h-[200px] w-[364px] overflow-hidden border border-zinc-950/10 bg-white outline-none dark:bg-zinc-700", // Changed z-90 to z-50
-            className,
+            "absolute z-50 h-[200px] w-[364px] overflow-hidden border border-zinc-950/10 bg-white outline-none dark:bg-zinc-700",
+            className
           )}
           style={{
             borderRadius: 12,
-            top: "auto", // Remove any top positioning
-            left: "auto", // Remove any left positioning
-            transform: "none", // Remove any transform
+            top: "auto",
+            left: align === "start" ? "auto" : undefined,
+            right: align === "end" ? 0 : undefined,
+            transform: "none",
           }}
         >
           {children}
@@ -186,11 +164,7 @@ interface PopoverFormProps {
   className?: string;
 }
 
-export function PopoverForm({
-  children,
-  onSubmit,
-  className,
-}: PopoverFormProps) {
+export function PopoverForm({ children, onSubmit, className }: PopoverFormProps) {
   const { note, closePopover } = usePopover();
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -200,10 +174,7 @@ export function PopoverForm({
   };
 
   return (
-    <form
-      className={cn("flex h-full flex-col", className)}
-      onSubmit={handleSubmit}
-    >
+    <form className={cn("flex h-full flex-col", className)} onSubmit={handleSubmit}>
       {children}
     </form>
   );
@@ -226,7 +197,7 @@ export function PopoverLabel({ children, className }: PopoverLabelProps) {
       }}
       className={cn(
         "absolute left-4 top-3 select-none text-sm text-zinc-500 dark:text-zinc-400",
-        className,
+        className
       )}
     >
       {children}
@@ -245,7 +216,7 @@ export function PopoverTextarea({ className }: PopoverTextareaProps) {
     <textarea
       className={cn(
         "h-full w-full resize-none rounded-md bg-transparent px-4 py-3 text-sm outline-none",
-        className,
+        className
       )}
       autoFocus
       value={note}
@@ -261,10 +232,7 @@ interface PopoverFooterProps {
 
 export function PopoverFooter({ children, className }: PopoverFooterProps) {
   return (
-    <div
-      key="close"
-      className={cn("flex justify-between px-4 py-3", className)}
-    >
+    <div key="close" className={cn("flex justify-between px-4 py-3", className)}>
       {children}
     </div>
   );
@@ -298,7 +266,7 @@ export function PopoverSubmitButton({ className }: PopoverSubmitButtonProps) {
     <button
       className={cn(
         "relative ml-1 flex h-8 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 bg-transparent px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:text-zinc-50 dark:hover:bg-zinc-800",
-        className,
+        className
       )}
       type="submit"
       aria-label="Submit note"
@@ -316,12 +284,7 @@ export function PopoverHeader({
   className?: string;
 }) {
   return (
-    <div
-      className={cn(
-        "px-4 py-2 font-semibold text-zinc-900 dark:text-zinc-100",
-        className,
-      )}
-    >
+    <div className={cn("px-4 py-2 font-semibold text-zinc-900 dark:text-zinc-100", className)}>
       {children}
     </div>
   );
@@ -337,7 +300,6 @@ export function PopoverBody({
   return <div className={cn("p-4", className)}>{children}</div>;
 }
 
-// New component: PopoverButton
 export function PopoverButton({
   children,
   onClick,
@@ -351,7 +313,7 @@ export function PopoverButton({
     <button
       className={cn(
         "flex w-full items-center gap-2 rounded-md px-4 py-2 text-left text-sm hover:bg-zinc-100 dark:hover:bg-zinc-700",
-        className,
+        className
       )}
       onClick={onClick}
     >

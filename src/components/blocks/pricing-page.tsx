@@ -1,10 +1,10 @@
 "use client";
 
+import { Check, X } from "lucide-react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { Check, X } from "lucide-react";
-import { useState } from "react";
 
 const fadingBorderStyle = `
   relative before:absolute before:inset-0 before:border before:border-gray-700 before:rounded-lg
@@ -24,32 +24,23 @@ export function PricingPageComponent() {
     <div className="min-h-screen bg-black p-8 text-white">
       <div className="mx-auto max-w-6xl">
         <div className="mb-8 flex justify-center space-x-4">
-          <Switch
-            checked={isApplicationLogs}
-            onCheckedChange={() => setIsApplicationLogs(true)}
-          />
-          <span className={isApplicationLogs ? "font-bold" : ""}>
-            Application Logs
-          </span>
+          <Switch checked={isApplicationLogs} onCheckedChange={() => setIsApplicationLogs(true)} />
+          <span className={isApplicationLogs ? "font-bold" : ""}>Application Logs</span>
           <Switch
             checked={!isApplicationLogs}
             onCheckedChange={() => setIsApplicationLogs(false)}
           />
-          <span className={!isApplicationLogs ? "font-bold" : ""}>
-            Infrastructure Logs
-          </span>
+          <span className={!isApplicationLogs ? "font-bold" : ""}>Infrastructure Logs</span>
         </div>
 
         <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
           {/* Free Tier */}
           <div className={`flex flex-col p-6 ${fadingBorderStyle}`}>
             <h2 className="mb-4 text-2xl font-bold">Free</h2>
-            <div className="mb-6 text-4xl font-bold">$0 / mo</div>
+            <div className="mb-6 text-4xl font-bold tabular-nums">$0 / mo</div>
             <div className="mb-6">
               <div>Up to 50,000 log entries / mo</div>
-              <div className="text-sm text-gray-400">
-                1,000 log entries / day
-              </div>
+              <div className="text-sm text-gray-400">1,000 log entries / day</div>
             </div>
             <div className="flex-grow space-y-2">
               <Feature included>Basic Log Search</Feature>
@@ -66,7 +57,7 @@ export function PricingPageComponent() {
           {/* Pro Tier */}
           <div className={`flex flex-col p-6 ${fadingBorderStyle}`}>
             <h2 className="mb-4 text-2xl font-bold">Pro</h2>
-            <div className="mb-6 text-4xl font-bold">
+            <div className="mb-6 text-4xl font-bold tabular-nums">
               ${calculatePrice(logEntries)} / mo
             </div>
             <div className="mb-6">
@@ -77,10 +68,10 @@ export function PricingPageComponent() {
                 value={[logEntries]}
                 onValueChange={(value) => value[0] && setLogEntries(value[0])}
               />
-              <div>{logEntries.toLocaleString()} log entries / mo</div>
-              <div className="text-sm text-gray-400">
-                No daily sending limit
+              <div>
+                <span className="tabular-nums">{logEntries.toLocaleString()}</span> log entries / mo
               </div>
+              <div className="text-sm text-gray-400">No daily sending limit</div>
             </div>
             <div className="flex-grow space-y-2">
               <Feature included>Advanced Log Search</Feature>
@@ -119,11 +110,17 @@ export function PricingPageComponent() {
   );
 }
 
-function Feature({ children, included = false }) {
+function Feature({
+  children,
+  included = false,
+}: {
+  children: React.ReactNode;
+  included?: boolean;
+}) {
   return (
     <div className="flex items-center space-x-2">
       {included ? (
-        <Check className="h-5 w-5 text-blue-500" />
+        <Check className="h-5 w-5 text-green-500" />
       ) : (
         <X className="h-5 w-5 text-gray-500" />
       )}

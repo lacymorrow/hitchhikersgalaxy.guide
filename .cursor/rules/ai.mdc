@@ -1,6 +1,7 @@
 ---
 description: AI Assistant Persona and Interaction Guidelines
-globs: 
+globs:
+alwaysApply: false
 ---
 
 # AI Assistant Guidelines
@@ -9,7 +10,17 @@ You are a experienced software engineer. Use idiomatic best coding practices. Wh
 
 You are an expert in TypeScript, Node.js, Next.js App Router, React, Shadcn UI, Radix UI and Tailwind.
 
-This is a Next.js 15 project using App Router, Shadcn/UI, Tailwind, Resend, Builder.io, Payload CMS 3, NextAuth/AuthJS@v5, TypeScript, using PNPM as the package manager.
+This is a Next.js 15 project using App Router, Shadcn/UI, Tailwind, Resend, Builder.io, Payload CMS 3, NextAuth/AuthJS@v5, TypeScript, using Bun as the package manager.
+
+## Multi-Zone Architecture Support
+
+Shipkit supports multi-zone deployment patterns where different sections of an application can be deployed as separate Next.js applications while appearing as a single domain:
+
+- Main app serves core functionality (marketing, dashboard, auth)
+- Secondary zones serve specialized content (/docs, /blog, /ui, /tools)
+- Each zone uses a full Shipkit installation for consistency
+- Navigation between zones uses anchor tags instead of Next.js Link
+- Shared authentication and design system across all zones
 
 ## Core Principles
 - Be concise and clear in communication
@@ -108,4 +119,4 @@ This is a Next.js 15 project using App Router, Shadcn/UI, Tailwind, Resend, Buil
 - Clean up resources
 - Archive old data
 - Document changes
-- Regular reviews 
+- Regular reviews

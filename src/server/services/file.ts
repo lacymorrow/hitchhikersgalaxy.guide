@@ -1,9 +1,9 @@
 import { logger } from "@/lib/logger";
-import { fileSchema, type FileSchemaType } from "@/server/actions/schemas";
+import { type FileSchemaType, fileSchema } from "@/server/actions/schemas";
 import { deleteFromS3, generatePresignedUrl } from "@/server/services/s3";
 
 export const uploadFile = async (
-  file: FileSchemaType,
+  file: FileSchemaType
 ): Promise<{ fileName: string; url: string }> => {
   const validatedFile = fileSchema.parse(file);
 

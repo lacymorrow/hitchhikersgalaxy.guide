@@ -1,6 +1,7 @@
 ---
 description: Error Handling Best Practices and Guidelines
 globs: *.ts, *.tsx, src/lib/errors/*, src/components/error-boundary/*
+alwaysApply: false
 ---
 
 # Error Handling Best Practices
@@ -31,6 +32,18 @@ globs: *.ts, *.tsx, src/lib/errors/*, src/components/error-boundary/*
 - Monitor error rates
 - Regular error review
 - Document API errors
+
+## Webhook Errors
+- Return proper HTTP status codes (200 for success, 4xx for client errors)
+- Implement comprehensive try/catch blocks for webhook processing
+- Log all webhook processing errors with context (but not sensitive data)
+- Never expose internal error details in webhook responses
+- Implement graceful degradation for non-critical webhook failures
+- Handle signature verification failures appropriately
+- Implement retry logic for failed webhook processing
+- Set up alerts for webhook failure patterns
+- Track webhook success/failure rates
+- Handle duplicate webhook events gracefully
 
 ## Database Errors
 - Handle connection errors
@@ -93,4 +106,4 @@ globs: *.ts, *.tsx, src/lib/errors/*, src/components/error-boundary/*
 - Share knowledge
 - Regular reviews
 - Monitor changes
-- Maintain docs 
+- Maintain docs

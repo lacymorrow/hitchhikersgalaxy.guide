@@ -43,7 +43,7 @@ export function FileDropzone() {
     const newFiles = fileList.map((file) =>
       Object.assign(file, {
         preview: URL.createObjectURL(file),
-      }),
+      })
     );
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
   };

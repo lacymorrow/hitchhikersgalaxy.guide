@@ -1,30 +1,15 @@
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
-import { FlatCompat } from "@eslint/eslintrc";
+import pluginNext from "@next/eslint-plugin-next";
 import ts from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
+import pluginReact from "eslint-plugin-react";
+import pluginReactHooks from "eslint-plugin-react-hooks";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-const compat = new FlatCompat({
-	baseDirectory: __dirname,
-});
-
 const eslintConfig = [
-	// Base config for all files
-	{
-		languageOptions: {
-			parserOptions: {
-				project: ["./tsconfig.json"],
-				tsconfigRootDir: __dirname,
-			},
-		},
-		linterOptions: {
-			reportUnusedDisableDirectives: true,
-		},
-	},
-
 	// Configure global ignores (replaces .eslintignore)
 	{
 		ignores: [
@@ -37,13 +22,33 @@ const eslintConfig = [
 		],
 	},
 
-	// Extend configurations
-	...compat.extends(
-		"plugin:@typescript-eslint/recommended-type-checked",
-		"plugin:@typescript-eslint/stylistic-type-checked",
-		"next/core-web-vitals",
-		"next/typescript"
-	),
+	// React flat config (avoids FlatCompat circular reference issue)
+	{
+		...pluginReact.configs.flat.recommended,
+		settings: {
+			react: { version: "detect" },
+		},
+	},
+	pluginReact.configs.flat["jsx-runtime"],
+
+	// React Hooks
+	{
+		plugins: {
+			"react-hooks": pluginReactHooks,
+		},
+		rules: pluginReactHooks.configs.recommended.rules,
+	},
+
+	// Next.js plugin (core-web-vitals includes recommended)
+	{
+		plugins: {
+			"@next/next": pluginNext,
+		},
+		rules: {
+			...pluginNext.configs.recommended.rules,
+			...pluginNext.configs["core-web-vitals"].rules,
+		},
+	},
 
 	// TypeScript files configuration
 	{
@@ -63,8 +68,12 @@ const eslintConfig = [
 		plugins: {
 			"@typescript-eslint": ts,
 		},
+		linterOptions: {
+			reportUnusedDisableDirectives: true,
+		},
 		rules: {
-			...ts.configs.recommended.rules,
+			...(ts.configs["recommended-type-checked"]?.rules || {}),
+			...(ts.configs["stylistic-type-checked"]?.rules || {}),
 			"@typescript-eslint/no-unused-vars": [
 				"warn",
 				{
@@ -79,7 +88,6 @@ const eslintConfig = [
 					fixStyle: "inline-type-imports",
 				},
 			],
-			// ! Todo: Enable
 			"@typescript-eslint/ban-ts-comment": "warn",
 			"@typescript-eslint/no-explicit-any": "warn",
 			"@typescript-eslint/no-floating-promises": "warn",
@@ -89,6 +97,26 @@ const eslintConfig = [
 			"@typescript-eslint/no-unsafe-call": "warn",
 			"@typescript-eslint/no-unsafe-member-access": "warn",
 			"@typescript-eslint/no-unsafe-return": "warn",
+		},
+	},
+
+	// Workers: use dedicated tsconfig for typed linting
+	{
+		files: ["src/workers/**/*.ts"],
+		languageOptions: {
+			parser: tsParser,
+			parserOptions: {
+				project: ["./tsconfig.workers.json"],
+				tsconfigRootDir: __dirname,
+				ecmaVersion: "latest",
+				sourceType: "module",
+				ecmaFeatures: {
+					jsx: false,
+				},
+			},
+		},
+		plugins: {
+			"@typescript-eslint": ts,
 		},
 	},
 ];

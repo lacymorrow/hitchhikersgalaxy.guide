@@ -1,9 +1,32 @@
 ---
 description: Deployment Best Practices and Guidelines
 globs: Dockerfile, docker-compose.yml, .env.*, .github/workflows/*, vercel.json
+alwaysApply: false
 ---
 
 # Deployment Best Practices
+
+## Multi-Zone Deployment
+
+### Zone Deployment Strategy
+- Deploy each zone as separate Vercel project
+- Use consistent naming: `main-shipkit`, `docs-shipkit`, `blog-shipkit`, `ui-shipkit`, `tools-shipkit`
+- Configure environment variables pointing to zone URLs
+- Assign custom domain to main application
+- Test cross-zone navigation and functionality
+
+### Zone Environment Configuration
+- Main app contains zone domain environment variables
+- Each zone has its own environment configuration
+- Use separate databases or shared database per zone requirements
+- Configure authentication to work across zones
+- Set up monitoring for each zone independently
+
+### Zone-Specific Optimizations
+- Documentation zone: Static generation, search optimization
+- Blog zone: ISR for posts, SEO optimization
+- UI zone: Component isolation, visual regression testing
+- Tools zone: Client-side rendering, real-time features
 
 ## Environment Setup
 - Use `.env.local` for local development
@@ -93,4 +116,4 @@ globs: Dockerfile, docker-compose.yml, .env.*, .github/workflows/*, vercel.json
 - Document troubleshooting
 - Keep runbooks updated
 - Document incidents
-- Maintain change log 
+- Maintain change log

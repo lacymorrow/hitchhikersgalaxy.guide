@@ -16,10 +16,7 @@ interface AccordionListProps {
   accordionProps?: any; // TODO: fix type
 }
 
-export const AccordionList: React.FC<AccordionListProps> = ({
-  items,
-  accordionProps,
-}) => {
+export const AccordionList: React.FC<AccordionListProps> = ({ items, accordionProps }) => {
   return (
     <Accordion type="single" collapsible {...accordionProps}>
       {items.map((item, index) => (

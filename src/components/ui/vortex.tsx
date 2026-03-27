@@ -1,9 +1,9 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { useEffect, useRef } from "react";
 import { createNoise3D } from "simplex-noise";
+import { cn } from "@/lib/utils";
 
 interface VortexProps {
   children?: any;
@@ -42,7 +42,7 @@ export const Vortex = (props: VortexProps) => {
   let tick = 0;
   const noise3D = createNoise3D();
   let particleProps = new Float32Array(particlePropsLength);
-  let center: [number, number] = [0, 0];
+  const center: [number, number] = [0, 0];
 
   const HALF_PI: number = 0.5 * Math.PI;
   const TAU: number = 2 * Math.PI;
@@ -50,11 +50,10 @@ export const Vortex = (props: VortexProps) => {
   const rand = (n: number): number => n * Math.random();
   const randRange = (n: number): number => n - rand(2 * n);
   const fadeInOut = (t: number, m: number): number => {
-    let hm = 0.5 * m;
+    const hm = 0.5 * m;
     return Math.abs(((t + hm) % m) - hm) / hm;
   };
-  const lerp = (n1: number, n2: number, speed: number): number =>
-    (1 - speed) * n1 + speed * n2;
+  const lerp = (n1: number, n2: number, speed: number): number => (1 - speed) * n1 + speed * n2;
 
   const setup = () => {
     const canvas = canvasRef.current;
@@ -124,7 +123,7 @@ export const Vortex = (props: VortexProps) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    let i2 = 1 + i,
+    const i2 = 1 + i,
       i3 = 2 + i,
       i4 = 3 + i,
       i5 = 4 + i,
@@ -134,22 +133,22 @@ export const Vortex = (props: VortexProps) => {
       i9 = 8 + i;
     let n, x, y, vx, vy, life, ttl, speed, x2, y2, radius, hue;
 
-    x = particleProps[i];
-    y = particleProps[i2];
+    x = particleProps[i] || 0;
+    y = particleProps[i2] || 0;
     n = noise3D(x * xOff, y * yOff, tick * zOff) * noiseSteps * TAU;
-    vx = lerp(particleProps[i3], Math.cos(n), 0.5);
-    vy = lerp(particleProps[i4], Math.sin(n), 0.5);
-    life = particleProps[i5];
-    ttl = particleProps[i6];
-    speed = particleProps[i7];
+    vx = lerp(particleProps[i3] || 0, Math.cos(n), 0.5);
+    vy = lerp(particleProps[i4] || 0, Math.sin(n), 0.5);
+    life = particleProps[i5] || 0;
+    ttl = particleProps[i6] || 100;
+    speed = particleProps[i7] || 1;
     x2 = x + vx * speed;
     y2 = y + vy * speed;
-    radius = particleProps[i8];
-    hue = particleProps[i9];
+    radius = particleProps[i8] || 1;
+    hue = particleProps[i9] || 0;
 
-    drawParticle(x, y, x2, y2, life, ttl, radius, hue, ctx);
+    drawParticle(x, y, x2, y2, life || 0, ttl || 100, radius || 1, hue || 0, ctx);
 
-    life++;
+    life = (life || 0) + 1;
 
     particleProps[i] = x2;
     particleProps[i2] = y2;
@@ -157,7 +156,7 @@ export const Vortex = (props: VortexProps) => {
     particleProps[i4] = vy;
     particleProps[i5] = life;
 
-    (checkBounds(x, y, canvas) || life > ttl) && initParticle(i);
+    (checkBounds(x, y, canvas) || (life || 0) > (ttl || 100)) && initParticle(i);
   };
 
   const drawParticle = (
@@ -169,7 +168,7 @@ export const Vortex = (props: VortexProps) => {
     ttl: number,
     radius: number,
     hue: number,
-    ctx: CanvasRenderingContext2D,
+    ctx: CanvasRenderingContext2D
   ) => {
     ctx.save();
     ctx.lineCap = "round";
@@ -187,10 +186,7 @@ export const Vortex = (props: VortexProps) => {
     return x > canvas.width || x < 0 || y > canvas.height || y < 0;
   };
 
-  const resize = (
-    canvas: HTMLCanvasElement,
-    ctx?: CanvasRenderingContext2D,
-  ) => {
+  const resize = (canvas: HTMLCanvasElement, ctx?: CanvasRenderingContext2D) => {
     const { innerWidth, innerHeight } = window;
 
     canvas.width = innerWidth;
@@ -200,10 +196,7 @@ export const Vortex = (props: VortexProps) => {
     center[1] = 0.5 * canvas.height;
   };
 
-  const renderGlow = (
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D,
-  ) => {
+  const renderGlow = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     ctx.save();
     ctx.filter = "blur(8px) brightness(200%)";
     ctx.globalCompositeOperation = "lighter";
@@ -217,10 +210,7 @@ export const Vortex = (props: VortexProps) => {
     ctx.restore();
   };
 
-  const renderToScreen = (
-    canvas: HTMLCanvasElement,
-    ctx: CanvasRenderingContext2D,
-  ) => {
+  const renderToScreen = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     ctx.save();
     ctx.globalCompositeOperation = "lighter";
     ctx.drawImage(canvas, 0, 0);
@@ -246,12 +236,10 @@ export const Vortex = (props: VortexProps) => {
         ref={containerRef}
         className="absolute inset-0 z-0 flex h-full w-full items-center justify-center bg-transparent"
       >
-        <canvas ref={canvasRef}></canvas>
+        <canvas ref={canvasRef} />
       </motion.div>
 
-      <div className={cn("relative z-10", props.className)}>
-        {props.children}
-      </div>
+      <div className={cn("relative z-10", props.className)}>{props.children}</div>
     </div>
   );
 };

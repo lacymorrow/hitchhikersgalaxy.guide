@@ -8,18 +8,9 @@ interface AvatarCirclesProps {
   avatarUrls: string[];
 }
 
-const AvatarCircles = ({
-  numPeople,
-  className,
-  avatarUrls,
-}: AvatarCirclesProps) => {
+const AvatarCircles = ({ numPeople, className, avatarUrls }: AvatarCirclesProps) => {
   return (
-    <div
-      className={cn(
-        "z-10 flex justify-center -space-x-4 rtl:space-x-reverse",
-        className,
-      )}
-    >
+    <div className={cn("z-10 flex justify-center -space-x-4 rtl:space-x-reverse", className)}>
       {avatarUrls.map((url, index) => (
         <img
           key={index}

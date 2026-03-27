@@ -1,14 +1,9 @@
 // https://cuicui.day/marketing-ui/statistics
 
 "use client";
-import { cn } from "@/lib/utils";
-import {
-  type MotionValue,
-  motion,
-  useSpring,
-  useTransform,
-} from "framer-motion";
+import { type MotionValue, motion, useSpring, useTransform } from "framer-motion";
 import { useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 export function Counter({
   value,
@@ -27,18 +22,15 @@ export function Counter({
 
   return (
     <div className={cn("flex w-fit overflow-hidden leading-none", className)}>
-      {Array.from(
-        { length: convertToPositiveInteger(numberOfDigits) },
-        (_, index) => (
-          <Digit
-            height={convertToPositiveInteger(paddingBetweenNumbers)}
-            // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
-            key={`digit-${index}`}
-            place={10 ** (convertToPositiveInteger(numberOfDigits) - index - 1)}
-            value={value}
-          />
-        ),
-      )}
+      {Array.from({ length: convertToPositiveInteger(numberOfDigits) }, (_, index) => (
+        <Digit
+          height={convertToPositiveInteger(paddingBetweenNumbers)}
+          // biome-ignore lint/suspicious/noArrayIndexKey: <explanation>
+          key={`digit-${index}`}
+          place={10 ** (convertToPositiveInteger(numberOfDigits) - index - 1)}
+          value={value}
+        />
+      ))}
     </div>
   );
 }
@@ -83,10 +75,7 @@ function MemoizedNumber({
   });
 
   return (
-    <motion.span
-      className="absolute inset-0 flex items-center justify-center"
-      style={{ y }}
-    >
+    <motion.span className="absolute inset-0 flex items-center justify-center" style={{ y }}>
       {number}
     </motion.span>
   );

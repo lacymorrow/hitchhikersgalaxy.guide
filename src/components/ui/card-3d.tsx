@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 export const Card3d = ({
   columns = 5,
@@ -37,9 +37,7 @@ export const Card3d = ({
     const xRotation = maxXrotation - (row / (rows - 1)) * 2 * maxXrotation;
     const yRotation = -maxYrotation + (col / (columns - 1)) * 2 * maxYrotation;
 
-    return `rotateX(${xRotation.toFixed(2)}deg) rotateY(${yRotation.toFixed(
-      2,
-    )}deg)`;
+    return `rotateX(${xRotation.toFixed(2)}deg) rotateY(${yRotation.toFixed(2)}deg)`;
   };
 
   return (
@@ -67,8 +65,8 @@ export const Card3d = ({
             (_, rowIndex) =>
               `"${Array.from(
                 { length: columns },
-                (_, colIndex) => `tr-${rowIndex * columns + colIndex + 1}`,
-              ).join(" ")}"`,
+                (_, colIndex) => `tr-${rowIndex * columns + colIndex + 1}`
+              ).join(" ")}"`
           ).join(" "),
         }}
       >
@@ -76,7 +74,7 @@ export const Card3d = ({
         <div
           className={cn(
             "group absolute inset-0 z-20 transition-all duration-150 ease-in-out",
-            className,
+            className
           )}
           id="cuicui-card"
         >

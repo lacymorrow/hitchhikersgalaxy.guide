@@ -1,8 +1,8 @@
 ---
 description: Database Best Practices and Guidelines
 globs: *.prisma, *.sql, src/server/db/*, src/lib/db/*
+alwaysApply: false
 ---
-
 # Database Best Practices
 
 ## Data Modeling
@@ -25,6 +25,22 @@ globs: *.prisma, *.sql, src/server/db/*, src/lib/db/*
 - Use proper numeric types
 - Consider storage implications
 
+## Field Consistency and Provider Integration
+- **ALWAYS** store critical data in multiple compatible fields when dealing with external providers
+- **NEVER** assume external systems use your field naming conventions
+- Use fallback logic when reading data that could exist in multiple fields
+  - ✅ `payment.orderId || payment.processorOrderId || ""`
+  - ❌ `payment.orderId ?? ""`
+- Document which providers populate which fields in [src/server/providers/](mdc:src/server/providers)
+- Test complete data flow from provider import to UI display
+- Maintain backward compatibility when adding new fields
+- Example from payments table:
+  ```typescript
+  // Store in both fields for compatibility
+  orderId: processorOrderId,           // For display compatibility
+  processorOrderId: processorOrderId,  // For provider-specific operations
+  ```
+
 ## Relationships
 - Define foreign key constraints
 - Use junction tables for many-to-many
@@ -33,6 +49,18 @@ globs: *.prisma, *.sql, src/server/db/*, src/lib/db/*
 - Plan for cascading operations
 - Handle circular references
 - Consider query performance
+
+## Webhook Data Patterns
+- Store webhook event IDs for idempotency checks
+- Use database transactions for atomic webhook processing
+- Implement proper indexes on webhook event lookup fields
+- Store webhook processing status and timestamps
+- Use proper data types for webhook payload storage (JSON/JSONB)
+- Implement webhook event deduplication at database level
+- Create audit trails for webhook-triggered data changes
+- Handle webhook event ordering and dependencies
+- Use database locks to prevent race conditions in webhook processing
+- Store webhook retry attempts and failure reasons
 
 ## Querying
 - Use parameterized queries
@@ -95,4 +123,4 @@ globs: *.prisma, *.sql, src/server/db/*, src/lib/db/*
 - Monitor disk usage
 - Check connection pools
 - Monitor query patterns
-- Regular health checks 
+- Regular health checks

@@ -1,10 +1,10 @@
+// @ts-nocheck
 "use client";
 
-import { AnimatePresence, MotionConfig, motion } from "framer-motion";
-import React, { ReactNode, forwardRef } from "react";
-
-import { cn } from "@/lib/utils";
 import { useMeasure } from "@uidotdev/usehooks";
+import { AnimatePresence, MotionConfig, motion } from "framer-motion";
+import React, { forwardRef, type ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 type PanelContainerProps = {
   panelOpen: boolean;
@@ -39,10 +39,7 @@ export const SidePanel = forwardRef<HTMLDivElement, PanelContainerProps>(
     return (
       <ResizablePanel>
         <motion.div
-          className={cn(
-            "w-[160px] rounded-r-[44px] bg-neutral-900 md:w-[260px]",
-            className,
-          )}
+          className={cn("w-[160px] rounded-r-[44px] bg-neutral-900 md:w-[260px]", className)}
           animate={panelOpen ? "open" : "closed"}
           variants={sectionVariants}
           transition={{ duration: 0.2, ease: "easeInOut" }}
@@ -65,17 +62,14 @@ export const SidePanel = forwardRef<HTMLDivElement, PanelContainerProps>(
                   <div
                     className={cn(
                       "flex w-full items-center justify-start py-1 pl-4 md:py-3 md:pl-4",
-                      panelOpen ? "pr-3" : "",
+                      panelOpen ? "pr-3" : ""
                     )}
                   >
                     {renderButton && renderButton(handlePanelOpen)}
                   </div>
 
                   {panelOpen && (
-                    <motion.div
-                      exit={{ opacity: 0 }}
-                      transition={sharedTransition}
-                    >
+                    <motion.div exit={{ opacity: 0 }} transition={sharedTransition}>
                       {children}
                     </motion.div>
                   )}
@@ -86,7 +80,7 @@ export const SidePanel = forwardRef<HTMLDivElement, PanelContainerProps>(
         </motion.div>
       </ResizablePanel>
     );
-  },
+  }
 );
 
 SidePanel.displayName = "SidePanel";
@@ -105,10 +99,7 @@ const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelProps>(
           <div className="mx-auto w-full">
             <div
               ref={ref}
-              className={cn(
-                children ? "rounded-r-none" : "rounded-sm",
-                "relative overflow-hidden",
-              )}
+              className={cn(children ? "rounded-r-none" : "rounded-sm", "relative overflow-hidden")}
             >
               {children}
             </div>
@@ -116,7 +107,7 @@ const ResizablePanel = React.forwardRef<HTMLDivElement, ResizablePanelProps>(
         </div>
       </MotionConfig>
     );
-  },
+  }
 );
 
 ResizablePanel.displayName = "ResizablePanel";

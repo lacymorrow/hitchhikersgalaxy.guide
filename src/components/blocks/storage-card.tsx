@@ -15,11 +15,7 @@ export function StorageCard() {
           <p className="text-muted-foreground">
             Get metrics, projects, and teams when you upgrade.
           </p>
-          <Progress
-            value={79.2}
-            className="mt-1"
-            aria-label="79.2 GB / 100 GB used"
-          />
+          <Progress value={79.2} className="mt-1" aria-label="79.2 GB / 100 GB used" />
         </div>
       </CardContent>
     </Card>

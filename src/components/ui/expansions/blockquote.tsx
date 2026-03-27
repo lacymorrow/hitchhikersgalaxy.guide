@@ -1,5 +1,5 @@
+import type React from "react";
 import { cn } from "@/lib/utils";
-import React from "react";
 
 type BlockquoteProps = {
   children?: React.ReactNode;
@@ -11,7 +11,7 @@ const Blockquote = ({ children, className }: BlockquoteProps) => {
     <div
       className={cn(
         "relative rounded-lg border-l-8 border-l-gray-700 bg-gray-100 py-5 pl-16 pr-5 font-sans text-lg italic leading-relaxed text-gray-500 before:absolute before:left-3 before:top-3 before:font-serif before:text-6xl before:text-gray-700 before:content-['“']",
-        className,
+        className
       )}
     >
       {children}
@@ -21,12 +21,7 @@ const Blockquote = ({ children, className }: BlockquoteProps) => {
 
 const BlockquoteAuthor = ({ children, className }: BlockquoteProps) => {
   return (
-    <p
-      className={cn(
-        "mt-5 pr-4 text-right font-bold not-italic text-gray-700",
-        className,
-      )}
-    >
+    <p className={cn("mt-5 pr-4 text-right font-bold not-italic text-gray-700", className)}>
       {children}
     </p>
   );

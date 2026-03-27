@@ -1,6 +1,6 @@
-import { cn } from "@/lib/utils";
 import { MessageCircleIcon } from "lucide-react";
 import type { ReactNode } from "react";
+import { cn } from "@/lib/utils";
 
 type CardType = {
   title: string;
@@ -51,7 +51,7 @@ export function SimpleFeaturesCards() {
           className={cn(
             "transform-gpu hover:rotate-0 hover:scale-110",
             index % 2 === 0 ? "rotate-12" : "-rotate-12",
-            `-translate-x-[${index * 30}px]`,
+            `-translate-x-[${index * 30}px]`
           )}
           content={card.content}
           description={`0${index}`}
@@ -78,16 +78,12 @@ function Card({
     <div
       className={cn(
         "h-42 group flex w-28 rotate-12 transform-gpu flex-col rounded-xl border border-neutral-500/30 bg-white p-3 shadow-2xl shadow-neutral-500/30 transition-all hover:shadow-xl dark:bg-neutral-800",
-        className,
+        className
       )}
     >
       <div className="flex size-20 items-center justify-center">{content}</div>
-      <p className="text-xs text-neutral-200 dark:text-neutral-500">
-        {description}
-      </p>
-      <p className="text-xs font-medium text-neutral-700 dark:text-neutral-400">
-        {title}
-      </p>
+      <p className="text-xs text-neutral-200 dark:text-neutral-500">{description}</p>
+      <p className="text-xs font-medium text-neutral-700 dark:text-neutral-400">{title}</p>
     </div>
   );
 }

@@ -1,0 +1,28 @@
+# ShipKit
+
+> Next.js starter kit with auth, CMS, payments, and everything apps need to ship fast.
+
+## What is ShipKit?
+ShipKit is a production-ready Next.js 15 starter template. Clone it, configure it, deploy to Vercel. Auth, payments, CMS, email, AI, analytics, database, storage, all pre-wired.
+
+## Quick Start
+git clone https://github.com/shipkit-io/shipkit
+cd shipkit
+bun install --frozen-lockfile
+bun dev
+
+## Deploy
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshipkit-io%2Fshipkit)
+
+No environment variables needed to start. The setup wizard guides you through configuration after deployment.
+
+## Docs
+- Full Documentation: https://shipkit.io/docs
+- Deploy Guide: https://shipkit.io/docs/getting-started/deploy
+- Development Guide: https://shipkit.io/docs/development
+
+## Links
+- Website: https://shipkit.io
+- GitHub: https://github.com/shipkit-io/shipkit
+- Free Template: https://github.com/shipkit-io/bones
+- Twitter: https://twitter.com/lacybuilds

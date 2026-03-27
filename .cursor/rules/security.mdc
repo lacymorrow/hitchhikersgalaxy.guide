@@ -1,6 +1,7 @@
 ---
 description: Security Best Practices and Guidelines
 globs: *.ts, *.tsx, src/server/*, src/lib/auth/*, middleware.*
+alwaysApply: false
 ---
 
 # Security Best Practices
@@ -40,6 +41,18 @@ globs: *.ts, *.tsx, src/server/*, src/lib/auth/*, middleware.*
 - Monitor API usage
 - Regular security tests
 - Document endpoints
+
+## Webhook Security
+- ALWAYS verify webhook signatures using timing-safe comparison
+- Never accept webhooks without proper signature validation
+- Use environment variables for webhook secrets
+- Implement idempotency using unique event identifiers
+- Validate all webhook payload fields before processing
+- Never log sensitive data from webhook payloads
+- Return proper HTTP status codes for webhook responses
+- Implement rate limiting per webhook source
+- Process webhooks asynchronously when possible
+- Use database transactions for webhook data consistency
 
 ## Frontend Security
 - Prevent XSS attacks
@@ -93,4 +106,4 @@ globs: *.ts, *.tsx, src/server/*, src/lib/auth/*, middleware.*
 - Regular reviews
 - Share best practices
 - Monitor changes
-- Maintain records 
+- Maintain records

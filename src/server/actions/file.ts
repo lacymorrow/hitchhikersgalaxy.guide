@@ -1,14 +1,14 @@
 "use server";
 
-import { fileSchema } from "@/server/actions/schemas";
-import { deleteFile, uploadFile } from "@/server/services/file";
-import { logger } from "@/lib/logger";
-import { userService } from "@/server/services/user-service";
 import { revalidateTag } from "next/cache";
+import { logger } from "@/lib/logger";
+import { fileSchema } from "@/server/actions/schemas";
 import { auth } from "@/server/auth";
+import { deleteFile, uploadFile } from "@/server/services/file";
+import { userService } from "@/server/services/user-service";
 
 export const uploadFileAction = async (
-  formData: FormData,
+  formData: FormData
 ): Promise<{ fileName: string; fileId: number | undefined }> => {
   const session = await auth();
   if (!session?.user?.id) {
@@ -27,8 +27,14 @@ export const uploadFileAction = async (
   logger.info(`File uploaded - Name: ${fileName}, URL: ${url}`);
 
   // Add the file to the user's profile
-  const userFile = await userService.addUserFile(session.user.id, { title: fileName, location: url });
-  revalidateTag("files");
+  const userFile = await userService.addUserFile(session.user.id, {
+    title: fileName,
+    location: url,
+  });
+  revalidateTag("files", "max");
+  if (!userFile) {
+    throw new Error("Failed to create user file");
+  }
   return { fileName, fileId: userFile.id };
 };
 
@@ -48,7 +54,7 @@ export async function deleteFileAction({
     await userService.deleteUserFile(session.user.id, fileId);
     await deleteFile(fileName);
     // Remove the file from the user's profile
-    revalidateTag("files");
+    revalidateTag("files", "max");
 
     logger.info(`File deleted successfully: ${fileId}`);
   } catch (error) {

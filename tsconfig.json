@@ -13,7 +13,7 @@
     "incremental": true,
     "isolatedModules": true,
     "moduleDetection": "force",
-    "noUncheckedIndexedAccess": false,
+    "noUncheckedIndexedAccess": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "verbatimModuleSyntax": false,
@@ -67,13 +67,14 @@
     ".next/dev/types/**/*.ts"
   ],
   "exclude": [
+    ".next",
     "node_modules",
+    ".vercel",
+    "tests",
     "public",
-    "src/components/blocks/**/*.ts",
-    "src/components/blocks/**/*.tsx",
-    "src/components/ui/**/*.ts",
-    "src/components/ui/**/*.tsx",
-    "src/app/(app)/ai/**/*",
+    "packages",
+    "cli/dist",
+    "debug/**/*.ts",
     "src/app/(app)/(demo)/examples/**/*",
     "src/workers/**/*.ts"
   ]

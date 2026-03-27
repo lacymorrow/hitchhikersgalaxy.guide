@@ -1,4 +1,3 @@
-import { Link } from "@/components/primitives/link-with-transition";
 import {
   ChevronLeft,
   Home,
@@ -14,6 +13,7 @@ import {
   Users2,
 } from "lucide-react";
 import Image from "next/image";
+import { Link } from "@/components/primitives/link";
 
 import { Badge } from "@/components/ui/badge";
 import {
@@ -61,11 +61,7 @@ import {
 } from "@/components/ui/table";
 import { Textarea } from "@/components/ui/textarea";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 export default function Dashboard() {
   return (
@@ -187,10 +183,7 @@ export default function Dashboard() {
                   <ShoppingCart className="h-5 w-5" />
                   Orders
                 </Link>
-                <Link
-                  href="#"
-                  className="flex items-center gap-4 px-2.5 text-foreground"
-                >
+                <Link href="#" className="flex items-center gap-4 px-2.5 text-foreground">
                   <Package className="h-5 w-5" />
                   Products
                 </Link>
@@ -240,11 +233,7 @@ export default function Dashboard() {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                size="icon"
-                className="overflow-hidden rounded-full"
-              >
+              <Button variant="outline" size="icon" className="overflow-hidden rounded-full">
                 <Image
                   src="/placeholder-user.jpg"
                   width={36}
@@ -334,35 +323,21 @@ export default function Dashboard() {
                       </TableHeader>
                       <TableBody>
                         <TableRow>
-                          <TableCell className="font-semibold">
-                            GGPC-001
-                          </TableCell>
+                          <TableCell className="font-semibold">GGPC-001</TableCell>
                           <TableCell>
                             <Label htmlFor="stock-1" className="sr-only">
                               Stock
                             </Label>
-                            <Input
-                              id="stock-1"
-                              type="number"
-                              defaultValue="100"
-                            />
+                            <Input id="stock-1" type="number" defaultValue="100" />
                           </TableCell>
                           <TableCell>
                             <Label htmlFor="price-1" className="sr-only">
                               Price
                             </Label>
-                            <Input
-                              id="price-1"
-                              type="number"
-                              defaultValue="99.99"
-                            />
+                            <Input id="price-1" type="number" defaultValue="99.99" />
                           </TableCell>
                           <TableCell>
-                            <ToggleGroup
-                              type="single"
-                              defaultValue="s"
-                              variant="outline"
-                            >
+                            <ToggleGroup type="single" defaultValue="s" variant="outline">
                               <ToggleGroupItem value="s">S</ToggleGroupItem>
                               <ToggleGroupItem value="m">M</ToggleGroupItem>
                               <ToggleGroupItem value="l">L</ToggleGroupItem>
@@ -370,35 +345,21 @@ export default function Dashboard() {
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell className="font-semibold">
-                            GGPC-002
-                          </TableCell>
+                          <TableCell className="font-semibold">GGPC-002</TableCell>
                           <TableCell>
                             <Label htmlFor="stock-2" className="sr-only">
                               Stock
                             </Label>
-                            <Input
-                              id="stock-2"
-                              type="number"
-                              defaultValue="143"
-                            />
+                            <Input id="stock-2" type="number" defaultValue="143" />
                           </TableCell>
                           <TableCell>
                             <Label htmlFor="price-2" className="sr-only">
                               Price
                             </Label>
-                            <Input
-                              id="price-2"
-                              type="number"
-                              defaultValue="99.99"
-                            />
+                            <Input id="price-2" type="number" defaultValue="99.99" />
                           </TableCell>
                           <TableCell>
-                            <ToggleGroup
-                              type="single"
-                              defaultValue="m"
-                              variant="outline"
-                            >
+                            <ToggleGroup type="single" defaultValue="m" variant="outline">
                               <ToggleGroupItem value="s">S</ToggleGroupItem>
                               <ToggleGroupItem value="m">M</ToggleGroupItem>
                               <ToggleGroupItem value="l">L</ToggleGroupItem>
@@ -406,35 +367,21 @@ export default function Dashboard() {
                           </TableCell>
                         </TableRow>
                         <TableRow>
-                          <TableCell className="font-semibold">
-                            GGPC-003
-                          </TableCell>
+                          <TableCell className="font-semibold">GGPC-003</TableCell>
                           <TableCell>
                             <Label htmlFor="stock-3" className="sr-only">
                               Stock
                             </Label>
-                            <Input
-                              id="stock-3"
-                              type="number"
-                              defaultValue="32"
-                            />
+                            <Input id="stock-3" type="number" defaultValue="32" />
                           </TableCell>
                           <TableCell>
                             <Label htmlFor="price-3" className="sr-only">
                               Stock
                             </Label>
-                            <Input
-                              id="price-3"
-                              type="number"
-                              defaultValue="99.99"
-                            />
+                            <Input id="price-3" type="number" defaultValue="99.99" />
                           </TableCell>
                           <TableCell>
-                            <ToggleGroup
-                              type="single"
-                              defaultValue="s"
-                              variant="outline"
-                            >
+                            <ToggleGroup type="single" defaultValue="s" variant="outline">
                               <ToggleGroupItem value="s">S</ToggleGroupItem>
                               <ToggleGroupItem value="m">M</ToggleGroupItem>
                               <ToggleGroupItem value="l">L</ToggleGroupItem>
@@ -460,40 +407,26 @@ export default function Dashboard() {
                       <div className="grid gap-3">
                         <Label htmlFor="category">Category</Label>
                         <Select>
-                          <SelectTrigger
-                            id="category"
-                            aria-label="Select category"
-                          >
+                          <SelectTrigger id="category" aria-label="Select category">
                             <SelectValue placeholder="Select category" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="clothing">Clothing</SelectItem>
-                            <SelectItem value="electronics">
-                              Electronics
-                            </SelectItem>
-                            <SelectItem value="accessories">
-                              Accessories
-                            </SelectItem>
+                            <SelectItem value="electronics">Electronics</SelectItem>
+                            <SelectItem value="accessories">Accessories</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
                       <div className="grid gap-3">
-                        <Label htmlFor="subcategory">
-                          Subcategory (optional)
-                        </Label>
+                        <Label htmlFor="subcategory">Subcategory (optional)</Label>
                         <Select>
-                          <SelectTrigger
-                            id="subcategory"
-                            aria-label="Select subcategory"
-                          >
+                          <SelectTrigger id="subcategory" aria-label="Select subcategory">
                             <SelectValue placeholder="Select subcategory" />
                           </SelectTrigger>
                           <SelectContent>
                             <SelectItem value="t-shirts">T-Shirts</SelectItem>
                             <SelectItem value="hoodies">Hoodies</SelectItem>
-                            <SelectItem value="sweatshirts">
-                              Sweatshirts
-                            </SelectItem>
+                            <SelectItem value="sweatshirts">Sweatshirts</SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
@@ -578,7 +511,7 @@ export default function Dashboard() {
                     </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div></div>
+                    <div />
                     <Button size="sm" variant="secondary">
                       Archive Product
                     </Button>

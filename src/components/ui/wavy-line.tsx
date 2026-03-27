@@ -1,6 +1,6 @@
 "use client";
+import { type ComponentProps, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
-import { useEffect, useRef, type ComponentProps } from "react";
 
 interface MouseEvent {
   movementY: number;
@@ -26,11 +26,7 @@ export function WavyLine({ className, ...props }: ComponentProps<"div">) {
     const width = parentRef.current?.clientWidth ?? window.innerWidth * 1;
 
     // Set the "d" attribute of the SVG path element using a quadratic Bézier curve
-    path.current?.setAttributeNS(
-      null,
-      "d",
-      `M0 50 Q${width * x} ${50 + progress}, ${width} 50`,
-    );
+    path.current?.setAttributeNS(null, "d", `M0 50 Q${width * x} ${50 + progress}, ${width} 50`);
   };
 
   // Define a linear interpolation function
@@ -92,11 +88,7 @@ export function WavyLine({ className, ...props }: ComponentProps<"div">) {
   };
 
   return (
-    <div
-      className={cn("relative h-px w-full", className)}
-      {...props}
-      ref={parentRef}
-    >
+    <div className={cn("relative h-px w-full", className)} {...props} ref={parentRef}>
       <div
         className="relative -top-5 z-10 h-10 w-full"
         onMouseEnter={handleMouseEnter}

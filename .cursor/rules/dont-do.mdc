@@ -1,12 +1,12 @@
 ---
 description: Things to Avoid - Anti-patterns and Common Mistakes
 globs: *.ts, *.tsx, *.js, *.jsx, src/**/*
+alwaysApply: false
 ---
-
 # Don't Do These Things
 
 ## Next.js
-- Don't use pages router (use app router)
+- Prefer use pages router (use app router)
 - Don't nest server components in client components
 - Don't use `use client` in server components
 - Don't fetch data with server actions
@@ -77,6 +77,17 @@ globs: *.ts, *.tsx, *.js, *.jsx, src/**/*
 - Don't ignore transaction boundaries
 - Don't store large blobs
 
+## Payment Provider Integration
+- Don't store order IDs in only one database field (use both `orderId` and `processorOrderId`)
+- Don't assume provider data maps to your field names
+- Don't read from single fields without fallback logic
+- Don't skip testing the complete data flow (Provider → Import → Database → Service → UI)
+- Don't assume all providers follow the same data structure
+- Don't ignore field mapping inconsistencies between providers
+- Don't deploy provider changes without verifying admin UI displays correctly
+- Don't hardcode field names in service layer without fallbacks
+- Don't skip creating debug scripts for provider integration testing
+
 ## Testing
 - Don't skip writing tests
 - Don't test implementation details
@@ -93,4 +104,4 @@ globs: *.ts, *.tsx, *.js, *.jsx, src/**/*
 - Don't leave TODO comments
 - Don't ignore linter warnings
 - Don't write unclear code
-- Don't skip documentation 
+- Don't skip documentation

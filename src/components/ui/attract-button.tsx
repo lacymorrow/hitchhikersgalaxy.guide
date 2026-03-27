@@ -1,10 +1,10 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import { motion, useAnimation } from "framer-motion";
 import { Magnet } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 interface Btn03Props extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   particleCount?: number;
@@ -54,8 +54,8 @@ export function AttractButton({
   const handleInteractionEnd = useCallback(async () => {
     setIsAttracting(false);
     await particlesControl.start((i) => ({
-      x: particles[i].x,
-      y: particles[i].y,
+      x: particles[i]?.x || 0,
+      y: particles[i]?.y || 0,
       transition: {
         type: "spring",
         stiffness: 100,
@@ -73,7 +73,7 @@ export function AttractButton({
         "text-violet-600 dark:text-violet-300",
         "border border-violet-300 dark:border-violet-700",
         "transition-all duration-300",
-        className,
+        className
       )}
       onMouseEnter={handleInteractionStart}
       onMouseLeave={handleInteractionEnd}
@@ -85,22 +85,19 @@ export function AttractButton({
         <motion.div
           key={index}
           custom={index}
-          initial={{ x: particles[index].x, y: particles[index].y }}
+          initial={{ x: particles[index]?.x || 0, y: particles[index]?.y || 0 }}
           animate={particlesControl}
           className={cn(
             "absolute h-1.5 w-1.5 rounded-full",
             "bg-violet-400 dark:bg-violet-300",
             "transition-opacity duration-300",
-            isAttracting ? "opacity-100" : "opacity-40",
+            isAttracting ? "opacity-100" : "opacity-40"
           )}
         />
       ))}
       <span className="relative flex w-full items-center justify-center gap-2">
         <Magnet
-          className={cn(
-            "h-4 w-4 transition-transform duration-300",
-            isAttracting && "scale-110",
-          )}
+          className={cn("h-4 w-4 transition-transform duration-300", isAttracting && "scale-110")}
         />
         {isAttracting ? "Attracting" : "Hover me"}
       </span>

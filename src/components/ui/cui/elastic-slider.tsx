@@ -1,17 +1,10 @@
 "use client";
 
-import {
-  animate,
-  motion,
-  useMotionValue,
-  useMotionValueEvent,
-  useTransform,
-} from "framer-motion";
+import { animate, motion, useMotionValue, useMotionValueEvent, useTransform } from "framer-motion";
 import { Volume2Icon, VolumeXIcon } from "lucide-react";
-import { type ElementRef, useRef, useState } from "react";
-
 // biome-ignore lint/style/noNamespaceImport: <explanation>
-import * as RadixSlider from "@radix-ui/react-slider";
+import { Slider as RadixSlider } from "radix-ui";
+import { type ElementRef, useRef, useState } from "react";
 
 const MAX_OVERFLOW = 50;
 
@@ -70,9 +63,7 @@ function Slider() {
             transition: { duration: 0.25 },
           }}
           style={{
-            x: useTransform(() =>
-              region === "left" ? -overflow.get() / scale.get() : 0,
-            ),
+            x: useTransform(() => (region === "left" ? -overflow.get() / scale.get() : 0)),
           }}
         >
           <VolumeXIcon className="size-5 translate-x-0 translate-y-0 text-neutral-800 dark:text-neutral-200" />
@@ -88,7 +79,7 @@ function Slider() {
               clientX.jump(e.clientX);
             }
           }}
-          onValueChange={([v]) => setVolume(Math.floor(v))}
+          onValueChange={([v]) => setVolume(Math.floor(v || 0))}
           ref={ref}
           step={0.01}
           value={[volume]}
@@ -129,9 +120,7 @@ function Slider() {
             transition: { duration: 0.25 },
           }}
           style={{
-            x: useTransform(() =>
-              region === "right" ? overflow.get() / scale.get() : 0,
-            ),
+            x: useTransform(() => (region === "right" ? overflow.get() / scale.get() : 0)),
           }}
         >
           <Volume2Icon className="size-5 translate-x-0 translate-y-0 text-neutral-800 dark:text-neutral-200" />

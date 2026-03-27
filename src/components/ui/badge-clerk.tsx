@@ -11,7 +11,7 @@ export default function BadgeClerk({
     <span
       className={cn(
         "relative bg-blue-50 px-[0.1875rem] text-[0.625rem]/[0.875rem] font-medium text-blue-500 dark:bg-blue-950",
-        className,
+        className
       )}
     >
       {children}

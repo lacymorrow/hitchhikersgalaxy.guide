@@ -1,0 +1,142 @@
+# ShipKit
+
+> Next.js starter kit with auth, CMS, payments, and everything apps need to ship fast.
+
+## What is ShipKit?
+ShipKit is a production-ready Next.js 15 starter template. Clone it, configure it, deploy to Vercel. Auth, payments, CMS, email, AI, analytics, database, storage, all pre-wired.
+
+## Quick Start
+git clone https://github.com/shipkit-io/shipkit
+cd shipkit
+bun install --frozen-lockfile
+bun dev
+
+## Deploy
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fshipkit-io%2Fshipkit)
+
+No environment variables needed to start. The setup wizard guides you through configuration after deployment.
+
+## Docs
+- Full Documentation: https://shipkit.io/docs
+- Deploy Guide: https://shipkit.io/docs/getting-started/deploy
+- Development Guide: https://shipkit.io/docs/development
+
+## Links
+- Website: https://shipkit.io
+- GitHub: https://github.com/shipkit-io/shipkit
+- Free Template: https://github.com/shipkit-io/bones
+- Twitter: https://twitter.com/lacybuilds
+
+## Features
+
+### Authentication
+ShipKit supports multiple auth providers out of the box. Swap providers without rewriting your app.
+- Auth.js (NextAuth v5): The default, supports dozens of OAuth providers and credentials.
+- Better Auth: Lightweight alternative with a simple API.
+- Clerk: Managed auth with prebuilt UI components.
+- Supabase Auth: Integrated with the Supabase ecosystem.
+- Stack Auth: Open-source auth with built-in user management.
+
+### Payments
+Integrated billing and subscription management. Configure your provider and start accepting payments.
+- Lemon Squeezy: Merchant of record, handles tax and compliance globally.
+- Stripe: Full-featured payment processing with subscriptions, invoices, and more.
+- Polar: Open-source-friendly monetization platform.
+
+### Content Management
+- Payload CMS v3: Headless CMS built directly into the Next.js app. Admin panel, collections, rich text, media, and access control included.
+- Builder.io: Visual drag-and-drop editor for marketing pages. Non-developers can edit content without touching code.
+
+### Email
+- Resend: Transactional email with React Email templates. Send welcome emails, password resets, notifications, and marketing campaigns.
+
+### AI
+- SmolLM: Lightweight local language model for on-device inference.
+- OpenAI: GPT models for chat, completion, and embeddings.
+- Anthropic: Claude models for advanced reasoning and content generation.
+
+### Analytics
+- PostHog: Product analytics, feature flags, session replay, and A/B testing.
+- Umami: Privacy-focused, lightweight web analytics.
+- Google Analytics: Standard web analytics integration.
+- Statsig: Feature gates, experiments, and dynamic configs.
+
+### Database
+- PostgreSQL: The primary database, robust and production-proven.
+- Drizzle ORM: Type-safe SQL query builder with automatic migrations and schema management.
+
+### Storage
+- AWS S3: Object storage for files, images, and media.
+- Vercel Blob: Simple blob storage integrated with the Vercel platform.
+
+## Tech Stack
+- Next.js 15: React framework with App Router, Server Components, Server Actions, and streaming.
+- TypeScript: Full type safety across the entire codebase.
+- Tailwind CSS: Utility-first CSS framework for rapid styling.
+- Shadcn/UI: Accessible, composable UI components built on Radix primitives.
+- Drizzle ORM: Type-safe database toolkit with zero-overhead SQL.
+- Payload CMS v3: Headless CMS embedded in the Next.js process.
+- Builder.io: Visual page builder for no-code content editing.
+- Resend: Email delivery with React-based templates.
+
+## Project Structure
+```
+shipkit/
+  src/
+    app/              # Next.js App Router pages and layouts
+      (app)/          # Main app layout group
+      (marketing)/    # Marketing pages layout group
+      api/            # API route handlers
+    components/       # Shared React components
+      ui/             # Shadcn/UI primitives
+      layouts/        # Layout components
+      modules/        # Feature-specific component modules
+    config/           # App configuration (site, metadata, fonts, navigation)
+    lib/              # Utility functions and shared logic
+    server/           # Server-side code (auth, db, providers, actions)
+      db/             # Drizzle schema and migrations
+      actions/        # Server Actions
+      providers/      # Payment and auth provider setup
+    styles/           # Global CSS and Tailwind config
+  public/             # Static assets
+  payload/            # Payload CMS configuration and collections
+  drizzle/            # Database migration files
+```
+
+## Configuration
+
+### Environment Variables
+ShipKit uses a validated env schema (via `@t3-oss/env-nextjs`). Copy `.env.example` to `.env.local` and fill in values for the providers you want to use. No env vars are required to start the dev server; the setup wizard walks you through configuration.
+
+### Setup Wizard
+On first run, ShipKit detects missing configuration and launches an interactive setup wizard. It guides you through:
+- Selecting your auth provider
+- Connecting your payment provider
+- Configuring your database connection
+- Setting up email delivery
+- Enabling analytics
+
+## Customization
+
+### Adding Pages
+Create new routes in `src/app/`. Use the `(app)` group for authenticated app pages and `(marketing)` for public marketing pages. Each group has its own layout.
+
+### Switching Auth Providers
+Set the `AUTH_PROVIDER` environment variable to your chosen provider (`authjs`, `better-auth`, `clerk`, `supabase`, or `stack`). ShipKit's auth abstraction layer handles the rest. Provider-specific configuration goes in `src/server/auth/`.
+
+### Switching Payment Providers
+Set the `PAYMENT_PROVIDER` environment variable (`stripe`, `lemonsqueezy`, or `polar`). Configure API keys and webhook secrets. Product and pricing definitions live in `src/config/pricing.ts`.
+
+### Adding UI Components
+Run `bunx shadcn@latest add <component>` to add new Shadcn/UI components. They install into `src/components/ui/`.
+
+## AI Assistant Guide
+ShipKit includes a `CLAUDE.md` file at the repository root. This file provides AI coding assistants (Claude, Cursor, Copilot, and others) with project context, coding conventions, architecture decisions, and instructions for working effectively with the codebase.
+
+## License
+ShipKit is open source software. See the repository for license details.
+
+## Support
+- GitHub Issues: https://github.com/shipkit-io/shipkit/issues
+- Documentation: https://shipkit.io/docs
+- Twitter: https://twitter.com/lacybuilds

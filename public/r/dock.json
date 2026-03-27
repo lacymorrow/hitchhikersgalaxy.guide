@@ -1,0 +1,21 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "dock",
+  "title": "Dock",
+  "description": "A macOS-style dock with magnification effect on hover.",
+  "dependencies": [
+    "framer-motion",
+    "class-variance-authority"
+  ],
+  "registryDependencies": [
+    "cn"
+  ],
+  "files": [
+    {
+      "path": "src/components/ui/dock.tsx",
+      "content": "\"use client\";\n\nimport { cva, type VariantProps } from \"class-variance-authority\";\nimport {\n  type HTMLMotionProps,\n  type MotionValue,\n  motion,\n  useMotionValue,\n  useSpring,\n  useTransform,\n} from \"framer-motion\";\nimport React, { useRef } from \"react\";\n\nimport { cn } from \"@/lib/utils\";\n\nexport interface DockProps extends VariantProps<typeof dockVariants> {\n  className?: string;\n  magnification?: number;\n  distance?: number;\n  direction?: \"top\" | \"middle\" | \"bottom\";\n  children: React.ReactNode;\n}\n\nconst DEFAULT_MAGNIFICATION = 60;\nconst DEFAULT_DISTANCE = 140;\n\nconst dockVariants = cva(\n  \"supports-backdrop-blur:bg-white/10 supports-backdrop-blur:dark:bg-black/10 mx-auto mt-8 flex h-[58px] w-max gap-2 rounded-2xl border p-2 backdrop-blur-md\"\n);\n\n// Create context with null as default - we'll provide actual values in the Dock component\nconst DockContext = React.createContext<{\n  mouseX: MotionValue<number> | null;\n  magnification: number;\n  distance: number;\n}>({\n  mouseX: null,\n  magnification: DEFAULT_MAGNIFICATION,\n  distance: DEFAULT_DISTANCE,\n});\n\nconst Dock = React.forwardRef<HTMLDivElement, DockProps>(\n  (\n    {\n      className,\n      children,\n      magnification = DEFAULT_MAGNIFICATION,\n      distance = DEFAULT_DISTANCE,\n      direction = \"bottom\",\n      ...props\n    },\n    ref\n  ) => {\n    // Use hooks inside the component\n    const mouseX = useMotionValue(Number.POSITIVE_INFINITY);\n\n    return (\n      <DockContext.Provider value={{ mouseX, magnification, distance }}>\n        <motion.div\n          ref={ref}\n          onMouseMove={(e) => mouseX.set(e.pageX)}\n          onMouseLeave={() => mouseX.set(Number.POSITIVE_INFINITY)}\n          {...props}\n          className={cn(dockVariants({ className }), {\n            \"items-start\": direction === \"top\",\n            \"items-center\": direction === \"middle\",\n            \"items-end\": direction === \"bottom\",\n          })}\n        >\n          {children}\n        </motion.div>\n      </DockContext.Provider>\n    );\n  }\n);\n\nDock.displayName = \"Dock\";\n\nexport interface DockIconProps extends Omit<HTMLMotionProps<\"div\">, \"children\"> {\n  size?: number;\n  children?: React.ReactNode;\n}\n\nconst DockIcon = ({ size, className, children, ...props }: DockIconProps) => {\n  const ref = useRef<HTMLDivElement>(null);\n  const { mouseX, magnification, distance } = React.useContext(DockContext);\n\n  // Handle case where mouseX is null (should only happen if DockIcon is used outside of Dock)\n  const mouseXValue = mouseX || useMotionValue(Number.POSITIVE_INFINITY);\n\n  const distanceCalc = useTransform(mouseXValue, (val: number) => {\n    const bounds = ref.current?.getBoundingClientRect() ?? { x: 0, width: 0 };\n    return val - bounds.x - bounds.width / 2;\n  });\n\n  const widthSync = useTransform(distanceCalc, [-distance, 0, distance], [40, magnification, 40]);\n\n  const width = useSpring(widthSync, {\n    mass: 0.1,\n    stiffness: 150,\n    damping: 12,\n  });\n\n  return (\n    <motion.div\n      ref={ref}\n      style={{ width }}\n      className={cn(\n        \"flex aspect-square cursor-pointer items-center justify-center rounded-full\",\n        className\n      )}\n      {...props}\n    >\n      {children}\n    </motion.div>\n  );\n};\n\nDockIcon.displayName = \"DockIcon\";\n\nexport { Dock, DockIcon, dockVariants };\n",
+      "type": "registry:ui"
+    }
+  ],
+  "type": "registry:ui"
+}

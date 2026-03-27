@@ -1,18 +1,14 @@
-import {
-	HoverCard,
-	HoverCardContent,
-	HoverCardTrigger,
-} from "@/components/ui/hover-card";
+import type { ReactNode } from "react";
+import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
 import { cn } from "@/lib/utils";
-import { ReactNode } from "react";
 
 interface HoverInfoProps {
-	children: ReactNode;
-	content: ReactNode;
-	className?: string;
-	side?: "top" | "right" | "bottom" | "left";
-	align?: "start" | "center" | "end";
-	[key: string]: any;
+  children: ReactNode;
+  content: ReactNode;
+  className?: string;
+  side?: "top" | "right" | "bottom" | "left";
+  align?: "start" | "center" | "end";
+  [key: string]: any;
 }
 
 /**
@@ -26,33 +22,28 @@ interface HoverInfoProps {
  * ```
  */
 export const HoverInfo = ({
-	children,
-	content,
-	className,
-	side = "top",
-	align = "center",
-	...rest
+  children,
+  content,
+  className,
+  side = "top",
+  align = "center",
+  ...rest
 }: HoverInfoProps) => {
-	return (
-		<HoverCard openDelay={200}>
-			<HoverCardTrigger asChild>
-				<span
-					className={cn(
-						"inline-block cursor-help border-b border-dotted border-muted-foreground hover:border-foreground",
-						className,
-					)}
-				>
-					{children}
-				</span>
-			</HoverCardTrigger>
-			<HoverCardContent
-				className="z-50 w-80"
-				side={side}
-				align={align}
-				{...rest}
-			>
-				<div className="space-y-2">{content}</div>
-			</HoverCardContent>
-		</HoverCard>
-	);
+  return (
+    <HoverCard openDelay={200}>
+      <HoverCardTrigger asChild>
+        <span
+          className={cn(
+            "font-medium inline-block cursor-help transition-colors duration-200",
+            className
+          )}
+        >
+          {children}
+        </span>
+      </HoverCardTrigger>
+      <HoverCardContent className="z-50 w-80" side={side} align={align} {...rest}>
+        <div className="space-y-2">{content}</div>
+      </HoverCardContent>
+    </HoverCard>
+  );
 };

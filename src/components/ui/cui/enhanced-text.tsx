@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { cn } from "@/lib/utils";
 
 interface EnhancedTextProps {
   text?: string;
@@ -47,7 +47,7 @@ export function EnhancedText({
           "tracking-widest transition-all duration-200 ease-in-out",
           "italic text-black dark:text-white",
           "stroke-[#d6f4f4]",
-          className,
+          className
         )}
         style={textShadowStyle}
         whileHover={noShadowStyle}

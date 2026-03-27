@@ -1,21 +1,17 @@
 {
-  // Smooth Scrolling
   "editor.smoothScrolling": true,
   "editor.cursorBlinking": "smooth",
   "editor.cursorSmoothCaretAnimation": "on",
   "workbench.list.smoothScrolling": true,
   "terminal.integrated.smoothScrolling": true,
   "terminal.integrated.cursorBlinking": true,
-
-  // Title Bar
   "workbench.colorCustomizations": {
     "titleBar.activeBackground": "#a2068d",
     "titleBar.inactiveBackground": "#570a49",
     "titleBar.activeForeground": "#ffffff"
   },
-  // "eslint.enable": false,
   "editor.formatOnSave": true,
-  "editor.defaultFormatter": "biomejs.biome",
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "[javascript]": {
     "editor.defaultFormatter": "biomejs.biome"
   },
@@ -23,31 +19,49 @@
     "editor.defaultFormatter": "biomejs.biome"
   },
   "[typescript]": {
-    "editor.defaultFormatter": "biomejs.biome"
+    "editor.defaultFormatter": "vscode.typescript-language-features"
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "vscode.typescript-language-features"
   },
+
+  "typescript.updateImportsOnFileMove.enabled": "always",
+
+  "typescript.preferences.preferTypeOnlyAutoImports": true,
   "typescript.preferences.importModuleSpecifier": "non-relative",
   "typescript.preferences.importModuleSpecifierEnding": "minimal",
-  "typescript.preferences.preferTypeOnlyAutoImports": true,
+  "javascript.preferences.importModuleSpecifier": "non-relative",
+  "javascript.preferences.importModuleSpecifierEnding": "minimal",
+  "typescript.preferences.autoImportFileExcludePatterns": [],
+  "javascript.preferences.autoImportFileExcludePatterns": [],
+  "editor.codeActionsOnSave": {
+    // "source.organizeImports": "explicit"
+  },
+  "typescript.suggest.autoImports": true,
+  "javascript.suggest.autoImports": true,
   "[markdown]": {
     "editor.defaultFormatter": "DavidAnson.vscode-markdownlint"
   },
   "[dotenv]": {
     "editor.defaultFormatter": "foxundermoon.shell-format"
   },
-  // Exclude demo folder from search and IntelliSense
-  "search.exclude": {
-    "**/src/app/(app)/(demo)": true
-  },
   "files.watcherExclude": {
     "**/src/app/(app)/(demo)/**": true
   },
-  "[postcss]": {
-    "editor.defaultFormatter": "stylelint.vscode-stylelint"
-  },
   "[mdx]": {
     "editor.defaultFormatter": "unifiedjs.vscode-mdx"
-  }
+  },
+  "[git-commit]": {
+    "editor.wordWrap": "on"
+  },
+  "editor.wordWrap": "on",
+  "editor.wordWrapColumn": 120,
+  "chat.editor.wordWrap": "off",
+  "[properties]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "[ignore]": {
+    "editor.defaultFormatter": "foxundermoon.shell-format"
+  },
+  "kiroAgent.configureMCP": "Disabled"
 }

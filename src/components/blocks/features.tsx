@@ -1,23 +1,23 @@
-import { motion } from 'framer-motion'
-import { Zap, Shield, Rocket } from 'lucide-react'
+import { motion } from "framer-motion";
+import { Rocket, Shield, Zap } from "lucide-react";
 
 const features = [
   {
     icon: Zap,
-    title: 'Lightning Fast',
-    description: 'Boost your productivity with our blazing fast CLI tool.'
+    title: "Lightning Fast",
+    description: "Boost your productivity with our blazing fast CLI tool.",
   },
   {
     icon: Shield,
-    title: 'Secure',
-    description: 'Built with security in mind to keep your projects safe.'
+    title: "Secure",
+    description: "Built with security in mind to keep your projects safe.",
   },
   {
     icon: Rocket,
-    title: 'Easy to Use',
-    description: 'Simple and intuitive commands for developers of all levels.'
-  }
-]
+    title: "Easy to Use",
+    description: "Simple and intuitive commands for developers of all levels.",
+  },
+];
 
 export function Features() {
   return (
@@ -26,7 +26,7 @@ export function Features() {
         <h2 className="text-3xl font-bold text-center mb-12">Why Choose Our CLI?</h2>
         <div className="grid md:grid-cols-3 gap-8">
           {features.map((feature, index) => (
-            <motion.div 
+            <motion.div
               key={index}
               className="bg-background p-6 rounded-lg shadow-lg"
               initial={{ opacity: 0, y: 20 }}
@@ -41,6 +41,5 @@ export function Features() {
         </div>
       </div>
     </section>
-  )
+  );
 }
-

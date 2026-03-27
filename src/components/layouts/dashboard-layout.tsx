@@ -1,50 +1,28 @@
-import { AppSidebar } from "@/components/blocks/app-sidebar";
+import { type ReactNode, Suspense } from "react";
+import { DashboardHeader } from "@/components/blocks/dashboard-header";
 import { SidebarLayout } from "@/components/layouts/sidebar-layout";
-import { getTeamData } from "@/components/providers/team-data";
-import { BreadcrumbNav } from "@/components/ui/breadcrumb-nav";
-import { Separator } from "@/components/ui/separator";
-import { SidebarInset, SidebarTrigger } from "@/components/ui/sidebar";
-import { routes } from "@/config/routes";
-import { auth } from "@/server/auth";
-import { SidebarCloseIcon } from "lucide-react";
-import { redirect } from "next/navigation";
-import { type ReactNode } from "react";
+import { AppSidebar } from "@/components/modules/sidebar/app-sidebar";
+import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
+import { SidebarInset } from "@/components/ui/sidebar";
 
-export const DashboardLayout = async ({
-	children,
-}: {
-	children: ReactNode;
-}) => {
-	const session = await auth();
+export const DashboardLayout = ({ children }: { children: ReactNode }) => {
+  return (
+    <SidebarLayout>
+      <div
+        className="flex min-h-svh w-full flex-col"
+        style={{ "--header-height": "4rem", "--sidebar-top": "var(--header-height)" } as React.CSSProperties}
+      >
+        <Suspense fallback={<SuspenseFallback />}>
+          <DashboardHeader />
+        </Suspense>
 
-	if (!session?.user) {
-		redirect(routes.auth.signIn);
-	}
-
-	const teams = await getTeamData();
-
-	return (
-		<SidebarLayout initialTeams={teams}>
-			<AppSidebar />
-			<SidebarInset>
-				<header className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-[[data-collapsible=icon]]/sidebar-wrapper:h-12">
-					<div className="flex items-center gap-2 px-4">
-						<SidebarTrigger className="-ml-1">
-							<SidebarCloseIcon />
-						</SidebarTrigger>
-						<Separator orientation="vertical" className="mr-2 h-4" />
-						<BreadcrumbNav
-							pathLabels={{
-								[routes.app.dashboard]: "Dashboard",
-								[routes.app.apiKeys]: "API Keys",
-								[routes.app.settings]: "Settings",
-								[routes.app.tools]: "Tools",
-							}}
-						/>
-					</div>
-				</header>
-				<main className="flex-1">{children}</main>
-			</SidebarInset>
-		</SidebarLayout>
-	);
-}
+        <div className="flex flex-1">
+          <AppSidebar />
+          <SidebarInset>
+            <main className="flex flex-1 flex-col">{children}</main>
+          </SidebarInset>
+        </div>
+      </div>
+    </SidebarLayout>
+  );
+};

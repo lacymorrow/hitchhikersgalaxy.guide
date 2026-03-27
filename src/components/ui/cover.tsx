@@ -1,8 +1,9 @@
 "use client";
+import { AnimatePresence, motion } from "framer-motion";
+import type React from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { SparklesCore } from "@/components/ui/sparkles";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useId, useRef, useState } from "react";
 
 export const Cover = ({
   children,
@@ -26,7 +27,7 @@ export const Cover = ({
       const numberOfBeams = Math.floor(height / 10); // Adjust the divisor to control the spacing
       const positions = Array.from(
         { length: numberOfBeams },
-        (_, i) => (i + 1) * (height / (numberOfBeams + 1)),
+        (_, i) => (i + 1) * (height / (numberOfBeams + 1))
       );
       setBeamPositions(positions);
     }
@@ -60,7 +61,7 @@ export const Cover = ({
                 translateX: {
                   duration: 10,
                   ease: "linear",
-                  repeat: Infinity,
+                  repeat: Number.POSITIVE_INFINITY,
                 },
               }}
               className="flex h-full w-[200%]"
@@ -114,12 +115,12 @@ export const Cover = ({
           duration: 0.2,
           x: {
             duration: 0.2,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             repeatType: "loop",
           },
           y: {
             duration: 0.2,
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             repeatType: "loop",
           },
           scale: {
@@ -131,7 +132,7 @@ export const Cover = ({
         }}
         className={cn(
           "relative z-20 inline-block text-neutral-900 transition duration-200 group-hover/cover:text-white dark:text-white",
-          className,
+          className
         )}
       >
         {children}
@@ -170,10 +171,7 @@ export const Beam = ({
       className={cn("absolute inset-x-0 w-full", className)}
       {...svgProps}
     >
-      <motion.path
-        d={`M0 0.5H${width ?? "600"}`}
-        stroke={`url(#svgGradient-${id})`}
-      />
+      <motion.path d={`M0 0.5H${width ?? "600"}`} stroke={`url(#svgGradient-${id})`} />
 
       <defs>
         <motion.linearGradient
@@ -195,7 +193,7 @@ export const Beam = ({
           transition={{
             duration: hovered ? 0.5 : (duration ?? 2),
             ease: "linear",
-            repeat: Infinity,
+            repeat: Number.POSITIVE_INFINITY,
             delay: hovered ? Math.random() * (1 - 0.2) + 0.2 : 0,
             repeatDelay: hovered ? Math.random() * (2 - 1) + 1 : (delay ?? 1),
           }}
@@ -209,19 +207,13 @@ export const Beam = ({
   );
 };
 
-export const CircleIcon = ({
-  className,
-  delay,
-}: {
-  className?: string;
-  delay?: number;
-}) => {
+export const CircleIcon = ({ className, delay }: { className?: string; delay?: number }) => {
   return (
     <div
       className={cn(
-        `group pointer-events-none h-2 w-2 animate-pulse rounded-full bg-neutral-600 opacity-20 group-hover/cover:hidden group-hover/cover:bg-white group-hover/cover:opacity-100 dark:bg-white`,
-        className,
+        "group pointer-events-none h-2 w-2 animate-pulse rounded-full bg-neutral-600 opacity-20 group-hover/cover:hidden group-hover/cover:bg-white group-hover/cover:opacity-100 dark:bg-white",
+        className
       )}
-    ></div>
+    />
   );
 };

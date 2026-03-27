@@ -1,5 +1,6 @@
+import type React from "react";
+import { useMemo } from "react";
 import BlurFade from "@/components/ui/blur-fade";
-import React, { useMemo } from "react";
 
 interface MasonryProps<T> {
   items: T[];
@@ -8,12 +9,7 @@ interface MasonryProps<T> {
   gap?: number;
 }
 
-export function Masonry<T>({
-  items,
-  renderItem,
-  columns = 3,
-  gap = 4,
-}: MasonryProps<T>) {
+export function Masonry<T>({ items, renderItem, columns = 3, gap = 4 }: MasonryProps<T>) {
   return (
     <section id="masonry">
       <div
@@ -22,9 +18,7 @@ export function Masonry<T>({
       >
         {items.map((item, idx) => (
           <BlurFade key={idx} delay={0.25 + idx * 0.05} inView>
-            <div className="mb-4 break-inside-avoid">
-              {renderItem(item, idx)}
-            </div>
+            <div className="mb-4 break-inside-avoid">{renderItem(item, idx)}</div>
           </BlurFade>
         ))}
       </div>
@@ -36,9 +30,8 @@ export function Masonry<T>({
 const ExampleMasonry: React.FC = () => {
   const images = useMemo(() => {
     return Array.from({ length: 9 }, (_, i) => {
-      // const isLandscape = Math.random() > 0.5;
-      const width = Math.floor(Math.random() * (800 - 600 + 1) + 600);
-      const height = Math.floor(Math.random() * (800 - 600 + 1) + 600);
+      const width = 600 + ((i * 37) % 201);
+      const height = 600 + ((i * 53) % 201);
       return `https://picsum.photos/seed/${i + 1}/${width}/${height}`;
     });
   }, []);

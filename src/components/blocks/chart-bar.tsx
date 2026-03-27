@@ -1,17 +1,11 @@
-'use client'
+"use client";
 
-import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from 'recharts'
+import { Bar, BarChart, ResponsiveContainer, XAxis, YAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface ChartBarProps {
-  data: { name: string; value: number }[]
+  data: { name: string; value: number }[];
 }
 
 export function ChartBar({ data }: ChartBarProps) {
@@ -48,6 +42,5 @@ export function ChartBar({ data }: ChartBarProps) {
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  )
+  );
 }
-

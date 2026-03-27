@@ -1,16 +1,16 @@
+import type { ComponentPropsWithoutRef, ReactNode } from "react";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 
-export function AuthenticationCard({
-	children,
-	className,
-}: {
-	children: React.ReactNode;
-	className?: string;
-}) {
-	return (
-		<Card className={cn("mx-auto min-w-[400px] max-w-[400px] overflow-hidden", className)}>
-			{children}
-		</Card>
-	);
+interface AuthenticationCardProps extends ComponentPropsWithoutRef<typeof Card> {
+  children: ReactNode;
+  className?: string;
+}
+
+export function AuthenticationCard({ children, className, ...props }: AuthenticationCardProps) {
+  return (
+    <Card className={cn("overflow-hidden", className)} {...props}>
+      {children}
+    </Card>
+  );
 }

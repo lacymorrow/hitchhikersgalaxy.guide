@@ -92,12 +92,24 @@ Both systems can coexist: use Payload for structured content (blog posts, FAQs) 
 
 The `useIsPreviewing()` hook from Builder.io detects when you're editing in the visual editor. Content renders even without being published, so you get live preview during editing.
 
+## Installing in Other Projects
+
+Builder.io is available as a shadcn registry block:
+
+```bash
+npx shadcn add @shipkit/builder-io   # Standalone Builder.io integration
+npx shadcn add @shipkit/cms-pages    # Shared Payload + Builder.io catch-all
+```
+
+See [Component Registry](/docs/features/registry) for setup.
+
 ## Key Files
 
 | File | Purpose |
 |------|---------|
 | `src/builder-registry.ts` | Component registration |
 | `src/lib/builder-io/builder-io.tsx` | Renderer component (`RenderBuilderContent`) |
-| `src/app/(app)/(integrations)/builder.io/[...slug]/page.tsx` | Builder.io page route |
+| `src/app/(cms)/[...slug]/page.tsx` | Unified CMS catch-all (Payload + Builder.io) |
+| `src/app/(app)/(integrations)/builder.io/[...slug]/page.tsx` | Standalone Builder.io route |
 | `src/components/modules/builder/` | Builder-specific components (hero, cta, stats) |
 | `src/styles/builder-io.css` | Style overrides |

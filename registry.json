@@ -223,12 +223,12 @@
         {
           "path": "src/app/(app)/(kit)/faq/page.tsx",
           "type": "registry:page",
-          "target": "~/app/faq/page.tsx"
+          "target": "~/app/(app)/faq/page.tsx"
         },
         {
           "path": "src/app/(app)/(kit)/faq/loading.tsx",
           "type": "registry:component",
-          "target": "~/app/faq/loading.tsx"
+          "target": "~/app/(app)/faq/loading.tsx"
         },
         {
           "path": "src/content/faq/faq-content.tsx",
@@ -256,42 +256,42 @@
         {
           "path": "src/app/(app)/docs/layout.tsx",
           "type": "registry:component",
-          "target": "~/app/docs/layout.tsx"
+          "target": "~/app/(app)/docs/layout.tsx"
         },
         {
           "path": "src/app/(app)/docs/[[...slug]]/page.tsx",
           "type": "registry:page",
-          "target": "~/app/docs/[[...slug]]/page.tsx"
+          "target": "~/app/(app)/docs/[[...slug]]/page.tsx"
         },
         {
           "path": "src/app/(app)/docs/loading.tsx",
           "type": "registry:component",
-          "target": "~/app/docs/loading.tsx"
+          "target": "~/app/(app)/docs/loading.tsx"
         },
         {
           "path": "src/app/(app)/docs/not-found.tsx",
           "type": "registry:component",
-          "target": "~/app/docs/not-found.tsx"
+          "target": "~/app/(app)/docs/not-found.tsx"
         },
         {
           "path": "src/app/(app)/docs/styles.css",
           "type": "registry:style",
-          "target": "~/app/docs/styles.css"
+          "target": "~/app/(app)/docs/styles.css"
         },
         {
           "path": "src/app/(app)/docs/_components/docs-sidebar.tsx",
           "type": "registry:component",
-          "target": "~/app/docs/_components/docs-sidebar.tsx"
+          "target": "~/app/(app)/docs/_components/docs-sidebar.tsx"
         },
         {
           "path": "src/app/(app)/docs/_components/docs-header.tsx",
           "type": "registry:component",
-          "target": "~/app/docs/_components/docs-header.tsx"
+          "target": "~/app/(app)/docs/_components/docs-header.tsx"
         },
         {
           "path": "src/app/(app)/docs/_components/docs-search.tsx",
           "type": "registry:component",
-          "target": "~/app/docs/_components/docs-search.tsx"
+          "target": "~/app/(app)/docs/_components/docs-search.tsx"
         },
         {
           "path": "src/lib/docs.ts",
@@ -311,7 +311,7 @@
         {
           "path": "src/app/(app)/api/docs/search/route.ts",
           "type": "registry:lib",
-          "target": "~/app/api/docs/search/route.ts"
+          "target": "~/app/(app)/api/docs/search/route.ts"
         }
       ],
       "docs": "Full docs system powered by MDX. Place your `.mdx` files in `docs/` at the project root. Includes sidebar navigation, search with optional AI-powered answers, and responsive layout."
@@ -333,47 +333,47 @@
         {
           "path": "src/app/(app)/blog/layout.tsx",
           "type": "registry:component",
-          "target": "~/app/blog/layout.tsx"
+          "target": "~/app/(app)/blog/layout.tsx"
         },
         {
           "path": "src/app/(app)/blog/page.tsx",
           "type": "registry:page",
-          "target": "~/app/blog/page.tsx"
+          "target": "~/app/(app)/blog/page.tsx"
         },
         {
           "path": "src/app/(app)/blog/loading.tsx",
           "type": "registry:component",
-          "target": "~/app/blog/loading.tsx"
+          "target": "~/app/(app)/blog/loading.tsx"
         },
         {
           "path": "src/app/(app)/blog/[...slug]/page.tsx",
           "type": "registry:page",
-          "target": "~/app/blog/[...slug]/page.tsx"
+          "target": "~/app/(app)/blog/[...slug]/page.tsx"
         },
         {
           "path": "src/app/(app)/blog/[...slug]/loading.tsx",
           "type": "registry:component",
-          "target": "~/app/blog/[...slug]/loading.tsx"
+          "target": "~/app/(app)/blog/[...slug]/loading.tsx"
         },
         {
           "path": "src/app/(app)/blog/categories/page.tsx",
           "type": "registry:page",
-          "target": "~/app/blog/categories/page.tsx"
+          "target": "~/app/(app)/blog/categories/page.tsx"
         },
         {
           "path": "src/app/(app)/blog/categories/[category]/page.tsx",
           "type": "registry:page",
-          "target": "~/app/blog/categories/[category]/page.tsx"
+          "target": "~/app/(app)/blog/categories/[category]/page.tsx"
         },
         {
           "path": "src/app/(app)/blog/authors/[author]/page.tsx",
           "type": "registry:page",
-          "target": "~/app/blog/authors/[author]/page.tsx"
+          "target": "~/app/(app)/blog/authors/[author]/page.tsx"
         },
         {
           "path": "src/app/(app)/blog/authors/[author]/loading.tsx",
           "type": "registry:component",
-          "target": "~/app/blog/authors/[author]/loading.tsx"
+          "target": "~/app/(app)/blog/authors/[author]/loading.tsx"
         },
         {
           "path": "src/components/modules/blog/index.ts",
@@ -469,7 +469,7 @@
         {
           "path": "src/app/(app)/(integrations)/builder.io/[...slug]/page.tsx",
           "type": "registry:page",
-          "target": "~/app/builder.io/[...slug]/page.tsx"
+          "target": "~/app/(app)/builder.io/[...slug]/page.tsx"
         },
         {
           "path": "src/lib/builder-io/builder-io.tsx",
@@ -525,6 +525,76 @@
       "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add your `BUILDER_API_KEY` to `.env`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard."
     },
     {
+      "name": "cms-pages",
+      "type": "registry:block",
+      "title": "CMS Pages",
+      "description": "Shared catch-all route that renders dynamic pages from Payload CMS and/or Builder.io with automatic fallback.",
+      "categories": ["shipkit", "cms"],
+      "dependencies": [
+        "@builder.io/sdk",
+        "uuid"
+      ],
+      "registryDependencies": ["cn", "features-config", "builder-io", "button", "card", "carousel", "avatar"],
+      "files": [
+        {
+          "path": "src/app/(cms)/[...slug]/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(cms)/[...slug]/page.tsx"
+        },
+        {
+          "path": "src/app/(cms)/layout.tsx",
+          "type": "registry:component",
+          "target": "~/app/(cms)/layout.tsx"
+        },
+        {
+          "path": "src/app/(cms)/payload-root-layout.tsx",
+          "type": "registry:component",
+          "target": "~/app/(cms)/payload-root-layout.tsx"
+        },
+        {
+          "path": "src/app/(cms)/not-found.tsx",
+          "type": "registry:component",
+          "target": "~/app/(cms)/not-found.tsx"
+        },
+        {
+          "path": "src/app/(cms)/payload-blocks.tsx",
+          "type": "registry:component",
+          "target": "~/app/(cms)/payload-blocks.tsx"
+        },
+        {
+          "path": "src/app/(cms)/hero.tsx",
+          "type": "registry:component",
+          "target": "~/app/(cms)/hero.tsx"
+        },
+        {
+          "path": "src/app/(cms)/content.tsx",
+          "type": "registry:component",
+          "target": "~/app/(cms)/content.tsx"
+        },
+        {
+          "path": "src/app/(cms)/features.tsx",
+          "type": "registry:component",
+          "target": "~/app/(cms)/features.tsx"
+        },
+        {
+          "path": "src/app/(cms)/testimonials.tsx",
+          "type": "registry:component",
+          "target": "~/app/(cms)/testimonials.tsx"
+        },
+        {
+          "path": "src/types/blocks.ts",
+          "type": "registry:lib",
+          "target": "~/types/blocks.ts"
+        },
+        {
+          "path": "src/styles/builder-io.css",
+          "type": "registry:style",
+          "target": "~/styles/builder-io.css"
+        }
+      ],
+      "docs": "Shared CMS catch-all route. Checks Payload CMS first, then falls back to Builder.io. Both CMS systems coexist on the same URL space. Requires `features-config` to detect which CMS is enabled via env vars. Install `builder-io` block for Builder.io support and/or configure Payload CMS separately."
+    },
+    {
       "name": "auth",
       "type": "registry:block",
       "title": "Auth",
@@ -542,122 +612,122 @@
         {
           "path": "src/app/(app)/(authentication)/layout.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/layout.tsx"
+          "target": "~/app/(app)/(authentication)/layout.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/sign-in/page.tsx",
           "type": "registry:page",
-          "target": "~/app/(authentication)/sign-in/page.tsx"
+          "target": "~/app/(app)/(authentication)/sign-in/page.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/sign-in/_components/sign-in.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/sign-in/_components/sign-in.tsx"
+          "target": "~/app/(app)/(authentication)/sign-in/_components/sign-in.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/sign-up/page.tsx",
           "type": "registry:page",
-          "target": "~/app/(authentication)/sign-up/page.tsx"
+          "target": "~/app/(app)/(authentication)/sign-up/page.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/sign-up/_components/sign-up.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/sign-up/_components/sign-up.tsx"
+          "target": "~/app/(app)/(authentication)/sign-up/_components/sign-up.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/sign-up/_components/sign-up-form.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/sign-up/_components/sign-up-form.tsx"
+          "target": "~/app/(app)/(authentication)/sign-up/_components/sign-up-form.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/forgot-password/page.tsx",
           "type": "registry:page",
-          "target": "~/app/(authentication)/forgot-password/page.tsx"
+          "target": "~/app/(app)/(authentication)/forgot-password/page.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/forgot-password/_components/forgot-password-form.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/forgot-password/_components/forgot-password-form.tsx"
+          "target": "~/app/(app)/(authentication)/forgot-password/_components/forgot-password-form.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/reset-password/page.tsx",
           "type": "registry:page",
-          "target": "~/app/(authentication)/reset-password/page.tsx"
+          "target": "~/app/(app)/(authentication)/reset-password/page.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/reset-password/_components/reset-password-form.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/reset-password/_components/reset-password-form.tsx"
+          "target": "~/app/(app)/(authentication)/reset-password/_components/reset-password-form.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/error/page.tsx",
           "type": "registry:page",
-          "target": "~/app/(authentication)/error/page.tsx"
+          "target": "~/app/(app)/(authentication)/error/page.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/error/_components/auth-error-content.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/error/_components/auth-error-content.tsx"
+          "target": "~/app/(app)/(authentication)/error/_components/auth-error-content.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/sign-out/route.ts",
           "type": "registry:lib",
-          "target": "~/app/(authentication)/sign-out/route.ts"
+          "target": "~/app/(app)/(authentication)/sign-out/route.ts"
         },
         {
           "path": "src/app/(app)/(authentication)/_components/auth-form.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/_components/auth-form.tsx"
+          "target": "~/app/(app)/(authentication)/_components/auth-form.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/_components/credentials-form.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/_components/credentials-form.tsx"
+          "target": "~/app/(app)/(authentication)/_components/credentials-form.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/_components/magic-link-form.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/_components/magic-link-form.tsx"
+          "target": "~/app/(app)/(authentication)/_components/magic-link-form.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/_components/guest-form.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/_components/guest-form.tsx"
+          "target": "~/app/(app)/(authentication)/_components/guest-form.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/_components/oauth-buttons.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/_components/oauth-buttons.tsx"
+          "target": "~/app/(app)/(authentication)/_components/oauth-buttons.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/_components/authentication-card.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/_components/authentication-card.tsx"
+          "target": "~/app/(app)/(authentication)/_components/authentication-card.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/_components/auth-header.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/_components/auth-header.tsx"
+          "target": "~/app/(app)/(authentication)/_components/auth-header.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/_components/auth-footer.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/_components/auth-footer.tsx"
+          "target": "~/app/(app)/(authentication)/_components/auth-footer.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/_components/auth-branding.tsx",
           "type": "registry:component",
-          "target": "~/app/(authentication)/_components/auth-branding.tsx"
+          "target": "~/app/(app)/(authentication)/_components/auth-branding.tsx"
         },
         {
           "path": "src/app/(app)/(authentication)/_hooks/use-auth-form.ts",
           "type": "registry:hook",
-          "target": "~/app/(authentication)/_hooks/use-auth-form.ts"
+          "target": "~/app/(app)/(authentication)/_hooks/use-auth-form.ts"
         },
         {
           "path": "src/app/(app)/(authentication)/api/auth/[...nextauth]/route.ts",
           "type": "registry:lib",
-          "target": "~/app/api/auth/[...nextauth]/route.ts"
+          "target": "~/app/(app)/api/auth/[...nextauth]/route.ts"
         },
         {
           "path": "src/server/db/schema.ts",

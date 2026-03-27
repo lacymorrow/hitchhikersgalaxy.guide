@@ -1,0 +1,751 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry.json",
+  "name": "shipkit",
+  "homepage": "https://shipkit.io",
+  "items": [
+    {
+      "name": "cn",
+      "type": "registry:lib",
+      "title": "cn",
+      "description": "Utility for merging Tailwind CSS classes with clsx and tailwind-merge.",
+      "files": [
+        {
+          "path": "src/lib/utils/cn.ts",
+          "type": "registry:lib",
+          "target": "~/lib/utils/cn.ts"
+        }
+      ],
+      "dependencies": ["clsx", "tailwind-merge"]
+    },
+    {
+      "name": "marquee",
+      "type": "registry:ui",
+      "title": "Marquee",
+      "description": "An infinite scrolling marquee component with horizontal and vertical support.",
+      "files": [
+        {
+          "path": "src/components/ui/marquee.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "tailwind": {
+        "config": {
+          "theme": {
+            "extend": {
+              "keyframes": {
+                "marquee": {
+                  "from": { "transform": "translateX(0)" },
+                  "to": { "transform": "translateX(calc(-100% - var(--gap)))" }
+                },
+                "marquee-vertical": {
+                  "from": { "transform": "translateY(0)" },
+                  "to": { "transform": "translateY(calc(-100% - var(--gap)))" }
+                }
+              },
+              "animation": {
+                "marquee": "marquee var(--duration) infinite linear",
+                "marquee-vertical": "marquee-vertical var(--duration) linear infinite"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "border-beam",
+      "type": "registry:ui",
+      "title": "Border Beam",
+      "description": "An animated beam effect that traces along the border of a container.",
+      "files": [
+        {
+          "path": "src/components/ui/border-beam.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "tailwind": {
+        "config": {
+          "theme": {
+            "extend": {
+              "keyframes": {
+                "border-beam": {
+                  "100%": { "offset-distance": "100%" }
+                }
+              },
+              "animation": {
+                "border-beam": "border-beam calc(var(--duration)*1s) infinite linear"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "retro-grid",
+      "type": "registry:ui",
+      "title": "Retro Grid",
+      "description": "A perspective grid background effect with retro aesthetics.",
+      "files": [
+        {
+          "path": "src/components/ui/retro-grid.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "tailwind": {
+        "config": {
+          "theme": {
+            "extend": {
+              "keyframes": {
+                "grid": {
+                  "0%": { "transform": "translateY(-50%)" },
+                  "100%": { "transform": "translateY(0)" }
+                }
+              },
+              "animation": {
+                "grid": "grid 120s linear infinite"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "shimmer-button",
+      "type": "registry:ui",
+      "title": "Shimmer Button",
+      "description": "A button with a rotating shimmer light effect.",
+      "files": [
+        {
+          "path": "src/components/ui/shimmer-button.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "registryDependencies": ["cn"],
+      "tailwind": {
+        "config": {
+          "theme": {
+            "extend": {
+              "keyframes": {
+                "shimmer-slide": {
+                  "to": { "transform": "translate(calc(100cqw - 100%), 0)" }
+                },
+                "spin-around": {
+                  "0%": { "transform": "translateZ(0) rotate(0)" },
+                  "15%, 35%": { "transform": "translateZ(0) rotate(90deg)" },
+                  "65%, 85%": { "transform": "translateZ(0) rotate(270deg)" },
+                  "100%": { "transform": "translateZ(0) rotate(360deg)" }
+                }
+              },
+              "animation": {
+                "shimmer-slide": "shimmer-slide var(--speed) ease-in-out infinite alternate",
+                "spin-around": "spin-around calc(var(--speed) * 2) infinite linear"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "dock",
+      "type": "registry:ui",
+      "title": "Dock",
+      "description": "A macOS-style dock with magnification effect on hover.",
+      "files": [
+        {
+          "path": "src/components/ui/dock.tsx",
+          "type": "registry:ui"
+        }
+      ],
+      "dependencies": ["framer-motion", "class-variance-authority"],
+      "registryDependencies": ["cn"]
+    },
+    {
+      "name": "use-copy-to-clipboard",
+      "type": "registry:hook",
+      "title": "useCopyToClipboard",
+      "description": "A hook for copying text to the clipboard with a timeout reset.",
+      "files": [
+        {
+          "path": "src/hooks/use-copy-to-clipboard.ts",
+          "type": "registry:hook"
+        }
+      ]
+    },
+    {
+      "name": "use-mobile",
+      "type": "registry:hook",
+      "title": "useIsMobile",
+      "description": "A hook that detects mobile viewport using matchMedia.",
+      "files": [
+        {
+          "path": "src/hooks/use-mobile.tsx",
+          "type": "registry:hook"
+        }
+      ]
+    },
+
+    {
+      "name": "routes-config",
+      "type": "registry:lib",
+      "title": "Routes Config",
+      "description": "Centralized route definitions for Shipkit apps.",
+      "files": [
+        {
+          "path": "src/config/routes.ts",
+          "type": "registry:lib",
+          "target": "~/config/routes.ts"
+        }
+      ]
+    },
+    {
+      "name": "features-config",
+      "type": "registry:lib",
+      "title": "Features Config",
+      "description": "Build-time feature flag detection based on environment variables.",
+      "files": [
+        {
+          "path": "src/config/features-config.ts",
+          "type": "registry:lib",
+          "target": "~/config/features-config.ts"
+        }
+      ]
+    },
+
+    {
+      "name": "faq",
+      "type": "registry:block",
+      "title": "FAQ",
+      "description": "A full FAQ page with accordion layout, CMS integration, and static content fallback.",
+      "categories": ["shipkit", "faq"],
+      "files": [
+        {
+          "path": "src/app/(app)/(kit)/faq/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/faq/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(kit)/faq/loading.tsx",
+          "type": "registry:component",
+          "target": "~/app/faq/loading.tsx"
+        },
+        {
+          "path": "src/content/faq/faq-content.tsx",
+          "type": "registry:component",
+          "target": "~/content/faq/faq-content.tsx"
+        }
+      ],
+      "registryDependencies": ["cn", "accordion"],
+      "docs": "Static FAQ page with accordion UI. Optionally integrates with Payload CMS for dynamic FAQ management."
+    },
+    {
+      "name": "docs",
+      "type": "registry:block",
+      "title": "Docs",
+      "description": "Full documentation system with sidebar navigation, search, and MDX rendering.",
+      "categories": ["shipkit", "docs"],
+      "dependencies": [
+        "next-mdx-remote",
+        "remark-gfm",
+        "gray-matter",
+        "zod"
+      ],
+      "registryDependencies": ["cn", "routes-config", "accordion", "scroll-area", "skeleton", "badge", "command", "input"],
+      "files": [
+        {
+          "path": "src/app/(app)/docs/layout.tsx",
+          "type": "registry:component",
+          "target": "~/app/docs/layout.tsx"
+        },
+        {
+          "path": "src/app/(app)/docs/[[...slug]]/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/docs/[[...slug]]/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/docs/loading.tsx",
+          "type": "registry:component",
+          "target": "~/app/docs/loading.tsx"
+        },
+        {
+          "path": "src/app/(app)/docs/not-found.tsx",
+          "type": "registry:component",
+          "target": "~/app/docs/not-found.tsx"
+        },
+        {
+          "path": "src/app/(app)/docs/styles.css",
+          "type": "registry:style",
+          "target": "~/app/docs/styles.css"
+        },
+        {
+          "path": "src/app/(app)/docs/_components/docs-sidebar.tsx",
+          "type": "registry:component",
+          "target": "~/app/docs/_components/docs-sidebar.tsx"
+        },
+        {
+          "path": "src/app/(app)/docs/_components/docs-header.tsx",
+          "type": "registry:component",
+          "target": "~/app/docs/_components/docs-header.tsx"
+        },
+        {
+          "path": "src/app/(app)/docs/_components/docs-search.tsx",
+          "type": "registry:component",
+          "target": "~/app/docs/_components/docs-search.tsx"
+        },
+        {
+          "path": "src/lib/docs.ts",
+          "type": "registry:lib",
+          "target": "~/lib/docs.ts"
+        },
+        {
+          "path": "src/hooks/use-docs-search.ts",
+          "type": "registry:hook",
+          "target": "~/hooks/use-docs-search.ts"
+        },
+        {
+          "path": "src/server/services/docs-search.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/docs-search.ts"
+        },
+        {
+          "path": "src/app/(app)/api/docs/search/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/api/docs/search/route.ts"
+        }
+      ],
+      "docs": "Full docs system powered by MDX. Place your `.mdx` files in `docs/` at the project root. Includes sidebar navigation, search with optional AI-powered answers, and responsive layout."
+    },
+    {
+      "name": "blog",
+      "type": "registry:block",
+      "title": "Blog",
+      "description": "Complete blog system with MDX posts, author profiles, categories, sidebar, and feed-style timeline layout.",
+      "categories": ["shipkit", "blog"],
+      "dependencies": [
+        "gray-matter",
+        "next-mdx-remote",
+        "remark-gfm",
+        "lucide-react"
+      ],
+      "registryDependencies": ["cn", "routes-config", "badge", "button", "input", "scroll-area", "separator", "sheet", "skeleton"],
+      "files": [
+        {
+          "path": "src/app/(app)/blog/layout.tsx",
+          "type": "registry:component",
+          "target": "~/app/blog/layout.tsx"
+        },
+        {
+          "path": "src/app/(app)/blog/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/blog/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/blog/loading.tsx",
+          "type": "registry:component",
+          "target": "~/app/blog/loading.tsx"
+        },
+        {
+          "path": "src/app/(app)/blog/[...slug]/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/blog/[...slug]/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/blog/[...slug]/loading.tsx",
+          "type": "registry:component",
+          "target": "~/app/blog/[...slug]/loading.tsx"
+        },
+        {
+          "path": "src/app/(app)/blog/categories/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/blog/categories/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/blog/categories/[category]/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/blog/categories/[category]/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/blog/authors/[author]/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/blog/authors/[author]/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/blog/authors/[author]/loading.tsx",
+          "type": "registry:component",
+          "target": "~/app/blog/authors/[author]/loading.tsx"
+        },
+        {
+          "path": "src/components/modules/blog/index.ts",
+          "type": "registry:component",
+          "target": "~/components/modules/blog/index.ts"
+        },
+        {
+          "path": "src/components/modules/blog/hero.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/blog/hero.tsx"
+        },
+        {
+          "path": "src/components/modules/blog/post.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/blog/post.tsx"
+        },
+        {
+          "path": "src/components/modules/blog/authors.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/blog/authors.tsx"
+        },
+        {
+          "path": "src/components/modules/blog/author-profile.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/blog/author-profile.tsx"
+        },
+        {
+          "path": "src/components/modules/blog/badge.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/blog/badge.tsx"
+        },
+        {
+          "path": "src/components/modules/blog/image.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/blog/image.tsx"
+        },
+        {
+          "path": "src/components/modules/blog/table-of-contents.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/blog/table-of-contents.tsx"
+        },
+        {
+          "path": "src/components/modules/blog/mobile-toc.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/blog/mobile-toc.tsx"
+        },
+        {
+          "path": "src/components/modules/blog/skeleton.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/blog/skeleton.tsx"
+        },
+        {
+          "path": "src/components/layouts/blog-sidebar.tsx",
+          "type": "registry:component",
+          "target": "~/components/layouts/blog-sidebar.tsx"
+        },
+        {
+          "path": "src/lib/blog.ts",
+          "type": "registry:lib",
+          "target": "~/lib/blog.ts"
+        },
+        {
+          "path": "src/config/blog-authors.ts",
+          "type": "registry:lib",
+          "target": "~/config/blog-authors.ts"
+        },
+        {
+          "path": "src/config/nextjs/with-blog.ts",
+          "type": "registry:lib",
+          "target": "~/config/nextjs/with-blog.ts"
+        },
+        {
+          "path": "src/styles/blog.css",
+          "type": "registry:style",
+          "target": "~/styles/blog.css"
+        }
+      ],
+      "docs": "MDX-powered blog with author profiles, categories, feed-style timeline, and sidebar navigation. Place `.mdx` posts in `src/content/blog/`. Add `withBlog()` to your `next.config.ts` to auto-detect blog content."
+    },
+    {
+      "name": "builder-io",
+      "type": "registry:block",
+      "title": "Builder.io",
+      "description": "Visual page builder integration with Builder.io for no-code content editing.",
+      "categories": ["shipkit", "cms", "builder"],
+      "dependencies": [
+        "@builder.io/react",
+        "@builder.io/sdk",
+        "@builder.io/dev-tools"
+      ],
+      "registryDependencies": ["cn"],
+      "files": [
+        {
+          "path": "src/app/(app)/(integrations)/builder.io/[...slug]/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/builder.io/[...slug]/page.tsx"
+        },
+        {
+          "path": "src/lib/builder-io/builder-io.tsx",
+          "type": "registry:component",
+          "target": "~/lib/builder-io/builder-io.tsx"
+        },
+        {
+          "path": "src/builder-registry.ts",
+          "type": "registry:lib",
+          "target": "~/builder-registry.ts"
+        },
+        {
+          "path": "src/components/modules/builder/index.ts",
+          "type": "registry:component",
+          "target": "~/components/modules/builder/index.ts"
+        },
+        {
+          "path": "src/components/modules/builder/cta.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/builder/cta.tsx"
+        },
+        {
+          "path": "src/components/modules/builder/hero.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/builder/hero.tsx"
+        },
+        {
+          "path": "src/components/modules/builder/stats.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/builder/stats.tsx"
+        },
+        {
+          "path": "src/components/modules/builder/features-grid.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/builder/features-grid.tsx"
+        },
+        {
+          "path": "src/components/modules/builder/testimonials.tsx",
+          "type": "registry:component",
+          "target": "~/components/modules/builder/testimonials.tsx"
+        },
+        {
+          "path": "src/config/nextjs/with-builder.ts",
+          "type": "registry:lib",
+          "target": "~/config/nextjs/with-builder.ts"
+        },
+        {
+          "path": "src/styles/builder-io.css",
+          "type": "registry:style",
+          "target": "~/styles/builder-io.css"
+        }
+      ],
+      "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add your `BUILDER_API_KEY` to `.env`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard."
+    },
+    {
+      "name": "auth",
+      "type": "registry:block",
+      "title": "Auth",
+      "description": "Full authentication system with NextAuth.js v5, multi-provider OAuth, credentials, magic link, and guest access.",
+      "categories": ["shipkit", "auth"],
+      "dependencies": [
+        "next-auth@5",
+        "@auth/drizzle-adapter",
+        "bcryptjs",
+        "zod",
+        "zsa"
+      ],
+      "registryDependencies": ["cn", "routes-config", "features-config", "button", "input", "card", "separator", "form", "label", "tooltip"],
+      "files": [
+        {
+          "path": "src/app/(app)/(authentication)/layout.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/layout.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/sign-in/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(authentication)/sign-in/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/sign-in/_components/sign-in.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/sign-in/_components/sign-in.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/sign-up/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(authentication)/sign-up/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/sign-up/_components/sign-up.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/sign-up/_components/sign-up.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/sign-up/_components/sign-up-form.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/sign-up/_components/sign-up-form.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/forgot-password/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(authentication)/forgot-password/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/forgot-password/_components/forgot-password-form.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/forgot-password/_components/forgot-password-form.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/reset-password/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(authentication)/reset-password/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/reset-password/_components/reset-password-form.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/reset-password/_components/reset-password-form.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/error/page.tsx",
+          "type": "registry:page",
+          "target": "~/app/(authentication)/error/page.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/error/_components/auth-error-content.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/error/_components/auth-error-content.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/sign-out/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/(authentication)/sign-out/route.ts"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/_components/auth-form.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/_components/auth-form.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/_components/credentials-form.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/_components/credentials-form.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/_components/magic-link-form.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/_components/magic-link-form.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/_components/guest-form.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/_components/guest-form.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/_components/oauth-buttons.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/_components/oauth-buttons.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/_components/authentication-card.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/_components/authentication-card.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/_components/auth-header.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/_components/auth-header.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/_components/auth-footer.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/_components/auth-footer.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/_components/auth-branding.tsx",
+          "type": "registry:component",
+          "target": "~/app/(authentication)/_components/auth-branding.tsx"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/_hooks/use-auth-form.ts",
+          "type": "registry:hook",
+          "target": "~/app/(authentication)/_hooks/use-auth-form.ts"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/api/auth/[...nextauth]/route.ts",
+          "type": "registry:lib",
+          "target": "~/app/api/auth/[...nextauth]/route.ts"
+        },
+        {
+          "path": "src/server/db/schema.ts",
+          "type": "registry:lib",
+          "target": "~/server/db/schema.ts"
+        },
+        {
+          "path": "src/server/auth.ts",
+          "type": "registry:lib",
+          "target": "~/server/auth.ts"
+        },
+        {
+          "path": "src/server/auth-js/auth.config.ts",
+          "type": "registry:lib",
+          "target": "~/server/auth-js/auth.config.ts"
+        },
+        {
+          "path": "src/server/auth-js/auth-providers.config.ts",
+          "type": "registry:lib",
+          "target": "~/server/auth-js/auth-providers.config.ts"
+        },
+        {
+          "path": "src/server/auth-js/auth-providers-utils.ts",
+          "type": "registry:lib",
+          "target": "~/server/auth-js/auth-providers-utils.ts"
+        },
+        {
+          "path": "src/server/actions/auth.ts",
+          "type": "registry:lib",
+          "target": "~/server/actions/auth.ts"
+        },
+        {
+          "path": "src/server/services/auth-service.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/auth-service.ts"
+        },
+        {
+          "path": "src/server/services/user-service.ts",
+          "type": "registry:lib",
+          "target": "~/server/services/user-service.ts"
+        },
+        {
+          "path": "src/hooks/use-auth-redirect.ts",
+          "type": "registry:hook",
+          "target": "~/hooks/use-auth-redirect.ts"
+        },
+        {
+          "path": "src/hooks/use-redirect-after-sign-in.ts",
+          "type": "registry:hook",
+          "target": "~/hooks/use-redirect-after-sign-in.ts"
+        },
+        {
+          "path": "src/lib/schemas/auth.ts",
+          "type": "registry:lib",
+          "target": "~/lib/schemas/auth.ts"
+        },
+        {
+          "path": "src/lib/schemas/user.ts",
+          "type": "registry:lib",
+          "target": "~/lib/schemas/user.ts"
+        },
+        {
+          "path": "src/lib/errors/authentication-error.ts",
+          "type": "registry:lib",
+          "target": "~/lib/errors/authentication-error.ts"
+        },
+        {
+          "path": "src/types/user.ts",
+          "type": "registry:lib",
+          "target": "~/types/user.ts"
+        },
+        {
+          "path": "src/types/next-auth.d.ts",
+          "type": "registry:lib",
+          "target": "~/types/next-auth.d.ts"
+        },
+        {
+          "path": "src/components/buttons/sign-in-button.tsx",
+          "type": "registry:component",
+          "target": "~/components/buttons/sign-in-button.tsx"
+        },
+        {
+          "path": "src/components/buttons/github-oauth-button.tsx",
+          "type": "registry:component",
+          "target": "~/components/buttons/github-oauth-button.tsx"
+        }
+      ],
+      "docs": "Full auth system with NextAuth.js v5. Run `npx auth secret` to generate `AUTH_SECRET`. Configure at least one OAuth provider (e.g. `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`) or enable guest access with `ENABLE_AUTH_GUEST=true`. Requires a database — set `DATABASE_URL` and run Drizzle migrations."
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "faq",
+  "title": "FAQ",
+  "description": "A full FAQ page with accordion layout, CMS integration, and static content fallback.",
+  "registryDependencies": [
+    "cn",
+    "accordion"
+  ],
+  "files": [
+    {
+      "path": "src/app/(app)/(kit)/faq/page.tsx",
+      "content": "import { notFound } from \"next/navigation\";\nimport {\n  Accordion,\n  AccordionContent,\n  AccordionItem,\n  AccordionTrigger,\n} from \"@/components/ui/accordion\";\nimport { siteConfig } from \"@/config/site-config\";\nimport { getPayloadContent } from \"@/lib/utils/get-payload-content\";\nimport type { Faq } from \"@/payload-types\";\n\n// Define types for static content structure\ntype StaticFaq = {\n  id?: string;\n  question: string;\n  answer: string;\n  category: string;\n  order?: number;\n};\n\nconst getAnswerText = (answer: unknown): string => {\n  if (typeof answer === \"string\") return answer;\n  if (typeof answer === \"object\" && answer && \"root\" in answer) {\n    const richText = answer as { root: { children: { children?: { text: string }[] }[] } };\n    return richText.root.children.map((child) => child.children?.[0]?.text || \"\").join(\"\\n\");\n  }\n  return \"\";\n};\n\nexport default async function FaqPage() {\n  let faqs: (Faq | StaticFaq)[] = [];\n\n  try {\n    faqs = await getPayloadContent<\"faqs\", StaticFaq[]>({\n      collection: \"faqs\",\n      options: { sort: \"-order\" },\n      fallbackImport: async () => {\n        const { content } = await import(\"@/content/faq/faq-content\");\n        // The content is already in the correct format for static FAQs\n        return { content };\n      },\n    });\n  } catch (error) {\n    console.error(\"Error loading FAQs:\", error);\n    return null;\n  }\n\n  if (!faqs?.length) {\n    return notFound();\n  }\n\n  return (\n    <section className=\"container mx-auto mt-header space-y-section py-16\">\n      <div className=\"grid w-full grid-cols-1 md:grid-cols-5\">\n        <div className=\"z-10 col-span-2 bg-neutral-50 p-12 dark:bg-neutral-900\">\n          <h2 className=\"mb-4 text-3xl font-semibold tracking-tight text-neutral-900 dark:text-neutral-100\">\n            Frequently Asked Questions\n          </h2>\n          <p className=\"mb-8 text-neutral-600 dark:text-neutral-300\">\n            Here are some common questions about {siteConfig.title}. If you have any other\n            questions, feel free to reach out to us.\n          </p>\n        </div>\n        <div className=\"col-span-3 space-y-8 border-t border-neutral-400/15 bg-white px-20 py-12 dark:bg-neutral-950 md:border-l md:border-t-0\">\n          <Accordion type=\"single\" collapsible className=\"w-full\">\n            {faqs.map((faq) => {\n              const id = \"id\" in faq && faq.id ? faq.id.toString() : faq.question;\n              const answerText = getAnswerText(faq.answer);\n\n              return (\n                <AccordionItem key={id} value={id}>\n                  <AccordionTrigger className=\"text-xl font-medium tracking-tight text-neutral-800 dark:text-neutral-100\">\n                    {faq.question}\n                  </AccordionTrigger>\n                  <AccordionContent className=\"mt-2 leading-6 text-neutral-700 dark:text-neutral-400\">\n                    <p className=\"whitespace-pre-line\">{answerText}</p>\n                  </AccordionContent>\n                </AccordionItem>\n              );\n            })}\n          </Accordion>\n        </div>\n      </div>\n    </section>\n  );\n}\n",
+      "type": "registry:page",
+      "target": "~/app/faq/page.tsx"
+    },
+    {
+      "path": "src/app/(app)/(kit)/faq/loading.tsx",
+      "content": "import { SuspenseFallback } from \"@/components/primitives/suspense-fallback\";\n\nexport default function Loading() {\n  return <SuspenseFallback />;\n}\n",
+      "type": "registry:component",
+      "target": "~/app/faq/loading.tsx"
+    },
+    {
+      "path": "src/content/faq/faq-content.tsx",
+      "content": "export const content = [\n  {\n    question: \"What do I actually get?\",\n    answer:\n      \"A full Next.js 15 codebase. Auth (Auth.js v5), database (Postgres + Drizzle), payments (LemonSqueezy), CMS (Payload), email (Resend), 100+ UI components (shadcn/ui), AI integrations, and deployment configs. You clone the repo and own the code forever.\",\n    category: \"general\",\n  },\n  {\n    question: \"Is this a template or a framework?\",\n    answer:\n      \"Neither. It's a working app. Dashboard, landing pages, auth flows, admin panel. All built. Modify whatever you want, delete what you don't. There's no lock-in because it's just Next.js, TypeScript, and standard libraries.\",\n    category: \"general\",\n  },\n  {\n    question:\n      \"I use Cursor, v0, or Windsurf. Does this work with AI coding tools?\",\n    answer:\n      \"Yes. Shipkit ships with Cursor rules, prompts, and project context files so AI tools understand the codebase from the start. Built for the AI-assisted workflow.\",\n    category: \"technical\",\n  },\n  {\n    question: \"Can non-developers use this?\",\n    answer:\n      \"There's a visual editor (Builder.io) and CMS (Payload) for managing content without code. For the rest, AI tools like Cursor can handle most setup and customization if you give them the right context. Shipkit includes that context.\",\n    category: \"technical\",\n  },\n  {\n    question: \"What if I don't need all the features?\",\n    answer:\n      \"Delete what you don't need. Don't want the CMS? Remove the Payload config. No AI? Drop those routes. It's your code.\",\n    category: \"technical\",\n  },\n  {\n    question: \"Is there a free version?\",\n    answer:\n      \"Shipkit Bones is free and open source. Core Next.js setup with auth and basic components. The paid version adds the database, payments, CMS, AI, and premium components.\",\n    category: \"pricing\",\n  },\n  {\n    question: \"Do I get updates?\",\n    answer: \"Forever. You own the code, so you merge updates when you want.\",\n    category: \"general\",\n  },\n  {\n    question: \"Who built this?\",\n    answer:\n      \"One developer who's shipped 10+ production apps with this exact stack. Fly5, FPV Bible, Lacy Shell, Vibe Rehab, and this site all run on Shipkit. Not a company with investors and a marketing department. Just someone who uses this every day.\",\n    category: \"general\",\n  },\n];\n",
+      "type": "registry:component",
+      "target": "~/content/faq/faq-content.tsx"
+    }
+  ],
+  "docs": "Static FAQ page with accordion UI. Optionally integrates with Payload CMS for dynamic FAQ management.",
+  "categories": [
+    "shipkit",
+    "faq"
+  ],
+  "type": "registry:block"
+}

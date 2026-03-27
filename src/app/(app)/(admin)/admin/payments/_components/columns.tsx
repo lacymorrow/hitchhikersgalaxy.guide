@@ -1,6 +1,6 @@
 "use client";
 
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ArrowUpDown, Eye, Tag } from "lucide-react";
 import { useState } from "react";
@@ -9,6 +9,32 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { PaymentData } from "@/server/services/payment-service";
 import { PaymentDrawer } from "./payment-drawer";
+
+function PaymentActionsCell({ row }: { row: Row<PaymentData> }) {
+  const [isPaymentDrawerOpen, setIsPaymentDrawerOpen] = useState(false);
+  const payment = row.original;
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsPaymentDrawerOpen(true);
+        }}
+        className="flex items-center"
+      >
+        <Eye className="mr-1 h-4 w-4" /> View Details
+      </Button>
+      <PaymentDrawer
+        payment={payment}
+        open={isPaymentDrawerOpen}
+        onClose={() => setIsPaymentDrawerOpen(false)}
+      />
+    </>
+  );
+}
 
 export const columns: ColumnDef<PaymentData>[] = [
   {
@@ -150,30 +176,6 @@ export const columns: ColumnDef<PaymentData>[] = [
   {
     id: "actions",
     header: "Details",
-    cell: ({ row }) => {
-      const [isPaymentDrawerOpen, setIsPaymentDrawerOpen] = useState(false);
-      const payment = row.original;
-
-      return (
-        <>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsPaymentDrawerOpen(true);
-            }}
-            className="flex items-center"
-          >
-            <Eye className="h-4 w-4 mr-1" /> View Details
-          </Button>
-          <PaymentDrawer
-            payment={payment}
-            open={isPaymentDrawerOpen}
-            onClose={() => setIsPaymentDrawerOpen(false)}
-          />
-        </>
-      );
-    },
+    cell: ({ row }) => <PaymentActionsCell row={row} />,
   },
 ];

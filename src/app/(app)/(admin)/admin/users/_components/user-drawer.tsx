@@ -81,18 +81,29 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
   const [isLoadingCompleteData, setIsLoadingCompleteData] = useState(false);
 
   useEffect(() => {
-    if (open && user?.id && isJsonOpen && !completeData) {
-      setIsLoadingCompleteData(true);
-      getCompleteUserData(user.id)
-        .then(setCompleteData)
-        .finally(() => setIsLoadingCompleteData(false));
-    }
+    if (!(open && user?.id && isJsonOpen && !completeData)) return;
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (!cancelled) setIsLoadingCompleteData(true);
+    });
+    void getCompleteUserData(user.id)
+      .then((data) => {
+        if (!cancelled) setCompleteData(data);
+      })
+      .finally(() => {
+        if (!cancelled) setIsLoadingCompleteData(false);
+      });
+    return () => {
+      cancelled = true;
+    };
   }, [open, user?.id, isJsonOpen, completeData]);
 
   useEffect(() => {
     if (!open) {
-      setCompleteData(null);
-      setIsJsonOpen(false);
+      queueMicrotask(() => {
+        setCompleteData(null);
+        setIsJsonOpen(false);
+      });
     }
   }, [open]);
 

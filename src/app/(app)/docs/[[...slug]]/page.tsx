@@ -7,7 +7,7 @@ import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { constructMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
 import { getAllDocSlugsFromFileSystem, getDocFromParams } from "@/lib/docs";
-import { useMDXComponents } from "@/mdx-components";
+import { getMDXComponents } from "@/mdx-components";
 
 interface PageProps {
   params: Promise<{
@@ -76,7 +76,7 @@ export default async function DocsPage({ params }: PageProps) {
       <Suspense fallback={<SuspenseFallback />}>
         <MDXRemote
           source={doc.content}
-          components={useMDXComponents({})}
+          components={getMDXComponents({})}
           options={{ mdxOptions: { remarkPlugins: [remarkGfm] } }}
         />
       </Suspense>

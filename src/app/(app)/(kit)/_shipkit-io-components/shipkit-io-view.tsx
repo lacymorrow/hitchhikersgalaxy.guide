@@ -22,9 +22,9 @@ import {
 } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import AnimatedCounter from "@/app/(app)/landing/_components/animated-counter";
-import { FeaturesGrid } from "@/app/(app)/landing/_components/features-grid";
-import { Spotlight } from "@/app/(app)/landing/_components/spotlight";
+import AnimatedCounter from "@/app/(app)/(kit)/_shipkit-io-components/animated-counter";
+import { FeaturesGrid } from "@/app/(app)/(kit)/_shipkit-io-components/features-grid";
+import { Spotlight } from "@/app/(app)/(kit)/_shipkit-io-components/spotlight";
 import { Icon } from "@/components/assets/icon";
 import { Icons } from "@/components/assets/icons";
 import { PricingSectionSingle } from "@/components/blocks/pricing-section-single";
@@ -53,17 +53,17 @@ import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { singlePlan } from "@/content/pricing/pricing-content";
 import { cn } from "@/lib/utils";
-import { AiDemoSection } from "./_components/ai-demo-section";
-import { ComparisonTable } from "./_components/comparison-table";
-import { FAQ } from "./_components/faq";
-import { FeaturesCards } from "./_components/features-cards";
-import { HeroDemo } from "./_components/hero-demo";
-import { ParticlesHero } from "./_components/particles-hero";
-import PrimaryCta from "./_components/primary-cta";
-import { ROICalculator } from "./_components/roi-calculator";
-import { SocialDock } from "./_components/social-dock";
-import { SocialMarquee } from "./_components/social-marquee";
-import { SocialProof } from "./_components/social-proof";
+import { AiDemoSection } from "@/app/(app)/(kit)/_shipkit-io-components/ai-demo-section";
+import { ComparisonTable } from "@/app/(app)/(kit)/_shipkit-io-components/comparison-table";
+import { FAQ } from "@/app/(app)/(kit)/_shipkit-io-components/faq";
+import { FeaturesCards } from "@/app/(app)/(kit)/_shipkit-io-components/features-cards";
+import { HeroDemo } from "@/app/(app)/(kit)/_shipkit-io-components/hero-demo";
+import { ParticlesHero } from "@/app/(app)/(kit)/_shipkit-io-components/particles-hero";
+import PrimaryCta from "@/app/(app)/(kit)/_shipkit-io-components/primary-cta";
+import { ROICalculator } from "@/app/(app)/(kit)/_shipkit-io-components/roi-calculator";
+import { SocialDock } from "@/app/(app)/(kit)/_shipkit-io-components/social-dock";
+import { SocialMarquee } from "@/app/(app)/(kit)/_shipkit-io-components/social-marquee";
+import { SocialProof } from "@/app/(app)/(kit)/_shipkit-io-components/social-proof";
 
 const headings = ["Ship your Next.js app this week"];
 
@@ -74,7 +74,7 @@ export const metadata: Metadata = constructMetadata({
 
 // const LAUNCH_END_DATE = "2025-09-10T23:59:59";
 
-export default async function Home() {
+export function ShipkitIoView() {
   const landingAiContent = `${siteConfig.title}\n\n${siteConfig.description}`;
   const isProduction = process.env.NEXT_PUBLIC_VERCEL_ENV === "production";
 

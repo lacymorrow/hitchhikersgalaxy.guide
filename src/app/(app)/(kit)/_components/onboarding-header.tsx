@@ -27,8 +27,8 @@ export function OnboardingHeader() {
           </h1>
 
           <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
-            🎉 Congratulations! You've successfully deployed Shipkit. Now let's get you set up and
-            ready to build amazing things. Below you'll find everything you need to configure your
+            🎉 Congratulations! You&apos;ve successfully deployed Shipkit. Now let&apos;s get you set up and
+            ready to build amazing things. Below you&apos;ll find everything you need to configure your
             features and start shipping.
           </p>
 

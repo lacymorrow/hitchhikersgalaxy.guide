@@ -1,6 +1,6 @@
 "use client";
 
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ExternalLink, Trash2, Users } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -25,6 +25,42 @@ export interface GitHubUserData {
 function formatDate(date: Date | null) {
   if (!date) return "N/A";
   return format(date, "MMM d, yyyy");
+}
+
+function GitHubAccessActionsCell({ row }: { row: Row<GitHubUserData> }) {
+  const { toast } = useToast();
+  const handleRevoke = async () => {
+    try {
+      const result = await revokeGitHubAccessAction(row.original.id);
+      if (result.success) {
+        toast({
+          title: "Access Revoked",
+          description: "GitHub access has been revoked successfully.",
+        });
+        window.location.reload();
+      } else {
+        toast({
+          title: "Error",
+          description: result.error || "Failed to revoke GitHub access",
+          variant: "destructive",
+        });
+      }
+    } catch (_error) {
+      toast({
+        title: "Error",
+        description: "Failed to revoke GitHub access",
+        variant: "destructive",
+      });
+    }
+  };
+
+  if (row.original.isOwner) return null;
+
+  return (
+    <Button variant="ghost" size="icon" onClick={() => void handleRevoke()} className="h-8 w-8">
+      <Trash2 className="h-4 w-4" />
+    </Button>
+  );
 }
 
 export const columns: ColumnDef<GitHubUserData>[] = [
@@ -101,41 +137,6 @@ export const columns: ColumnDef<GitHubUserData>[] = [
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const { toast } = useToast();
-      const handleRevoke = async () => {
-        try {
-          const result = await revokeGitHubAccessAction(row.original.id);
-          if (result.success) {
-            toast({
-              title: "Access Revoked",
-              description: "GitHub access has been revoked successfully.",
-            });
-            // Optionally refresh the page or update the table
-            window.location.reload();
-          } else {
-            toast({
-              title: "Error",
-              description: result.error || "Failed to revoke GitHub access",
-              variant: "destructive",
-            });
-          }
-        } catch (error) {
-          toast({
-            title: "Error",
-            description: "Failed to revoke GitHub access",
-            variant: "destructive",
-          });
-        }
-      };
-
-      if (row.original.isOwner) return null;
-
-      return (
-        <Button variant="ghost" size="icon" onClick={() => void handleRevoke()} className="h-8 w-8">
-          <Trash2 className="h-4 w-4" />
-        </Button>
-      );
-    },
+    cell: ({ row }) => <GitHubAccessActionsCell row={row} />,
   },
 ];

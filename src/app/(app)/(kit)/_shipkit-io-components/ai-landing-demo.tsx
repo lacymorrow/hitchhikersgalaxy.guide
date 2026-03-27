@@ -59,9 +59,8 @@ export function AILandingDemo() {
 
   useEffect(() => {
     if (!worker.current && hasAcceptedPermissions) {
-      setIsLoadingModel(true);
       worker.current = new Worker(
-        new URL("@/app/(app)/landing/_components/worker.js", import.meta.url)
+        new URL("@/app/(app)/(kit)/_shipkit-io-components/worker.js", import.meta.url)
       );
 
       worker.current.postMessage({ type: "load" });
@@ -222,7 +221,13 @@ export function AILandingDemo() {
             </div>
           </div>
 
-          <Button className="w-full" onClick={() => setHasAcceptedPermissions(true)}>
+          <Button
+            className="w-full"
+            onClick={() => {
+              setHasAcceptedPermissions(true);
+              setIsLoadingModel(true);
+            }}
+          >
             Download & Run Live
           </Button>
         </div>

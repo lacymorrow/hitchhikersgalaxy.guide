@@ -1,7 +1,6 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
 
 import { Particles } from "@/components/ui/particles";
 import { cn } from "@/lib/utils";
@@ -19,12 +18,8 @@ export function ParticlesHero({
   speed?: number;
   color?: string;
 }) {
-  const { theme } = useTheme();
-  const [currentColor, setCurrentColor] = useState("#ffffff");
-
-  useEffect(() => {
-    setCurrentColor(color ?? (theme === "dark" ? "#ffffff" : "#000000"));
-  }, [color, theme]);
+  const { resolvedTheme } = useTheme();
+  const currentColor = color ?? (resolvedTheme === "dark" ? "#ffffff" : "#000000");
 
   return (
     <div className={cn("relative w-full bg-background", className)}>

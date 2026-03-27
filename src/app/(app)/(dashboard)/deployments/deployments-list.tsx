@@ -76,9 +76,6 @@ function getStatusBadgeVariant(status: string) {
 }
 
 export function DeploymentsList({ deployments: initialDeployments }: DeploymentsListProps) {
-  const [hasActiveDeployments, setHasActiveDeployments] = useState(
-    initialDeployments.some(isActivelyDeploying)
-  );
   // Counter to force re-renders for timestamp updates
   const [, setTick] = useState(0);
   // Track previous deployments to detect status changes
@@ -87,15 +84,22 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
   );
 
   // Use React Query for efficient polling
-  // Only poll if there are deployments still in progress or pending verification
   const { data: deployments = initialDeployments } = useQuery({
     queryKey: ["deployments"],
     queryFn: fetchDeployments,
     initialData: initialDeployments,
-    refetchInterval: hasActiveDeployments ? POLLING_INTERVAL_MS : false,
+    refetchInterval: (query) => {
+      const data = query.state.data ?? initialDeployments;
+      return data.some(isActivelyDeploying) ? POLLING_INTERVAL_MS : false;
+    },
     refetchIntervalInBackground: true,
     staleTime: 1000, // Consider data stale after 1 second
   });
+
+  const hasActiveDeployments = useMemo(
+    () => deployments.some(isActivelyDeploying),
+    [deployments]
+  );
 
   // Detect status changes and show toasts
   useEffect(() => {
@@ -124,13 +128,6 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
 
     // Update the ref with current deployments
     previousDeploymentsRef.current = new Map(deployments.map((d) => [d.id, d]));
-  }, [deployments]);
-
-  // Update polling state when deployments change
-  // Keep polling while any deployment still needs status verification
-  useEffect(() => {
-    const shouldPoll = deployments.some(isActivelyDeploying);
-    setHasActiveDeployments(shouldPoll);
   }, [deployments]);
 
   // Live-update timestamps every second while there are active deployments

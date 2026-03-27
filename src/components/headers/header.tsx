@@ -19,6 +19,7 @@ import { ThemeToggle } from "@/components/ui/shipkit/theme";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import type { NavLink } from "@/config/navigation";
 import { defaultNavLinks as navigationDefaultNavLinks } from "@/config/navigation";
+import { PriorityNav } from "@/components/ui/priority-nav";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
@@ -144,8 +145,8 @@ export const Header: React.FC<HeaderProps> = ({
         variant === "floating" && styles.header,
         variant === "floating" && isOpaque && styles.opaque,
         variant === "floating" &&
-          isOpaque &&
-          "-top-[12px] [--header-background:#fafafc70] dark:[--header-background:#1c1c2270]",
+        isOpaque &&
+        "-top-[12px] [--header-background:#fafafc70] dark:[--header-background:#1c1c2270]",
         className
       )}
     >
@@ -160,8 +161,8 @@ export const Header: React.FC<HeaderProps> = ({
       >
         <div
           className={cn(
-            "flex items-center gap-2 md:gap-4 shrink-0",
-            isLogoOnly ? "justify-center" : "justify-start"
+            "flex items-center gap-2 md:gap-4",
+            isLogoOnly ? "justify-center shrink-0" : "justify-start min-w-0 flex-1"
           )}
         >
           {!isLogoOnly && (
@@ -248,19 +249,8 @@ export const Header: React.FC<HeaderProps> = ({
             <span className="block whitespace-nowrap">{logoText}</span>
           </Link>
 
-          <div className="hidden items-center gap-md text-sm md:flex">
-            {navLinks.map((link) => (
-              <Link
-                key={`${link.href}-${link.label}`}
-                href={link.href}
-                className={cn(
-                  "transition-colors hover:text-foreground",
-                  link.isCurrent ? "text-foreground" : "text-muted-foreground"
-                )}
-              >
-                {link.label}
-              </Link>
-            ))}
+          <div className="hidden md:flex min-w-0 flex-1">
+            <PriorityNav navLinks={navLinks} />
           </div>
         </div>
 

@@ -48,10 +48,9 @@ export const useCountdown = (targetDate: string | Date): CountdownResult => {
       };
     };
 
-    // Initial calculation
-    setCountdown(calculateTimeLeft());
+    // Defer initial setState so the effect does not synchronously cascade renders.
+    queueMicrotask(() => setCountdown(calculateTimeLeft()));
 
-    // Update every second
     const timer = setInterval(() => {
       setCountdown(calculateTimeLeft());
     }, 1000);

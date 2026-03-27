@@ -36,7 +36,7 @@ export function useIsMac(): boolean {
         determinedIsMac = is.mac;
       }
     }
-    setIsMac(determinedIsMac);
+    queueMicrotask(() => setIsMac(determinedIsMac));
   }, []);
 
   return isMac;

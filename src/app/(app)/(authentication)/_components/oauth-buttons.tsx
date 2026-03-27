@@ -41,6 +41,15 @@ interface Provider {
   isExcluded?: boolean;
 }
 
+function MagicLinkContent() {
+  return (
+    <div className="space-y-4 pt-4">
+      <Divider text="Get a magic link" />
+      <MagicLinkForm />
+    </div>
+  );
+}
+
 export function OAuthButtons({
   variant = "default",
   className,
@@ -83,15 +92,6 @@ export function OAuthButtons({
   if (isGuestOnlyMode) {
     return null;
   }
-
-  const MagicLinkContent = () => {
-    return (
-      <div className="space-y-4 pt-4">
-        <Divider text="Get a magic link" />
-        <MagicLinkForm />
-      </div>
-    );
-  };
 
   return (
     <>

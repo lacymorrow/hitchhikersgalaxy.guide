@@ -23,7 +23,7 @@ const createRedirects = (sources: Route[], destination: Route, permanent = false
     if (source.endsWith("/") && source.length > 1) {
       expanded.add(source.slice(0, -1) as Route);
     } else if (!source.endsWith("/")) {
-      expanded.add(source + "/" as Route);
+      expanded.add(`${source}/` as Route);
     }
   }
 

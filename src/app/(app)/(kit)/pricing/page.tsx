@@ -4,7 +4,7 @@ import { Link } from "@/components/primitives/link";
 import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";
 import { singlePlan } from "@/content/pricing/pricing-content";
-import { FAQ } from "../_components/faq";
+import { FAQ } from "../_shipkit-io-components/faq";
 export const metadata: Metadata = constructMetadata({
   title: "Pricing & Plans - Start Building Today | Shipkit",
   description:

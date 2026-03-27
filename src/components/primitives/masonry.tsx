@@ -30,9 +30,8 @@ export function Masonry<T>({ items, renderItem, columns = 3, gap = 4 }: MasonryP
 const ExampleMasonry: React.FC = () => {
   const images = useMemo(() => {
     return Array.from({ length: 9 }, (_, i) => {
-      // const isLandscape = Math.random() > 0.5;
-      const width = Math.floor(Math.random() * (800 - 600 + 1) + 600);
-      const height = Math.floor(Math.random() * (800 - 600 + 1) + 600);
+      const width = 600 + ((i * 37) % 201);
+      const height = 600 + ((i * 53) % 201);
       return `https://picsum.photos/seed/${i + 1}/${width}/${height}`;
     });
   }, []);

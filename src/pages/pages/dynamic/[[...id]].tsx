@@ -12,8 +12,7 @@ interface DynamicPageProps {
 export default function DynamicPage(props: DynamicPageProps) {
   const { id, requestTime } = props;
 
-  // Generate a random example ID
-  const exampleId = `example-${Math.floor(Math.random() * 1000)}`;
+  const exampleId = `example-${(id ?? "0").replace(/\W/g, "").slice(0, 12) || "demo"}`;
 
   // Create a dynamic route using the routes configuration
   const dynamicExampleRoute = createRoute(`${routes.pages.dynamic}/${exampleId}`);

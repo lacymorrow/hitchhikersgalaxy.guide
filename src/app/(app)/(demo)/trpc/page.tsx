@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Session } from "next-auth";
 
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
@@ -6,25 +7,25 @@ import { api, HydrateClient } from "@/lib/trpc/server";
 import { auth } from "@/server/auth";
 import { LatestPost } from "./_components/post";
 
+function SignInOutLink({ session }: { session: Session | null }) {
+  const urlPath = session ? routes.auth.signOut : routes.auth.signIn;
+  const nextUrl = routes.demo.trpc;
+  const url = `${urlPath}?${SEARCH_PARAM_KEYS.nextUrl}=${nextUrl}`;
+  return (
+    <Link
+      className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
+      href={url}
+    >
+      {session ? "Sign out" : "Sign in"}
+    </Link>
+  );
+}
+
 export default async function Home() {
   const hello = await api.post.hello({ text: "from tRPC" });
   const session = await auth();
 
   void api.post.getLatest.prefetch();
-
-  const SignInOutButton = () => {
-    const urlPath = session ? routes.auth.signOut : routes.auth.signIn;
-    const nextUrl = routes.demo.trpc;
-    const url = `${urlPath}?${SEARCH_PARAM_KEYS.nextUrl}=${nextUrl}`;
-    return (
-      <Link
-        className="rounded-full bg-white/10 px-10 py-3 font-semibold no-underline transition hover:bg-white/20"
-        href={url}
-      >
-        {session ? "Sign out" : "Sign in"}
-      </Link>
-    );
-  };
 
   return (
     <HydrateClient>
@@ -67,7 +68,7 @@ export default async function Home() {
               </p>
             </div>
           </div>
-          <SignInOutButton />
+          <SignInOutLink session={session} />
           {session?.user && <LatestPost />}
         </div>
       </main>

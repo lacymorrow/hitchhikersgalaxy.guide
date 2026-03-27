@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { toast } from "sonner";
 
 /**
@@ -245,14 +245,15 @@ export function useServerAction<T extends any[], R>(
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const wrappedAction = useCallback(
-    withServerActionHandling(serverAction, {
-      ...options,
-      onLoadingChange: (loading) => {
-        setIsLoading(loading);
-        options.onLoadingChange?.(loading);
-      },
-    }),
+  const wrappedAction = useMemo(
+    () =>
+      withServerActionHandling(serverAction, {
+        ...options,
+        onLoadingChange: (loading) => {
+          setIsLoading(loading);
+          options.onLoadingChange?.(loading);
+        },
+      }),
     [serverAction, options]
   );
 

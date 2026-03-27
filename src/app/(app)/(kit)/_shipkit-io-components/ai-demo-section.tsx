@@ -2,7 +2,7 @@
 
 import { IconRobotFace } from "@tabler/icons-react";
 import { Cloud, Cpu } from "lucide-react";
-import { AIDemosLocal } from "@/app/(app)/landing/_components/ai-demos-local";
+import { AIDemosLocal } from "@/app/(app)/(kit)/_shipkit-io-components/ai-demos-local";
 import { AIDemoCloud } from "@/components/blocks/ai-demo-cloud";
 import { Section, SectionBadge, SectionCopy, SectionHeader } from "@/components/primitives/section";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";

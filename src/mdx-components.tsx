@@ -51,7 +51,8 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
   </Prose>
 );
 
-export function useMDXComponents(components: MDXComponents): MDXComponents {
+/** MDX component map for RSC and bundlers — not a React hook despite the legacy name on `useMDXComponents`. */
+export function getMDXComponents(components: MDXComponents): MDXComponents {
   // const fumadocsComponents = await import('fumadocs-ui/mdx');
 
   return {
@@ -116,4 +117,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     SiteName: () => <>{siteConfig.title}</>,
     ...components,
   };
+}
+
+/** Legacy name kept for MDX tooling; delegates to {@link getMDXComponents}. */
+export function useMDXComponents(components: MDXComponents): MDXComponents {
+  return getMDXComponents(components);
 }

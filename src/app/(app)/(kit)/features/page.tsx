@@ -3,8 +3,8 @@ import { Suspense } from "react";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { constructMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
-import { FAQ } from "../_components/faq";
-import { FeaturesTable } from "../_components/features-table";
+import { FAQ } from "../_shipkit-io-components/faq";
+import { FeaturesTable } from "../_shipkit-io-components/features-table";
 
 export const metadata: Metadata = constructMetadata({
   title: `${siteConfig.title} Features & Capabilities`,

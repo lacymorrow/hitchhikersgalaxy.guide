@@ -1,6 +1,6 @@
 "use client";
 
-import type { ColumnDef } from "@tanstack/react-table";
+import type { ColumnDef, Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { Eye } from "lucide-react";
 import { useState } from "react";
@@ -13,6 +13,28 @@ import { UserDrawer } from "./user-drawer";
 const formatDate = (date: Date | null) => {
   return date ? format(date, "MMM d, yyyy") : "N/A";
 };
+
+function UserActionsCell({ row }: { row: Row<UserData> }) {
+  const [isUserDrawerOpen, setIsUserDrawerOpen] = useState(false);
+  const user = row.original;
+
+  return (
+    <>
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={(e) => {
+          e.stopPropagation();
+          setIsUserDrawerOpen(true);
+        }}
+        className="flex items-center"
+      >
+        <Eye className="mr-1 h-4 w-4" /> View Details
+      </Button>
+      <UserDrawer user={user} open={isUserDrawerOpen} onClose={() => setIsUserDrawerOpen(false)} />
+    </>
+  );
+}
 
 export const columns: ColumnDef<UserData>[] = [
   {
@@ -100,30 +122,6 @@ export const columns: ColumnDef<UserData>[] = [
   {
     id: "actions",
     header: "Details",
-    cell: ({ row }) => {
-      const [isUserDrawerOpen, setIsUserDrawerOpen] = useState(false);
-      const user = row.original;
-
-      return (
-        <>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={(e) => {
-              e.stopPropagation();
-              setIsUserDrawerOpen(true);
-            }}
-            className="flex items-center"
-          >
-            <Eye className="h-4 w-4 mr-1" /> View Details
-          </Button>
-          <UserDrawer
-            user={user}
-            open={isUserDrawerOpen}
-            onClose={() => setIsUserDrawerOpen(false)}
-          />
-        </>
-      );
-    },
+    cell: ({ row }) => <UserActionsCell row={row} />,
   },
 ];

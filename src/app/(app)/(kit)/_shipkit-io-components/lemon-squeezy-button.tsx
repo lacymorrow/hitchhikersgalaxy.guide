@@ -21,24 +21,25 @@ export const LemonSqueezyButton = async ({ userId, email }: LemonSqueezyButtonPr
     return signInButton;
   }
 
+  let hasPaid = false;
   try {
-    const hasPaid = userId ? await PaymentService.getUserPaymentStatus(userId) : false;
-
-    if (!hasPaid) {
-      return (
-        <Link className={buttonVariants()} href={routes.external.buy}>
-          Buy Now
-        </Link>
-      );
-    }
-
-    return (
-      <Link className={buttonVariants()} href={routes.app.dashboard}>
-        Go to Dashboard
-      </Link>
-    );
+    hasPaid = userId ? await PaymentService.getUserPaymentStatus(userId) : false;
   } catch (error) {
     console.error("Error fetching payment status:", error);
     return signInButton;
   }
+
+  if (!hasPaid) {
+    return (
+      <Link className={buttonVariants()} href={routes.external.buy}>
+        Buy Now
+      </Link>
+    );
+  }
+
+  return (
+    <Link className={buttonVariants()} href={routes.app.dashboard}>
+      Go to Dashboard
+    </Link>
+  );
 };

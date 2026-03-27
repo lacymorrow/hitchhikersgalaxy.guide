@@ -30,9 +30,11 @@ export type HapticPattern =
   | "nudge"
   | "buzz";
 
-// Singleton instance for imperative (non-hook) usage
-let singletonTrigger: ((input?: HapticInput, opts?: TriggerOptions) => void) | null = null;
-let singletonCancel: (() => void) | null = null;
+// Mutable store for imperative (non-hook) usage — object properties satisfy react-hooks/globals (no top-level `let` reassignment).
+const imperativeHaptics: {
+  trigger: ((input?: HapticInput, opts?: TriggerOptions) => void) | null;
+  cancel: (() => void) | null;
+} = { trigger: null, cancel: null };
 
 /**
  * Fire a haptic vibration pattern.
@@ -41,18 +43,14 @@ let singletonCancel: (() => void) | null = null;
  * unsupported devices.
  */
 export function haptic(pattern: HapticPattern = "light"): void {
-  if (singletonTrigger) {
-    singletonTrigger(pattern);
-  }
+  imperativeHaptics.trigger?.(pattern);
 }
 
 /**
  * Cancel any ongoing haptic vibration.
  */
 export function hapticCancel(): void {
-  if (singletonCancel) {
-    singletonCancel();
-  }
+  imperativeHaptics.cancel?.();
 }
 
 /**
@@ -69,9 +67,8 @@ export function hapticCancel(): void {
 export function useHaptics() {
   const { trigger, cancel, isSupported } = useWebHaptics();
 
-  // Register singleton for imperative access
-  singletonTrigger = trigger;
-  singletonCancel = cancel;
+  imperativeHaptics.trigger = trigger;
+  imperativeHaptics.cancel = cancel;
 
   return useMemo(
     () => ({

@@ -71,7 +71,7 @@ export default function BlogAuthorsDemo() {
             <Suspense key={author.id} fallback={<BlogAuthorSkeleton />}>
               <AuthorProfile
                 author={author}
-                postCount={Math.floor(Math.random() * 10) + 1}
+                postCount={(author.id.charCodeAt(0) % 10) + 1}
                 showCompact={true}
               />
             </Suspense>

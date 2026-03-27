@@ -19,10 +19,7 @@ export const metadata: Metadata = constructMetadata({
 });
 
 function UsersTableSkeleton() {
-  // Generate skeleton row IDs
-  const skeletonRowIds = Array.from({ length: 3 }, () =>
-    Math.random().toString(36).substring(2, 10)
-  );
+  const skeletonRowIds = ["skeleton-row-0", "skeleton-row-1", "skeleton-row-2"];
 
   return (
     <div className="space-y-4">

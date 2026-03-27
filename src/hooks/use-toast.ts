@@ -167,18 +167,11 @@ function toast({ ...props }: Toast) {
 }
 
 function useToast() {
-  // If this runs during SSR, return a safe no-op API without using React hooks.
-  if (typeof window === "undefined") {
-    return {
-      toasts: [],
-      toast: () => ({ id: "", dismiss: () => {}, update: () => {} }),
-      dismiss: () => {},
-    };
-  }
-
+  const isBrowser = typeof window !== "undefined";
   const [state, setState] = React.useState<State>(memoryState);
 
   React.useEffect(() => {
+    if (!isBrowser) return;
     listeners.push(setState);
     return () => {
       const index = listeners.indexOf(setState);
@@ -186,7 +179,15 @@ function useToast() {
         listeners.splice(index, 1);
       }
     };
-  }, []);
+  }, [isBrowser]);
+
+  if (!isBrowser) {
+    return {
+      toasts: [],
+      toast: () => ({ id: "", dismiss: () => {}, update: () => {} }),
+      dismiss: () => {},
+    };
+  }
 
   return {
     ...state,

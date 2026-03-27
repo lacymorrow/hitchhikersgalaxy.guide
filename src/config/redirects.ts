@@ -3,8 +3,8 @@ import { routes } from "./routes";
 
 /**
  * Redirect type used by Next.js config.
- * Duplicated here to avoid importing from @/lib/utils/redirect which
- * pulls in next/navigation — unavailable during config transpilation.
+ * Defined here (not in @/lib/utils/redirect) because next.config.ts imports
+ * this file and cannot pull in next/navigation at transpile time.
  */
 export interface Redirect {
   source: Route;
@@ -14,7 +14,20 @@ export interface Redirect {
 
 const createRedirects = (sources: Route[], destination: Route, permanent = false): Redirect[] => {
   if (!sources.length) return [];
-  return sources
+
+  // Automatically generate both trailing-slash variants for each source.
+  // This is necessary when skipTrailingSlashRedirect is enabled (e.g. for PostHog).
+  const expanded = new Set<Route>();
+  for (const source of sources) {
+    expanded.add(source);
+    if (source.endsWith("/")) {
+      expanded.add(source.slice(0, -1) as Route);
+    } else {
+      expanded.add(`${source}/` as Route);
+    }
+  }
+
+  return Array.from(expanded)
     .filter((source) => source !== destination)
     .map((source) => ({ source, destination, permanent }));
 };

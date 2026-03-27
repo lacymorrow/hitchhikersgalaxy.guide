@@ -51,6 +51,7 @@ const {
 } = buildTimeFeatures.AUTH_ENABLED
   ? NextAuth({
       ...authOptions,
+      trustHost: true,
       secret: env.AUTH_SECRET ?? "supersecretshipkit",
       // Override session strategy based on adapter usage
       session: {

@@ -1,4 +1,3 @@
-import type { Route } from "next";
 import { redirect as nextRedirect } from "next/navigation";
 import { NextResponse } from "next/server";
 import { BASE_URL } from "../../config/base-url";
@@ -56,20 +55,3 @@ export function routeRedirect(
   return NextResponse.redirect(url);
 }
 
-export interface Redirect {
-  source: Route;
-  destination: Route;
-  permanent: boolean;
-}
-
-export const createRedirects = (
-  sources: Route[],
-  destination: Route,
-  permanent = false
-): Redirect[] => {
-  if (!sources.length) return [];
-
-  return sources
-    .filter((source) => source !== destination)
-    .map((source) => ({ source, destination, permanent }));
-};

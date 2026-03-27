@@ -20,10 +20,10 @@ const createRedirects = (sources: Route[], destination: Route, permanent = false
   const expanded = new Set<Route>();
   for (const source of sources) {
     expanded.add(source);
-    if (source.endsWith("/")) {
+    if (source.endsWith("/") && source.length > 1) {
       expanded.add(source.slice(0, -1) as Route);
-    } else {
-      expanded.add(`${source}/` as Route);
+    } else if (!source.endsWith("/")) {
+      expanded.add(source + "/" as Route);
     }
   }
 

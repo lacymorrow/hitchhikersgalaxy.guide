@@ -186,8 +186,8 @@ export const siteConfig: SiteConfig = {
     pageTransitions: true,
   },
 
-  name: "Shipkit",
-  title: "Shipkit",
+  name: "The Hitchhiker's Guide to the Galaxy Guide",
+  title: "The Hitchhiker's Guide to the Galaxy Guide",
   tagline: "Launch your app at light speed.",
   url: "https://shipkit.io",
   ogImage: "/app/og-image.png",
@@ -234,7 +234,7 @@ export const siteConfig: SiteConfig = {
 
   repo: {
     owner: "lacymorrow",
-    name: "shipkit",
+    name: "hitchhikersgalaxy",
     url: "https://github.com/lacymorrow/shipkit",
     format: {
       // Placeholder format functions - assigned below

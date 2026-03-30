@@ -24,6 +24,8 @@ export const routes = {
 	// Legal routes
 	terms: "/terms-of-service",
 	privacy: "/privacy-policy",
+	eula: "/eula",
+	legal: "/legal",
 
 	// Marketing routes
 	faq: "/faq",
@@ -103,7 +105,13 @@ export const routes = {
 	examples: {
 		root: "/examples",
 		dashboard: "/examples/dashboard",
+		mail: "/examples/mail",
+		tasks: "/examples/tasks",
+		playground: "/examples/playground",
+		music: "/examples/music",
+		cards: "/examples/cards",
 		forms: "/examples/forms",
+		formsAccount: "/examples/forms/account",
 		authentication: "/examples/authentication",
 		notifications: "/examples/forms/notifications",
 		profile: "/examples/forms/profile",

@@ -80,17 +80,6 @@ let nextConfig: NextConfig = {
 	 */
 	productionBrowserSourceMaps: true,
 
-	/*
-	 * Lint configuration
-	 */
-	eslint: {
-		/*
-			!! WARNING !!
-			* This allows production builds to successfully complete even if
-			* your project has ESLint errors.
-		*/
-		ignoreDuringBuilds: true,
-	},
 	typescript: {
 		/*
 			!! WARNING !!
@@ -160,15 +149,13 @@ const withMDX = createMDX({
 	options: {
 		remarkPlugins: [
 			[
-				// @ts-expect-error
-				"remark-frontmatter",
+				"remark-frontmatter" as string,
 				{
 					type: "yaml",
 					marker: "-",
 				},
 			],
-			// @ts-expect-error
-			["remark-mdx-frontmatter", {}],
+			["remark-mdx-frontmatter" as string, {}],
 		],
 		rehypePlugins: [],
 	},

@@ -1,4 +1,3 @@
-import { google } from "googleapis";
 import type React from "react";
 
 import { env } from "@/env";
@@ -34,6 +33,7 @@ export const importGoogleDoc = async (documentId: string): Promise<ProcessedDocu
   }
 
   try {
+    const { google } = await import("googleapis");
     const auth = new google.auth.GoogleAuth({
       credentials: {
         client_email: env.GOOGLE_CLIENT_EMAIL,

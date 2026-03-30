@@ -741,3 +741,17 @@ export const guideEntryRevisionsRelations = relations(guideEntryRevisions, ({ on
 		references: [users.id],
 	}),
 }));
+
+// Waitlist
+export const waitlistEntries = createTable("waitlist_entry", {
+	id: serial("id").primaryKey(),
+	email: varchar("email", { length: 255 }).notNull().unique(),
+	name: varchar("name", { length: 255 }),
+	referralSource: varchar("referral_source", { length: 255 }),
+	isNotified: boolean("is_notified").default(false).notNull(),
+	createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export type WaitlistEntry = typeof waitlistEntries.$inferSelect;
+export type NewWaitlistEntry = typeof waitlistEntries.$inferInsert;

@@ -150,3 +150,15 @@ export const constructMetadata = ({
 	// },
 	robots: noIndex ? { index: false, follow: true } : defaultMetadata.robots,
 });
+
+// Head link hints for preconnect/prefetch
+export type HeadLinkHint = {
+	rel: string;
+	href: string;
+	crossOrigin?: "" | "anonymous" | "use-credentials";
+};
+
+export const headLinkHints: HeadLinkHint[] = [
+	{ rel: "dns-prefetch", href: "https://fonts.googleapis.com" },
+	{ rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
+];

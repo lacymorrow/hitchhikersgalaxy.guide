@@ -772,3 +772,67 @@ export const waitlistEntries = createTable("waitlist_entry", {
 
 export type WaitlistEntry = typeof waitlistEntries.$inferSelect;
 export type NewWaitlistEntry = typeof waitlistEntries.$inferInsert;
+
+// ============================================================
+// Credits schema (synced from shipkit base)
+// ============================================================
+
+export const userCredits = createTable(
+  "user_credit",
+  {
+    id: varchar("id", { length: 255 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: varchar("user_id", { length: 255 })
+      .notNull()
+      .unique()
+      .references(() => users.id, { onDelete: "cascade" }),
+    balance: integer("balance").notNull().default(0),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true }).$onUpdate(() => new Date()),
+  },
+  (table) => ({
+    userIdIdx: index("user_credit_user_id_idx").on(table.userId),
+  })
+);
+
+export type UserCredit = typeof userCredits.$inferSelect;
+export type NewUserCredit = typeof userCredits.$inferInsert;
+
+export const creditTransactions = createTable(
+  "credit_transaction",
+  {
+    id: varchar("id", { length: 255 })
+      .notNull()
+      .primaryKey()
+      .$defaultFn(() => crypto.randomUUID()),
+    userId: varchar("user_id", { length: 255 })
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    amount: integer("amount").notNull(),
+    type: varchar("type", { length: 50 }).notNull(),
+    description: text("description"),
+    metadata: text("metadata"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .default(sql`CURRENT_TIMESTAMP`)
+      .notNull(),
+  },
+  (table) => ({
+    userIdIdx: index("credit_transaction_user_id_idx").on(table.userId),
+    typeIdx: index("credit_transaction_type_idx").on(table.type),
+  })
+);
+
+export type CreditTransaction = typeof creditTransactions.$inferSelect;
+export type NewCreditTransaction = typeof creditTransactions.$inferInsert;
+
+export const userCreditsRelations = relations(userCredits, ({ one }) => ({
+  user: one(users, { fields: [userCredits.userId], references: [users.id] }),
+}));
+
+export const creditTransactionsRelations = relations(creditTransactions, ({ one }) => ({
+  user: one(users, { fields: [creditTransactions.userId], references: [users.id] }),
+}));

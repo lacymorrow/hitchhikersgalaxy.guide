@@ -70,6 +70,14 @@ export const routes = {
 		teams: "/teams",
 	},
 
+	// Settings routes
+	settings: {
+		root: "/settings",
+		profile: "/settings/profile",
+		appearance: "/settings/appearance",
+		account: "/settings/account",
+	},
+
 	// Admin routes
 	admin: {
 		root: "/admin",

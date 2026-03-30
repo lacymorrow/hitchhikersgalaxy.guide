@@ -742,6 +742,23 @@ export const guideEntryRevisionsRelations = relations(guideEntryRevisions, ({ on
 	}),
 }));
 
+// Deployments
+export const deployments = createTable("deployment", {
+	id: varchar("id", { length: 255 }).primaryKey().$defaultFn(() => crypto.randomUUID()),
+	userId: varchar("user_id", { length: 255 }).notNull(),
+	projectName: varchar("project_name", { length: 255 }).notNull(),
+	description: text("description"),
+	status: varchar("status", { length: 50 }).notNull().default("deploying"),
+	vercelDeploymentId: varchar("vercel_deployment_id", { length: 255 }),
+	vercelDeploymentUrl: varchar("vercel_deployment_url", { length: 1024 }),
+	vercelProjectId: varchar("vercel_project_id", { length: 255 }),
+	createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
+	updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
+});
+
+export type Deployment = typeof deployments.$inferSelect;
+export type NewDeployment = typeof deployments.$inferInsert;
+
 // Waitlist
 export const waitlistEntries = createTable("waitlist_entry", {
 	id: serial("id").primaryKey(),

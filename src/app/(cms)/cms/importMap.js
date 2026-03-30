@@ -24,7 +24,6 @@ import { ItalicFeatureClient as ItalicFeatureClient_e70f5e05f09f93e00b997edb1ef0
 import { default as default_0ee5949d9899ab9534d74505b4ac7c16 } from '../../../lib/payload/components/payload-icon'
 import { default as default_329722cde64353467c2ed984abd6e719 } from '../../../lib/payload/components/payload-logo'
 import { S3ClientUploadHandler as S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24 } from '@payloadcms/storage-s3/client'
-import { CollectionCards as CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1 } from '@payloadcms/next/rsc'
 
 export const importMap = {
   "@payloadcms/richtext-lexical/rsc#RscEntryLexicalCell": RscEntryLexicalCell_44fe37237e0ebf4470c9990d8cb7b07e,
@@ -53,5 +52,5 @@ export const importMap = {
   "./lib/payload/components/payload-icon#default": default_0ee5949d9899ab9534d74505b4ac7c16,
   "./lib/payload/components/payload-logo#default": default_329722cde64353467c2ed984abd6e719,
   "@payloadcms/storage-s3/client#S3ClientUploadHandler": S3ClientUploadHandler_f97aa6c64367fa259c5bc0567239ef24,
-  "@payloadcms/next/rsc#CollectionCards": CollectionCards_f9c02e79a4aed9a3924487c0cd4cafb1
+
 }

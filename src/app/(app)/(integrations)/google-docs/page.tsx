@@ -3,6 +3,8 @@ import { constructMetadata } from "@/config/metadata";
 import { DocLayout } from "./_components/doc-layout";
 import { importGoogleDoc } from "./_components/google-docs";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = constructMetadata({
   title: "Google Docs Integration",
   description: "View content imported from Google Docs.",

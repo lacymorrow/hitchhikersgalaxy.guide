@@ -78,6 +78,15 @@ export const routes = {
 		account: "/settings/account",
 	},
 
+	// Pages router examples
+	pages: {
+		index: "/pages",
+		static: "/pages/static",
+		dynamic: "/pages/dynamic",
+		markdown: "/pages/markdown",
+		apiExample: "/pages/api-example",
+	},
+
 	// Admin routes
 	admin: {
 		root: "/admin",

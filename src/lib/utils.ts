@@ -30,3 +30,6 @@ export function normalizeSlug(slug: string): string {
 	normalized = normalized.trim(); // Added trim for safety after other operations
 	return normalized;
 }
+
+
+export { generateProjectNameSuggestions } from "./utils/generate-project-name-suggestions";

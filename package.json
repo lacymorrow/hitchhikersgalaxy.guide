@@ -189,6 +189,7 @@
     "react-page-tracker": "^0.5.0",
     "react-resizable-panels": "^4.0.14",
     "react-syntax-highlighter": "^16.1.0",
+    "react-use-measure": "^2.1.7",
     "react-wrap-balancer": "^1.1.1",
     "recharts": "^3.6.0",
     "remark-frontmatter": "^5.0.0",

@@ -78,7 +78,7 @@ let nextConfig: NextConfig = {
 	/*
 	 * Source maps
 	 */
-	productionBrowserSourceMaps: true,
+	productionBrowserSourceMaps: false,
 
 	typescript: {
 		/*

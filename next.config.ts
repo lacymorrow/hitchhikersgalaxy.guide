@@ -93,6 +93,16 @@ let nextConfig: NextConfig = {
 	pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
 
 	/*
+	 * Externalize heavy server packages to speed up builds
+	 */
+	serverExternalPackages: [
+		"onnxruntime-node",
+		"isolated-vm",
+		"sharp",
+		"@lvce-editor/ripgrep",
+	],
+
+	/*
 	 * Experimental configuration
 	 */
 	experimental: {

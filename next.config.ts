@@ -68,7 +68,7 @@ let nextConfig: NextConfig = {
 	 * Output configuration
 	 * Ensures the app is NOT statically exported
 	 */
-	output: "standalone",
+	// output: "standalone", // Disabled for Vercel - standalone causes slower builds
 
 	/*
 	 * React configuration

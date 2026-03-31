@@ -2,7 +2,7 @@
   "name": "ship-kit",
   "version": "0.1.1",
   "private": true,
-  "type": "module",
+
   "scripts": {
     "build": "NODE_OPTIONS='--max-old-space-size=8192' next build",
     "clean": "rm -rf .next && rm -rf node_modules && rm -rf .turbo && rm next-env.d.ts && rm package-lock.json && rm pnpm-lock.yaml && rm bun.lockb",

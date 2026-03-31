@@ -100,6 +100,17 @@ let nextConfig: NextConfig = {
 		"isolated-vm",
 		"sharp",
 		"@lvce-editor/ripgrep",
+		"mysql2",
+		"better-sqlite3",
+		"@aws-sdk/client-rds-data",
+		"@electric-sql/pglite",
+		"@libsql/client",
+		"@neondatabase/serverless",
+		"@planetscale/database",
+		"@vercel/postgres",
+		"esbuild",
+		"esbuild-register",
+		"drizzle-kit",
 	],
 
 	/*

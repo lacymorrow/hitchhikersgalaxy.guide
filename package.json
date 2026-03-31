@@ -58,7 +58,6 @@
     "@fortawesome/react-fontawesome": "3.1.1",
     "@hookform/resolvers": "5.2.2",
     "@huggingface/inference": "^4.13.5",
-    "@huggingface/transformers": "^3.8.1",
     "@lemonsqueezy/lemonsqueezy.js": "^4.0.0",
     "@mantine/hooks": "^8.3.18",
     "@mdx-js/loader": "3.1.1",

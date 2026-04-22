@@ -2,6 +2,7 @@ import { ShareButton } from "@/components/buttons/share-button";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { siteConfig } from "@/config/site";
 import { normalizeSlug } from "@/lib/utils";
 import { searchGuide } from "@/server/actions/guide-search";
 import type { GuideCrossReference as GuideCrossReferenceSchemaType, GuideEntry as GuideEntrySchemaType } from "@/server/db/schema";
@@ -9,8 +10,44 @@ import { guideService } from "@/server/services/guide-service";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import { formatDistanceToNow } from "date-fns";
 import { BookOpen, Rocket, Shield } from "lucide-react";
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+
+export async function generateMetadata({
+	params,
+}: {
+	params: Promise<{ slug: string }>;
+}): Promise<Metadata> {
+	const resolvedParams = await params;
+	let rawSlug = resolvedParams.slug;
+	try {
+		rawSlug = decodeURIComponent(rawSlug);
+	} catch {
+		// use raw slug as fallback
+	}
+	const displayName = rawSlug.replace(/-/g, " ");
+	const capitalizedName = displayName.replace(/\b\w/g, (c) => c.toUpperCase());
+
+	const title = `${capitalizedName} - The Hitchhiker's Guide`;
+	const description = `Everything you need to know about ${displayName} in the Hitchhiker's Guide to the Galaxy. Travel advice, fun facts, and more.`;
+
+	return {
+		title,
+		description,
+		openGraph: {
+			title,
+			description,
+			url: `${siteConfig.url}/${encodeURIComponent(rawSlug)}`,
+			type: "article",
+		},
+		twitter: {
+			card: "summary_large_image",
+			title,
+			description,
+		},
+	};
+}
 
 // Loading skeleton component
 function GuideEntrySkeleton() {

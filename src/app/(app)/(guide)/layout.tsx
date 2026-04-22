@@ -63,9 +63,9 @@ export default function GuideLayout({
 				</div>
 			</header>
 
-			<main className="flex-1">
+			<div className="flex-1">
 				{children}
-			</main>
+			</div>
 
 			{/* Footer */}
 			<footer className="relative overflow-hidden py-2 pb-12">

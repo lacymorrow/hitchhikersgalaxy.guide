@@ -1,5 +1,11 @@
 import { HeartFilledIcon, StarFilledIcon } from "@radix-ui/react-icons";
 import { Info, Rocket } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "About the Guide",
+	description: "Learn about the Hitchhiker's Guide to the Galaxy Guide — a community-driven digital companion inspired by Douglas Adams' legendary encyclopedia of all knowledge.",
+};
 
 export default function AboutPage() {
 	return (

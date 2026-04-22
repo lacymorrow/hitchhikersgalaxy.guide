@@ -4,10 +4,16 @@ import { Link } from "@/components/primitives/link-with-transition";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { Button } from "@/components/ui/button";
 import { StarFilledIcon } from "@radix-ui/react-icons";
+import type { Metadata } from "next";
 import { BookOpen, Info, MapIcon } from "lucide-react";
 import { Suspense } from "react";
 import { GuideSearchInlineServer } from "./_components/guide-search-inline-server";
 import { RecentEntries } from "./_components/recent-entries";
+
+export const metadata: Metadata = {
+	title: "The Hitchhiker's Guide to the Galaxy Guide",
+	description: "Your indispensable companion through the vast, bewildering, and often absurd universe. Search the Guide for travel advice, fun facts, and everything you need to know. Don't Panic!",
+};
 
 export const dynamic = 'force-dynamic';
 
@@ -37,9 +43,9 @@ export default function GuidePage() {
 							{/* Image removed, using div background and mask */}
 						</div>
 
-						<h2 className="font-mono text-5xl font-bold text-[#70c8cd] sm:text-6xl md:text-7xl lg:text-8xl mt-8">
+						<h1 className="font-mono text-5xl font-bold text-[#70c8cd] sm:text-6xl md:text-7xl lg:text-8xl mt-8">
 							DON'T PANIC
-						</h2>
+						</h1>
 
 						<p className="max-w-[42rem] text-[#70c8cd]/80 sm:text-lg sm:leading-8 mt-4">
 							The standard repository of all knowledge and wisdom. An

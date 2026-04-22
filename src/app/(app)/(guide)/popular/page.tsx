@@ -2,6 +2,12 @@ import { Link } from "@/components/primitives/link-with-transition";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { guideService } from "@/server/services/guide-service";
 import { StarFilledIcon } from "@radix-ui/react-icons";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+	title: "Popular Entries",
+	description: "Explore the most popular entries in the Hitchhiker's Guide to the Galaxy. Discover the best-loved topics, from Vogons to the Answer to Life, the Universe, and Everything.",
+};
 
 export default async function PopularEntriesPage() {
 	const entries = await guideService.getPopularEntries(20); // Get top 20 entries

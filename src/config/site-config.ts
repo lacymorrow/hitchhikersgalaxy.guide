@@ -188,26 +188,26 @@ export const siteConfig: SiteConfig = {
 
   name: "The Hitchhiker's Guide to the Galaxy Guide",
   title: "The Hitchhiker's Guide to the Galaxy Guide",
-  tagline: "Launch your app at light speed.",
-  url: "https://shipkit.io",
-  ogImage: "/app/og-image.png",
+  tagline: "Don't Panic.",
+  url: "https://hitchhikersgalaxy.guide",
+  ogImage: "/opengraph-image.png",
   description:
-    "Launch your app at light speed. Fast, flexible, and feature-packed for the modern web.",
+    "Your indispensable companion through the vast, bewildering, and often absurd universe. Don't Panic!",
 
   branding: {
-    projectName: "Shipkit",
-    projectSlug: "shipkit",
+    projectName: "Hitchhiker's Guide",
+    projectSlug: "hitchhikersgalaxy",
     productNames: {
       bones: "Bones",
       brains: "Brains",
-      main: "Shipkit",
+      main: "Hitchhiker's Guide",
     },
-    domain: "shipkit.io",
-    protocol: "web+shipkit",
-    githubOrg: "shipkit-io",
-    githubRepo: "shipkit",
-    vercelProjectName: "shipkit-app",
-    databaseName: "shipkit",
+    domain: "hitchhikersgalaxy.guide",
+    protocol: "web+hitchhikersgalaxy",
+    githubOrg: "lacymorrow",
+    githubRepo: "hitchhikersgalaxy.guide",
+    vercelProjectName: "hitchhikers-guide",
+    databaseName: "hitchhikersgalaxy",
   },
 
   links: {
@@ -244,12 +244,12 @@ export const siteConfig: SiteConfig = {
   },
 
   email: {
-    support: "feedback@shipkit.io",
-    team: "team@shipkit.io",
-    noreply: "noreply@shipkit.io",
-    domain: "shipkit.io",
-    legal: "legal@shipkit.io",
-    privacy: "privacy@shipkit.io",
+    support: "feedback@hitchhikersgalaxy.guide",
+    team: "team@hitchhikersgalaxy.guide",
+    noreply: "noreply@hitchhikersgalaxy.guide",
+    domain: "hitchhikersgalaxy.guide",
+    legal: "legal@hitchhikersgalaxy.guide",
+    privacy: "privacy@hitchhikersgalaxy.guide",
     // Placeholder format function - assigned below
     format: (_type) => "",
   },
@@ -282,13 +282,13 @@ export const siteConfig: SiteConfig = {
 
   metadata: {
     keywords: [
-      "Next.js",
-      "React",
-      "Tailwind CSS",
-      "Server Components",
-      "Shipkit",
-      "Shadcn",
-      "UI Components",
+      "Hitchhiker's Guide to the Galaxy",
+      "HHGTTG",
+      "Douglas Adams",
+      "Don't Panic",
+      "42",
+      "Galaxy Guide",
+      "Sci-Fi Comedy",
     ],
     themeColor: {
       light: "white",

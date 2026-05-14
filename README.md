@@ -2,7 +2,9 @@
 
 **Don't Panic.** This is an AI-powered, entirely generative website version of *The Hitchhiker's Guide to the Galaxy*.
 
-Every page is born when you ask for it — just like the original Guide (minus the sarcasm filter). It's not a static site. It’s not a wiki. It’s the Guide, reimagined by a mildly confused neural network with access to far too much cosmic trivia.
+![Homepage hero — DON'T PANIC](docs/images/screenshot-hero.png)
+
+Every page is born when you ask for it — just like the original Guide (minus the sarcasm filter). It's not a static site. It's not a wiki. It's the Guide, reimagined by a mildly confused neural network with access to far too much cosmic trivia.
 
 ## What is this?
 
@@ -12,6 +14,16 @@ Built for web. Powered by AI. Fueled by improbability.
 You search — it generates.  
 Want to know about Vogon poetry? It has *opinions*.  
 Curious about towels? It's got you covered.
+
+## Screenshots
+
+| Homepage | Popular Entries |
+|----------|-----------------|
+| ![Homepage with recent entries](docs/images/screenshot-homepage.png) | ![Popular entries page](docs/images/screenshot-popular.png) |
+
+| Entry Detail | Mobile |
+|--------------|--------|
+| ![Entry detail view](docs/images/screenshot-entry.png) | ![Mobile view](docs/images/screenshot-mobile.png) |
 
 ## Features
 

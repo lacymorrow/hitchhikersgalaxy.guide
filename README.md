@@ -2,7 +2,7 @@
 
 **Don't Panic.** This is an AI-powered, entirely generative website version of *The Hitchhiker's Guide to the Galaxy*.
 
-![Homepage hero — DON’T PANIC](docs/images/screenshot-hero.png)
+![Homepage hero — DON'T PANIC](docs/images/screenshot-hero.png)
 
 Every page is born when you ask for it — just like the original Guide (minus the sarcasm filter). It's not a static site. It's not a wiki. It's the Guide, reimagined by a mildly confused neural network with access to far too much cosmic trivia.
 

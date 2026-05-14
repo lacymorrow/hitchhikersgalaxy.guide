@@ -1,6 +1,6 @@
 # 🪐 hitchhikersgalaxy.guide
 
-**Don’t Panic.** This is an AI-powered, entirely generative website version of *The Hitchhiker’s Guide to the Galaxy*.
+**Don't Panic.** This is an AI-powered, entirely generative website version of *The Hitchhiker's Guide to the Galaxy*.
 
 ![Homepage hero — DON’T PANIC](docs/images/screenshot-hero.png)
 

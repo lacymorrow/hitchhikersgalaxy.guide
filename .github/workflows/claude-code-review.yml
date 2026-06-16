@@ -37,7 +37,7 @@ jobs:
         run: |
           echo 'Skipping Claude Code Review: CLAUDE_CODE_OAUTH_TOKEN not set'
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 1
 

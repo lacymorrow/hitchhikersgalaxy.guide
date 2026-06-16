@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v1
@@ -17,7 +17,7 @@ jobs:
           bun-version: 1.1.34
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: '22'
 
@@ -40,7 +40,7 @@ jobs:
         run: bun run audit:lh:loop -- http://localhost:3000/
 
       - name: Upload Lighthouse Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: lighthouse-reports
           path: .lighthouse

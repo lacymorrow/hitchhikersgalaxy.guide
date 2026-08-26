@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import type { OpenGraph } from "next/dist/lib/metadata/types/opengraph-types";
 import type { Twitter } from "next/dist/lib/metadata/types/twitter-types";
+import { SEO_TITLE_BRAND } from "@/lib/seo";
 import { siteConfig } from "./site";
 
 const defaultOpenGraph: OpenGraph = {
@@ -39,7 +40,9 @@ export const defaultMetadata: Metadata = {
 	metadataBase: new URL(siteConfig.url),
 	title: {
 		default: siteConfig.title,
-		template: `%s | ${siteConfig.name}`,
+		// Short brand suffix: the full 42-char site name pushed every page title
+		// past Google's ~60-char SERP limit (Ahrefs "Title too long", LAC-3514).
+		template: `%s | ${SEO_TITLE_BRAND}`,
 	},
 	description: siteConfig.description,
 	applicationName: siteConfig.name,
@@ -70,16 +73,8 @@ export const defaultMetadata: Metadata = {
 			"max-snippet": -1,
 		},
 	},
-	verification: {
-		google: "YOUR_VERIFICATION_CODE",
-		yandex: "your-yandex-verification",
-	},
-	alternates: {
-		canonical: siteConfig.url,
-		// languages: {
-		// 	"en-US": "/en-US",
-		// },
-	},
+	// No default canonical: a site-wide `alternates.canonical` pointed every
+	// page's canonical at the homepage. Pages set their own canonical instead.
 	openGraph: defaultOpenGraph,
 	twitter: defaultTwitter,
 	appleWebApp: {

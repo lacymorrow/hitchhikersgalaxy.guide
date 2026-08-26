@@ -3,6 +3,7 @@ import { Link } from "@/components/primitives/link-with-transition";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/config/site";
+import { guideEntrySeo } from "@/lib/seo";
 import { normalizeSlug } from "@/lib/utils";
 import { searchGuide } from "@/server/actions/guide-search";
 import type { GuideCrossReference as GuideCrossReferenceSchemaType, GuideEntry as GuideEntrySchemaType } from "@/server/db/schema";
@@ -29,21 +30,24 @@ export async function generateMetadata({
 	const displayName = rawSlug.replace(/-/g, " ");
 	const capitalizedName = displayName.replace(/\b\w/g, (c) => c.toUpperCase());
 
-	const title = `${capitalizedName} - The Hitchhiker's Guide`;
-	const description = `Everything you need to know about ${displayName} in the Hitchhiker's Guide to the Galaxy. Travel advice, fun facts, and more.`;
+	const { title, displayTitle, description } = guideEntrySeo(capitalizedName);
+	const pageUrl = `${siteConfig.url}/${encodeURIComponent(rawSlug)}`;
 
 	return {
 		title,
 		description,
+		alternates: {
+			canonical: pageUrl,
+		},
 		openGraph: {
-			title,
+			title: displayTitle,
 			description,
-			url: `${siteConfig.url}/${encodeURIComponent(rawSlug)}`,
+			url: pageUrl,
 			type: "article",
 		},
 		twitter: {
 			card: "summary_large_image",
-			title,
+			title: displayTitle,
 			description,
 		},
 	};

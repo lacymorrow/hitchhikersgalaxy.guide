@@ -11,8 +11,14 @@ import { GuideSearchInlineServer } from "./_components/guide-search-inline-serve
 import { RecentEntries } from "./_components/recent-entries";
 
 export const metadata: Metadata = {
-	title: "The Hitchhiker's Guide to the Galaxy Guide",
-	description: "Your indispensable companion through the vast, bewildering, and often absurd universe. Search the Guide for travel advice, fun facts, and everything you need to know. Don't Panic!",
+	// Absolute: a plain string here gets the layout's "| The Hitchhiker's Guide"
+	// template appended, duplicating the brand in the homepage title.
+	title: { absolute: "The Hitchhiker's Guide to the Galaxy Guide" },
+	description:
+		"Your indispensable companion through the vast, bewildering, and often absurd universe. Search the Guide for travel advice and fun facts. Don't Panic!",
+	alternates: {
+		canonical: "/",
+	},
 };
 
 export const dynamic = 'force-dynamic';

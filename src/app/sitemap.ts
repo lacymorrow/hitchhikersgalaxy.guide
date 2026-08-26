@@ -55,55 +55,46 @@ async function getGuideEntries() {
   }
 }
 
-// This function will be called at build time and can also be called on-demand
-export async function generateSitemaps() {
-  const sitemaps = [
-    { id: 0 }, // Static routes + guide pages
-    { id: 1 }, // Guide entries from database
-  ];
-
-  // Only include blog/docs sitemaps if blog is enabled
-  if (process.env.NEXT_PUBLIC_HAS_BLOG === "true") {
-    sitemaps.push({ id: 2 }); // Blog posts
-    sitemaps.push({ id: 3 }); // Documentation
-  }
-
-  return sitemaps;
-}
-
-export default async function sitemap({ id }: { id: number }): Promise<MetadataRoute.Sitemap> {
+/*
+ * Single sitemap served at /sitemap.xml (where robots.txt points).
+ *
+ * This previously used `generateSitemaps` to shard into /sitemap/[id].xml,
+ * which left /sitemap.xml falling through to the guide catch-all route as an
+ * HTML page (Ahrefs: "Sitemap in the wrong format"), and the shards themselves
+ * rendered empty in production because the id arrived as a string and never
+ * matched the numeric switch cases. At ~50 URLs, sharding is unnecessary
+ * (the sitemap protocol allows 50,000 URLs per file).
+ */
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = siteConfig.url;
 
-  switch (id) {
-    case 0: {
-      // Static guide pages + support pages
-      const guidePages = [
-        { url: baseUrl, lastModified: new Date(), changeFrequency: "daily" as const, priority: 1 },
-        { url: `${baseUrl}/popular`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
-        { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
-        { url: `${baseUrl}/travel-guide`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
-        { url: `${baseUrl}/submit`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
-        { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
-        { url: `${baseUrl}/privacy-policy`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.3 },
-        { url: `${baseUrl}/terms-of-service`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.3 },
-      ];
-      return guidePages;
-    }
-    case 1: {
-      // Dynamic guide entries from database
-      const entries = await getGuideEntries();
-      return entries.map((entry) => ({
-        url: `${baseUrl}/${encodeURIComponent(entry.searchTerm)}`,
-        lastModified: entry.updatedAt ?? new Date(),
-        changeFrequency: "weekly" as const,
-        priority: 0.8,
-      }));
-    }
-    case 2: {
-      // Blog posts (only when blog is enabled)
-      if (process.env.NEXT_PUBLIC_HAS_BLOG !== "true") return [];
-      const blogFiles = await getContentFiles("blog");
-      const blogRoutes = await Promise.all(
+  // Static guide pages + support pages
+  const staticPages: MetadataRoute.Sitemap = [
+    { url: baseUrl, lastModified: new Date(), changeFrequency: "daily" as const, priority: 1 },
+    { url: `${baseUrl}/popular`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
+    { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
+    { url: `${baseUrl}/travel-guide`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
+    { url: `${baseUrl}/submit`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
+    { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
+    { url: `${baseUrl}/privacy-policy`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.3 },
+    { url: `${baseUrl}/terms-of-service`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.3 },
+  ];
+
+  // Dynamic guide entries from database
+  const entries = await getGuideEntries();
+  const entryPages: MetadataRoute.Sitemap = entries.map((entry) => ({
+    url: `${baseUrl}/${encodeURIComponent(entry.searchTerm)}`,
+    lastModified: entry.updatedAt ?? new Date(),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
+  }));
+
+  // Blog posts + docs (only when blog is enabled)
+  const contentPages: MetadataRoute.Sitemap = [];
+  if (process.env.NEXT_PUBLIC_HAS_BLOG === "true") {
+    const blogFiles = await getContentFiles("blog");
+    contentPages.push(
+      ...(await Promise.all(
         blogFiles.map(async (file) => {
           const stats = await stat(file.path);
           return {
@@ -113,14 +104,11 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
             priority: 0.6,
           };
         })
-      );
-      return blogRoutes;
-    }
-    case 3: {
-      // Documentation pages (only when blog is enabled)
-      if (process.env.NEXT_PUBLIC_HAS_BLOG !== "true") return [];
-      const docFiles = await getContentFiles("docs");
-      const docsRoutes = await Promise.all(
+      ))
+    );
+    const docFiles = await getContentFiles("docs");
+    contentPages.push(
+      ...(await Promise.all(
         docFiles.map(async (file) => {
           const stats = await stat(file.path);
           return {
@@ -130,10 +118,9 @@ export default async function sitemap({ id }: { id: number }): Promise<MetadataR
             priority: 0.7,
           };
         })
-      );
-      return docsRoutes;
-    }
-    default:
-      return [];
+      ))
+    );
   }
+
+  return [...staticPages, ...entryPages, ...contentPages];
 }

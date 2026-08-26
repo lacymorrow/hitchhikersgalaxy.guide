@@ -16,7 +16,6 @@ import {
 } from "@/config/metadata";
 import { env } from "@/env";
 import { initializePaymentProviders } from "@/server/providers";
-import Script from "next/script";
 
 export const fetchCache = "default-cache";
 export const metadata: Metadata = defaultMetadata;
@@ -50,30 +49,32 @@ export default async function Layout({
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
+        {/* The previous SoftwareApplication schema failed schema.org and Google
+            rich-results validation on every page (LAC-3514): codeRepository/
+            programmingLanguage/runtimePlatform are not SoftwareApplication
+            properties, and this site is a content guide, not an app. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify({
               "@context": "https://schema.org",
-              "@type": "SoftwareApplication",
+              "@type": "WebSite",
               name: siteConfig.title,
               description: siteConfig.description,
               url: siteConfig.url,
-              applicationCategory: "DeveloperApplication",
-              operatingSystem: "Any",
-              offers: {
-                "@type": "Offer",
-                price: "0",
-                priceCurrency: "USD",
-              },
-              author: {
+              publisher: {
                 "@type": "Person",
                 name: siteConfig.creator.name,
                 url: siteConfig.creator.url,
               },
-              codeRepository: siteConfig.repo.url,
-              programmingLanguage: ["TypeScript", "JavaScript"],
-              runtimePlatform: "Node.js",
+              potentialAction: {
+                "@type": "SearchAction",
+                target: {
+                  "@type": "EntryPoint",
+                  urlTemplate: `${siteConfig.url}/{search_term_string}`,
+                },
+                "query-input": "required name=search_term_string",
+              },
             }),
           }}
         />

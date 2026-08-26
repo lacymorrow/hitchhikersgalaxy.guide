@@ -69,9 +69,22 @@ export default function GuideLayout({
 
 			{/* Footer */}
 			<footer className="relative overflow-hidden py-2 pb-12">
-				<div className="container flex items-center justify-center gap-2 font-mono text-sm text-[#70c8cd]/40">
-					<ShareButton title="The Hitchhiker's Guide to the Galaxy" variant="subtle" />
-					<span>- Sirius Cybernetics Corporation</span>
+				<div className="container flex flex-col items-center justify-center gap-2 font-mono text-sm text-[#70c8cd]/40">
+					<div className="flex items-center gap-2">
+						<ShareButton title="The Hitchhiker's Guide to the Galaxy" variant="subtle" />
+						<span>- Sirius Cybernetics Corporation</span>
+					</div>
+					<nav className="flex items-center gap-4">
+						<Link href="/contact" className="transition-colors hover:text-[#70c8cd]">
+							Contact
+						</Link>
+						<Link href="/privacy-policy" className="transition-colors hover:text-[#70c8cd]">
+							Privacy
+						</Link>
+						<Link href="/terms-of-service" className="transition-colors hover:text-[#70c8cd]">
+							Terms
+						</Link>
+					</nav>
 				</div>
 			</footer>
 		</div>

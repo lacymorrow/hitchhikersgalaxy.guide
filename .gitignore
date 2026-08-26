@@ -23,10 +23,22 @@
 npm-debug.log*
 yarn-debug.log*
 
-# local env files
-env
-*.env*
+# local env files (LAC-3468 / LAC-3470)
+# Deny every dotenv variant, then explicitly allow the shared example.
+.env
+.env.*
 !.env.example
+
+# Nested / renamed .git directories (LAC-3470).
+# LAC-3468 originated when a committed `.gittt/` shipped a live `.env` inside
+# a mirror of the working tree — no `.env` glob catches that. Deny the
+# renamed-.git shapes we have seen, and any nested `.git/` under the tree.
+.gittt/
+.git-old/
+.git.bak/
+.git.old/
+.git-backup/
+**/.git/
 
 # vercel
 .vercel
@@ -50,13 +62,7 @@ build/
 .cache/
 .eslintcache
 
-# Environment variables
-env/*
-*.env*
-!.env.example
-
-# # Logs
-# logs
+# Logs
 *.log
 
 # Editor directories and files
@@ -65,4 +71,3 @@ env/*
 *.ntvs*
 *.njsproj
 *.sln
-.env*.local

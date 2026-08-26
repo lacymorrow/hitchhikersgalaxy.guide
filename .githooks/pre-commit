@@ -1,0 +1,59 @@
+#!/usr/bin/env bash
+# Pre-commit secret scan.
+#
+# Two layers:
+#   1. Reject any staged dotenv file (`.env`, `.env.*`, at any depth), with
+#      an allowlist for `.env.example`. See LAC-3470.
+#   2. Run `gitleaks protect --staged` on the remaining staged diff so a
+#      committed secret in any other file also fails the commit. See LAC-3163.
+#
+# To bypass in a true emergency: git commit --no-verify (do not use for
+# routine work — the whole point of this hook is to stop leaks pre-push).
+
+set -euo pipefail
+
+# --- Layer 1: dotenv guard (LAC-3470) ---------------------------------------
+mapfile -d '' staged < <(git diff --cached --name-only --diff-filter=ACMR -z)
+
+forbidden=()
+for path in "${staged[@]:-}"; do
+	[[ -z "$path" ]] && continue
+	base="${path##*/}"
+	case "$base" in
+		.env|.env.*)
+			[[ "$base" == ".env.example" ]] && continue
+			forbidden+=("$path")
+			;;
+	esac
+done
+
+if (( ${#forbidden[@]} > 0 )); then
+	echo "" >&2
+	echo "  ✗ Refusing to commit dotenv file(s):" >&2
+	for f in "${forbidden[@]}"; do
+		echo "      $f" >&2
+	done
+	echo "" >&2
+	echo "  These files must never enter git. Real values belong in your" >&2
+	echo "  local .env; commit only .env.example. See LAC-3468 / LAC-3470." >&2
+	echo "" >&2
+	exit 1
+fi
+
+# --- Layer 2: gitleaks scan (LAC-3163) --------------------------------------
+if ! command -v gitleaks >/dev/null 2>&1; then
+  cat >&2 <<'EOM'
+gitleaks not found on PATH.
+
+Install it once, then retry the commit:
+  macOS:   brew install gitleaks
+  Linux:   see https://github.com/gitleaks/gitleaks#installing
+
+CI (.github/workflows/gitleaks.yml) will still scan the PR delta, so the
+missing hook does not silently let a secret through — but local scanning
+catches it before it hits any remote.
+EOM
+  exit 1
+fi
+
+gitleaks protect --staged --no-banner --redact

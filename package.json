@@ -41,7 +41,8 @@
     "build:registry": "tsx src/registry/generate-registry.ts",
     "build:blocks": "tsx scripts/generate-registry.ts -i src/registry/blocks -o public/registry -t",
     "sync-upstream": "tsx scripts/sync-upstream.ts",
-    "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload"
+    "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload",
+    "postinstall": "git config core.hooksPath .githooks 2>/dev/null || true"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "1.11.1",

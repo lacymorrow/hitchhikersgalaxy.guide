@@ -52,14 +52,24 @@ const checkResend = async (): Promise<HealthCheck> => {
       headers: { Authorization: `Bearer ${key}` },
       cache: "no-store",
     });
-    if (response.status === 401 || response.status === 403) {
-      return {
-        name: "resend_api_key",
-        ok: false,
-        detail: `Resend rejected key (HTTP ${response.status})`,
-      };
-    }
     if (!response.ok) {
+      // Sending-only keys can't list domains, but the rejection proves the
+      // key authenticated — Resend names it "restricted_api_key". That key
+      // still sends mail, so the form is healthy.
+      const body = (await response.json().catch(() => null)) as {
+        name?: string;
+        message?: string;
+      } | null;
+      if (body?.name === "restricted_api_key" || body?.message?.includes("restricted")) {
+        return { name: "resend_api_key", ok: true, detail: "valid (sending-only key)" };
+      }
+      if (response.status === 400 || response.status === 401 || response.status === 403) {
+        return {
+          name: "resend_api_key",
+          ok: false,
+          detail: `Resend rejected key (HTTP ${response.status}): ${body?.message ?? "unknown"}`,
+        };
+      }
       return {
         name: "resend_api_key",
         ok: false,

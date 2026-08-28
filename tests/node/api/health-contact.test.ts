@@ -64,6 +64,46 @@ describe("GET /api/health/contact", () => {
     expect(body.ok).toBe(false);
   });
 
+  it("returns 200 for a valid sending-only (restricted) key", async () => {
+    // Resend rejects /domains for send-only keys with name "restricted_api_key",
+    // but such a key is valid for sending — the form is healthy.
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          statusCode: 401,
+          message: "This API key is restricted to only send emails",
+          name: "restricted_api_key",
+        }),
+        { status: 401 }
+      )
+    );
+
+    const res = await GET(makeRequest());
+    const body = await res.json();
+
+    expect(res.status).toBe(200);
+    expect(body.ok).toBe(true);
+  });
+
+  it("returns 503 for an invalid key (Resend HTTP 400)", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          statusCode: 400,
+          message: "API key is invalid",
+          name: "validation_error",
+        }),
+        { status: 400 }
+      )
+    );
+
+    const res = await GET(makeRequest());
+    const body = await res.json();
+
+    expect(res.status).toBe(503);
+    expect(body.ok).toBe(false);
+  });
+
   it("returns 503 when the Resend request throws", async () => {
     vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("network down"));
 

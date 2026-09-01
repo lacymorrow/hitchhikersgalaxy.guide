@@ -246,7 +246,10 @@ export const siteConfig: SiteConfig = {
   email: {
     support: "feedback@hitchhikersgalaxy.guide",
     team: "team@hitchhikersgalaxy.guide",
-    noreply: "noreply@hitchhikersgalaxy.guide",
+    // LAC-3578: contact form sends via the verified shipkit.io Resend domain
+    // (consolidated). hitchhikersgalaxy.guide is not verified on the shipkit
+    // Resend team, so the from-address must be @shipkit.io to avoid a 403.
+    noreply: "noreply@shipkit.io",
     domain: "hitchhikersgalaxy.guide",
     legal: "legal@hitchhikersgalaxy.guide",
     privacy: "privacy@hitchhikersgalaxy.guide",

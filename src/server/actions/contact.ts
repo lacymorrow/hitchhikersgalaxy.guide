@@ -27,7 +27,7 @@ export async function submitContactForm(formData: FormData) {
     const result = await resend.emails.send({
       from: `Contact Form <${siteConfig.email.noreply}>`,
       to: [siteConfig.email.support],
-      subject: "New Contact Form Submission",
+      subject: `New Contact Form Submission — ${siteConfig.name}`,
       replyTo: validatedData.contactInfo,
       html: `
                 <h2>New Contact Form Submission</h2>

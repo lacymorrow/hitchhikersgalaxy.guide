@@ -1,5 +1,12 @@
-# CI gate — every job MUST pass before merging to main.
-# See plans/MASTER-TEST-PLAN.md (Phase 6) for the rationale.
+# CI gate. See plans/MASTER-TEST-PLAN.md (Phase 6) for the rationale.
+#
+# Minutes policy (Actions minutes are billed on this private repo):
+#   - Cheap jobs (typecheck, lint, unit) run on every PR.
+#   - Expensive jobs (integration, build, e2e, docs-links) run on pushes to main
+#     and on PRs labeled "ci:full". Add the label when a change touches auth,
+#     payments, the build pipeline, or docs routing.
+#   - Locally verified work (upstream syncs, agent PRs) runs `bun run verify`,
+#     pastes the summary in the PR, and commits with "[skip ci]".
 #
 # Job summary:
 #   typecheck       — `bun run typecheck` (cheap, fast feedback)
@@ -74,6 +81,7 @@ jobs:
 
   test-integration:
     name: Integration tests (real Postgres)
+    if: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'ci:full') }}
     runs-on: ubuntu-latest
     timeout-minutes: 20
     services:
@@ -105,6 +113,7 @@ jobs:
 
   build:
     name: Production build
+    if: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'ci:full') }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     needs: [typecheck, lint]
@@ -121,6 +130,7 @@ jobs:
 
   test-e2e:
     name: E2E (Playwright)
+    if: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'ci:full') }}
     runs-on: ubuntu-latest
     # Includes a production build (~15-25 min) before the Playwright run —
     # keep this above the build job's timeout plus test time.
@@ -176,6 +186,7 @@ jobs:
   # when the provider was introduced. See docs-site/README.md.
   docs-links:
     name: Docs link check (Holocron build)
+    if: ${{ github.event_name == 'push' || contains(github.event.pull_request.labels.*.name, 'ci:full') }}
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
@@ -200,7 +211,9 @@ jobs:
     needs: [typecheck, lint, test-unit, test-integration, build, test-e2e, docs-links]
     if: always()
     steps:
+      # Skipped jobs (expensive suite not requested) are fine; failures and
+      # cancellations are not.
       - name: Fail if any required job failed
         if: contains(needs.*.result, 'failure') || contains(needs.*.result, 'cancelled')
         run: exit 1
-      - run: echo "All CI jobs passed."
+      - run: echo "All CI jobs that ran passed."

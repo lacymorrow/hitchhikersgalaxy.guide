@@ -76,7 +76,7 @@
     "form-monitor": "tsx scripts/form-monitor.ts",
     "form-monitor:status": "tsx scripts/form-monitor.ts status",
     "form-monitor:test": "tsx scripts/form-monitor.ts test",
-    "verify": "tsx scripts/verify.ts",
+    "verify": "bash scripts/verify.sh",
     "verify:quick": "tsx scripts/verify.ts --quick",
     "docs:nav": "node scripts/generate-holocron-nav.mjs",
     "docs:holocron:dev": "npm --prefix docs-site run dev",

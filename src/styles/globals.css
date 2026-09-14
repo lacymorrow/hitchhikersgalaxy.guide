@@ -1,6 +1,7 @@
 /* ! Shadcn UI Default Styles - Uncomment to use */
 @import "./theme.css";
 @import "./overrides.css";
+@import "./components/sidebar-icons.css";
 
 /* ! Shadcn UI Default Styles - Uncomment to use */
 /* @import "./shadcn-ui-default.css"; */

@@ -13,7 +13,7 @@ import { revenueChartData } from "./mock-data";
 const chartConfig = {
   revenue: {
     label: "Revenue",
-    color: "hsl(var(--foreground))",
+    color: "hsl(var(--primary))",
   },
   expenses: {
     label: "Expenses",
@@ -23,15 +23,15 @@ const chartConfig = {
 
 export const RevenueChart = () => {
   return (
-    <Card className="border-border/50 bg-card/50">
+    <Card>
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-            Revenue
+          <CardTitle className="text-sm">
+            Revenue <span className="ml-1.5 font-normal text-muted-foreground">Jan to Dec</span>
           </CardTitle>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-foreground" />
+              <span className="h-2 w-2 rounded-full bg-primary" />
               Revenue
             </span>
             <span className="flex items-center gap-1.5">

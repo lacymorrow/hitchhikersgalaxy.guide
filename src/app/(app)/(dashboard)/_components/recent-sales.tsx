@@ -3,20 +3,23 @@ import { sales } from "./mock-data";
 
 export function RecentSales() {
   return (
-    <div className="space-y-8">
+    <ul className="-mx-6 -mb-6">
       {sales.map((sale) => (
-        <div key={sale.id} className="flex items-center">
-          <Avatar className="h-9 w-9">
-            <AvatarImage src={sale.avatar} alt={sale.name} />
+        <li
+          key={sale.id}
+          className="flex items-center gap-3 px-6 py-2.5 shadow-hairline-t transition-colors duration-100 ease-out-quart hover:bg-muted/60"
+        >
+          <Avatar className="size-7 text-[10px]">
+            <AvatarImage src={sale.avatar} alt="" />
             <AvatarFallback>{sale.fallback}</AvatarFallback>
           </Avatar>
-          <div className="ml-4 space-y-1">
-            <p className="text-sm font-medium leading-none">{sale.name}</p>
-            <p className="text-sm text-muted-foreground">{sale.email}</p>
+          <div className="min-w-0">
+            <p className="truncate font-medium leading-4">{sale.name}</p>
+            <p className="truncate text-[11px] leading-4 text-muted-foreground">{sale.email}</p>
           </div>
-          <div className="ml-auto font-medium">{sale.amount}</div>
-        </div>
+          <div className="ml-auto font-medium tabular-nums">{sale.amount.replace(/^\+/, "")}</div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 }

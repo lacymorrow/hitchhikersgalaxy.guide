@@ -37,8 +37,18 @@ const config = {
           "2xl": "1400px",
         },
       },
+      boxShadow: {
+        hairline: "0 0 0 0.5px var(--hairline), 0 1px 2px rgb(0 0 0 / 0.04)",
+        "hairline-b": "0 0.5px 0 var(--hairline)",
+        "hairline-t": "0 -0.5px 0 var(--hairline)",
+      },
+      transitionTimingFunction: {
+        spring: "var(--ease-spring)",
+        "out-quart": "var(--ease-out-quart)",
+      },
       colors: {
         border: "hsl(var(--border))",
+        success: "hsl(var(--success))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",

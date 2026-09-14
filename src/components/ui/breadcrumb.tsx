@@ -52,6 +52,8 @@ BreadcrumbLink.displayName = "BreadcrumbLink";
 
 const BreadcrumbPage = React.forwardRef<HTMLSpanElement, React.ComponentPropsWithoutRef<"span">>(
   ({ className, ...props }, ref) => (
+    // biome-ignore lint/a11y/useSemanticElements: disabled link rendered as span for accessibility
+    // biome-ignore lint/a11y/useFocusableInteractive: aria-disabled span is non-focusable by design
     <span
       ref={ref}
       role="link"
@@ -68,7 +70,7 @@ const BreadcrumbSeparator = ({ children, className, ...props }: React.ComponentP
   <li
     role="presentation"
     aria-hidden="true"
-    className={cn("[&>svg]:w-3.5 [&>svg]:h-3.5", className)}
+    className={cn("[&>svg]:h-3.5 [&>svg]:w-3.5", className)}
     {...props}
   >
     {children ?? <ChevronRightIcon />}

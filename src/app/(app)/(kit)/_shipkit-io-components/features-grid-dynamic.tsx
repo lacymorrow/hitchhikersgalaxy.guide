@@ -4,7 +4,7 @@ import { getPayloadContent } from "@/lib/utils/get-payload-content";
 import type { FeatureCategory, FeaturePlan } from "@/types/feature";
 import { FeatureCard } from "./feature-card";
 
-type PayloadFeature = {
+interface PayloadFeature {
   id?: number;
   name: string;
   description: string;
@@ -13,7 +13,7 @@ type PayloadFeature = {
   icon?: string | null;
   order?: number | null;
   badge?: "new" | "popular" | "pro" | null;
-};
+}
 
 export async function FeaturesGridDynamic() {
   let features: PayloadFeature[] = [];
@@ -42,16 +42,16 @@ export async function FeaturesGridDynamic() {
       )}
     >
       {features.map((feature, index) => {
-        const id = feature.id || index;
+        const id = feature.id ?? index;
         return (
           <FeatureCard
             key={uuidv4()}
             feature={{
               ...feature,
               id: Number(id),
-              icon: feature.icon || undefined,
-              order: feature.order || undefined,
-              badge: feature.badge || undefined,
+              icon: feature.icon ?? undefined,
+              order: feature.order ?? undefined,
+              badge: feature.badge ?? undefined,
             }}
           />
         );

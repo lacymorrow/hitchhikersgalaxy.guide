@@ -118,7 +118,7 @@ export default function PricingPage() {
 
           {/* Pricing Cards */}
           <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 md:grid-cols-3">
-            {plans.map((plan, index) => (
+            {plans.map((plan, _index) => (
               <PriceCard key={uuidv4()} {...plan} />
             ))}
           </div>

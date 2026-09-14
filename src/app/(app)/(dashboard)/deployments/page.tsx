@@ -45,11 +45,11 @@ export default async function DeploymentsPage() {
   const hasActiveDeployment = deployments.some((deployment) => deployment.status === "deploying");
 
   return (
-    <div className="container mx-auto py-10 space-y-6">
+    <div className="container mx-auto space-y-6 py-10">
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Deployments</h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="mt-2 text-muted-foreground">
             Manage and monitor your Shipkit deployments to Vercel
           </p>
         </div>

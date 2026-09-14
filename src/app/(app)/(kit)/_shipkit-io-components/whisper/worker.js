@@ -118,7 +118,7 @@ async function load() {
   });
 
   // Load the pipeline and save it for future use.
-  const [tokenizer, processor, model] = await AutomaticSpeechRecognitionPipeline.getInstance(
+  const [_tokenizer, _processor, model] = await AutomaticSpeechRecognitionPipeline.getInstance(
     (x) => {
       // We also add a progress callback to the pipeline so that we can
       // track model loading.

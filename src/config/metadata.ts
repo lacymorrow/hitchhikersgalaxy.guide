@@ -157,3 +157,15 @@ export const headLinkHints: HeadLinkHint[] = [
 	{ rel: "dns-prefetch", href: "https://fonts.googleapis.com" },
 	{ rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
 ];
+
+// Route-specific metadata for better CTR
+export const routeMetadata = {
+	home: {
+		title: siteConfig.title,
+		description: siteConfig.description,
+	},
+	faq: {
+		title: `FAQ - Frequently Asked Questions | ${siteConfig.title}`,
+		description: `Common questions about ${siteConfig.title}: features, pricing, setup, and what to expect.`,
+	},
+};

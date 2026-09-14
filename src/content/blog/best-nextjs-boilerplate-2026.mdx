@@ -1,0 +1,76 @@
+---
+title: "Best Next.js Boilerplate 2026: An Honest Comparison"
+publishedAt: 2026-07-26
+description: "We compared the top Next.js SaaS boilerplates for 2026 — MakerKit, ShipFast, Supastarter, Open SaaS, and Shipkit — on stack, price, and what you actually get."
+authorIds: ["lacy-morrow"]
+categories: ["Guides", "Development"]
+badge: "SEO"
+authors:
+  - name: "Lacy Morrow"
+    avatar: "https://avatars.githubusercontent.com/u/1311301?v=4"
+---
+
+# Best Next.js Boilerplate 2026: An Honest Comparison
+
+Choosing a Next.js boilerplate in 2026 is harder than it should be. There are at least a dozen options, half of them have subscription pricing, and most comparison articles are written by the boilerplate authors themselves.
+
+This is no different — I built Shipkit — but I'll be upfront about trade-offs and let you decide.
+
+## What We're Comparing
+
+| Feature         | Shipkit                     | MakerKit      | ShipFast      | Supastarter          | Open SaaS          |
+| --------------- | --------------------------- | ------------- | ------------- | -------------------- | ------------------ |
+| **Framework**   | Next.js 16                  | Next.js 15    | Next.js 14    | Next.js 15           | Wasp (React)       |
+| **Pricing**     | $249 one-time               | $299/yr       | $199 one-time | $399 one-time        | Free (open source) |
+| **Auth**        | Better Auth + OAuth         | Supabase Auth | NextAuth      | Supabase Auth        | Lucia              |
+| **Database**    | Postgres + Drizzle          | Supabase      | Supabase      | Supabase / Prisma    | Prisma             |
+| **Payments**    | Stripe, LemonSqueezy, Polar | Stripe        | Stripe        | Stripe, LemonSqueezy | Stripe             |
+| **CMS**         | Payload CMS + Builder.io    | —             | —             | —                    | —                  |
+| **AI Built-in** | OpenAI + Anthropic          | OpenAI addon  | —             | —                    | OpenAI             |
+| **Components**  | 100+ (shadcn/ui)            | 50+           | 30+           | 40+                  | 20+                |
+| **Free Tier**   | Bones (MIT)                 | —             | —             | —                    | Full (FOSS)        |
+| **Updates**     | Lifetime                    | Annual sub    | Lifetime      | Lifetime             | Community          |
+
+## The Short Version
+
+- **Just want free and functional?** Open SaaS or Shipkit Bones.
+- **Need a full stack with CMS, AI, and 100+ components?** Shipkit.
+- **Supabase ecosystem fan?** MakerKit or Supastarter.
+- **Fastest possible launch, minimal features?** ShipFast.
+- **Enterprise team, budget is not a concern?** Supastarter or MakerKit.
+
+## Where Shipkit Wins
+
+**Stack breadth.** Most boilerplates give you auth + payments + a landing page. Shipkit ships a working app: admin panel, CMS, email system, AI hooks, dashboard, 100+ components, and deployment configs. It's the "three months of infrastructure" already done.
+
+**AI-native workflow.** Ships with Cursor rules, AI context files, and structured prompts so AI coding tools understand the codebase immediately. Not an afterthought addon.
+
+**No subscription.** $249 once. Clone the repo, own the code. Updates merge when you want them.
+
+**Free open-source tier.** Shipkit Bones (github.com/shipkit-io/bones) is MIT licensed. Auth, basic components, and the core Next.js setup. Upgrade to the paid version when you need the full stack.
+
+## Where Shipkit Loses
+
+**Learning curve.** More features means more surface area to understand. If you only need auth + landing page, a simpler boilerplate might be faster to grok.
+
+**Not Supabase-native.** If your team is all-in on Supabase, MakerKit or Supastarter are a more natural fit.
+
+**Solo maintainer.** Shipkit is built and maintained by one developer (me). MakerKit and Supastarter have small teams. Open SaaS has community contributors.
+
+## How to Choose
+
+Ask yourself three questions:
+
+1. **Do I need a CMS?** If yes, Shipkit is the only option with Payload CMS + visual editing built in.
+2. **Am I using AI coding tools?** If yes, Shipkit's AI-native workflow saves hours of context setup.
+3. **Is $249 one-time acceptable?** If budget is zero, start with Bones or Open SaaS.
+
+## Try It
+
+- **Shipkit (paid):** [shipkit.io](https://shipkit.io)
+- **Bones (free):** [github.com/shipkit-io/bones](https://github.com/shipkit-io/bones)
+- **Live site running Shipkit:** [shipkit.io](https://shipkit.io) (yes, this site is built with Shipkit)
+
+---
+
+_Last updated: July 2026. Prices and features verified at time of writing._

@@ -21,20 +21,21 @@ const features = [
 
 export function Features() {
   return (
-    <section className="py-20 px-4 md:px-6 lg:px-8 bg-muted">
-      <div className="max-w-6xl mx-auto">
-        <h2 className="text-3xl font-bold text-center mb-12">Why Choose Our CLI?</h2>
-        <div className="grid md:grid-cols-3 gap-8">
+    <section className="bg-muted px-4 py-20 md:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl">
+        <h2 className="mb-12 text-center text-3xl font-bold">Why Choose Our CLI?</h2>
+        <div className="grid gap-8 md:grid-cols-3">
           {features.map((feature, index) => (
             <motion.div
+              // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
               key={index}
-              className="bg-background p-6 rounded-lg shadow-lg"
+              className="rounded-lg bg-background p-6 shadow-lg"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <feature.icon className="h-12 w-12 mb-4 text-primary" />
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+              <feature.icon className="mb-4 h-12 w-12 text-primary" />
+              <h3 className="mb-2 text-xl font-semibold">{feature.title}</h3>
               <p className="text-muted-foreground">{feature.description}</p>
             </motion.div>
           ))}

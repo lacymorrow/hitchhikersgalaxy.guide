@@ -29,6 +29,7 @@ shipkit create --template user/repo  # custom template
 ```
 
 What happens:
+
 1. Creates a new GitHub repo from the ShipKit template (falls back to `git clone` if `gh` auth fails)
 2. Sets `upstream` remote to `https://github.com/lacymorrow/shipkit.git`
 3. Grafts upstream history with `--allow-unrelated-histories`
@@ -73,22 +74,22 @@ Updates `src/config/site-config.ts`, `.env.example`, and `package.json` with you
 
 ## Development
 
-The CLI lives in `cli/` with its own `package.json` and build:
+The CLI lives in its own repo: [lacymorrow/shipkit-cli](https://github.com/lacymorrow/shipkit-cli).
 
 ```bash
-cd cli
+git clone https://github.com/lacymorrow/shipkit-cli.git
+cd shipkit-cli
 bun install
-bun run build    # tsup build -> cli/dist/
+bun run build    # tsup build -> dist/
 bun run dev      # watch mode
 ```
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `cli/src/index.ts` | Entry point, command definitions |
-| `cli/src/create.ts` | Project scaffolding logic |
-| `cli/src/sync.ts` | Upstream sync logic |
-| `cli/src/deploy.ts` | Vercel deployment logic |
-| `cli/src/utils.ts` | Shared utilities |
-| `scripts/rebrand.ts` | Post-create branding script |
+| File                             | Purpose                          |
+| -------------------------------- | -------------------------------- |
+| `src/index.ts` (shipkit-cli)     | Entry point, command definitions |
+| `src/create.ts` (shipkit-cli)    | Project scaffolding logic        |
+| `src/sync.ts` (shipkit-cli)      | Upstream sync logic              |
+| `src/deploy.ts` (shipkit-cli)    | Vercel deployment logic          |
+| `scripts/rebrand.ts` (this repo) | Post-create branding script      |

@@ -49,7 +49,7 @@ export const GitHubConnectButton = ({ className }: { className?: string }) => {
   // Prefill input with current username when opening dialog
   useEffect(() => {
     if (dialogOpen) {
-      setUsernameInput(githubUsername || "");
+      setUsernameInput(githubUsername ?? "");
     }
   }, [dialogOpen, githubUsername]);
 

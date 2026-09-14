@@ -1,13 +1,6 @@
 "use client";
 
-import {
-  BookOpenIcon,
-  ClockIcon,
-  MenuIcon,
-  SearchIcon,
-  TagIcon,
-  TrendingUpIcon,
-} from "lucide-react";
+import { ClockIcon, MenuIcon, SearchIcon, TagIcon, TrendingUpIcon } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import { Link } from "@/components/primitives/link";
@@ -38,6 +31,7 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
     return posts.filter(
       (post) =>
         post.title?.toLowerCase().includes(query) ||
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing -- intentional boolean OR over optional chain results
         post.description?.toLowerCase().includes(query) ||
         post.categories?.some((cat) => cat.toLowerCase().includes(query))
     );
@@ -57,13 +51,15 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
   const allCategories = useMemo(() => {
     const cats = new Set<string>();
     posts.forEach((post) => {
-      post.categories?.forEach((cat) => cats.add(cat));
+      post.categories?.forEach((cat) => {
+        cats.add(cat);
+      });
     });
     return Array.from(cats).sort();
   }, [posts]);
 
   const content = (
-    <div className="h-full flex flex-col w-full max-w-full overflow-hidden">
+    <div className="flex h-full w-full max-w-full flex-col overflow-hidden">
       {/* Header */}
       <div className="flex items-center gap-3 px-2 py-4">
         <div>
@@ -72,24 +68,24 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
       </div>
 
       {/* Search */}
-      <div className="relative px-2 mb-4">
+      <div className="relative mb-4 px-2">
         <SearchIcon className="absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Search articles..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 h-9 bg-background border-border"
+          className="h-9 border-border bg-background pl-10"
         />
       </div>
 
       {/* Navigation Content */}
-      <ScrollArea className="flex-1 px-2 w-full [&>[data-radix-scroll-area-viewport]>div]:!block">
-        <div className="space-y-6 w-full max-w-full">
+      <ScrollArea className="w-full flex-1 px-2 [&>[data-radix-scroll-area-viewport]>div]:!block">
+        <div className="w-full max-w-full space-y-6">
           {/* Search Results */}
           {searchQuery && (
             <div>
-              <div className="flex items-center justify-between mb-3">
-                <h3 className="font-medium text-sm text-foreground">Search Results</h3>
+              <div className="mb-3 flex items-center justify-between">
+                <h3 className="text-sm font-medium text-foreground">Search Results</h3>
                 <Badge variant="secondary" className="text-xs">
                   {filteredPosts.length} found
                 </Badge>
@@ -102,20 +98,20 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
                       key={post.slug}
                       href={`/blog/${post.slug}`}
                       className={cn(
-                        "flex items-center gap-2 p-2 rounded-md transition-colors group min-w-0",
+                        "group flex min-w-0 items-center gap-2 rounded-md p-2 transition-colors",
                         "hover:bg-accent/50",
                         isActive
-                          ? "bg-primary text-primary-foreground font-medium"
+                          ? "bg-primary font-medium text-primary-foreground"
                           : "text-foreground hover:text-primary"
                       )}
                     >
-                      <span className="font-medium text-sm truncate flex-1 min-w-0">
+                      <span className="min-w-0 flex-1 truncate text-sm font-medium">
                         {post.title}
                       </span>
                       {post.badge && (
                         <Badge
                           variant={isActive ? "secondary" : "outline"}
-                          className="ml-2 text-xs shrink-0"
+                          className="ml-2 shrink-0 text-xs"
                         >
                           {post.badge}
                         </Badge>
@@ -125,7 +121,7 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
                 })}
               </div>
               {filteredPosts.length === 0 && (
-                <div className="text-center py-4">
+                <div className="py-4 text-center">
                   <p className="text-sm text-muted-foreground">No articles found</p>
                   <Button
                     variant="link"
@@ -143,9 +139,9 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
           {/* Recent Posts */}
           {!searchQuery && (
             <div>
-              <div className="flex items-center gap-2 mb-3">
+              <div className="mb-3 flex items-center gap-2">
                 <TrendingUpIcon className="h-4 w-4 text-muted-foreground" />
-                <h3 className="font-medium text-sm text-foreground">Latest</h3>
+                <h3 className="text-sm font-medium text-foreground">Latest</h3>
               </div>
               <div className="space-y-1">
                 {recentPosts.map((post) => {
@@ -155,24 +151,24 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
                       key={post.slug}
                       href={`/blog/${post.slug}`}
                       className={cn(
-                        "flex items-center gap-2 p-2 rounded-md transition-colors group min-w-0",
+                        "group flex min-w-0 items-center gap-2 rounded-md p-2 transition-colors",
                         "hover:bg-accent/50",
                         isActive
-                          ? "bg-primary text-primary-foreground font-medium"
+                          ? "bg-primary font-medium text-primary-foreground"
                           : "text-muted-foreground hover:text-foreground"
                       )}
                     >
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium text-sm truncate min-w-0">{post.title}</div>
+                      <div className="min-w-0 flex-1">
+                        <div className="min-w-0 truncate text-sm font-medium">{post.title}</div>
                         {post.publishedAt && (
-                          <div className="flex items-center gap-1 text-xs opacity-70 mt-0.5">
+                          <div className="mt-0.5 flex items-center gap-1 text-xs opacity-70">
                             <ClockIcon className="h-3 w-3" />
                             {new Date(post.publishedAt).toLocaleDateString()}
                           </div>
                         )}
                       </div>
                       {post.badge && (
-                        <Badge variant="secondary" className="ml-2 text-xs shrink-0">
+                        <Badge variant="secondary" className="ml-2 shrink-0 text-xs">
                           {post.badge}
                         </Badge>
                       )}
@@ -188,9 +184,9 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
             <>
               <Separator />
               <div>
-                <div className="flex items-center gap-2 mb-3">
+                <div className="mb-3 flex items-center gap-2">
                   <TagIcon className="h-4 w-4 text-muted-foreground" />
-                  <h3 className="font-medium text-sm text-foreground">Categories</h3>
+                  <h3 className="text-sm font-medium text-foreground">Categories</h3>
                 </div>
                 <div className="space-y-1">
                   {allCategories.map((category) => {
@@ -201,12 +197,12 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
                       <Link
                         key={category}
                         href={`/blog/categories/${encodeURIComponent(category)}`}
-                        className="flex items-center gap-2 p-2 rounded-md hover:bg-accent/50 transition-colors group min-w-0"
+                        className="group flex min-w-0 items-center gap-2 rounded-md p-2 transition-colors hover:bg-accent/50"
                       >
-                        <span className="text-sm text-foreground group-hover:text-primary truncate flex-1 min-w-0">
+                        <span className="min-w-0 flex-1 truncate text-sm text-foreground group-hover:text-primary">
                           {category}
                         </span>
-                        <span className="text-xs text-muted-foreground shrink-0 ml-2">
+                        <span className="ml-2 shrink-0 text-xs text-muted-foreground">
                           {categoryPosts.length}
                         </span>
                       </Link>
@@ -224,7 +220,7 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
   return (
     <>
       {/* Desktop Sidebar */}
-      <aside className="hidden lg:block w-64 xl:w-80 shrink-0 min-w-0">
+      <aside className="hidden w-64 min-w-0 shrink-0 lg:block xl:w-80">
         <div className="sticky top-[var(--navbar-height)] h-[calc(100vh-var(--navbar-height))] w-full overflow-hidden">
           {content}
         </div>
@@ -232,7 +228,7 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
 
       {/* Mobile Navigation */}
       <div className="sticky top-0 z-40 lg:hidden">
-        <div className="flex items-center gap-2 p-4 bg-background border-b">
+        <div className="flex items-center gap-2 border-b bg-background p-4">
           <Sheet>
             <SheetTrigger asChild>
               <Button variant="outline" size="icon" className="shrink-0">

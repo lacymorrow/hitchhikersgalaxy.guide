@@ -9,12 +9,12 @@ import { cn } from "@/lib/utils";
 import { getPayloadContent } from "@/lib/utils/get-payload-content";
 import type { Faq } from "@/payload-types";
 
-type StaticFaq = {
+interface StaticFaq {
   id?: string;
   question: string;
   answer: unknown;
   category: string;
-};
+}
 
 type FaqType = Faq | StaticFaq;
 

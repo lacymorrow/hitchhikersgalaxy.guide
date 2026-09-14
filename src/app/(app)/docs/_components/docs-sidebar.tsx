@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import * as React from "react";
 import {
   Accordion,
   AccordionContent,
@@ -43,7 +42,7 @@ export function DocsSidebar({ className, navigation }: DocsSidebarProps) {
                         "flex w-full items-center rounded-md px-2 py-1.5 text-sm transition-colors",
                         "hover:bg-accent hover:text-accent-foreground",
                         pathname === item.href
-                          ? "font-medium text-foreground bg-accent"
+                          ? "bg-accent font-medium text-foreground"
                           : "text-foreground/60"
                       )}
                     >

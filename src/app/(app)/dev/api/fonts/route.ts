@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { GOOGLE_FONTS, type FontCategory } from "@/config/fonts";
+import { type FontCategory, GOOGLE_FONTS } from "@/config/fonts";
 import { env } from "@/env";
 
 interface GoogleFontApiItem {
@@ -25,25 +25,55 @@ export interface FontWithCategory {
 
 const FALLBACK_STACKS: Record<string, string> = {
   "sans-serif": [
-    "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont",
-    '"Segoe UI"', "Roboto", '"Helvetica Neue"', "Arial", '"Noto Sans"', "sans-serif",
-    '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"',
+    "ui-sans-serif",
+    "system-ui",
+    "-apple-system",
+    "BlinkMacSystemFont",
+    '"Segoe UI"',
+    "Roboto",
+    '"Helvetica Neue"',
+    "Arial",
+    '"Noto Sans"',
+    "sans-serif",
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+    '"Noto Color Emoji"',
   ].join(", "),
   serif: [
-    "ui-serif", "Georgia", "Cambria", '"Times New Roman"', "Times", "serif",
-    '"Apple Color Emoji"', '"Segoe UI Emoji"', '"Segoe UI Symbol"', '"Noto Color Emoji"',
+    "ui-serif",
+    "Georgia",
+    "Cambria",
+    '"Times New Roman"',
+    "Times",
+    "serif",
+    '"Apple Color Emoji"',
+    '"Segoe UI Emoji"',
+    '"Segoe UI Symbol"',
+    '"Noto Color Emoji"',
   ].join(", "),
   monospace: [
-    "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas",
-    '"Liberation Mono"', '"Courier New"', "monospace",
+    "ui-monospace",
+    "SFMono-Regular",
+    "Menlo",
+    "Monaco",
+    "Consolas",
+    '"Liberation Mono"',
+    '"Courier New"',
+    "monospace",
   ].join(", "),
   display: [
-    "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont",
-    '"Segoe UI"', "Roboto", '"Helvetica Neue"', "Arial", "sans-serif",
+    "ui-sans-serif",
+    "system-ui",
+    "-apple-system",
+    "BlinkMacSystemFont",
+    '"Segoe UI"',
+    "Roboto",
+    '"Helvetica Neue"',
+    "Arial",
+    "sans-serif",
   ].join(", "),
-  handwriting: [
-    "cursive", "ui-sans-serif", "system-ui", "sans-serif",
-  ].join(", "),
+  handwriting: ["cursive", "ui-sans-serif", "system-ui", "sans-serif"].join(", "),
 };
 
 const DEFAULT_FALLBACK = FALLBACK_STACKS["sans-serif"];
@@ -86,8 +116,8 @@ export async function GET(request: NextRequest) {
   const apiKey = env.GOOGLE_FONTS_API_KEY;
   const searchParams = request.nextUrl.searchParams;
   const searchQuery = searchParams.get("search")?.trim().toLowerCase();
-  const page = Number.parseInt(searchParams.get("page") || "1", 10);
-  const limit = Number.parseInt(searchParams.get("limit") || String(BROWSE_PAGE_LIMIT), 10);
+  const page = Number.parseInt(searchParams.get("page") ?? "1", 10);
+  const limit = Number.parseInt(searchParams.get("limit") ?? String(BROWSE_PAGE_LIMIT), 10);
 
   if (!apiKey) {
     console.warn(

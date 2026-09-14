@@ -28,44 +28,44 @@ NEXT_PUBLIC_FEATURE_HAPTICS_ENABLED=false
 
 ## Components with Haptics
 
-| Component | Pattern | Trigger | Method |
-|-----------|---------|---------|--------|
-| **Button** | `light` | click | `data-haptic` |
-| **Button** (destructive) | `heavy` | click | `data-haptic` |
-| **Switch** | `medium` | toggle | `haptic()` |
-| **Checkbox** | `selection` | check/uncheck | `haptic()` |
-| **Toggle** | `medium` | press | `haptic()` |
-| **Tabs** | `selection` | tab switch | `haptic()` |
-| **Accordion** | `selection` | expand/collapse | `haptic()` |
-| **Dialog** | `soft` open / `light` close | open/close | `haptic()` |
-| **Sheet** | `soft` open / `light` close | open/close | `haptic()` |
-| **Drawer** | `soft` open / `light` close | open/close | `haptic()` |
-| **AlertDialog Action** | `heavy` | confirm | `haptic()` |
-| **AlertDialog Cancel** | `light` | cancel | `haptic()` |
-| **Select** | `selection` | value change | `haptic()` |
-| **Slider** | `light` | value commit | `haptic()` |
-| **Dropdown Menu Item** | `selection` | select item | `haptic()` |
-| **Copy Button** | `success` | copy action | `haptic()` |
-| **Share (copy link)** | `success` | copy action | `haptic()` |
-| **Toast** | `success` / `error` (destructive) | show | `haptic()` |
+| Component                | Pattern                           | Trigger         | Method        |
+| ------------------------ | --------------------------------- | --------------- | ------------- |
+| **Button**               | `light`                           | click           | `data-haptic` |
+| **Button** (destructive) | `heavy`                           | click           | `data-haptic` |
+| **Switch**               | `medium`                          | toggle          | `haptic()`    |
+| **Checkbox**             | `selection`                       | check/uncheck   | `haptic()`    |
+| **Toggle**               | `medium`                          | press           | `haptic()`    |
+| **Tabs**                 | `selection`                       | tab switch      | `haptic()`    |
+| **Accordion**            | `selection`                       | expand/collapse | `haptic()`    |
+| **Dialog**               | `soft` open / `light` close       | open/close      | `haptic()`    |
+| **Sheet**                | `soft` open / `light` close       | open/close      | `haptic()`    |
+| **Drawer**               | `soft` open / `light` close       | open/close      | `haptic()`    |
+| **AlertDialog Action**   | `heavy`                           | confirm         | `haptic()`    |
+| **AlertDialog Cancel**   | `light`                           | cancel          | `haptic()`    |
+| **Select**               | `selection`                       | value change    | `haptic()`    |
+| **Slider**               | `light`                           | value commit    | `haptic()`    |
+| **Dropdown Menu Item**   | `selection`                       | select item     | `haptic()`    |
+| **Copy Button**          | `success`                         | copy action     | `haptic()`    |
+| **Share (copy link)**    | `success`                         | copy action     | `haptic()`    |
+| **Toast**                | `success` / `error` (destructive) | show            | `haptic()`    |
 
 ## Available Patterns
 
 All patterns map to [web-haptics presets](https://haptics.lochie.me), which match iOS `UIFeedbackGenerator` categories:
 
-| Pattern | Feel | Use Case |
-|---------|------|----------|
-| `light` | Light tap | General button presses |
-| `medium` | Medium pulse | Switches, toggles |
-| `heavy` | Heavy thud | Destructive/confirm actions |
-| `success` | Double-pulse | Copy, save, success states |
-| `warning` | Warning burst | Caution feedback |
-| `error` | Error buzz | Error states |
+| Pattern     | Feel           | Use Case                     |
+| ----------- | -------------- | ---------------------------- |
+| `light`     | Light tap      | General button presses       |
+| `medium`    | Medium pulse   | Switches, toggles            |
+| `heavy`     | Heavy thud     | Destructive/confirm actions  |
+| `success`   | Double-pulse   | Copy, save, success states   |
+| `warning`   | Warning burst  | Caution feedback             |
+| `error`     | Error buzz     | Error states                 |
 | `selection` | Selection tick | Tabs, radio, checkbox, menus |
-| `soft` | Cushioned tap | Opening overlays |
-| `rigid` | Crisp tap | Hard UI feedback |
-| `nudge` | Reminder nudge | Subtle attention |
-| `buzz` | Long buzz | Extended feedback |
+| `soft`      | Cushioned tap  | Opening overlays             |
+| `rigid`     | Crisp tap      | Hard UI feedback             |
+| `nudge`     | Reminder nudge | Subtle attention             |
+| `buzz`      | Long buzz      | Extended feedback            |
 
 ## Usage
 
@@ -148,11 +148,11 @@ Components use either:
 
 ### Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/hooks/use-haptics.ts` | Hook, imperative `haptic()` function, types |
+| File                                            | Purpose                                          |
+| ----------------------------------------------- | ------------------------------------------------ |
+| `src/hooks/use-haptics.ts`                      | Hook, imperative `haptic()` function, types      |
 | `src/components/providers/haptics-provider.tsx` | Singleton mount + `data-haptic` event delegation |
-| `src/components/providers/kit-provider.tsx` | Wraps app with `HapticsProvider` |
+| `src/components/providers/kit-provider.tsx`     | Wraps app with `HapticsProvider`                 |
 
 ### Dependencies
 
@@ -161,21 +161,21 @@ Components use either:
 
 ## Browser Support
 
-| Platform | Method | Status |
-|----------|--------|--------|
-| Android Chrome | `navigator.vibrate()` | ✅ Full support |
+| Platform         | Method                                 | Status                    |
+| ---------------- | -------------------------------------- | ------------------------- |
+| Android Chrome   | `navigator.vibrate()`                  | ✅ Full support           |
 | iOS Safari 17.5+ | `<input type="checkbox" switch>` trick | ✅ Works (no permissions) |
-| Desktop browsers | Audio debug mode | 🔊 Audible feedback only |
-| Unsupported | — | Silent no-op |
+| Desktop browsers | Audio debug mode                       | 🔊 Audible feedback only  |
+| Unsupported      | —                                      | Silent no-op              |
 
 ## Button API
 
 The `Button` component exposes two haptics-related props:
 
-| Prop | Type | Default | Description |
-|------|------|---------|-------------|
-| `noHaptics` | `boolean` | `false` | Disable haptic feedback on this button |
-| `hapticPattern` | `HapticPattern` | `"light"` | Which haptic pattern to fire on click |
+| Prop            | Type            | Default   | Description                            |
+| --------------- | --------------- | --------- | -------------------------------------- |
+| `noHaptics`     | `boolean`       | `false`   | Disable haptic feedback on this button |
+| `hapticPattern` | `HapticPattern` | `"light"` | Which haptic pattern to fire on click  |
 
 ## Adding Haptics to New Components
 

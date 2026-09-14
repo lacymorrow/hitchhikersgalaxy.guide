@@ -1,0 +1,64 @@
+---
+title: "ShipKit v2.1.2: Claude Code Workflows, Theme Control, and Linear Integration"
+publishedAt: 2025-09-23
+description: "ShipKit v2.1.2 ships Claude Code GitHub workflows, runtime theme control, deeper Linear integration, and a stack of bug fixes for the Next.js starter kit."
+categories: ["Releases", "ShipKit", "Development"]
+badge: "v2.1.2"
+authors:
+  - name: "Lacy Morrow"
+    avatar: "https://avatars.githubusercontent.com/u/1311301?v=4"
+---
+
+ShipKit v2.1.2 is out. This release is less about big feature swings and more about plumbing that pays off every day you're building with the kit. We wired up Claude Code into the GitHub workflow, gave you real runtime control over themes, deepened the Linear integration, and cleared out a backlog of paper cuts that were making the dev loop feel rougher than it needed to.
+
+If you're new here, ShipKit is the Next.js starter kit built for working alongside Cursor, v0, and Shadcn/UI. The whole point is that you can stop yak-shaving auth, payments, and content infrastructure and start shipping the thing you actually wanted to build. v2.1.2 leans hard into that goal.
+
+![Developer working on a laptop](https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=300&fit=crop)
+
+## Claude Code lands in your GitHub workflow
+
+The headline change is the new Claude Code GitHub workflow. Drop the workflow into `.github/workflows/` and you can mention Claude in an issue or PR and have it read context, propose patches, and open commits without leaving the repo. For ShipKit projects, this matters because the kit already has a lot of moving parts: auth providers, payment flows, MDX content, and the Shadcn component layer. Letting an agent reason over the whole repo when you ask "why is the checkout redirect bouncing on Safari" is a real upgrade over copy-pasting files into a chat window.
+
+The setup is intentionally boring. Add the `ANTHROPIC_API_KEY` secret, commit the workflow, and you're done. No new service to host, no extra dashboard. It runs in GitHub Actions like every other CI step you already trust. If you want to scope it down, the workflow honors path filters and label triggers so you can keep it on a tight leash while you build trust with it.
+
+A small note on cost discipline: the workflow uses the standard Anthropic API, so the same caching and tool-use patterns you'd use in your own code apply here. If you're going to run it on big monorepos, look at scoping it to specific labels rather than every PR comment.
+
+## Pay2 and the payments cleanup
+
+The "Pay2" PR is the second pass on payments, and it tightens up the surface area between Stripe, LemonSqueezy, and Polar. The previous flow worked but had a few rough spots around webhook idempotency and entitlement reads after upgrades. v2.1.2 normalizes those reads through a single entitlement helper so your gated routes don't have to care which provider issued the subscription.
+
+Concretely, if you were checking `user.subscription.status === 'active'` in three different places with three slightly different shapes, you can now check entitlements through one helper and get a consistent answer. This also makes it easier to swap providers later, which matters more than people think. Pricing pages get rewritten more often than auth providers do.
+
+## Theme control that actually behaves
+
+The "Control themes" PR is the kind of fix that sounds small until you've spent an hour fighting it. The theme system now exposes runtime controls that respect user preference, system preference, and forced overrides without the flash-of-wrong-theme moment that plagues a lot of Next.js apps. If you've ever shipped a dark mode toggle and watched it briefly render light on first paint, you know exactly what got fixed here.
+
+The implementation leans on the App Router's streaming behavior to set the theme class before hydration. That means no `suppressHydrationWarning` hacks scattered across your layout, and no `useEffect` flicker. You also get programmatic control: forcing a theme for a specific route (think marketing pages that should always be dark) is a one-liner now instead of a context-provider gymnastics routine.
+
+![Code on a screen at night](https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=300&fit=crop)
+
+## Linear integration, round two
+
+PR #86 is "Feat linear2," the second iteration of the Linear integration. The first pass let you sync issues; this one closes the loop. You can now create Linear issues directly from feedback widgets in your shipped app, attach repro context (browser, route, user ID if available), and have them land in a triage view in Linear without anybody copy-pasting anything.
+
+The reason this matters for a starter kit specifically is that most indie projects skip bug triage entirely until something breaks loudly. A built-in path from "user clicks the report button" to "ticket in your backlog with reproduction steps" is the difference between fixing things and forgetting them. The integration uses Linear's GraphQL API and respects your team's workflow states, so issues land wherever you've configured your inbox.
+
+If you don't use Linear, the same pattern works as a reference for wiring any issue tracker. The webhook handlers and event shapes are generic enough that swapping in GitHub Issues or Jira takes an afternoon.
+
+## Bug fixes worth calling out
+
+Three fix PRs landed in this release: #85, #12, and #92. Together they handle MDX rendering edge cases in the blog system (the same one rendering this post), a stale-cache issue when blog posts were updated without a full rebuild, and a redirect bug that affected users coming back from OAuth providers with non-default callback URLs.
+
+The OAuth fix is the one most teams will feel. If you'd configured a custom callback URL for Google or GitHub auth and a user signed in from a deep link, you could end up bounced to `/` instead of the intended destination. v2.1.2 preserves the original URL through the entire OAuth dance, including the Next.js middleware and the auth callback route. Nothing about your config needs to change; just pull the update.
+
+PRs #87 and #93 bring dev-environment improvements: faster turbopack starts, fewer warnings on first boot, and a cleaner experience when your `.env` is missing keys. The kit will now tell you which keys are missing for which features rather than failing silently, which makes onboarding new contributors substantially less painful.
+
+## Blog system and intro polish
+
+A few PRs in this batch cleaned up the content infrastructure. The blog system now handles longer posts more gracefully, the intro/landing flow has tighter copy and fewer layout shifts, and the MDX pipeline is more forgiving with custom components. If you've been using ShipKit to publish technical content, you'll notice your build times drop and your reading experience feels closer to what you'd get from a hand-built blog.
+
+## Upgrading
+
+Pull `v2.1.2`, run your package manager's install, and check the changelog for any env vars you might want to add (specifically `ANTHROPIC_API_KEY` if you want the Claude Code workflow). There are no breaking changes in this release, so the upgrade should be a noop for most apps. If you've forked the theme system, double-check that you're not overriding the new runtime helpers; otherwise it's a clean pull.
+
+The full diff lives at https://github.com/lacymorrow/shipkit/commits/v2.1.2 if you want to see exactly what moved. Next release will focus on the integrations layer, but for now, v2.1.2 should make day-to-day work on ShipKit projects feel noticeably smoother.

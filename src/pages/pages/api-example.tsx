@@ -31,8 +31,8 @@ export default function ApiExample() {
 
   return (
     <PagesRouterLayout>
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">API Route Example</h1>
+      <div className="mx-auto max-w-4xl">
+        <h1 className="mb-8 text-4xl font-bold">API Route Example</h1>
         <div className="space-y-6">
           <Card>
             <CardHeader>
@@ -47,7 +47,7 @@ export default function ApiExample() {
               </Button>
 
               {response && (
-                <div className="mt-4 p-4 bg-muted rounded-lg">
+                <div className="mt-4 rounded-lg bg-muted p-4">
                   <pre className="whitespace-pre-wrap">
                     <code>{JSON.stringify(response, null, 2)}</code>
                   </pre>
@@ -62,7 +62,7 @@ export default function ApiExample() {
               <CardDescription>Here&apos;s how the API route is implemented</CardDescription>
             </CardHeader>
             <CardContent>
-              <div className="p-4 bg-muted rounded-lg">
+              <div className="rounded-lg bg-muted p-4">
                 <pre className="whitespace-pre-wrap">
                   <code>
                     {`

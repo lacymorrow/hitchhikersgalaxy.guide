@@ -1,5 +1,4 @@
 import Image from "next/image";
-import type React from "react";
 import { Link } from "@/components/primitives/link";
 import { authorUtils, type BlogAuthor } from "@/config/blog-authors";
 
@@ -24,7 +23,8 @@ export const BlogAuthors = ({ authors }: BlogAuthorsProps) => {
   if (!authors || authors.length === 0) return null;
 
   return (
-    <div className="flex -space-x-2 relative z-0 mt-6" role="group" aria-label="Article authors">
+    // biome-ignore lint/a11y/useSemanticElements: presentational author group with explicit aria role
+    <div className="relative z-0 mt-6 flex -space-x-2" role="group" aria-label="Article authors">
       {authors.map((author, i) => {
         const isNewAuthor = isBlogAuthor(author);
         const displayName = isNewAuthor ? authorUtils.getDisplayName(author) : author.name;
@@ -48,7 +48,7 @@ export const BlogAuthors = ({ authors }: BlogAuthorsProps) => {
             <Link
               key={isNewAuthor ? author.id : `legacy-${i}`}
               href={authorUrl}
-              className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-full"
+              className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
               aria-label={`View ${displayName}'s profile`}
             >
               {imageElement}

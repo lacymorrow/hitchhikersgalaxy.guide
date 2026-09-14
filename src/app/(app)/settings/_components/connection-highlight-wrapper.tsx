@@ -35,6 +35,7 @@ export const ConnectionHighlightWrapper = ({
       });
 
       // Trigger highlight via state so React controls the style
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- triggered by external URL search params + scroll side effect
       setHighlighted(true);
 
       // Remove highlight and clean up URL after animation
@@ -61,7 +62,7 @@ export const ConnectionHighlightWrapper = ({
       className={cn(
         "rounded-lg transition-all duration-700",
         highlighted &&
-          "ring-2 ring-blue-500 shadow-[0_0_20px_rgba(59,130,246,0.5),0_0_40px_rgba(59,130,246,0.25)]"
+          "shadow-[0_0_20px_rgba(59,130,246,0.5),0_0_40px_rgba(59,130,246,0.25)] ring-2 ring-blue-500"
       )}
     >
       {children}

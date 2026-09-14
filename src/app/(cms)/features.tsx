@@ -59,7 +59,7 @@ export const Features = ({ block, className }: FeaturesProps) => {
         {layout === "list" && (
           <div className="space-y-6">
             {features.map((feature) => (
-              <div key={feature.id} className="max-w-3xl mx-auto">
+              <div key={feature.id} className="mx-auto max-w-3xl">
                 {renderFeature(feature)}
               </div>
             ))}
@@ -67,7 +67,7 @@ export const Features = ({ block, className }: FeaturesProps) => {
         )}
 
         {layout === "carousel" && (
-          <Carousel className="w-full max-w-5xl mx-auto">
+          <Carousel className="mx-auto w-full max-w-5xl">
             <CarouselContent>
               {features.map((feature) => (
                 <CarouselItem key={feature.id} className="md:basis-1/2 lg:basis-1/3">

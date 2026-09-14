@@ -1,6 +1,6 @@
 import { eq } from "drizzle-orm";
 import { logger } from "@/lib/logger";
-import { db, schema } from "@/server/db";
+import { db } from "@/server/db";
 import { users } from "@/server/db/schema";
 import {
   type CheckoutOptions,
@@ -118,7 +118,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
         .from(users)
         .where(eq(users.id, userId))
         .limit(1)
-        .then((rows) => rows[0] || null);
+        .then((rows) => rows[0] ?? null);
 
       return user?.email ?? null;
     } catch (error) {

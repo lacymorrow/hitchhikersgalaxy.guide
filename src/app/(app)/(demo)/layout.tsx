@@ -1,6 +1,6 @@
+import { LayoutDashboard } from "lucide-react";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { LayoutDashboard } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { constructMetadata } from "@/config/metadata";
 import { routes } from "@/config/routes";

@@ -54,7 +54,7 @@ function getStatusIcon(status: string) {
     case "timeout":
       return <AlertCircle className="h-4 w-4 text-orange-500" />;
     case "deploying":
-      return <Clock className="h-4 w-4 text-blue-500 animate-spin" />;
+      return <Clock className="h-4 w-4 animate-spin text-blue-500" />;
     default:
       return null;
   }
@@ -96,10 +96,7 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
     staleTime: 1000, // Consider data stale after 1 second
   });
 
-  const hasActiveDeployments = useMemo(
-    () => deployments.some(isActivelyDeploying),
-    [deployments]
-  );
+  const hasActiveDeployments = useMemo(() => deployments.some(isActivelyDeploying), [deployments]);
 
   // Detect status changes and show toasts
   useEffect(() => {
@@ -114,12 +111,12 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
           toast.success(`Deployment "${deployment.projectName}" completed successfully!`);
         } else if (deployment.status === "failed") {
           toast.error(
-            `Deployment "${deployment.projectName}" failed: ${deployment.error || "Unknown error"}`,
+            `Deployment "${deployment.projectName}" failed: ${deployment.error ?? "Unknown error"}`,
             { duration: 10000 }
           );
         } else if (deployment.status === "timeout") {
           toast.error(
-            `Deployment "${deployment.projectName}" timed out: ${deployment.error || "No response received"}`,
+            `Deployment "${deployment.projectName}" timed out: ${deployment.error ?? "No response received"}`,
             { duration: 10000 }
           );
         }
@@ -158,7 +155,7 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
         cell: ({ row }) => (
           <Badge
             variant={getStatusBadgeVariant(row.original.status)}
-            className="flex items-center gap-1 w-fit"
+            className="flex w-fit items-center gap-1"
           >
             {getStatusIcon(row.original.status)}
             <span className="capitalize">{row.original.status}</span>
@@ -203,7 +200,7 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
                 href={row.original.vercelProjectUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 title="View on Vercel"
               >
                 <Icons.vercel className="h-4 w-4" />
@@ -214,7 +211,7 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
                 href={row.original.githubRepoUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 title="View on GitHub"
               >
                 <Icons.github className="h-4 w-4" />
@@ -225,7 +222,7 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
                 href={row.original.vercelDeploymentUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                className="rounded-md p-1.5 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                 title="View deployment"
               >
                 <Link2Icon className="h-4 w-4" />
@@ -245,10 +242,10 @@ export function DeploymentsList({ deployments: initialDeployments }: Deployments
   return (
     <>
       {deployments.length === 0 ? (
-        <div className="text-center py-12 bg-muted/50 rounded-lg">
-          <Rocket className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">No deployments yet</h3>
-          <p className="text-muted-foreground mb-6">
+        <div className="rounded-lg bg-muted/50 py-12 text-center">
+          <Rocket className="mx-auto mb-4 h-12 w-12 text-muted-foreground" />
+          <h3 className="mb-2 text-lg font-semibold">No deployments yet</h3>
+          <p className="mb-6 text-muted-foreground">
             Deploy your first {siteConfig.title} instance to get started
           </p>
           <DashboardVercelDeploy />

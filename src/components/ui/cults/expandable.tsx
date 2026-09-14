@@ -290,6 +290,7 @@ const ExpandableContent = React.forwardRef<
                 >
                   {React.Children.map(children as React.ReactNode, (child, index) => (
                     <motion.div
+                      // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
                       key={index}
                       variants={{
                         hidden: { opacity: 0, y: 20 },
@@ -422,6 +423,8 @@ const ExpandableTrigger = React.forwardRef<HTMLDivElement, React.HTMLAttributes<
   ({ children, ...props }, ref) => {
     const { toggleExpand } = useExpandable();
     return (
+      // biome-ignore lint/a11y/noStaticElementInteractions: decorative/UI hover interaction, not primary action
+      // biome-ignore lint/a11y/useKeyWithClickEvents: decorative click target, no keyboard handler required
       <div ref={ref} onClick={toggleExpand} className="cursor-pointer" {...props}>
         {children}
       </div>

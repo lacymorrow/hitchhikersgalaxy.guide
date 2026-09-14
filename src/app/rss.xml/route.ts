@@ -43,7 +43,7 @@ export async function GET(_req: NextRequest): Promise<Response> {
   }
   const posts = await getBlogPosts();
   const sorted = posts
-    .filter((p) => p.publishedAt && !isNaN(new Date(p.publishedAt).getTime()))
+    .filter((p) => p.publishedAt && !Number.isNaN(new Date(p.publishedAt).getTime()))
     .sort((a, b) => new Date(b.publishedAt!).getTime() - new Date(a.publishedAt!).getTime());
 
   const lastBuildDate = sorted[0]?.publishedAt
@@ -59,7 +59,7 @@ export async function GET(_req: NextRequest): Promise<Response> {
       const link = escapeXml(`${siteConfig.url}${routes.blog}/${post.slug}`);
       const title = escapeXml(sanitizeText(post.title));
       const description = escapeCdata(
-        sanitizeText(post.description || post.content?.slice(0, 280) || "")
+        sanitizeText(post.description ?? (post.content?.slice(0, 280) || ""))
       );
       const pubDate = post.publishedAt ? new Date(post.publishedAt).toUTCString() : lastBuildDate;
       const guid = link;

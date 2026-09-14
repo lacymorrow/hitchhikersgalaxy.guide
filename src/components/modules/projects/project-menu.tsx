@@ -55,13 +55,13 @@ export const ProjectMenu = ({ project, teamId, deleteAction }: ProjectMenuProps)
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <SidebarMenuAction className="h-6 w-6 rounded-md hover:bg-primary/5 hover:text-accent-foreground flex items-center justify-center">
+        <SidebarMenuAction className="flex h-6 w-6 items-center justify-center rounded-md hover:bg-primary/5 hover:text-accent-foreground">
           <DotsHorizontalIcon className="h-4 w-4" />
           <span className="sr-only">More</span>
         </SidebarMenuAction>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-48" align="start">
-        <ProjectDialog variant="edit" project={project} userId={session?.user?.id || ""}>
+        <ProjectDialog variant="edit" project={project} userId={session?.user?.id ?? ""}>
           <DropdownMenuItem className="flex items-center gap-2 px-2 py-1.5">
             <Pencil2Icon className="h-4 w-4" />
             <span className="text-sm">Rename Project</span>

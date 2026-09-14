@@ -6,7 +6,6 @@ import {
   Database,
   FileText,
   type LucideIcon,
-  Rocket,
   Shield,
   Zap,
 } from "lucide-react";
@@ -86,7 +85,7 @@ export function NextStepsSection() {
         </p>
       </div>
 
-      <Card className="bg-gradient-to-r from-primary/5 to-primary/10 border-primary/20">
+      <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
@@ -108,26 +107,26 @@ export function NextStepsSection() {
       </Card>
 
       <div className="space-y-4">
-        {nextSteps.map((step, index) => (
+        {nextSteps.map((step, _index) => (
           <Card
             key={step.title}
             className={`transition-all ${
               step.isComplete
-                ? "bg-green-50 border-green-200 dark:bg-green-950/20 dark:border-green-800"
+                ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20"
                 : "hover:shadow-md"
             }`}
           >
             <CardHeader className="pb-3">
               <div className="flex items-start gap-4">
-                <div className="flex-shrink-0 mt-1">
+                <div className="mt-1 flex-shrink-0">
                   {step.isComplete ? (
                     <CheckCircle className="h-5 w-5 text-green-500" />
                   ) : (
                     <Circle className="h-5 w-5 text-muted-foreground" />
                   )}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-2">
+                <div className="min-w-0 flex-1">
+                  <div className="mb-2 flex items-center gap-2">
                     <step.icon />
                     <CardTitle className="text-base">{step.title}</CardTitle>
                     {step.isOptional && (
@@ -145,7 +144,7 @@ export function NextStepsSection() {
                   {step.isComplete ? (
                     <Badge
                       variant="outline"
-                      className="bg-green-50 text-green-700 border-green-200"
+                      className="border-green-200 bg-green-50 text-green-700"
                     >
                       Complete
                     </Badge>
@@ -165,11 +164,11 @@ export function NextStepsSection() {
       </div>
 
       {completedSteps === totalSteps && (
-        <Card className="bg-gradient-to-r from-green-50 to-green-100 border-green-200 dark:from-green-950/20 dark:to-green-900/20 dark:border-green-800">
+        <Card className="border-green-200 bg-gradient-to-r from-green-50 to-green-100 dark:border-green-800 dark:from-green-950/20 dark:to-green-900/20">
           <CardContent className="pt-6">
             <div className="text-center">
-              <CheckCircle className="h-12 w-12 text-green-500 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-green-800 dark:text-green-200 mb-2">
+              <CheckCircle className="mx-auto mb-4 h-12 w-12 text-green-500" />
+              <h3 className="mb-2 text-xl font-semibold text-green-800 dark:text-green-200">
                 🎉 Congratulations! You&apos;re all set up!
               </h3>
             </div>

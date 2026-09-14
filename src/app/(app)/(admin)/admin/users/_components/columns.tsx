@@ -47,11 +47,11 @@ export const columns: ColumnDef<UserData>[] = [
       return (
         <Avatar className="size-8">
           <AvatarImage
-            src={userImage || ""}
+            src={userImage ?? ""}
             alt={userName ? `${userName}'s avatar` : "User avatar"}
             draggable={false}
           />
-          <AvatarFallback>{userName?.[0]?.toUpperCase() || "?"}</AvatarFallback>
+          <AvatarFallback>{userName?.[0]?.toUpperCase() ?? "?"}</AvatarFallback>
         </Avatar>
       );
     },
@@ -78,7 +78,7 @@ export const columns: ColumnDef<UserData>[] = [
       const hasPaid = Boolean(row.getValue("hasPaid"));
 
       return (
-        <div className="flex flex-col gap-1 items-start justify-center">
+        <div className="flex flex-col items-start justify-center gap-1">
           <Badge variant={hasPaid ? "default" : "secondary"}>{hasPaid ? "Paid" : "Not Paid"}</Badge>
         </div>
       );
@@ -103,7 +103,7 @@ export const columns: ColumnDef<UserData>[] = [
       }
 
       return (
-        <div className="flex flex-col gap-1 items-start justify-center">
+        <div className="flex flex-col items-start justify-center gap-1">
           <Badge variant={variant}>{status}</Badge>
         </div>
       );

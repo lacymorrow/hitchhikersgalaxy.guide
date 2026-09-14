@@ -179,7 +179,6 @@ const Carousel = forwardRef<
       >
         <div
           {...props}
-          tabIndex={0}
           ref={ref}
           onKeyDownCapture={handleKeyDown}
           className={cn("relative grid w-full gap-2 focus:outline-none", className)}
@@ -264,6 +263,8 @@ const SliderThumbItem = forwardRef<
   const { activeIndex, onThumbClick, orientation } = useCarousel();
   const isSlideActive = activeIndex === index;
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: decorative/UI hover interaction, not primary action
+    // biome-ignore lint/a11y/useKeyWithClickEvents: decorative click target, no keyboard handler required
     <div
       {...props}
       ref={ref}

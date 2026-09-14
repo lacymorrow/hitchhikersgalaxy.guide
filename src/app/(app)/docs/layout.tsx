@@ -10,8 +10,8 @@ interface DocsLayoutProps {
   children: ReactNode;
 }
 
-export default async function DocsLayout({ children }: DocsLayoutProps) {
-  const navigation = await getDocsNavigation();
+export default function DocsLayout({ children }: DocsLayoutProps) {
+  const navigation = getDocsNavigation();
   const navLinks = [
     { href: routes.docs, label: "Docs" },
     { href: routes.features, label: "Features" },
@@ -32,7 +32,7 @@ export default async function DocsLayout({ children }: DocsLayoutProps) {
         </aside>
 
         {/* Main content */}
-        <main className="relative py-6 lg:py-8 container mx-auto w-full min-w-0">
+        <main className="container relative mx-auto w-full min-w-0 py-6 lg:py-8">
           {/* Content */}
           {children}
         </main>

@@ -19,7 +19,7 @@ interface CountdownProps extends React.HTMLAttributes<HTMLDivElement> {
  * ```
  */
 export const Countdown = ({
-  targetDate = new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30),
+  targetDate = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
   showIcon = true,
   variant = "default",
   className,
@@ -41,7 +41,7 @@ export const Countdown = ({
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium",
+        "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium",
         variantStyles[variant],
         className
       )}

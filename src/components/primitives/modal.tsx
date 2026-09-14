@@ -106,7 +106,7 @@ export function Modal({
 
   useEffect(() => {
     return () => {
-      const debounced = debouncedRouteBack as typeof debouncedRouteBack & { cancel?: () => void };
+      const debounced = debouncedRouteBack;
       if (typeof debounced.cancel === "function") {
         debounced.cancel();
       }

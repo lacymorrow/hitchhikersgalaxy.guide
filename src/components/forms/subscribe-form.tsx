@@ -33,7 +33,7 @@ export const SubscribeForm: React.FC = () => {
         setStatus("error");
         toast({
           title: "Subscription failed",
-          description: result.error || "Failed to subscribe. Please try again.",
+          description: result.error ?? "Failed to subscribe. Please try again.",
           variant: "destructive",
         });
       }

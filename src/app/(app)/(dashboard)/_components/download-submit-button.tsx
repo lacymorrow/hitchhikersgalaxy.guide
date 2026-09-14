@@ -11,6 +11,7 @@ export const DownloadSubmitButton = ({ children, ...props }: ButtonProps) => {
 
   useEffect(() => {
     if (!pending) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing with external useFormStatus state
       setTimeoutElapsed(false);
       return;
     }

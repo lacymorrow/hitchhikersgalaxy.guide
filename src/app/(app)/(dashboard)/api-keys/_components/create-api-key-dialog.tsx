@@ -77,7 +77,7 @@ export function CreateApiKeyDialog({ onSubmit, userId }: CreateApiKeyDialogProps
         setCreatedKey(result.key);
         setShowKeyDialog(true);
       }
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: "Error",
         description: "Failed to create API key. Please try again.",
@@ -182,13 +182,13 @@ export function CreateApiKeyDialog({ onSubmit, userId }: CreateApiKeyDialogProps
           <div className="py-4">
             <Alert className="mb-4">
               <AlertDescription>
-                Make sure to copy your API key now. You won't be able to see it again.
+                Make sure to copy your API key now. You won&apos;t be able to see it again.
               </AlertDescription>
             </Alert>
 
-            <div className="flex items-center space-x-2 bg-muted p-3 rounded-md">
-              <code className="flex-1 font-mono text-sm break-all">{createdKey}</code>
-              <CopyButton value={createdKey || ""} />
+            <div className="flex items-center space-x-2 rounded-md bg-muted p-3">
+              <code className="flex-1 break-all font-mono text-sm">{createdKey}</code>
+              <CopyButton value={createdKey ?? ""} />
             </div>
           </div>
 

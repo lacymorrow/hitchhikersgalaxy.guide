@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default function BrowserPage() {
   return (
     <div className="container py-10">
-      <h1 className="text-4xl font-bold mb-8">Bones Project Explorer</h1>
+      <h1 className="mb-8 text-4xl font-bold">Bones Project Explorer</h1>
       <Suspense fallback={<SuspenseFallback />}>
         <FileBrowser />
       </Suspense>

@@ -1,7 +1,6 @@
 "use client";
 
 import { Builder } from "@builder.io/react";
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 
 interface CTAButton {
@@ -42,24 +41,24 @@ export const CTA = ({
       )}
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center">
+      <div className="container relative z-10 mx-auto px-4">
+        <div className="mx-auto max-w-3xl text-center">
           <h2
-            className={`text-3xl md:text-4xl font-bold mb-6 ${
+            className={`mb-6 text-3xl font-bold md:text-4xl ${
               backgroundImage ? "text-white" : "text-gray-900"
             }`}
           >
             {title}
           </h2>
-          <p className={`text-lg mb-8 ${backgroundImage ? "text-gray-200" : "text-gray-600"}`}>
+          <p className={`mb-8 text-lg ${backgroundImage ? "text-gray-200" : "text-gray-600"}`}>
             {description}
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button asChild variant={primaryButton.variant || "default"} size="lg">
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
+            <Button asChild variant={primaryButton.variant ?? "default"} size="lg">
               <a href={primaryButton.link}>{primaryButton.text}</a>
             </Button>
             {secondaryButton && (
-              <Button asChild variant={secondaryButton.variant || "outline"} size="lg">
+              <Button asChild variant={secondaryButton.variant ?? "outline"} size="lg">
                 <a href={secondaryButton.link}>{secondaryButton.text}</a>
               </Button>
             )}

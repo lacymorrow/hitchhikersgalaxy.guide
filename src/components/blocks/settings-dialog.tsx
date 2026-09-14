@@ -80,6 +80,7 @@ export function SettingsDialog() {
                     {data.nav.map((item) => (
                       <SidebarMenuItem key={item.name}>
                         <SidebarMenuButton asChild isActive={item.name === "Messages & media"}>
+                          {/* biome-ignore lint/a11y/useValidAnchor: placeholder anchor in demo sidebar */}
                           <a href="#">
                             <item.icon />
                             <span>{item.name}</span>
@@ -110,6 +111,7 @@ export function SettingsDialog() {
             </header>
             <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-4 pt-0">
               {Array.from({ length: 10 }).map((_, i) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
                 <div key={i} className="aspect-video max-w-3xl rounded-xl bg-muted/50" />
               ))}
             </div>

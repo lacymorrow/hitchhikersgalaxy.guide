@@ -20,7 +20,7 @@ export const DashboardHeaderHomeLink = ({ className }: DashboardHeaderHomeLinkPr
       aria-label="Dashboard home"
       className={cn(
         "flex items-center justify-center",
-        state === "expanded" ? "min-w-56 mr-2 justify-start" : "min-w-6",
+        state === "expanded" ? "mr-2 min-w-56 justify-start" : "min-w-6",
         className
       )}
     >

@@ -255,7 +255,7 @@ export function DataTable<TData, TValue>({
                           )}
                           {rowActions?.map((action) => (
                             <DropdownMenuItem key={action.label} asChild>
-                              <div className="flex items-center w-full">
+                              <div className="flex w-full items-center">
                                 <action.component item={row.original as TData} />
                               </div>
                             </DropdownMenuItem>

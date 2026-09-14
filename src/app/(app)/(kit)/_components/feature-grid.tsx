@@ -187,33 +187,31 @@ export function FeatureGrid() {
               </CardHeader>
               <CardContent className="space-y-4">
                 {feature.dependencies && feature.dependencies.length > 0 && (
-                  <>
-                    <div className="space-y-2">
-                      <span className="text-sm font-medium">Required Variables:</span>
-                      {feature.dependencies.map((dep) => (
-                        <div key={dep} className="flex items-center justify-between">
-                          <code className="text-xs bg-muted px-2 py-1 rounded">{dep}</code>
-                          <TooltipProvider>
-                            <Tooltip>
-                              <TooltipTrigger asChild>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => copyToClipboard(dep)}
-                                  className="h-6 px-2"
-                                >
-                                  <Copy className="h-3 w-3" />
-                                </Button>
-                              </TooltipTrigger>
-                              <TooltipContent>
-                                <p>Copy variable name</p>
-                              </TooltipContent>
-                            </Tooltip>
-                          </TooltipProvider>
-                        </div>
-                      ))}
-                    </div>
-                  </>
+                  <div className="space-y-2">
+                    <span className="text-sm font-medium">Required Variables:</span>
+                    {feature.dependencies.map((dep) => (
+                      <div key={dep} className="flex items-center justify-between">
+                        <code className="rounded bg-muted px-2 py-1 text-xs">{dep}</code>
+                        <TooltipProvider>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => copyToClipboard(dep)}
+                                className="h-6 px-2"
+                              >
+                                <Copy className="h-3 w-3" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                              <p>Copy variable name</p>
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </div>
+                    ))}
+                  </div>
                 )}
 
                 <Separator />

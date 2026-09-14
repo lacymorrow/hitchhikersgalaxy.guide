@@ -6,13 +6,13 @@ import {
 } from "@/components/ui/accordion";
 import { Separator } from "@/components/ui/separator";
 
-export interface AccordionItem {
+export interface AccordionListItem {
   title: string;
   content: React.ReactNode;
 }
 
 interface AccordionListProps {
-  items: AccordionItem[];
+  items: AccordionListItem[];
   accordionProps?: any; // TODO: fix type
 }
 
@@ -20,6 +20,7 @@ export const AccordionList: React.FC<AccordionListProps> = ({ items, accordionPr
   return (
     <Accordion type="single" collapsible {...accordionProps}>
       {items.map((item, index) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
         <AccordionItem key={index} value={`item-${index + 1}`} className="">
           <AccordionTrigger>{item.title}</AccordionTrigger>
           <AccordionContent>

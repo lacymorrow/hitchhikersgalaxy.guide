@@ -1,8 +1,8 @@
-import fs from "fs/promises";
+import fs from "node:fs/promises";
+import path from "node:path";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
-import path from "path";
-import { directoryCache, sanitizePath, TEMPLATE_BASE_DIR } from "../utils";
+import { directoryCache, sanitizePath } from "../utils";
 
 // Use a more specific template directory path that only includes necessary files
 // This prevents including the entire codebase in the serverless function
@@ -16,7 +16,7 @@ async function getDirectoryContents(directoryPath: string) {
     // Check cache first
     if (directoryCache.has(directoryPath)) {
       console.log(`Using cached directory listing for: ${directoryPath}`);
-      return directoryCache.get(directoryPath) || [];
+      return directoryCache.get(directoryPath) ?? [];
     }
 
     // Use the specific template directory instead of potentially the entire project
@@ -52,7 +52,7 @@ async function getDirectoryContents(directoryPath: string) {
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
-    let dirPath = searchParams.get("path") || "";
+    let dirPath = searchParams.get("path") ?? "";
 
     // Sanitize the path to prevent directory traversal attacks
     dirPath = sanitizePath(dirPath);

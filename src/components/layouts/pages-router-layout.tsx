@@ -12,12 +12,10 @@ export const PagesRouterLayout = ({
   hideFooter?: boolean;
 }) => {
   return (
-    <>
-      <ShipkitThemeProvider>
-        <div className="flex min-h-screen flex-col py-10">
-          <main className="flex-1">{children}</main>
-        </div>
-      </ShipkitThemeProvider>
-    </>
+    <ShipkitThemeProvider>
+      <div className="flex min-h-screen flex-col py-10">
+        <main className="flex-1">{children}</main>
+      </div>
+    </ShipkitThemeProvider>
   );
 };

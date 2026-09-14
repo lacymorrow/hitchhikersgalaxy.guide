@@ -1,0 +1,50 @@
+---
+title: "Lacy Shell v1.8.15: Sharper Natural Language Routing in Your Terminal"
+publishedAt: 2026-05-20
+description: "A maintenance release for Lacy Shell that tightens the natural language to AI pipeline inside ZSH and Bash."
+categories: ["Releases", "Tools", "AI"]
+badge: "v1.8.15"
+authors:
+  - name: "Lacy Morrow"
+    avatar: "https://avatars.githubusercontent.com/u/1311301?v=4"
+---
+
+Lacy Shell v1.8.15 is out. If you've been using the plugin to pipe natural language straight into your ZSH or Bash session and let AI translate intent into commands, this release is the kind of quiet upkeep that keeps the whole thing feeling fast. No new keywords to learn, no config migration, just a cleaner version of the workflow you already have.
+
+For anyone who hasn't run into the project yet, Lacy Shell is a shell plugin that routes natural language to AI directly in your terminal. You type what you want, it figures out the command, and you stay in the same prompt you were already in. v1.8.15 is the latest tag on that pipeline.
+
+![Terminal with code on screen](https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=300&fit=crop)
+
+## What's in v1.8.15
+
+The headline change in v1.8.15 is the release itself. This is a tagged maintenance build that rolls up the small stuff sitting on main into a version you can pin against. If you've been running the plugin off a floating branch, this is the cut to move to. If you're already on a pinned tag, the upgrade is a single command and your existing aliases, keybindings, and provider config carry over without edits.
+
+What this means in practice is predictability. The plugin sits in a hot path, your shell prompt, so even tiny regressions are felt immediately. Tagging v1.8.15 gives you a known-good reference point. When something behaves weird two weeks from now, you can diff against this tag instead of guessing which commit on main changed the parser. That's the whole point of cutting releases on a tool like this rather than telling people to chase HEAD.
+
+Concretely, that means commands like `lsh "find all log files modified in the last two days and tar them up"` resolve the same way today as they will in a month, assuming you stay on this tag. The natural language routing layer doesn't shift under you between commits.
+
+## Why a small release still matters for a shell plugin
+
+I get asked often why a shell plugin needs versioned releases at all. The honest answer is that anything that hooks into your prompt has a much higher bar than a normal tool. A web app can ship a regression and roll it back from a dashboard. A shell plugin that breaks tab completion or eats stderr is going to ruin somebody's afternoon, and there's no remote killswitch.
+
+So Lacy Shell ships in small, frequent tags. v1.8.15 follows that pattern. Every bump is a chance to retest the install path on a fresh ZSH config, verify the Bash fallback still loads cleanly, and confirm the AI routing layer doesn't choke on weird quoting. A user running `lsh "rename every .jpeg to .jpg in this directory but skip ones starting with IMG_"` should get back a `mv` loop, not a parse error, and the only way to be confident about that is to actually exercise the path on a tag.
+
+This release also keeps the install instructions in the README accurate. Documentation rot is real. When the README says "install v1.8.x" and the latest tag is v1.7.something, new users hit weird inconsistencies. Cutting v1.8.15 keeps the docs and the tags in sync, which sounds boring but matters a lot when somebody is trying the tool for the first time over coffee.
+
+![Developer workspace](https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&h=300&fit=crop)
+
+## Upgrading and what to expect
+
+If you installed via the recommended path, the upgrade is whatever your plugin manager wants. For zinit users that's a `zinit update`. For oh-my-zsh custom plugins it's a `git pull` inside the plugin directory. For Bash users sourcing the script directly, pull the repo and re-source your rc file or open a new terminal. None of that has changed.
+
+After upgrading, your existing config keeps working. The plugin still reads from the same env vars for your model provider, still respects whatever keybinding you set for the inline trigger, and still falls back gracefully when the AI provider is unreachable. If you set `LSH_PROVIDER=openai` or `LSH_PROVIDER=anthropic` six months ago and forgot about it, that's fine. v1.8.15 doesn't touch the env var contract.
+
+One thing worth checking after any upgrade is your shell startup time. The whole pitch of Lacy Shell is that it disappears into your prompt, which means it has to load fast. After pulling v1.8.15, run `time zsh -i -c exit` once or twice and confirm you're still in the same ballpark you were before. If you see a regression, open an issue with your shell version and plugin manager. That kind of feedback is exactly what tagged releases are for. You can point at v1.8.15 specifically instead of "some commit last week."
+
+For people who use the plugin in a team setting, like a shared dotfiles repo, pinning to v1.8.15 in your bootstrap script is the right move. Everybody on the team gets the same parser behavior, the same prompt latency, and the same answers to the same questions. Floating on main is fine for solo use but quietly painful when three engineers are debugging "why did `lsh "show me processes using port 3000"` give us different commands."
+
+## What's next
+
+The roadmap for the next few releases is mostly about making the natural language to command translation feel even more like muscle memory. That means tighter context handling so the plugin knows what directory you're in and what files are relevant, better caching so common phrasings don't hit the network at all, and more honest error messages when the model can't figure out what you wanted. None of that lands in v1.8.15, but pinning to this tag now means you'll be on a clean baseline when those changes ship.
+
+v1.8.15 is available now. If you're new to the project, the install instructions live at https://lacy.sh and the plugin works with both ZSH and Bash on macOS and Linux. If you're already a user, upgrade when convenient and keep typing English at your terminal like a normal person.

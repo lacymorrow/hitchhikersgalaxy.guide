@@ -75,14 +75,14 @@ The install system is built around several key components:
 ## Usage
 
 ```typescript
-import { ContainerManager } from './container-manager';
+import { ContainerManager } from "./container-manager";
 
 // Initialize the container
 const containerManager = new ContainerManager();
 await containerManager.initialize();
 
 // Run a shadcn command
-const changedFiles = await containerManager.runShadcnCommand(['add', 'button']);
+const changedFiles = await containerManager.runShadcnCommand(["add", "button"]);
 
 // Process the changed files
 console.log(`Added ${changedFiles.length} files`);

@@ -35,8 +35,6 @@ let supabaseClient: ReturnType<typeof createSupabaseClient> | null = null;
  * Uses singleton pattern to avoid creating multiple instances
  */
 export const getSupabaseClient = () => {
-  if (!supabaseClient) {
-    supabaseClient = createSupabaseClient();
-  }
+  supabaseClient ??= createSupabaseClient();
   return supabaseClient;
 };

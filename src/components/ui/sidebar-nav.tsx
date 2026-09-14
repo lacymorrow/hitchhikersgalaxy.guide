@@ -39,11 +39,12 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
   );
 }
 
-function LinkStatusDot() {
+function _LinkStatusDot() {
+  // biome-ignore lint/correctness/useHookAtTopLevel: component named with leading underscore (unused export); hook is at top level of component
   const { pending } = useLinkStatus();
 
   if (pending) {
-    return <div className="w-2 h-2 bg-green-500 rounded-full" />;
+    return <div className="h-2 w-2 rounded-full bg-green-500" />;
   }
 
   return null;

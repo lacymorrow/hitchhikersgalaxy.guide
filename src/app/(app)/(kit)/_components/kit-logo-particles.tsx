@@ -78,7 +78,7 @@ export const KitLogoParticles = () => {
       // Draw "shipkit" text
       const text = "shipkit";
       const textMetrics = ctx.measureText(text);
-      const textWidth = textMetrics.width;
+      const _textWidth = textMetrics.width;
 
       ctx.fillText(text, canvas.width / 2, canvas.height / 2);
 
@@ -90,11 +90,11 @@ export const KitLogoParticles = () => {
       return fontSize / 20; // Return a scale factor
     }
 
-    function createParticle(scale: number) {
+    function createParticle(_scale: number) {
       if (!ctx || !canvas || !textImageData) return null;
 
       const data = textImageData.data;
-      const particleGap = 2;
+      const _particleGap = 2;
 
       for (let attempt = 0; attempt < 100; attempt++) {
         const x = Math.floor(Math.random() * canvas.width);
@@ -251,7 +251,7 @@ export const KitLogoParticles = () => {
 
           // Fade color back to base color - Adjust for light/dark themes
           if (theme === "dark") {
-            const intensity = Math.floor(255 * p.burstProgress);
+            const _intensity = Math.floor(255 * p.burstProgress);
             particleColor = `rgb(${255}, ${Math.floor(255 - 35 * (1 - p.burstProgress))}, ${Math.floor(255 - 55 * (1 - p.burstProgress))})`;
           } else {
             // Fade from darker explosion color back to black

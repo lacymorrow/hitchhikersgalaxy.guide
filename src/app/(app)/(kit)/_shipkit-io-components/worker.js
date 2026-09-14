@@ -69,7 +69,7 @@ const TextGenerationPipeline = (() => {
 
 const stopping_criteria = new InterruptableStoppingCriteria();
 
-let past_key_values_cache = null;
+let _past_key_values_cache = null;
 async function generate(messages) {
   try {
     // Retrieve the text-generation pipeline.
@@ -82,11 +82,11 @@ async function generate(messages) {
 
     let startTime;
     let numTokens = 0;
-    let tps;
-    const token_callback_function = (tokens) => {
+    let _tps;
+    const token_callback_function = (_tokens) => {
       startTime ??= performance.now();
       if (numTokens++ > 0) {
-        tps = (numTokens / (performance.now() - startTime)) * 1000;
+        _tps = (numTokens / (performance.now() - startTime)) * 1000;
       }
     };
 
@@ -119,7 +119,7 @@ async function generate(messages) {
       stopping_criteria,
       return_dict_in_generate: true,
     });
-    past_key_values_cache = past_key_values;
+    _past_key_values_cache = past_key_values;
 
     const decoded = tokenizer.batch_decode(sequences, {
       skip_special_tokens: true,
@@ -202,7 +202,7 @@ self.addEventListener("message", async (e) => {
       break;
 
     case "reset":
-      past_key_values_cache = null;
+      _past_key_values_cache = null;
       stopping_criteria.reset();
       break;
   }

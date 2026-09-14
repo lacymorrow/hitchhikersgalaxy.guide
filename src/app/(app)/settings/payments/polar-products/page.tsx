@@ -74,7 +74,7 @@ export default async function PolarProductsPage() {
             ))}
           </div>
         ) : (
-          <div className="bg-muted p-4 rounded-md">
+          <div className="rounded-md bg-muted p-4">
             <p className="text-muted-foreground">
               No Polar products configured. Add NEXT_PUBLIC_POLAR_ONE_TIME_PRICE_ID and/or
               NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID to your environment variables.
@@ -84,12 +84,12 @@ export default async function PolarProductsPage() {
 
         {session?.user && userProducts.length > 0 && (
           <div className="mt-8">
-            <h2 className="text-2xl font-bold mb-4">Your Purchases</h2>
+            <h2 className="mb-4 text-2xl font-bold">Your Purchases</h2>
             <div className="grid gap-4">
               {userProducts.map((product) => (
                 <Card key={product.id}>
                   <CardContent className="pt-6">
-                    <div className="flex justify-between items-center">
+                    <div className="flex items-center justify-between">
                       <div>
                         <h3 className="font-semibold">{product.name}</h3>
                         <p className="text-sm text-muted-foreground">

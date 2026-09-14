@@ -89,7 +89,11 @@ export function ClerkSignOutButton({ children, className }: ClerkSignOutButtonPr
 
   return (
     <SignOutButton redirectUrl="/">
-      {children ?? <button className={className}>Sign Out</button>}
+      {children ?? (
+        <button type="button" className={className}>
+          Sign Out
+        </button>
+      )}
     </SignOutButton>
   );
 }

@@ -29,7 +29,7 @@ export const GuestForm = () => {
         const result = await signIn("guest", {
           name: name.trim(),
           redirect: false,
-          redirectTo: nextUrl || routes.app.dashboard,
+          redirectTo: nextUrl ?? routes.app.dashboard,
         });
 
         // When redirect is false, NextAuth returns an object we can inspect
@@ -43,7 +43,7 @@ export const GuestForm = () => {
             return;
           }
         }
-      } catch (error) {
+      } catch (_error) {
         // Avoid leaking sensitive details in logs; log minimal info in development only.
         if (process.env.NODE_ENV !== "production") {
           console.error("Guest sign in error");

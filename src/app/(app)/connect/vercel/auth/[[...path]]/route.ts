@@ -162,10 +162,10 @@ export async function GET(request: NextRequest, context: RouteContext) {
 
     const userData = await userResponse.json();
     console.log("User info retrieved:", {
-      hasUserId: !!(userData.user?.id || userData.user?.uid),
+      hasUserId: !!(userData.user?.id ?? userData.user?.uid),
       user: userData.user
         ? {
-            id: userData.user.id || userData.user.uid,
+            id: userData.user.id ?? userData.user.uid,
             email: userData.user.email,
             username: userData.user.username,
             name: userData.user.name,
@@ -173,7 +173,7 @@ export async function GET(request: NextRequest, context: RouteContext) {
         : null,
     });
 
-    const vercelUserId = userData.user?.id || userData.user?.uid;
+    const vercelUserId = userData.user?.id ?? userData.user?.uid;
 
     if (!vercelUserId) {
       console.error("Failed to get Vercel user ID");

@@ -41,7 +41,7 @@ export const HeroDemo = () => {
   return (
     <Card className="overflow-hidden border-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
       <Tabs defaultValue="auth" className="w-full">
-        <div className="border-b border-gray-100 dark:border-gray-800 px-6 py-4">
+        <div className="border-b border-gray-100 px-6 py-4 dark:border-gray-800">
           <TabsList className="inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1">
             {tabs.map((tab) => (
               <TabsTrigger
@@ -56,10 +56,10 @@ export const HeroDemo = () => {
         </div>
         {tabs.map((tab) => (
           <TabsContent key={tab.id} value={tab.id} className="mt-0">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 p-6">
+            <div className="grid grid-cols-1 gap-8 p-6 md:grid-cols-2">
               <div className="flex flex-col justify-center">
-                <h3 className="text-2xl font-semibold mb-4">{tab.content.title}</h3>
-                <p className="text-gray-600 dark:text-gray-300 mb-6">{tab.content.description}</p>
+                <h3 className="mb-4 text-2xl font-semibold">{tab.content.title}</h3>
+                <p className="mb-6 text-gray-600 dark:text-gray-300">{tab.content.description}</p>
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2 text-sm">
                     <Play className="h-4 w-4" />
@@ -67,7 +67,7 @@ export const HeroDemo = () => {
                   </div>
                 </div>
               </div>
-              <div className="relative aspect-video rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-800">
+              <div className="relative aspect-video overflow-hidden rounded-lg bg-gray-100 dark:bg-gray-800">
                 <img
                   src={tab.content.preview}
                   alt={tab.content.title}

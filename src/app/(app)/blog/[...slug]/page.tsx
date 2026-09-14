@@ -58,7 +58,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return constructMetadata({
     title: `${post.title} | Shipkit Blog`,
     description:
-      post.description ||
+      post.description ??
       "Read this comprehensive guide on app development best practices, tips, and insights from the Shipkit team.",
     images: [
       {
@@ -122,19 +122,19 @@ const BlogPostPage = async ({ params }: Props) => {
 
       <div className="flex gap-8">
         {/* Main content */}
-        <article className="flex-1 min-w-0">
+        <article className="min-w-0 flex-1">
           {/* Mobile TOC */}
           <Suspense fallback={<MobileTOCSkeleton />}>
             <MobileToc headings={tocHeadings} />
           </Suspense>
 
           {/* Header section */}
-          <header className="flex flex-col gap-4 border-b pb-8 mb-8">
+          <header className="mb-8 flex flex-col gap-4 border-b pb-8">
             <h1 className="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
               {post.title}
             </h1>
             {post.description && (
-              <p className="text-xl text-muted-foreground leading-7">{post.description}</p>
+              <p className="text-xl leading-7 text-muted-foreground">{post.description}</p>
             )}
 
             <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -168,7 +168,7 @@ const BlogPostPage = async ({ params }: Props) => {
           </header>
 
           {/* Content section */}
-          <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             {/* Featured image */}
             {post.image && (
               <BlogImage src={post.image} alt={post.title} className="mb-8" priority={true} />
@@ -181,8 +181,8 @@ const BlogPostPage = async ({ params }: Props) => {
           </div>
 
           {/* AI summary buttons */}
-          <div className="mt-12 pt-8 border-t">
-            <p className="text-sm text-muted-foreground mb-3">Read with AI</p>
+          <div className="mt-12 border-t pt-8">
+            <p className="mb-3 text-sm text-muted-foreground">Read with AI</p>
             <AskAiButtons
               goal={`Summarize this article: ${post.title}`}
               content={[post.title, post.description, post.content].filter(Boolean).join("\n\n")}
@@ -192,7 +192,7 @@ const BlogPostPage = async ({ params }: Props) => {
 
         {/* Table of Contents - Now properly sticky */}
         {tocHeadings.length > 0 && (
-          <aside className="hidden lg:block w-64 shrink-0">
+          <aside className="hidden w-64 shrink-0 lg:block">
             <div className="sticky top-8 max-h-[calc(100vh-4rem)] overflow-y-auto">
               <Suspense fallback={<TOCSkeleton />}>
                 <TableOfContents headings={tocHeadings} />

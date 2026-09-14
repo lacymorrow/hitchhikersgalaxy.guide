@@ -90,7 +90,7 @@ export class AIAnalyzer {
     };
 
     return (
-      guides[feature] || [
+      guides[feature] ?? [
         "1. Plan the feature implementation",
         "2. Review existing similar features",
         "3. Follow project conventions",
@@ -145,7 +145,7 @@ export class AIAnalyzer {
       ],
     };
 
-    return tools[task] || [];
+    return tools[task] ?? [];
   }
 
   /**

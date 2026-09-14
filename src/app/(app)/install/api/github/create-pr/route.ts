@@ -20,10 +20,10 @@ export async function POST(req: Request) {
 
     // Create a new pull request
     const { data } = await octokit.pulls.create({
-      owner: env.GITHUB_REPO_OWNER || "lacymorrow",
-      repo: env.GITHUB_REPO_NAME || "shipkit",
+      owner: env.GITHUB_REPO_OWNER ?? "lacymorrow",
+      repo: env.GITHUB_REPO_NAME ?? "shipkit",
       title,
-      body: body || `Generated PR for Shadcn UI components.\n\nBranch: ${branchName}`,
+      body: body ?? `Generated PR for Shadcn UI components.\n\nBranch: ${branchName}`,
       head: branchName,
       base: baseBranch,
       maintainer_can_modify: true,

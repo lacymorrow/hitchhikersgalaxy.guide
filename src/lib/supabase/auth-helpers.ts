@@ -23,7 +23,7 @@ export const supabaseAuth = {
       password,
     });
 
-    return result as AuthResponse;
+    return result;
   },
 
   /**
@@ -44,7 +44,7 @@ export const supabaseAuth = {
       options,
     });
 
-    return result as AuthResponse;
+    return result;
   },
 
   /**

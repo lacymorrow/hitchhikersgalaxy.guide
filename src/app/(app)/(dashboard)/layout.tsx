@@ -1,10 +1,18 @@
+import type { Metadata } from "next";
 import { type ReactNode, Suspense } from "react";
 import { DashboardLayout } from "@/components/layouts/dashboard-layout";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { TeamProvider } from "@/components/providers/team-provider";
+import { constructMetadata } from "@/config/metadata";
 import { logger } from "@/lib/logger";
 import { auth } from "@/server/auth";
 import { teamService } from "@/server/services/team-service";
+
+export const metadata: Metadata = constructMetadata({
+  title: "Dashboard",
+  description: "Manage your account, API keys, deployments, and tools.",
+  noIndex: true,
+});
 
 export default async function Layout({ children }: { children: ReactNode }) {
   const session = await auth();

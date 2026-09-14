@@ -13,8 +13,10 @@ export const WavesBackground: React.FC = () => {
 
     const ctx = canvas.getContext("2d")!;
     let time = 0;
-    const width = (canvas.width = window.innerWidth);
-    const height = (canvas.height = window.innerHeight);
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    const width = canvas.width;
+    const height = canvas.height;
 
     // Generate many more layers with extreme parameters
     const generateLayers = () => {
@@ -99,7 +101,7 @@ export const WavesBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed top-0 left-0 w-full h-full bg-black"
+      className="fixed left-0 top-0 h-full w-full bg-black"
       style={{
         filter: "contrast(1.2) saturate(1.5) brightness(1.2)",
         mixBlendMode: "screen",

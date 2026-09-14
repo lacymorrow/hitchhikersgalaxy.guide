@@ -6,11 +6,16 @@
 .pnp.js
 
 # testing
+/testing-results
+/test-results
 /coverage
 
 # next.js
 /.next/
 /out/
+
+# generated content manifests (created by scripts/prebuild-content.mjs)
+src/lib/generated/
 
 # production
 /build
@@ -30,6 +35,13 @@ env
 
 # vercel
 .vercel
+
+# Secret-scan hygiene (LAC-3163)
+# .specstory persists chat transcripts that captured live tokens in past commits.
+.specstory/
+# repomix outputs bundle repo contents and have leaked secrets historically.
+.repomix-output.*
+repomix-output.*
 
 # typescript
 *.tsbuildinfo
@@ -66,3 +78,14 @@ env/*
 *.njsproj
 *.sln
 .env*.local
+
+# From bones sync
+.idea/
+env/
+logs
+
+# fumadocs-mdx generated collections
+.source
+
+# mirrored from docs/images by scripts/sync-docs-images.mjs
+public/docs

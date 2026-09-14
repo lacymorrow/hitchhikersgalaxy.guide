@@ -15,6 +15,7 @@
 All business logic, architectural decisions, and domain context lives in this repository. If information isn't in the codebase, it doesn't exist for agents.
 
 **Context hierarchy (read in order):**
+
 1. `CLAUDE.md` — Commands, architecture, conventions, environment setup
 2. `AGENTS.md` (this file) — Agent workflows, constraints, verification
 3. `WORKFLOW.md` — Task lifecycle and proof-of-work contract
@@ -27,6 +28,7 @@ All business logic, architectural decisions, and domain context lives in this re
 These mechanical rules keep the codebase consistent across agent runs. Violations will cause CI failures or review rejection.
 
 ### Code Style (Non-Negotiable)
+
 - Files must stay under **500 lines**. Split if approaching limit.
 - **Arrow functions** for components, **function keyword** for utilities.
 - **Interfaces** over types. **No enums** — use objects/maps.
@@ -35,6 +37,7 @@ These mechanical rules keep the codebase consistent across agent runs. Violation
 - Preserve existing comments. Add comments only for "why", never "what".
 
 ### Architecture (Non-Negotiable)
+
 - **Server Components first**. Only add `'use client'` when strictly necessary.
 - **Never use server actions for data fetching**. Use Server Components.
 - **Services layer** (`server/services/`) for business logic.
@@ -42,6 +45,7 @@ These mechanical rules keep the codebase consistent across agent runs. Violation
 - **Timestamps over booleans** in database schemas (`activeAt` not `isActive`).
 
 ### What Agents Must NOT Do
+
 - Create new files unless absolutely necessary. Prefer editing existing files.
 - Add dependencies without explicit approval.
 - Modify CI/CD workflows without explicit approval.
@@ -68,6 +72,7 @@ bun run build        # Must complete successfully
 ```
 
 **Report format** (include in task comment):
+
 ```
 ## Verification
 - typecheck: PASS (0 errors)
@@ -81,6 +86,7 @@ If any check fails, the task is NOT done. Fix the issue or report the blocker.
 ## Task Scoping Guidelines
 
 ### Good agent tasks (single-responsibility, verifiable)
+
 - Fix a specific bug with a reproduction case
 - Add a single component following existing patterns
 - Refactor one file to match conventions
@@ -88,6 +94,7 @@ If any check fails, the task is NOT done. Fix the issue or report the blocker.
 - Update documentation to match current code
 
 ### Tasks that need human decomposition first
+
 - Multi-file architectural changes
 - New feature systems spanning multiple domains
 - Database schema redesigns
@@ -120,22 +127,25 @@ ls src/lib/                  # Utilities
 ## Testing Patterns for Agents
 
 ### Writing hermetic tests
+
 - Tests must be self-contained — no external service dependencies.
 - Use `safeDbExecute` for database operations in tests.
 - Mock external APIs, never make real network calls.
 - Each test must be independent — no shared mutable state.
 
 ### Test file placement
-| Test type | Directory | Command |
-|-----------|-----------|---------|
-| Unit (utils, components) | `tests/unit/` | `bun run test` |
-| Node.js (server, API) | `tests/node/` | `bun run test:node` |
+
+| Test type                | Directory        | Command                |
+| ------------------------ | ---------------- | ---------------------- |
+| Unit (utils, components) | `tests/unit/`    | `bun run test`         |
+| Node.js (server, API)    | `tests/node/`    | `bun run test:node`    |
 | Browser (DOM, rendering) | `tests/browser/` | `bun run test:browser` |
-| E2E (user flows) | `tests/e2e/` | `bun run test:e2e` |
+| E2E (user flows)         | `tests/e2e/`     | `bun run test:e2e`     |
 
 ## Error Recovery
 
 If you break something:
+
 1. Run `git diff` to see what changed.
 2. Run `bun run typecheck` to identify type errors.
 3. Run `bun run lint:fix` to auto-fix formatting.

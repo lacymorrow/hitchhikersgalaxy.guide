@@ -1,47 +1,221 @@
 ---
 title: "Vercel Deployment"
-description: "Deploying Shipkit to Vercel with production configuration."
+description: "Deploying Shipkit to Vercel: project setup, build configuration, route conventions, upstream sync conflicts, and common build errors."
 ---
 
 # Vercel Deployment
 
-Shipkit deploys to Vercel with zero configuration. For detailed deployment steps including one-click deploy, see the [deploy guide](/docs/getting-started/deploy).
+Shipkit deploys to Vercel with zero configuration. For first-time deployment steps including one-click deploy, see the [deploy guide](/docs/getting-started/deploy).
 
-This page covers production-specific Vercel configuration.
+This page covers production configuration and the failure patterns specific to Shipkit and its downstream forks. If you maintain a site forked from Shipkit (or Bones), read [Upstream Sync & Route Conflicts](#upstream-sync--route-conflicts) — route collisions after an upstream sync are the most common cause of broken Vercel builds in downstream repos.
 
-## Build Configuration
+## Project Setup
 
-For larger builds that hit memory limits, use the Vercel build command:
+Vercel reads most settings from `vercel.json` at the repo root, so a fresh import needs almost nothing configured manually:
+
+| Setting          | Value                           | Source           |
+| ---------------- | ------------------------------- | ---------------- |
+| Framework preset | Next.js                         | Auto-detected    |
+| Build command    | `bun run build:vercel`          | `vercel.json`    |
+| Install command  | `bun install --frozen-lockfile` | `vercel.json`    |
+| Dev command      | `bun run dev`                   | `vercel.json`    |
+| Output directory | `.next` (default)               | Framework preset |
+
+Don't override the build or install commands in the Vercel dashboard — dashboard settings silently win over `vercel.json`, which makes downstream repos drift from upstream behavior.
+
+`vercel.json` also configures serverless function limits for API routes (`memory: 512`, plus `excludeFiles` to keep bundles under Vercel's size cap) and per-path headers. Note the `functions` block only matches `src/app/(app)/api/**/*` — API routes added outside that path (e.g. `src/app/api/` or another route group) won't inherit these limits, so either keep API routes under `(app)/api/` or add a matching `functions` entry. If you add a heavy dependency to an API route and hit function size errors, extend `excludeFiles` there or `outputFileTracingExcludes` in `next.config.ts`.
+
+## `build:vercel` vs `build`
 
 ```bash
-bun run build:vercel  # Uses 8GB heap allocation
+bun run build          # node scripts/prebuild-content.mjs && next build --webpack
+bun run build:vercel   # same, with NODE_OPTIONS='--max-old-space-size=8192'
 ```
 
-Set this as your build command in the Vercel dashboard if you hit OOM errors.
+Both run `scripts/prebuild-content.mjs` (generates content artifacts before the Next.js build) and both build with webpack (`--webpack` — Turbopack builds are disabled, see below). The only difference is that `build:vercel` raises the Node heap to 8GB. Shipkit's dependency graph (Payload CMS, Builder.io, MDX pipeline) can exceed the default heap during production builds, which surfaces as an OOM kill or a silent exit code 137 on Vercel.
+
+Use `build:vercel` on Vercel (already the default via `vercel.json`). Use plain `build` locally unless you also hit OOM.
+
+**Why `--webpack`?** Next.js 16 defaults to Turbopack, which currently panics on parts of Shipkit's build. Both `dev` and `build` pin webpack explicitly. Don't remove the flag in a downstream without verifying a full production build.
 
 ## Environment Variables
 
-Set in Vercel Dashboard > Project > Settings > Environment Variables.
+Set in Vercel Dashboard → Project → Settings → Environment Variables, with separate values for Production and Preview where appropriate.
 
-Use different values for Production, Preview, and Development environments. At minimum:
+Minimum for a working deploy:
 
 ```bash
 DATABASE_URL=           # PostgreSQL connection string
-AUTH_SECRET=            # openssl rand -base64 32
-AUTH_URL=               # Your production URL
+AUTH_SECRET=            # openssl rand -base64 32 (or set APP_SECRET to derive all secrets)
 ```
 
-See [Environment Variables](/docs/getting-started/environment) for the full list.
+Everything else is optional — features auto-enable when their env vars are present (see `src/config/features-config.ts` for detection logic):
+
+```bash
+AUTH_GITHUB_ID=              # GitHub OAuth client ID
+AUTH_GITHUB_SECRET=          # GitHub OAuth client secret
+LEMONSQUEEZY_API_KEY=        # Lemon Squeezy payments
+LEMONSQUEEZY_STORE_ID=       # Lemon Squeezy store
+STRIPE_SECRET_KEY=           # Stripe payments
+STRIPE_PUBLISHABLE_KEY=      # Stripe publishable key
+BUILDER_API_KEY=             # Builder.io visual editing
+RESEND_API_KEY=              # Email
+OPENAI_API_KEY=              # OpenAI
+ANTHROPIC_API_KEY=           # Anthropic
+NEXT_PUBLIC_POSTHOG_KEY=     # Analytics
+```
+
+Notes that matter on Vercel specifically:
+
+- `AUTH_URL` is derived from `VERCEL_URL` automatically; only set it explicitly for a custom production domain.
+- Feature flags are resolved at **build time**. Adding or removing an env var requires a redeploy to take effect.
+- `NEXT_PUBLIC_*` vars are inlined into the client bundle at build time — never put secrets in them.
+
+See [Environment Variables](/docs/getting-started/environment) for the full reference.
+
+## Route Group Conventions
+
+Shipkit's `src/app/` uses route groups to organize pages without affecting URLs:
+
+```
+src/app/
+├── (app)/                 # Main application — layouts, pages, api/
+│   ├── (kit)/             # Marketing/landing pages (page.tsx here serves "/")
+│   ├── (authentication)/  # Sign-in, sign-up flows
+│   ├── (dashboard)/       # Protected routes
+│   ├── (admin)/           # Admin panel
+│   ├── (demo)/            # Demo/example pages
+│   ├── (legal)/           # Terms, privacy
+│   ├── [...slug]/         # CMS catch-all: renders Payload / Builder.io pages
+│   └── @modal/            # Parallel route slot (intercepted auth modals)
+└── (cms)/                 # Payload admin UI (/cms) and REST API (/cms-api)
+```
+
+Route groups `(name)` are stripped from the URL, so **two pages in different groups can resolve to the same path**. Next.js fails the build with:
+
+```
+You cannot have two parallel pages that resolve to the same path.
+```
+
+Rules to avoid collisions:
+
+1. **`/` is owned by `(app)/(kit)/page.tsx`.** If your downstream adds its own landing group (e.g. `(main)/page.tsx`), delete or move the upstream one — don't keep both.
+2. Before adding a page in a new group, check every group for the same resolved path: `find src/app -name "page.tsx" | grep -v node_modules`.
+3. The `(app)` catch-all `[...slug]` is lower priority than static routes, so it won't conflict at build time. A static page still shadows the CMS page at the same URL.
+4. Keep downstream-specific pages in a clearly-named group (e.g. `(site)`) rather than editing upstream groups; this makes upstream merges cleaner.
+
+## Parallel Route Slots and `default.tsx`
+
+`(app)/@modal/` is a parallel route slot used for intercepted auth modals. Every parallel slot **must** have a `default.tsx` (Shipkit's returns `null`) — it's what Next.js renders for the slot on routes that don't match it, including hard navigations.
+
+Symptoms of a missing `default.tsx`:
+
+- Build error or 404s on hard reload of any page under the layout that declares the slot
+- `Error: No default component was found for a parallel route`
+
+If an upstream sync adds a new `@slot/` directory to a layout your downstream customized, verify the slot's `default.tsx` survived the merge. When deleting a parallel slot, delete the slot reference from the corresponding `layout.tsx` props too.
+
+## Upstream Sync & Route Conflicts
+
+Downstream repos pull upstream changes with:
+
+```bash
+bun run upstream:pull        # tsx scripts/git-sync-upstream.ts — creates a sync PR
+bun run upstream:pull -- -d  # direct merge into main, no PR
+```
+
+The script picks the first accessible upstream (premium `shipkit`, falling back to public `bones`, or `UPSTREAM_REPO_URL` if set), merges `upstream/main` into a temp branch, and opens a PR.
+
+**Why syncs break Vercel builds:** git merges files, not routes. If upstream moved or added a `page.tsx` at a path your downstream also defines (in a different route group), the merge completes cleanly — no git conflict — but the Next.js build fails with a duplicate-path error. This is the most common Vercel failure across Shipkit downstreams.
+
+After every upstream sync, before merging the sync PR:
+
+1. **Build locally**: `bun run build`. A route conflict fails fast with the two conflicting file paths in the error.
+2. **Resolve by deleting the duplicate you don't want** — usually the upstream copy if your downstream intentionally overrode that page, or your copy if you want the new upstream version.
+3. **Check parallel slots**: `find src/app -type d -name "@*"` — each needs a `default.tsx`.
+4. **Check the lockfile**: if the sync changed `package.json`, run `bun install` and commit the updated lockfile, or the Vercel install step fails (see below).
+
+The preview deployment on the sync PR is your safety net — never merge a sync PR whose preview build failed.
+
+## Common Build Errors
+
+### Frozen lockfile mismatch
+
+```
+error: lockfile had changes, but lockfile is frozen
+```
+
+The install command is `bun install --frozen-lockfile`, so `package.json` and the lockfile must agree. Happens when a dependency change (often from an upstream sync) lands without a regenerated lockfile. Fix: `bun install`, commit the lockfile, push.
+
+### Route conflict
+
+```
+You cannot have two parallel pages that resolve to the same path
+```
+
+See [Route Group Conventions](#route-group-conventions). Delete one of the two pages.
+
+### Missing `default.tsx`
+
+See [Parallel Route Slots](#parallel-route-slots-and-defaulttsx).
+
+### Module not found after sync
+
+```
+Module not found: Can't resolve '@/components/...'
+```
+
+Upstream deleted or moved a file your downstream still imports (or vice versa). Fix the import or restore the file; `bun run typecheck` catches these before Vercel does.
+
+### Database unreachable during static generation
+
+```
+Error occurred prerendering page ... ENOTFOUND / connection refused
+```
+
+A Server Component that queries the database is being statically generated at build time, but the database isn't reachable from the build (paused database, IP allowlist). Fix: make the page dynamic with `export const dynamic = "force-dynamic"`, or make the database reachable at build time.
+
+### Out of memory
+
+Build exits with code 137 or a heap allocation error. Ensure the build command is `bun run build:vercel` (8GB heap). If it still OOMs, trim `optimizePackageImports` additions and check for accidental large imports in Server Components.
+
+### Serverless function size exceeded
+
+```
+Max serverless function size of 50 MB (compressed) was exceeded
+```
+
+Extend `excludeFiles` in `vercel.json` (`functions` block) or `outputFileTracingExcludes` in `next.config.ts` for the offending route.
+
+### Vulnerable framework version blocked
+
+Vercel refuses to promote deployments running a Next.js version with a known CVE, even when the build succeeds. Fix: bump `next` to the patched version, regenerate the lockfile, push.
+
+## `next.config.ts` Settings That Affect Vercel
+
+Shipkit's config includes several settings that exist specifically because of Vercel's build/runtime environment. When syncing downstream, don't remove these without understanding why they're there:
+
+| Setting                                    | Why it matters on Vercel                                                                                                                                      |
+| ------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `serverExternalPackages`                   | Excludes native modules (`isolated-vm`), optional DB drivers, and ESM-only packages from the server bundle — these fail to compile or `require()` on Vercel.  |
+| `transpilePackages`                        | Force-bundles ESM-only packages (`estree-walker` etc.) that Next.js would otherwise externalize; externalizing them causes 500s at runtime (e.g. on `/docs`). |
+| `experimental.serverActions.bodySizeLimit` | Raises the Server Action payload cap for file uploads; the default rejects large uploads in production.                                                       |
+| `experimental.optimizePackageImports`      | Tree-shakes icon/util libraries; reduces both build memory and function size.                                                                                 |
+| `outputFileTracingExcludes`                | Keeps dev-only and heavy packages out of serverless function bundles — the main lever against the 50MB function limit.                                        |
+| `outputFileTracingIncludes`                | Ensures `docs/**` and `src/content/**` ship with functions that read them at runtime; without this, MDX pages 404/500 only in production.                     |
+| `reactCompiler`                            | Required by dependencies (e.g. `@payloadcms/ui`) that ship React Compiler output and expect the `useMemoCache` runtime.                                       |
 
 ## Custom Domains
 
-1. Add domain in Vercel Dashboard > Project > Domains
+1. Add domain in Vercel Dashboard → Project → Domains
 2. Update DNS records (Vercel provides the values)
 3. SSL certificate is provisioned automatically
 
-## Preview Deployments
+Then set `AUTH_URL` to the production domain and update payment/webhook callback URLs.
 
-Every pull request gets a preview deployment automatically. Preview URLs follow the format `{project}-{hash}.vercel.app`.
+## Preview Deployments & Health Checks
+
+Every pull request gets a preview deployment (`{project}-{hash}.vercel.app`). Shipkit also ships a GitHub Actions health check that blocks promotion of deployments returning 5xx — see [Vercel Deployment Checks](/docs/deployment/vercel-deployment-checks) for setup.
 
 ## Production Checklist
 
@@ -51,7 +225,8 @@ Every pull request gets a preview deployment automatically. Preview URLs follow 
 - [ ] Database is accessible from Vercel's network
 - [ ] Webhook URLs updated to production domain
 - [ ] Analytics configured (PostHog, Umami, etc.)
-- [ ] Error monitoring active
+- [ ] Deployment health checks enabled (Settings → Deployment Checks)
+- [ ] Local `bun run build` passes after any upstream sync
 
 ## Multi-Zone
 

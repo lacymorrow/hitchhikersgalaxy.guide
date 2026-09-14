@@ -127,7 +127,7 @@ export function ProjectDialog({
     defaultValues: {
       name: isEditMode && project ? project.name : "",
       teamId:
-        isEditMode && project?.teamId ? project.teamId : selectedTeamId || defaultTeamId || "",
+        isEditMode && project?.teamId ? project.teamId : (selectedTeamId ?? defaultTeamId ?? ""),
     },
   });
 
@@ -156,7 +156,7 @@ export function ProjectDialog({
           // Set form value if not already set and in create mode
           if (!isEditMode && !form.getValues("teamId")) {
             // Prioritize selectedTeamId from context if available
-            form.setValue("teamId", selectedTeamId || firstTeamId);
+            form.setValue("teamId", selectedTeamId ?? firstTeamId);
           }
         }
       } catch (error) {
@@ -183,7 +183,7 @@ export function ProjectDialog({
       if (!team) {
         throw new Error("Failed to create team");
       }
-      form.setValue("teamId", team.id || "");
+      form.setValue("teamId", team.id ?? "");
       setShowNewTeamInput(false);
       setNewTeamName("");
 

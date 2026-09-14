@@ -78,9 +78,9 @@ Shipkit features are available as installable shadcn registry blocks. Add auth, 
 Smooth page transitions using the `LinkWithTransition` component. Drop-in replacement for Next.js `Link`.
 
 ```tsx
-import { Link } from "@/components/primitives/link-with-transition"
+import { Link } from "@/components/primitives/link-with-transition";
 
-<Link href="/about">About</Link>
+<Link href="/about">About</Link>;
 ```
 
 ## Theme System
@@ -136,3 +136,9 @@ Redis-based caching and rate limiting via Upstash. API rate limiting (configurab
 Structured error services, validation service, global and component-level error boundaries, server action error handling with toast notifications.
 
 [Error handling guide](/docs/guides/error-handling)
+
+## Component Registry
+
+All Shipkit features are available as installable shadcn registry blocks. Start from [bones](https://github.com/shipkit-io/bones) and add features incrementally with `npx shadcn add @shipkit/<block>`. 30 blocks available covering auth, payments, blog, docs, CMS, analytics, email, admin, settings, and more.
+
+[Registry guide](/docs/features/registry)

@@ -13,13 +13,13 @@ Shipkit uses NextAuth.js v5 with a database-backed session strategy. Authenticat
 
 ### OAuth Providers
 
-| Provider | Flag | Required Env Vars |
-|----------|------|-------------------|
-| GitHub | `NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED` | `AUTH_GITHUB_ID`, `AUTH_GITHUB_SECRET` |
-| Google | `NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED` | `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET` |
-| Discord | `NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED` | `AUTH_DISCORD_ID`, `AUTH_DISCORD_SECRET` |
-| Twitter | `NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED` | `AUTH_TWITTER_ID`, `AUTH_TWITTER_SECRET` |
-| GitLab | `NEXT_PUBLIC_FEATURE_AUTH_GITLAB_ENABLED` | `AUTH_GITLAB_ID`, `AUTH_GITLAB_SECRET` |
+| Provider  | Flag                                         | Required Env Vars                            |
+| --------- | -------------------------------------------- | -------------------------------------------- |
+| GitHub    | `NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED`    | `AUTH_GITHUB_ID`, `AUTH_GITHUB_SECRET`       |
+| Google    | `NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED`    | `AUTH_GOOGLE_ID`, `AUTH_GOOGLE_SECRET`       |
+| Discord   | `NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED`   | `AUTH_DISCORD_ID`, `AUTH_DISCORD_SECRET`     |
+| Twitter   | `NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED`   | `AUTH_TWITTER_ID`, `AUTH_TWITTER_SECRET`     |
+| GitLab    | `NEXT_PUBLIC_FEATURE_AUTH_GITLAB_ENABLED`    | `AUTH_GITLAB_ID`, `AUTH_GITLAB_SECRET`       |
 | Bitbucket | `NEXT_PUBLIC_FEATURE_AUTH_BITBUCKET_ENABLED` | `AUTH_BITBUCKET_ID`, `AUTH_BITBUCKET_SECRET` |
 
 All OAuth providers have `allowDangerousEmailAccountLinking` enabled, so multiple providers can link to the same email automatically.
@@ -50,12 +50,12 @@ The session includes `user.isAdmin` (boolean) populated from the JWT callback.
 ### Server Components
 
 ```tsx
-import { auth } from "@/server/lib/auth"
+import { auth } from "@/server/lib/auth";
 
 export default async function ProtectedPage() {
-  const session = await auth({ protect: true })
+  const session = await auth({ protect: true });
   // Redirects to /sign-in if not authenticated
-  return <div>Hello {session.user.name}</div>
+  return <div>Hello {session.user.name}</div>;
 }
 ```
 
@@ -64,26 +64,26 @@ export default async function ProtectedPage() {
 Admin routes use a layout-level check in `src/app/(app)/(admin)/layout.tsx`:
 
 ```tsx
-import { auth } from "@/server/lib/auth"
-import { isAdmin } from "@/server/services/admin-service"
+import { auth } from "@/server/lib/auth";
+import { isAdmin } from "@/server/services/admin-service";
 
 export default async function AdminLayout({ children }) {
-  const session = await auth()
+  const session = await auth();
   if (!session?.user?.email || !isAdmin({ email: session.user.email })) {
-    redirect(routes.home)
+    redirect(routes.home);
   }
-  return <>{children}</>
+  return <>{children}</>;
 }
 ```
 
 ### Server Actions
 
 ```tsx
-"use server"
-import { auth } from "@/server/lib/auth"
+"use server";
+import { auth } from "@/server/lib/auth";
 
 export async function myProtectedAction() {
-  const session = await auth({ protect: true })
+  const session = await auth({ protect: true });
   // session.user is guaranteed to exist here
 }
 ```
@@ -91,13 +91,13 @@ export async function myProtectedAction() {
 ### Client Components
 
 ```tsx
-"use client"
-import { useIsAdmin } from "@/hooks/use-is-admin"
+"use client";
+import { useIsAdmin } from "@/hooks/use-is-admin";
 
 export function AdminButton() {
-  const isAdmin = useIsAdmin()
-  if (!isAdmin) return null
-  return <button>Admin Action</button>
+  const isAdmin = useIsAdmin();
+  if (!isAdmin) return null;
+  return <button>Admin Action</button>;
 }
 ```
 
@@ -126,8 +126,8 @@ Check permissions in API routes:
 const check = await RBACService.checkPermission(req, {
   resource: "team",
   action: "create",
-  context: { teamIdParam: "teamId" }
-})
+  context: { teamIdParam: "teamId" },
+});
 // Returns 401/403 response if unauthorized
 ```
 
@@ -135,34 +135,34 @@ const check = await RBACService.checkPermission(req, {
 
 Available in `src/server/actions/auth.ts`:
 
-| Action | Purpose |
-|--------|---------|
-| `signInWithOAuthAction(providerId)` | Start OAuth flow |
-| `signInAction(input)` | Credentials sign-in |
-| `signUpWithCredentialsAction(formData)` | User registration |
-| `signOutAction()` | Sign out |
-| `forgotPasswordAction(email)` | Send password reset email |
-| `resetPasswordAction(token, password)` | Complete password reset |
+| Action                                  | Purpose                   |
+| --------------------------------------- | ------------------------- |
+| `signInWithOAuthAction(providerId)`     | Start OAuth flow          |
+| `signInAction(input)`                   | Credentials sign-in       |
+| `signUpWithCredentialsAction(formData)` | User registration         |
+| `signOutAction()`                       | Sign out                  |
+| `forgotPasswordAction(email)`           | Send password reset email |
+| `resetPasswordAction(token, password)`  | Complete password reset   |
 
 ## Auth Pages
 
-| Route | Purpose |
-|-------|---------|
-| `/sign-in` | Sign-in page |
-| `/sign-out` | Sign-out page |
+| Route         | Purpose         |
+| ------------- | --------------- |
+| `/sign-in`    | Sign-in page    |
+| `/sign-out`   | Sign-out page   |
 | `/auth/error` | Auth error page |
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/server/auth.ts` | NextAuth exports (`auth`, `signIn`, `signOut`) |
-| `src/server/auth-js/auth.config.ts` | Provider config, callbacks, session strategy |
-| `src/server/auth-js/auth-providers.config.ts` | Provider definitions and feature flags |
-| `src/server/services/auth-service.ts` | Auth business logic |
-| `src/server/services/admin-service.ts` | Admin role checking |
-| `src/server/services/rbac.ts` | Permission system |
-| `src/server/actions/auth.ts` | Auth server actions |
+| File                                          | Purpose                                        |
+| --------------------------------------------- | ---------------------------------------------- |
+| `src/server/auth.ts`                          | NextAuth exports (`auth`, `signIn`, `signOut`) |
+| `src/server/auth-js/auth.config.ts`           | Provider config, callbacks, session strategy   |
+| `src/server/auth-js/auth-providers.config.ts` | Provider definitions and feature flags         |
+| `src/server/services/auth-service.ts`         | Auth business logic                            |
+| `src/server/services/admin-service.ts`        | Admin role checking                            |
+| `src/server/services/rbac.ts`                 | Permission system                              |
+| `src/server/actions/auth.ts`                  | Auth server actions                            |
 
 ## Alternative Auth Libraries
 

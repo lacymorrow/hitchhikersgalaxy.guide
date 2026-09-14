@@ -99,7 +99,7 @@ export function PolarProductStatus({
 
         setIsPurchased(result.purchased);
       } else {
-        setError(result.message || "Failed to check purchase status");
+        setError(result.message ?? "Failed to check purchase status");
       }
     } catch (err) {
       setError("An error occurred while checking purchase status");
@@ -136,7 +136,7 @@ export function PolarProductStatus({
       if (result.success && result.url) {
         window.location.href = result.url;
       } else {
-        toast.error(result.message || "Failed to create checkout URL");
+        toast.error(result.message ?? "Failed to create checkout URL");
       }
     } catch (error) {
       console.error("Error creating checkout:", error);
@@ -182,7 +182,9 @@ export function PolarProductStatus({
       <CardContent>
         <div className="space-y-2">
           {productPrice && <p className="font-semibold">{productPrice}</p>}
-          <p className="text-sm text-muted-foreground">You haven't purchased this product yet.</p>
+          <p className="text-sm text-muted-foreground">
+            You haven&apos;t purchased this product yet.
+          </p>
         </div>
       </CardContent>
       <CardFooter>

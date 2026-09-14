@@ -6,7 +6,7 @@ import { BlogAuthorSkeleton } from "@/components/modules/blog/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { authorUtils, blogAuthors, getActiveAuthors, getAuthorById } from "@/config/blog-authors";
+import { blogAuthors, getActiveAuthors, getAuthorById } from "@/config/blog-authors";
 import { constructMetadata } from "@/config/metadata";
 
 export const metadata: Metadata = constructMetadata({
@@ -20,11 +20,11 @@ export default function BlogAuthorsDemo() {
   const shipkitTeam = getAuthorById("shipkit-team");
 
   return (
-    <div className="w-full max-w-6xl mx-auto space-y-8">
+    <div className="mx-auto w-full max-w-6xl space-y-8">
       {/* Header */}
-      <div className="text-center space-y-4">
+      <div className="space-y-4 text-center">
         <h1 className="text-4xl font-bold">Blog Authors System Demo</h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+        <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
           Showcasing the new centralized author configuration system with enhanced components,
           accessibility features, and improved user experience.
         </p>
@@ -39,13 +39,13 @@ export default function BlogAuthorsDemo() {
       {/* Author Profiles - Full Version */}
       <section className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-2">Full Author Profiles</h2>
+          <h2 className="mb-2 text-2xl font-semibold">Full Author Profiles</h2>
           <p className="text-muted-foreground">
             Comprehensive author cards with bio, social links, and post counts
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           <Suspense fallback={<BlogAuthorSkeleton />}>
             <AuthorProfile author={lacyAuthor} postCount={5} />
           </Suspense>
@@ -60,13 +60,13 @@ export default function BlogAuthorsDemo() {
       {/* Author Profiles - Compact Version */}
       <section className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-2">Compact Author Profiles</h2>
+          <h2 className="mb-2 text-2xl font-semibold">Compact Author Profiles</h2>
           <p className="text-muted-foreground">
             Condensed version perfect for sidebars and smaller spaces
           </p>
         </div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {activeAuthors.map((author) => (
             <Suspense key={author.id} fallback={<BlogAuthorSkeleton />}>
               <AuthorProfile
@@ -84,7 +84,7 @@ export default function BlogAuthorsDemo() {
       {/* Author Bylines */}
       <section className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-2">Author Bylines</h2>
+          <h2 className="mb-2 text-2xl font-semibold">Author Bylines</h2>
           <p className="text-muted-foreground">Compact author attribution for blog post headers</p>
         </div>
 
@@ -97,7 +97,7 @@ export default function BlogAuthorsDemo() {
               <AuthorByline author={lacyAuthor} publishedAt="2024-12-28" />
               <p className="text-muted-foreground">
                 This is how an author byline would appear in a blog post header, showing the
-                author's avatar, name, and publication date.
+                author&apos;s avatar, name, and publication date.
               </p>
             </CardContent>
           </Card>
@@ -121,7 +121,7 @@ export default function BlogAuthorsDemo() {
       {/* Multi-Author Display */}
       <section className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-2">Multi-Author Display</h2>
+          <h2 className="mb-2 text-2xl font-semibold">Multi-Author Display</h2>
           <p className="text-muted-foreground">Show multiple authors with overlapping avatars</p>
         </div>
 
@@ -144,13 +144,13 @@ export default function BlogAuthorsDemo() {
       {/* System Features */}
       <section className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-2">System Features</h2>
+          <h2 className="mb-2 text-2xl font-semibold">System Features</h2>
           <p className="text-muted-foreground">
             Key improvements and capabilities of the new author system
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           <Card>
             <CardHeader>
               <CardTitle className="text-lg">🎯 Centralized Config</CardTitle>
@@ -227,28 +227,28 @@ export default function BlogAuthorsDemo() {
       {/* Technical Details */}
       <section className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-2">Technical Implementation</h2>
+          <h2 className="mb-2 text-2xl font-semibold">Technical Implementation</h2>
           <p className="text-muted-foreground">Under the hood details for developers</p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6">
+        <div className="grid gap-6 lg:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle>Author Configuration</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="text-sm">
-                <p className="font-medium mb-2">Location:</p>
-                <code className="text-xs bg-muted px-2 py-1 rounded">
+                <p className="mb-2 font-medium">Location:</p>
+                <code className="rounded bg-muted px-2 py-1 text-xs">
                   src/config/blog-authors.ts
                 </code>
               </div>
               <div className="text-sm">
-                <p className="font-medium mb-2">Total Authors:</p>
+                <p className="mb-2 font-medium">Total Authors:</p>
                 <Badge variant="outline">{Object.keys(blogAuthors).length}</Badge>
               </div>
               <div className="text-sm">
-                <p className="font-medium mb-2">Active Authors:</p>
+                <p className="mb-2 font-medium">Active Authors:</p>
                 <Badge variant="outline">{activeAuthors.length}</Badge>
               </div>
             </CardContent>
@@ -259,21 +259,21 @@ export default function BlogAuthorsDemo() {
               <CardTitle>Utility Functions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="text-sm space-y-2">
+              <div className="space-y-2 text-sm">
                 <p>
-                  <code className="text-xs bg-muted px-1 rounded">getAuthorById()</code> - Get
+                  <code className="rounded bg-muted px-1 text-xs">getAuthorById()</code> - Get
                   author by ID
                 </p>
                 <p>
-                  <code className="text-xs bg-muted px-1 rounded">getAuthorByName()</code> - Get
+                  <code className="rounded bg-muted px-1 text-xs">getAuthorByName()</code> - Get
                   author by name
                 </p>
                 <p>
-                  <code className="text-xs bg-muted px-1 rounded">convertLegacyAuthor()</code> -
+                  <code className="rounded bg-muted px-1 text-xs">convertLegacyAuthor()</code> -
                   Convert legacy data
                 </p>
                 <p>
-                  <code className="text-xs bg-muted px-1 rounded">
+                  <code className="rounded bg-muted px-1 text-xs">
                     authorUtils.getSocialLinks()
                   </code>{" "}
                   - Generate social links
@@ -289,19 +289,19 @@ export default function BlogAuthorsDemo() {
       {/* Usage Examples */}
       <section className="space-y-6">
         <div className="text-center">
-          <h2 className="text-2xl font-semibold mb-2">Usage in MDX</h2>
+          <h2 className="mb-2 text-2xl font-semibold">Usage in MDX</h2>
           <p className="text-muted-foreground">
             How to use the new system in blog post frontmatter
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid gap-6 md:grid-cols-2">
           <Card>
             <CardHeader>
               <CardTitle>Single Author</CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
+              <pre className="overflow-x-auto rounded bg-muted p-3 text-xs">
                 {`---
 title: "My Blog Post"
 publishedAt: 2024-12-28
@@ -317,7 +317,7 @@ categories: ["Development"]
               <CardTitle>Multiple Authors</CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="text-xs bg-muted p-3 rounded overflow-x-auto">
+              <pre className="overflow-x-auto rounded bg-muted p-3 text-xs">
                 {`---
 title: "Team Post"
 publishedAt: 2024-12-28
@@ -331,7 +331,7 @@ categories: ["Development"]
       </section>
 
       {/* Footer */}
-      <div className="text-center py-8 text-sm text-muted-foreground">
+      <div className="py-8 text-center text-sm text-muted-foreground">
         <p>
           This demo showcases the enhanced blog author system with improved performance,
           accessibility, and developer experience.

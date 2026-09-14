@@ -45,7 +45,7 @@ const extractRichText = (richText: PayloadRichText): string => {
       richText?.root?.children
         .map((child) => {
           const textNode = child?.children?.[0];
-          return textNode?.text || "";
+          return textNode?.text ?? "";
         })
         .join("\n") || ""
     );
@@ -104,7 +104,7 @@ export async function getPayloadContent<T extends CollectionKey, F>({
 }): Promise<Collections[T][] | F> {
   try {
     // Attempt to fetch from Payload
-    const payloadContent = await getPayloadCollection(collection, options).catch(async (error) => {
+    const payloadContent = await getPayloadCollection(collection, options).catch((error) => {
       console.warn(
         `Error fetching ${collection} from payload, falling back to static content: `,
         error

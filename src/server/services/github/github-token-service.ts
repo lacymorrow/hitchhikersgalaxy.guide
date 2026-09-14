@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import { auth } from "@/server/auth";
 import { db } from "@/server/db";
-import { accounts, users } from "@/server/db/schema";
+import { users } from "@/server/db/schema";
 
 /**
  * Validates a GitHub token by making a lightweight API call.
@@ -80,18 +80,19 @@ export async function getGitHubConnectionStatusWithValidation(
 export async function getGitHubAccessToken(userId?: string): Promise<string | null> {
   try {
     // If no userId provided, get from current session
-    if (!userId) {
+    let resolvedUserId = userId;
+    if (!resolvedUserId) {
       const session = await auth();
       if (!session?.user?.id) {
         return null;
       }
-      userId = session.user.id;
+      resolvedUserId = session.user.id;
     }
 
     // First, try to get the token from the accounts table
     const account = await db?.query.accounts.findFirst({
       where: (accounts, { and, eq }) =>
-        and(eq(accounts.userId, userId!), eq(accounts.provider, "github")),
+        and(eq(accounts.userId, resolvedUserId), eq(accounts.provider, "github")),
     });
 
     if (account?.access_token) {
@@ -100,7 +101,7 @@ export async function getGitHubAccessToken(userId?: string): Promise<string | nu
 
     // Fallback: check user metadata
     const user = await db?.query.users.findFirst({
-      where: eq(users.id, userId),
+      where: eq(users.id, resolvedUserId),
     });
 
     if (user?.metadata) {
@@ -163,17 +164,18 @@ export async function getGitHubConnectionStatus(userId?: string): Promise<{
 export async function getGitHubUsername(userId?: string): Promise<string | null> {
   try {
     // If no userId provided, get from current session
-    if (!userId) {
+    let resolvedUserId = userId;
+    if (!resolvedUserId) {
       const session = await auth();
       if (!session?.user?.id) {
         return null;
       }
-      userId = session.user.id;
+      resolvedUserId = session.user.id;
     }
 
     // Get the user's GitHub username from database
     const user = await db?.query.users.findFirst({
-      where: eq(users.id, userId),
+      where: eq(users.id, resolvedUserId),
     });
 
     if (user?.githubUsername) {
@@ -181,7 +183,7 @@ export async function getGitHubUsername(userId?: string): Promise<string | null>
     }
 
     // If no username stored but we have an access token, fetch from GitHub API
-    const accessToken = await getGitHubAccessToken(userId);
+    const accessToken = await getGitHubAccessToken(resolvedUserId);
     if (accessToken) {
       try {
         const response = await fetch("https://api.github.com/user", {
@@ -203,10 +205,10 @@ export async function getGitHubUsername(userId?: string): Promise<string | null>
                 githubUsername,
                 updatedAt: new Date(),
               })
-              .where(eq(users.id, userId));
+              .where(eq(users.id, resolvedUserId));
 
             console.info("[getGitHubUsername] Fetched and stored missing GitHub username:", {
-              userId,
+              userId: resolvedUserId,
               githubUsername,
             });
 

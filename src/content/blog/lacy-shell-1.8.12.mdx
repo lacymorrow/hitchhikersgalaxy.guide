@@ -1,0 +1,62 @@
+---
+title: "Lacy Shell v1.8.12: Bash Without Friction, More Backends, Better Detection"
+publishedAt: 2026-05-18
+description: "Lacy Shell v1.8.12 fixes bash compatibility, adds five new AI backends, and ships smarter natural language routing for terminal users."
+categories: ["Releases", "Tools", "AI"]
+badge: "v1.8.12"
+authors:
+  - name: "Lacy Morrow"
+    avatar: "https://avatars.githubusercontent.com/u/1311301?v=4"
+---
+
+Lacy Shell is the ZSH and Bash plugin that lets you type plain English at your terminal prompt and routes it to whichever AI CLI you have installed. This release, v1.8.12, is the one that finally makes the bash story actually work, expands the backend roster to cover almost every serious AI CLI shipping today, and tightens up the natural language detection so fewer real commands get misrouted as prompts.
+
+This was a heavy maintenance cycle with a lot of "wait, that was broken?" energy. If you tried Lacy Shell on a bash-only box in the last few weeks and bounced off, this is the version to come back to.
+
+![Terminal with code on a dark screen](https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600&h=300&fit=crop)
+
+## The bash installation story actually works now
+
+The biggest cluster of fixes in v1.8.12 is about pretending we ever supported bash correctly. We did not. Four separate PRs landed to fix the install path for users who are not on zsh.
+
+First, the version check used to shell out to `/bin/bash` to verify the runtime. On macOS that means bash 3.2 from 2007, which fails the version gate even when the user has bash 5.2 installed via Homebrew and is actively using it. Now the check uses `$BASH` or walks the process tree to find the actual interpreter you launched from. If you are running bash 5, the installer sees bash 5.
+
+Second, the install script demanded zsh and git as hard requirements. Neither is actually needed if you are running bash and we can fall back to a curl tarball download. The new install flow probes for `git` first, falls back to `curl` with a versioned tarball if git is missing, and only refuses to continue if both are absent. The zsh check was just wrong and got deleted.
+
+Third, the npx installer was hanging after a successful install. The shell was waiting on a child process that never closed because of an unresolved stdio handle. The fix in [#61](https://github.com/lacymorrow/lacy/pull/61) explicitly closes the handles and detaches before exit, so `npx lacy install` now returns control to your terminal in under a second.
+
+The cumulative effect: you can do `npx lacy install` on a fresh Debian container with bash and curl and nothing else, and it works. That was the promise from day one and it took until v1.8.12 to make it real.
+
+## Five new backends: Aider, Amp, Goose, Copilot, and Hermes
+
+The whole point of Lacy Shell is that you do not have to commit to one AI CLI. You install Lacy, you install whichever assistants you want, and the router figures out which one to call based on the prompt and your config. This release adds five backends to that roster.
+
+Aider lands as a first-class backend in [#43](https://github.com/lacymorrow/lacy/pull/43), which is the one I get asked about most. If you live in Aider for code edits, you can now route prompts that look like code changes directly to it without leaving your shell prompt. Sourcegraph Amp CLI follows in [#45](https://github.com/lacymorrow/lacy/pull/45), which is useful if you are already in a Sourcegraph workflow and want their context-aware completion handling natural language queries.
+
+Goose CLI from Block is in via [#42](https://github.com/lacymorrow/lacy/pull/42). Goose is interesting because it has its own extension model, so routing to it lets you compose Lacy Shell's prompt detection with Goose's tool ecosystem. GitHub Copilot CLI gets wired up in [52c3649](https://github.com/lacymorrow/lacy/commit/52c3649), which closes a long-standing request from people who already pay for Copilot and do not want a second subscription just to use Lacy. And Hermes joins in [#40](https://github.com/lacymorrow/lacy/pull/40) for users running their own self-hosted agent stacks.
+
+On top of new backends, the doctor command got updated in [318863e](https://github.com/lacymorrow/lacy/commit/318863e) so `lacy doctor` actually reports on `hermes`, `copilot`, and `goose` instead of silently ignoring them. If you run doctor and a tool you have installed is not showing up, it is now a real bug instead of a deliberate omission.
+
+## Detection got 40 new agent words
+
+The natural language router got smarter in [#57](https://github.com/lacymorrow/lacy/pull/57) with around 40 new agent words added to the detection vocabulary. The router has to decide on every prompt: is this an actual shell command the user wants to run, or is this a natural language request they want routed to an AI? Get it wrong in one direction and you accidentally execute `rm` on something. Get it wrong in the other direction and the user has to keep prefixing things with `lacy` manually.
+
+The new vocabulary covers verbs and patterns that kept getting misclassified. Things like "refactor", "explain", "summarize", "rename", "scaffold", "migrate", "diff", "audit", "review" are now strong signals for routing to an AI rather than treating the word as a binary on your PATH. The error messages also got better in [#55](https://github.com/lacymorrow/lacy/pull/55), so when no AI tool is detected at all, you get a clear "install one of these" message with the actual install commands instead of a generic "no backend configured" string.
+
+The spinner system picked up two new styles in [#56](https://github.com/lacymorrow/lacy/pull/56): a dots variant and an ASCII variant. The default unicode spinner looks great in modern terminals but rendered as garbage in some Linux TTYs and over certain SSH multiplexers. Set `LACY_SPINNER=ascii` in your config and you get a clean rotating slash that works everywhere.
+
+![Code editor with terminal pane open](https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=300&fit=crop)
+
+## Brand, social, and license housekeeping
+
+A bunch of smaller changes that add up to a less janky project surface. The horizontal logo got light and dark variants in [#54](https://github.com/lacymorrow/lacy/pull/54) so it stops looking burned-out on whichever theme your GitHub or docs page renders in. The wordmark glow got dialed back in [#53](https://github.com/lacymorrow/lacy/pull/53) to feel more like a CSS drop-shadow and less like a halo. The social preview card now actually shows `npx lacy` as the install command instead of leading with the curl one-liner, which converts better for people who already trust npm.
+
+The license switched to FSL-1.1-MIT in [5a06894](https://github.com/lacymorrow/lacy/commit/5a06894). Functional Source License is a fair-source license that converts to MIT after two years. If you are using Lacy Shell at work and your legal team was waiting on this, you are good. The README got rewritten with proper installation methods and a community section, and there are now real GitHub issue templates so bug reports come in with actionable info instead of "it broken."
+
+CI got bumped to actions/checkout v6 in [#47](https://github.com/lacymorrow/lacy/pull/47), and dependabot auto-merge is now wired up so dependency PRs that pass tests roll in automatically. Less noise in the PR queue, less risk of a security update sitting unmerged for a month.
+
+## Upgrade
+
+If you already have Lacy Shell installed, run `npx lacy upgrade` or pull the latest tarball. The version check fix means the upgrade itself will work correctly on bash for the first time. If you are new, `npx lacy install` is the path. The doctor command will tell you which backends you have and which you are missing.
+
+Full diff is on [GitHub](https://github.com/lacymorrow/lacy/releases/tag/v1.8.12). File issues if anything in this release misbehaves, especially the bash install path, because that is the one I most want to hear about if it is still broken anywhere.

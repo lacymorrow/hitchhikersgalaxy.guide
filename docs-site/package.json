@@ -1,0 +1,27 @@
+{
+  "name": "shipkit-docs-site",
+  "private": true,
+  "type": "module",
+  "description": "Standalone Holocron build of the Shipkit docs. Reads the same MDX from ../docs.",
+  "scripts": {
+    "prenav": "node ../scripts/generate-holocron-nav.mjs && node ../scripts/sync-docs-images.mjs",
+    "dev": "npm run prenav && vite dev",
+    "build": "npm run prenav && vite build",
+    "start": "node dist/rsc/index.js"
+  },
+  "dependencies": {
+    "@holocron.so/vite": "0.30.0",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "vite": "^8.0.10"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "typescript": "^5.9.3"
+  },
+  "allowScripts": {
+    "esbuild@0.28.1": true,
+    "workerd@1.20260815.1": true
+  }
+}

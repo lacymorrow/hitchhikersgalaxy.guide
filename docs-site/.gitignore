@@ -1,0 +1,5 @@
+node_modules
+dist
+# generated from ../docs by scripts/generate-holocron-nav.mjs
+docs.jsonc
+public/docs

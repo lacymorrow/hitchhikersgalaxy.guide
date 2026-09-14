@@ -13,22 +13,26 @@ Use this button to sync with the latest changes from the upstream repository:
 ### Option 1: Using Git Commands
 
 1. Add the upstream remote (one time setup):
+
 ```bash
 git remote add upstream https://github.com/lacymorrow/shipkit.git
 ```
 
 2. Fetch upstream changes:
+
 ```bash
 git fetch upstream
 ```
 
 3. Merge upstream changes into your main branch:
+
 ```bash
 git checkout main
 git merge upstream/main
 ```
 
 4. Resolve any conflicts and push:
+
 ```bash
 git push origin main
 ```
@@ -57,7 +61,7 @@ name: Sync with Upstream
 
 on:
   schedule:
-    - cron: '0 0 * * 0' # Weekly on Sunday
+    - cron: "0 0 * * 0" # Weekly on Sunday
   workflow_dispatch: # Manual trigger
 
 jobs:

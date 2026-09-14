@@ -28,7 +28,7 @@ export function AddCollaboratorForm() {
       } else {
         toast({
           title: "Error",
-          description: result.error || "Failed to add collaborator",
+          description: result.error ?? "Failed to add collaborator",
           variant: "destructive",
         });
       }
@@ -53,7 +53,7 @@ export function AddCollaboratorForm() {
         disabled={loading}
       />
       <Button type="submit" disabled={loading || !username.trim()} size="sm">
-        <UserPlus className="h-4 w-4 mr-2" />
+        <UserPlus className="mr-2 h-4 w-4" />
         Add Collaborator
       </Button>
     </form>

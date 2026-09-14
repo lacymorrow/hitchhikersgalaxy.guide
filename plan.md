@@ -26,17 +26,17 @@ This plan is designed for an LLM to execute step-by-step. It standardizes lightw
 - Prefer this guard:
 
 ```ts
-const __DEV__ = process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_DEBUG === 'true';
-if (__DEV__) console.debug('[Context] Message', { key: value });
+const __DEV__ = process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_DEBUG === "true";
+if (__DEV__) console.debug("[Context] Message", { key: value });
 ```
 
 - Timing helper (inline, no global util required):
 
 ```ts
-const __DEV__ = process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_DEBUG === 'true';
+const __DEV__ = process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_DEBUG === "true";
 const t0 = __DEV__ ? performance.now() : 0;
 // ... work ...
-if (__DEV__) console.debug('[Timing] some-work', Math.round(performance.now() - t0), 'ms');
+if (__DEV__) console.debug("[Timing] some-work", Math.round(performance.now() - t0), "ms");
 ```
 
 - Migration of existing console usage:
@@ -82,8 +82,8 @@ Edits:
 Debug to add (temporary, dev-only):
 
 ```ts
-const __DEV__ = process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_DEBUG === 'true';
-if (__DEV__) console.debug('[ClientAudit] Converted to server component', 'path/to/file');
+const __DEV__ = process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_DEBUG === "true";
+if (__DEV__) console.debug("[ClientAudit] Converted to server component", "path/to/file");
 ```
 
 Acceptance:
@@ -97,7 +97,7 @@ Goal: Replace noisy production logs with dev-only `console.debug` while keeping 
 
 Targets:
 
-- `src/server/actions/deployment-actions.ts` (multiple console.*)
+- `src/server/actions/deployment-actions.ts` (multiple console.\*)
 - `src/lib/server-action-wrapper.tsx` (console.log + console.error)
 - TRPC timing middleware: `src/lib/trpc/api/trpc.ts`
 
@@ -110,13 +110,13 @@ Edits:
 Debug example:
 
 ```ts
-const __DEV__ = process.env.NODE_ENV !== 'production' || process.env.NEXT_PUBLIC_DEBUG === 'true';
-if (__DEV__) console.debug('[TRPC] %s took %dms', path, end - start);
+const __DEV__ = process.env.NODE_ENV !== "production" || process.env.NEXT_PUBLIC_DEBUG === "true";
+if (__DEV__) console.debug("[TRPC] %s took %dms", path, end - start);
 ```
 
 Acceptance:
 
-- [ ] No unguarded `console.log/info/warn` in src/**/*
+- [ ] No unguarded `console.log/info/warn` in src/\*_/_
 - [ ] All timing logs dev-only
 
 ## Phase 3 — Split Oversized Files
@@ -145,7 +145,7 @@ Edits:
 Debug:
 
 ```ts
-if (__DEV__) console.debug('[Refactor] Split module', { from: 'old.ts', to: ['a.ts','b.ts'] });
+if (__DEV__) console.debug("[Refactor] Split module", { from: "old.ts", to: ["a.ts", "b.ts"] });
 ```
 
 Acceptance:
@@ -166,7 +166,7 @@ Edits:
 Debug:
 
 ```ts
-if (__DEV__) console.debug('[Error] Kind=%s', appError.code, { metadata: appError.metadata });
+if (__DEV__) console.debug("[Error] Kind=%s", appError.code, { metadata: appError.metadata });
 ```
 
 Acceptance:
@@ -193,8 +193,13 @@ Debug:
 
 ```ts
 const t0 = __DEV__ ? performance.now() : 0;
-const res = await /* query */;
-if (__DEV__) console.debug('[DB] query paymentsByUser took %dms (%d rows)', Math.round(performance.now() - t0), res?.length ?? 0);
+const res = await; /* query */
+if (__DEV__)
+  console.debug(
+    "[DB] query paymentsByUser took %dms (%d rows)",
+    Math.round(performance.now() - t0),
+    res?.length ?? 0
+  );
 ```
 
 Acceptance:
@@ -213,8 +218,8 @@ Edits:
 Debug:
 
 ```ts
-if (__DEV__) console.debug('[Cache] hit', key);
-if (__DEV__) console.debug('[Cache] miss', key);
+if (__DEV__) console.debug("[Cache] hit", key);
+if (__DEV__) console.debug("[Cache] miss", key);
 ```
 
 Acceptance:
@@ -233,7 +238,7 @@ Edits:
 Debug:
 
 ```ts
-if (__DEV__) console.debug('[Dynamic] loaded component', 'ComponentName');
+if (__DEV__) console.debug("[Dynamic] loaded component", "ComponentName");
 ```
 
 Acceptance:
@@ -250,7 +255,7 @@ Acceptance:
 
 ## File-Specific Starting Points (Initial Batch)
 
-1) Client-to-Server candidates:
+1. Client-to-Server candidates:
 
 - `src/components/ui/visually-hidden.tsx`
 - `src/components/ui/separator.tsx`
@@ -258,13 +263,13 @@ Acceptance:
 - `src/components/ui/avatar.tsx`
 - `src/components/ui/progress.tsx`
 
-2) Console hygiene:
+2. Console hygiene:
 
 - `src/server/actions/deployment-actions.ts`
 - `src/lib/server-action-wrapper.tsx`
 - `src/lib/trpc/api/trpc.ts`
 
-3) Oversized splits:
+3. Oversized splits:
 
 - `src/server/services/payment-service.ts`
 - `src/components/ui/sidebar.tsx`

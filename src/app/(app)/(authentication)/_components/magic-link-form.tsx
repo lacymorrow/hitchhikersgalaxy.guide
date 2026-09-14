@@ -43,7 +43,7 @@ export function MagicLinkForm({ className }: MagicLinkFormProps) {
       await signInWithOAuthAction({
         providerId: "resend",
         options: {
-          redirectTo: nextUrl || routes.home,
+          redirectTo: nextUrl ?? routes.home,
           email: values.email,
         },
       });

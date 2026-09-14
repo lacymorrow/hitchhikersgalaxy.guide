@@ -62,22 +62,46 @@ export async function GET(request: Request) {
   const [fonts] = await Promise.all([loadAssets()]);
 
   return new ImageResponse(
-    <div tw="flex h-full w-full" style={{ fontFamily: "Geist Sans", backgroundColor: colors.bg, color: colors.fg }}>
-      <div tw="flex absolute inset-y-0 left-16 w-[1px]" style={{ borderLeft: `1px dashed ${colors.border}` }} />
-      <div tw="flex absolute inset-y-0 right-16 w-[1px]" style={{ borderLeft: `1px dashed ${colors.border}` }} />
-      <div tw="flex absolute inset-x-0 h-[1px] top-16" style={{ borderTop: `1px solid ${colors.border}` }} />
-      <div tw="flex absolute inset-x-0 h-[1px] bottom-16" style={{ borderTop: `1px solid ${colors.border}` }} />
+    <div
+      // eslint-disable-next-line react/no-unknown-property
+      tw="flex h-full w-full"
+      style={{ fontFamily: "Geist Sans", backgroundColor: colors.bg, color: colors.fg }}
+    >
+      <div
+        // eslint-disable-next-line react/no-unknown-property
+        tw="flex absolute inset-y-0 left-16 w-[1px]"
+        style={{ borderLeft: `1px dashed ${colors.border}` }}
+      />
+      <div
+        // eslint-disable-next-line react/no-unknown-property
+        tw="flex absolute inset-y-0 right-16 w-[1px]"
+        style={{ borderLeft: `1px dashed ${colors.border}` }}
+      />
+      <div
+        // eslint-disable-next-line react/no-unknown-property
+        tw="flex absolute inset-x-0 h-[1px] top-16"
+        style={{ borderTop: `1px solid ${colors.border}` }}
+      />
+      <div
+        // eslint-disable-next-line react/no-unknown-property
+        tw="flex absolute inset-x-0 h-[1px] bottom-16"
+        style={{ borderTop: `1px solid ${colors.border}` }}
+      />
+      {/* eslint-disable-next-line react/no-unknown-property */}
       <div tw="flex absolute bottom-24 right-24">
         <img src={`${origin}/app/og-logo.png`} width={80} height={80} alt="Logo" />
       </div>
       <div
+        // eslint-disable-next-line react/no-unknown-property
         tw="flex absolute bottom-24 left-24 text-[32px]"
         style={{ fontWeight: 400, color: colors.muted }}
       >
         {url}
       </div>
+      {/* eslint-disable-next-line react/no-unknown-property */}
       <div tw="flex flex-col absolute w-[896px] justify-center inset-32">
         <div
+          // eslint-disable-next-line react/no-unknown-property
           tw="tracking-tight flex-grow-1 flex flex-col justify-center leading-[1.1]"
           style={{
             textWrap: "balance",
@@ -89,6 +113,7 @@ export async function GET(request: Request) {
           {title}
         </div>
         <div
+          // eslint-disable-next-line react/no-unknown-property
           tw="text-[40px] leading-[1.5] flex-grow-1"
           style={{
             fontWeight: 500,
@@ -102,7 +127,7 @@ export async function GET(request: Request) {
     </div>,
     {
       width: 1200,
-      height: 628,
+      height: 630,
       fonts,
     }
   );

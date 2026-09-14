@@ -150,7 +150,6 @@ The current implementation loads all repository files into the WebContainer, whi
   - Configuration files (package.json, tsconfig.json, components.json, tailwind.config)
   - Directory structure for component installation
   - Component-specific dependencies
-  
 - Eliminate loading of unrelated project files:
   - Avoid loading unaffected directories
   - Skip loading media assets, documentation, and other non-essential files
@@ -166,26 +165,14 @@ The current implementation loads all repository files into the WebContainer, whi
 
 ```typescript
 // Example implementation for selective file loading
-const essentialFiles = [
-  "package.json", 
-  "tsconfig.json", 
-  "components.json", 
-  "tailwind.config.js"
-];
+const essentialFiles = ["package.json", "tsconfig.json", "components.json", "tailwind.config.js"];
 
 // Only mount the essential files for installation
 async function mountEssentialFiles(container) {
-  await Promise.all(
-    essentialFiles.map(file => mountFile(container, file))
-  );
-  
+  await Promise.all(essentialFiles.map((file) => mountFile(container, file)));
+
   // Create empty directories for component installation
-  await createEmptyDirectories(container, [
-    "components/ui", 
-    "app", 
-    "lib", 
-    "hooks"
-  ]);
+  await createEmptyDirectories(container, ["components/ui", "app", "lib", "hooks"]);
 }
 ```
 
@@ -257,14 +244,14 @@ async function mountEssentialFiles(container) {
 ### Using the Container Manager
 
 ```typescript
-import { ContainerManager } from './container-manager';
+import { ContainerManager } from "./container-manager";
 
 // Initialize the container
 const containerManager = new ContainerManager();
 await containerManager.initialize();
 
 // Run a shadcn command
-const changedFiles = await containerManager.runShadcnCommand(['add', 'button']);
+const changedFiles = await containerManager.runShadcnCommand(["add", "button"]);
 
 // Process the changed files
 console.log(`Added ${changedFiles.length} files`);
@@ -274,10 +261,10 @@ console.log(`Added ${changedFiles.length} files`);
 
 ```typescript
 // Fetch a source component file
-const response = await fetch('/install/api/template-file-content?path=button.tsx');
+const response = await fetch("/install/api/template-file-content?path=button.tsx");
 const fileContent = await response.text();
 
 // List source component files
-const response = await fetch('/install/api/template-files?path=components');
+const response = await fetch("/install/api/template-files?path=components");
 const files = await response.json();
 ```

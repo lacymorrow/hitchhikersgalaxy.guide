@@ -249,7 +249,7 @@ export class RBACService extends BaseService<typeof roles> {
         columns: {
           role: true,
         },
-      })) || [];
+      })) ?? [];
 
     // Get project roles, default to empty array if db is undefined
     const projectRoles =
@@ -258,7 +258,7 @@ export class RBACService extends BaseService<typeof roles> {
         columns: {
           role: true,
         },
-      })) || [];
+      })) ?? [];
 
     // Combine and deduplicate roles
     const allRoles = [...teamRoles, ...projectRoles].map((r) => r.role);

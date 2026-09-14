@@ -52,15 +52,15 @@ export const AuthorProfile = ({
                   onError={handleImageError}
                 />
               ) : (
-                <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
                   <span className="text-sm font-medium">{displayName.charAt(0).toUpperCase()}</span>
                 </div>
               )}
             </div>
-            <div className="flex-1 min-w-0">
-              <h3 className="font-medium text-sm truncate">{displayName}</h3>
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate text-sm font-medium">{displayName}</h3>
               {author.role && (
-                <p className="text-xs text-muted-foreground truncate">{author.role}</p>
+                <p className="truncate text-xs text-muted-foreground">{author.role}</p>
               )}
               {postCount !== undefined && (
                 <p className="text-xs text-muted-foreground">
@@ -78,7 +78,7 @@ export const AuthorProfile = ({
   return (
     <Card className={cn("w-full", className)}>
       <CardHeader className="pb-4">
-        <div className="flex flex-col sm:flex-row gap-4 items-start">
+        <div className="flex flex-col items-start gap-4 sm:flex-row">
           <div className="relative">
             {!imageError ? (
               <Image
@@ -91,15 +91,15 @@ export const AuthorProfile = ({
                 priority
               />
             ) : (
-              <div className="w-20 h-20 rounded-full bg-muted flex items-center justify-center">
+              <div className="flex h-20 w-20 items-center justify-center rounded-full bg-muted">
                 <span className="text-xl font-medium">{displayName.charAt(0).toUpperCase()}</span>
               </div>
             )}
           </div>
 
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
-              <h1 className="text-2xl font-bold truncate">{displayName}</h1>
+          <div className="min-w-0 flex-1">
+            <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center">
+              <h1 className="truncate text-2xl font-bold">{displayName}</h1>
               {author.isActive !== false && (
                 <Badge variant="secondary" className="w-fit">
                   Active
@@ -107,7 +107,7 @@ export const AuthorProfile = ({
               )}
             </div>
 
-            {author.role && <p className="text-muted-foreground mb-2">{author.role}</p>}
+            {author.role && <p className="mb-2 text-muted-foreground">{author.role}</p>}
 
             <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
               {author.location && (
@@ -131,14 +131,14 @@ export const AuthorProfile = ({
       <CardContent className="space-y-4">
         {author.bio && (
           <div>
-            <h2 className="font-medium mb-2">About</h2>
-            <p className="text-muted-foreground leading-relaxed">{author.bio}</p>
+            <h2 className="mb-2 font-medium">About</h2>
+            <p className="leading-relaxed text-muted-foreground">{author.bio}</p>
           </div>
         )}
 
         {socialLinks.length > 0 && (
           <div>
-            <h2 className="font-medium mb-3">Connect</h2>
+            <h2 className="mb-3 font-medium">Connect</h2>
             <div className="flex flex-wrap gap-2">
               {socialLinks.map((link) => (
                 <Button key={link.platform} variant="outline" size="sm" asChild className="h-8">
@@ -153,7 +153,7 @@ export const AuthorProfile = ({
                       <Globe className="h-3 w-3" aria-hidden="true" />
                     )}
                     <span className="text-xs">{link.handle}</span>
-                    <ExternalLink className="h-2 w-2 ml-1" aria-hidden="true" />
+                    <ExternalLink className="ml-1 h-2 w-2" aria-hidden="true" />
                   </a>
                 </Button>
               ))}
@@ -168,7 +168,7 @@ export const AuthorProfile = ({
               <Mail className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
               <a
                 href={`mailto:${author.email}`}
-                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 aria-label={`Send email to ${displayName}`}
               >
                 {author.email}
@@ -210,7 +210,7 @@ export const AuthorByline = ({
     <div className={cn("flex items-center gap-3", className)}>
       <Link
         href={authorUtils.getAuthorUrl(author)}
-        className="focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-full"
+        className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
         aria-label={`View ${displayName}'s profile`}
       >
         {!imageError ? (
@@ -223,17 +223,17 @@ export const AuthorByline = ({
             onError={handleImageError}
           />
         ) : (
-          <div className="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted">
             <span className="text-xs font-medium">{displayName.charAt(0).toUpperCase()}</span>
           </div>
         )}
       </Link>
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2 text-sm">
           <span className="text-muted-foreground">By</span>
           <Link
             href={authorUtils.getAuthorUrl(author)}
-            className="font-medium hover:underline truncate"
+            className="truncate font-medium hover:underline"
           >
             {displayName}
           </Link>

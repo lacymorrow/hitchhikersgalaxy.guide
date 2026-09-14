@@ -197,18 +197,18 @@ export const ComparisonTable = () => {
   const [hoveredFeature, setHoveredFeature] = useState<string | null>(null);
 
   return (
-    <div className="rounded-lg border max-w-[1200px] w-full mx-auto">
+    <div className="mx-auto w-full max-w-[1200px] rounded-lg border">
       <Table className="w-full">
         <TableHeader>
           <TableRow>
             <TableHead className="w-[40%]">Feature</TableHead>
-            <TableHead className="text-center w-[30%]">
+            <TableHead className="w-[30%] text-center">
               <div className="flex flex-col items-center gap-1">
                 <Badge variant="default">ShipKit</Badge>
                 <span className="text-xs text-muted-foreground">Production-Ready</span>
               </div>
             </TableHead>
-            <TableHead className="text-center w-[30%]">
+            <TableHead className="w-[30%] text-center">
               <div className="flex flex-col items-center gap-1 py-2">
                 <Badge variant="secondary">Others</Badge>
                 <span className="text-xs text-muted-foreground">Basic Features</span>

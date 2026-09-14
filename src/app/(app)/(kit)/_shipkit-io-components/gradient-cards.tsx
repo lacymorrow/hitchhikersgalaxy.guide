@@ -28,13 +28,7 @@ export const GradientCards: React.FC<GradientCardsProps> = ({ cards, className }
   const colsClass = GRID_COLS[Math.min(cards.length, 4)] ?? "md:grid-cols-4";
 
   return (
-    <div
-      className={cn(
-        "mx-auto relative grid w-5/6 grid-cols-1 gap-2 p-2",
-        colsClass,
-        className
-      )}
-    >
+    <div className={cn("relative mx-auto grid w-5/6 grid-cols-1 gap-2 p-2", colsClass, className)}>
       {cards.map((card) => (
         <GradientCard
           key={uuidv4()}

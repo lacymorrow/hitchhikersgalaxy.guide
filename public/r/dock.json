@@ -3,13 +3,8 @@
   "name": "dock",
   "title": "Dock",
   "description": "A macOS-style dock with magnification effect on hover.",
-  "dependencies": [
-    "framer-motion",
-    "class-variance-authority"
-  ],
-  "registryDependencies": [
-    "cn"
-  ],
+  "dependencies": ["framer-motion", "class-variance-authority"],
+  "registryDependencies": ["@shipkit/cn"],
   "files": [
     {
       "path": "src/components/ui/dock.tsx",

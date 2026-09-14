@@ -25,7 +25,6 @@ export interface CodeReviewGuidelines {
  */
 export class AIAssistant {
   private context = aiLoader.getContext();
-  private insights = aiAnalyzer.getCodebaseInsights();
 
   /**
    * Get guidance on how to implement a feature
@@ -217,7 +216,7 @@ export class AIAssistant {
       ],
     };
 
-    return recommendations[feature] || [];
+    return recommendations[feature] ?? [];
   }
 
   /**

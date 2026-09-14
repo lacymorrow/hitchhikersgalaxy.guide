@@ -71,53 +71,51 @@ export function DashboardTabs({ hasGitHubConnection }: { hasGitHubConnection: bo
           <CardContent>
             <div className="flex flex-col gap-4">
               {hasGitHubConnection && (
-                <>
-                  <div className="space-y-4">
-                    <div className="prose dark:prose-invert">
-                      <h3>Quick Install</h3>
-                      <span className="block">
-                        Clone the repository with{" "}
-                        <CodeWindow
-                          code={`git clone ${siteConfig.repo.url}`}
-                          language="bash"
-                          variant="single"
-                          showLineNumbers={false}
-                        />
-                        then install dependencies with{" "}
-                        <CodeWindow
-                          code="bun install --frozen-lockfile"
-                          language="bash"
-                          variant="single"
-                          showLineNumbers={false}
-                        />
-                      </span>
-                    </div>
-
-                    <div className="rounded-lg border bg-card p-4">
-                      <h3 className="mb-3 text-lg font-semibold">Full Installation Steps</h3>
+                <div className="space-y-4">
+                  <div className="prose dark:prose-invert">
+                    <h3>Quick Install</h3>
+                    <span className="block">
+                      Clone the repository with{" "}
                       <CodeWindow
-                        title="Terminal"
-                        code={installationCode}
+                        code={`git clone ${siteConfig.repo.url}`}
                         language="bash"
+                        variant="single"
                         showLineNumbers={false}
-                        theme="dark"
-                        variant="minimal"
                       />
-                    </div>
-
-                    <div className="rounded-lg border bg-card p-4">
-                      <h3 className="mb-3 text-lg font-semibold">Using Docker</h3>
+                      then install dependencies with{" "}
                       <CodeWindow
-                        title="Terminal"
-                        code={dockerCode}
+                        code="bun install --frozen-lockfile"
                         language="bash"
+                        variant="single"
                         showLineNumbers={false}
-                        theme="dark"
-                        variant="minimal"
                       />
-                    </div>
+                    </span>
                   </div>
-                </>
+
+                  <div className="rounded-lg border bg-card p-4">
+                    <h3 className="mb-3 text-lg font-semibold">Full Installation Steps</h3>
+                    <CodeWindow
+                      title="Terminal"
+                      code={installationCode}
+                      language="bash"
+                      showLineNumbers={false}
+                      theme="dark"
+                      variant="minimal"
+                    />
+                  </div>
+
+                  <div className="rounded-lg border bg-card p-4">
+                    <h3 className="mb-3 text-lg font-semibold">Using Docker</h3>
+                    <CodeWindow
+                      title="Terminal"
+                      code={dockerCode}
+                      language="bash"
+                      showLineNumbers={false}
+                      theme="dark"
+                      variant="minimal"
+                    />
+                  </div>
+                </div>
               )}
 
               {!hasGitHubConnection && (

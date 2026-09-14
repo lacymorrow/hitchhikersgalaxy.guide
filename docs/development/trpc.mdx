@@ -79,9 +79,9 @@ const items = await trpc.my.list();
 
 ## Procedures
 
-| Type | Import | Auth required |
-|------|--------|--------------|
-| `publicProcedure` | `@/lib/trpc/api/trpc` | No |
+| Type                 | Import                | Auth required                  |
+| -------------------- | --------------------- | ------------------------------ |
+| `publicProcedure`    | `@/lib/trpc/api/trpc` | No                             |
 | `protectedProcedure` | `@/lib/trpc/api/trpc` | Yes — `ctx.session` guaranteed |
 
 ## Demo Route

@@ -8,8 +8,8 @@ interface StaticPageProps {
 export default function StaticPage({ buildTime }: StaticPageProps) {
   return (
     <PagesRouterLayout>
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Static Page Example</h1>
+      <div className="mx-auto max-w-4xl">
+        <h1 className="mb-8 text-4xl font-bold">Static Page Example</h1>
         <Card>
           <CardHeader>
             <CardTitle>Static Site Generation (SSG)</CardTitle>
@@ -19,7 +19,7 @@ export default function StaticPage({ buildTime }: StaticPageProps) {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">This page was built at: {buildTime}</p>
-            <div className="mt-4 p-4 bg-muted rounded-lg">
+            <div className="mt-4 rounded-lg bg-muted p-4">
               <pre className="whitespace-pre-wrap">
                 <code>
                   {`
@@ -41,6 +41,7 @@ export async function getStaticProps() {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function getStaticProps() {
   return {
     props: {

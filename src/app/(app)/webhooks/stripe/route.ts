@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
-import { processStripeWebhook, verifyStripeWebhookSignature } from "@/lib/stripe";
+import { verifyStripeWebhookSignature } from "@/lib/stripe";
 import { PaymentService } from "@/server/services/payment-service";
 import { userService } from "@/server/services/user-service";
 
@@ -333,6 +333,7 @@ export async function POST(request: Request) {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function GET(request: Request) {
   const headers = Object.fromEntries(request.headers.entries());
   logger.info("GET request received on Stripe webhook endpoint:", {

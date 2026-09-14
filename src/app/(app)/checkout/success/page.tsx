@@ -81,8 +81,8 @@ export default async function CheckoutSuccessPage({
       // Lemon Squeezy checkout
       paymentProcessor = "lemon-squeezy";
       orderId = searchParams.order_id;
-      email = searchParams.email || "";
-      status = searchParams.status || "completed";
+      email = searchParams.email ?? "";
+      status = searchParams.status ?? "completed";
 
       logger.info("Lemon Squeezy checkout detected", {
         requestId,
@@ -122,7 +122,7 @@ export default async function CheckoutSuccessPage({
       paymentProcessor = "polar";
       orderId = searchParams.checkoutId;
       // We don't have email directly from Polar, use user email if available
-      email = session?.user?.email || "";
+      email = session?.user?.email ?? "";
       status = "completed"; // Assume completed if we got redirected to success page
 
       logger.info("Polar checkout detected", {
@@ -146,7 +146,7 @@ export default async function CheckoutSuccessPage({
     if (orderId && (session?.user?.id || customData.user_id)) {
       try {
         await PaymentService.createPayment({
-          userId: session?.user?.id || customData.user_id!,
+          userId: session?.user?.id ?? customData.user_id!,
           orderId: orderId,
           status: status,
           amount: 0,
@@ -163,7 +163,7 @@ export default async function CheckoutSuccessPage({
         logger.info("Access granted successfully", {
           requestId,
           orderId,
-          userId: session?.user?.id || customData.user_id,
+          userId: session?.user?.id ?? customData.user_id,
           paymentProcessor,
         });
       } catch (error) {
@@ -206,7 +206,7 @@ export default async function CheckoutSuccessPage({
           <div className="mb-8 text-center">
             <h2 className="mb-2 text-4xl font-semibold">Welcome aboard</h2>
             <p className="text-muted-foreground">
-              Your purchase was successful, we can't wait to see what you build.
+              Your purchase was successful, we can&apos;t wait to see what you build.
             </p>
             {accessGranted && (
               <p className="mt-2 text-sm text-green-500">✓ Access granted successfully</p>

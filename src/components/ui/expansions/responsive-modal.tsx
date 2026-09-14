@@ -53,7 +53,8 @@ const ResponsiveModalVariants = cva(
 );
 
 interface ResponsiveModalContentProps
-  extends React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
+  extends
+    React.ComponentPropsWithoutRef<typeof DialogPrimitive.Content>,
     VariantProps<typeof ResponsiveModalVariants> {}
 
 const ResponsiveModalContent = React.forwardRef<

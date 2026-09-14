@@ -59,6 +59,7 @@ export const OnboardingWizard = ({
   const [open, setOpen] = useState(!safeOnboardingState.completed);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- syncs with external localStorage onboardingState
     setOpen(!safeOnboardingState.completed);
   }, [safeOnboardingState.completed]);
 
@@ -154,7 +155,7 @@ export const OnboardingWizard = ({
             </div>
             <div className="rounded-lg bg-primary/10 p-3 text-center">
               <h3 className="font-semibold">Almost there!</h3>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="mt-1 text-sm text-muted-foreground">
                 Once deployed, your site will be available at your custom domain or a
                 Vercel-provided URL.
               </p>
@@ -208,7 +209,7 @@ export const OnboardingWizard = ({
             currentStep: index,
             steps: {
               ...safePrev.steps,
-              [stepIds[Math.max(0, Math.min(stepIds.length - 1, index))] || ""]: true,
+              [stepIds[Math.max(0, Math.min(stepIds.length - 1, index))] ?? ""]: true,
             },
           };
         })

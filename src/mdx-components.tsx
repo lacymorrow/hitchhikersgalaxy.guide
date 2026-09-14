@@ -38,11 +38,11 @@ import { siteConfig } from "@/config/site-config";
 // Filter the icon libraries to only include valid React components
 function filterForMDXComponents(module: Record<string, any>): MDXComponents {
   return Object.fromEntries(
-    Object.entries(module).filter(([key, value]) => {
+    Object.entries(module).filter(([_key, value]) => {
       // Only include valid React component types
       return isValidElementType(value);
     })
-  ) as MDXComponents;
+  );
 }
 
 const wrapper = ({ children }: { children: React.ReactNode }) => (
@@ -53,11 +53,8 @@ const wrapper = ({ children }: { children: React.ReactNode }) => (
 
 /** MDX component map for RSC and bundlers — not a React hook despite the legacy name on `useMDXComponents`. */
 export function getMDXComponents(components: MDXComponents): MDXComponents {
-  // const fumadocsComponents = await import('fumadocs-ui/mdx');
-
   return {
     wrapper,
-    // ...filterForMDXComponents(fumadocsComponents),
 
     ...filterForMDXComponents(LucideIcons),
     ...filterForMDXComponents(RadixIcons),

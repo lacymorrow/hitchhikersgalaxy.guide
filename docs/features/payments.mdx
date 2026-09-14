@@ -9,11 +9,11 @@ Shipkit supports three payment providers behind a unified `PaymentService`. Each
 
 ## Providers
 
-| Provider | Feature Flag | Required Env Vars |
-|----------|-------------|-------------------|
-| Lemon Squeezy | `NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED` | `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_STORE_ID` |
-| Stripe | `NEXT_PUBLIC_FEATURE_STRIPE_ENABLED` | `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` |
-| Polar | `NEXT_PUBLIC_FEATURE_POLAR_ENABLED` | `POLAR_ACCESS_TOKEN` |
+| Provider      | Feature Flag                               | Required Env Vars                                         |
+| ------------- | ------------------------------------------ | --------------------------------------------------------- |
+| Lemon Squeezy | `NEXT_PUBLIC_FEATURE_LEMONSQUEEZY_ENABLED` | `LEMONSQUEEZY_API_KEY`, `LEMONSQUEEZY_STORE_ID`           |
+| Stripe        | `NEXT_PUBLIC_FEATURE_STRIPE_ENABLED`       | `STRIPE_SECRET_KEY`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` |
+| Polar         | `NEXT_PUBLIC_FEATURE_POLAR_ENABLED`        | `POLAR_ACCESS_TOKEN`                                      |
 
 Feature flags are auto-set when the required env vars are present. No manual flag configuration needed.
 
@@ -64,11 +64,11 @@ Uses the `@polar-sh/nextjs` SDK. Checkout route at `/integrations/polar/checkout
 
 Each provider has a webhook endpoint:
 
-| Provider | Endpoint | Secret Env Var |
-|----------|----------|---------------|
+| Provider      | Endpoint                 | Secret Env Var                |
+| ------------- | ------------------------ | ----------------------------- |
 | Lemon Squeezy | `/webhooks/lemonsqueezy` | `LEMONSQUEEZY_WEBHOOK_SECRET` |
-| Stripe | `/webhooks/stripe` | `STRIPE_WEBHOOK_SECRET` |
-| Polar | `/webhooks/polar` | - |
+| Stripe        | `/webhooks/stripe`       | `STRIPE_WEBHOOK_SECRET`       |
+| Polar         | `/webhooks/polar`        | -                             |
 
 ### What Webhooks Handle
 
@@ -122,26 +122,26 @@ Admin actions are rate-limited.
 ## Checking Payment Status
 
 ```typescript
-import { PaymentService } from "@/server/services/payment-service"
+import { PaymentService } from "@/server/services/payment-service";
 
 // Check if user has any active payment
-const status = await PaymentService.getUserPaymentStatus(userId)
+const status = await PaymentService.getUserPaymentStatus(userId);
 
 // Check specific product purchase
-const hasPurchased = await PaymentService.hasUserPurchasedProduct(userId, productId)
+const hasPurchased = await PaymentService.hasUserPurchasedProduct(userId, productId);
 
 // Check active subscription
-const isSubscribed = await PaymentService.hasUserActiveSubscription(userId)
+const isSubscribed = await PaymentService.hasUserActiveSubscription(userId);
 ```
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/server/services/payment-service.ts` | Unified payment orchestration |
-| `src/server/providers/lemonsqueezy-provider.ts` | Lemon Squeezy implementation |
-| `src/server/providers/stripe-provider.ts` | Stripe implementation |
-| `src/server/providers/polar-provider.ts` | Polar implementation |
-| `src/server/actions/payments.ts` | Payment server actions |
-| `src/app/(app)/webhooks/` | Webhook route handlers |
-| `src/app/(app)/checkout/success/page.tsx` | Post-checkout page |
+| File                                            | Purpose                       |
+| ----------------------------------------------- | ----------------------------- |
+| `src/server/services/payment-service.ts`        | Unified payment orchestration |
+| `src/server/providers/lemonsqueezy-provider.ts` | Lemon Squeezy implementation  |
+| `src/server/providers/stripe-provider.ts`       | Stripe implementation         |
+| `src/server/providers/polar-provider.ts`        | Polar implementation          |
+| `src/server/actions/payments.ts`                | Payment server actions        |
+| `src/app/(app)/webhooks/`                       | Webhook route handlers        |
+| `src/app/(app)/checkout/success/page.tsx`       | Post-checkout page            |

@@ -2,15 +2,8 @@
   "name": "3d-card-effect",
   "type": "registry:block",
   "description": "A card perspective effect, hover over the card to elevate card elements.",
-  "dependencies": [
-    "react",
-    "@types/react",
-    "@types/node"
-  ],
-  "categories": [
-    "components",
-    "ui"
-  ],
+  "dependencies": ["react", "@types/react", "@types/node"],
+  "categories": ["components", "ui"],
   "files": [
     {
       "path": "3d-card-effect.tsx",

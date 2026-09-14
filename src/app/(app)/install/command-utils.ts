@@ -44,7 +44,7 @@ export async function runInstallCommand(
       // First overload: packageManager, command[], displayCommand?
       packageManager = packageManagerOrCommandString;
       command = commandArray;
-      fullCommand = displayCommand || `${packageManager} ${command.join(" ")}`;
+      fullCommand = displayCommand ?? `${packageManager} ${command.join(" ")}`;
     } else {
       // Second overload: commandString
       fullCommand = packageManagerOrCommandString;
@@ -170,23 +170,4 @@ export async function runInstallCommand(
 export function processTerminalOutput(output: string): string {
   if (!output) return "";
   return output;
-
-  // Skip any debug logging messages about ANSI sequences
-  const cleanedOutput = output
-    .split("\n")
-    .filter((line) => {
-      return (
-        !line.includes("Detected ANSI control sequence") &&
-        !line.includes("not considering as completion")
-      );
-    })
-    .join("\n");
-
-  // Remove repetitive command output prefixes
-  const withoutPrefixes = cleanedOutput.replace(/^npx .+ output:\s*/gm, "");
-
-  // Remove excessive empty lines
-  const withoutExcessiveEmptyLines = withoutPrefixes.replace(/\n\s*\n\s*\n+/g, "\n\n");
-
-  return withoutExcessiveEmptyLines;
 }

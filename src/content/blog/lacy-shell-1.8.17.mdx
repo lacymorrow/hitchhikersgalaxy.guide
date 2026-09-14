@@ -1,0 +1,72 @@
+---
+title: "Lacy Shell v1.8.17: Smarter Natural Language Routing in Your Terminal"
+publishedAt: 2026-05-24
+description: "Lacy Shell v1.8.17 ships refinements to the ZSH/Bash plugin that routes natural language straight to AI from your terminal prompt."
+categories: ["Releases", "Tools", "AI"]
+badge: "v1.8.17"
+authorId: "lacy-morrow"
+---
+
+Lacy Shell v1.8.17 is out. If you haven't run into Lacy Shell yet, it's a ZSH/Bash plugin that lets you type plain English at your prompt and get an actual answer back, without bouncing to a browser tab or remembering which CLI flag you wanted. You keep typing commands like normal, but anything that doesn't look like a command gets routed to an AI model and answered inline.
+
+This release is a maintenance cut. No new flags to memorize, no config migrations, no rebuilding your dotfiles. Just install it and keep going. That said, the point of a stable shell plugin is that it stays out of your way, and v1.8.17 leans into that goal pretty hard.
+
+![Terminal on a developer desk](https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600&h=300&fit=crop)
+
+## What Lacy Shell Actually Does
+
+The pitch is small but the workflow change is bigger than it sounds. Most of us live in the shell. We `cd`, we `grep`, we `git log`, and every twenty minutes or so we get stuck on something annoying. "What's the syntax for a recursive chmod that skips symlinks again?" Normally that's a context switch: tab over, open Claude or ChatGPT, paste the question, copy the answer, tab back. Lacy Shell collapses that loop.
+
+You type the question right where you'd type a command. The plugin detects that it's natural language instead of an executable, routes it to the configured model, and prints the answer underneath your cursor. The output stays in your scrollback alongside whatever else you were doing, which makes it weirdly easy to keep working without losing your place.
+
+The routing logic is the interesting part. It's not just "if the first word isn't on PATH, send it to an LLM." That naive approach would catch every typo and send "gti status" to an API. The plugin does intent detection on the whole input. A misspelled command gets the usual zsh correction prompt, but a sentence ending in a question mark or starting with "how do I" or "explain" gets recognized as a query.
+
+## The v1.8.17 Cut
+
+This release lands as a tagged version bump on top of the 1.8.x line. The 1.8 series has been focused on making the plugin behave well in long-running shells, especially when you've got multiple panes open in tmux or zellij and the plugin is loaded in each one. The earlier 1.8 releases tightened up the init path so the plugin doesn't add measurable startup time to new shells, and v1.8.17 continues in that direction.
+
+If you were already on 1.8.x, the upgrade path is the usual one for whatever plugin manager you use. With zinit:
+
+```sh
+zinit update lacy-morrow/lacy-shell
+```
+
+Or with oh-my-zsh:
+
+```sh
+cd ~/.oh-my-zsh/custom/plugins/lacy-shell && git pull
+```
+
+Or, if you installed via the install script, just rerun it. It's idempotent and will pick up the new tag.
+
+There's no config schema change in this release, so your `~/.lacyshrc` or wherever you keep your settings doesn't need touching. The default model selection, the routing heuristics, and the keybindings all stay where they were. If you had it bound to a hotkey for "ask without sending the buffer," that still works.
+
+## Why a Boring Release Is a Good Release
+
+I want to flag this directly because it matters for terminal tooling: when a plugin touches your shell init, the best release is often the one with the smallest changelog. Your prompt is sacred. If a version bump introduces a 200ms delay on every new shell or breaks completion for `git checkout`, you're going to rip it out, and rightly so.
+
+The 1.8.17 cut keeps the surface area exactly where it was. The plugin still loads through a single sourced file, still doesn't fork anything at startup, and still defers the heavier imports until you actually invoke a query. That last bit is what keeps it cheap. When you open a new pane, Lacy Shell registers a couple of zle widgets and a precmd hook, and that's it. No Python runtime spinning up, no Node process sitting in the background.
+
+When you do ask a question, the network call happens then, and the response streams back to your terminal as it arrives. Streaming is the difference between "this feels like a chat interface that happens to live in my shell" and "this feels like I'm waiting for a curl request to finish." It's a small thing that you notice every single time.
+
+![Code on a screen](https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=300&fit=crop)
+
+## Practical Examples
+
+A few things I've used Lacy Shell for in the last week, in case you're new to the project and trying to figure out where it fits.
+
+Asking for a one-liner I've forgotten. Typing `find me all files larger than 100MB modified in the last week` and getting back a `find` invocation I can run or edit. The output prints the command in a code fence, so I can copy it without grabbing the surrounding prose.
+
+Explaining errors. When a build fails with a stack trace, I pipe it into the plugin's `explain` command and get a summary of what went wrong before I start digging. This is way faster than reading the trace myself for the kind of errors I see often enough to be tired of them but rarely enough to not remember exactly what they mean.
+
+Quick reference. Asking `what's the difference between rebase and merge for someone who already knows git basics` and getting an answer that doesn't waste paragraphs explaining what version control is. The model picks up on tone, and a shell user implicitly signals a baseline of competence.
+
+The thing that surprised me when I first built this is how much friction there is in the "tab to a browser" workflow. It's not that browser AI tools are slow. They're fine. It's that the act of leaving the terminal pulls your attention out of whatever you were doing. Staying in the prompt keeps you in the rhythm.
+
+## What's Next
+
+The 1.9 line is going to focus on extending the routing layer to handle multi-turn context inside a single shell session. Right now each query is independent, which is fine for one-shot questions but loses value when you're working through something more involved. The plan is to give the plugin a small per-session memory that you can clear with a command, so follow-up questions can reference the previous answer without you having to paste anything back in.
+
+For now, grab v1.8.17, point it at whichever model you prefer, and forget it's there until you need it. That's the whole point. The blog post you're reading is longer than any interaction you're likely to have with the plugin on a given day, and that's by design.
+
+Source and install instructions live at the repo. Issues and feature requests welcome there too.

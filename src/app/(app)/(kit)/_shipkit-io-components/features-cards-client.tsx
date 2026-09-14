@@ -4,10 +4,10 @@ import { Section, SectionHeader } from "@/components/primitives/section";
 import { GradientCards } from "./gradient-cards";
 
 interface FeaturesCardsClientProps {
-  cards: Array<{
+  cards: {
     title: string;
     description: string;
-  }>;
+  }[];
 }
 
 export function FeaturesCardsClient({ cards }: FeaturesCardsClientProps) {

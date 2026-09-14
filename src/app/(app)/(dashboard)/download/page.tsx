@@ -49,7 +49,7 @@ bun install --frozen-lockfile
 # Start the development server
 bun dev`;
 
-const dockerCode = `# Clone the repository
+const _dockerCode = `# Clone the repository
 git clone ${siteConfig.repo.url}
 
 # Change directory
@@ -83,16 +83,16 @@ export default async function DownloadPage() {
     hasPurchased,
     hasGitHubConnection: gitHubStatus.isConnected,
     githubUsername: gitHubStatus.username,
-    userEmail: session?.user?.email || undefined,
+    userEmail: session?.user?.email ?? undefined,
   };
 
   return (
     <main className="container py-8">
       <div className="mx-auto max-w-4xl space-y-8">
         {/* Header Section */}
-        <div className="text-center space-y-4">
+        <div className="space-y-4 text-center">
           <h1 className="text-4xl font-bold tracking-tight">Download {siteConfig.name}</h1>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
             Get started with the premium Next.js boilerplate that includes everything you need to
             build and ship your product fast.
           </p>
@@ -323,11 +323,13 @@ function InstallationPreview() {
           <TerminalIcon className="h-5 w-5" />
           Installation Preview
         </CardTitle>
-        <CardDescription>Here's what you'll do after downloading {siteConfig.name}</CardDescription>
+        <CardDescription>
+          Here&apos;s what you&apos;ll do after downloading {siteConfig.name}
+        </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
         <div>
-          <h4 className="font-semibold mb-3">Quick Start (Recommended)</h4>
+          <h4 className="mb-3 font-semibold">Quick Start (Recommended)</h4>
           <CodeWindow
             title="Terminal"
             code={installationCode}
@@ -359,33 +361,35 @@ function SupportSection() {
     <Card>
       <CardHeader>
         <CardTitle>Need Help?</CardTitle>
-        <CardDescription>We're here to help you get started with {siteConfig.name}</CardDescription>
+        <CardDescription>
+          We&apos;re here to help you get started with {siteConfig.name}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <div className="grid gap-4 md:grid-cols-3">
           <Link
             href={routes.docs}
-            className="flex flex-col items-center text-center p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+            className="flex flex-col items-center rounded-lg border p-4 text-center transition-colors hover:bg-muted/50"
           >
-            <InfoIcon className="h-8 w-8 mb-2 text-primary" />
+            <InfoIcon className="mb-2 h-8 w-8 text-primary" />
             <h4 className="font-semibold">Documentation</h4>
             <p className="text-sm text-muted-foreground">Complete guides and API reference</p>
           </Link>
 
           <Link
             href={routes.contact}
-            className="flex flex-col items-center text-center p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+            className="flex flex-col items-center rounded-lg border p-4 text-center transition-colors hover:bg-muted/50"
           >
-            <UserIcon className="h-8 w-8 mb-2 text-primary" />
+            <UserIcon className="mb-2 h-8 w-8 text-primary" />
             <h4 className="font-semibold">Contact Support</h4>
             <p className="text-sm text-muted-foreground">Get help from our support team</p>
           </Link>
 
           <Link
             href={siteConfig.links.github}
-            className="flex flex-col items-center text-center p-4 rounded-lg border hover:bg-muted/50 transition-colors"
+            className="flex flex-col items-center rounded-lg border p-4 text-center transition-colors hover:bg-muted/50"
           >
-            <GitBranchIcon className="h-8 w-8 mb-2 text-primary" />
+            <GitBranchIcon className="mb-2 h-8 w-8 text-primary" />
             <h4 className="font-semibold">GitHub</h4>
             <p className="text-sm text-muted-foreground">Report issues and contribute</p>
           </Link>

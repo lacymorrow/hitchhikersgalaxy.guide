@@ -1,12 +1,9 @@
-import { eq, or } from "drizzle-orm";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import {
   createStripeCheckoutSession,
-  createStripeCustomer,
   getAllStripeOrders,
   getStripeClient,
-  getStripeCustomerByEmail,
   getStripePaymentStatus,
   hasUserPurchasedStripeProduct,
   processStripeWebhook,
@@ -522,6 +519,7 @@ export class StripeProvider extends BasePaymentProvider {
    * Note: Stripe doesn't have a simple "list all products" approach for checkout
    * This would typically be configured in your application with specific price IDs
    */
+  // eslint-disable-next-line @typescript-eslint/require-await -- provider interface contract requires async
   async listProducts(): Promise<ProductData[]> {
     try {
       this.checkProviderReady();

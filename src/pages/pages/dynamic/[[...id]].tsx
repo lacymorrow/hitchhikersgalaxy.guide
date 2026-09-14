@@ -2,7 +2,7 @@ import type { GetServerSideProps } from "next";
 import Link from "next/link";
 import { PagesRouterLayout } from "@/components/layouts/pages-router-layout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { createRoute, routes } from "@/config/routes";
+import { routes } from "@/config/routes";
 
 interface DynamicPageProps {
   id: string;
@@ -15,12 +15,12 @@ export default function DynamicPage(props: DynamicPageProps) {
   const exampleId = `example-${(id ?? "0").replace(/\W/g, "").slice(0, 12) || "demo"}`;
 
   // Create a dynamic route using the routes configuration
-  const dynamicExampleRoute = createRoute(`${routes.pages.dynamic}/${exampleId}`);
+  const dynamicExampleRoute = `${routes.pages.dynamic}/${exampleId}`;
 
   return (
     <PagesRouterLayout>
-      <div className="max-w-4xl mx-auto">
-        <h1 className="text-4xl font-bold mb-8">Dynamic Page Example</h1>
+      <div className="mx-auto max-w-4xl">
+        <h1 className="mb-8 text-4xl font-bold">Dynamic Page Example</h1>
         <Card>
           <CardHeader>
             <CardTitle>Server-Side Rendering (SSR)</CardTitle>
@@ -34,7 +34,7 @@ export default function DynamicPage(props: DynamicPageProps) {
                 Current dynamic ID: <span className="font-mono">{id ?? "(empty path)"}</span>
               </p>
               <p className="text-muted-foreground">Request time: {requestTime}</p>
-              <div className="p-4 bg-muted rounded-lg">
+              <div className="rounded-lg bg-muted p-4">
                 <pre className="whitespace-pre-wrap">
                   <code>
                     {`
@@ -55,10 +55,10 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
                 try visiting{" "}
                 <Link
                   suppressHydrationWarning
-                  href={dynamicExampleRoute.path}
+                  href={dynamicExampleRoute}
                   className="text-primary hover:underline"
                 >
-                  {dynamicExampleRoute.path}
+                  {dynamicExampleRoute}
                 </Link>
               </p>
             </div>
@@ -69,6 +69,7 @@ export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/require-await
 export const getServerSideProps: GetServerSideProps = async ({ params }) => {
   return {
     props: {

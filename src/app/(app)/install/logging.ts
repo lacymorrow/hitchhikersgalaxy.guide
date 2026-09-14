@@ -60,9 +60,7 @@ function appendToLogHistory(
   data?: unknown
 ): void {
   if (typeof window !== "undefined") {
-    if (!window.webContainerLogs) {
-      window.webContainerLogs = [];
-    }
+    window.webContainerLogs ??= [];
 
     window.webContainerLogs.push({
       type,

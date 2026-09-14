@@ -34,7 +34,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
   const modifiedFiles = changedFiles.length - newFiles;
 
   // Function to get the file extension
-  const getFileExtension = (filePath: string) => {
+  const _getFileExtension = (filePath: string) => {
     const parts = filePath.split(".");
     return parts.length > 1 ? parts[parts.length - 1] : "";
   };
@@ -52,7 +52,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
 
   const downloadSingleFile = (file: FileChange) => {
     const blob = new Blob([file.content], { type: "text/plain;charset=utf-8" });
-    saveAs(blob, file.path.split("/").pop() || "file.txt");
+    saveAs(blob, file.path.split("/").pop() ?? "file.txt");
   };
 
   const downloadAllFiles = async () => {
@@ -92,7 +92,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h3 className="font-semibold text-lg">Installation Complete</h3>
+          <h3 className="text-lg font-semibold">Installation Complete</h3>
           <p className="text-sm text-muted-foreground">
             The following files were{" "}
             {newFiles > 0 && modifiedFiles > 0
@@ -108,8 +108,8 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-1 space-y-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+        <div className="space-y-4 lg:col-span-1">
           <Card>
             <CardHeader className="py-3">
               <CardTitle className="text-sm font-medium">Files</CardTitle>
@@ -120,7 +120,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
                   <li key={file.path}>
                     <button
                       type="button"
-                      className={`w-full text-left px-3 py-2 text-sm flex items-center space-x-2 hover:bg-accent/50 ${
+                      className={`flex w-full items-center space-x-2 px-3 py-2 text-left text-sm hover:bg-accent/50 ${
                         activeFile === file.path ? "bg-accent" : ""
                       }`}
                       onClick={() => setActiveFile(file.path)}
@@ -134,7 +134,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
                       {file.isNew && (
                         <Badge
                           variant="outline"
-                          className="text-xs bg-emerald-500/10 text-emerald-500 border-emerald-500/20"
+                          className="border-emerald-500/20 bg-emerald-500/10 text-xs text-emerald-500"
                         >
                           New
                         </Badge>
@@ -149,7 +149,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
 
         <div className="lg:col-span-2">
           <Card>
-            <CardHeader className="py-3 flex flex-row items-center justify-between">
+            <CardHeader className="flex flex-row items-center justify-between py-3">
               <CardTitle className="text-sm font-medium">{selectedFile?.path}</CardTitle>
               <div className="flex space-x-2">
                 <Button
@@ -173,7 +173,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
                 </Button>
               </div>
             </CardHeader>
-            <CardContent className="p-0 max-h-[500px] overflow-auto">
+            <CardContent className="max-h-[500px] overflow-auto p-0">
               {selectedFile && (
                 <div className="text-sm">
                   {selectedFile.content.includes("[Binary data:") ? (
@@ -181,7 +181,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
                       Binary file content cannot be displayed.
                     </div>
                   ) : (
-                    <pre className="p-4 bg-slate-900 text-slate-50 rounded-md whitespace-pre-wrap font-mono text-sm">
+                    <pre className="whitespace-pre-wrap rounded-md bg-slate-900 p-4 font-mono text-sm text-slate-50">
                       {selectedFile.content}
                     </pre>
                   )}

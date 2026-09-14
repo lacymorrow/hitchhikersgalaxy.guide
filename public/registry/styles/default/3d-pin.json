@@ -10,10 +10,7 @@
     "@types/react",
     "@types/node"
   ],
-  "categories": [
-    "components",
-    "ui"
-  ],
+  "categories": ["components", "ui"],
   "files": [
     {
       "path": "3d-pin.tsx",

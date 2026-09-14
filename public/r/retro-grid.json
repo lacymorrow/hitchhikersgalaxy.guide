@@ -3,9 +3,7 @@
   "name": "retro-grid",
   "title": "Retro Grid",
   "description": "A perspective grid background effect with retro aesthetics.",
-  "registryDependencies": [
-    "cn"
-  ],
+  "registryDependencies": ["@shipkit/cn"],
   "files": [
     {
       "path": "src/components/ui/retro-grid.tsx",

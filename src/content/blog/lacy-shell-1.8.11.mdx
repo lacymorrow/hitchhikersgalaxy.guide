@@ -1,0 +1,73 @@
+---
+title: "Lacy Shell v1.8.11: Cleaner Terminal Routing and Smarter Path Handling"
+publishedAt: 2026-05-05
+description: "Lacy Shell v1.8.11 drops Kitty and WezTerm support, fixes path-prefixed command routing, and preserves backslashes in shell history."
+categories: ["Releases", "Tools", "AI"]
+badge: "v1.8.11"
+authors:
+  - name: "Lacy Morrow"
+    avatar: "https://avatars.githubusercontent.com/u/1311301?v=4"
+---
+
+Lacy Shell v1.8.11 is out, and this one is a course correction. The previous release shipped experimental terminal output capture through Kitty and WezTerm APIs, and after living with it for a cycle, the cost outweighed the benefit. So we ripped it out. Alongside that, this release fixes a long-standing annoyance with how path-prefixed commands were getting routed, and tightens up how backslashes survive the trip into shell history.
+
+If you're new here, Lacy Shell is a ZSH and Bash plugin that routes natural language to AI directly in your terminal. You type something that looks like a sentence, it goes to the model. You type something that looks like a command, it goes to your shell. The whole game is making that routing decision correctly, every time, without making you think about it.
+
+![Terminal with code](https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600&h=300&fit=crop)
+
+## Why Kitty and WezTerm Support Got Removed
+
+Two releases ago, I added terminal output capture using the native APIs in Kitty and WezTerm. The idea was to let the AI see what you'd just been looking at in your terminal so it could give better context-aware answers. If you ran a failing build and asked "why did this break," the model would have the actual stack trace.
+
+It worked. It also broke in ways that were hard to predict. WezTerm's pane introspection API differs across versions, Kitty's remote control protocol requires opt-in flags that most users don't have set, and the failure modes were silent. People would ask the AI a question, get a worse answer than expected, and have no way to know that capture had silently failed and the model was operating blind.
+
+PR #26 removes both integrations entirely. The codebase loses about 400 lines of terminal-specific glue code, the plugin starts up faster, and the behavior is consistent across every terminal emulator. If you want to feed terminal output to the AI, you can still pipe it explicitly, which is honestly clearer than the magic version anyway. Sometimes the right move is to delete the clever feature and let users be explicit.
+
+This is the kind of thing that's easier to ship than to walk back. Removing a feature feels worse than adding one, but the maintenance burden of cross-terminal capture wasn't going to get smaller. WezTerm and Kitty both ship updates that change pane behavior, and chasing those changes across two emulators for a feature that works 70% of the time was the wrong investment.
+
+## Path-Prefixed Commands Now Route Correctly
+
+The big bug fix in v1.8.11 is PR #27, which addresses how Lacy Shell decides what's a command and what's a question. The router has always had heuristics: if the first token is a binary on your PATH, it's a command. If it starts with `./` or `/`, it's a command. If it looks like English, it goes to the AI.
+
+The bug was that path-prefixed commands like `./scripts/deploy.sh --staging` or `/usr/local/bin/custom-tool` were sometimes getting matched against the AI router's heuristics first, especially when the path contained words that looked like natural language. A path like `./build/run-tests.sh` could occasionally trip the router into thinking "run tests" was a question.
+
+The fix is straightforward: any input whose first token starts with `./`, `../`, `/`, or `~/` is unconditionally a shell command. No AI inspection, no heuristics, no second-guessing. If you typed a path, you meant a path.
+
+```bash
+./deploy.sh production        # always shell, never AI
+~/scripts/backup.sh           # always shell, never AI
+/usr/bin/find . -name "*.ts"  # always shell, never AI
+how do I deploy to production # AI, as intended
+```
+
+The same PR also fixes a separate but related issue with backslash preservation in shell history. When Lacy Shell intercepts your input to route it, it has to put the original command back into your shell's history file so that pressing the up arrow gives you back what you typed. Backslashes were getting eaten on the way through, which meant that if you typed something like `find . -name \*.log`, your history would show `find . -name *.log`, and re-running it would expand the glob in the current directory instead of passing the literal star to find.
+
+This was rare but maddening when it happened, because the failure was invisible until you tried to recall the command. The fix preserves the exact byte sequence of your input, backslashes and all, so what goes into history is exactly what you typed.
+
+## What This Means for Day-to-Day Use
+
+If you've been using Lacy Shell for a while, you'll notice that path-prefixed commands feel snappier and more reliable. There's no perceptible AI round-trip on something the router previously had to think about. You can run `./long-named-script-with-words.sh` and it goes straight to the shell without delay.
+
+The Kitty and WezTerm removal won't be visible unless you were depending on terminal context capture. If you were, you'll want to switch to explicit piping. Something like `./build.sh 2>&1 | tail -50 | lacy "why did this fail"` does the same job, takes one extra keystroke, and works in every terminal including tmux, screen, iTerm, Alacritty, Ghostty, and the macOS default Terminal.
+
+![Code editor on desk](https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=600&h=300&fit=crop)
+
+The backslash fix is one of those things you don't notice until you do, and once you do you can't unsee it. If you've ever copy-pasted a complex find or grep invocation out of your history and had it behave differently than the original, this fixes that class of issue for any command Lacy Shell intercepts.
+
+## Upgrading
+
+Pull the latest from your plugin manager. For zinit:
+
+```bash
+zinit update lacymorrow/lacy
+```
+
+For Oh My Zsh, refresh the custom plugin directory and reload your shell. For Bash users with manual installs, pull the repo and re-source the init script in your `.bashrc`.
+
+There are no breaking changes in v1.8.11 unless you were relying on the Kitty or WezTerm capture features, in which case you'll want to update any aliases or wrapper scripts that assumed automatic context capture was happening. The router behavior change is strictly more correct, so existing shell commands continue to work and previously-broken path commands now work right.
+
+## Closing Thoughts
+
+This release is mostly subtraction, and that's fine. v1.8.10 added something that didn't earn its keep, and v1.8.11 takes it back out while fixing the kind of small router bug that makes a tool feel either trustworthy or annoying. The whole pitch of Lacy Shell is that it gets out of your way, and getting out of the way means being right about routing decisions every single time, even when the input looks ambiguous.
+
+Next up I'm looking at improving the model selection logic so that quick factual questions go to a faster model and longer-form requests go to a more capable one. That work is already in flight on a feature branch. If you hit any regressions in v1.8.11, file an issue on the GitHub repo with the exact input that misrouted and I'll dig in.

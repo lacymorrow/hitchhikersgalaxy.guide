@@ -34,8 +34,7 @@ interface FooterGroup {
 }
 
 type FooterElement =
-  | { type: "group"; content: FooterGroup }
-  | { type: "node"; content: React.ReactNode };
+  { type: "group"; content: FooterGroup } | { type: "node"; content: React.ReactNode };
 
 const defaultGroups: FooterElement[] = [
   {
@@ -103,7 +102,7 @@ export const Footer: React.FC<FooterProps> = ({
 }) => {
   const { className, ...rest } = props;
 
-  const groupElements = groups.map((element, index) => {
+  const groupElements = groups.map((element, _index) => {
     if (element.type === "group") {
       const group = element.content;
       return (
@@ -116,7 +115,7 @@ export const Footer: React.FC<FooterProps> = ({
             <h3 className="mb-2 font-semibold">{group.header.label}</h3>
           )}
           <ul className="space-y-2">
-            {group.items.map((item, itemIndex) => {
+            {group.items.map((item, _itemIndex) => {
               if (item && typeof item === "object" && "href" in item && "label" in item) {
                 return (
                   <li key={uuid()}>
@@ -140,8 +139,8 @@ export const Footer: React.FC<FooterProps> = ({
 
   return (
     <footer className={cn(footerStyles({ variant }), className)} {...rest}>
-      <div className="container relative flex md:min-h-80 w-full flex-col items-stretch gap-2xl py-2xl">
-        <div className="flex flex-col lg:flex-row justify-between gap-2xl">
+      <div className="container relative flex w-full flex-col items-stretch gap-2xl py-2xl md:min-h-80">
+        <div className="flex flex-col justify-between gap-2xl lg:flex-row">
           <div className="flex flex-col gap-2xl">
             <Link href={routes.home}>
               <SparklesText
@@ -154,17 +153,16 @@ export const Footer: React.FC<FooterProps> = ({
             <SubscribeForm />
           </div>
           {/* Desktop Layout */}
-          <div className="hidden md:flex flex-col md:flex-row flex-wrap lg:gap-20">
+          <div className="hidden flex-col flex-wrap md:flex md:flex-row lg:gap-20">
             {groupElements}
           </div>
           {/* Mobile Layout */}
-          <div className="flex flex-col gap-md md:hidden w-full">
+          <div className="flex w-full flex-col gap-md md:hidden">
             <Accordion type="multiple" className="w-full">
               {groups
                 .filter((el) => el.type === "group")
                 .map((element) => {
-                  // We already filtered, so this cast is safe
-                  const group = (element as { type: "group"; content: FooterGroup }).content;
+                  const group = element.content;
                   return (
                     <AccordionItem value={group.header.label} key={uuid()}>
                       <AccordionTrigger className="font-semibold">
@@ -188,7 +186,7 @@ export const Footer: React.FC<FooterProps> = ({
                                   <Link
                                     className={cn(
                                       buttonVariants({ variant: "link" }),
-                                      "p-0 h-auto" // Adjust padding/height for accordion content
+                                      "h-auto p-0" // Adjust padding/height for accordion content
                                     )}
                                     href={item.href}
                                   >
@@ -210,12 +208,12 @@ export const Footer: React.FC<FooterProps> = ({
             </Accordion>
           </div>
         </div>
-        <div className="hidden md:block overflow-hidden">
+        <div className="hidden overflow-hidden md:block">
           <TextHoverEffect text={siteConfig.title} />
         </div>
       </div>
       <RetroGrid
-        className={"hidden md:block [mask-image:linear-gradient(to_top,white,transparent)]"}
+        className={"hidden [mask-image:linear-gradient(to_top,white,transparent)] md:block"}
       />
     </footer>
   );

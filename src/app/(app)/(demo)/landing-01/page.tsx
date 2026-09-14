@@ -1,4 +1,4 @@
-import { ArrowRight, Box, Code2, GitBranch, Layers, Palette, Shield, Zap } from "lucide-react";
+import { ArrowRight, Box, Code2, Layers, Palette, Rocket, Shield, Zap } from "lucide-react";
 import {
   PageHeader,
   PageHeaderDescription,
@@ -59,9 +59,9 @@ export default function FeaturesPage() {
     <div className="min-h-screen bg-background">
       {/* Hero Section */}
       <section className="relative py-20">
-        <div className="container px-4 mx-auto">
-          <PageHeader className="max-w-3xl mx-auto text-center mb-16">
-            <PageHeaderHeading className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/60">
+        <div className="container mx-auto px-4">
+          <PageHeader className="mx-auto mb-16 max-w-3xl text-center">
+            <PageHeaderHeading className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Supercharge Your Next.js Development
             </PageHeaderHeading>
             <PageHeaderDescription>
@@ -71,13 +71,13 @@ export default function FeaturesPage() {
           </PageHeader>
 
           {/* Features Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-16">
+          <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
-              <Card key={feature.id} className="p-6 hover:shadow-lg transition-shadow">
+              <Card key={feature.id} className="p-6 transition-shadow hover:shadow-lg">
                 <div className={`${feature.color} mb-4`}>
                   <feature.icon size={24} />
                 </div>
-                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                <h3 className="mb-2 text-xl font-semibold">{feature.title}</h3>
                 <p className="text-muted-foreground">{feature.description}</p>
               </Card>
             ))}
@@ -85,15 +85,15 @@ export default function FeaturesPage() {
 
           {/* CTA Section */}
           <div className="mt-20 text-center">
-            <div className="inline-flex items-center p-1 bg-secondary rounded-full">
-              <GitBranch className="w-5 h-5 mr-2" />
-              <span className="text-sm font-medium px-2 py-1">Open Source</span>
+            <div className="inline-flex items-center rounded-full bg-secondary p-1">
+              <Rocket className="mr-2 h-5 w-5" />
+              <span className="px-2 py-1 text-sm font-medium">Ship Faster</span>
             </div>
-            <h2 className="text-3xl font-bold mt-4 mb-8">Ready to Start Building?</h2>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <h2 className="mb-8 mt-4 text-3xl font-bold">Ready to Start Building?</h2>
+            <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Button size="lg" className="gap-2">
                 Get Started
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="h-4 w-4" />
               </Button>
               <Button size="lg" variant="outline">
                 View Documentation

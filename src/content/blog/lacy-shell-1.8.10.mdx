@@ -1,0 +1,66 @@
+---
+title: "Lacy Shell v1.8.10: Delta Context, Quoted Paths, and Tighter Telemetry"
+publishedAt: 2026-04-21
+description: "v1.8.10 ships delta-based terminal context for agent queries, fixes quoted path routing, and hardens the telemetry payload against escape bugs."
+categories: ["Releases", "Tools", "AI"]
+badge: "v1.8.10"
+authors:
+  - name: "Lacy Morrow"
+    avatar: "https://avatars.githubusercontent.com/u/1311301?v=4"
+---
+
+Lacy Shell v1.8.10 is out. If you have not seen it before, Lacy Shell is a ZSH and Bash plugin that routes natural language straight to an AI agent from your terminal prompt, so you can type `how do I rebase the last three commits onto main` and get a real answer without leaving the shell. This release is mostly about making the routing smarter, the context richer, and the telemetry less brittle. Three fixes, one new feature, and a bit of housekeeping around funding.
+
+The headline change is delta-based terminal context. The rest of the release fixes the kind of small, sharp edges that you only notice when you hit them: a quoted path getting eaten by the agent, a trailing question mark breaking reserved word detection, a telemetry payload choking on a stray quote. Below is a tour of what shipped and why it matters.
+
+![Terminal with code on a dark screen](https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600&h=300&fit=crop)
+
+## Delta-Based Terminal Context for Agent Queries
+
+The biggest change in v1.8.10 is how Lacy Shell builds the context window it sends to the agent. Previously, every natural language query shipped a chunk of recent terminal output along with the question. That worked, but it had two problems. First, it wasted tokens on output the agent had already seen during the same session. Second, it made follow-up questions feel disconnected, because each call rebuilt context from scratch instead of acknowledging what had already been discussed.
+
+The new delta-based approach ([PR #22](https://github.com/lacymorrow/lacy/pull/22)) tracks what the agent has already seen and only sends the diff since the last query. If you ran a build, asked the agent why it failed, then ran the build again with a fix, the second query only ships the new build output and the new prompt. The agent already has the previous failure in its working memory, so it can reason about the change rather than re-parsing the whole transcript.
+
+Concretely, that means a session like this:
+
+```
+$ cargo build
+... 200 lines of output, fails ...
+$ ?? why did this fail
+... agent answers ...
+$ cargo build
+... 30 new lines, still fails differently ...
+$ ?? still broken, what now
+```
+
+Sends roughly a third of the tokens it used to on that second query, and the agent's response actually engages with the delta. Before, you would sometimes get a generic "have you tried checking the error message" answer because the model was effectively re-reading the same wall of text. Now it sees the new lines as new information and treats them that way.
+
+The implementation hooks into the existing context capture buffer. There is a session marker that advances every time a query completes successfully, and the next query reads from that marker forward. If the session is reset, killed, or the buffer overflows, it falls back to the full snapshot. No configuration needed, it is on by default in v1.8.10.
+
+## Routing Fixes: Quoted Paths and Trailing Punctuation
+
+Two routing bugs got fixed this release, and they both stem from the same underlying tension. Lacy Shell has to decide on every line whether to pass input straight to the shell or send it to the agent, and the heuristics are doing real work. When they get it wrong, you get either a confused agent or a broken command.
+
+The quoted path fix ([PR #19](https://github.com/lacymorrow/lacy/pull/19) and the follow-up [commit 915d602](https://github.com/lacymorrow/lacy/commit/915d602)) handles input like `cd "/Users/me/My Documents"` or `cat "report final.pdf"`. Before v1.8.10, the routing logic looked at the unquoted token stream and could decide that "My Documents" or "report final" looked like prose, then forward the whole thing to the agent. The agent would then politely explain how to change directories, which is not what you want when you literally typed a `cd` command. The fix detects quoted segments before tokenization and treats anything containing them as a shell command by default. Quotes are a strong signal of intent, and we now respect that.
+
+The trailing punctuation fix ([commit 27e4cf4](https://github.com/lacymorrow/lacy/commit/27e4cf4)) is even smaller in scope but matters more often than you would think. The reserved word matcher decides if a line starts with something like `git`, `npm`, or `cd`, and routes accordingly. It also decides if a line looks like a question and should go to the agent. The bug was that `git?` did not match `git` because of the question mark, and `git status?` got routed to the agent instead of being executed and then questioned. The fix strips trailing `?`, `!`, and `.` before running both the reserved word check and the agent matcher. So `cargo build?` now runs the build, and `what does cargo build do?` still goes to the agent.
+
+These are the kind of fixes that do not show up on a feature list but make the plugin feel like it is on your side rather than fighting you.
+
+![Person typing on a laptop keyboard](https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=600&h=300&fit=crop)
+
+## Hardening Telemetry JSON
+
+[PR #23](https://github.com/lacymorrow/lacy/pull/23) fixes a bug in the optional telemetry payload that a few users hit when their queries contained certain characters. Lacy Shell builds the telemetry blob in shell, which means escaping is done by hand, and the previous version had a gap: backslashes inside double quoted strings were not always escaped before being concatenated into the JSON body. The result was that a query containing a Windows-style path or a regex with `\d` could produce malformed JSON, which the receiving endpoint would reject. The user never saw an error because telemetry failures are silent by design, but the data point was lost.
+
+The fix uses a small escaping helper that handles the four characters JSON cares about (`"`, `\`, `newline`, `tab`) before the value enters the payload. It is not glamorous code, but it removes a class of silent failures. If you have telemetry enabled, your queries with paths and regexes are now actually getting recorded. If you have it disabled, nothing changes.
+
+## Funding and Housekeeping
+
+The other commits in this release are about funding metadata. There is a new GitHub Sponsors section in the README, a `funding` field in `package.json`, and a cleanup pass that moved the per-repo `FUNDING.yml` to the org-level default so every project under the account inherits it without duplicate config files. Lacy Shell is free and open source and that is not changing, but if the plugin saves you time and you want to throw a few dollars at keeping it maintained, the sponsor link is now one click away from the repo page.
+
+## Upgrading
+
+If you installed via the standard one-liner, your shell startup will pick up v1.8.10 the next time you open a terminal. If you pinned a version, bump to `v1.8.10` in your plugin manager config. There are no breaking changes and no new configuration options, so the upgrade is a no-op aside from the new behavior kicking in.
+
+The next release is going to focus on multi-agent routing, so you can pick which model handles which class of query without leaving the prompt. If you have thoughts on what that interface should look like, the issue tracker is open. Until then, enjoy the shorter context windows and the routing that finally respects your quotes.

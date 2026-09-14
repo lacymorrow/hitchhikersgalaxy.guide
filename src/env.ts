@@ -139,6 +139,9 @@ const serverSchema = {
   VERCEL_CLIENT_ID: z.string().optional(),
   VERCEL_CLIENT_SECRET: z.string().optional(),
   VERCEL_BLOB_READ_WRITE_TOKEN: z.string().optional(),
+
+  // Preview / Feature-Flag Overrides
+  PREVIEW_SECRET: z.string().optional(),
 };
 
 // Auto-generate server runtimeEnv — dynamic process.env[key] works on the server.
@@ -251,6 +254,7 @@ export const env = createEnv({
     NEXT_PUBLIC_FEATURE_GOOGLE_TAG_MANAGER_ENABLED: zBooleanFeatureFlag,
     NEXT_PUBLIC_FEATURE_C15T_ENABLED: zBooleanFeatureFlag,
     NEXT_PUBLIC_FEATURE_CONSENT_MANAGER_ENABLED: zBooleanFeatureFlag,
+    NEXT_PUBLIC_FEATURE_EVLOG_ENABLED: zBooleanFeatureFlag,
     NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED: zBooleanFeatureFlag,
     NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED: zBooleanFeatureFlag,
     NEXT_PUBLIC_FEATURE_DEVTOOLS_REACT_GRAB_ENABLED: zBooleanFeatureFlag,
@@ -357,6 +361,7 @@ export const env = createEnv({
     NEXT_PUBLIC_FEATURE_C15T_ENABLED: process.env.NEXT_PUBLIC_FEATURE_C15T_ENABLED,
     NEXT_PUBLIC_FEATURE_CONSENT_MANAGER_ENABLED:
       process.env.NEXT_PUBLIC_FEATURE_CONSENT_MANAGER_ENABLED,
+    NEXT_PUBLIC_FEATURE_EVLOG_ENABLED: process.env.NEXT_PUBLIC_FEATURE_EVLOG_ENABLED,
     NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED: process.env.NEXT_PUBLIC_FEATURE_DEVTOOLS_ENABLED,
     NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED:
       process.env.NEXT_PUBLIC_FEATURE_DEVTOOLS_FONT_SELECTOR_ENABLED,

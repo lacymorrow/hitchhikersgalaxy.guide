@@ -34,6 +34,7 @@ export const Cover = ({
   }, [ref.current]);
 
   return (
+    // biome-ignore lint/a11y/noStaticElementInteractions: decorative/UI hover interaction, not primary action
     <div
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
@@ -88,6 +89,7 @@ export const Cover = ({
       </AnimatePresence>
       {beamPositions.map((position, index) => (
         <Beam
+          // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
           key={index}
           hovered={hovered}
           duration={Math.random() * 2 + 1}

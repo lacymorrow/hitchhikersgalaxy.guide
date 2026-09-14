@@ -137,34 +137,38 @@ export const ContainerProcessor = ({
             <Collapsible open={showLogs} onOpenChange={setShowLogs} className="space-y-2">
               <CollapsibleTrigger asChild>
                 <Button variant="outline" size="sm" className="flex items-center">
-                  <CodeIcon className="h-4 w-4 mr-2" />
+                  <CodeIcon className="mr-2 h-4 w-4" />
                   {showLogs ? "Hide Logs" : "Show Logs"}
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <div
                   ref={logsRef}
-                  className="bg-slate-950 text-slate-50 p-4 rounded-md font-mono text-xs max-h-96 overflow-y-auto"
+                  className="max-h-96 overflow-y-auto rounded-md bg-slate-950 p-4 font-mono text-xs text-slate-50"
                 >
                   {logs.map((log, index) => (
-                    <div key={`log-${index}-${log.timestamp}`} className="pb-1">
+                    <div
+                      // biome-ignore lint/suspicious/noArrayIndexKey: log entries are append-only; timestamps can collide
+                      key={`log-${index}-${log.timestamp}`}
+                      className="pb-1"
+                    >
                       <span className="text-slate-400">
                         [{new Date(log.timestamp).toLocaleTimeString()}]
                       </span>{" "}
                       <span
                         className={
-                          log.message.includes("prompt") ? "text-yellow-400 font-medium" : ""
+                          log.message.includes("prompt") ? "font-medium text-yellow-400" : ""
                         }
                       >
                         {log.message}
                       </span>
                       {log.data && typeof log.data === "string" && (
                         <pre
-                          className={`whitespace-pre-wrap break-words pl-6 mt-1 ${
+                          className={`mt-1 whitespace-pre-wrap break-words pl-6 ${
                             log.data.includes("Ok to proceed?") ||
                             log.data.includes("Need to install")
                               ? "text-yellow-300"
-                              : log.data.includes("y\n") || log.data.includes("responding")
+                              : log.data.includes("y") || log.data.includes("responding")
                                 ? "text-green-400"
                                 : "text-green-400"
                           }`}
@@ -189,7 +193,7 @@ export const ContainerProcessor = ({
         <CardTitle>
           {status === "completed" ? (
             <div className="flex items-center">
-              <CheckIcon className="h-5 w-5 mr-2 text-green-500" />
+              <CheckIcon className="mr-2 h-5 w-5 text-green-500" />
               Template Processing Complete
             </div>
           ) : (
@@ -198,7 +202,7 @@ export const ContainerProcessor = ({
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Progress value={progress} className="h-2 mb-2" />
+        <Progress value={progress} className="mb-2 h-2" />
         <p className="text-sm text-muted-foreground">
           {status === "initializing" && "Setting up environment..."}
           {status === "loading-container" && "Loading WebContainer..."}
@@ -215,34 +219,38 @@ export const ContainerProcessor = ({
             <Collapsible open={showLogs} onOpenChange={setShowLogs} className="space-y-2">
               <CollapsibleTrigger asChild>
                 <Button variant="outline" size="sm" className="flex items-center">
-                  <CodeIcon className="h-4 w-4 mr-2" />
+                  <CodeIcon className="mr-2 h-4 w-4" />
                   {showLogs ? "Hide Logs" : "Show Logs"}
                 </Button>
               </CollapsibleTrigger>
               <CollapsibleContent>
                 <div
                   ref={logsRef}
-                  className="bg-slate-950 text-slate-50 p-4 rounded-md font-mono text-xs max-h-96 overflow-y-auto mt-2"
+                  className="mt-2 max-h-96 overflow-y-auto rounded-md bg-slate-950 p-4 font-mono text-xs text-slate-50"
                 >
                   {logs.map((log, index) => (
-                    <div key={`log-${index}-${log.timestamp}`} className="pb-1">
+                    <div
+                      // biome-ignore lint/suspicious/noArrayIndexKey: log entries are append-only; timestamps can collide
+                      key={`log-${index}-${log.timestamp}`}
+                      className="pb-1"
+                    >
                       <span className="text-slate-400">
                         [{new Date(log.timestamp).toLocaleTimeString()}]
                       </span>{" "}
                       <span
                         className={
-                          log.message.includes("prompt") ? "text-yellow-400 font-medium" : ""
+                          log.message.includes("prompt") ? "font-medium text-yellow-400" : ""
                         }
                       >
                         {log.message}
                       </span>
                       {log.data && typeof log.data === "string" && (
                         <pre
-                          className={`whitespace-pre-wrap break-words pl-6 mt-1 ${
+                          className={`mt-1 whitespace-pre-wrap break-words pl-6 ${
                             log.data.includes("Ok to proceed?") ||
                             log.data.includes("Need to install")
                               ? "text-yellow-300"
-                              : log.data.includes("y\n") || log.data.includes("responding")
+                              : log.data.includes("y") || log.data.includes("responding")
                                 ? "text-green-400"
                                 : "text-green-400"
                           }`}

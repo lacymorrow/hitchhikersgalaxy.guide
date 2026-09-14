@@ -36,7 +36,7 @@ function SingleFilePreview({ file }: SingleFilePreviewProps) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = file.path.split("/").pop() || "file.txt";
+    a.download = file.path.split("/").pop() ?? "file.txt";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -65,7 +65,7 @@ function SingleFilePreview({ file }: SingleFilePreviewProps) {
             </pre>
           </CardContent>
         </CollapsibleContent>
-        <CardFooter className="py-2 px-6 flex justify-end gap-2">
+        <CardFooter className="flex justify-end gap-2 px-6 py-2">
           <Button variant="outline" size="sm" onClick={handleCopy}>
             {copied ? <CheckIcon className="h-4 w-4" /> : <CopyIcon className="h-4 w-4" />}
             <span className="ml-2">{copied ? "Copied" : "Copy"}</span>
@@ -82,7 +82,7 @@ function SingleFilePreview({ file }: SingleFilePreviewProps) {
 
 export function FilePreview({ files }: FilePreviewProps) {
   if (!files || files.length === 0) {
-    return <div className="text-center p-8 text-muted-foreground">No files to display</div>;
+    return <div className="p-8 text-center text-muted-foreground">No files to display</div>;
   }
 
   return (

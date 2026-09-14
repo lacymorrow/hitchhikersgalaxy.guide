@@ -20,14 +20,15 @@ export function RepoMetricsSkeleton() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {Array.from({ length: 4 }).map((_, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
         <Card key={i}>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <div className="h-4 w-24 bg-muted animate-pulse rounded" />
-            <div className="h-4 w-4 bg-muted animate-pulse rounded" />
+            <div className="h-4 w-24 animate-pulse rounded bg-muted" />
+            <div className="h-4 w-4 animate-pulse rounded bg-muted" />
           </CardHeader>
           <CardContent>
-            <div className="h-8 w-16 bg-muted animate-pulse rounded mb-1" />
-            <div className="h-3 w-32 bg-muted animate-pulse rounded" />
+            <div className="mb-1 h-8 w-16 animate-pulse rounded bg-muted" />
+            <div className="h-3 w-32 animate-pulse rounded bg-muted" />
           </CardContent>
         </Card>
       ))}
@@ -56,7 +57,7 @@ export async function RepoMetricsContent() {
             </CardHeader>
             <CardContent>
               <p className="text-sm text-muted-foreground">To enable GitHub repository metrics:</p>
-              <ul className="mt-2 text-sm text-muted-foreground list-disc list-inside space-y-1">
+              <ul className="mt-2 list-inside list-disc space-y-1 text-sm text-muted-foreground">
                 <li>
                   Set <code>NEXT_PUBLIC_FEATURE_GITHUB_API_ENABLED=true</code>
                 </li>
@@ -78,7 +79,7 @@ export async function RepoMetricsContent() {
       per_page: 1,
     });
 
-    const prCount = pullRequests[0]?.number || 0;
+    const prCount = pullRequests[0]?.number ?? 0;
 
     // Get recent commits
     const { data: commits } = await octokit.rest.repos.listCommits({
@@ -99,7 +100,7 @@ export async function RepoMetricsContent() {
       ? new Date(commits[0].commit.author.date)
       : new Date();
     const daysSinceLastCommit = Math.floor(
-      (new Date().getTime() - lastCommitDate.getTime()) / (1000 * 60 * 60 * 24)
+      (Date.now() - lastCommitDate.getTime()) / (1000 * 60 * 60 * 24)
     );
 
     const metrics: RepoMetric[] = [
@@ -172,7 +173,7 @@ export async function RepoMetricsContent() {
           </CardHeader>
           {isBadCredentials && (
             <CardContent>
-              <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
+              <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
                 <li>
                   Ensure <code>GITHUB_ACCESS_TOKEN</code> is set in your environment
                 </li>

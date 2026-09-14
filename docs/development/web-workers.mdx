@@ -11,11 +11,9 @@ Shipkit is pre-configured to build Typescript Web Workers from the `src/workers`
 
 ## Example
 
-<FileTree
-  files={[
-    { path: "src/workers/logger-worker.ts", type: "file" },
-    { path: "public/workers/logger-worker.js", type: "file" },
-  ]}
-/>
+```text
+src/workers/logger-worker.ts     # source
+public/workers/logger-worker.js  # build output
+```
 
 The `logger-worker.ts` file is an example of a web worker that handles logging operations in batches to reduce API calls. It automatically flushes logs every 5 seconds or when reaching a specified batch size.

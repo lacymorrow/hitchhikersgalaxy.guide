@@ -30,14 +30,14 @@ export const Stats = ({
     >
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{title}</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{subtitle}</p>
+        <div className="mb-16 text-center">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">{title}</h2>
+          <p className="mx-auto max-w-2xl text-lg text-gray-600">{subtitle}</p>
         </div>
 
         {/* Stats Grid */}
         <div
-          className={cn("grid gap-8 max-w-6xl mx-auto", {
+          className={cn("mx-auto grid max-w-6xl gap-8", {
             "grid-cols-1 md:grid-cols-2": columns === 2,
             "grid-cols-1 md:grid-cols-3": columns === 3,
             "grid-cols-1 md:grid-cols-2 lg:grid-cols-4": columns === 4,
@@ -45,11 +45,12 @@ export const Stats = ({
         >
           {stats.map((stat, index) => (
             <div
+              // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
               key={index}
-              className="text-center p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow"
+              className="rounded-lg border border-gray-200 p-6 text-center transition-shadow hover:shadow-lg"
             >
-              <div className="text-4xl font-bold text-primary mb-2">{stat.value}</div>
-              <div className="text-lg font-semibold mb-2">{stat.label}</div>
+              <div className="mb-2 text-4xl font-bold text-primary">{stat.value}</div>
+              <div className="mb-2 text-lg font-semibold">{stat.label}</div>
               {stat.description && <p className="text-gray-600">{stat.description}</p>}
             </div>
           ))}

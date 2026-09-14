@@ -58,26 +58,30 @@ export function Pricing({ title, plans }: PricingProps) {
       <h2>{title}</h2>
       {/* render plans */}
     </section>
-  )
+  );
 }
 ```
 
 Register it in `src/builder-registry.ts`:
 
 ```tsx
-import { Builder } from "@builder.io/react"
-import { Pricing } from "@/components/modules/builder/pricing"
+import { Builder } from "@builder.io/react";
+import { Pricing } from "@/components/modules/builder/pricing";
 
 Builder.registerComponent(Pricing, {
   name: "Pricing",
   inputs: [
     { name: "title", type: "string", defaultValue: "Pricing" },
-    { name: "plans", type: "list", subFields: [
-      { name: "name", type: "string" },
-      { name: "price", type: "number" },
-    ]},
+    {
+      name: "plans",
+      type: "list",
+      subFields: [
+        { name: "name", type: "string" },
+        { name: "price", type: "number" },
+      ],
+    },
   ],
-})
+});
 ```
 
 The component will appear in the Builder.io visual editor's component panel.
@@ -105,11 +109,11 @@ See [Component Registry](/docs/features/registry) for setup.
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/builder-registry.ts` | Component registration |
-| `src/lib/builder-io/builder-io.tsx` | Renderer component (`RenderBuilderContent`) |
-| `src/app/(cms)/[...slug]/page.tsx` | Unified CMS catch-all (Payload + Builder.io) |
-| `src/app/(app)/(integrations)/builder.io/[...slug]/page.tsx` | Standalone Builder.io route |
-| `src/components/modules/builder/` | Builder-specific components (hero, cta, stats) |
-| `src/styles/builder-io.css` | Style overrides |
+| File                                                         | Purpose                                        |
+| ------------------------------------------------------------ | ---------------------------------------------- |
+| `src/builder-registry.ts`                                    | Component registration                         |
+| `src/lib/builder-io/builder-io.tsx`                          | Renderer component (`RenderBuilderContent`)    |
+| `src/app/(app)/[...slug]/page.tsx`                           | Unified CMS catch-all (Payload + Builder.io)   |
+| `src/app/(app)/(integrations)/builder.io/[...slug]/page.tsx` | Standalone Builder.io route                    |
+| `src/components/modules/builder/`                            | Builder-specific components (hero, cta, stats) |
+| `src/styles/builder-io.css`                                  | Style overrides                                |

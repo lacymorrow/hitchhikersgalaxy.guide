@@ -51,7 +51,7 @@ function isProxyError(error: any): boolean {
   if (!error) return false;
 
   const errorString = error.toString().toLowerCase();
-  const message = error.message?.toLowerCase() || "";
+  const message = error.message?.toLowerCase() ?? "";
 
   // Common proxy blocking indicators
   const proxyIndicators = [
@@ -68,7 +68,7 @@ function isProxyError(error: any): boolean {
   ];
 
   return proxyIndicators.some(
-    (indicator) => errorString.includes(indicator) || message.includes(indicator)
+    (indicator) => errorString.includes(indicator) ?? message.includes(indicator)
   );
 }
 
@@ -79,7 +79,7 @@ function isNetworkError(error: any): boolean {
   if (!error) return false;
 
   const errorString = error.toString().toLowerCase();
-  const message = error.message?.toLowerCase() || "";
+  const message = error.message?.toLowerCase() ?? "";
 
   const networkIndicators = [
     "network",
@@ -94,7 +94,7 @@ function isNetworkError(error: any): boolean {
   ];
 
   return networkIndicators.some(
-    (indicator) => errorString.includes(indicator) || message.includes(indicator)
+    (indicator) => errorString.includes(indicator) ?? message.includes(indicator)
   );
 }
 
@@ -203,22 +203,22 @@ export function withServerActionHandling<T extends any[], R>(
     switch (errorType) {
       case ServerActionError.PROXY_BLOCKED:
         errorMessage =
-          errorMessages.proxy ||
+          errorMessages.proxy ??
           "This action was blocked by your network security. Please contact your IT administrator or try again later.";
         break;
       case ServerActionError.NETWORK_ERROR:
         errorMessage =
-          errorMessages.network ||
+          errorMessages.network ??
           "Network connection issue. Please check your internet connection and try again.";
         break;
       case ServerActionError.TIMEOUT:
-        errorMessage = errorMessages.timeout || "The request timed out. Please try again.";
+        errorMessage = errorMessages.timeout ?? "The request timed out. Please try again.";
         break;
       case ServerActionError.SERVER_ERROR:
-        errorMessage = errorMessages.server || "Server error occurred. Please try again later.";
+        errorMessage = errorMessages.server ?? "Server error occurred. Please try again later.";
         break;
       default:
-        errorMessage = errorMessages.unknown || "An unexpected error occurred. Please try again.";
+        errorMessage = errorMessages.unknown ?? "An unexpected error occurred. Please try again.";
     }
 
     if (showToast) {
@@ -263,7 +263,7 @@ export function useServerAction<T extends any[], R>(
       const result = await wrappedAction(...args);
 
       if (!result.success) {
-        setError(result.error || "Unknown error");
+        setError(result.error ?? "Unknown error");
       }
 
       return result;
@@ -284,7 +284,7 @@ export function useServerAction<T extends any[], R>(
  */
 export function withServerActionForm<P extends object>(
   WrappedComponent: React.ComponentType<P>,
-  options: ServerActionOptions = {}
+  _options: ServerActionOptions = {}
 ) {
   return function ServerActionFormWrapper(props: P) {
     return (

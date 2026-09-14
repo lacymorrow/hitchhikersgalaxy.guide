@@ -1,7 +1,7 @@
 "use client";
 
 import { Loader2, MessageSquare } from "lucide-react";
-import { type FormEvent, useCallback, useEffect, useRef, useState } from "react";
+import { type FormEvent, useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { LoadingBar } from "@/components/ui/loading-bar";
@@ -13,26 +13,24 @@ function TypingAnimation({ simulate = false }: { simulate?: boolean }) {
   const dotCount = useRef<number>(0);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
-  const animate = useCallback(() => {
+  useEffect(() => {
     if (!simulate) return;
 
-    dotCount.current = (dotCount.current + 1) % 4;
-    const dots = ".".repeat(dotCount.current);
-    setText(`Hi! I'm an AI assistant${dots}`);
+    const animate = () => {
+      dotCount.current = (dotCount.current + 1) % 4;
+      const dots = ".".repeat(dotCount.current);
+      setText(`Hi! I'm an AI assistant${dots}`);
+      timeoutRef.current = setTimeout(animate, 500);
+    };
 
-    timeoutRef.current = setTimeout(animate, 500);
-  }, [simulate]);
+    animate();
 
-  useEffect(() => {
-    if (simulate) {
-      animate();
-    }
     return () => {
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [animate, simulate]);
+  }, [simulate]);
 
   return (
     <div className="flex min-h-[100px] items-start gap-3 rounded-lg bg-muted/50 p-4">
@@ -52,7 +50,7 @@ export function AILandingDemo() {
   const [isLoadingModel, setIsLoadingModel] = useState(false);
   const [loadingMessage, setLoadingMessage] = useState("");
   const [progressItems, setProgressItems] = useState<
-    Array<{ file: string; progress: number; total: number }>
+    { file: string; progress: number; total: number }[]
   >([]);
   const worker = useRef<Worker | null>(null);
   const currentMessageRef = useRef<string>("");
@@ -102,8 +100,8 @@ export function AILandingDemo() {
             break;
           case "error": {
             console.error("Worker error:", e.data);
-            const errorMessage = data?.error || "An error occurred while processing your request.";
-            const errorType = data?.type || "unknown";
+            const errorMessage = data?.error ?? "An error occurred while processing your request.";
+            const errorType = data?.type ?? "unknown";
 
             switch (errorType) {
               case "webgpu_not_supported":
@@ -144,7 +142,7 @@ export function AILandingDemo() {
     };
   }, [hasAcceptedPermissions]);
 
-  const handleSubmit = async (e: FormEvent) => {
+  const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (!input.trim() || !worker.current || !hasAcceptedPermissions) return;
 
@@ -176,8 +174,8 @@ export function AILandingDemo() {
         <div className="space-y-4 text-center">
           <h2 className="text-lg font-semibold">Browser Not Supported</h2>
           <p className="text-sm text-muted-foreground">
-            Your browser doesn't support WebGPU, which is required for this demo. Please try using
-            Chrome Canary or another WebGPU-enabled browser.
+            Your browser doesn&apos;t support WebGPU, which is required for this demo. Please try
+            using Chrome Canary or another WebGPU-enabled browser.
           </p>
         </div>
       </Card>

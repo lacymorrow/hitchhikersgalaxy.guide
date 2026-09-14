@@ -1,0 +1,67 @@
+{
+  "$schema": "https://ui.shadcn.com/schema/registry-item.json",
+  "name": "analytics",
+  "title": "Analytics",
+  "description": "Multi-provider analytics with PostHog, Umami, DataFast, Google Analytics, Google Tag Manager, and Statsig — all behind feature flags.",
+  "dependencies": ["posthog-js"],
+  "registryDependencies": ["@shipkit/cn", "@shipkit/features-config"],
+  "files": [
+    {
+      "path": "src/lib/posthog/posthog-config.ts",
+      "content": "export const POSTHOG_RELAY_SLUG = \"relay-ediD\";\n",
+      "type": "registry:lib",
+      "target": "~/src/lib/posthog/posthog-config.ts"
+    },
+    {
+      "path": "src/lib/umami/umami-analytics.tsx",
+      "content": "import Script from \"next/script\";\nimport { env } from \"@/env\";\n\nexport const UmamiAnalytics = () => {\n  // Check if the Umami feature is explicitly enabled\n  if (!env.NEXT_PUBLIC_FEATURE_UMAMI_ENABLED) {\n    return null; // Return null if the feature is disabled\n  }\n\n  // Also check if the website ID is actually present\n  if (!env?.NEXT_PUBLIC_UMAMI_WEBSITE_ID) {\n    console.warn(\"Umami feature is enabled but Website ID is missing.\");\n    return null;\n  }\n\n  return (\n    <Script\n      src=\"https://analytics.lacy.sh/script.js\"\n      data-website-id={env?.NEXT_PUBLIC_UMAMI_WEBSITE_ID}\n      defer\n    />\n  );\n};\n",
+      "type": "registry:component",
+      "target": "~/src/lib/umami/umami-analytics.tsx"
+    },
+    {
+      "path": "src/lib/datafast/datafast-analytics.tsx",
+      "content": "import Script from \"next/script\";\nimport { env } from \"@/env\";\n\n/*\n * DataFast Analytics loader\n * Renders the tracking script when the feature flag is enabled and required envs exist.\n * @see https://datafa.st/docs/nextjs-app-router\n */\nexport const DataFastAnalytics = () => {\n  if (!env.NEXT_PUBLIC_FEATURE_DATAFAST_ENABLED) {\n    return null;\n  }\n\n  if (!env.NEXT_PUBLIC_DATAFAST_WEBSITE_ID) {\n    // Feature is enabled but WEBSITE_ID is missing; skip rendering silently per analytics convention\n    return null;\n  }\n\n  const dataDomain = env.NEXT_PUBLIC_DATAFAST_DOMAIN;\n\n  return (\n    <Script\n      src=\"https://datafa.st/js/script.js\"\n      data-website-id={env.NEXT_PUBLIC_DATAFAST_WEBSITE_ID}\n      {...(dataDomain ? { \"data-domain\": dataDomain } : {})}\n      strategy=\"afterInteractive\"\n    />\n  );\n};\n",
+      "type": "registry:component",
+      "target": "~/src/lib/datafast/datafast-analytics.tsx"
+    },
+    {
+      "path": "src/lib/google-analytics/google-analytics.tsx",
+      "content": "import { GoogleAnalytics as NextGoogleAnalytics } from \"@next/third-parties/google\";\nimport { env } from \"@/env\";\n\nexport const GoogleAnalytics = () => {\n  if (!env.NEXT_PUBLIC_FEATURE_GOOGLE_ANALYTICS_ENABLED) {\n    return null;\n  }\n\n  if (!env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID) {\n    return null;\n  }\n\n  return <NextGoogleAnalytics gaId={env.NEXT_PUBLIC_GOOGLE_ANALYTICS_ID} />;\n};\n",
+      "type": "registry:component",
+      "target": "~/src/lib/google-analytics/google-analytics.tsx"
+    },
+    {
+      "path": "src/lib/google-tag-manager/google-tag-manager.tsx",
+      "content": "import { GoogleTagManager as NextGoogleTagManager } from \"@next/third-parties/google\";\nimport { env } from \"@/env\";\n\nexport const GoogleTagManager = () => {\n  if (!env.NEXT_PUBLIC_FEATURE_GOOGLE_TAG_MANAGER_ENABLED || !env.NEXT_PUBLIC_GOOGLE_GTM_ID) {\n    return null;\n  }\n\n  return <NextGoogleTagManager gtmId={env.NEXT_PUBLIC_GOOGLE_GTM_ID} />;\n};\n",
+      "type": "registry:component",
+      "target": "~/src/lib/google-tag-manager/google-tag-manager.tsx"
+    },
+    {
+      "path": "src/lib/statsig/statsig-provider.tsx",
+      "content": "\"use client\";\nimport { StatsigProvider, useClientAsyncInit } from \"@statsig/react-bindings\";\nimport { StatsigSessionReplayPlugin } from \"@statsig/session-replay\";\nimport { StatsigAutoCapturePlugin } from \"@statsig/web-analytics\";\nimport type React from \"react\";\nimport { env } from \"@/env\";\nimport { PageViewTracker } from \"./statsig-pageview\";\n\ninterface ProviderProps {\n  children: React.ReactNode;\n}\n\n// Inner component that contains hooks - only rendered when Statsig is properly configured\nfunction StatsigProviderInner({ children }: ProviderProps) {\n  const clientKey = env.NEXT_PUBLIC_STATSIG_CLIENT_KEY;\n  const user = { userID: undefined as string | undefined };\n\n  const { client } = useClientAsyncInit(clientKey ?? \"\", user, {\n    plugins: [new StatsigAutoCapturePlugin(), new StatsigSessionReplayPlugin()],\n  });\n\n  if (!client) {\n    return children;\n  }\n\n  return (\n    <StatsigProvider client={client}>\n      <PageViewTracker />\n      {children}\n    </StatsigProvider>\n  );\n}\n\n// Lightweight wrapper to conditionally render Statsig only when enabled and key present\nexport function ShipkitStatsigProvider({ children }: ProviderProps) {\n  // Check conditions before rendering any hooks\n  if (!env.NEXT_PUBLIC_FEATURE_STATSIG_ENABLED) {\n    return <>{children}</>;\n  }\n\n  if (!env.NEXT_PUBLIC_STATSIG_CLIENT_KEY) {\n    // Feature flag enabled by build-time detection, but key missing at runtime\n    return <>{children}</>;\n  }\n\n  return <StatsigProviderInner>{children}</StatsigProviderInner>;\n}\n",
+      "type": "registry:component",
+      "target": "~/src/lib/statsig/statsig-provider.tsx"
+    },
+    {
+      "path": "src/lib/statsig/statsig-pageview.tsx",
+      "content": "\"use client\";\nimport { useStatsigClient } from \"@statsig/react-bindings\";\nimport { useEffect } from \"react\";\n\nexport function PageViewTracker() {\n  const { client } = useStatsigClient();\n\n  useEffect(() => {\n    if (!client) return;\n    // Optional: capture an initial page view event\n    client.logEvent(\"$pageview\");\n  }, [client]);\n\n  return null;\n}\n",
+      "type": "registry:component",
+      "target": "~/src/lib/statsig/statsig-pageview.tsx"
+    },
+    {
+      "path": "src/components/providers/analytics-provider.tsx",
+      "content": "import { Analytics as VercelAnalytics } from \"@vercel/analytics/react\";\nimport { SpeedInsights } from \"@vercel/speed-insights/next\";\nimport type { ReactNode } from \"react\";\nimport { WebVitals } from \"@/components/primitives/web-vitals\";\nimport { DataFastAnalytics } from \"@/lib/datafast/datafast-analytics\";\nimport { GoogleAnalytics } from \"@/lib/google-analytics/google-analytics\";\nimport { GoogleTagManager } from \"@/lib/google-tag-manager/google-tag-manager\";\nimport { ShipkitStatsigProvider } from \"@/lib/statsig/statsig-provider\";\nimport { UmamiAnalytics } from \"@/lib/umami/umami-analytics\";\n\nexport const AnalyticsProvider = ({ children }: { children: ReactNode }) => {\n  return (\n    <>\n      <ShipkitStatsigProvider>\n        {/* Web Vitals - Above children to track page metrics */}\n        <WebVitals />\n\n        {children}\n\n        {/* Metrics - Below children to avoid blocking */}\n        <SpeedInsights />\n\n        {/* Analytics */}\n        <GoogleAnalytics />\n        <GoogleTagManager />\n        <UmamiAnalytics />\n        <DataFastAnalytics />\n        <VercelAnalytics />\n      </ShipkitStatsigProvider>\n    </>\n  );\n};\n",
+      "type": "registry:component",
+      "target": "~/src/components/providers/analytics-provider.tsx"
+    },
+    {
+      "path": "src/components/providers/consent-provider.tsx",
+      "content": "import { ConsentBanner, ConsentDialog, ConsentManagerProvider } from \"@c15t/nextjs\";\nimport type { ReactNode } from \"react\";\nimport { env } from \"@/env\";\n\nexport default function ConsentProvider({ children }: { children: ReactNode }) {\n  if (!env?.NEXT_PUBLIC_FEATURE_C15T_ENABLED) {\n    return children;\n  }\n\n  return (\n    <ConsentManagerProvider\n      options={\n        env?.NEXT_PUBLIC_C15T_URL\n          ? { mode: \"c15t\", backendURL: env?.NEXT_PUBLIC_C15T_URL }\n          : { mode: \"offline\" }\n      }\n    >\n      {children}\n      <ConsentBanner />\n      <ConsentDialog />\n    </ConsentManagerProvider>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "~/src/components/providers/consent-provider.tsx"
+    }
+  ],
+  "docs": "Multi-provider analytics. Each provider auto-enables via env vars: `NEXT_PUBLIC_POSTHOG_KEY` (PostHog), `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Umami), `NEXT_PUBLIC_DATAFAST_ID` (DataFast), `NEXT_PUBLIC_GA_ID` (Google Analytics), `NEXT_PUBLIC_GTM_ID` (GTM), `NEXT_PUBLIC_STATSIG_CLIENT_KEY` (Statsig). Add `<AnalyticsProvider />` to your root layout.",
+  "categories": ["shipkit", "analytics"],
+  "type": "registry:block"
+}

@@ -7,6 +7,12 @@
  */
 
 import { revalidatePath, revalidateTag } from "next/cache";
+import {
+  auditAction,
+  recordAudit,
+  resolveSessionActor,
+  userActor,
+} from "@/server/services/audit-service";
 import { cacheService } from "@/server/services/cache-service";
 import { ErrorService } from "@/server/services/error-service";
 import { metrics, metricsService } from "@/server/services/metrics-service";
@@ -35,6 +41,8 @@ export async function createTeam(userId: string, name: string) {
     if (!team) {
       throw new Error("Failed to create team");
     }
+
+    recordAudit(auditAction.teamCreate({ actor: userActor(userId), target: { id: team.id } }));
 
     // Metrics end
     await metricsService.recordTiming(metrics.api.latency, startTime);
@@ -73,6 +81,17 @@ export async function updateTeam(teamId: string, data: { name?: string }) {
 
     // Update team
     const team = await teamService.updateTeam(teamId, data);
+
+    recordAudit(
+      auditAction.teamUpdate({
+        actor: await resolveSessionActor(),
+        target: { id: teamId },
+        changes:
+          data.name === undefined
+            ? undefined
+            : { patch: [{ op: "replace", path: "/name", value: data.name }] },
+      })
+    );
 
     // Metrics end
     await metricsService.recordTiming(metrics.api.latency, startTime);
@@ -118,6 +137,12 @@ export async function deleteTeam(teamId: string) {
     // Delete team
     const success = await teamService.deleteTeam(teamId);
 
+    if (success) {
+      recordAudit(
+        auditAction.teamDelete({ actor: await resolveSessionActor(), target: { id: teamId } })
+      );
+    }
+
     // Metrics end
     await metricsService.recordTiming(metrics.api.latency, startTime);
     await metricsService.incrementCounter(metrics.api.requests);
@@ -162,6 +187,14 @@ export async function addTeamMember(teamId: string, userId: string, role: string
     // Add member
     const member = await teamService.addTeamMember(teamId, userId, role);
 
+    recordAudit(
+      auditAction.teamMemberAdd({
+        actor: await resolveSessionActor(),
+        target: { id: teamId },
+        changes: { patch: [{ op: "add", path: `/members/${userId}`, value: { role } }] },
+      })
+    );
+
     // Metrics end
     await metricsService.recordTiming(metrics.api.latency, startTime);
     await metricsService.incrementCounter(metrics.api.requests);
@@ -199,6 +232,16 @@ export async function removeTeamMember(teamId: string, userId: string) {
 
     // Remove member
     const success = await teamService.removeTeamMember(teamId, userId);
+
+    if (success) {
+      recordAudit(
+        auditAction.teamMemberRemove({
+          actor: await resolveSessionActor(),
+          target: { id: teamId },
+          changes: { patch: [{ op: "remove", path: `/members/${userId}` }] },
+        })
+      );
+    }
 
     // Metrics end
     await metricsService.recordTiming(metrics.api.latency, startTime);
@@ -241,6 +284,14 @@ export async function updateTeamMemberRole(teamId: string, userId: string, role:
 
     // Update member role
     const member = await teamService.updateTeamMemberRole(teamId, userId, role);
+
+    recordAudit(
+      auditAction.teamMemberRoleUpdate({
+        actor: await resolveSessionActor(),
+        target: { id: teamId },
+        changes: { patch: [{ op: "replace", path: `/members/${userId}/role`, value: role }] },
+      })
+    );
 
     // Metrics end
     await metricsService.recordTiming(metrics.api.latency, startTime);

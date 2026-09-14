@@ -94,7 +94,7 @@ export function BetterAuthOAuthButtons({
       }
     } catch (error) {
       console.error("Better Auth: Sign-in failed", error);
-      toast.error(`Failed to sign in with ${providerConfigs[providerId]?.name || providerId}`);
+      toast.error(`Failed to sign in with ${providerConfigs[providerId]?.name ?? providerId}`);
     } finally {
       setLoadingProvider(null);
     }
@@ -103,7 +103,7 @@ export function BetterAuthOAuthButtons({
   return (
     <div
       className={cn(
-        "flex gap-xs w-full",
+        "flex w-full gap-xs",
         variant === "icons" ? "flex-row justify-center" : "flex-col items-stretch",
         className
       )}

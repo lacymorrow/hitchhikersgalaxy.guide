@@ -63,9 +63,9 @@ Run multiple Shipkit instances on different paths under one domain. See the [Mul
 
 ## Troubleshooting
 
-| Problem | Fix |
-|---------|-----|
-| Build fails | Check env vars are set, run `bun run typecheck` locally |
-| DB connection error | Verify `DATABASE_URL`, check IP allowlists |
-| OOM during build | Use `bun run build:vercel` (8GB heap) |
-| Stale features | Env vars are build-time — redeploy after changes |
+| Problem             | Fix                                                     |
+| ------------------- | ------------------------------------------------------- |
+| Build fails         | Check env vars are set, run `bun run typecheck` locally |
+| DB connection error | Verify `DATABASE_URL`, check IP allowlists              |
+| OOM during build    | Use `bun run build:vercel` (8GB heap)                   |
+| Stale features      | Env vars are build-time — redeploy after changes        |

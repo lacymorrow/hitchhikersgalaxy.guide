@@ -1,6 +1,5 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { eq } from "drizzle-orm";
-import { headers } from "next/headers";
 import { NextResponse } from "next/server";
 // @see https://docs.lemonsqueezy.com/api/webhooks
 // @see https://raw.githubusercontent.com/lmsqueezy/nextjs-billing/refs/heads/main/src/app/api/webhook/route.ts
@@ -8,7 +7,6 @@ import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
 import { payments, users } from "@/server/db/schema";
-import { PaymentService } from "@/server/services/payment-service";
 import { userService } from "@/server/services/user-service";
 
 // Types for webhook payload structure
@@ -68,6 +66,7 @@ interface SubscriptionAttributes {
   status_formatted: string;
   card_brand: string | null;
   card_last_four: string | null;
+  // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- third-party webhook payload structure
   pause: any | null;
   cancelled: boolean;
   trial_ends_at: string | null;
@@ -89,6 +88,7 @@ interface WebhookPayload {
   data: {
     type: "orders" | "subscriptions" | "subscription_invoices" | "license_keys";
     id: string;
+    // eslint-disable-next-line @typescript-eslint/no-redundant-type-constituents -- attributes union includes loose payload variants from third-party webhook
     attributes: OrderAttributes | SubscriptionAttributes | any;
   };
 }
@@ -161,25 +161,32 @@ async function isEventProcessed(eventId: string, eventName: string): Promise<boo
 /**
  * Find or create user from webhook data using consistent userService method
  */
-async function findOrCreateUser(
+export async function findOrCreateUser(
   userEmail: string,
   userName?: string | null,
   customData?: any
 ): Promise<string> {
   try {
-    // First try to find user by custom data user_id
+    // Honor custom_data.user_id ONLY when the hinted user's email matches
+    // the verified webhook email. custom_data flows through from a fully
+    // attacker-controlled checkout query string; trusting it without an
+    // email check is an IDOR (see plan 002 / issue #223).
     if (customData?.user_id) {
       const existingUser = await db?.query.users.findFirst({
         where: eq(users.id, customData.user_id),
       });
-      if (existingUser) {
+      if (existingUser && existingUser.email?.toLowerCase() === userEmail.toLowerCase()) {
         return existingUser.id;
       }
+      logger.debug("Ignoring custom_data.user_id whose email does not match webhook email", {
+        suppliedUserId: customData.user_id,
+        matched: !!existingUser,
+      });
     }
 
     // Use the consistent userService method for finding or creating users
     const { user, created } = await userService.findOrCreateUserByEmail(userEmail, {
-      name: userName || null,
+      name: userName ?? null,
     });
 
     if (created) {
@@ -198,7 +205,9 @@ async function findOrCreateUser(
     return user.id;
   } catch (error) {
     logger.error("Error finding or creating user", { userEmail, userName, error });
-    throw new Error(`Failed to find or create user: ${error}`);
+    throw new Error(
+      `Failed to find or create user: ${error instanceof Error ? error.message : String(error)}`
+    );
   }
 }
 
@@ -394,7 +403,7 @@ async function handleSubscriptionStatusChange(
       throw new Error(`Subscription payment not found for ${data.id}`);
     }
 
-    const existingMetadata = JSON.parse(existingPayment.metadata || "{}");
+    const existingMetadata = JSON.parse(existingPayment.metadata ?? "{}");
 
     // Update the metadata with new subscription status
     const updatedMetadata = {
@@ -475,7 +484,7 @@ async function handleSubscriptionPayment(
     await tx.insert(payments).values({
       userId,
       orderId: `${attributes.subscription_id}-${data.id}`, // Combine subscription and invoice ID
-      amount: attributes.total || 0,
+      amount: attributes.total ?? 0,
       status: eventName === "subscription_payment_success" ? "completed" : "failed",
       processor: "lemonsqueezy",
       metadata: JSON.stringify({
@@ -517,9 +526,9 @@ export async function POST(request: Request) {
   });
 
   try {
-    // Get headers
-    const headersList = await headers();
-    const signature = headersList.get("x-signature");
+    // Read the signature directly off the request so this handler is
+    // testable without a full Next request context.
+    const signature = request.headers.get("x-signature");
 
     if (!signature) {
       logger.warn("Missing X-Signature header", { requestId });
@@ -639,6 +648,7 @@ export async function POST(request: Request) {
 }
 
 // Prevent GET requests
+// eslint-disable-next-line @typescript-eslint/require-await -- Next.js Route Handler signature requires async
 export async function GET() {
   return new NextResponse("Method not allowed", { status: 405 });
 }

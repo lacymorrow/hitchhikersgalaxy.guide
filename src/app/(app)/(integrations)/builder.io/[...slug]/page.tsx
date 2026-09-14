@@ -52,13 +52,11 @@ export default async function Page(props: PageProps) {
     .toPromise();
 
   return (
-    <>
-      <div className="mx-auto w-full py-header">
-        {/* Render the Builder page */}
-        <Suspense fallback={<Loading />}>
-          <RenderBuilderContent content={content} model={model} />
-        </Suspense>
-      </div>
-    </>
+    <div className="mx-auto w-full py-header">
+      {/* Render the Builder page */}
+      <Suspense fallback={<Loading />}>
+        <RenderBuilderContent content={content} model={model} />
+      </Suspense>
+    </div>
   );
 }

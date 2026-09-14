@@ -15,7 +15,7 @@ export async function addWaitlistEntry(
       .insert(waitlistEntries)
       .values({
         ...data,
-        metadata: data.metadata || "{}",
+        metadata: data.metadata ?? "{}",
       })
       .returning();
 
@@ -53,7 +53,7 @@ export async function getWaitlistEntryByEmail(email: string): Promise<WaitlistEn
       .where(eq(waitlistEntries.email, email))
       .limit(1);
 
-    return entry || null;
+    return entry ?? null;
   }, null);
 }
 
@@ -92,8 +92,8 @@ export async function getWaitlistStats(): Promise<{
         .from(waitlistEntries)
         .where(eq(waitlistEntries.isNotified, true));
 
-      const total = totalResult?.count || 0;
-      const notified = notifiedResult?.count || 0;
+      const total = totalResult?.count ?? 0;
+      const notified = notifiedResult?.count ?? 0;
 
       return {
         total,

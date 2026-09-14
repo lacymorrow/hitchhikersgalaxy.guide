@@ -57,7 +57,7 @@ const prompt = (question: string, defaultValue?: string): Promise<string> => {
   }
   return new Promise((resolve) => {
     rl!.question(
-      question + (defaultValue ? " (default: " + defaultValue + ")" : "") + ": ",
+      `${question + (defaultValue ? ` (default: ${defaultValue})` : "")}: `,
       (answer) => {
         resolve(answer || defaultValue || "");
       }
@@ -67,7 +67,7 @@ const prompt = (question: string, defaultValue?: string): Promise<string> => {
 
 // Helper: build a line of TypeScript source like:   key: "value",
 function tsLine(indent: string, key: string, value: string): string {
-  return "\n" + indent + key + ': "' + value + '",';
+  return `\n${indent}${key}: "${value}",`;
 }
 
 // Match a top-level section like `\n\tkey: {\n...\n\t},` handling nested braces
@@ -75,7 +75,7 @@ function tsLine(indent: string, key: string, value: string): string {
 function sectionPattern(key: string): RegExp {
   // Match key: { ... }, where the closing }, is at the same indent level (\t)
   // We look for \n\t}, that isn't preceded by deeper indentation
-  return new RegExp("\\n\\t" + key + ": \\{[\\s\\S]*?\\n\\t\\},");
+  return new RegExp(`\\n\\t${key}: \\{[\\s\\S]*?\\n\\t\\},`);
 }
 
 // Backtick as a runtime value so esbuild never sees an unmatched literal
@@ -94,7 +94,7 @@ async function main() {
   const projectName = argMap.name || (await prompt("Project Name", "Shipkit"));
   const projectSlug =
     argMap.slug || (await prompt("Project Slug", projectName.toLowerCase().replace(/\s+/g, "-")));
-  const domain = argMap.domain || (await prompt("Domain", projectSlug + ".com"));
+  const domain = argMap.domain || (await prompt("Domain", `${projectSlug}.com`));
   const creatorName =
     argMap["creator-name"] || (needsPrompt ? await prompt("Your Name (optional)", "") : "");
 
@@ -105,14 +105,14 @@ async function main() {
   }
 
   // Derive values
-  const githubOrg = projectSlug + "-org";
+  const githubOrg = `${projectSlug}-org`;
   const githubRepo = projectSlug;
   const creatorUsername = creatorName ? creatorName.toLowerCase().replace(/\s+/g, "") : projectSlug;
-  const creatorEmail = "hello@" + domain;
-  const creatorDomain = creatorName ? creatorUsername + ".com" : domain;
+  const creatorEmail = `hello@${domain}`;
+  const creatorDomain = creatorName ? `${creatorUsername}.com` : domain;
   const creatorTwitter = creatorUsername;
   const databaseName = projectSlug;
-  const vercelProjectName = projectSlug + "-app";
+  const vercelProjectName = `${projectSlug}-app`;
   const bonesName = "Bones";
   const brainsName = "Brains";
 
@@ -135,12 +135,12 @@ async function main() {
   let afterConfig = siteConfig.substring(siteConfigStart + siteConfigMatch[0].length);
 
   // Simple key replacements
-  afterConfig = afterConfig.replace(/\n\tname: "([^"]+)"/, '\n\tname: "' + projectName + '"');
-  afterConfig = afterConfig.replace(/\n\ttitle: "([^"]+)"/, '\n\ttitle: "' + projectName + '"');
-  afterConfig = afterConfig.replace(/\n\turl: "([^"]+)"/, '\n\turl: "https://' + domain + '"');
+  afterConfig = afterConfig.replace(/\n\tname: "([^"]+)"/, `\n\tname: "${projectName}"`);
+  afterConfig = afterConfig.replace(/\n\ttitle: "([^"]+)"/, `\n\ttitle: "${projectName}"`);
+  afterConfig = afterConfig.replace(/\n\turl: "([^"]+)"/, `\n\turl: "https://${domain}"`);
   afterConfig = afterConfig.replace(
     /\n\s*ogImage: "([^"]+)"/,
-    '\n\togImage: "https://' + domain + '/og"'
+    `\n\togImage: "https://${domain}/og"`
   );
 
   // Branding section
@@ -155,7 +155,7 @@ async function main() {
     tsLine("\t\t\t", "main", projectName) +
     "\n\t\t}," +
     tsLine("\t\t", "domain", domain) +
-    tsLine("\t\t", "protocol", "web+" + projectSlug) +
+    tsLine("\t\t", "protocol", `web+${projectSlug}`) +
     tsLine("\t\t", "githubOrg", githubOrg) +
     tsLine("\t\t", "githubRepo", githubRepo) +
     tsLine("\t\t", "vercelProjectName", vercelProjectName) +
@@ -165,13 +165,13 @@ async function main() {
 
   // Repository section (needs backtick template literals in output)
   const repoPattern = sectionPattern("repo");
-  const cloneUrl = "https://github.com/" + githubOrg + "/" + githubRepo + ".git";
-  const sshUrl = "git@github.com:" + githubOrg + "/" + githubRepo + ".git";
+  const cloneUrl = `https://github.com/${githubOrg}/${githubRepo}.git`;
+  const sshUrl = `git@github.com:${githubOrg}/${githubRepo}.git`;
   const newRepo =
     "\n\trepo: {" +
     tsLine("\t\t", "owner", githubOrg) +
     tsLine("\t\t", "name", githubRepo) +
-    tsLine("\t\t", "url", "https://github.com/" + githubOrg + "/" + githubRepo) +
+    tsLine("\t\t", "url", `https://github.com/${githubOrg}/${githubRepo}`) +
     "\n\t\tformat: {" +
     "\n\t\t\tclone: () => " +
     BACKTICK +
@@ -191,12 +191,12 @@ async function main() {
   const emailPattern = sectionPattern("email");
   const newEmail =
     "\n\temail: {" +
-    tsLine("\t\t", "support", "support@" + domain) +
-    tsLine("\t\t", "team", "team@" + domain) +
-    tsLine("\t\t", "noreply", "noreply@" + domain) +
+    tsLine("\t\t", "support", `support@${domain}`) +
+    tsLine("\t\t", "team", `team@${domain}`) +
+    tsLine("\t\t", "noreply", `noreply@${domain}`) +
     tsLine("\t\t", "domain", domain) +
-    tsLine("\t\t", "legal", "legal@" + domain) +
-    tsLine("\t\t", "privacy", "privacy@" + domain) +
+    tsLine("\t\t", "legal", `legal@${domain}`) +
+    tsLine("\t\t", "privacy", `privacy@${domain}`) +
     "\n\t\tformat: (type: string) => " +
     BACKTICK +
     "${type}@" +
@@ -209,15 +209,15 @@ async function main() {
   // Creator section (avatar derived from GitHub username, not hardcoded)
   const creatorPattern = sectionPattern("creator");
   const creatorAvatar = creatorName
-    ? "https://github.com/" + creatorUsername + ".png"
-    : "https://" + domain + "/icon.png";
-  const creatorFullName = creatorName || projectName + " Team";
+    ? `https://github.com/${creatorUsername}.png`
+    : `https://${domain}/icon.png`;
+  const creatorFullName = creatorName || `${projectName} Team`;
   const newCreator =
     "\n\tcreator: {" +
     tsLine("\t\t", "name", creatorUsername) +
     tsLine("\t\t", "email", creatorEmail) +
-    tsLine("\t\t", "url", "https://" + creatorDomain) +
-    tsLine("\t\t", "twitter", "@" + creatorTwitter) +
+    tsLine("\t\t", "url", `https://${creatorDomain}`) +
+    tsLine("\t\t", "twitter", `@${creatorTwitter}`) +
     tsLine("\t\t", "twitter_handle", creatorTwitter) +
     tsLine("\t\t", "domain", creatorDomain) +
     tsLine("\t\t", "fullName", creatorFullName) +
@@ -232,8 +232,8 @@ async function main() {
   const socialPattern = sectionPattern("social");
   const newSocial =
     "\n\tsocial: {" +
-    tsLine("\t\t", "github", "https://github.com/" + githubOrg) +
-    tsLine("\t\t", "x", "https://x.com/" + creatorTwitter) +
+    tsLine("\t\t", "github", `https://github.com/${githubOrg}`) +
+    tsLine("\t\t", "x", `https://x.com/${creatorTwitter}`) +
     tsLine("\t\t", "linkedin", "") +
     tsLine("\t\t", "instagram", "") +
     tsLine("\t\t", "facebook", "") +
@@ -267,15 +267,15 @@ async function main() {
   const linksPattern = sectionPattern("links");
   const newLinks =
     "\n\tlinks: {" +
-    tsLine("\t\t", "twitter", "https://twitter.com/" + creatorTwitter) +
+    tsLine("\t\t", "twitter", `https://twitter.com/${creatorTwitter}`) +
     tsLine(
       "\t\t",
       "twitter_follow",
-      "https://twitter.com/intent/follow?screen_name=" + creatorTwitter
+      `https://twitter.com/intent/follow?screen_name=${creatorTwitter}`
     ) +
-    tsLine("\t\t", "x", "https://x.com/" + creatorTwitter) +
-    tsLine("\t\t", "x_follow", "https://x.com/intent/follow?screen_name=" + creatorTwitter) +
-    tsLine("\t\t", "github", "https://github.com/" + githubOrg + "/" + githubRepo) +
+    tsLine("\t\t", "x", `https://x.com/${creatorTwitter}`) +
+    tsLine("\t\t", "x_follow", `https://x.com/intent/follow?screen_name=${creatorTwitter}`) +
+    tsLine("\t\t", "github", `https://github.com/${githubOrg}/${githubRepo}`) +
     "\n\t},";
   afterConfig = afterConfig.replace(linksPattern, newLinks);
 
@@ -297,28 +297,35 @@ async function main() {
   let envExample = fs.readFileSync(envExamplePath, "utf8");
   envExample = envExample.replace(
     /DATABASE_URL="postgresql:\/\/postgres:password@localhost:5432\/([^"]+)"/,
-    'DATABASE_URL="postgresql://postgres:password@localhost:5432/' + databaseName + '"'
+    `DATABASE_URL="postgresql://postgres:password@localhost:5432/${databaseName}"`
   );
 
   // ── Update package.json ──
   const packageJsonPath = path.join(process.cwd(), "package.json");
   let packageJson = fs.readFileSync(packageJsonPath, "utf8");
-  packageJson = packageJson.replace(/"name":\s*"([^"]+)"/, '"name": "' + projectSlug + '"');
+  packageJson = packageJson.replace(/"name":\s*"([^"]+)"/, `"name": "${projectSlug}"`);
+
+  // ── Clear overrides.css (remove Shipkit brand overrides) ──
+  const overridesPath = path.join(process.cwd(), "src", "styles", "overrides.css");
+  const overridesContent = "/* Brand overrides — add your custom CSS variable overrides here */\n";
 
   // ── Output ──
   if (isDryRun) {
     console.log("\nChanges that would be made:");
     console.log("\n1. src/config/site-config.ts:");
-    console.log("  - Project name: Shipkit -> " + projectName);
-    console.log("  - Domain: shipkit.io -> " + domain);
-    console.log("  - GitHub: lacymorrow/shipkit -> " + githubOrg + "/" + githubRepo);
-    console.log("  - Creator: Lacy Morrow -> " + creatorFullName);
+    console.log(`  - Project name: Shipkit -> ${projectName}`);
+    console.log(`  - Domain: shipkit.io -> ${domain}`);
+    console.log(`  - GitHub: lacymorrow/shipkit -> ${githubOrg}/${githubRepo}`);
+    console.log(`  - Creator: Lacy Morrow -> ${creatorFullName}`);
 
     console.log("\n2. .env.example:");
-    console.log("  - Database name: shipkit -> " + databaseName);
+    console.log(`  - Database name: shipkit -> ${databaseName}`);
 
     console.log("\n3. package.json:");
-    console.log("  - Package name: ship-kit -> " + projectSlug);
+    console.log(`  - Package name: ship-kit -> ${projectSlug}`);
+
+    console.log("\n4. src/styles/overrides.css:");
+    console.log("  - Cleared Shipkit brand overrides (loader gradient will use theme colors)");
 
     console.log("\nNo files were modified (dry run)");
   } else {
@@ -330,6 +337,11 @@ async function main() {
 
     fs.writeFileSync(packageJsonPath, packageJson);
     console.log("Updated package.json");
+
+    if (fs.existsSync(overridesPath)) {
+      fs.writeFileSync(overridesPath, overridesContent);
+      console.log("Cleared src/styles/overrides.css (Shipkit brand overrides removed)");
+    }
 
     console.log("\nFormatting files...");
     try {
@@ -354,7 +366,11 @@ async function main() {
     console.log("\nNext steps:");
     console.log("1. Review the changes in src/config/site-config.ts");
     console.log("2. Update your .env file with the new database name");
-    console.log("3. Restart your development server");
+    console.log(
+      "3. Customize theme colors in src/styles/theme.css (--color-1 through --color-5 also control the page loader)"
+    );
+    console.log("4. Add any brand-specific CSS overrides in src/styles/overrides.css");
+    console.log("5. Restart your development server");
   } else {
     console.log("\nTo apply these changes, run the script without the --dry-run flag.");
   }

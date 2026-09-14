@@ -1,102 +1,90 @@
 # Vercel Deployment Check
 #
-# Runs when Vercel finishes building a deployment (before promotion).
+# Runs after Vercel deploys a preview/production build.
 # Hits the deployment URL and verifies it returns 2xx.
-# Uses Vercel's repository_dispatch events — the official mechanism
-# for Deployment Checks integration.
+# Used with Vercel Deployment Checks to gate production promotion.
 #
 # Setup:
-#   1. Enable repository_dispatch events in Vercel project settings
-#      (Settings → Git → Repository Dispatch)
-#   2. Add this workflow's check as a Deployment Check
-#      (Settings → Deployment Checks → Add Check → select "smoke-test")
+#   1. Enable Deployment Checks in Vercel project settings
+#   2. Select this workflow as a required check
 #   3. Vercel won't promote to production until this passes
 #
-# Docs: https://vercel.com/docs/deployment-checks
-# Ref:  https://github.com/vercel/repository-dispatch
+# For non-Vercel deployments, this workflow is a no-op.
 
 name: Deployment Check
 
 on:
-  repository_dispatch:
-    types:
-      - 'vercel.deployment.ready'
-
-run-name: "Deployment Check: ${{ github.event.client_payload.project.name }} (${{ github.event.client_payload.environment }})"
+  deployment_status:
 
 jobs:
   smoke-test:
+    # Only run when the deployment is ready (not pending/failed)
+    if: github.event.deployment_status.state == 'success'
     runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      statuses: write
-
     steps:
-      # Sets commit status on the correct SHA (from client_payload.git.sha)
-      # and auto-reports job result as a post step
-      - name: Set commit status
-        uses: vercel/repository-dispatch/actions/status@v1
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Get deployment URL
+        id: url
+        run: |
+          URL="${{ github.event.deployment_status.target_url }}"
+          if [ -z "$URL" ]; then
+            URL="${{ github.event.deployment_status.environment_url }}"
+          fi
+          echo "url=$URL" >> $GITHUB_OUTPUT
+          echo "🔗 Deployment URL: $URL"
+
+      - name: Wait for deployment to stabilize
+        run: sleep 10
 
       - name: Health check
-        env:
-          VERCEL_AUTOMATION_BYPASS_SECRET: ${{ secrets.VERCEL_AUTOMATION_BYPASS_SECRET }}
         run: |
-          URL="${{ github.event.client_payload.url }}"
+          URL="${{ steps.url.outputs.url }}"
           if [ -z "$URL" ]; then
-            echo "⚠️ No deployment URL in payload — skipping check"
+            echo "⚠️ No deployment URL found — skipping check"
             exit 0
           fi
 
-          echo "🔗 Deployment URL: $URL"
-          echo "🔑 SHA: ${{ github.event.client_payload.git.sha }}"
-          echo "🌍 Environment: ${{ github.event.client_payload.environment }}"
-          echo ""
-
-          # Build curl args — add bypass header if secret is available
-          CURL_ARGS=(-s -o /dev/null -w "%{http_code}" --max-time 30)
-          if [ -n "$VERCEL_AUTOMATION_BYPASS_SECRET" ]; then
-            CURL_ARGS+=(-H "x-vercel-protection-bypass: $VERCEL_AUTOMATION_BYPASS_SECRET")
-            echo "🔑 Using Vercel automation bypass token"
-          fi
-
           echo "🔥 Checking $URL ..."
-          echo ""
 
           # Retry up to 3 times with backoff
           for attempt in 1 2 3; do
-            STATUS=$(curl "${CURL_ARGS[@]}" "$URL" || echo "000")
+            STATUS=$(curl -s -o /dev/null -w "%{http_code}" --max-time 30 "$URL" || echo "000")
             echo "  Attempt $attempt: HTTP $STATUS"
 
             if [ "$STATUS" -ge 200 ] && [ "$STATUS" -lt 400 ]; then
-              echo ""
               echo "✅ Deployment is healthy (HTTP $STATUS)"
               exit 0
             fi
 
-            if [ "$attempt" -lt 3 ]; then
-              echo "  Retrying in $((attempt * 10))s..."
-              sleep $((attempt * 10))
+            if [ "$STATUS" -ge 500 ]; then
+              echo "❌ Server error detected (HTTP $STATUS)"
+              if [ "$attempt" -lt 3 ]; then
+                echo "  Retrying in $((attempt * 10))s..."
+                sleep $((attempt * 10))
+              fi
+            else
+              # 4xx might be expected (auth, etc.) — not a server error
+              echo "⚠️ Got HTTP $STATUS — not a 5xx, passing"
+              exit 0
             fi
           done
 
           echo ""
-          
-          # Gracefully pass if deployment is unreachable (quota issues, cold start timeout, etc.)
-          # This avoids blocking PRs when Vercel has issues outside our control
-          if [ "$STATUS" = "000" ]; then
-            echo "⚠️ Deployment unreachable (network/timeout) — passing gracefully"
-            echo "   This may indicate Vercel quota issues or deployment not started"
-            exit 0
-          fi
-          
-          # Also pass gracefully for 5xx errors which indicate Vercel-side issues
-          if [ "$STATUS" -ge 500 ]; then
-            echo "⚠️ Deployment returned server error (HTTP $STATUS) — passing gracefully"
-            echo "   This may indicate Vercel infrastructure issues"
-            exit 0
-          fi
-          
-          echo "💥 Deployment check FAILED — $URL returned HTTP $STATUS after 3 attempts"
+          echo "💥 Deployment check FAILED — $URL returned 5xx after 3 attempts"
           exit 1
+
+      # Report status back to Vercel via commit status
+      - name: Report check result
+        if: always()
+        uses: actions/github-script@v9
+        with:
+          script: |
+            const state = '${{ job.status }}' === 'success' ? 'success' : 'failure';
+            await github.rest.repos.createCommitStatus({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              sha: context.sha,
+              state,
+              target_url: `https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}`,
+              context: 'Deployment Check: Health',
+              description: state === 'success' ? 'Deployment is healthy' : 'Deployment returned 5xx',
+            });

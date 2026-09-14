@@ -26,6 +26,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
       <nav className="grid gap-1 px-2 group-[[data-collapsed=true]]:justify-center group-[[data-collapsed=true]]:px-2">
         {links.map((link, index) =>
           isCollapsed ? (
+            // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
             <Tooltip key={index} delayDuration={0}>
               <TooltipTrigger asChild>
                 <Link
@@ -48,6 +49,7 @@ export function Nav({ links, isCollapsed }: NavProps) {
             </Tooltip>
           ) : (
             <Link
+              // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
               key={index}
               href="#"
               className={cn(

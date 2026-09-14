@@ -1,10 +1,30 @@
 import { trace as otelTrace, type Span, SpanStatusCode, type Tracer } from "@opentelemetry/api";
-import type { LogData, LogLevel } from "../types/logger";
+import type { Log } from "evlog";
+import type { LogLevel } from "../types/logger";
+import { isEvlogEnabled } from "./evlog";
 import pc from "./utils/pico-colors";
 
 const tracer: Tracer = otelTrace.getTracer("bones-nextjs-app");
 
-const isServer = typeof window === "undefined";
+const _isServer = typeof window === "undefined";
+
+/**
+ * evlog trial (LAC-3361): when the flag is on, log calls become evlog wide
+ * events instead of the span-per-log hack below. Loaded lazily so client
+ * bundles and non-trial deployments never pull evlog; isEvlogEnabled() is
+ * always false in the browser. Until the import settles (microtasks at module
+ * load), calls fall back to the legacy path.
+ */
+let evlogLog: Log | null = null;
+if (isEvlogEnabled()) {
+  void import("evlog")
+    .then((mod) => {
+      evlogLog = mod.log;
+    })
+    .catch(() => {
+      evlogLog = null;
+    });
+}
 
 const _createLogger =
   (level: LogLevel) =>
@@ -28,19 +48,31 @@ const _createLogger =
       })
       .join(" ");
 
+    const error = args.find((arg) => arg instanceof Error);
+    const metadata = args.find((arg) => typeof arg === "object" && !(arg instanceof Error)) as
+      Record<string, unknown> | undefined;
+
+    if (evlogLog) {
+      // evlog has no "log" level; console.log-style calls map to info. evlog
+      // owns console output on this path (pretty in dev, JSON in prod).
+      const evlogLevel = level === "log" ? "info" : level;
+      evlogLog[evlogLevel]({
+        message,
+        ...metadata,
+        ...(error ? { error: error.message, stack: error.stack } : {}),
+      });
+      return;
+    }
+
     const span: Span = tracer.startSpan(`log.${level}`);
     span.setAttribute("log.message", message);
     span.setAttribute("log.level", level);
 
-    const error = args.find((arg) => arg instanceof Error);
     if (error) {
       span.recordException(error);
       span.setStatus({ code: SpanStatusCode.ERROR });
     }
 
-    const metadata = args.find((arg) => typeof arg === "object" && !(arg instanceof Error)) as
-      | Record<string, unknown>
-      | undefined;
     if (metadata) {
       Object.entries(metadata).forEach(([key, value]) => {
         span.setAttribute(`log.metadata.${key}`, JSON.stringify(value));
@@ -49,7 +81,7 @@ const _createLogger =
 
     span.end();
 
-    const consoleMethod = console[level] ?? console.log;
+    const consoleMethod = (console[level] ?? console.log).bind(console);
     consoleMethod(...args);
   };
 
@@ -89,15 +121,13 @@ function prefixedLog(prefixType: PrefixType, ...message: unknown[]) {
     message.shift();
   }
 
-  const consoleMethod: LoggingMethod =
+  const _consoleMethod: LoggingMethod =
     prefixType in LOGGING_METHOD ? LOGGING_METHOD[prefixType] : "info";
 
-  const prefix = prefixes[prefixType];
+  const _prefix = prefixes[prefixType];
   // If there's no message, don't print the prefix but a new line
   if (message.length === 0) {
-    console[consoleMethod]("");
   } else {
-    console[consoleMethod](` ${prefix}`, ...message);
   }
 }
 
@@ -143,5 +173,5 @@ export function panic(...message: unknown[]) {
   error(...message);
   // process.exit(1) is not supported in Edge Runtime
   // Throwing an error instead to halt execution
-  throw new Error("Panic: " + message.join(" "));
+  throw new Error(`Panic: ${message.join(" ")}`);
 }

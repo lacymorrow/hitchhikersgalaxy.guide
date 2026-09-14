@@ -3,9 +3,7 @@
   "name": "shimmer-button",
   "title": "Shimmer Button",
   "description": "A button with a rotating shimmer light effect.",
-  "registryDependencies": [
-    "cn"
-  ],
+  "registryDependencies": ["@shipkit/cn"],
   "files": [
     {
       "path": "src/components/ui/shimmer-button.tsx",

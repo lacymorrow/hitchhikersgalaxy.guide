@@ -77,7 +77,7 @@ export class BaseService<T extends PgTable> {
       .where(and(...conditions.filter((c): c is SQL<unknown> => !!c)))
       .limit(1);
 
-    return record || null;
+    return record ?? null;
   }
 
   /**
@@ -140,7 +140,7 @@ export class BaseService<T extends PgTable> {
       .where(eq(idColumn, id))
       .returning();
 
-    return record || null;
+    return record ?? null;
   }
 
   /**
@@ -222,8 +222,8 @@ export class BaseService<T extends PgTable> {
         data: [],
         pagination: {
           total: 0,
-          page: options.page || 1,
-          limit: options.limit || 10,
+          page: options.page ?? 1,
+          limit: options.limit ?? 10,
           totalPages: 0,
         },
       };
@@ -265,7 +265,7 @@ export class BaseService<T extends PgTable> {
 
     const [records, countResult] = await Promise.all([recordsQuery, countQuery]);
 
-    const count = countResult?.[0]?.count || 0;
+    const count = countResult?.[0]?.count ?? 0;
 
     return {
       data: records,

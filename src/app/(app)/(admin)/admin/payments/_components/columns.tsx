@@ -47,11 +47,11 @@ export const columns: ColumnDef<PaymentData>[] = [
       return (
         <Avatar className="size-8">
           <AvatarImage
-            src={userImage || ""}
+            src={userImage ?? ""}
             alt={userName ? `${userName}'s avatar` : "User avatar"}
             draggable={false}
           />
-          <AvatarFallback>{userName?.[0]?.toUpperCase() || "?"}</AvatarFallback>
+          <AvatarFallback>{userName?.[0]?.toUpperCase() ?? "?"}</AvatarFallback>
         </Avatar>
       );
     },

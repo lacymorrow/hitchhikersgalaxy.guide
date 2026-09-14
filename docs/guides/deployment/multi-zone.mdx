@@ -75,7 +75,7 @@ Each zone needs `basePath` and `assetPrefix`:
 
 ```typescript
 const nextConfig: NextConfig = {
-  basePath: "/docs",           // or /blog, /ui, /tools
+  basePath: "/docs", // or /blog, /ui, /tools
   assetPrefix: "/docs-static", // unique per zone
 
   async rewrites() {
@@ -132,6 +132,7 @@ cd ../shipkit-blog && bun dev -- --port 3002
 ```
 
 Test routes:
+
 - `http://localhost:3000/` -> Main app
 - `http://localhost:3000/docs` -> Proxied to docs app
 - `http://localhost:3000/blog` -> Proxied to blog app

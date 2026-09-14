@@ -3,7 +3,6 @@
 import { type KeyboardEvent, useCallback, useEffect, useState } from "react";
 import { ErrorBoundary, type FallbackProps } from "react-error-boundary";
 import { cn } from "@/lib/utils";
-import { TOCSkeleton } from "./skeleton";
 
 interface Heading {
   id: string;
@@ -88,27 +87,27 @@ function TableOfContentsInner({ headings }: TableOfContentsProps) {
   }
 
   return (
-    <aside className="blog-toc" role="complementary" aria-label="Table of contents">
-      <div className="px-4 py-3 border-b border-border">
+    <aside className="blog-toc" aria-label="Table of contents">
+      <div className="border-b border-border px-4 py-3">
         <h4
-          className="font-medium text-sm text-muted-foreground uppercase tracking-wide"
+          className="text-sm font-medium uppercase tracking-wide text-muted-foreground"
           id="toc-heading"
         >
           Table of Contents
         </h4>
       </div>
-      <nav className="p-4" role="navigation" aria-labelledby="toc-heading">
-        <ul className="space-y-1" role="list">
-          {headings.map(({ id, text, level }, index) => (
-            <li key={id} role="listitem">
+      <nav className="p-4" aria-labelledby="toc-heading">
+        <ul className="space-y-1">
+          {headings.map(({ id, text, level }, _index) => (
+            <li key={id}>
               <button
                 type="button"
                 onClick={() => handleClick(id)}
                 onKeyDown={(e) => handleKeyDown(e, id)}
                 className={cn(
-                  "block w-full text-left text-sm transition-colors duration-200 py-1.5 px-2 rounded-md hover:bg-muted/60 focus:bg-muted/60 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1",
+                  "block w-full rounded-md px-2 py-1.5 text-left text-sm transition-colors duration-200 hover:bg-muted/60 focus:bg-muted/60 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1",
                   "toc-link",
-                  activeId === id && "active bg-muted/80 text-foreground font-medium",
+                  activeId === id && "active bg-muted/80 font-medium text-foreground",
                   level === 2 && "pl-2",
                   level === 3 && "pl-6",
                   level === 4 && "pl-10",
@@ -134,17 +133,21 @@ function TableOfContentsInner({ headings }: TableOfContentsProps) {
 function TOCErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <div className="blog-toc">
-      <div className="px-4 py-3 border-b border-border">
-        <h4 className="font-medium text-sm text-muted-foreground uppercase tracking-wide">
+      <div className="border-b border-border px-4 py-3">
+        <h4 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
           Table of Contents
         </h4>
       </div>
       <div className="p-4 text-center">
-        <p className="text-sm text-muted-foreground mb-2">Failed to load table of contents</p>
+        <p className="mb-2 text-sm text-muted-foreground">Failed to load table of contents</p>
         {error instanceof Error && (
-          <p className="text-xs text-muted-foreground mb-3">{error.message}</p>
+          <p className="mb-3 text-xs text-muted-foreground">{error.message}</p>
         )}
-        <button onClick={resetErrorBoundary} className="text-xs text-primary hover:underline">
+        <button
+          type="button"
+          onClick={resetErrorBoundary}
+          className="text-xs text-primary hover:underline"
+        >
           Try again
         </button>
       </div>

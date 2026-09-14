@@ -50,11 +50,7 @@ export function KitProvider({ children, session, pageProps }: KitProviderProps) 
   return (
     <>
       <JsonLd organization website />
-      <HolyLoader
-        showSpinner
-        height={"4px"}
-        color={"linear-gradient(90deg, #FF61D8, #8C52FF, #5CE1E6, #FF61D8)"}
-      />
+      <HolyLoader showSpinner height={"4px"} color={"var(--loader-color)"} />
       <ShipkitThemeProvider>
         <SessionProvider {...(sessionProviderProps as any)}>
           <TRPCReactProvider {...pageProps}>

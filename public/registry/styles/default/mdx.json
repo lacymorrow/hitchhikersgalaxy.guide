@@ -9,15 +9,8 @@
     "mdx/types",
     "sonner"
   ],
-  "registryDependencies": [
-    "button",
-    "input"
-  ],
-  "categories": [
-    "shipkit",
-    "mdx",
-    "ui"
-  ],
+  "registryDependencies": ["button", "input"],
+  "categories": ["shipkit", "mdx", "ui"],
   "style": "default",
   "version": "1.0.0",
   "files": [

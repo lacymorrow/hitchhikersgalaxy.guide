@@ -23,11 +23,12 @@ export function RenderBuilderContent(props: BuilderPageProps) {
   // DefaultErrorPage with a 404.
   return (
     <>
+      {/* eslint-disable-next-line react/no-unknown-property */}
       <style jsx>{`
-				.next-error-h1 {
-					line-height: 49px;
-				}
-			`}</style>
+        .next-error-h1 {
+          line-height: 49px;
+        }
+      `}</style>
       <DefaultErrorPage statusCode={404} />
     </>
   );

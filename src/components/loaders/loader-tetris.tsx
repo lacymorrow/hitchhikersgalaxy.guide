@@ -56,100 +56,98 @@ export const LoaderTetris = ({
         <div className="tetromino box4" style={{ backgroundImage: `url('${svgUrl}')` }} />
       </div>
 
+      {/* eslint-disable-next-line react/no-unknown-property */}
       <style jsx>{`
-				.tetrominos-wrapper {
-					position: relative;
-					width: 100%;
-					height: 100%;
-					min-height: calc(var(--h) * 3);
-				}
+        .tetrominos-wrapper {
+          position: relative;
+          width: 100%;
+          height: 100%;
+          min-height: calc(var(--h) * 3);
+        }
 
-				.tetrominos {
-					--xspace: calc(var(--w) / 2);
-					--yspace: calc(var(--h) / 4 - 1px);
-					position: absolute;
-					top: 50%;
-					left: 50%;
-					transform: translate(calc(-1 * var(--h)), calc(-1 * var(--w)));
-				}
+        .tetrominos {
+          --xspace: calc(var(--w) / 2);
+          --yspace: calc(var(--h) / 4 - 1px);
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(calc(-1 * var(--h)), calc(-1 * var(--w)));
+        }
 
-				.tetromino {
-					width: var(--w);
-					height: var(--h);
-					position: absolute;
-					transition: all ease 0.3s;
-					background-position: center;
-					background-repeat: no-repeat;
-					background-size: contain;
-				}
+        .tetromino {
+          width: var(--w);
+          height: var(--h);
+          position: absolute;
+          transition: all ease 0.3s;
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: contain;
+        }
 
-				.box1 {
-					animation: tetromino1 var(--speed) ease-out infinite;
-				}
-				.box2 {
-					animation: tetromino2 var(--speed) ease-out infinite;
-				}
-				.box3 {
-					animation: tetromino3 var(--speed) ease-out infinite;
-					z-index: 2;
-				}
-				.box4 {
-					animation: tetromino4 var(--speed) ease-out infinite;
-				}
+        .box1 {
+          animation: tetromino1 var(--speed) ease-out infinite;
+        }
+        .box2 {
+          animation: tetromino2 var(--speed) ease-out infinite;
+        }
+        .box3 {
+          animation: tetromino3 var(--speed) ease-out infinite;
+          z-index: 2;
+        }
+        .box4 {
+          animation: tetromino4 var(--speed) ease-out infinite;
+        }
 
-				@keyframes tetromino1 {
-					0%,
-					40% {
-						transform: translate(0, 0);
-					}
-					50% {
-						transform: translate(var(--xspace), calc(-1 * var(--yspace)));
-					}
-					60%,
-					100% {
-						transform: translate(calc(var(--xspace) * 2), 0);
-					}
-				}
+        @keyframes tetromino1 {
+          0%,
+          40% {
+            transform: translate(0, 0);
+          }
+          50% {
+            transform: translate(var(--xspace), calc(-1 * var(--yspace)));
+          }
+          60%,
+          100% {
+            transform: translate(calc(var(--xspace) * 2), 0);
+          }
+        }
 
-				@keyframes tetromino2 {
-					0%,
-					20% {
-						transform: translate(calc(var(--xspace) * 2), 0);
-					}
-					40%,
-					100% {
-						transform: translate(calc(var(--xspace) * 3), var(--yspace));
-					}
-				}
+        @keyframes tetromino2 {
+          0%,
+          20% {
+            transform: translate(calc(var(--xspace) * 2), 0);
+          }
+          40%,
+          100% {
+            transform: translate(calc(var(--xspace) * 3), var(--yspace));
+          }
+        }
 
-				@keyframes tetromino3 {
-					0% {
-						transform: translate(calc(var(--xspace) * 3), var(--yspace));
-					}
-					20%,
-					60% {
-						transform: translate(
-							calc(var(--xspace) * 2),
-							calc(var(--yspace) * 2)
-						);
-					}
-					90%,
-					100% {
-						transform: translate(var(--xspace), var(--yspace));
-					}
-				}
+        @keyframes tetromino3 {
+          0% {
+            transform: translate(calc(var(--xspace) * 3), var(--yspace));
+          }
+          20%,
+          60% {
+            transform: translate(calc(var(--xspace) * 2), calc(var(--yspace) * 2));
+          }
+          90%,
+          100% {
+            transform: translate(var(--xspace), var(--yspace));
+          }
+        }
 
-				@keyframes tetromino4 {
-					0%,
-					60% {
-						transform: translate(var(--xspace), var(--yspace));
-					}
-					90%,
-					100% {
-						transform: translate(0, 0);
-					}
-				}
-			`}</style>
+        @keyframes tetromino4 {
+          0%,
+          60% {
+            transform: translate(var(--xspace), var(--yspace));
+          }
+          90%,
+          100% {
+            transform: translate(0, 0);
+          }
+        }
+      `}</style>
     </div>
   );
 };

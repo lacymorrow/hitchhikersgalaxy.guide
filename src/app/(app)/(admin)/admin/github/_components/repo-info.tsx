@@ -10,7 +10,7 @@ export function RepoInfoSkeleton() {
   return (
     <Card>
       <CardHeader>
-        <Skeleton className="h-5 w-[200px] mb-2" />
+        <Skeleton className="mb-2 h-5 w-[200px]" />
         <Skeleton className="h-4 w-[300px]" />
       </CardHeader>
       <CardContent>
@@ -69,7 +69,7 @@ export async function RepoInfoContent() {
           <div className="space-y-2">
             <h3 className="font-medium">{repo.full_name}</h3>
             <p className="text-sm text-muted-foreground">
-              {repo.description || "No description available"}
+              {repo.description ?? "No description available"}
             </p>
 
             {repo.homepage && (
@@ -141,7 +141,7 @@ export async function RepoInfoContent() {
   );
 }
 
-export default async function RepoInfo() {
+export default function RepoInfo() {
   return (
     <div className="space-y-8">
       <RepoInfoContent />

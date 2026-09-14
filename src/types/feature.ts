@@ -1,11 +1,5 @@
 export type FeatureCategory =
-  | "core"
-  | "dx"
-  | "backend"
-  | "advanced"
-  | "security"
-  | "devops"
-  | "support";
+  "core" | "dx" | "backend" | "advanced" | "security" | "devops" | "support";
 
 export type FeaturePlan = "bones" | "brains" | "muscles";
 

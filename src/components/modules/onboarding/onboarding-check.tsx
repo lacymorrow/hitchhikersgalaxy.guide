@@ -43,6 +43,7 @@ export function OnboardingCheck({
     // 2. Onboarding hasn't been completed yet
     // 3. We have a valid userId
     if ((hasPurchased || forceEnabled) && userId && !onboardingState?.completed) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncs with external localStorage onboardingState
       setShowOnboarding(true);
     } else {
       setShowOnboarding(false);

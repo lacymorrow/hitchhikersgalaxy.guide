@@ -21,7 +21,7 @@ const getImageUrl = (image: unknown): string | undefined => {
 
 const TestimonialCard = ({ testimonial }: { testimonial: Testimonial | StaticTestimonial }) => {
   const imageUrl = getImageUrl(testimonial.image);
-  const name = testimonial.name || "Anonymous";
+  const name = testimonial.name ?? "Anonymous";
 
   return (
     <figure

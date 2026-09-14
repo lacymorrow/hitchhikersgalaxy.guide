@@ -41,12 +41,12 @@ import type { Purchase, UserData } from "@/server/services/payment-service";
 
 // Type for complete user data from API
 interface CompleteUserData {
-  user: unknown | null;
+  user: unknown;
   accounts: unknown[];
   payments: unknown[];
   deployments: unknown[];
   apiKeys: unknown[];
-  credits: unknown | null;
+  credits: unknown;
   creditTransactions: unknown[];
   teamMemberships: unknown[];
 }
@@ -141,7 +141,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 
   return (
     <Drawer open={open} onOpenChange={onClose}>
-      <DrawerContent className="max-h-[90vh] flex flex-col">
+      <DrawerContent className="flex max-h-[90vh] flex-col">
         <DrawerHeader>
           <DrawerTitle>User Details</DrawerTitle>
           <DrawerDescription>
@@ -162,7 +162,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
                           <User className="h-8 w-8 text-primary" />
                         </div>
                         <div>
-                          <h4 className="text-xl font-medium">{user.name || "Unnamed User"}</h4>
+                          <h4 className="text-xl font-medium">{user.name ?? "Unnamed User"}</h4>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Mail className="h-3 w-3" />
                             <span>{user.email}</span>
@@ -171,7 +171,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
                       </div>
                     </div>
                     <CardContent className="p-0">
-                      <div className="grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-y-0 sm:divide-x">
+                      <div className="grid grid-cols-1 divide-y sm:grid-cols-2 sm:divide-x sm:divide-y-0">
                         <div className="p-4">
                           <div className="flex items-center gap-3">
                             <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">
@@ -297,7 +297,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
 
                 {user.purchases && user.purchases.length > 0 ? (
                   <Card>
-                    <div className="p-4 border-b">
+                    <div className="border-b p-4">
                       <div className="flex flex-wrap gap-3">
                         <Badge variant="outline" className="px-3 py-1">
                           Total: {user.totalPurchases} purchase
@@ -305,13 +305,13 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
                         </Badge>
                         {user.providerStatuses?.lemonsqueezy && (
                           <Badge variant="outline" className="px-3 py-1">
-                            <CreditCard className="h-4 w-4 mr-1 text-yellow-500" />
+                            <CreditCard className="mr-1 h-4 w-4 text-yellow-500" />
                             LemonSqueezy
                           </Badge>
                         )}
                         {user.providerStatuses?.polar && (
                           <Badge variant="outline" className="px-3 py-1">
-                            <CreditCard className="h-4 w-4 mr-1 text-blue-500" />
+                            <CreditCard className="mr-1 h-4 w-4 text-blue-500" />
                             Polar
                           </Badge>
                         )}
@@ -431,12 +431,12 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
                       >
                         {isJsonOpen ? (
                           <>
-                            <ChevronUp className="h-3 w-3 mr-1" />
+                            <ChevronUp className="mr-1 h-3 w-3" />
                             <span>Hide Raw Data</span>
                           </>
                         ) : (
                           <>
-                            <ChevronDown className="h-3 w-3 mr-1" />
+                            <ChevronDown className="mr-1 h-3 w-3" />
                             <span>Show Raw Data</span>
                           </>
                         )}
@@ -480,7 +480,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
           </div>
         </ScrollArea>
 
-        <DrawerFooter className="mt-auto pt-4 border-t">
+        <DrawerFooter className="mt-auto border-t pt-4">
           <DrawerClose asChild>
             <Button variant="outline">Close</Button>
           </DrawerClose>

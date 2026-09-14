@@ -231,7 +231,6 @@
     "resend": "^6.28.0",
     "server-only": "0.0.1",
     "shadcn-prose": "^1.2.1",
-    "sharp": "0.33.5",
     "simplex-noise": "^4.0.3",
     "sonner": "2.0.8",
     "stripe": "^21.0.1",

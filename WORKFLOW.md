@@ -10,25 +10,32 @@ Assigned → Checkout → Understand → Implement → Verify → Report
 ```
 
 ### 1. Assigned
+
 Agent receives a task via Paperclip or direct assignment.
 
 ### 2. Checkout
+
 Agent claims the task. No two agents work on the same task.
 
 ### 3. Understand
+
 Before writing any code:
+
 - Read the task description and all comments
 - Read parent/ancestor tasks for context
 - Identify affected files using file discovery patterns (see AGENTS.md)
 - Read existing code before proposing changes
 
 ### 4. Implement
+
 Write code following all golden rules in AGENTS.md. Key constraints:
+
 - Single-responsibility changes only
 - Stay within task scope — no drive-by improvements
 - Prefer editing existing files over creating new ones
 
 ### 5. Verify (Proof of Work Gate)
+
 This gate MUST pass before any task can be marked complete.
 
 ```bash
@@ -50,6 +57,7 @@ bun run build
 ```
 
 **Failure protocol:**
+
 - If Gate 1 fails → fix type errors, re-run
 - If Gate 2 fails → run `bun run lint:fix`, review changes, re-run
 - If Gate 3 fails → investigate failure, fix regression, re-run
@@ -57,7 +65,9 @@ bun run build
 - If stuck after 2 attempts → mark task as blocked with detailed blocker description
 
 ### 6. Report
+
 Post verification results in the task. Include:
+
 - What was changed and why
 - Verification gate results (pass/fail with output)
 - Any follow-up work identified
@@ -85,12 +95,12 @@ verification:
     timeout_ms: 300000
   build:
     command: "bun run build"
-    required: false  # Only for UI/structural changes
+    required: false # Only for UI/structural changes
     timeout_ms: 600000
 
 agent:
   max_retries: 2
-  timeout_ms: 3600000  # 1 hour max per task
+  timeout_ms: 3600000 # 1 hour max per task
 ```
 
 ## Concurrency Rules

@@ -32,7 +32,7 @@ export default function DevToolsGitHubPage() {
 
   // Effect to update input field when username changes (e.g., after connect/disconnect)
   useEffect(() => {
-    setUsernameInput(githubUsername || "");
+    setUsernameInput(githubUsername ?? "");
   }, [githubUsername]);
 
   const handleConnectOrUpdate = async () => {
@@ -85,7 +85,7 @@ export default function DevToolsGitHubPage() {
 
   if (status === "loading") {
     return (
-      <div className="flex justify-center items-center h-full">
+      <div className="flex h-full items-center justify-center">
         <Icons.spinner className="h-8 w-8 animate-spin" />
       </div>
     );
@@ -126,7 +126,7 @@ export default function DevToolsGitHubPage() {
               disabled={isLoadingConnect || isLoadingDisconnect}
             />
           </div>
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <Button
               onClick={() => void handleConnectOrUpdate()}
               disabled={isLoadingConnect || isLoadingDisconnect || !usernameInput.trim()}

@@ -62,7 +62,7 @@ export function ExamplesNav({ current, className, ...props }: ExamplesNavProps) 
 
   return (
     <div className="relative w-full">
-      <ScrollArea className="max-w-[600px] lg:max-w-none mx-auto px-md [mask-image:linear-gradient(to_right,transparent,white_7%,white_93%,transparent)]">
+      <ScrollArea className="mx-auto max-w-[600px] px-md [mask-image:linear-gradient(to_right,transparent,white_7%,white_93%,transparent)] lg:max-w-none">
         <div className={cn("flex items-center justify-center", className)} {...props}>
           {!isHome && (
             <ExampleLink

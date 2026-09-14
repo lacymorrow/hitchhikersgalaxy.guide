@@ -22,14 +22,8 @@
     "module": "ESNext",
     "moduleResolution": "bundler",
     "target": "ES2022",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "ES2022"
-    ],
-    "types": [
-      "node"
-    ],
+    "lib": ["dom", "dom.iterable", "ES2022"],
+    "types": ["node"],
     "plugins": [
       {
         "name": "next"
@@ -37,15 +31,10 @@
     ],
     "baseUrl": ".",
     "paths": {
-      "@payload-config": [
-        "./src/payload.config.ts"
-      ],
-      "@/public/*": [
-        "./public/*"
-      ],
-      "@/*": [
-        "./src/*"
-      ]
+      "@payload-config": ["./src/payload.config.ts"],
+      "@/.source/*": ["./.source/*"],
+      "@/public/*": ["./public/*"],
+      "@/*": ["./src/*"]
     }
   },
   "include": [
@@ -73,8 +62,9 @@
     "tests",
     "public",
     "packages",
-    "cli/dist",
+    "docs-site",
     "debug/**/*.ts",
+    "scripts",
     "src/app/(app)/(demo)/examples/**/*",
     "src/workers/**/*.ts"
   ]

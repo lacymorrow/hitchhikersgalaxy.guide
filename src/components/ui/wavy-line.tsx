@@ -89,6 +89,7 @@ export function WavyLine({ className, ...props }: ComponentProps<"div">) {
 
   return (
     <div className={cn("relative h-px w-full", className)} {...props} ref={parentRef}>
+      {/* biome-ignore lint/a11y/noStaticElementInteractions: decorative/UI hover interaction, not primary action */}
       <div
         className="relative -top-5 z-10 h-10 w-full"
         onMouseEnter={handleMouseEnter}

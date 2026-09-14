@@ -8,7 +8,7 @@ import ArrowRightIcon from "./_components/icons/ArrowRightIcon";
 import StopIcon from "./_components/icons/StopIcon";
 import Progress from "./_components/Progress";
 
-const IS_WEBGPU_AVAILABLE = !!navigator?.gpu;
+const _IS_WEBGPU_AVAILABLE = !!navigator?.gpu;
 const STICKY_SCROLL_THRESHOLD = 120;
 const EXAMPLES = [
   "Give me some tips to improve my time management skills.",
@@ -50,7 +50,7 @@ export const AISmollmWebGPU = () => {
         }
         await gpu.requestAdapter();
         setIsWebGPUAvailable(true);
-      } catch (e) {
+      } catch (_e) {
         setIsWebGPUAvailable(false);
       }
     };
@@ -201,7 +201,7 @@ export const AISmollmWebGPU = () => {
   // Show loading state while checking WebGPU
   if (isWebGPUAvailable === null) {
     return (
-      <div className="fixed w-screen h-screen bg-black z-10 bg-opacity-[92%] text-white text-2xl font-semibold flex justify-center items-center text-center">
+      <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-black bg-opacity-[92%] text-center text-2xl font-semibold text-white">
         Checking WebGPU support...
       </div>
     );
@@ -210,7 +210,7 @@ export const AISmollmWebGPU = () => {
   // Show not supported message
   if (!isWebGPUAvailable) {
     return (
-      <div className="fixed w-screen h-screen bg-black z-10 bg-opacity-[92%] text-white text-2xl font-semibold flex justify-center items-center text-center">
+      <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-black bg-opacity-[92%] text-center text-2xl font-semibold text-white">
         WebGPU is not supported
         <br />
         by this browser :&#40;
@@ -219,19 +219,19 @@ export const AISmollmWebGPU = () => {
   }
 
   return (
-    <div className="flex flex-col h-screen mx-auto items justify-end text-gray-800 dark:text-gray-200 bg-white dark:bg-gray-900">
+    <div className="items mx-auto flex h-screen flex-col justify-end bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
       {status === null && messages.length === 0 && (
-        <div className="h-full overflow-auto scrollbar-thin flex justify-center items-center flex-col relative">
-          <div className="flex flex-col items-center mb-1 max-w-[320px] text-center">
+        <div className="scrollbar-thin relative flex h-full flex-col items-center justify-center overflow-auto">
+          <div className="mb-1 flex max-w-[320px] flex-col items-center text-center">
             <img src="logo.png" width="80%" height="auto" alt="SmolLM2 Logo" className="block" />
-            <h1 className="text-4xl font-bold mb-1">SmolLM2 WebGPU</h1>
+            <h1 className="mb-1 text-4xl font-bold">SmolLM2 WebGPU</h1>
             <h2 className="font-semibold">
               A blazingly fast and powerful AI chatbot that runs locally in your browser.
             </h2>
           </div>
 
           <div className="flex flex-col items-center px-4">
-            <p className="max-w-[480px] mb-4">
+            <p className="mb-4 max-w-[480px]">
               <br />
               You are about to load{" "}
               <a
@@ -266,14 +266,15 @@ export const AISmollmWebGPU = () => {
             </p>
 
             {error && (
-              <div className="text-red-500 text-center mb-2">
+              <div className="mb-2 text-center text-red-500">
                 <p className="mb-1">Unable to load model due to the following error:</p>
                 <p className="text-sm">{error}</p>
               </div>
             )}
 
             <button
-              className="border px-4 py-2 rounded-lg bg-blue-400 text-white hover:bg-blue-500 disabled:bg-blue-100 disabled:cursor-not-allowed select-none"
+              type="button"
+              className="select-none rounded-lg border bg-blue-400 px-4 py-2 text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-blue-100"
               onClick={() => {
                 worker.current.postMessage({ type: "load" });
                 setStatus("loading");
@@ -286,28 +287,30 @@ export const AISmollmWebGPU = () => {
         </div>
       )}
       {status === "loading" && (
-        <>
-          <div className="w-full max-w-[500px] text-left mx-auto p-4 bottom-0 mt-auto">
-            <p className="text-center mb-1">{loadingMessage}</p>
-            {progressItems.map(({ file, progress, total }, i) => (
-              <Progress key={i} text={file} percentage={progress} total={total} />
-            ))}
-          </div>
-        </>
+        <div className="bottom-0 mx-auto mt-auto w-full max-w-[500px] p-4 text-left">
+          <p className="mb-1 text-center">{loadingMessage}</p>
+          {progressItems.map(({ file, progress, total }, i) => (
+            // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
+            <Progress key={i} text={file} percentage={progress} total={total} />
+          ))}
+        </div>
       )}
 
       {status === "ready" && (
         <div
           ref={chatContainerRef}
-          className="overflow-y-auto scrollbar-thin w-full flex flex-col items-center h-full"
+          className="scrollbar-thin flex h-full w-full flex-col items-center overflow-y-auto"
         >
           <Chat messages={messages} />
           {messages.length === 0 && (
             <div>
               {EXAMPLES.map((msg, i) => (
+                // biome-ignore lint/a11y/noStaticElementInteractions: decorative/UI hover interaction, not primary action
+                // biome-ignore lint/a11y/useKeyWithClickEvents: decorative click target, no keyboard handler required
                 <div
+                  // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
                   key={i}
-                  className="m-1 border dark:border-gray-600 rounded-md p-2 bg-gray-100 dark:bg-gray-700 cursor-pointer"
+                  className="m-1 cursor-pointer rounded-md border bg-gray-100 p-2 dark:border-gray-600 dark:bg-gray-700"
                   onClick={() => onEnter(msg)}
                 >
                   {msg}
@@ -315,7 +318,7 @@ export const AISmollmWebGPU = () => {
               ))}
             </div>
           )}
-          <p className="text-center text-sm min-h-6 text-gray-500 dark:text-gray-300">
+          <p className="min-h-6 text-center text-sm text-gray-500 dark:text-gray-300">
             {tps && messages.length > 0 && (
               <>
                 {!isRunning && (
@@ -326,7 +329,7 @@ export const AISmollmWebGPU = () => {
                 )}
                 {
                   <>
-                    <span className="font-medium text-center mr-1 text-black dark:text-white">
+                    <span className="mr-1 text-center font-medium text-black dark:text-white">
                       {tps.toFixed(2)}
                     </span>
                     <span className="text-gray-500 dark:text-gray-300">tokens/second</span>
@@ -335,8 +338,10 @@ export const AISmollmWebGPU = () => {
                 {!isRunning && (
                   <>
                     <span className="mr-1">&#41;.</span>
+                    {/* biome-ignore lint/a11y/noStaticElementInteractions: decorative/UI hover interaction, not primary action */}
+                    {/* biome-ignore lint/a11y/useKeyWithClickEvents: decorative click target, no keyboard handler required */}
                     <span
-                      className="underline cursor-pointer"
+                      className="cursor-pointer underline"
                       onClick={() => {
                         worker.current.postMessage({ type: "reset" });
                         setMessages([]);
@@ -352,10 +357,10 @@ export const AISmollmWebGPU = () => {
         </div>
       )}
 
-      <div className="mt-2 border dark:bg-gray-700 rounded-lg w-[600px] max-w-[80%] max-h-[200px] mx-auto relative mb-3 flex">
+      <div className="relative mx-auto mb-3 mt-2 flex max-h-[200px] w-[600px] max-w-[80%] rounded-lg border dark:bg-gray-700">
         <textarea
           ref={textareaRef}
-          className="scrollbar-thin w-[550px] dark:bg-gray-700 px-3 py-4 rounded-lg bg-transparent border-none outline-none text-gray-800 disabled:text-gray-400 dark:text-gray-200 placeholder-gray-500 dark:placeholder-gray-400 disabled:placeholder-gray-200 resize-none disabled:cursor-not-allowed"
+          className="scrollbar-thin w-[550px] resize-none rounded-lg border-none bg-transparent px-3 py-4 text-gray-800 placeholder-gray-500 outline-none disabled:cursor-not-allowed disabled:text-gray-400 disabled:placeholder-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
           placeholder="Type your message..."
           value={input}
           disabled={status !== "ready"}
@@ -381,7 +386,7 @@ export const AISmollmWebGPU = () => {
             }}
             aria-label="Stop generation"
           >
-            <StopIcon className="h-8 w-8 p-1 rounded-md text-gray-800 dark:text-gray-100 absolute right-3 bottom-3" />
+            <StopIcon className="absolute bottom-3 right-3 h-8 w-8 rounded-md p-1 text-gray-800 dark:text-gray-100" />
           </button>
         ) : input.length > 0 ? (
           <button
@@ -395,16 +400,16 @@ export const AISmollmWebGPU = () => {
             }}
             aria-label="Send message"
           >
-            <ArrowRightIcon className="h-8 w-8 p-1 bg-gray-800 dark:bg-gray-100 text-white dark:text-black rounded-md absolute right-3 bottom-3" />
+            <ArrowRightIcon className="absolute bottom-3 right-3 h-8 w-8 rounded-md bg-gray-800 p-1 text-white dark:bg-gray-100 dark:text-black" />
           </button>
         ) : (
           <div aria-hidden="true">
-            <ArrowRightIcon className="h-8 w-8 p-1 bg-gray-200 dark:bg-gray-600 text-gray-50 dark:text-gray-800 rounded-md absolute right-3 bottom-3" />
+            <ArrowRightIcon className="absolute bottom-3 right-3 h-8 w-8 rounded-md bg-gray-200 p-1 text-gray-50 dark:bg-gray-600 dark:text-gray-800" />
           </div>
         )}
       </div>
 
-      <p className="text-xs text-gray-400 text-center mb-3">
+      <p className="mb-3 text-center text-xs text-gray-400">
         Disclaimer: Generated content may be inaccurate or false.
       </p>
     </div>

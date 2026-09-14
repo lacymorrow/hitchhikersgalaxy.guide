@@ -82,23 +82,23 @@ export const GithubStarsButton = ({
       <Link
         href={href}
         className={cn(
-          "group relative dark:bg-neutral-800 bg-neutral-200 rounded-full p-px",
+          "group relative rounded-full bg-neutral-200 p-px dark:bg-neutral-800",
           className
         )}
         {...props}
       >
         <span
-          className="absolute inset-0 rounded-full overflow-hidden"
+          className="absolute inset-0 overflow-hidden rounded-full"
           style={{ transform: "translateZ(0)" }}
         >
           <span
-            className="inset-0 absolute pointer-events-none select-none"
+            className="pointer-events-none absolute inset-0 select-none"
             style={{
               animation: "10s ease-in-out infinite alternate border-translate",
             }}
           >
             <span
-              className="block -translate-x-1/2 -translate-y-1/3  size-24 blur-xl"
+              className="block size-24 -translate-x-1/2 -translate-y-1/3 blur-xl"
               style={{
                 background: "linear-gradient(135deg, #7A69F9, #F26378, #F5833F)",
               }}
@@ -106,13 +106,13 @@ export const GithubStarsButton = ({
           </span>
         </span>
         <span
-          className="inset-0 absolute pointer-events-none select-none"
+          className="pointer-events-none absolute inset-0 select-none"
           style={{
             animation: "10s ease-in-out infinite alternate border-glow-translate",
           }}
         >
           <span
-            className="block z-0 h-full w-12 blur-xl -translate-x-1/2 rounded-full"
+            className="z-0 block h-full w-12 -translate-x-1/2 rounded-full blur-xl"
             style={{
               animation: "10s ease-in-out infinite alternate border-glow-scale",
               background: "linear-gradient(135deg, #7A69F9, #F26378, #F5833F)",
@@ -120,8 +120,8 @@ export const GithubStarsButton = ({
           />
         </span>
 
-        <span className="flex items-center justify-center gap-1 relative z-[1] dark:bg-neutral-950/90 bg-neutral-50/90 rounded-full py-2 px-4 pl-2 w-full overflow-hidden">
-          <span className="relative  group-hover:scale-105 transition-transform group-hover:rotate-[360deg]">
+        <span className="relative z-[1] flex w-full items-center justify-center gap-1 overflow-hidden rounded-full bg-neutral-50/90 px-4 py-2 pl-2 dark:bg-neutral-950/90">
+          <span className="relative transition-transform group-hover:rotate-[360deg] group-hover:scale-105">
             <CuicuiStarIcon
               className="opacity-80 dark:opacity-100"
               style={{
@@ -130,7 +130,7 @@ export const GithubStarsButton = ({
               }}
             />
             <span
-              className="rounded-full size-11 absolute opacity-0 dark:opacity-30 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 blur-lg"
+              className="absolute left-1/2 top-1/2 size-11 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 blur-lg dark:opacity-30"
               style={{
                 animation: "14s ease-in-out infinite alternate star-shine",
                 background: "linear-gradient(135deg, #3BC4F2, #7A69F9, #F26378, #F5833F)",
@@ -142,10 +142,10 @@ export const GithubStarsButton = ({
             isolate={true}
             trend={0}
             spinTiming={{ duration: 1500, easing: "ease-in-out" }}
-            className="z-20 dark:text-neutral-500 text-neutral-400 text-xs font-semibold tracking-tighter"
+            className="z-20 text-xs font-semibold tracking-tighter text-neutral-400 dark:text-neutral-500"
           />
           {children && (
-            <span className="bg-gradient-to-b ml-1.5 dark:from-white dark:to-white/50 from-neutral-950 to-neutral-950/50 bg-clip-text text-xs text-transparent group-hover:scale-105 transition transform-gpu">
+            <span className="ml-1.5 transform-gpu bg-gradient-to-b from-neutral-950 to-neutral-950/50 bg-clip-text text-xs text-transparent transition group-hover:scale-105 dark:from-white dark:to-white/50">
               {children}
             </span>
           )}

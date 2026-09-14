@@ -16,14 +16,14 @@ export const BlogPostSkeleton = ({ className }: { className?: string }) => {
 
       <div className="flex gap-8">
         {/* Main content skeleton */}
-        <article className="flex-1 min-w-0">
+        <article className="min-w-0 flex-1">
           {/* Mobile TOC skeleton */}
-          <div className="xl:hidden mb-8">
+          <div className="mb-8 xl:hidden">
             <Skeleton className="h-10 w-full" />
           </div>
 
           {/* Header section skeleton */}
-          <header className="flex flex-col gap-4 border-b pb-8 mb-8">
+          <header className="mb-8 flex flex-col gap-4 border-b pb-8">
             <Skeleton className="h-12 w-full max-w-3xl" />
             <Skeleton className="h-6 w-full max-w-2xl" />
 
@@ -41,9 +41,9 @@ export const BlogPostSkeleton = ({ className }: { className?: string }) => {
           </header>
 
           {/* Content skeleton */}
-          <div className="prose prose-neutral dark:prose-invert max-w-none">
+          <div className="prose prose-neutral max-w-none dark:prose-invert">
             {/* Featured image skeleton */}
-            <Skeleton className="h-64 w-full mb-8 rounded-lg" />
+            <Skeleton className="mb-8 h-64 w-full rounded-lg" />
 
             {/* Content paragraphs */}
             <div className="space-y-4">
@@ -54,7 +54,7 @@ export const BlogPostSkeleton = ({ className }: { className?: string }) => {
               <Skeleton className="h-4 w-5/6" />
 
               <div className="my-6">
-                <Skeleton className="h-8 w-1/2 mb-4" />
+                <Skeleton className="mb-4 h-8 w-1/2" />
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-4/5" />
@@ -65,7 +65,7 @@ export const BlogPostSkeleton = ({ className }: { className?: string }) => {
               <Skeleton className="h-4 w-2/3" />
 
               <div className="my-6">
-                <Skeleton className="h-8 w-2/5 mb-4" />
+                <Skeleton className="mb-4 h-8 w-2/5" />
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-3/4" />
@@ -75,7 +75,7 @@ export const BlogPostSkeleton = ({ className }: { className?: string }) => {
         </article>
 
         {/* TOC skeleton */}
-        <aside className="hidden lg:block w-64 shrink-0">
+        <aside className="hidden w-64 shrink-0 lg:block">
           <div className="sticky top-8">
             <TOCSkeleton />
           </div>
@@ -91,7 +91,7 @@ export const BlogPostSkeleton = ({ className }: { className?: string }) => {
 export const TOCSkeleton = ({ className }: { className?: string }) => {
   return (
     <div className={cn("blog-toc", className)}>
-      <div className="px-4 py-3 border-b border-border">
+      <div className="border-b border-border px-4 py-3">
         <Skeleton className="h-4 w-32" />
       </div>
       <nav className="p-4">
@@ -101,25 +101,25 @@ export const TOCSkeleton = ({ className }: { className?: string }) => {
             <Skeleton className="h-8 w-full" />
           </li>
           <li>
-            <Skeleton className="h-8 w-5/6 ml-2" />
+            <Skeleton className="ml-2 h-8 w-5/6" />
           </li>
           <li>
-            <Skeleton className="h-8 w-4/5 ml-6" />
+            <Skeleton className="ml-6 h-8 w-4/5" />
           </li>
           <li>
             <Skeleton className="h-8 w-full" />
           </li>
           <li>
-            <Skeleton className="h-8 w-3/4 ml-2" />
+            <Skeleton className="ml-2 h-8 w-3/4" />
           </li>
           <li>
             <Skeleton className="h-8 w-5/6" />
           </li>
           <li>
-            <Skeleton className="h-8 w-2/3 ml-2" />
+            <Skeleton className="ml-2 h-8 w-2/3" />
           </li>
           <li>
-            <Skeleton className="h-8 w-3/5 ml-6" />
+            <Skeleton className="ml-6 h-8 w-3/5" />
           </li>
         </ul>
       </nav>
@@ -133,7 +133,7 @@ export const TOCSkeleton = ({ className }: { className?: string }) => {
 export const BlogPostListItemSkeleton = ({ className }: { className?: string }) => {
   return (
     <article className={cn("md:flex", className)}>
-      <div className="h-full mt-px">
+      <div className="mt-px h-full">
         <Skeleton className="h-4 w-20" />
       </div>
       <div className="content-block">
@@ -141,23 +141,23 @@ export const BlogPostListItemSkeleton = ({ className }: { className?: string }) 
         <div className="feed-dot" />
 
         {/* Badge skeleton */}
-        <Skeleton className="h-6 w-12 absolute -top-6 right-0 md:static mb-4" />
+        <Skeleton className="absolute -top-6 right-0 mb-4 h-6 w-12 md:static" />
 
         {/* Title skeleton */}
-        <Skeleton className="h-8 w-full mb-4 max-w-md" />
+        <Skeleton className="mb-4 h-8 w-full max-w-md" />
 
         {/* Image skeleton */}
-        <Skeleton className="h-48 w-full mb-6 rounded-lg" />
+        <Skeleton className="mb-6 h-48 w-full rounded-lg" />
 
         {/* Content skeleton */}
-        <div className="space-y-2 mb-6">
+        <div className="mb-6 space-y-2">
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-3/4" />
         </div>
 
         {/* Author skeleton */}
-        <div className="flex -space-x-2 relative z-0 mt-6">
+        <div className="relative z-0 mt-6 flex -space-x-2">
           <Skeleton className="h-8 w-8 rounded-full" />
           <Skeleton className="h-8 w-8 rounded-full" />
         </div>
@@ -179,6 +179,7 @@ export const BlogPostListSkeleton = ({
   return (
     <div className={cn("space-y-8", className)}>
       {Array.from({ length: count }).map((_, i) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
         <BlogPostListItemSkeleton key={i} />
       ))}
     </div>
@@ -209,7 +210,7 @@ export const BlogCategoriesSkeleton = ({ className }: { className?: string }) =>
       <Skeleton className="h-6 w-16" />
       <Skeleton className="h-6 w-20" />
       <Skeleton className="h-6 w-14" />
-      <Skeleton className="h-6 w-18" />
+      <Skeleton className="w-18 h-6" />
     </div>
   );
 };
@@ -219,9 +220,9 @@ export const BlogCategoriesSkeleton = ({ className }: { className?: string }) =>
  */
 export const MobileTOCSkeleton = ({ className }: { className?: string }) => {
   return (
-    <div className={cn("xl:hidden mb-8", className)}>
+    <div className={cn("mb-8 xl:hidden", className)}>
       <Skeleton className="h-10 w-full" />
-      <div className="mt-4 p-4 border rounded-lg bg-muted/30">
+      <div className="mt-4 rounded-lg border bg-muted/30 p-4">
         <div className="space-y-2">
           <Skeleton className="h-6 w-full" />
           <Skeleton className="h-6 w-5/6" />

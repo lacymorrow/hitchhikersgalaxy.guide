@@ -2,7 +2,6 @@ import { FileIcon, PlusIcon } from "@radix-ui/react-icons";
 import { ProjectDialog } from "@/components/modules/projects/project-dialog";
 import { ProjectMenu } from "@/components/modules/projects/project-menu";
 import { Button } from "@/components/ui/button";
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import {
   SidebarGroup,
   SidebarGroupLabel,
@@ -32,7 +31,7 @@ export async function ProjectsList() {
 
   const visibleProjects = projects.slice(0, 3);
   const collapsedProjects = projects.slice(3);
-  const hasCollapsedProjects = collapsedProjects.length > 0;
+  const _hasCollapsedProjects = collapsedProjects.length > 0;
 
   return (
     <SidebarGroup className="space-y-1 pb-10">
@@ -59,7 +58,7 @@ export async function ProjectsList() {
         {/* Always visible projects */}
         {visibleProjects.map((project) => (
           <SidebarMenuItem key={project.id}>
-            <div className="flex items-center justify-between rounded-md hover:bg-accent gap-2">
+            <div className="flex items-center justify-between gap-2 rounded-md hover:bg-accent">
               <SidebarMenuButton asChild className="w-full">
                 <div className="flex items-center gap-2">
                   <FileIcon className="h-4 w-4" />

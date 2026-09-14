@@ -45,11 +45,11 @@ const OfferCard = ({
   selectedBilledType: BilledType;
 }) => {
   function getAnnualPrice() {
-    return price.annually || 0;
+    return price.annually ?? 0;
   }
 
   function getMonthlyPrice() {
-    return price.monthly || 0;
+    return price.monthly ?? 0;
   }
 
   const currentPrice = selectedBilledType === "annually" ? getAnnualPrice() : getMonthlyPrice();
@@ -122,6 +122,7 @@ export function SelectOfferTab({
         }}
       />
       <button
+        type="button"
         onClick={() => handleSwitchTab("monthly")}
         className={cn(
           "relative z-10 flex-1 rounded-full px-4 text-sm font-medium transition-colors",
@@ -131,6 +132,7 @@ export function SelectOfferTab({
         Monthly
       </button>
       <button
+        type="button"
         onClick={() => handleSwitchTab("annually")}
         className={cn(
           "relative z-10 flex-1 rounded-full px-4 text-sm font-medium transition-colors",

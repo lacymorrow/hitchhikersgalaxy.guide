@@ -41,7 +41,7 @@ function GitHubAccessActionsCell({ row }: { row: Row<GitHubUserData> }) {
       } else {
         toast({
           title: "Error",
-          description: result.error || "Failed to revoke GitHub access",
+          description: result.error ?? "Failed to revoke GitHub access",
           variant: "destructive",
         });
       }

@@ -1,13 +1,16 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Calculator, Clock, DollarSign, Users } from "lucide-react";
+import { Calculator, Clock, DollarSign, RotateCcw, Users } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { siteConfig } from "@/config/site-config";
 import { oneTimePlans } from "@/content/pricing/pricing-content";
+
+const DEFAULTS = { teamSize: 1, monthsToLaunch: 3, monthlyBurn: 10000 };
 
 const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("en-US", {
@@ -18,12 +21,23 @@ const formatCurrency = (value: number) => {
 };
 
 export const ROICalculator = () => {
-  const [teamSize, setTeamSize] = useState(3);
-  const [monthsToLaunch, setMonthsToLaunch] = useState(6);
-  const [monthlyBurn, setMonthlyBurn] = useState(20000);
+  const [teamSize, setTeamSize] = useState(DEFAULTS.teamSize);
+  const [monthsToLaunch, setMonthsToLaunch] = useState(DEFAULTS.monthsToLaunch);
+  const [monthlyBurn, setMonthlyBurn] = useState(DEFAULTS.monthlyBurn);
+
+  const isDefault =
+    teamSize === DEFAULTS.teamSize &&
+    monthsToLaunch === DEFAULTS.monthsToLaunch &&
+    monthlyBurn === DEFAULTS.monthlyBurn;
+
+  const resetDefaults = () => {
+    setTeamSize(DEFAULTS.teamSize);
+    setMonthsToLaunch(DEFAULTS.monthsToLaunch);
+    setMonthlyBurn(DEFAULTS.monthlyBurn);
+  };
 
   // Get the highest priced plan
-  const shipkitCost = Math.max(...oneTimePlans.map((plan) => plan.price.oneTime || 0));
+  const shipkitCost = Math.max(...oneTimePlans.map((plan) => plan.price.oneTime ?? 0));
 
   // Calculate savings
   const avgDevSalary = 150000; // Average developer salary in 2024
@@ -44,7 +58,7 @@ export const ROICalculator = () => {
               <Users className="h-5 w-5 text-muted-foreground" />
               <Slider
                 value={[teamSize]}
-                onValueChange={(values) => setTeamSize(values[0] || teamSize)}
+                onValueChange={(values) => setTeamSize(values[0] ?? teamSize)}
                 min={1}
                 max={10}
                 step={1}
@@ -60,7 +74,7 @@ export const ROICalculator = () => {
               <Clock className="h-5 w-5 text-muted-foreground" />
               <Slider
                 value={[monthsToLaunch]}
-                onValueChange={(values) => setMonthsToLaunch(values[0] || monthsToLaunch)}
+                onValueChange={(values) => setMonthsToLaunch(values[0] ?? monthsToLaunch)}
                 min={3}
                 max={12}
                 step={1}
@@ -76,7 +90,7 @@ export const ROICalculator = () => {
               <DollarSign className="h-5 w-5 text-muted-foreground" />
               <Slider
                 value={[monthlyBurn]}
-                onValueChange={(values) => setMonthlyBurn(values[0] || monthlyBurn)}
+                onValueChange={(values) => setMonthlyBurn(values[0] ?? monthlyBurn)}
                 min={5000}
                 max={100000}
                 step={5000}
@@ -97,7 +111,7 @@ export const ROICalculator = () => {
             </h3>
             <div className="mt-6 space-y-6">
               <div>
-                <div className="text-sm text-muted-foreground">Development Costs</div>
+                <div className="text-sm text-muted-foreground">Estimated Time Savings</div>
                 <motion.div
                   key={totalSavings}
                   initial={{ scale: 0.95 }}
@@ -133,15 +147,32 @@ export const ROICalculator = () => {
           </div>
 
           <div className="space-y-4 text-sm text-muted-foreground">
-            <p>* Calculations based on:</p>
-            <ul className="list-disc pl-4 space-y-2">
-              <li>Average developer salary of {formatCurrency(avgDevSalary)}/year in 2024</li>
+            <p>
+              * Estimates assume {siteConfig.title} replaces custom development of equivalent
+              features. Actual savings depend on your specific requirements, team composition, and
+              project scope. Calculations based on:
+            </p>
+            <ul className="list-disc space-y-2 pl-4">
+              <li>
+                Average developer salary of {formatCurrency(avgDevSalary)}/year (Stack Overflow
+                2024)
+              </li>
               <li>Infrastructure and tooling costs of {formatCurrency(2000)}/month</li>
-              <li>Typical time savings of 75% with {siteConfig.title}</li>
               <li>
                 One-time {siteConfig.title} cost of {formatCurrency(shipkitCost)}
               </li>
             </ul>
+            {!isDefault && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={resetDefaults}
+                className="mt-2 gap-1.5 text-muted-foreground"
+              >
+                <RotateCcw className="h-3.5 w-3.5" />
+                Reset to defaults
+              </Button>
+            )}
           </div>
         </div>
       </div>

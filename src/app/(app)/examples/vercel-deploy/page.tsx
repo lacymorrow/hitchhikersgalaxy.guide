@@ -6,8 +6,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export default function VercelDeployExample() {
   return (
-    <div className="max-w-4xl mx-auto space-y-8">
-      <div className="text-center space-y-4">
+    <div className="mx-auto max-w-4xl space-y-8">
+      <div className="space-y-4 text-center">
         <h1 className="text-4xl font-bold">Vercel Deployment</h1>
         <p className="text-xl text-muted-foreground">
           Deploy your application to Vercel with zero configuration
@@ -77,11 +77,11 @@ export default function VercelDeployExample() {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <ExternalLink className="h-4 w-4 mr-2" />
+              <ExternalLink className="mr-2 h-4 w-4" />
               Deploy to Vercel
             </a>
           </Button>
-          <div className="text-sm text-muted-foreground space-y-2">
+          <div className="space-y-2 text-sm text-muted-foreground">
             <p>
               <strong>Note:</strong> Make sure to configure your environment variables after
               deployment.
@@ -101,19 +101,19 @@ export default function VercelDeployExample() {
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <h3 className="font-medium mb-2">1. Install Vercel CLI</h3>
-            <pre className="bg-muted p-3 rounded-md text-sm">
+            <h3 className="mb-2 font-medium">1. Install Vercel CLI</h3>
+            <pre className="rounded-md bg-muted p-3 text-sm">
               <code>npm install -g vercel</code>
             </pre>
           </div>
           <div>
-            <h3 className="font-medium mb-2">2. Deploy</h3>
-            <pre className="bg-muted p-3 rounded-md text-sm">
+            <h3 className="mb-2 font-medium">2. Deploy</h3>
+            <pre className="rounded-md bg-muted p-3 text-sm">
               <code>vercel --prod</code>
             </pre>
           </div>
           <div>
-            <h3 className="font-medium mb-2">3. Follow the prompts</h3>
+            <h3 className="mb-2 font-medium">3. Follow the prompts</h3>
             <p className="text-sm text-muted-foreground">
               The CLI will guide you through the deployment process and configuration.
             </p>

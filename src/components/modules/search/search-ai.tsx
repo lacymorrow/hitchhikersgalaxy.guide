@@ -6,7 +6,6 @@ import {
   ChevronUp,
   CircleArrowRight,
   Code,
-  CornerRightDown,
   Frown,
   HelpCircle,
   Loader,
@@ -34,7 +33,7 @@ import { cn } from "@/lib/utils";
 
 const MIN_HEIGHT = 48;
 const MAX_HEIGHT = 120;
-const MAX_SECTION_HEIGHT = 400;
+const _MAX_SECTION_HEIGHT = 400;
 const PREVIEW_LINES = 2;
 
 const SEARCH_SUGGESTIONS = [
@@ -292,7 +291,7 @@ export const SearchAi = ({
       >
         {collapsible && <Search className="h-4 w-4 shrink-0 lg:mr-2" />}
         <span
-          className={cn("text-xs truncate", collapsible ? "hidden lg:inline-flex" : "inline-flex")}
+          className={cn("truncate text-xs", collapsible ? "hidden lg:inline-flex" : "inline-flex")}
         >
           {buttonText ?? defaultButtonText}
         </span>
@@ -310,7 +309,7 @@ export const SearchAi = ({
       </Button>
 
       <Dialog open={open} onOpenChange={handleModalToggle}>
-        <DialogContent className="max-h-[90vh] sm:max-w-[1000px] overflow-hidden flex flex-col">
+        <DialogContent className="flex max-h-[90vh] flex-col overflow-hidden sm:max-w-[1000px]">
           <DialogHeader>
             <DialogTitle>Search Documentation</DialogTitle>
             <DialogDescription>
@@ -318,7 +317,7 @@ export const SearchAi = ({
             </DialogDescription>
           </DialogHeader>
 
-          <div className="w-full py-4 shrink-0">
+          <div className="w-full shrink-0 py-4">
             <div className="relative mx-auto w-full max-w-full">
               <div className="relative rounded-2xl border border-black/10 bg-black/[0.03] focus-within:border-black/20 dark:border-white/10 dark:bg-white/[0.03] dark:focus-within:border-white/20">
                 <div className="flex flex-col">
@@ -358,7 +357,7 @@ export const SearchAi = ({
                             "rounded-md border px-2 py-0.5 text-xs font-medium shadow-sm",
                             "animate-fadeIn transition-colors duration-200",
                             isSearchInProgress
-                              ? "opacity-50 cursor-not-allowed"
+                              ? "cursor-not-allowed opacity-50"
                               : "hover:bg-black/5 dark:hover:bg-white/5",
                             currentSuggestion.colors.bg,
                             currentSuggestion.colors.border
@@ -418,7 +417,7 @@ export const SearchAi = ({
 
           {/* Results Section - Responsive Layout */}
           {(showResultsSection || error) && (
-            <div className="min-h-0 flex-1 overflow-y-auto flex flex-col gap-4">
+            <div className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto">
               {/* Mobile/Tablet: Preview Cards */}
               <div className="flex flex-col gap-4 lg:hidden">
                 {/* Search Results Preview Card */}
@@ -539,7 +538,7 @@ export const SearchAi = ({
                         </ScrollArea>
                       ) : error ? (
                         <div className="flex items-start gap-3">
-                          <Frown className="h-4 w-4 shrink-0 text-red-500 mt-0.5" />
+                          <Frown className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
                           <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
                         </div>
                       ) : hasSearched ? (
@@ -553,10 +552,10 @@ export const SearchAi = ({
               </div>
 
               {/* Desktop: Side by Side */}
-              <div className="hidden lg:flex lg:gap-6 min-h-0 flex-1">
+              <div className="hidden min-h-0 flex-1 lg:flex lg:gap-6">
                 {/* Search Results Column */}
-                <div className="flex-1 min-h-0 flex flex-col">
-                  <div className="rounded-lg border bg-white dark:bg-gray-900 flex flex-col min-h-0 flex-1">
+                <div className="flex min-h-0 flex-1 flex-col">
+                  <div className="flex min-h-0 flex-1 flex-col rounded-lg border bg-white dark:bg-gray-900">
                     <div className="flex items-center justify-between border-b p-4">
                       <div className="flex items-center gap-2">
                         <BookOpen className="h-4 w-4 text-blue-600" />
@@ -583,7 +582,7 @@ export const SearchAi = ({
                     </div>
 
                     {isSearchResultsExpanded && (
-                      <div className="p-4 min-h-0 flex-1 overflow-hidden">
+                      <div className="min-h-0 flex-1 overflow-hidden p-4">
                         {isLoading && searchResults.length === 0 ? (
                           <div className="flex items-center gap-3">
                             <Loader className="h-4 w-4 animate-spin text-blue-600" />
@@ -621,8 +620,8 @@ export const SearchAi = ({
                 </div>
 
                 {/* AI Response Column */}
-                <div className="flex-1 min-h-0 flex flex-col">
-                  <div className="rounded-lg border bg-white dark:bg-gray-900 flex flex-col min-h-0 flex-1">
+                <div className="flex min-h-0 flex-1 flex-col">
+                  <div className="flex min-h-0 flex-1 flex-col rounded-lg border bg-white dark:bg-gray-900">
                     <div className="flex items-center justify-between border-b p-4">
                       <div className="flex items-center gap-2">
                         <HelpCircle className="h-4 w-4 text-purple-600" />
@@ -649,7 +648,7 @@ export const SearchAi = ({
                     </div>
 
                     {isAIResponseExpanded && (
-                      <div className="p-4 min-h-0 flex-1 overflow-hidden">
+                      <div className="min-h-0 flex-1 overflow-hidden p-4">
                         {isLoading && !answer ? (
                           <div className="flex items-center gap-3">
                             <Loader className="h-4 w-4 animate-spin text-purple-600" />
@@ -663,7 +662,7 @@ export const SearchAi = ({
                           </ScrollArea>
                         ) : error ? (
                           <div className="flex items-start gap-3">
-                            <Frown className="h-4 w-4 shrink-0 text-red-500 mt-0.5" />
+                            <Frown className="mt-0.5 h-4 w-4 shrink-0 text-red-500" />
                             <p className="text-sm text-red-600 dark:text-red-400">{error}</p>
                           </div>
                         ) : hasSearched ? (

@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   authorUtils,
-  type BlogAuthor,
   getActiveAuthors,
   getAuthorById,
   getAuthorByName,
@@ -27,7 +26,9 @@ export async function generateStaticParams() {
   const authorIds = new Set<string>();
 
   // Add author IDs from active authors
-  activeAuthors.forEach((author) => authorIds.add(author.id));
+  activeAuthors.forEach((author) => {
+    authorIds.add(author.id);
+  });
 
   // Add legacy author names that have posts
   posts.forEach((post) => {
@@ -39,7 +40,9 @@ export async function generateStaticParams() {
       authorIds.add(post.authorObject.id);
     }
     if (post.authorObjects) {
-      post.authorObjects.forEach((author) => authorIds.add(author.id));
+      post.authorObjects.forEach((author) => {
+        authorIds.add(author.id);
+      });
     }
   });
 
@@ -70,7 +73,7 @@ export default async function AuthorPage({ params }: Props) {
   // Filter posts by author (support both legacy and new systems)
   const authorPosts = posts.filter((post) => {
     // Check new author system first
-    if (post.authorObject && post.authorObject.id === authorId) {
+    if (post.authorObject?.id === authorId) {
       return true;
     }
     if (post.authorObjects?.some((a) => a.id === authorId)) {
@@ -87,9 +90,11 @@ export default async function AuthorPage({ params }: Props) {
   if (authorPosts.length === 0) {
     return (
       <div className="container py-8">
-        <h1 className="text-3xl font-bold mb-4">Author Not Found</h1>
-        <p className="text-muted-foreground mb-4">No posts found for author "{displayName}".</p>
-        <Link href={routes.blog} className="text-blue-600 hover:text-blue-800 underline">
+        <h1 className="mb-4 text-3xl font-bold">Author Not Found</h1>
+        <p className="mb-4 text-muted-foreground">
+          No posts found for author &quot;{displayName}&quot;.
+        </p>
+        <Link href={routes.blog} className="text-blue-600 underline hover:text-blue-800">
           ← Back to Blog
         </Link>
       </div>
@@ -99,12 +104,12 @@ export default async function AuthorPage({ params }: Props) {
   return (
     <div className="w-full">
       <div className="mb-8">
-        <div className="flex flex-col lg:flex-row gap-8 mb-8">
+        <div className="mb-8 flex flex-col gap-8 lg:flex-row">
           <div className="lg:w-1/3">
             <AuthorProfile author={author} postCount={authorPosts.length} />
           </div>
           <div className="lg:w-2/3">
-            <h1 className="text-3xl font-bold mb-2">Posts by {displayName}</h1>
+            <h1 className="mb-2 text-3xl font-bold">Posts by {displayName}</h1>
             <p className="text-muted-foreground">
               {authorPosts.length} post{authorPosts.length !== 1 ? "s" : ""} found
             </p>
@@ -117,7 +122,7 @@ export default async function AuthorPage({ params }: Props) {
           <Card key={post.slug} className="transition-colors hover:bg-muted/50">
             <CardHeader>
               {post.categories && post.categories.length > 0 && (
-                <div className="flex flex-wrap gap-2 mb-2">
+                <div className="mb-2 flex flex-wrap gap-2">
                   {post.categories.map((category) => (
                     <Link key={category} href={`/blog/categories/${encodeURIComponent(category)}`}>
                       <Badge variant="secondary">{category}</Badge>

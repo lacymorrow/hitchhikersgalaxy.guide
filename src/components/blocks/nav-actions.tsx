@@ -117,10 +117,12 @@ export function NavActions() {
           <Sidebar collapsible="none" className="bg-transparent">
             <SidebarContent>
               {data.map((group, index) => (
+                // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
                 <SidebarGroup key={index} className="border-b last:border-none">
                   <SidebarGroupContent className="gap-0">
                     <SidebarMenu>
                       {group.map((item, index) => (
+                        // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
                         <SidebarMenuItem key={index}>
                           <SidebarMenuButton>
                             <item.icon /> <span>{item.label}</span>

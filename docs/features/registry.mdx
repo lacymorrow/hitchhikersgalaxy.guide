@@ -5,7 +5,9 @@ description: "Install Shipkit features as shadcn registry blocks in any Next.js 
 
 # Component Registry
 
-Shipkit features are available as installable [shadcn registry blocks](https://ui.shadcn.com/docs/registry). Add auth, blog, docs, CMS, or FAQ to any Next.js project with a single command.
+Shipkit features are available as installable [shadcn registry blocks](https://ui.shadcn.com/docs/registry). Add auth, payments, blog, docs, CMS, analytics, or any feature to a Next.js project with a single command.
+
+The goal: start from [bones](https://github.com/shipkit-io/bones) (the upstream boilerplate) and install blocks until you reach full Shipkit parity.
 
 ## Quick Start
 
@@ -24,56 +26,95 @@ In your project's `components.json`, add the Shipkit registry:
 ### 2. Install a block
 
 ```bash
-npx shadcn add @shipkit/faq
-npx shadcn add @shipkit/blog
-npx shadcn add @shipkit/docs
 npx shadcn add @shipkit/auth
-npx shadcn add @shipkit/builder-io
-npx shadcn add @shipkit/cms-pages
+npx shadcn add @shipkit/payments
+npx shadcn add @shipkit/blog
+npx shadcn add @shipkit/analytics
 ```
 
 Or install directly via URL:
 
 ```bash
-npx shadcn add https://shipkit.io/r/faq.json
+npx shadcn add https://shipkit.io/r/auth.json
 ```
 
-## Available Blocks
+## Available Blocks (35 items)
 
-### Feature Blocks
+### Core Feature Blocks
 
-| Block | Files | Description |
-|-------|-------|-------------|
-| `faq` | 3 | Accordion FAQ page with static content and optional Payload CMS integration |
-| `docs` | 12 | Full documentation system — sidebar, search, MDX rendering |
-| `blog` | 24 | Blog with author profiles, categories, feed-style timeline, sidebar |
-| `builder-io` | 11 | Builder.io visual page builder — components, config, standalone route |
-| `cms-pages` | 11 | Shared Payload + Builder.io catch-all route with automatic fallback |
-| `auth` | 41 | NextAuth.js v5 — OAuth, credentials, magic link, guest access, RBAC |
+| Block       | Files | Description                                                       |
+| ----------- | ----- | ----------------------------------------------------------------- |
+| `auth`      | 41    | NextAuth.js v5 — OAuth, credentials, magic link, guest access     |
+| `payments`  | 30    | Stripe, Lemon Squeezy, Polar — checkout, webhooks, subscriptions  |
+| `dashboard` | 46    | User dashboard — projects, teams, API keys, deployments, charts   |
+| `blog`      | 24    | MDX blog with author profiles, categories, feed-style timeline    |
+| `docs`      | 12    | Documentation system — sidebar, search, MDX rendering             |
+| `admin`     | 30    | Role-based admin panel — users, payments, GitHub, integrations    |
+| `settings`  | 12    | User settings — profile, appearance, account management           |
+| `rbac`      | 3     | Role-based access control — permission service, hook, API         |
+| `demo`      | 93    | Showcase pages — dashboard, mail, music, playground, forms, cards |
+
+### Content & Marketing
+
+| Block       | Files | Description                                                  |
+| ----------- | ----- | ------------------------------------------------------------ |
+| `faq`       | 3     | Accordion FAQ page with optional Payload CMS integration     |
+| `pricing`   | 8     | Pricing page with plan cards, features, testimonials content |
+| `legal`     | 5     | Privacy policy, terms of service, EULA, legal info (MDX)     |
+| `changelog` | 6     | Auto-generated changelog from GitHub commits and tags        |
+| `contact`   | 4     | Contact form with Resend email and newsletter opt-in         |
+| `waitlist`  | 10    | Pre-launch signup with hero, social proof, FAQ sections      |
+
+### CMS
+
+| Block        | Files | Description                                                   |
+| ------------ | ----- | ------------------------------------------------------------- |
+| `builder-io` | 11    | Builder.io visual page builder — drag-and-drop components     |
+| `cms-pages`  | 11    | Shared Payload + Builder.io catch-all with automatic fallback |
+
+### Integrations
+
+| Block            | Files | Description                                                        |
+| ---------------- | ----- | ------------------------------------------------------------------ |
+| `email`          | 6     | Resend email — client, service, subscribe actions, newsletter form |
+| `feedback`       | 4     | User feedback dialog/popover with database storage                 |
+| `analytics`      | 9     | PostHog, Umami, DataFast, Google Analytics, GTM, Statsig           |
+| `ai`             | 15    | SmolLM browser AI (WebGPU) + cloud AI (OpenAI, Anthropic)          |
+| `github-connect` | 10    | GitHub OAuth, repo creation, collaborators, download service       |
+| `vercel-connect` | 11    | Vercel OAuth, deploy triggers, webhooks, status tracking           |
+| `storage`        | 6     | AWS S3 presigned uploads, file service, upload components          |
+| `caching`        | 4     | Redis caching and rate limiting via Upstash                        |
 
 ### Shared Infrastructure
 
-These are installed automatically as dependencies of the feature blocks above.
+Installed automatically as dependencies of the blocks above.
 
-| Item | Type | Description |
-|------|------|-------------|
-| `cn` | `registry:lib` | Tailwind class merging utility (`clsx` + `tailwind-merge`) |
-| `routes-config` | `registry:lib` | Centralized route definitions |
-| `features-config` | `registry:lib` | Build-time feature flag detection from env vars |
+| Item              | Type           | Description                                        |
+| ----------------- | -------------- | -------------------------------------------------- |
+| `cn`              | `registry:lib` | Tailwind class merging (`clsx` + `tailwind-merge`) |
+| `routes-config`   | `registry:lib` | Centralized route definitions                      |
+| `features-config` | `registry:lib` | Build-time feature flags from env vars             |
 
 ### UI Components
 
-Standalone UI components, also installable individually:
+Standalone components, also installable individually:
 
-| Component | Description |
-|-----------|-------------|
-| `marquee` | Infinite scrolling marquee (horizontal/vertical) |
-| `border-beam` | Animated beam tracing a container border |
-| `retro-grid` | Perspective grid background |
-| `shimmer-button` | Button with rotating shimmer effect |
-| `dock` | macOS-style dock with magnification |
-| `use-copy-to-clipboard` | Clipboard hook with timeout reset |
-| `use-mobile` | Mobile viewport detection hook |
+| Component               | Description                                      |
+| ----------------------- | ------------------------------------------------ |
+| `marquee`               | Infinite scrolling marquee (horizontal/vertical) |
+| `border-beam`           | Animated beam tracing a container border         |
+| `retro-grid`            | Perspective grid background                      |
+| `shimmer-button`        | Button with rotating shimmer effect              |
+| `dock`                  | macOS-style dock with magnification              |
+| `use-copy-to-clipboard` | Clipboard hook with timeout reset                |
+| `use-mobile`            | Mobile viewport detection hook                   |
+
+### Roadmap (not yet available)
+
+| Block         | Description                                  |
+| ------------- | -------------------------------------------- |
+| `onboarding`  | Multi-step setup wizard                      |
+| `payload-cms` | Full Payload CMS collections and admin panel |
 
 ## Block Details
 
@@ -86,6 +127,7 @@ npx shadcn add @shipkit/faq
 ```
 
 **Installs to:**
+
 - `app/(app)/faq/page.tsx` — Server component with accordion layout
 - `app/(app)/faq/loading.tsx` — Loading skeleton
 - `content/faq/faq-content.tsx` — Static FAQ content (8 questions)
@@ -103,6 +145,7 @@ npx shadcn add @shipkit/docs
 ```
 
 **Installs to:**
+
 - `app/docs/` — Layout, page, loading, not-found, styles
 - `app/docs/_components/` — Sidebar, header, search dialog
 - `app/api/docs/search/` — Search API route (optional AI-powered answers)
@@ -123,6 +166,7 @@ npx shadcn add @shipkit/blog
 ```
 
 **Installs to:**
+
 - `app/blog/` — Listing, post pages, categories, author pages
 - `components/modules/blog/` — 10 components (hero, post, authors, TOC, skeletons)
 - `components/layouts/blog-sidebar.tsx` — Sticky sidebar with search
@@ -144,6 +188,7 @@ npx shadcn add @shipkit/builder-io
 ```
 
 **Installs to:**
+
 - `app/builder.io/[...slug]/page.tsx` — Standalone catch-all route
 - `lib/builder-io/builder-io.tsx` — `RenderBuilderContent` component
 - `builder-registry.ts` — Component registration (Hero, Stats, CTA)
@@ -164,7 +209,8 @@ npx shadcn add @shipkit/cms-pages
 ```
 
 **Installs to:**
-- `app/(cms)/[...slug]/page.tsx` — Unified catch-all handler
+
+- `app/(app)/[...slug]/page.tsx`: unified catch-all handler (lives under `(app)` so the sync root layout can send a real 404)
 - `app/(cms)/layout.tsx` — Conditional Payload layout (tree-shakes when disabled)
 - `app/(cms)/payload-root-layout.tsx` — Payload CSS/config loader
 - `app/(cms)/payload-blocks.tsx` — Block renderer (Hero, Content, Features, Testimonials)
@@ -175,7 +221,7 @@ npx shadcn add @shipkit/cms-pages
 
 ```
 Request to /<any-path>
-  -> (cms)/[...slug] catches it
+  -> (app)/[...slug] catches it
   -> Checks Payload CMS database for matching page
   -> If not found, falls back to Builder.io API
   -> If neither has content, returns 404
@@ -192,6 +238,7 @@ npx shadcn add @shipkit/auth
 ```
 
 **Installs to:**
+
 - `app/(authentication)/` — Sign-in, sign-up, forgot/reset password, error pages
 - `app/(authentication)/_components/` — Auth form, credentials, magic link, guest, OAuth buttons
 - `app/api/auth/[...nextauth]/route.ts` — NextAuth API route
@@ -208,11 +255,170 @@ npx shadcn add @shipkit/auth
 **Dependencies:** `next-auth@5`, `@auth/drizzle-adapter`, `bcryptjs`, `zod`, `zsa`
 
 **Setup:**
+
 1. Run `npx auth secret` to generate `AUTH_SECRET`
 2. Set `DATABASE_URL` for PostgreSQL
 3. Run Drizzle migrations: `npx drizzle-kit generate && npx drizzle-kit migrate`
 4. Configure at least one provider (e.g., `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`)
 5. Or enable guest access: `ENABLE_AUTH_GUEST=true`
+
+### Legal
+
+```bash
+npx shadcn add @shipkit/legal
+```
+
+Privacy policy, terms of service, EULA, and legal info as MDX pages with shared layout and header navigation. Customize content in each `.mdx` file after installation.
+
+### Changelog
+
+```bash
+npx shadcn add @shipkit/changelog
+```
+
+Auto-generates changelog from your GitHub repo's commits and tags. Set `GITHUB_REPO_OWNER` and `GITHUB_REPO_NAME` env vars. Timeline view with individual entry pages. Cached for 1 hour via ISR.
+
+### Contact
+
+```bash
+npx shadcn add @shipkit/contact
+```
+
+Contact page with animated background, email card, and React Hook Form. Sends emails via Resend (`RESEND_API_KEY`). Includes newsletter opt-in.
+
+### Waitlist
+
+```bash
+npx shadcn add @shipkit/waitlist
+```
+
+Pre-launch waitlist with hero, social proof, FAQ, and email signup. Stores entries in the database. Optional Resend email notifications.
+
+### Admin
+
+```bash
+npx shadcn add @shipkit/admin
+```
+
+Role-based admin dashboard. Set `ADMIN_EMAIL` (comma-separated) to grant access. Sections: users, payments, GitHub, integrations, feedback, waitlist, CMS. Requires `auth` block.
+
+### Settings
+
+```bash
+npx shadcn add @shipkit/settings
+```
+
+User settings with profile editing, appearance/theme picker, account deletion, and provider disconnect. Requires `auth` block.
+
+### Email
+
+```bash
+npx shadcn add @shipkit/email
+```
+
+Resend email integration. Set `RESEND_API_KEY` to enable. Includes subscribe form, audience management, and email utility functions.
+
+### Feedback
+
+```bash
+npx shadcn add @shipkit/feedback
+```
+
+User feedback dialog and popover components. Stores in database, optionally emails via Resend.
+
+### Analytics
+
+```bash
+npx shadcn add @shipkit/analytics
+```
+
+Six providers, all behind feature flags. Set any env var to enable: `NEXT_PUBLIC_POSTHOG_KEY`, `NEXT_PUBLIC_UMAMI_WEBSITE_ID`, `NEXT_PUBLIC_DATAFAST_ID`, `NEXT_PUBLIC_GA_ID`, `NEXT_PUBLIC_GTM_ID`, `NEXT_PUBLIC_STATSIG_CLIENT_KEY`. Add `<AnalyticsProvider />` to your root layout.
+
+### Pricing
+
+```bash
+npx shadcn add @shipkit/pricing
+```
+
+Pricing page with plan cards, features showcase, and testimonials. Customize plans in `content/pricing/pricing-content.ts`.
+
+### Payments
+
+```bash
+npx shadcn add @shipkit/payments
+```
+
+Unified payment system. Each provider auto-enables via env vars:
+
+- **Stripe:** `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY`
+- **Lemon Squeezy:** `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID`
+- **Polar:** `POLAR_ACCESS_TOKEN`
+
+Includes webhook handlers, checkout flows, subscription management, and buy buttons.
+
+### Caching
+
+```bash
+npx shadcn add @shipkit/caching
+```
+
+Redis caching and rate limiting via Upstash. Set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN`.
+
+### Storage
+
+```bash
+npx shadcn add @shipkit/storage
+```
+
+AWS S3 file uploads with presigned URLs. Set `AWS_S3_BUCKET_NAME`, `AWS_S3_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`. Includes file upload components.
+
+### Dashboard
+
+```bash
+npx shadcn add @shipkit/dashboard
+```
+
+Full user dashboard with projects, teams, API keys, deployments, downloads, tools, revenue chart, and stats cards. Includes sidebar, service layer, and server actions. Requires `auth` block.
+
+### RBAC
+
+```bash
+npx shadcn add @shipkit/rbac
+```
+
+Role-based access control. Server-side `rbacService.hasPermission(userId, resource, action)` and client-side `usePermission()` hook. Includes `/api/permissions/check` endpoint.
+
+### AI
+
+```bash
+npx shadcn add @shipkit/ai
+```
+
+Browser-based SmolLM via WebGPU (no server, no API key) and cloud AI with OpenAI/Anthropic. Set `OPENAI_API_KEY` or `ANTHROPIC_API_KEY` for cloud features. Includes demo components and WebGPU detection.
+
+### GitHub Connect
+
+```bash
+npx shadcn add @shipkit/github-connect
+```
+
+GitHub integration for repo management. Requires `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`. Provides repo creation, collaborator invitations, download service, and repo availability checks.
+
+### Vercel Connect
+
+```bash
+npx shadcn add @shipkit/vercel-connect
+```
+
+Vercel deployment integration. Set `VERCEL_TOKEN` and `VERCEL_TEAM_ID`. OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components.
+
+### Demo
+
+```bash
+npx shadcn add @shipkit/demo
+```
+
+93 files of showcase demos: dashboard, mail client, music player, AI playground, forms, cards, file browser, authentication, pricing, landing page, and tRPC. Great for exploring UI patterns.
 
 ## Route Groups
 
@@ -221,13 +427,13 @@ All blocks install into the `(app)` route group by default. This is required for
 ```
 app/
 ├── (app)/           <- Feature blocks install here
+│   ├── [...slug]/   <- Shared Payload + Builder.io catch-all
 │   ├── faq/
 │   ├── docs/
 │   ├── blog/
 │   ├── builder.io/
 │   └── (authentication)/
-├── (cms)/       <- CMS pages block installs here
-│   ├── [...slug]/   <- Shared Payload + Builder.io catch-all
+├── (cms)/       <- Payload admin + REST API only
 │   ├── cms/         <- Payload admin panel
 │   └── cms-api/     <- Payload REST API
 └── layout.tsx
@@ -329,13 +535,13 @@ This resolves all internal deps (`cn`, `routes-config`, etc.) through the local 
 
 ### File Entry Types
 
-| Type | Use for |
-|------|---------|
-| `registry:page` | Route pages (`page.tsx`) |
-| `registry:component` | React components, layouts, loading states |
-| `registry:hook` | React hooks |
-| `registry:lib` | Utilities, configs, server code, types, API routes |
-| `registry:style` | CSS files |
+| Type                 | Use for                                            |
+| -------------------- | -------------------------------------------------- |
+| `registry:page`      | Route pages (`page.tsx`)                           |
+| `registry:component` | React components, layouts, loading states          |
+| `registry:hook`      | React hooks                                        |
+| `registry:lib`       | Utilities, configs, server code, types, API routes |
+| `registry:style`     | CSS files                                          |
 
 ### Target Paths
 

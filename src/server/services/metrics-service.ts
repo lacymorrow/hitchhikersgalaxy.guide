@@ -105,7 +105,7 @@ export class MetricsService {
             value,
             timestamp: Date.now(),
             metadata,
-          } as MetricData),
+          }),
         })
         .exec();
     } catch (error) {

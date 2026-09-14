@@ -163,7 +163,7 @@ export function TeamSwitcher({
             variant="ghost"
             size="sm"
             className={cn(
-              "flex items-center gap-2 py-6 h-12",
+              "flex h-12 items-center gap-2 py-6",
               variant === "sidebar" ? "w-full" : "w-[260px] max-w-full justify-between",
               variant === "sidebar" && sidebarOpen && "justify-between"
             )}

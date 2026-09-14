@@ -39,12 +39,12 @@ const IntegrationCard = ({ status }: { status: IntegrationStatus }) => {
         </CardTitle>
         <CardDescription>Configuration Status</CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow flex flex-col justify-between">
-        <div className="mb-4 flex items-start space-x-2 text-sm break-all">
+      <CardContent className="flex flex-grow flex-col justify-between">
+        <div className="mb-4 flex items-start space-x-2 break-all text-sm">
           {status.configured ? (
-            <CheckCircle className="h-4 w-4 mt-0.5 text-green-600 flex-shrink-0" />
+            <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600" />
           ) : (
-            <XCircle className="h-4 w-4 mt-0.5 text-red-600 flex-shrink-0" />
+            <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600" />
           )}
           <p className="text-muted-foreground">{status.message}</p>
         </div>
@@ -103,12 +103,12 @@ const PayloadCMSCard: React.FC<{ status: IntegrationStatus }> = ({ status }) => 
         </CardTitle>
         <CardDescription>Configuration Status</CardDescription>
       </CardHeader>
-      <CardContent className="flex-grow flex flex-col justify-between space-y-4">
+      <CardContent className="flex flex-grow flex-col justify-between space-y-4">
         <div className="flex items-start space-x-2 text-sm">
           {status.configured ? (
-            <CheckCircle className="h-4 w-4 mt-0.5 text-green-600 flex-shrink-0" />
+            <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600" />
           ) : (
-            <XCircle className="h-4 w-4 mt-0.5 text-red-600 flex-shrink-0" />
+            <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600" />
           )}
           <p className="text-muted-foreground">{status.message}</p>
         </div>
@@ -128,7 +128,7 @@ const PayloadCMSCard: React.FC<{ status: IntegrationStatus }> = ({ status }) => 
           )}
 
           {/* Seed CMS button */}
-          <form onSubmit={handleSeed} className="space-y-2 mt-1">
+          <form onSubmit={handleSeed} className="mt-1 space-y-2">
             <Button
               type="submit"
               disabled={seedLoading || !status.configured}
@@ -154,7 +154,7 @@ const PayloadCMSCard: React.FC<{ status: IntegrationStatus }> = ({ status }) => 
           {seedMessage && (
             <Alert
               variant={seedMessage.type === "success" ? "default" : "destructive"}
-              className="text-sm mt-2"
+              className="mt-2 text-sm"
             >
               {seedMessage.type === "success" ? (
                 <CheckCircle className="h-4 w-4" />
@@ -180,7 +180,7 @@ export const IntegrationsClientContent: React.FC<IntegrationsClientContentProps>
         ([category, integrations]) =>
           integrations.length > 0 && (
             <section key={category}>
-              <h2 className="text-xl font-semibold tracking-tight mb-4">{category}</h2>
+              <h2 className="mb-4 text-xl font-semibold tracking-tight">{category}</h2>
               <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
                 {integrations.map((integration) => (
                   <IntegrationCard key={integration.name} status={integration} />

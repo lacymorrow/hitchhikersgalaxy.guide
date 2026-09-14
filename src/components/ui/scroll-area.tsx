@@ -89,6 +89,7 @@ const ScrollArea = React.forwardRef<
     return (
       <ScrollAreaContext.Provider value={isTouch}>
         {isTouch ? (
+          // biome-ignore lint/a11y/useSemanticElements: scroll area uses explicit role for screen readers
           <div
             ref={ref}
             role="group"
@@ -101,7 +102,6 @@ const ScrollArea = React.forwardRef<
               ref={viewportRef}
               data-slot="scroll-area-viewport"
               className={cn("size-full overflow-auto rounded-[inherit]", viewportClassName)}
-              tabIndex={0}
             >
               {children}
             </div>
@@ -154,9 +154,9 @@ const ScrollBar = React.forwardRef<
       orientation={orientation}
       data-slot="scroll-area-scrollbar"
       className={cn(
-        "hover:bg-muted dark:hover:bg-muted/50 data-[state=visible]:fade-in-0 data-[state=hidden]:fade-out-0 data-[state=visible]:animate-in data-[state=hidden]:animate-out flex touch-none p-px transition-[colors] duration-150 select-none",
+        "flex touch-none select-none p-px transition-[colors] duration-150 hover:bg-muted data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out-0 data-[state=visible]:fade-in-0 dark:hover:bg-muted/50",
         orientation === "vertical" && "h-full w-2.5 border-l border-l-transparent",
-        orientation === "horizontal" && "h-2.5 flex-col border-t border-t-transparent px-1 pr-1.25",
+        orientation === "horizontal" && "pr-1.25 h-2.5 flex-col border-t border-t-transparent px-1",
         className
       )}
       {...props}
@@ -164,7 +164,7 @@ const ScrollBar = React.forwardRef<
       <ScrollAreaPrimitive.ScrollAreaThumb
         data-slot="scroll-area-thumb"
         className={cn(
-          "bg-border relative flex-1 origin-center rounded-full transition-[scale]",
+          "relative flex-1 origin-center rounded-full bg-border transition-[scale]",
           orientation === "vertical" && "my-1 active:scale-y-95",
           orientation === "horizontal" && "active:scale-x-98"
         )}
@@ -202,8 +202,8 @@ const ScrollMask = ({
           "before:h-(--top-fade-height) after:h-(--bottom-fade-height)",
           showMask.top ? "before:opacity-100" : "before:opacity-0",
           showMask.bottom ? "after:opacity-100" : "after:opacity-0",
-          "before:from-background before:bg-gradient-to-b before:to-transparent",
-          "after:from-background after:bg-gradient-to-t after:to-transparent",
+          "before:bg-gradient-to-b before:from-background before:to-transparent",
+          "after:bg-gradient-to-t after:from-background after:to-transparent",
           className
         )}
       />
@@ -223,8 +223,8 @@ const ScrollMask = ({
           "before:w-(--left-fade-width) after:w-(--right-fade-width)",
           showMask.left ? "before:opacity-100" : "before:opacity-0",
           showMask.right ? "after:opacity-100" : "after:opacity-0",
-          "before:from-background before:bg-gradient-to-r before:to-transparent",
-          "after:from-background after:bg-gradient-to-l after:to-transparent",
+          "before:bg-gradient-to-r before:from-background before:to-transparent",
+          "after:bg-gradient-to-l after:from-background after:to-transparent",
           className
         )}
       />

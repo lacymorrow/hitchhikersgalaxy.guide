@@ -144,7 +144,7 @@ export async function disconnectAccount(
     await update({
       user: {
         // Explicitly set accounts to simulate removal
-        accounts: (session.user.accounts || []).filter((account) => account.provider !== provider),
+        accounts: (session.user.accounts ?? []).filter((account) => account.provider !== provider),
       },
     });
 

@@ -106,7 +106,7 @@ export default function Charts() {
                   axisLine={false}
                   tickMargin={4}
                   tickFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
+                    return new Date(String(value)).toLocaleDateString("en-US", {
                       weekday: "short",
                     });
                   }}
@@ -117,7 +117,7 @@ export default function Charts() {
                     <ChartTooltipContent
                       hideIndicator
                       labelFormatter={(value) => {
-                        return new Date(value).toLocaleDateString("en-US", {
+                        return new Date(String(value)).toLocaleDateString("en-US", {
                           day: "numeric",
                           month: "long",
                           year: "numeric",
@@ -247,7 +247,7 @@ export default function Charts() {
                   axisLine={false}
                   tickMargin={8}
                   tickFormatter={(value) => {
-                    return new Date(value).toLocaleDateString("en-US", {
+                    return new Date(String(value)).toLocaleDateString("en-US", {
                       weekday: "short",
                     });
                   }}
@@ -270,7 +270,7 @@ export default function Charts() {
                     <ChartTooltipContent
                       indicator="line"
                       labelFormatter={(value) => {
-                        return new Date(value).toLocaleDateString("en-US", {
+                        return new Date(String(value)).toLocaleDateString("en-US", {
                           day: "numeric",
                           month: "long",
                           year: "numeric",

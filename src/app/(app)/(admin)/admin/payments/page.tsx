@@ -34,7 +34,7 @@ export default async function PaymentsPage({
   const payments = await PaymentService.getPaymentsWithUsers();
   const searchParams = await searchParamsPromise;
   // Filter payments based on the filter parameter
-  const filterType = searchParams.filter || "all";
+  const filterType = searchParams.filter ?? "all";
 
   const filteredPayments = payments.filter((payment) => {
     // Default is to show all payments
@@ -54,7 +54,7 @@ export default async function PaymentsPage({
 
   return (
     <>
-      <div className="flex justify-between items-center mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <PageHeader>
           <PageHeaderHeading>Payment Management</PageHeaderHeading>
           <PageHeaderDescription>

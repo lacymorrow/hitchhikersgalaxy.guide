@@ -38,12 +38,12 @@ const directoryListingCache: Map<string, any[]> = new Map();
 export async function getDirectoryEntries(directoryPath = ""): Promise<any[]> {
   // Normalize path to ensure consistent cache keys
   const normalizedPath = directoryPath.replace(/^\/+/, "").trim();
-  
+
   // Check cache first
   if (directoryListingCache.has(normalizedPath)) {
     return directoryListingCache.get(normalizedPath) || [];
   }
-  
+
   // Fetch and cache results if not found
   const entries = await fetchDirectoryEntries(normalizedPath);
   directoryListingCache.set(normalizedPath, entries);
@@ -60,15 +60,15 @@ const fileContentCache: Map<string, string | Uint8Array> = new Map();
 export async function readTemplateFile(filePath: string): Promise<string | Uint8Array | null> {
   // Normalize path
   const normalizedPath = filePath.replace(/^\/+/, "").trim();
-  
+
   // Skip empty paths
   if (!normalizedPath) return null;
-  
+
   // Check cache first
   if (fileContentCache.has(normalizedPath)) {
     return fileContentCache.get(normalizedPath) || null;
   }
-  
+
   // Fetch and cache content if not found
   const content = await fetchFileContent(normalizedPath);
   if (content) fileContentCache.set(normalizedPath, content);
@@ -91,7 +91,7 @@ export async function processTemplateFilesFromDisk(
   if (processedTemplateCache.has(cacheKey)) {
     return processedTemplateCache.get(cacheKey) || [];
   }
-  
+
   // Process files and cache results
   const files = await processFiles(container, projectStructure);
   processedTemplateCache.set(cacheKey, files);
@@ -105,13 +105,13 @@ export async function processTemplateFilesFromDisk(
 export function shouldIgnoreFile(filename: string): boolean {
   // Skip empty paths
   if (!filename || filename.trim() === "") return true;
-  
+
   // Normalize path
   const normalizedName = filename.replace(/^\/+/, "").trim();
-  
+
   // Ignore system files
   if (normalizedName.includes(".DS_Store")) return true;
-  
+
   // Ignore lock files
   if (
     normalizedName.includes("package-lock.json") ||
@@ -121,11 +121,12 @@ export function shouldIgnoreFile(filename: string): boolean {
     normalizedName.includes("npm-shrinkwrap.json") ||
     normalizedName.includes("bun.lockb") ||
     normalizedName.includes("bun.lock")
-  ) return true;
-  
+  )
+    return true;
+
   // Ignore TypeScript environment files
   if (normalizedName.includes("next-env.d.ts")) return true;
-  
+
   // Ignore configuration files
   if (
     normalizedName.includes("README.md") ||
@@ -133,16 +134,18 @@ export function shouldIgnoreFile(filename: string): boolean {
     normalizedName.includes("next.config") ||
     normalizedName.includes("postcss.config") ||
     normalizedName.includes("tsconfig.json")
-  ) return true;
-  
+  )
+    return true;
+
   // Ignore environment files
   if (
     normalizedName.endsWith(".env") ||
     normalizedName.endsWith(".env.local") ||
     normalizedName.endsWith(".env.development") ||
     normalizedName.endsWith(".env.production")
-  ) return true;
-  
+  )
+    return true;
+
   return false;
 }
 ```
@@ -159,7 +162,7 @@ let templateFilesLoaded = false;
 async initialize() {
   // Return early if already initialized
   if (this.isReady && this.container) return true;
-  
+
   // Wait for existing initialization if in progress
   if (containerInitializing) {
     while (containerInitializing) {
@@ -171,14 +174,14 @@ async initialize() {
       return true;
     }
   }
-  
+
   // Set initialization flag
   containerInitializing = true;
-  
+
   try {
     // Initialize container
     // ...
-    
+
     // Mark template loading state
     templateFilesLoaded = true;
     containerInitializing = false;
@@ -200,25 +203,25 @@ const directoryCache = new Map<string, any[]>();
 export async function GET(request: NextRequest) {
   const { searchParams } = new URL(request.url);
   let dirPath = searchParams.get("path") || "";
-  
+
   // Sanitize path
   dirPath = dirPath.replace(/\.\./g, "").replace(/^\/+/, "");
-  
+
   // Check cache first
   if (directoryCache.has(dirPath)) {
     return NextResponse.json(directoryCache.get(dirPath));
   }
-  
+
   // Process directory and filter results
   const entries = await getDirectoryContents(dirPath);
-  const filteredEntries = entries.filter(entry => {
+  const filteredEntries = entries.filter((entry) => {
     const fullPath = path.join(dirPath, entry.name);
     return !shouldIgnoreFile(fullPath);
   });
-  
+
   // Cache results
   directoryCache.set(dirPath, filteredEntries);
-  
+
   return NextResponse.json(filteredEntries);
 }
 ```
@@ -279,7 +282,7 @@ const ESSENTIAL_CONFIG_FILES = [
   "tailwind.config.ts",
   "postcss.config.js",
   "next.config.js",
-  "next.config.ts"
+  "next.config.ts",
 ];
 
 // Define essential directories
@@ -291,13 +294,13 @@ const ESSENTIAL_DIRECTORIES = [
   "src/app",
   "lib",
   "hooks",
-  "styles"
+  "styles",
 ];
 
 // Component dependency mapping
 const COMPONENT_DEPENDENCIES: Record<string, string[]> = {
-  "button": ["components/ui/button.tsx", "lib/utils.ts"],
-  "dialog": ["components/ui/dialog.tsx", "lib/utils.ts", "components/ui/button.tsx"],
+  button: ["components/ui/button.tsx", "lib/utils.ts"],
+  dialog: ["components/ui/dialog.tsx", "lib/utils.ts", "components/ui/button.tsx"],
   // Add more component dependencies as needed
 };
 
@@ -314,7 +317,7 @@ export async function loadEssentialFiles(
       }
     })
   );
-  
+
   // Create essential directories
   await Promise.all(
     ESSENTIAL_DIRECTORIES.map(async (dir) => {
@@ -322,7 +325,7 @@ export async function loadEssentialFiles(
       await container.fs.mkdir(targetDir, { recursive: true });
     })
   );
-  
+
   // Load component-specific dependencies if a component is specified
   if (componentToInstall && COMPONENT_DEPENDENCIES[componentToInstall]) {
     await Promise.all(
@@ -337,15 +340,13 @@ export async function loadEssentialFiles(
 }
 
 // Update container initialization to use selective loading
-export async function initializeContainer(
-  componentToInstall?: string
-): Promise<WebContainer> {
+export async function initializeContainer(componentToInstall?: string): Promise<WebContainer> {
   const container = await WebContainer.boot();
   const projectStructure = determineProjectStructure();
-  
+
   // Only load essential files rather than the entire repository
   await loadEssentialFiles(container, projectStructure, componentToInstall);
-  
+
   return container;
 }
 ```

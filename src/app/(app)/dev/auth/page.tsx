@@ -16,18 +16,18 @@ export default async function AuthDebugPage() {
 
   return (
     <div className="container py-8">
-      <h1 className="text-2xl font-bold mb-6">Authentication Debug</h1>
+      <h1 className="mb-6 text-2xl font-bold">Authentication Debug</h1>
 
-      <div className="p-4 mb-6 bg-yellow-50 border border-yellow-200 rounded-md">
-        <p className="text-yellow-800 font-medium">
+      <div className="mb-6 rounded-md border border-yellow-200 bg-yellow-50 p-4">
+        <p className="font-medium text-yellow-800">
           This page is only available in development mode to help debug authentication issues.
         </p>
       </div>
 
       <div className="space-y-6">
-        <section className="p-6 bg-white rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold mb-4">Session Status</h2>
-          <div className="p-4 bg-slate-50 rounded-md">
+        <section className="rounded-lg border bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-xl font-semibold">Session Status</h2>
+          <div className="rounded-md bg-slate-50 p-4">
             <pre className="whitespace-pre-wrap text-sm">
               {JSON.stringify(
                 {
@@ -53,16 +53,16 @@ export default async function AuthDebugPage() {
           </div>
         </section>
 
-        <section className="p-6 bg-white rounded-lg shadow-sm border">
-          <h2 className="text-xl font-semibold mb-4">Authentication Troubleshooting</h2>
+        <section className="rounded-lg border bg-white p-6 shadow-sm">
+          <h2 className="mb-4 text-xl font-semibold">Authentication Troubleshooting</h2>
 
           <div className="space-y-4">
             <div>
-              <h3 className="font-medium mb-2">Common Issues</h3>
-              <ul className="list-disc list-inside space-y-2">
+              <h3 className="mb-2 font-medium">Common Issues</h3>
+              <ul className="list-inside list-disc space-y-2">
                 <li>
                   <span className="font-medium">Session not persisting after sign-in</span>
-                  <ul className="list-disc ml-6 mt-1 text-slate-600">
+                  <ul className="ml-6 mt-1 list-disc text-slate-600">
                     <li>Check cookies configuration in auth.config.ts</li>
                     <li>Ensure database session strategy is properly configured</li>
                     <li>Verify the database adapter is working correctly</li>
@@ -71,7 +71,7 @@ export default async function AuthDebugPage() {
                 </li>
                 <li>
                   <span className="font-medium">OAuth sign-in not working</span>
-                  <ul className="list-disc ml-6 mt-1 text-slate-600">
+                  <ul className="ml-6 mt-1 list-disc text-slate-600">
                     <li>Verify OAuth provider credentials</li>
                     <li>Check callback URLs and permissions</li>
                     <li>Ensure OAuth provider is enabled</li>
@@ -79,7 +79,7 @@ export default async function AuthDebugPage() {
                 </li>
                 <li>
                   <span className="font-medium">Credentials sign-in issues</span>
-                  <ul className="list-disc ml-6 mt-1 text-slate-600">
+                  <ul className="ml-6 mt-1 list-disc text-slate-600">
                     <li>Check credentials provider configuration</li>
                     <li>Verify user data is saved to both databases</li>
                     <li>Ensure passwords are compared correctly</li>

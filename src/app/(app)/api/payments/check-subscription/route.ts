@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
 
     const hasSubscription = await PaymentService.hasUserActiveSubscription({
       userId: session.user.id,
-      provider: provider || undefined,
+      provider: provider ?? undefined,
     });
 
     return NextResponse.json({ success: true, hasSubscription });

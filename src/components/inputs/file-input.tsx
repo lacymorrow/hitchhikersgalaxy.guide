@@ -136,6 +136,7 @@ export default function FileInput() {
       <ul className="space-y-1">
         {fileList.map((file, index) => (
           <li
+            // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
             key={index}
             className={`flex items-center justify-between rounded-md px-4 py-2 ${
               isUploaded ? "bg-green-100" : "bg-muted"
@@ -167,6 +168,7 @@ export default function FileInput() {
   return (
     <form onSubmit={handleSubmit}>
       <div className="mx-auto w-full max-w-md space-y-4">
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: decorative/UI hover interaction, not primary action */}
         <div
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}

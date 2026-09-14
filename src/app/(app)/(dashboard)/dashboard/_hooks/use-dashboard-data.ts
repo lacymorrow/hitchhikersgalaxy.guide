@@ -24,7 +24,7 @@ export async function getDashboardData() {
       checkVercelConnection(userId),
       PaymentService.hasUserPurchasedVariant({
         userId,
-        variantId: siteConfig.store.products.shipkit || "",
+        variantId: siteConfig.store.products.shipkit ?? "",
         provider: "lemonsqueezy",
       }),
       PaymentService.hasUserActiveSubscription({ userId }),

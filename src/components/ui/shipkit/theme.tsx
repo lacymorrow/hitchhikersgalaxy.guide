@@ -68,12 +68,7 @@ export type AnimationStart =
   | "right-left";
 
 export type ThemeToggleVariant =
-  | "default"
-  | "yin-yang"
-  | "sun-moon"
-  | "sun-dots"
-  | "lightbulb"
-  | "eclipse";
+  "default" | "yin-yang" | "sun-moon" | "sun-dots" | "lightbulb" | "eclipse";
 
 interface Animation {
   name: string;

@@ -47,8 +47,8 @@ export function InstallSection() {
   }, [controls]);
 
   return (
-    <section className={"py-20 px-4 md:px-6 lg:px-8"}>
-      <div className="max-w-4xl mx-auto text-center">
+    <section className={"px-4 py-20 md:px-6 lg:px-8"}>
+      <div className="mx-auto max-w-4xl text-center">
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -56,7 +56,7 @@ export function InstallSection() {
         >
           <h1
             className={cn(
-              "text-4xl md:text-6xl lg:text-8xl mb-6 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-600 font-light",
+              "mb-6 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-4xl font-light text-transparent md:text-6xl lg:text-8xl",
               fontBungee.className
             )}
           >
@@ -64,7 +64,7 @@ export function InstallSection() {
           </h1>
         </motion.div>
         <motion.p
-          className="text-xl mb-12 text-gray-300"
+          className="mb-12 text-xl text-gray-300"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.2 }}
@@ -72,20 +72,20 @@ export function InstallSection() {
           Browse and install ShadCN UI registries without a terminal.
         </motion.p>
         <motion.div
-          className="relative bg-gray-800/80 p-8 rounded-lg mb-8 overflow-hidden shadow-2xl border border-gray-700"
+          className="relative mb-8 overflow-hidden rounded-lg border border-gray-700 bg-gray-800/80 p-8 shadow-2xl"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
-          <div className="flex items-center justify-between mb-4">
+          <div className="mb-4 flex items-center justify-between">
             <div className="flex space-x-2">
-              <div className="w-3 h-3 rounded-full bg-gray-100/40" />
-              <div className="w-3 h-3 rounded-full bg-gray-100/30" />
-              <div className="w-3 h-3 rounded-full bg-gray-100/20" />
+              <div className="h-3 w-3 rounded-full bg-gray-100/40" />
+              <div className="h-3 w-3 rounded-full bg-gray-100/30" />
+              <div className="h-3 w-3 rounded-full bg-gray-100/20" />
             </div>
           </div>
-          <div className="flex justify-center items-center font-mono text-sm sm:text-base md:text-lg break-all w-full relative">
-            <Terminal className="inline mr-2 text-blue-400" />
+          <div className="relative flex w-full items-center justify-center break-all font-mono text-sm sm:text-base md:text-lg">
+            <Terminal className="mr-2 inline text-blue-400" />
             <button
               ref={textRef}
               onClick={selectText}
@@ -117,7 +117,7 @@ export function InstallSection() {
           <Button
             size="lg"
             onClick={copyToClipboard}
-            className="bg-blue-600 hover:bg-blue-700 text-white"
+            className="bg-blue-600 text-white hover:bg-blue-700"
           >
             {copied ? <Check className="mr-2 h-4 w-4" /> : <Copy className="mr-2 h-4 w-4" />}
             {copied ? "Copied!" : "Copy Command"}
@@ -127,20 +127,20 @@ export function InstallSection() {
             href={routes.external.bones}
             className={cn(
               buttonVariants({ variant: "outline", size: "lg" }),
-              "bg-gray-800 border-gray-600 text-gray-300 hover:bg-gray-700"
+              "border-gray-600 bg-gray-800 text-gray-300 hover:bg-gray-700"
             )}
           >
             Learn More
           </Link>
         </motion.div>
         <div className="mt-10 space-y-10">
-          <p className="text-muted-foreground [&>a]:text-blue-400 [&>a]:underline [&>a]:font-medium">
+          <p className="text-muted-foreground [&>a]:font-medium [&>a]:text-blue-400 [&>a]:underline">
             Run this command in your Next.js project after setting up{" "}
             <Link href={"https://ui.shadcn.com/docs/"}>ShadCN UI</Link>. If you would like to start
             with ShadCN pre-configured, check out the{" "}
             <Link href={routes.external.bones}>Bones Starter</Link>.
           </p>
-          <p className="text-lg text-muted-foreground [&>a]:text-blue-400 [&>a]:underline [&>a]:font-medium">
+          <p className="text-lg text-muted-foreground [&>a]:font-medium [&>a]:text-blue-400 [&>a]:underline">
             Get more components and ship even faster with{" "}
             <Link href={routes.external.shipkit}>Shipkit</Link>.
           </p>

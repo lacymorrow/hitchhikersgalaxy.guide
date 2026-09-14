@@ -100,6 +100,7 @@ export const ShortcutDisplay = ({
   return (
     <Component className={finalClassName}>
       {parts.map((part, index) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
         <React.Fragment key={index}>{part}</React.Fragment>
       ))}
     </Component>

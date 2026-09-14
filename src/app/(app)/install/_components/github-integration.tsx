@@ -26,10 +26,10 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
   const componentName = extractComponentInfo();
   const isoString = new Date().toISOString();
   const isoParts = isoString.split("T");
-  const timestamp = isoParts[0] || ""; // YYYY-MM-DD
+  const timestamp = isoParts[0] ?? ""; // YYYY-MM-DD
 
   const timePart = isoParts[1];
-  const timeComponent = timePart ? timePart.split(".")[0]?.replace(/:/g, "-") || "" : ""; // HH-MM-SS
+  const timeComponent = timePart ? (timePart.split(".")[0]?.replace(/:/g, "-") ?? "") : ""; // HH-MM-SS
 
   // Generate default values once
   const defaultValues = {
@@ -112,7 +112,7 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
 
     const responseData = await response.json();
     if (!response.ok) {
-      throw new Error(responseData.details || responseData.error || `Failed to ${endpoint}`);
+      throw new Error(responseData.details ?? responseData.error ?? `Failed to ${endpoint}`);
     }
 
     addProgressMessage(
@@ -271,7 +271,7 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
       </div>
 
       <div className="transition-[height,opacity] duration-200 ease-in-out">
-        {(error || progressMessages.length > 0 || success) && (
+        {(error ?? (progressMessages.length > 0 || success)) && (
           <div className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm">
             {error && (
               <Alert variant="destructive" className="mb-3">

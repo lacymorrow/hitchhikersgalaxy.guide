@@ -2,9 +2,7 @@
   "name": "cli",
   "type": "registry:block",
   "description": "A complete interface for managing your Shadcn UI components.",
-  "dependencies": [
-    "lucide-react"
-  ],
+  "dependencies": ["lucide-react"],
   "registryDependencies": [
     "button",
     "card",
@@ -15,10 +13,7 @@
     "switch",
     "tooltip"
   ],
-  "categories": [
-    "tools",
-    "development"
-  ],
+  "categories": ["tools", "development"],
   "files": [
     {
       "path": "page.tsx",

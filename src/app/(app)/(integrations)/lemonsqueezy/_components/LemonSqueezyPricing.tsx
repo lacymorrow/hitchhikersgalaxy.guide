@@ -15,7 +15,7 @@ export const LemonSqueezyProductPricing = async () => {
   let products: LemonProduct[] = [];
   try {
     // Fetch configured variants (not products) from Lemon Squeezy
-    products = (await fetchConfiguredLemonSqueezyProducts()) as LemonProduct[];
+    products = await fetchConfiguredLemonSqueezyProducts();
   } catch (error) {
     console.error("Error fetching Lemon Squeezy products:", error);
     return <div>Error loading pricing information.</div>;

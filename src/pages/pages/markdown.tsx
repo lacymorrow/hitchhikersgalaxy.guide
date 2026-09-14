@@ -1,7 +1,7 @@
 export default function MarkdownPage() {
   return (
     <div className="container py-10">
-      <div className="prose dark:prose-invert max-w-none">
+      <div className="prose max-w-none dark:prose-invert">
         <h1>Shipkit Pages Layout - Markdown Demo</h1>
         <h2>Overview</h2>
         <p>Shipkit provides a flexible layout system for both the App Router and Pages Router.</p>

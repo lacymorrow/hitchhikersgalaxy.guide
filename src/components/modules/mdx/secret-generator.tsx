@@ -48,9 +48,9 @@ export const SecretGenerator = ({
   };
 
   return (
-    <div className="my-4 p-4 border rounded-md bg-muted/50">
+    <div className="my-4 rounded-md border bg-muted/50 p-4">
       <div className="mb-2 font-medium">Generate a secure random secret</div>
-      <div className="flex gap-2 mb-4">
+      <div className="mb-4 flex gap-2">
         <Button onClick={generateSecret} variant="default">
           {label}
         </Button>
@@ -58,7 +58,7 @@ export const SecretGenerator = ({
 
       {secret && (
         <div className="mt-2">
-          <div className="flex gap-2 items-center">
+          <div className="flex items-center gap-2">
             <Input value={secret} readOnly className="font-mono text-sm" />
             <Button
               size="icon"
@@ -69,7 +69,7 @@ export const SecretGenerator = ({
               <Copy className="h-4 w-4" />
             </Button>
           </div>
-          <p className="text-xs text-muted-foreground mt-2">
+          <p className="mt-2 text-xs text-muted-foreground">
             This is a cryptographically secure random string. Copy this value and use it as your
             PAYLOAD_SECRET.
           </p>

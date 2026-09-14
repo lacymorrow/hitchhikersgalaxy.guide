@@ -3,17 +3,13 @@
  * This file contains only server-safe code (no browser APIs or client-specific functionality)
  */
 
-import path from "path";
 import { getAlternativePaths, getEssentialConfigFiles } from "./project-config";
 import type { ContainerFile } from "./types";
 
-// Common constants
-export const TEMPLATE_BASE_DIR = path.join(
-  "packages",
-  "create-shipkit-app",
-  "templates",
-  "minimal"
-);
+// Common constants — string literal because this module is imported by
+// client components and node:* schemes blow up under the webpack client
+// build.
+export const TEMPLATE_BASE_DIR = "packages/create-shipkit-app/templates/minimal";
 export const BINARY_EXTENSIONS = [
   ".ico",
   ".png",
@@ -113,7 +109,7 @@ export function shouldIgnoreFile(filename: string): boolean {
  * @returns Content type string
  */
 export function getContentType(ext: string): string {
-  return CONTENT_TYPE_MAP[ext.toLowerCase()] || "text/plain";
+  return CONTENT_TYPE_MAP[ext.toLowerCase()] ?? "text/plain";
 }
 
 /**
@@ -144,7 +140,7 @@ export async function readTemplateFile(filePath: string): Promise<string | Uint8
     if (typeof window !== "undefined") {
       // Check cache first
       if (fileContentCache.has(normalizedPath)) {
-        return fileContentCache.get(normalizedPath) || null;
+        return fileContentCache.get(normalizedPath) ?? null;
       }
 
       // Fetch directly from source components
@@ -157,7 +153,7 @@ export async function readTemplateFile(filePath: string): Promise<string | Uint8
       }
 
       // Check content type to determine how to handle the response
-      const contentType = response.headers.get("Content-Type") || "";
+      const contentType = response.headers.get("Content-Type") ?? "";
 
       let content: string | Uint8Array;
 
@@ -181,7 +177,7 @@ export async function readTemplateFile(filePath: string): Promise<string | Uint8
       return content;
     }
     return null;
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 }
@@ -198,7 +194,7 @@ export async function getDirectoryEntries(directoryPath = ""): Promise<any[]> {
 
     // Check cache first
     if (directoryListingCache.has(normalizedPath)) {
-      return directoryListingCache.get(normalizedPath) || [];
+      return directoryListingCache.get(normalizedPath) ?? [];
     }
 
     const response = await fetch(
@@ -213,7 +209,7 @@ export async function getDirectoryEntries(directoryPath = ""): Promise<any[]> {
     // Cache the directory listing
     directoryListingCache.set(normalizedPath, entries);
     return entries;
-  } catch (error) {
+  } catch (_error) {
     return [];
   }
 }
@@ -360,7 +356,7 @@ export async function importProjectFiles(
                   if (directory) {
                     try {
                       await container.fs.mkdir(directory, { recursive: true });
-                    } catch (mkdirErr) {
+                    } catch (_mkdirErr) {
                       // Directory may already exist, that's fine
                     }
                   }
@@ -381,7 +377,7 @@ export async function importProjectFiles(
                   if (directory) {
                     try {
                       await container.fs.mkdir(directory, { recursive: true });
-                    } catch (mkdirErr) {
+                    } catch (_mkdirErr) {
                       // Directory may already exist, that's fine
                     }
                   }
@@ -411,11 +407,11 @@ export async function importProjectFiles(
  */
 export async function ensureComponentsJsonExists(
   container: any,
-  readFile: (path: string) => Promise<string | Uint8Array | null>
+  _readFile: (path: string) => Promise<string | Uint8Array | null>
 ): Promise<void> {
   try {
     // Just check if components.json exists
-    const exists = await fileExistsInContainer(container, "components.json");
+    const _exists = await fileExistsInContainer(container, "components.json");
     // We do nothing with this information - we let shadcn create it if needed
   } catch (error) {
     // Don't throw, continue anyway
@@ -430,7 +426,7 @@ async function fileExistsInContainer(container: any, path: string): Promise<bool
   try {
     await container.fs.stat(path);
     return true;
-  } catch (err) {
+  } catch (_err) {
     return false;
   }
 }

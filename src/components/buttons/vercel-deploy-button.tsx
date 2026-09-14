@@ -13,7 +13,7 @@ interface VercelDeployButtonProps {
 
 export const VercelDeployButton: FC<VercelDeployButtonProps> = ({ href, className }) => {
   const deployUrl =
-    href ||
+    href ??
     (routes.external as any)?.vercelDeploy?.({
       repositoryUrl: `https://github.com/${siteConfig.repo.owner}/${siteConfig.repo.name}`,
       projectName: siteConfig.branding.vercelProjectName,

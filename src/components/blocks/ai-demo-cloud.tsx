@@ -153,12 +153,12 @@ export const AIDemoCloud: React.FC = () => {
 
   return (
     <>
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-        <Card className="p-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-2">
+      <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2">
+        <Card className="relative overflow-hidden p-6">
+          <div className="absolute right-0 top-0 p-2">
             <Bot className="h-5 w-5 text-primary" />
           </div>
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
             <Terminal className="h-4 w-4" />
             Try the Demo
           </h3>
@@ -173,23 +173,23 @@ export const AIDemoCloud: React.FC = () => {
             </div>
             <Button type="submit" disabled={loading || !prompt} className="w-full">
               {loading ? (
-                <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
-                <Send className="h-4 w-4 mr-2" />
+                <Send className="mr-2 h-4 w-4" />
               )}
               Generate Response
             </Button>
-            {error && <p className="text-sm text-red-500 mt-2">{error}</p>}
+            {error && <p className="mt-2 text-sm text-red-500">{error}</p>}
           </form>
           <div className="mt-4">
-            <p className="text-sm text-gray-500 mb-2">Try these examples:</p>
+            <p className="mb-2 text-sm text-gray-500">Try these examples:</p>
             <div className="flex flex-wrap gap-2">
               {demoPrompts.map((demoPrompt) => (
                 <button
                   key={demoPrompt}
                   type="button"
                   onClick={() => handleDemoClick(demoPrompt)}
-                  className={`text-xs px-3 py-1.5 rounded-full transition-colors ${
+                  className={`rounded-full px-3 py-1.5 text-xs transition-colors ${
                     selectedDemo === demoPrompt
                       ? "bg-primary text-primary-foreground"
                       : "bg-secondary hover:bg-secondary/80"
@@ -202,18 +202,17 @@ export const AIDemoCloud: React.FC = () => {
           </div>
         </Card>
 
-        <Card className="p-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-2">
+        <Card className="relative overflow-hidden p-6">
+          <div className="absolute right-0 top-0 p-2">
             <Sparkles className="h-5 w-5 text-yellow-500" />
           </div>
-          <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+          <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
             <Wand2 className="h-4 w-4" />
             AI Response
           </h3>
           <div className="relative">
             <div
-              className={`h-[200px] bg-muted/50 rounded-lg p-4 overflow-y-auto scroll-smooth
-								${isScrolled ? "bg-gradient-to-b from-muted/50 to-transparent" : ""}`}
+              className={`h-[200px] overflow-y-auto scroll-smooth rounded-lg bg-muted/50 p-4 ${isScrolled ? "bg-gradient-to-b from-muted/50 to-transparent" : ""}`}
               ref={(el) => {
                 responseRef.current = el;
                 scrollToBottom(el);
@@ -221,13 +220,13 @@ export const AIDemoCloud: React.FC = () => {
               onScroll={handleScroll}
             >
               {loading ? (
-                <div className="flex items-center justify-center h-full">
+                <div className="flex h-full items-center justify-center">
                   <Loader2 className="h-6 w-6 animate-spin text-primary" />
                 </div>
               ) : response ? (
                 <div className="whitespace-pre-wrap">{response}</div>
               ) : (
-                <div className="text-gray-500 text-center h-full flex items-center justify-center">
+                <div className="flex h-full items-center justify-center text-center text-gray-500">
                   Select an example or enter your own prompt to see the AI in action
                 </div>
               )}
@@ -236,7 +235,7 @@ export const AIDemoCloud: React.FC = () => {
               <Button
                 size="icon"
                 variant="outline"
-                className="absolute bottom-2 right-2 h-8 w-8 rounded-full opacity-90 hover:opacity-100 transition-opacity"
+                className="absolute bottom-2 right-2 h-8 w-8 rounded-full opacity-90 transition-opacity hover:opacity-100"
                 onClick={() => scrollToBottom(responseRef.current)}
               >
                 <Send className="h-4 w-4 rotate-90" />

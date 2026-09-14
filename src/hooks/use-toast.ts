@@ -182,10 +182,14 @@ function useToast() {
   }, [isBrowser]);
 
   if (!isBrowser) {
+    // SSR fallbacks: intentional no-ops since toasts only work in the browser.
+    const noop = () => {
+      // intentionally empty
+    };
     return {
       toasts: [],
-      toast: () => ({ id: "", dismiss: () => {}, update: () => {} }),
-      dismiss: () => {},
+      toast: () => ({ id: "", dismiss: noop, update: noop }),
+      dismiss: noop,
     };
   }
 

@@ -27,7 +27,7 @@ interface TreeElement {
 }
 
 const convertToTreeElements = (nodes: FileNode[], parentPath = ""): TreeElement[] => {
-  return nodes.map((node, index) => {
+  return nodes.map((node, _index) => {
     const currentPath = parentPath ? `${parentPath}/${node.name}` : node.name;
     return {
       id: currentPath,
@@ -51,7 +51,7 @@ const renderTreeNodes = (nodes: FileNode[], onSelect: (node: FileNode) => void) 
     }
     return (
       <File key={key} value={node.path} onClick={() => onSelect(node)}>
-        <p className="truncate w-full">{node.name}</p>
+        <p className="w-full truncate">{node.name}</p>
       </File>
     );
   });
@@ -82,7 +82,7 @@ export function FileBrowser() {
       const rootPaths = tree.filter((node) => node.type === "directory").map((node) => node.path);
       setExpandedPaths(rootPaths);
       router.refresh();
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to load file tree");
     } finally {
       setLoading(false);
@@ -120,7 +120,7 @@ export function FileBrowser() {
 
   return (
     <div className="grid grid-cols-[300px_1fr] gap-6">
-      <div className="border rounded-lg p-4">
+      <div className="rounded-lg border p-4">
         <Tree
           className="h-[500px] overflow-auto bg-background p-2"
           initialExpandedItems={expandedPaths}
@@ -131,7 +131,7 @@ export function FileBrowser() {
       </div>
       <div
         className={cn(
-          "border rounded-lg p-6",
+          "rounded-lg border p-6",
           "min-h-[500px]",
           !selectedFile && "flex items-center justify-center text-muted-foreground"
         )}

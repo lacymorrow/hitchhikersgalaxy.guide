@@ -4,6 +4,6 @@ import { routes } from "@/config/routes";
 /**
  * Admin page
  */
-export default async function AdminPage() {
+export default function AdminPage() {
   redirect(routes.admin.users);
 }

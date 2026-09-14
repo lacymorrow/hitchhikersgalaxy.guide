@@ -44,8 +44,7 @@ const builtByVariants = cva(
 );
 
 export interface AttributionProps
-  extends React.HTMLAttributes<HTMLDivElement>,
-    VariantProps<typeof builtByVariants> {
+  extends React.HTMLAttributes<HTMLDivElement>, VariantProps<typeof builtByVariants> {
   heading?: React.ReactNode;
   description?: React.ReactNode;
   onClose?: () => void;

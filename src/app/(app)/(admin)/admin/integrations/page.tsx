@@ -1,6 +1,6 @@
 export const dynamic = "force-dynamic";
 
-import { Settings, XCircle } from "lucide-react";
+import { XCircle } from "lucide-react";
 import type { Metadata } from "next";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { constructMetadata } from "@/config/metadata";
@@ -44,10 +44,10 @@ export default async function IntegrationsPage() {
   }
 
   return (
-    <div className="container mx-auto max-w-5xl py-10 space-y-8">
-      <div className="flex flex-col gap-2 items-start justify-start">
+    <div className="container mx-auto max-w-5xl space-y-8 py-10">
+      <div className="flex flex-col items-start justify-start gap-2">
         <h1 className="text-3xl font-bold tracking-tight">Integrations</h1>
-        <p className="text-sm text-muted-foreground max-w-xl">
+        <p className="max-w-xl text-sm text-muted-foreground">
           See your integrations with external services. You can connect services by adding
           environment variables.
         </p>
@@ -66,7 +66,7 @@ export default async function IntegrationsPage() {
       )}
 
       {!fetchError && Object.keys(categorizedIntegrations).length === 0 && (
-        <p className="text-center text-muted-foreground py-10">
+        <p className="py-10 text-center text-muted-foreground">
           No integration statuses found or could be loaded.
         </p>
       )}

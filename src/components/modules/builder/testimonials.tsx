@@ -47,37 +47,40 @@ export const Testimonials = ({ title, subtitle, testimonials }: TestimonialsProp
   }, [emblaApi, onSelect]);
 
   return (
-    <section className="py-20 bg-gray-50">
+    <section className="bg-gray-50 py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{title}</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{subtitle}</p>
+        <div className="mb-16 text-center">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">{title}</h2>
+          <p className="mx-auto max-w-2xl text-lg text-gray-600">{subtitle}</p>
         </div>
 
         {/* Carousel */}
-        <div className="relative max-w-4xl mx-auto">
+        <div className="relative mx-auto max-w-4xl">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
               {testimonials.map((testimonial, index) => (
-                <div key={index} className="flex-[0_0_100%] min-w-0 pl-4 relative">
-                  <div className="bg-white p-8 rounded-lg shadow-sm">
-                    <div className="flex items-center mb-6">
+                // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
+                <div key={index} className="relative min-w-0 flex-[0_0_100%] pl-4">
+                  <div className="rounded-lg bg-white p-8 shadow-sm">
+                    <div className="mb-6 flex items-center">
                       {testimonial.image && (
                         <div className="mr-4">
                           <img
                             src={testimonial.image}
                             alt={testimonial.author}
-                            className="w-12 h-12 rounded-full object-cover"
+                            className="h-12 w-12 rounded-full object-cover"
                           />
                         </div>
                       )}
                       <div>
                         <div className="font-semibold">{testimonial.author}</div>
-                        <div className="text-gray-600 text-sm">{testimonial.role}</div>
+                        <div className="text-sm text-gray-600">{testimonial.role}</div>
                       </div>
                     </div>
-                    <blockquote className="text-lg text-gray-700">"{testimonial.quote}"</blockquote>
+                    <blockquote className="text-lg text-gray-700">
+                      &quot;{testimonial.quote}&quot;
+                    </blockquote>
                   </div>
                 </div>
               ))}
@@ -89,8 +92,8 @@ export const Testimonials = ({ title, subtitle, testimonials }: TestimonialsProp
             variant="outline"
             size="icon"
             className={cn(
-              "absolute left-0 top-1/2 -translate-y-1/2 -translate-x-full",
-              !canScrollPrev && "opacity-50 cursor-not-allowed"
+              "absolute left-0 top-1/2 -translate-x-full -translate-y-1/2",
+              !canScrollPrev && "cursor-not-allowed opacity-50"
             )}
             onClick={scrollPrev}
             disabled={!canScrollPrev}
@@ -102,7 +105,7 @@ export const Testimonials = ({ title, subtitle, testimonials }: TestimonialsProp
             size="icon"
             className={cn(
               "absolute right-0 top-1/2 -translate-y-1/2 translate-x-full",
-              !canScrollNext && "opacity-50 cursor-not-allowed"
+              !canScrollNext && "cursor-not-allowed opacity-50"
             )}
             onClick={scrollNext}
             disabled={!canScrollNext}

@@ -32,13 +32,13 @@ export default async function SubscriptionsPage() {
     hasSubscription = await hasUserActiveSubscription(userId);
 
     // Check subscription tiers
-    const subscriptionId = process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID || "";
+    const subscriptionId = process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID ?? "";
     if (subscriptionId) {
       purchasedProducts[subscriptionId] = hasSubscription;
     }
 
     // Check one-time product
-    const oneTimeId = process.env.NEXT_PUBLIC_POLAR_ONE_TIME_PRICE_ID || "";
+    const oneTimeId = process.env.NEXT_PUBLIC_POLAR_ONE_TIME_PRICE_ID ?? "";
     if (oneTimeId) {
       purchasedProducts[oneTimeId] = await hasUserPurchasedProduct(userId, oneTimeId);
     }
@@ -46,7 +46,7 @@ export default async function SubscriptionsPage() {
 
   const subscriptionTiers = [
     {
-      id: process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID || "",
+      id: process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID ?? "",
       name: "Basic",
       description: "Perfect for getting started",
       price: "$9/month",
@@ -55,7 +55,7 @@ export default async function SubscriptionsPage() {
 
   const oneTimeTiers = [
     {
-      id: process.env.NEXT_PUBLIC_POLAR_ONE_TIME_PRICE_ID || "",
+      id: process.env.NEXT_PUBLIC_POLAR_ONE_TIME_PRICE_ID ?? "",
       name: "One-Time",
       description: "Perfect for getting started",
       price: "$5",
@@ -65,15 +65,15 @@ export default async function SubscriptionsPage() {
   const tiers = [...subscriptionTiers, ...oneTimeTiers];
   return (
     <div className="container mx-auto py-12">
-      <h1 className="text-4xl font-bold text-center mb-12">Choose Your Plan</h1>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <h1 className="mb-12 text-center text-4xl font-bold">Choose Your Plan</h1>
+      <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
         {tiers.map((tier) => (
           <Card key={tier.id} className="flex flex-col">
             <CardHeader className="relative">
               <CardTitle>{tier.name}</CardTitle>
               <CardDescription>{tier.description}</CardDescription>
               {userId && purchasedProducts[tier.id] && (
-                <div className="absolute top-4 right-4">
+                <div className="absolute right-4 top-4">
                   {tier.id === process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID ? (
                     <Badge variant="default" className="bg-green-500">
                       Active

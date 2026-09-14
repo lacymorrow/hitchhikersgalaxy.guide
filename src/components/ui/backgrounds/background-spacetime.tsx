@@ -47,6 +47,7 @@ export const BackgroundSpacetime: React.FC = () => {
           </linearGradient>
         </defs>
         {grid.map((point, index) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
           <React.Fragment key={`grid-${index}`}>
             {point.x < cols && (
               <motion.line

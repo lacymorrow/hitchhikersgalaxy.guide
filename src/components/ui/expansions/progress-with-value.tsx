@@ -5,8 +5,9 @@ import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
-interface ProgressWithValueProps
-  extends React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root> {
+interface ProgressWithValueProps extends React.ComponentPropsWithoutRef<
+  typeof ProgressPrimitive.Root
+> {
   position?: "start" | "start-outside" | "follow" | "end" | "end-outside";
   label?: (value?: number | null) => React.ReactNode;
   valueClassName?: string;

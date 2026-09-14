@@ -18,12 +18,12 @@ interface FeaturesGridProps {
 
 export const FeaturesGrid = ({ title, subtitle, features, columns = 3 }: FeaturesGridProps) => {
   return (
-    <section className="py-20 bg-white">
+    <section className="bg-white py-20">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">{title}</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">{subtitle}</p>
+        <div className="mb-16 text-center">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">{title}</h2>
+          <p className="mx-auto max-w-2xl text-lg text-gray-600">{subtitle}</p>
         </div>
 
         {/* Features Grid */}
@@ -36,15 +36,16 @@ export const FeaturesGrid = ({ title, subtitle, features, columns = 3 }: Feature
         >
           {features.map((feature, index) => (
             <div
+              // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
               key={index}
-              className="p-6 rounded-lg border border-gray-200 hover:shadow-lg transition-shadow"
+              className="rounded-lg border border-gray-200 p-6 transition-shadow hover:shadow-lg"
             >
               {feature.icon && (
-                <div className="w-12 h-12 mb-4">
-                  <img src={feature.icon} alt="" className="w-full h-full object-contain" />
+                <div className="mb-4 h-12 w-12">
+                  <img src={feature.icon} alt="" className="h-full w-full object-contain" />
                 </div>
               )}
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+              <h3 className="mb-2 text-xl font-semibold">{feature.title}</h3>
               <p className="text-gray-600">{feature.description}</p>
             </div>
           ))}

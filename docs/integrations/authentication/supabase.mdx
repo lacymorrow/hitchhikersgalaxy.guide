@@ -1,3 +1,8 @@
+---
+title: "Supabase Authentication Integration"
+description: "Supabase Auth provides a complete authentication system with user management, powered by PostgreSQL and JWT tokens."
+---
+
 # Supabase Authentication Integration
 
 Supabase Auth provides a complete authentication system with user management, powered by PostgreSQL and JWT tokens.
@@ -5,11 +10,13 @@ Supabase Auth provides a complete authentication system with user management, po
 ## Environment Variables
 
 ### Required Server Variables
+
 ```
 SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... # Service role key for admin operations
 ```
 
 ### Required Client Variables
+
 ```
 NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co # Your Supabase project URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9... # Anonymous/public key
@@ -64,6 +71,7 @@ When these environment variables are configured, the following features become a
 ## Configuration Options
 
 ### Advanced Configuration
+
 You can enhance Supabase Auth with additional settings:
 
 ```bash

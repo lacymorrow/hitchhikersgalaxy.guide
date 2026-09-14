@@ -53,7 +53,7 @@ export function useSubscription(provider?: SubscriptionProvider) {
     }
 
     // Check cache first
-    const cacheKey = `${session.user.id}-${provider || "all"}`;
+    const cacheKey = `${session.user.id}-${provider ?? "all"}`;
     const cached = subscriptionCache.get(cacheKey);
     const now = Date.now();
 
@@ -79,7 +79,7 @@ export function useSubscription(provider?: SubscriptionProvider) {
 
       if (!result.success) {
         setHasActiveSubscription(false);
-        setError(result.message || "Failed to check subscription");
+        setError(result.message ?? "Failed to check subscription");
         return;
       }
 

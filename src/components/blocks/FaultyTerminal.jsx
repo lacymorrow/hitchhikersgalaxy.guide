@@ -264,7 +264,7 @@ export default function FaultyTerminal(props) {
     tint = "#ffffff",
     mouseReact = true,
     mouseStrength = 0.2,
-    dpr = Math.min(window.devicePixelRatio || 1, 2),
+    dpr,
     pageLoadAnimation = true,
     brightness = 1,
     className,
@@ -283,7 +283,12 @@ export default function FaultyTerminal(props) {
   const frozenTimeRef = useRef(0);
   const rafRef = useRef(0);
   const loadAnimationStartRef = useRef(0);
-  const timeOffsetRef = useRef(Math.random() * 100);
+  // Lazy init to avoid hydration mismatch — Math.random() must not run during SSR
+  /** @type {import('react').MutableRefObject<number>} */
+  const timeOffsetRef = useRef(0);
+  if (timeOffsetRef.current === 0 && typeof window !== "undefined") {
+    timeOffsetRef.current = Math.random() * 100;
+  }
 
   const tintVec = useMemo(() => hexToRgb(tint), [tint]);
 
@@ -305,7 +310,8 @@ export default function FaultyTerminal(props) {
     const ctn = containerRef.current;
     if (!ctn) return;
 
-    const renderer = new Renderer({ dpr });
+    const resolvedDpr = dpr ?? Math.min(window.devicePixelRatio || 1, 2);
+    const renderer = new Renderer({ dpr: resolvedDpr });
     rendererRef.current = renderer;
     const gl = renderer.gl;
     gl.clearColor(0, 0, 0, 1);

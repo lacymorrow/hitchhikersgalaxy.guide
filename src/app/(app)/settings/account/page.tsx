@@ -44,7 +44,7 @@ export default async function AccountPage() {
   const gitHubUsername = gitHubStatus.username;
 
   // Define the connected accounts based on unified connection status
-  const connectedAccounts = [
+  const _connectedAccounts = [
     {
       name: "GitHub",
       connected: hasGitHub,

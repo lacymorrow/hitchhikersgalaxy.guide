@@ -47,7 +47,7 @@ export async function createApiKey(data: z.infer<typeof schemas.createApiKey>) {
 
     // Convert expiresIn to milliseconds if provided
     const expiresIn = data.expiresIn
-      ? Number.parseInt(data.expiresIn) * MILLISECONDS_IN_A_WEEK
+      ? Number.parseInt(data.expiresIn, 10) * MILLISECONDS_IN_A_WEEK
       : undefined;
 
     // Create the API key

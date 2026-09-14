@@ -196,7 +196,7 @@ export const AIRealtimeWhisperWebGPU = () => {
       {
         <div className="h-full overflow-auto scrollbar-thin flex justify-center items-center flex-col relative">
           <div className="flex flex-col items-center mb-1 max-w-[400px] text-center">
-            <img src="/logo.png" width="50%" height="auto" className="block" />
+            <img src="/logo.png" width="50%" height="auto" className="block" alt="Whisper logo" />
             <h1 className="text-4xl font-bold mb-1">Whisper WebGPU</h1>
             <h2 className="text-xl font-semibold">Real-time in-browser speech recognition</h2>
           </div>
@@ -233,7 +233,7 @@ export const AIRealtimeWhisperWebGPU = () => {
                   from the internet after the model has loaded!
                 </p>
 
-                <button
+                <button type="button"
                   className="border px-4 py-2 rounded-lg bg-blue-400 text-white hover:bg-blue-500 disabled:bg-blue-100 disabled:cursor-not-allowed select-none"
                   onClick={() => {
                     worker.current.postMessage({ type: "load" });
@@ -269,7 +269,7 @@ export const AIRealtimeWhisperWebGPU = () => {
                     recorderRef.current?.start();
                   }}
                 />
-                <button
+                <button type="button"
                   className="border rounded-lg px-2 absolute right-2"
                   onClick={() => {
                     recorderRef.current?.stop();
@@ -284,6 +284,7 @@ export const AIRealtimeWhisperWebGPU = () => {
               <div className="w-full max-w-[500px] text-left mx-auto p-4">
                 <p className="text-center">{loadingMessage}</p>
                 {progressItems.map(({ file, progress, total }, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
                   <Progress key={i} text={file} percentage={progress} total={total} />
                 ))}
               </div>

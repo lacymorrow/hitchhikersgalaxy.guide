@@ -88,6 +88,7 @@ export function AnimatedListDemo({ className }: { className?: string }) {
     >
       <AnimatedList>
         {notifications.map((item, idx) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
           <Notification {...item} key={idx} />
         ))}
       </AnimatedList>

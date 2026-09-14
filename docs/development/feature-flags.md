@@ -58,95 +58,94 @@ If `APP_SECRET` is set, secrets like `PAYLOAD_SECRET` and `BETTER_AUTH_SECRET` a
 
 ### Core
 
-| Flag | Enabled when | Disable with |
-|------|-------------|-------------|
-| `DATABASE_ENABLED` | `DATABASE_URL` set | — |
-| `PAYLOAD_ENABLED` | Database + `PAYLOAD_SECRET` (or `APP_SECRET`) | `DISABLE_PAYLOAD=true` |
-| `BUILDER_ENABLED` | `NEXT_PUBLIC_BUILDER_API_KEY` set | `DISABLE_BUILDER=true` |
-| `MDX_ENABLED` | Always (default on) | `DISABLE_MDX=true` |
-| `PWA_ENABLED` | Always (default on) | `DISABLE_PWA=true` |
-| `DEVTOOLS_ENABLED` | `ENABLE_DEVTOOLS=true` | — |
+| Flag               | Enabled when                                  | Disable with           |
+| ------------------ | --------------------------------------------- | ---------------------- |
+| `DATABASE_ENABLED` | `DATABASE_URL` set                            | —                      |
+| `PAYLOAD_ENABLED`  | Database + `PAYLOAD_SECRET` (or `APP_SECRET`) | `DISABLE_PAYLOAD=true` |
+| `BUILDER_ENABLED`  | `NEXT_PUBLIC_BUILDER_API_KEY` set             | `DISABLE_BUILDER=true` |
+| `MDX_ENABLED`      | Always (default on)                           | `DISABLE_MDX=true`     |
+| `PWA_ENABLED`      | Always (default on)                           | `DISABLE_PWA=true`     |
+| `DEVTOOLS_ENABLED` | `ENABLE_DEVTOOLS=true`                        | —                      |
 
 ### Authentication
 
-| Flag | Enabled when | Disable with |
-|------|-------------|-------------|
-| `AUTH_JS_ENABLED` | Any Auth.js provider enabled | — |
-| `BETTER_AUTH_ENABLED` | `BETTER_AUTH_SECRET` (or `APP_SECRET`) | `DISABLE_BETTER_AUTH=true` |
-| `AUTH_CLERK_ENABLED` | `CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY` | `DISABLE_AUTH_CLERK=true` |
-| `AUTH_STACK_ENABLED` | `STACK_PROJECT_ID` + `STACK_PUBLISHABLE_CLIENT_KEY` + `STACK_SECRET_SERVER_KEY` | `DISABLE_AUTH_STACK=true` |
-| `SUPABASE_AUTH_ENABLED` | `SUPABASE_URL` + `SUPABASE_ANON_KEY` | `DISABLE_SUPABASE_AUTH=true` |
-| `AUTH_GUEST_ENABLED` | `ENABLE_AUTH_GUEST=true` | — |
-| `AUTH_CREDENTIALS_ENABLED` | Payload enabled | `DISABLE_AUTH_CREDENTIALS=true` |
-| `AUTH_RESEND_ENABLED` | `RESEND_API_KEY` (dev only) | `DISABLE_AUTH_RESEND=true` |
-| `AUTH_GITHUB_ENABLED` | `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET` | `DISABLE_AUTH_GITHUB=true` |
-| `AUTH_GOOGLE_ENABLED` | `AUTH_GOOGLE_ID` + `AUTH_GOOGLE_SECRET` | `DISABLE_AUTH_GOOGLE=true` |
-| `AUTH_DISCORD_ENABLED` | `AUTH_DISCORD_ID` + `AUTH_DISCORD_SECRET` | `DISABLE_AUTH_DISCORD=true` |
-| `AUTH_TWITTER_ENABLED` | `AUTH_TWITTER_ID` + `AUTH_TWITTER_SECRET` | `DISABLE_AUTH_TWITTER=true` |
-| `AUTH_GITLAB_ENABLED` | `AUTH_GITLAB_ID` + `AUTH_GITLAB_SECRET` | `DISABLE_AUTH_GITLAB=true` |
-| `AUTH_BITBUCKET_ENABLED` | `AUTH_BITBUCKET_ID` + `AUTH_BITBUCKET_SECRET` | `DISABLE_AUTH_BITBUCKET=true` |
-| `AUTH_VERCEL_ENABLED` | `VERCEL_CLIENT_ID` + `VERCEL_CLIENT_SECRET` | `DISABLE_AUTH_VERCEL=true` |
-| `AUTH_ENABLED` | Any auth provider enabled | — |
+| Flag                       | Enabled when                                                                    | Disable with                    |
+| -------------------------- | ------------------------------------------------------------------------------- | ------------------------------- |
+| `AUTH_JS_ENABLED`          | Any Auth.js provider enabled                                                    | —                               |
+| `BETTER_AUTH_ENABLED`      | `BETTER_AUTH_SECRET` (or `APP_SECRET`)                                          | `DISABLE_BETTER_AUTH=true`      |
+| `AUTH_CLERK_ENABLED`       | `CLERK_PUBLISHABLE_KEY` + `CLERK_SECRET_KEY`                                    | `DISABLE_AUTH_CLERK=true`       |
+| `AUTH_STACK_ENABLED`       | `STACK_PROJECT_ID` + `STACK_PUBLISHABLE_CLIENT_KEY` + `STACK_SECRET_SERVER_KEY` | `DISABLE_AUTH_STACK=true`       |
+| `SUPABASE_AUTH_ENABLED`    | `SUPABASE_URL` + `SUPABASE_ANON_KEY`                                            | `DISABLE_SUPABASE_AUTH=true`    |
+| `AUTH_GUEST_ENABLED`       | `ENABLE_AUTH_GUEST=true`                                                        | —                               |
+| `AUTH_CREDENTIALS_ENABLED` | Payload enabled                                                                 | `DISABLE_AUTH_CREDENTIALS=true` |
+| `AUTH_RESEND_ENABLED`      | `RESEND_API_KEY` (dev only)                                                     | `DISABLE_AUTH_RESEND=true`      |
+| `AUTH_GITHUB_ENABLED`      | `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`                                         | `DISABLE_AUTH_GITHUB=true`      |
+| `AUTH_GOOGLE_ENABLED`      | `AUTH_GOOGLE_ID` + `AUTH_GOOGLE_SECRET`                                         | `DISABLE_AUTH_GOOGLE=true`      |
+| `AUTH_DISCORD_ENABLED`     | `AUTH_DISCORD_ID` + `AUTH_DISCORD_SECRET`                                       | `DISABLE_AUTH_DISCORD=true`     |
+| `AUTH_TWITTER_ENABLED`     | `AUTH_TWITTER_ID` + `AUTH_TWITTER_SECRET`                                       | `DISABLE_AUTH_TWITTER=true`     |
+| `AUTH_GITLAB_ENABLED`      | `AUTH_GITLAB_ID` + `AUTH_GITLAB_SECRET`                                         | `DISABLE_AUTH_GITLAB=true`      |
+| `AUTH_BITBUCKET_ENABLED`   | `AUTH_BITBUCKET_ID` + `AUTH_BITBUCKET_SECRET`                                   | `DISABLE_AUTH_BITBUCKET=true`   |
+| `AUTH_VERCEL_ENABLED`      | `VERCEL_CLIENT_ID` + `VERCEL_CLIENT_SECRET`                                     | `DISABLE_AUTH_VERCEL=true`      |
+| `AUTH_ENABLED`             | Any auth provider enabled                                                       | —                               |
 
 ### Payments
 
-| Flag | Enabled when | Disable with |
-|------|-------------|-------------|
+| Flag                   | Enabled when                                     | Disable with                |
+| ---------------------- | ------------------------------------------------ | --------------------------- |
 | `LEMONSQUEEZY_ENABLED` | `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` | `DISABLE_LEMONSQUEEZY=true` |
-| `STRIPE_ENABLED` | `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY` | `DISABLE_STRIPE=true` |
-| `POLAR_ENABLED` | `POLAR_ACCESS_TOKEN` | `DISABLE_POLAR=true` |
+| `STRIPE_ENABLED`       | `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY`   | `DISABLE_STRIPE=true`       |
+| `POLAR_ENABLED`        | `POLAR_ACCESS_TOKEN`                             | `DISABLE_POLAR=true`        |
 
 ### Storage
 
-| Flag | Enabled when | Disable with |
-|------|-------------|-------------|
-| `S3_ENABLED` | `AWS_REGION` + `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY` + `AWS_BUCKET_NAME` | `DISABLE_S3=true` |
-| `VERCEL_BLOB_ENABLED` | `VERCEL_BLOB_READ_WRITE_TOKEN` | `DISABLE_VERCEL_BLOB=true` |
-| `FILE_UPLOAD_ENABLED` | S3 or Vercel Blob enabled | — |
+| Flag                  | Enabled when                                                                     | Disable with               |
+| --------------------- | -------------------------------------------------------------------------------- | -------------------------- |
+| `S3_ENABLED`          | `AWS_REGION` + `AWS_ACCESS_KEY_ID` + `AWS_SECRET_ACCESS_KEY` + `AWS_BUCKET_NAME` | `DISABLE_S3=true`          |
+| `VERCEL_BLOB_ENABLED` | `VERCEL_BLOB_READ_WRITE_TOKEN`                                                   | `DISABLE_VERCEL_BLOB=true` |
+| `FILE_UPLOAD_ENABLED` | S3 or Vercel Blob enabled                                                        | —                          |
 
 ### Analytics
 
-| Flag | Enabled when | Disable with |
-|------|-------------|-------------|
-| `POSTHOG_ENABLED` | `POSTHOG_KEY` | `DISABLE_POSTHOG=true` |
-| `UMAMI_ENABLED` | `UMAMI_WEBSITE_ID` | `DISABLE_UMAMI=true` |
-| `DATAFAST_ENABLED` | `DATAFAST_WEBSITE_ID` | `DISABLE_DATAFAST=true` |
-| `STATSIG_ENABLED` | `STATSIG_CLIENT_KEY` | `DISABLE_STATSIG=true` |
-| `GOOGLE_ANALYTICS_ENABLED` | `GOOGLE_ANALYTICS_ID` | `DISABLE_GOOGLE_ANALYTICS=true` |
-| `GOOGLE_TAG_MANAGER_ENABLED` | `GOOGLE_GTM_ID` | `DISABLE_GOOGLE_TAG_MANAGER=true` |
+| Flag                         | Enabled when          | Disable with                      |
+| ---------------------------- | --------------------- | --------------------------------- |
+| `POSTHOG_ENABLED`            | `POSTHOG_KEY`         | `DISABLE_POSTHOG=true`            |
+| `UMAMI_ENABLED`              | `UMAMI_WEBSITE_ID`    | `DISABLE_UMAMI=true`              |
+| `DATAFAST_ENABLED`           | `DATAFAST_WEBSITE_ID` | `DISABLE_DATAFAST=true`           |
+| `STATSIG_ENABLED`            | `STATSIG_CLIENT_KEY`  | `DISABLE_STATSIG=true`            |
+| `GOOGLE_ANALYTICS_ENABLED`   | `GOOGLE_ANALYTICS_ID` | `DISABLE_GOOGLE_ANALYTICS=true`   |
+| `GOOGLE_TAG_MANAGER_ENABLED` | `GOOGLE_GTM_ID`       | `DISABLE_GOOGLE_TAG_MANAGER=true` |
 
 ### Infrastructure
 
-| Flag | Enabled when | Disable with |
-|------|-------------|-------------|
-| `REDIS_ENABLED` | `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN` | `DISABLE_REDIS=true` |
+| Flag                         | Enabled when                                                            | Disable with                      |
+| ---------------------------- | ----------------------------------------------------------------------- | --------------------------------- |
+| `REDIS_ENABLED`              | `UPSTASH_REDIS_REST_URL` + `UPSTASH_REDIS_REST_TOKEN`                   | `DISABLE_REDIS=true`              |
 | `VERCEL_INTEGRATION_ENABLED` | `VERCEL_INTEGRATION_SLUG` + `VERCEL_CLIENT_ID` + `VERCEL_CLIENT_SECRET` | `DISABLE_VERCEL_INTEGRATION=true` |
 
 ### AI / External Services
 
-| Flag | Enabled when | Disable with |
-|------|-------------|-------------|
-| `OPENAI_ENABLED` | `OPENAI_API_KEY` | `DISABLE_OPENAI=true` |
-| `ANTHROPIC_ENABLED` | `ANTHROPIC_API_KEY` | `DISABLE_ANTHROPIC=true` |
+| Flag                 | Enabled when          | Disable with              |
+| -------------------- | --------------------- | ------------------------- |
+| `OPENAI_ENABLED`     | `OPENAI_API_KEY`      | `DISABLE_OPENAI=true`     |
+| `ANTHROPIC_ENABLED`  | `ANTHROPIC_API_KEY`   | `DISABLE_ANTHROPIC=true`  |
 | `GITHUB_API_ENABLED` | `GITHUB_ACCESS_TOKEN` | `DISABLE_GITHUB_API=true` |
 
 ### Other
 
-| Flag | Enabled when | Disable with |
-|------|-------------|-------------|
-| `LIGHT_MODE_ENABLED` | Always (default on) | `DISABLE_LIGHT_MODE=true` |
-| `DARK_MODE_ENABLED` | Always (default on) | `DISABLE_DARK_MODE=true` |
-| `C15T_ENABLED` | `C15T_URL` | `DISABLE_C15T=true` |
-| `CONSENT_MANAGER_ENABLED` | C15T or `ENABLE_CONSENT_MANAGER=true` | `DISABLE_CONSENT_MANAGER=true` |
-| `TURNSTILE_ENABLED` | `TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` | — |
+| Flag                      | Enabled when                                  | Disable with                   |
+| ------------------------- | --------------------------------------------- | ------------------------------ |
+| `LIGHT_MODE_ENABLED`      | Always (default on)                           | `DISABLE_LIGHT_MODE=true`      |
+| `DARK_MODE_ENABLED`       | Always (default on)                           | `DISABLE_DARK_MODE=true`       |
+| `C15T_ENABLED`            | `C15T_URL`                                    | `DISABLE_C15T=true`            |
+| `CONSENT_MANAGER_ENABLED` | C15T or `ENABLE_CONSENT_MANAGER=true`         | `DISABLE_CONSENT_MANAGER=true` |
+| `TURNSTILE_ENABLED`       | `TURNSTILE_SITE_KEY` + `TURNSTILE_SECRET_KEY` | —                              |
 
 ## Adding a New Feature Flag
 
 1. Add detection in `src/config/features-config.ts`:
 
 ```typescript
-buildTimeFeatures.MY_FEATURE_ENABLED =
-  hasEnv("MY_API_KEY") && !envIsTrue("DISABLE_MY_FEATURE");
+buildTimeFeatures.MY_FEATURE_ENABLED = hasEnv("MY_API_KEY") && !envIsTrue("DISABLE_MY_FEATURE");
 ```
 
 2. Add the env var to `src/env.ts` for type safety.
@@ -154,7 +153,7 @@ buildTimeFeatures.MY_FEATURE_ENABLED =
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
+| File                            | Purpose                             |
+| ------------------------------- | ----------------------------------- |
 | `src/config/features-config.ts` | Feature detection + flag generation |
-| `src/env.ts` | T3 Env schema (runtime validation) |
+| `src/env.ts`                    | T3 Env schema (runtime validation)  |

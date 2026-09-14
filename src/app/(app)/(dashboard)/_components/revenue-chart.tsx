@@ -46,7 +46,7 @@ export const RevenueChart = () => {
         </div>
       </CardHeader>
       <CardContent className="px-2 pb-2">
-        <ChartContainer config={chartConfig} className="h-[280px] w-full aspect-auto">
+        <ChartContainer config={chartConfig} className="aspect-auto h-[280px] w-full">
           <AreaChart data={revenueChartData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
             <defs>
               <linearGradient id="fillRevenue" x1="0" y1="0" x2="0" y2="1">

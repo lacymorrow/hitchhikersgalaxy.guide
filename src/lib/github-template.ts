@@ -36,7 +36,7 @@ export class GitHubTemplateService {
   constructor(config: GitHubConfig) {
     this.octokit = new Octokit({
       auth: config.accessToken,
-      userAgent: config.userAgent || "Shipkit-Deploy/1.0.0",
+      userAgent: config.userAgent ?? "Shipkit-Deploy/1.0.0",
     });
   }
 
@@ -58,7 +58,7 @@ export class GitHubTemplateService {
         template_repo: config.templateRepo,
         owner: config.newRepoOwner,
         name: config.newRepoName,
-        description: config.description || `Deployed from ${config.templateRepo} template`,
+        description: config.description ?? `Deployed from ${config.templateRepo} template`,
         private: config.private ?? true,
         include_all_branches: config.includeAllBranches ?? false,
       });
@@ -119,7 +119,7 @@ export class GitHubTemplateService {
           ) as any;
           invitationError.isPendingInvitation = true;
           invitationError.invitationUrl =
-            invitationCheck.invitationUrl || `https://github.com/${owner}/${repo}/invitations`;
+            invitationCheck.invitationUrl ?? `https://github.com/${owner}/${repo}/invitations`;
           throw invitationError;
         }
 
@@ -471,7 +471,7 @@ export class GitHubTemplateService {
       return "Repository not found or not accessible.";
     }
     if (error.status === 422) {
-      const message = error.response?.data?.message || error.message || "";
+      const message = error.response?.data?.message ?? error.message ?? "";
       // Check for "already exists" error specifically
       if (
         message.toLowerCase().includes("already exists") ||
@@ -479,10 +479,10 @@ export class GitHubTemplateService {
       ) {
         return "A repository with this name already exists on your GitHub account. Please choose a different project name.";
       }
-      return message || "Invalid repository configuration.";
+      return message ?? "Invalid repository configuration.";
     }
 
-    return error.message || "An unexpected error occurred.";
+    return error.message ?? "An unexpected error occurred.";
   }
 }
 

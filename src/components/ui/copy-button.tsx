@@ -45,7 +45,7 @@ export const CopyButton = ({
           size="icon"
           onClick={() => copyToClipboard(value)}
           {...props}
-          className={cn("h-8 w-8 relative", className)}
+          className={cn("relative h-8 w-8", className)}
         >
           <AnimatePresence mode="wait">
             <motion.div

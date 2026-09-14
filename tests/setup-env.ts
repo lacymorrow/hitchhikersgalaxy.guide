@@ -6,6 +6,12 @@ process.env = {
   ...process.env,
   NODE_ENV: "test",
   SKIP_ENV_VALIDATION: "1",
+  // Webhook-secret tests (LemonSqueezy plan 002 e2e) need this captured at
+  // @/env module-eval time, which happens before any test code runs. Keep
+  // a test-only default so a missing CI env var doesn't silently disable
+  // signature verification.
+  LEMONSQUEEZY_WEBHOOK_SECRET:
+    process.env.LEMONSQUEEZY_WEBHOOK_SECRET ?? "test-only-lemonsqueezy-webhook-secret",
 };
 
 // Only load Next.js environment config in Node.js environment
@@ -24,14 +30,13 @@ if (typeof window === "undefined") {
     // Patch next-auth test runtime when Next.js module pathing differs
     // Some versions expect next/server; in Vitest we can noop this
     try {
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
       require.resolve("next/server");
     } catch {
       // Map bare import "next/server" to our JS shim so next-auth/env can import it safely
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const Module = require("module");
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      const path = require("path");
+
+      const Module = require("node:module");
+
+      const path = require("node:path");
       const originalResolve = Module._resolveFilename;
       const shimPath = path.resolve(__dirname, "./shims/next-server.js");
       Module._resolveFilename = function (

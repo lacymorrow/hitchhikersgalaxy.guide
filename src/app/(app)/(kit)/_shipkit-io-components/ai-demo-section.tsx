@@ -14,15 +14,15 @@ export const AiDemoSection = () => {
 
   return (
     <Section className="relative">
-      <SectionBadge className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-50 dark:bg-red-900/20 text-red-600 dark:text-red-400 text-sm font-medium">
+      <SectionBadge className="inline-flex items-center gap-2 rounded-full bg-red-50 px-4 py-2 text-sm font-medium text-red-600 dark:bg-red-900/20 dark:text-red-400">
         <IconRobotFace className="h-4 w-4" />
         <span>AI App Demos</span>
       </SectionBadge>
       <SectionHeader>Build your own AI apps</SectionHeader>
       <SectionCopy>See how you can build your own AI apps with {siteConfig.name}.</SectionCopy>
-      <Tabs defaultValue="cloud" className="w-full max-w-4xl mx-auto">
+      <Tabs defaultValue="cloud" className="mx-auto w-full max-w-4xl">
         {isWebGPUAvailable && (
-          <div className="flex justify-center mb-8">
+          <div className="mb-8 flex justify-center">
             <TabsList>
               <TabsTrigger value="cloud" className="flex items-center gap-2">
                 <Cloud className="h-4 w-4" />

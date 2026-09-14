@@ -1,0 +1,141 @@
+# DRAFT — Phase 6 CI gating workflow
+# Move to .github/workflows/ci.yml when Phase 5 is green and we want
+# to enforce the bar on PRs.
+#
+# Provides: typecheck, lint (biome + eslint + prettier), unit tests,
+# browser tests, build sanity, with Postgres available for service tests
+# (Phase 3) and Playwright e2e (Phase 5).
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+env:
+  NODE_VERSION: "22"
+  BUN_VERSION: "latest"
+
+jobs:
+  typecheck:
+    name: TypeScript
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+
+  lint:
+    name: Lint (biome + eslint + prettier)
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+      - run: bun run lint
+
+  test-unit:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: shipkit_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      TEST_DATABASE_URL: postgres://postgres:postgres@localhost:5432/shipkit_test
+      AUTH_SECRET: ci-only-secret-do-not-use-in-prod
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+      - name: Apply Drizzle migrations to test DB
+        run: bun run db:push
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+      - run: bun run test
+      - run: bun run test:browser
+      - run: bun run test:node
+
+  build:
+    name: Production build
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [typecheck, lint]
+    env:
+      AUTH_SECRET: ci-only-secret-do-not-use-in-prod
+      # Disable features that require real network calls during CI build
+      NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED: "true"
+      NODE_OPTIONS: "--max-old-space-size=8192"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+      - run: bun run build
+
+  e2e:
+    name: E2E (Playwright)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: [test-unit]
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: shipkit_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    env:
+      DATABASE_URL: postgres://postgres:postgres@localhost:5432/shipkit_e2e
+      AUTH_SECRET: ci-only-secret-do-not-use-in-prod
+      NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED: "true"
+    steps:
+      - uses: actions/checkout@v6
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: ${{ env.BUN_VERSION }}
+      - run: bun install --frozen-lockfile
+      - run: bunx playwright install --with-deps chromium
+      - run: bun run db:push
+      - run: bun run build
+      - run: bun run test:e2e
+      - if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: playwright-report
+          path: test-results/
+          retention-days: 7

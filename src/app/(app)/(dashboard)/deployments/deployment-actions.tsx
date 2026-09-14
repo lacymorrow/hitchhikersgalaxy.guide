@@ -174,7 +174,7 @@ export function DeploymentActions({ deployment }: DeploymentActionsProps) {
               className="text-yellow-600 focus:text-yellow-600"
               data-testid="deployment-actions-cancel"
             >
-              <Square className="h-3 w-3 mr-2" />
+              <Square className="mr-2 h-3 w-3" />
               Cancel
             </DropdownMenuItem>
           )}
@@ -184,7 +184,7 @@ export function DeploymentActions({ deployment }: DeploymentActionsProps) {
             className="text-red-600 focus:text-red-600"
             data-testid="deployment-actions-delete"
           >
-            <Trash2 className="h-3 w-3 mr-2" />
+            <Trash2 className="mr-2 h-3 w-3" />
             Delete
           </DropdownMenuItem>
         </DropdownMenuContent>

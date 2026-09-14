@@ -22,7 +22,7 @@ const defaultProps: GradientBackgroundProps = {
 
 function hexToRgb(hex: string): [number, number, number] {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result && result[1] && result[2] && result[3]
+  return result?.[1] && result[2] && result[3]
     ? [
         Number.parseInt(result[1], 16) / 255,
         Number.parseInt(result[2], 16) / 255,
@@ -134,6 +134,7 @@ export function StripeGradient(props: GradientBackgroundProps = {}) {
       canvas.height = height;
 
       gl.viewport(0, 0, width, height);
+      // biome-ignore lint/correctness/useHookAtTopLevel: WebGL gl.useProgram is not a React hook
       gl.useProgram(program);
 
       const time = ((Date.now() - startTimeRef.current) / 1000) * mergedProps.speed;

@@ -31,13 +31,7 @@ import { LOCAL_STORAGE_KEYS } from "@/config/local-storage-keys";
 import { cn } from "@/lib/utils";
 
 type ToolCategory =
-  | "Formatters"
-  | "Testing"
-  | "Generators"
-  | "Converters"
-  | "Security"
-  | "Design"
-  | "AI";
+  "Formatters" | "Testing" | "Generators" | "Converters" | "Security" | "Design" | "AI";
 
 interface Tool {
   title: string;
@@ -386,6 +380,7 @@ export const ToolsSection = () => {
   useEffect(() => {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (stored) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing with external localStorage on mount
       setStarredTools(new Set(JSON.parse(stored)));
     }
   }, []);
@@ -440,7 +435,7 @@ export const ToolsSection = () => {
     <div className="space-y-6">
       {/* Search and Filter */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div className="flex flex-col gap-4 sm:flex-row sm:flex-1 sm:items-center">
+        <div className="flex flex-col gap-4 sm:flex-1 sm:flex-row sm:items-center">
           <div className="relative w-full sm:w-[300px] md:w-[350px]">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -457,16 +452,20 @@ export const ToolsSection = () => {
             size="sm"
             onClick={() => setShowStarredOnly(!showStarredOnly)}
             className={cn(
-              "gap-2 whitespace-nowrap w-full sm:w-auto",
+              "w-full gap-2 whitespace-nowrap sm:w-auto",
               showStarredOnly && "bg-primary text-primary-foreground hover:bg-primary/90"
             )}
           >
-            <StarIcon className="h-4 w-4" />
+            {showStarredOnly ? (
+              <StarFilledIcon className="h-4 w-4 fill-current" />
+            ) : (
+              <StarIcon className="h-4 w-4" />
+            )}
             {showStarredOnly ? "Show All" : "Show Starred"}
           </Button>
         </div>
         {starredTools.size > 0 && (
-          <div className="text-sm text-muted-foreground text-center sm:text-right">
+          <div className="text-center text-sm text-muted-foreground sm:text-right">
             {starredTools.size} starred tool{starredTools.size !== 1 ? "s" : ""}
           </div>
         )}
@@ -495,7 +494,7 @@ export const ToolsSection = () => {
         {sortedAndFilteredTools.map((tool) => (
           <div key={tool.title} className="group">
             <Card
-              className="cursor-pointer transition-colors hover:bg-muted/50 group h-full flex flex-col"
+              className="group flex h-full cursor-pointer flex-col transition-colors hover:bg-muted/50"
               onClick={() => setSelectedTool(tool)}
             >
               <ToolCardContent
@@ -569,12 +568,12 @@ const ToolCardContent = ({
   <>
     <CardHeader className="flex-shrink-0">
       <div className="flex items-center justify-between gap-2">
-        <div className="flex items-center space-x-2 min-w-0 flex-1">
-          <div className="rounded-md bg-primary/10 p-2 group-hover:bg-primary/20 flex-shrink-0">
+        <div className="flex min-w-0 flex-1 items-center space-x-2">
+          <div className="flex-shrink-0 rounded-md bg-primary/10 p-2 group-hover:bg-primary/20">
             <tool.icon className={cn("h-5 w-5 text-primary")} />
           </div>
           <div className="min-w-0 flex-1">
-            <CardTitle className="text-base break-words line-clamp-2 leading-tight">
+            <CardTitle className="line-clamp-2 break-words text-base leading-tight">
               {tool.title}
             </CardTitle>
             <div className="text-xs text-muted-foreground">
@@ -582,7 +581,7 @@ const ToolCardContent = ({
             </div>
           </div>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex flex-shrink-0 items-center gap-2">
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onToggleStar}>
             {isStarred ? (
               <StarFilledIcon className="h-4 w-4 fill-primary text-primary" />
@@ -605,11 +604,12 @@ const ToolCardContent = ({
         </div>
       </div>
     </CardHeader>
-    <CardContent className="flex-1 flex flex-col">
-      <CardDescription className="flex-1 line-clamp-3">{tool.description}</CardDescription>
+    <CardContent className="flex flex-1 flex-col">
+      <CardDescription className="line-clamp-3 flex-1">{tool.description}</CardDescription>
       <div className="mt-3 flex flex-wrap gap-1">
         {tool.keywords.slice(0, 6).map((keyword, index) => (
           <span
+            // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
             key={`${keyword}-${index}`}
             className="inline-flex items-center rounded-full bg-muted px-2 py-0.5 text-xs font-medium text-muted-foreground"
           >

@@ -21,7 +21,7 @@ export function PaymentFilters() {
   const searchParams = useSearchParams();
 
   // Get the current active filter
-  const currentFilter = searchParams?.get("filter") || "all";
+  const currentFilter = searchParams?.get("filter") ?? "all";
 
   // Function to update the URL with the selected filter
   const setFilter = (filterValue: string) => {
@@ -63,10 +63,10 @@ export function PaymentFilters() {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" className="relative">
-          <FilterIcon className="h-4 w-4 mr-2" />
+          <FilterIcon className="mr-2 h-4 w-4" />
           Filter
           {currentFilter !== "all" && (
-            <Badge variant="secondary" className="ml-2 px-1 py-0 h-5">
+            <Badge variant="secondary" className="ml-2 h-5 px-1 py-0">
               {getFilterLabel()}
             </Badge>
           )}

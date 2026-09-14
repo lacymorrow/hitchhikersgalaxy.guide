@@ -113,7 +113,7 @@ export const AuthErrorContent = () => {
   // Customize message for OAuthAccountNotLinked with provider hint
   let message = config.message;
   if (error === AuthError.OAuthAccountNotLinked && provider) {
-    const providerName = providerNames[provider] || provider;
+    const providerName = providerNames[provider] ?? provider;
     message = `This email is already associated with an account. Please sign in with ${providerName} instead.`;
   }
 
@@ -123,12 +123,12 @@ export const AuthErrorContent = () => {
       description={message}
       href={config.href}
       actionText={config.action}
-      className="max-w-xl mx-auto"
+      className="mx-auto max-w-xl"
     >
       {error && (
-        <div className="text-xs text-muted-foreground mt-4">
+        <div className="mt-4 text-xs text-muted-foreground">
           Error code:{" "}
-          <code className="rounded-sm bg-slate-100 dark:bg-slate-800 px-1 py-0.5 text-xs">
+          <code className="rounded-sm bg-slate-100 px-1 py-0.5 text-xs dark:bg-slate-800">
             {error}
           </code>
         </div>

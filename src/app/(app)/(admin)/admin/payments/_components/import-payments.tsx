@@ -50,7 +50,14 @@ const formatImportMessage = (provider: PaymentProvider, result: unknown): string
         );
       } else if (stats && typeof stats === "object" && "error" in stats) {
         const providerName = providerId.charAt(0).toUpperCase() + providerId.slice(1);
-        messages.push(`${providerName}: Error - ${stats.error || "Unknown error"}`);
+        const errorValue = (stats as { error: unknown }).error;
+        const errorMessage =
+          errorValue instanceof Error
+            ? errorValue.message
+            : typeof errorValue === "string"
+              ? errorValue
+              : "Unknown error";
+        messages.push(`${providerName}: Error - ${errorMessage}`);
       }
     }
 
@@ -120,7 +127,7 @@ export function ImportPayments() {
           // Show success toast
           toast({
             title: "All payments deleted",
-            description: result.message || `Successfully deleted ${result.deletedCount} payments`,
+            description: result.message ?? `Successfully deleted ${result.deletedCount} payments`,
             variant: "default",
           });
 
@@ -146,7 +153,7 @@ export function ImportPayments() {
           toast({
             title: "All payments refreshed",
             description:
-              result.message ||
+              result.message ??
               `Successfully refreshed payments: deleted ${result.deletedCount} old payments and imported fresh data`,
             variant: "default",
           });
@@ -257,7 +264,7 @@ export function ImportPayments() {
   /**
    * Gets the loading icon based on current action
    */
-  const getLoadingIcon = () => {
+  const _getLoadingIcon = () => {
     if (currentAction === "import") {
       return <FolderSyncIcon className="mr-2 h-4 w-4" />;
     }

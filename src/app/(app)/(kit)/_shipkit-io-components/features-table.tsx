@@ -30,7 +30,7 @@ const comparisonData = [
     category: "Core Features",
     features: [
       {
-        name: "Next.js 15 App Router",
+        name: "Next.js 16 App Router",
         description: "Latest Next.js features including server components, streaming, and more",
         bones: true,
         muscles: true,
@@ -454,22 +454,20 @@ export const FeaturesTable = () => {
                       />
                     </TableCell>
                     {!isMobile ? (
-                      <>
-                        {comparePlans.map((plan) => (
-                          <TableCell key={plan} className="text-center">
-                            {feature[plan] ? (
-                              <Check
-                                className={cn(
-                                  "mx-auto h-4 w-4",
-                                  shouldHighlight(feature) ? "text-primary" : "text-green-500"
-                                )}
-                              />
-                            ) : (
-                              <Minus className="mx-auto h-4 w-4 text-muted-foreground" />
-                            )}
-                          </TableCell>
-                        ))}
-                      </>
+                      comparePlans.map((plan) => (
+                        <TableCell key={plan} className="text-center">
+                          {feature[plan] ? (
+                            <Check
+                              className={cn(
+                                "mx-auto h-4 w-4",
+                                shouldHighlight(feature) ? "text-primary" : "text-green-500"
+                              )}
+                            />
+                          ) : (
+                            <Minus className="mx-auto h-4 w-4 text-muted-foreground" />
+                          )}
+                        </TableCell>
+                      ))
                     ) : (
                       <TableCell className="text-center">
                         <Badge

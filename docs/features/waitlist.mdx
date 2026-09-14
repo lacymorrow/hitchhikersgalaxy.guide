@@ -39,6 +39,7 @@ bun run db:push
 ```
 
 This creates the `waitlist_entry` table with the following fields:
+
 - Email, name, company, role
 - Project type, timeline, interests
 - Notification status and metadata
@@ -47,6 +48,7 @@ This creates the `waitlist_entry` table with the following fields:
 ### 3. Access the Waitlist
 
 The waitlist is available at:
+
 - **Public page**: `/waitlist` - User signup page
 - **Admin page**: `/admin/waitlist` - View entries and stats
 
@@ -63,6 +65,7 @@ The waitlist is available at:
 ### Admin Management
 
 Access `/admin/waitlist` to:
+
 - View signup statistics
 - Browse all waitlist entries
 - See user project details
@@ -81,7 +84,7 @@ await addToWaitlist({
   role: "developer",
   projectType: "saas",
   timeline: "3-months",
-  interests: "Authentication and payments"
+  interests: "Authentication and payments",
 });
 
 // Get waitlist statistics
@@ -99,14 +102,14 @@ import {
   isEmailOnWaitlist,
   getWaitlistEntries,
   getWaitlistStats,
-  markWaitlistEntryAsNotified
+  markWaitlistEntryAsNotified,
 } from "@/server/services/waitlist-service";
 
 // Add an entry directly
 const entry = await addWaitlistEntry({
   email: "user@example.com",
   name: "John Doe",
-  source: "website"
+  source: "website",
 });
 
 // Check if email exists
@@ -116,7 +119,7 @@ const exists = await isEmailOnWaitlist("user@example.com");
 const entries = await getWaitlistEntries({
   limit: 50,
   offset: 0,
-  orderBy: "desc"
+  orderBy: "desc",
 });
 
 // Mark as notified

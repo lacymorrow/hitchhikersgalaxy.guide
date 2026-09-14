@@ -9,13 +9,15 @@ import { cn } from "@/lib/utils";
 
 type LogLevel = "info" | "warning" | "error" | "success";
 type RequestType = "fetch" | "xmlhttprequest" | "other";
+// Allow well-known types while keeping autocomplete; the `& {}` keeps literal hints in IDEs.
+type RequestTypeOrString = RequestType | (string & Record<never, never>);
 type RequestStatus = "pending" | "success" | "error";
 
 interface NetworkRequest {
   id: string;
   name: string;
   status: RequestStatus;
-  type: RequestType | string;
+  type: RequestTypeOrString;
   size: string;
   time: number;
   level?: LogLevel;
@@ -233,7 +235,7 @@ export const NetworkLog = ({
                 </motion.div>
               ))
             ) : (
-              <div className="text-center animate-pulse">
+              <div className="animate-pulse text-center">
                 <p className="text-muted-foreground/60">Waiting for requests...</p>
               </div>
             )}
@@ -244,7 +246,7 @@ export const NetworkLog = ({
       {showRefresh && (
         <button
           type="button"
-          className="w-full text-blue-400 hover:text-blue-300 flex items-center justify-center bg-gray-800 bg-opacity-30 py-4"
+          className="flex w-full items-center justify-center bg-gray-800 bg-opacity-30 py-4 text-blue-400 hover:text-blue-300"
           onClick={() => setRequests([])}
         >
           <RefreshCw className="mr-2 h-5 w-5" />

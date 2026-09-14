@@ -8,13 +8,20 @@
  *   build-time configuration to inject values via Next.js `env`.
  */
 
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { BASE_URL } from "./base-url";
 
 export function getMasterAppSecret(): string {
   const provided = process.env.APP_SECRET;
   if (typeof provided === "string" && provided.trim().length > 0) {
     return provided;
+  }
+
+  if (process.env.NODE_ENV === "production") {
+    console.warn(
+      "[SECURITY] APP_SECRET is not set. Using deterministic fallback derived from BASE_URL. " +
+        "This is INSECURE for production. Set APP_SECRET in your environment."
+    );
   }
 
   const input = `${BASE_URL}|shipkit|app-secret|v1`;

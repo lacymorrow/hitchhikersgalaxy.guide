@@ -31,11 +31,11 @@ export const addToWaitlist = async (formData: WaitlistFormData) => {
     const entry = await addWaitlistEntry({
       email: formData.email,
       name: formData.name,
-      company: formData.company || null,
-      role: formData.role || null,
-      projectType: formData.projectType || null,
-      timeline: formData.timeline || null,
-      interests: formData.interests || null,
+      company: formData.company ?? null,
+      role: formData.role ?? null,
+      projectType: formData.projectType ?? null,
+      timeline: formData.timeline ?? null,
+      interests: formData.interests ?? null,
       source: "website",
     });
 
@@ -64,7 +64,7 @@ export const addToWaitlist = async (formData: WaitlistFormData) => {
     if ((env.RESEND_API_KEY || env.RESEND_API_KEY) && resend) {
       try {
         await resend.emails.send({
-          from: env.RESEND_FROM_EMAIL || "Shipkit <noreply@shipkit.io>",
+          from: env.RESEND_FROM_EMAIL ?? "Shipkit <noreply@shipkit.io>",
           to: formData.email,
           subject: "Welcome to the Shipkit Waitlist! 🚀",
           html: `

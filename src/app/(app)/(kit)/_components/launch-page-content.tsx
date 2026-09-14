@@ -63,7 +63,7 @@ export async function LaunchPageContent() {
           <Section className="container">
             <div className="mx-auto max-w-4xl text-center">
               <h2 className="mb-6 text-3xl font-bold">Easy Component Setup</h2>
-              <p className="mb-8 text-lg text-muted-foreground max-w-2xl mx-auto">
+              <p className="mx-auto mb-8 max-w-2xl text-lg text-muted-foreground">
                 Install the shadcn/UI component library with our browser-based template installer.
                 No terminal commands needed - just click, preview, and download.
               </p>
@@ -73,8 +73,8 @@ export async function LaunchPageContent() {
             </div>
           </Section>
 
-          <div className="container relative z-10 mx-auto flex flex-col items-center justify-center gap-4 text-center mt-header">
-            <h1 className="bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl lg:text-6xl">
+          <div className="container relative z-10 mx-auto mt-header flex flex-col items-center justify-center gap-4 text-center">
+            <h1 className="text-balance bg-gradient-to-b from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl lg:text-6xl">
               Launch Your App Today
             </h1>
             <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">
@@ -95,7 +95,7 @@ export async function LaunchPageContent() {
 
           {/* Code Preview */}
           <Section className="container">
-            <div className="mx-auto max-w-4xl w-full">
+            <div className="mx-auto w-full max-w-4xl">
               <CodeWindow title="Quick Start" language="bash" code={codeExample} />
             </div>
           </Section>

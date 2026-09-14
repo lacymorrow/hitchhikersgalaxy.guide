@@ -11,10 +11,7 @@
     "@types/react",
     "@types/node"
   ],
-  "categories": [
-    "components",
-    "ui"
-  ],
+  "categories": ["components", "ui"],
   "files": [
     {
       "path": "bento-grid.tsx",

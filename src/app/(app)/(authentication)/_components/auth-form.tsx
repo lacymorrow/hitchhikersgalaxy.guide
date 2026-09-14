@@ -64,9 +64,9 @@ export function AuthForm({
         />
       )}
       <CardContent className={cn("pb-0", !withFooter && "pb-6")}>
-        <div className="grid gap-6 relative">
+        <div className="relative grid gap-6">
           {showAuthUnavailable && (
-            <div className="text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
+            <div className="flex items-center justify-center gap-2 text-center text-xs text-muted-foreground">
               <span aria-hidden="true">&gt;</span>
               <span>Login and sign-up are not available at this time.</span>
             </div>
@@ -74,7 +74,9 @@ export function AuthForm({
 
           {!showAuthUnavailable && (
             <>
-              <OAuthButtons collapsible variant="icons" />
+              <Suspense fallback={<SuspenseFallback />}>
+                <OAuthButtons collapsible variant="icons" />
+              </Suspense>
               <Suspense fallback={<SuspenseFallback />}>{children}</Suspense>
             </>
           )}
@@ -85,7 +87,7 @@ export function AuthForm({
                 href={alternateLink.href}
                 className={cn(
                   buttonVariants({ variant: "link" }),
-                  "underline underline-offset-4 hover:no-underline hover:text-muted-foreground px-0"
+                  "px-0 underline underline-offset-4 hover:text-muted-foreground hover:no-underline"
                 )}
                 onClick={handleAlternateLinkClick}
               >

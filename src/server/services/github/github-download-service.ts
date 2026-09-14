@@ -5,12 +5,12 @@
  * and caches it for 1 hour
  */
 
-import { createWriteStream } from "fs";
-import { mkdir, readFile, stat, writeFile } from "fs/promises";
-import https from "https";
-import { tmpdir } from "os";
-import { join } from "path";
-import { pipeline } from "stream/promises";
+import { createWriteStream } from "node:fs";
+import { mkdir, readFile, stat, writeFile } from "node:fs/promises";
+import https from "node:https";
+import { tmpdir } from "node:os";
+import { join } from "node:path";
+import { pipeline } from "node:stream/promises";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
@@ -69,11 +69,11 @@ async function makeGitHubRequest(url: string): Promise<{
           response.on("end", () => {
             try {
               resolve({
-                statusCode: response.statusCode || 500,
+                statusCode: response.statusCode ?? 500,
                 headers: response.headers,
                 data: data ? JSON.parse(data) : null,
               });
-            } catch (e) {
+            } catch (_e) {
               reject(new Error("Failed to parse response"));
             }
           });
@@ -117,7 +117,7 @@ async function verifyTokenPermissions(): Promise<{
     return {
       isValid: false,
       scopes,
-      error: data?.message || "Unknown error",
+      error: data?.message ?? "Unknown error",
     };
   } catch (error) {
     logger.error("GitHub repository accessibility request failed", { error });
@@ -307,7 +307,7 @@ async function downloadLatestRelease(): Promise<{
   if (!isValid) {
     throw new Error(
       `GitHub token verification failed: ${error}. Required scopes: repo. Current scopes: ${
-        scopes?.join(", ") || "none"
+        scopes?.join(", ") ?? "none"
       }`
     );
   }

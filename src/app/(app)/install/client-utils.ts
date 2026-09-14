@@ -32,7 +32,7 @@ export async function readTemplateFile(filePath: string): Promise<string | Uint8
     // Check cache first
     if (fileContentCache.has(normalizedPath)) {
       logInfo(`Using cached file content for: ${normalizedPath}`);
-      return fileContentCache.get(normalizedPath) || null;
+      return fileContentCache.get(normalizedPath) ?? null;
     }
 
     // Fetch directly from source components
@@ -50,7 +50,7 @@ export async function readTemplateFile(filePath: string): Promise<string | Uint8
     }
 
     // Check content type to determine how to handle the response
-    const contentType = response.headers.get("Content-Type") || "";
+    const contentType = response.headers.get("Content-Type") ?? "";
     logInfo(`Received content type: ${contentType} for file: ${normalizedPath}`);
 
     let content: string | Uint8Array;
@@ -93,7 +93,7 @@ export async function getDirectoryEntries(directoryPath: string): Promise<string
     // Check cache first
     if (directoryListingCache.has(normalizedPath)) {
       logInfo(`Using cached directory listing for: ${normalizedPath}`);
-      return directoryListingCache.get(normalizedPath) || [];
+      return directoryListingCache.get(normalizedPath) ?? [];
     }
 
     const response = await fetch(

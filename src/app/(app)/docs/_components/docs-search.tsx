@@ -17,10 +17,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-  CommandLoading,
 } from "@/components/ui/command";
 import { Input } from "@/components/ui/input";
-import { Skeleton } from "@/components/ui/skeleton";
 import { routes } from "@/config/routes";
 import { type DocSearchResult, useDocsSearch } from "@/hooks/use-docs-search";
 import { cn } from "@/lib/utils";
@@ -77,6 +75,7 @@ export function DocsSearch() {
     try {
       const stored = localStorage.getItem(RECENT_SEARCHES_KEY);
       if (stored) {
+        // eslint-disable-next-line react-hooks/set-state-in-effect -- syncing with external localStorage on mount
         setRecentSearches(JSON.parse(stored));
       }
     } catch (error) {
@@ -115,6 +114,7 @@ export function DocsSearch() {
 
   // Reset selection when items change
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- resets selection when search results change
     setSelectedIndex(0);
   }, [totalItems, query]);
 
@@ -241,21 +241,21 @@ export function DocsSearch() {
         key={`result-${index}`}
         value={`result-${result.title}-${index}`}
         onSelect={() => handleResultSelect(result)}
-        className={cn("flex items-start gap-3 p-3 cursor-pointer", isSelected && "bg-accent")}
+        className={cn("flex cursor-pointer items-start gap-3 p-3", isSelected && "bg-accent")}
       >
-        <FileTextIcon className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />
-        <div className="flex-1 min-w-0">
+        <FileTextIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-sm truncate">{result.title}</span>
+            <span className="truncate text-sm font-medium">{result.title}</span>
             {result.section && (
               <Badge variant="outline" className="text-xs">
                 {result.section}
               </Badge>
             )}
           </div>
-          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{result.content}</p>
+          <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{result.content}</p>
         </div>
-        <ChevronRightIcon className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+        <ChevronRightIcon className="h-3 w-3 flex-shrink-0 text-muted-foreground" />
       </CommandItem>
     );
   };
@@ -269,11 +269,11 @@ export function DocsSearch() {
         key={`popular-${index}`}
         value={`popular-${doc.title}-${index}`}
         onSelect={() => handlePopularDocSelect(doc)}
-        className={cn("flex items-center gap-3 p-3 cursor-pointer", isSelected && "bg-accent")}
+        className={cn("flex cursor-pointer items-center gap-3 p-3", isSelected && "bg-accent")}
       >
         <FileTextIcon className="h-4 w-4 text-muted-foreground" />
         <div className="flex-1">
-          <span className="font-medium text-sm">{doc.title}</span>
+          <span className="text-sm font-medium">{doc.title}</span>
           <p className="text-xs text-muted-foreground">{doc.description}</p>
         </div>
       </CommandItem>
@@ -289,7 +289,7 @@ export function DocsSearch() {
         key={`recent-${index}`}
         value={`recent-${recentQuery}-${index}`}
         onSelect={() => handleRecentSearchSelect(recentQuery)}
-        className={cn("flex items-center gap-3 p-3 cursor-pointer", isSelected && "bg-accent")}
+        className={cn("flex cursor-pointer items-center gap-3 p-3", isSelected && "bg-accent")}
       >
         <ClockIcon className="h-4 w-4 text-muted-foreground" />
         <span className="text-sm">{recentQuery}</span>
@@ -310,7 +310,7 @@ export function DocsSearch() {
       </div>
 
       <CommandDialog open={open} onOpenChange={handleOpenChange}>
-        <div className="w-full h-[300px] flex flex-col">
+        <div className="flex h-[300px] w-full flex-col">
           <DialogTitle className="sr-only">Search Documentation</DialogTitle>
           <CommandInput
             ref={inputRef}
@@ -331,7 +331,7 @@ export function DocsSearch() {
             )}
 
             {!isLoading && !error && hasSearched && results.length === 0 && (
-              <CommandEmpty>No results found for "{query}"</CommandEmpty>
+              <CommandEmpty>No results found for &quot;{query}&quot;</CommandEmpty>
             )}
 
             {/* Search Results */}

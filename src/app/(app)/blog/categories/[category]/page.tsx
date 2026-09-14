@@ -1,24 +1,32 @@
+import type { Metadata } from "next";
 import { Link } from "@/components/primitives/link";
 import { Badge } from "@/components/ui/badge";
+import { constructMetadata } from "@/config/metadata";
 import { getBlogCategories, getBlogPosts } from "@/lib/blog";
 import { cn } from "@/lib/utils";
 
-// Generate static paths for all blog categories
+interface CategoryPageProps {
+  params: Promise<{
+    category: string;
+  }>;
+}
+
+export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
+  const { category } = await params;
+  const name = decodeURIComponent(category);
+  return constructMetadata({
+    title: `${name} — Blog`,
+    description: `Browse all Shipkit blog posts in the ${name} category.`,
+  });
+}
+
 export async function generateStaticParams() {
   const posts = await getBlogPosts();
   const categories = getBlogCategories(posts);
 
   return categories.map((cat) => ({
-    // URL-encode the category name for the param
     category: encodeURIComponent(cat.name),
   }));
-}
-
-// Use params for route segments - params is now a Promise in Next.js 15
-interface CategoryPageProps {
-  params: Promise<{
-    category: string;
-  }>;
 }
 
 // Note: The component signature is updated to use params as Promise

@@ -7,29 +7,46 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Use process.env.PORT by default and fallback to 3000 if not available.
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT ?? 3000;
 const baseURL = `http://localhost:${PORT}`;
 
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
 export default defineConfig({
-  // Timeout per test
-  timeout: 30 * 1000,
+  // Timeout per test. CI runs against a production build (`next start`,
+  // LAC-2687) so there is no compile-on-demand, but keep headroom for slow
+  // 4-vCPU runners.
+  timeout: process.env.CI ? 90 * 1000 : 30 * 1000,
   // Test directory
   testDir: path.join(__dirname, "tests/e2e"),
-  // If a test fails, retry it additional 2 times
-  retries: 2,
+  // Retry on CI to absorb flakes; never locally — keeps the dev loop tight.
+  retries: process.env.CI ? 2 : 0,
   // Artifacts folder where screenshots, videos, and traces are stored.
   outputDir: "test-results/",
 
-  // Run your local dev server before starting the tests:*
+  // Boot a Postgres testcontainer + push schema before tests start.
+  // Tears it down after. Set E2E_SKIP_DB_SETUP=1 to use an external DB.
+  globalSetup: path.join(__dirname, "tests/e2e/global-setup.ts"),
+  globalTeardown: path.join(__dirname, "tests/e2e/global-teardown.ts"),
+
+  // Run your local dev server before starting the tests:
   // https://playwright.dev/docs/test-advanced#launching-a-development-web-server-during-the-tests
   webServer: {
-    command: "pnpm dev",
+    // CI serves the production build (`bun run build` runs earlier in the
+    // workflow) — dev-server compile-on-demand caused first-navigation
+    // timeout flakes on CI runners (LAC-2687). Locally keep `bun dev` so
+    // reuseExistingServer picks up a running dev server.
+    command: process.env.CI ? "bun run start" : "bun dev",
     url: baseURL,
-    timeout: 120 * 1000,
+    timeout: 180 * 1000,
     reuseExistingServer: !process.env.CI,
+    // Surface server output in CI logs. Playwright swallows stdout by
+    // default, which hid the Next 16 Turbopack panic behind a bare
+    // "Timed out waiting 180000ms" (LAC-2685).
+    stdout: "pipe",
+    // Inherit DATABASE_URL etc. set by globalSetup.
+    env: process.env as Record<string, string>,
   },
 
   use: {

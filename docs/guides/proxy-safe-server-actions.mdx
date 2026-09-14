@@ -33,11 +33,7 @@ We've implemented a comprehensive error handling system with:
 import { ServerActionErrorBoundary } from "@/components/primitives/server-action-error-boundary";
 
 export function MyForm() {
-  return (
-    <ServerActionErrorBoundary>
-      {/* Your existing form */}
-    </ServerActionErrorBoundary>
-  );
+  return <ServerActionErrorBoundary>{/* Your existing form */}</ServerActionErrorBoundary>;
 }
 ```
 
@@ -47,15 +43,12 @@ export function MyForm() {
 import { useServerAction } from "@/lib/server-action-wrapper";
 
 export function MyForm() {
-  const { execute, isLoading, error, clearError } = useServerAction(
-    myServerAction,
-    {
-      timeout: 10000,
-      retries: 2,
-      showToast: true,
-      fallback: () => localFallbackFunction(),
-    },
-  );
+  const { execute, isLoading, error, clearError } = useServerAction(myServerAction, {
+    timeout: 10000,
+    retries: 2,
+    showToast: true,
+    fallback: () => localFallbackFunction(),
+  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -127,9 +120,7 @@ async function fallbackSubmission(formData: FormData) {
   };
 
   // Store in localStorage
-  const existing = JSON.parse(
-    localStorage.getItem("pending_submissions") || "[]",
-  );
+  const existing = JSON.parse(localStorage.getItem("pending_submissions") || "[]");
   existing.push(data);
   localStorage.setItem("pending_submissions", JSON.stringify(existing));
 
@@ -254,9 +245,7 @@ export function AdaptiveForm() {
   return (
     <div>
       {!isChecking && isCorporate && (
-        <div className="warning">
-          Corporate network detected. Some features may be limited.
-        </div>
+        <div className="warning">Corporate network detected. Some features may be limited.</div>
       )}
 
       <ServerActionErrorBoundary>{/* Your form */}</ServerActionErrorBoundary>

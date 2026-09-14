@@ -1,7 +1,7 @@
+import fs from "node:fs";
+import path from "node:path";
 import { fileURLToPath } from "node:url";
-import fs from "fs";
 import type { NextConfig } from "next";
-import path from "path";
 import { PLUGINS_DIR_URL } from "./nextjs";
 
 /**
@@ -33,6 +33,7 @@ export function withPlugins(initialConfig: NextConfig, pluginsRelativeDir?: stri
       for (const file of pluginFiles) {
         const pluginPath = path.join(pluginsDir, file);
         try {
+          // eslint-disable-next-line @typescript-eslint/no-require-imports -- dynamic plugin loading requires CommonJS require
           const pluginModule = require(pluginPath);
           // Find the exported function (prefer default export, fallback to the first named export function)
           let pluginFunction = pluginModule.default;
@@ -50,9 +51,7 @@ export function withPlugins(initialConfig: NextConfig, pluginsRelativeDir?: stri
               `[Next.js Config] Skipping ${file}: No exported function found or the export is not a function.`
             );
           }
-        } catch (error) {
-          console.debug(`[Next.js Config] Error loading or applying plugin ${file}:`, error);
-        }
+        } catch (_error) {}
       }
     } else {
       // This condition is logged in instrumentation.ts now

@@ -41,10 +41,7 @@ import type { Session as NextAuthSession } from "next-auth";
 // Type guard to check if auth() returned a Session vs NextResponse
 export function isSession(
   sessionOrResponse:
-    | NextAuthSession
-    | { user: null; expires: string }
-    | NextResponse<unknown>
-    | null
+    NextAuthSession | { user: null; expires: string } | NextResponse<unknown> | null
 ): sessionOrResponse is NextAuthSession {
   return (
     sessionOrResponse !== null &&

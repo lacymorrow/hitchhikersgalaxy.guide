@@ -35,7 +35,7 @@ const OfferCard = ({
   return (
     <div
       className={cn(
-        "h-full transform-gpu rounded-2xl overflow-hidden border bg-neutral-800/95 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-neutral-800/100 dark:bg-neutral-800/50",
+        "h-full transform-gpu overflow-hidden rounded-2xl border bg-neutral-800/95 transition-all duration-300 ease-in-out hover:scale-105 hover:bg-neutral-800/100 dark:bg-neutral-800/50",
         "text-white dark:text-neutral-400",
         isBestValue ? "border-purple-500" : "border-neutral-500/50",
         isComingSoon ? "bg-neutral-700" : ""
@@ -64,7 +64,7 @@ const OfferCard = ({
         </div>
 
         {isComingSoon ? (
-          <div className="my-12 inline-flex w-full transform-gpu items-center justify-center rounded-full border border-neutral-400/20 px-12 py-2.5 font-semibold tracking-tight text-neutral-50 transition-all hover:scale-105 bg-neutral-700">
+          <div className="my-12 inline-flex w-full transform-gpu items-center justify-center rounded-full border border-neutral-400/20 bg-neutral-700 px-12 py-2.5 font-semibold tracking-tight text-neutral-50 transition-all hover:scale-105">
             Coming Soon
           </div>
         ) : (
@@ -79,7 +79,7 @@ const OfferCard = ({
             {price.oneTime ? "Get Started" : "Download Now"}
           </Link>
         )}
-        <p className={cn("mb-4 text-sm font-semibold tracking-tight")}>What's included:</p>
+        <p className={cn("mb-4 text-sm font-semibold tracking-tight")}>What&apos;s included:</p>
         <ul className="space-y-2">
           {features.map((feature) => (
             <li className="flex items-center gap-2" key={feature}>

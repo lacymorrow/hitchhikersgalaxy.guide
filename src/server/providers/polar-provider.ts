@@ -23,7 +23,6 @@ import {
   type OrderData,
   PaymentProviderError,
   type ProductData,
-  type ProviderConfig, // Use the standard config type
 } from "./types";
 // Removed crypto as webhook verification is expected to be handled (or needed) in processPolarWebhook
 
@@ -48,7 +47,7 @@ export class PolarProvider extends BasePaymentProvider {
     }
 
     // Use config passed during initialization first, fallback to env
-    this.apiKey = this._config.apiKey || env.POLAR_ACCESS_TOKEN;
+    this.apiKey = this._config.apiKey ?? env.POLAR_ACCESS_TOKEN;
     this.webhookSecret = this._config.webhookSecret; // Store webhook secret if provided
 
     if (!this.apiKey) {
@@ -119,7 +118,7 @@ export class PolarProvider extends BasePaymentProvider {
       // Map the response from the lib function (which returns any[]) to ProductData
       return polarProducts.map((product: any) => ({
         id: String(product.id), // Ensure ID is string
-        name: product.name || "Unknown Product", // Use consistent fallback
+        name: product.name ?? "Unknown Product", // Use consistent fallback
         // Assuming price comes back in cents from the lib function; adjust if not
         price: typeof product.price === "number" ? product.price / 100 : undefined,
         provider: this.id,
@@ -378,7 +377,7 @@ export class PolarProvider extends BasePaymentProvider {
       processor: this.id,
       processorOrderId: processorOrderId, // Store the raw Polar order ID
       productName: order.productName, // Store the extracted product name
-      metadata: JSON.stringify(order.attributes || {}), // Store original attributes
+      metadata: JSON.stringify(order.attributes ?? {}), // Store original attributes
       purchasedAt: order.purchaseDate,
     });
 
@@ -491,7 +490,7 @@ export class PolarProvider extends BasePaymentProvider {
       // Map response from lib function (any[]) to ProductData
       return polarProducts.map((product: any) => ({
         id: String(product.id), // Ensure ID is string
-        name: product.name || "Unknown Polar Product",
+        name: product.name ?? "Unknown Polar Product",
         // Assuming price comes back in cents; adjust if necessary
         price: typeof product.price === "number" ? product.price / 100 : undefined,
         description: product.description,

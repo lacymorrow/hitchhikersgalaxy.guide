@@ -43,29 +43,29 @@ export function FileStats({ file, extraStats }: FileStatsProps) {
       </div>
 
       <div className="grid gap-4">
-        <div className="grid grid-cols-2 gap-2 p-4 bg-muted rounded-lg">
+        <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted p-4">
           <span className="text-muted-foreground">Type</span>
           <span className="font-medium">{file.type}</span>
         </div>
 
-        <div className="grid grid-cols-2 gap-2 p-4 bg-muted rounded-lg">
+        <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted p-4">
           <span className="text-muted-foreground">Path</span>
-          <span className="font-medium break-all">{file.path}</span>
+          <span className="break-all font-medium">{file.path}</span>
         </div>
 
         {file.type === "file" && (
           <>
-            <div className="grid grid-cols-2 gap-2 p-4 bg-muted rounded-lg">
+            <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted p-4">
               <span className="text-muted-foreground">Size</span>
               <span className="font-medium">{formatSize(extraStats?.size)}</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 p-4 bg-muted rounded-lg">
+            <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted p-4">
               <span className="text-muted-foreground">Created</span>
               <span className="font-medium">{formatDate(extraStats?.createdAt)}</span>
             </div>
 
-            <div className="grid grid-cols-2 gap-2 p-4 bg-muted rounded-lg">
+            <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted p-4">
               <span className="text-muted-foreground">Last Modified</span>
               <span className="font-medium">{formatDate(extraStats?.modifiedAt)}</span>
             </div>

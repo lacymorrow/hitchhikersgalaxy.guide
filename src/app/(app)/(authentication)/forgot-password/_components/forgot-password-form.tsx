@@ -59,11 +59,11 @@ export function ForgotPasswordForm() {
           form.reset();
         } else {
           toast.error("Error sending password reset email", {
-            description: typedResult.error || "Please try again.",
+            description: typedResult.error ?? "Please try again.",
           });
         }
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error("Error sending password reset email", {
         description: "Please try again.",
       });

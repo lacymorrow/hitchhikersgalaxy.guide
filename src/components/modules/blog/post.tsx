@@ -22,22 +22,22 @@ export const BlogPostComponent = ({ post, children }: BlogPostProps) => {
   const displayDate = formatDateForBlog(post.publishedAt);
 
   // Determine which authors to display (prefer new system)
-  const authorsToDisplay = post.authorObjects || post.authors;
-  const singleAuthor = post.authorObject || (post.author ? { name: post.author } : null);
+  const authorsToDisplay = post.authorObjects ?? post.authors;
+  const singleAuthor = post.authorObject ?? (post.author ? { name: post.author } : null);
 
   return (
     <article className="md:flex">
-      <h2 className="content-date h-full mt-px">
+      <h2 className="content-date mt-px h-full">
         <span>{displayDate}</span>
       </h2>
       <div className="content-block">
         <div className="feed-border" />
         <div className="feed-dot" />
         {post.badge && (
-          <BlogBadge label={post.badge} className="absolute -top-6 right-0 md:static mb-4" />
+          <BlogBadge label={post.badge} className="absolute -top-6 right-0 mb-4 md:static" />
         )}
         <Link href={`/blog/${post.slug}`} className="group">
-          <h1 className="text-xl sm:text-3xl font-bold mb-4 group-hover:underline cursor-pointer">
+          <h1 className="mb-4 cursor-pointer text-xl font-bold group-hover:underline sm:text-3xl">
             {post.title}
           </h1>
         </Link>
@@ -45,7 +45,7 @@ export const BlogPostComponent = ({ post, children }: BlogPostProps) => {
           <BlogImage
             src={post.image}
             alt={post.title}
-            className="mb-6 blog-image"
+            className="blog-image mb-6"
             priority={false}
           />
         )}
@@ -62,7 +62,7 @@ export const BlogPostComponent = ({ post, children }: BlogPostProps) => {
             By{" "}
             <Link
               href={authorUtils.getAuthorUrl(post.authorObject)}
-              className="text-foreground hover:underline font-medium"
+              className="font-medium text-foreground hover:underline"
             >
               {authorUtils.getDisplayName(post.authorObject)}
             </Link>
@@ -75,7 +75,7 @@ export const BlogPostComponent = ({ post, children }: BlogPostProps) => {
             By{" "}
             <Link
               href={authorUtils.getAuthorUrl(getAuthorByName(post.author))}
-              className="text-foreground hover:underline font-medium"
+              className="font-medium text-foreground hover:underline"
             >
               {authorUtils.getDisplayName(getAuthorByName(post.author))}
             </Link>

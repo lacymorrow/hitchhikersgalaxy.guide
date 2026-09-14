@@ -5,7 +5,7 @@ import { useEffect, useRef } from "react";
 
 import { cn } from "@/lib/utils";
 
-export default function NumberTicker({
+export function NumberTicker({
   value,
   direction = "up",
   delay = 0,
@@ -27,10 +27,12 @@ export default function NumberTicker({
   const isInView = useInView(ref, { once: true, margin: "0px" });
 
   useEffect(() => {
-    isInView &&
-      setTimeout(() => {
+    if (isInView) {
+      const timeoutId = setTimeout(() => {
         motionValue.set(direction === "down" ? 0 : value);
       }, delay * 1000);
+      return () => clearTimeout(timeoutId);
+    }
   }, [motionValue, isInView, delay, value, direction]);
 
   useEffect(

@@ -133,8 +133,8 @@ export const Footer: FC<FooterProps> = ({
 
   return (
     <footer className={cn(footerStyles({ variant }), className)} {...rest}>
-      <div className="container relative flex md:min-h-80 w-full flex-col items-stretch gap-2xl py-2xl">
-        <div className="flex flex-col lg:flex-row justify-between gap-2xl">
+      <div className="container relative flex w-full flex-col items-stretch gap-2xl py-2xl md:min-h-80">
+        <div className="flex flex-col justify-between gap-2xl lg:flex-row">
           <div className="flex flex-col gap-4">
             <Link href={routes.home}>
               <h1 className="text-4xl font-bold">{siteConfig.title}</h1>
@@ -143,17 +143,16 @@ export const Footer: FC<FooterProps> = ({
             <SocialLinks labelled className="" />
           </div>
           {/* Desktop Layout */}
-          <div className="hidden md:grid w-full items-start justify-items-start md:grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] gap-xl xl:gap-2xl">
+          <div className="hidden w-full items-start justify-items-start gap-xl md:grid md:grid-cols-[repeat(auto-fit,minmax(12rem,1fr))] xl:gap-2xl">
             {groupElements}
           </div>
           {/* Mobile Layout */}
-          <div className="flex flex-col gap-md md:hidden w-full">
+          <div className="flex w-full flex-col gap-md md:hidden">
             <Accordion type="multiple" className="w-full">
               {groups
                 .filter((el) => el.type === "group")
                 .map((element) => {
-                  // We already filtered, so this cast is safe
-                  const group = (element as { type: "group"; content: FooterGroup }).content;
+                  const group = element.content;
                   return (
                     <AccordionItem value={group.header.label} key={uuid()}>
                       <AccordionTrigger className="font-semibold">
@@ -173,7 +172,7 @@ export const Footer: FC<FooterProps> = ({
                                   <Link
                                     className={cn(
                                       buttonVariants({ variant: "link" }),
-                                      "p-0 h-auto"
+                                      "h-auto p-0"
                                     )}
                                     href={item.href}
                                   >

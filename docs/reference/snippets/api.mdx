@@ -1,6 +1,6 @@
 ---
-title: 'API Route Snippets'
-description: 'Common API route patterns in Shipkit'
+title: "API Route Snippets"
+description: "Common API route patterns in Shipkit"
 ---
 
 # API Route Snippets
@@ -25,10 +25,7 @@ export async function POST(req: Request) {
     const result = await ValidationService.validate(createPostSchema, json);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
     const post = await db?.post.create({
@@ -72,10 +69,7 @@ export async function POST(req: Request) {
     const result = await ValidationService.validate(schema, json);
 
     if (!result.success) {
-      return NextResponse.json(
-        { error: result.error },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: result.error }, { status: 400 });
     }
 
     const post = await db?.post.create({

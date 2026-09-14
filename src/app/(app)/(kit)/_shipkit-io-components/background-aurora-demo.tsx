@@ -22,7 +22,10 @@ export function AuroraBackgroundDemo() {
         <div className="py-4 text-base font-extralight dark:text-neutral-200 md:text-4xl">
           And this, is chemical burn.
         </div>
-        <button className="w-fit rounded-full bg-black px-4 py-2 text-white dark:bg-white dark:text-black">
+        <button
+          type="button"
+          className="w-fit rounded-full bg-black px-4 py-2 text-white dark:bg-white dark:text-black"
+        >
           Debug now
         </button>
       </motion.div>

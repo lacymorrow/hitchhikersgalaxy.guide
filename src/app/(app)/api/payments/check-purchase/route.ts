@@ -44,7 +44,7 @@ export async function GET(request: NextRequest) {
     } else {
       purchased = await PaymentService.hasUserPurchasedProduct({
         userId: session.user.id,
-        productId: productId as string,
+        productId: productId!,
         provider,
       });
     }

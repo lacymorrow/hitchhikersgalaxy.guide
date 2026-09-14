@@ -1,8 +1,8 @@
 // @ts-nocheck
 
 function titleCase(str) {
-  str = str.toLowerCase();
-  return (str.match(/\w+.?/g) || [])
+  const lower = str.toLowerCase();
+  return (lower.match(/\w+.?/g) || [])
     .map((word) => {
       return word.charAt(0).toUpperCase() + word.slice(1);
     })

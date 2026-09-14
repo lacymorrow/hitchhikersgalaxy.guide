@@ -26,14 +26,14 @@ function UsersTableSkeleton() {
       <Skeleton className="h-10 w-[250px]" />
       <div className="rounded-md border">
         <div className="p-4">
-          <div className="flex items-center justify-between py-4 border-b">
+          <div className="flex items-center justify-between border-b py-4">
             <div className="flex items-center gap-2">
               <Skeleton className="h-8 w-64" />
             </div>
             <Skeleton className="h-9 w-64" />
           </div>
-          <div className="flex items-center h-12 px-4 border-b">
-            <div className="flex-1 flex items-center gap-4">
+          <div className="flex h-12 items-center border-b px-4">
+            <div className="flex flex-1 items-center gap-4">
               <Skeleton className="h-4 w-4" />
               <Skeleton className="h-4 w-32" />
               <Skeleton className="h-4 w-32" />
@@ -42,8 +42,8 @@ function UsersTableSkeleton() {
             </div>
           </div>
           {skeletonRowIds.map((id) => (
-            <div key={id} className="flex items-center h-16 px-4 border-b">
-              <div className="flex-1 flex items-center gap-4">
+            <div key={id} className="flex h-16 items-center border-b px-4">
+              <div className="flex flex-1 items-center gap-4">
                 <Skeleton className="size-8 rounded-full" />
                 <Skeleton className="h-4 w-36" />
                 <Skeleton className="h-4 w-32" />
@@ -74,7 +74,7 @@ async function UsersTableContent() {
   const sortedUsers = users.map((user) => ({
     ...user,
     purchases:
-      user.purchases?.sort((a, b) => b.purchaseDate.getTime() - a.purchaseDate.getTime()) || [],
+      user.purchases?.sort((a, b) => b.purchaseDate.getTime() - a.purchaseDate.getTime()) ?? [],
   }));
 
   return <DataTable columns={columns} data={sortedUsers} searchPlaceholder="Search users..." />;
@@ -86,7 +86,7 @@ async function UsersTableContent() {
 export default function AdminPage() {
   return (
     <>
-      <div className="flex justify-between items-center mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <PageHeader>
           <PageHeaderHeading>User Management</PageHeaderHeading>
           <PageHeaderDescription>

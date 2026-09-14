@@ -1,8 +1,8 @@
 "use server";
 
-import { promises as fs } from "fs";
+import { promises as fs } from "node:fs";
+import path from "node:path";
 import { revalidatePath } from "next/cache";
-import path from "path";
 import type { FileNode } from "./file-browser";
 
 const ROOT_DIR = process.cwd();
@@ -52,7 +52,7 @@ export async function getFileTree() {
     const tree = await buildFileTree(ROOT_DIR);
     revalidatePath("/browser");
     return { tree };
-  } catch (error) {
+  } catch (_error) {
     return { error: "Failed to load file tree" };
   }
 }
@@ -70,7 +70,7 @@ export async function getFileStats(filePath: string) {
         isDirectory: stats.isDirectory(),
       },
     };
-  } catch (error) {
+  } catch (_error) {
     return { error: "Failed to get file stats" };
   }
 }

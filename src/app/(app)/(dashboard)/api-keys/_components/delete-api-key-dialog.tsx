@@ -37,7 +37,7 @@ export const DeleteApiKeyDialog = ({ apiKeyId, triggerProps }: DeleteApiKeyDialo
       } else {
         toast.error("Failed to delete API key");
       }
-    } catch (error) {
+    } catch (_error) {
       toast.error("Failed to delete API key");
     } finally {
       setIsLoading(false);
@@ -64,7 +64,7 @@ export const DeleteApiKeyDialog = ({ apiKeyId, triggerProps }: DeleteApiKeyDialo
           <form action={handleDelete}>
             <AlertDialogAction
               type="submit"
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="bg-red-600 text-white hover:bg-red-700"
               disabled={isLoading}
             >
               {isLoading ? "Deleting..." : "Delete"}

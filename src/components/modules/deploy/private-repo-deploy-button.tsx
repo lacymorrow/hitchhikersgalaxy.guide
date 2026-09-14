@@ -87,7 +87,7 @@ export const PrivateRepoDeployButton = () => {
         }
         setStatus({
           step: "error",
-          error: result.error || "Deployment failed",
+          error: result.error ?? "Deployment failed",
           githubRepo: result.data?.githubRepo, // Keep the GitHub repo info if available
         });
 
@@ -99,7 +99,7 @@ export const PrivateRepoDeployButton = () => {
           )}`;
           window.open(importUrl, "_blank", "noopener,noreferrer");
         } else {
-          toast.error(result.error || "Deployment failed");
+          toast.error(result.error ?? "Deployment failed");
         }
       }
     } catch (error) {
@@ -132,7 +132,7 @@ export const PrivateRepoDeployButton = () => {
       case "idle":
         return null;
       default:
-        return <Clock className="h-5 w-5 text-blue-500 animate-spin" />;
+        return <Clock className="h-5 w-5 animate-spin text-blue-500" />;
     }
   };
 
@@ -150,7 +150,7 @@ export const PrivateRepoDeployButton = () => {
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="mx-auto w-full max-w-2xl">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Github className="h-5 w-5" />
@@ -172,7 +172,7 @@ export const PrivateRepoDeployButton = () => {
               </Badge>
             </div>
             <AlertDescription className="mt-2">
-              {status.message || status.error}
+              {status.message ?? status.error}
               {needsGitHubAuth && (
                 <div className="mt-3">
                   <LinkWithTransition
@@ -194,7 +194,7 @@ export const PrivateRepoDeployButton = () => {
                     <span className="font-mono text-xs">{status.githubRepo?.name}</span>
                   </p>
                   <p className="text-sm">
-                    The Vercel import page should have opened in a new tab. If it didn't, click
+                    The Vercel import page should have opened in a new tab. If it didn&apos;t, click
                     below:
                   </p>
                   <Button
@@ -202,7 +202,7 @@ export const PrivateRepoDeployButton = () => {
                     size="sm"
                     onClick={() => {
                       const importUrl = `https://vercel.com/new/import?s=${encodeURIComponent(
-                        status.githubRepo?.url || ""
+                        status.githubRepo?.url ?? ""
                       )}`;
                       window.open(importUrl, "_blank", "noopener,noreferrer");
                     }}
@@ -264,7 +264,7 @@ export const PrivateRepoDeployButton = () => {
                     </Button>
                   </div>
                   {status.vercelProject.deploymentUrl && (
-                    <div className="flex items-center justify-between mt-2">
+                    <div className="mt-2 flex items-center justify-between">
                       <span className="text-sm text-muted-foreground">Live Site</span>
                       <Button variant="ghost" size="sm" asChild>
                         <a
@@ -324,12 +324,12 @@ export const PrivateRepoDeployButton = () => {
               />
             </div>
 
-            <div className="pt-4 space-y-3">
+            <div className="space-y-3 pt-4">
               <Button onClick={handleDeploy} disabled={isDeploying} className="w-full">
                 {isDeploying ? "Deploying..." : "Deploy Shipkit"}
               </Button>
-              <p className="text-xs text-center text-muted-foreground">
-                Make sure you've connected your GitHub and Vercel accounts in{" "}
+              <p className="text-center text-xs text-muted-foreground">
+                Make sure you&apos;ve connected your GitHub and Vercel accounts in{" "}
                 <LinkWithTransition
                   href={routes.settings.account}
                   className="text-primary hover:underline"

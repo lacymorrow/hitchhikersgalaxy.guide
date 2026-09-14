@@ -4,7 +4,6 @@ import {
   DesktopIcon,
   ExitIcon,
   GearIcon,
-  LockClosedIcon,
   MoonIcon,
   PersonIcon,
   RocketIcon,
@@ -103,7 +102,7 @@ export function UserMenuDropdown({
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{user?.name ?? "Guest User"}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              {user?.email || "Not signed in"}
+              {user?.email ?? "Not signed in"}
             </p>
           </div>
         </DropdownMenuLabel>
@@ -190,7 +189,7 @@ export function UserMenuDropdown({
                 <span>Theme</span>
               </DropdownMenuSubTrigger>
               <DropdownMenuSubContent>
-                <DropdownMenuRadioGroup value={theme || "system"} onValueChange={handleThemeChange}>
+                <DropdownMenuRadioGroup value={theme ?? "system"} onValueChange={handleThemeChange}>
                   <DropdownMenuRadioItem value="light" className="flex items-center gap-2">
                     <SunIcon className="size-4" />
                     <span>Light</span>

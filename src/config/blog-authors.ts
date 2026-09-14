@@ -74,7 +74,7 @@ export const blogAuthors: Record<string, BlogAuthor> = {
  * Default/fallback author for posts without a specified author
  */
 export const defaultAuthor: BlogAuthor =
-  blogAuthors["lacy-morrow"] || (Object.values(blogAuthors)[0] as BlogAuthor);
+  blogAuthors["lacy-morrow"] ?? Object.values(blogAuthors)[0]!;
 
 /**
  * Get author by ID/slug
@@ -83,7 +83,7 @@ export const defaultAuthor: BlogAuthor =
  * @returns The author object or default author if not found
  */
 export function getAuthorById(authorId: string): BlogAuthor {
-  return blogAuthors[authorId] || defaultAuthor;
+  return blogAuthors[authorId] ?? defaultAuthor;
 }
 
 /**
@@ -96,7 +96,7 @@ export function getAuthorByName(name: string): BlogAuthor {
   const author = Object.values(blogAuthors).find(
     (author) => author.name.toLowerCase() === name.toLowerCase()
   );
-  return author || defaultAuthor;
+  return author ?? defaultAuthor;
 }
 
 /**
@@ -151,7 +151,7 @@ export const authorUtils = {
    * Get author's display name with fallback
    */
   getDisplayName: (author: BlogAuthor): string => {
-    return author.fullName || author.name;
+    return author.fullName ?? author.name;
   },
 
   /**

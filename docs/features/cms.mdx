@@ -91,18 +91,18 @@ This happens in the catch-all route at `src/app/(payload)/[...slug]/page.tsx`.
 
 Media uploads can use:
 
-| Backend | Env Vars | Plugin |
-|---------|----------|--------|
-| S3 | `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_BUCKET_NAME` | `@payloadcms/storage-s3` |
-| Vercel Blob | `VERCEL_BLOB_READ_WRITE_TOKEN` | `@payloadcms/storage-vercel-blob` |
-| Local | None | Default filesystem |
+| Backend     | Env Vars                                                                      | Plugin                            |
+| ----------- | ----------------------------------------------------------------------------- | --------------------------------- |
+| S3          | `AWS_REGION`, `AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`, `AWS_BUCKET_NAME` | `@payloadcms/storage-s3`          |
+| Vercel Blob | `VERCEL_BLOB_READ_WRITE_TOKEN`                                                | `@payloadcms/storage-vercel-blob` |
+| Local       | None                                                                          | Default filesystem                |
 
 ## Key Files
 
-| File | Purpose |
-|------|---------|
-| `src/payload.config.ts` | Main Payload configuration |
-| `src/lib/payload/collections/` | Collection definitions (Pages, Media, Users, FAQs, Features, Testimonials, RBAC, VercelDeployments) |
-| `src/lib/payload/blocks/` | Page block definitions (hero, content, features, testimonials) |
-| `src/lib/payload/seed/` | Seed data |
-| `src/app/(app)/(admin)/admin/cms/page.tsx` | Admin CMS status page |
+| File                                       | Purpose                                                                                             |
+| ------------------------------------------ | --------------------------------------------------------------------------------------------------- |
+| `src/payload.config.ts`                    | Main Payload configuration                                                                          |
+| `src/lib/payload/collections/`             | Collection definitions (Pages, Media, Users, FAQs, Features, Testimonials, RBAC, VercelDeployments) |
+| `src/lib/payload/blocks/`                  | Page block definitions (hero, content, features, testimonials)                                      |
+| `src/lib/payload/seed/`                    | Seed data                                                                                           |
+| `src/app/(app)/(admin)/admin/cms/page.tsx` | Admin CMS status page                                                                               |

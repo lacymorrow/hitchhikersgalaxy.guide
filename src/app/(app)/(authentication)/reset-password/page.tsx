@@ -9,6 +9,7 @@ import { siteConfig } from "@/config/site-config";
 export const metadata: Metadata = constructMetadata({
   title: "Reset Password",
   description: `Create a new password for your ${siteConfig.name} account.`,
+  noIndex: true,
 });
 
 export default async function ResetPasswordPage({

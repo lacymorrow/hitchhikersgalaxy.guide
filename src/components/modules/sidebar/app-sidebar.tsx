@@ -28,7 +28,8 @@ const appSidebarVariants = cva("", {
 });
 
 interface AppSidebarProps
-  extends Omit<React.ComponentProps<typeof Sidebar>, "variant">,
+  extends
+    Omit<React.ComponentProps<typeof Sidebar>, "variant">,
     VariantProps<typeof appSidebarVariants> {
   variant?: "inset" | "floating" | "sidebar";
   size?: "default" | "sm" | "lg";

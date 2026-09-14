@@ -46,6 +46,7 @@ const features = [
       >
         {files.map((f, idx) => (
           <figure
+            // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
             key={idx}
             className={cn(
               "relative w-32 cursor-pointer overflow-hidden rounded-xl border p-4",
@@ -108,6 +109,7 @@ export const FeaturesGrid = () => {
   return (
     <BentoGrid className="">
       {features.map((feature, idx) => (
+        // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
         <BentoCard key={idx} {...feature} />
       ))}
     </BentoGrid>

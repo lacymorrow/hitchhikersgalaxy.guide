@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 export function ParticlesHero({
   children,
   className,
-  quantity = 100,
+  quantity = 12,
   speed = 80,
   color,
 }: {
@@ -25,7 +25,7 @@ export function ParticlesHero({
     <div className={cn("relative w-full bg-background", className)}>
       {children}
       <Particles
-        className="absolute inset-0 [mask-image:linear-gradient(to_bottom_right,white,transparent)]"
+        className="absolute inset-0 opacity-30 [mask-image:linear-gradient(to_bottom_right,white,transparent)]"
         quantity={quantity}
         ease={speed}
         color={currentColor}

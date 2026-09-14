@@ -14,9 +14,10 @@ import { SignUpForm } from "./_components/sign-up-form";
 export const metadata: Metadata = constructMetadata({
   title: "Create Account",
   description: `Create your ${siteConfig.name} account to start building and deploying your applications.`,
+  noIndex: true,
 });
 
-export default async function SignUpPage() {
+export default function SignUpPage() {
   const hasAuth = env.NEXT_PUBLIC_FEATURE_AUTH_ENABLED;
   const isGuestOnlyMode =
     !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
@@ -38,7 +39,7 @@ export default async function SignUpPage() {
           </div>
           {siteConfig.title}
         </div>
-        <div className="text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 text-center text-xs text-muted-foreground">
           <span aria-hidden="true">&gt;</span>
           <span>Login and sign-up are not available at this time.</span>
         </div>

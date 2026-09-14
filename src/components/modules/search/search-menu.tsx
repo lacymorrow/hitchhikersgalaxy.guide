@@ -133,7 +133,7 @@ export function SearchMenu({
       >
         {collapsible && <MagnifyingGlassIcon className="h-4 w-4 shrink-0 lg:mr-2" />}
         <span
-          className={cn("text-xs truncate", collapsible ? "hidden lg:inline-flex" : "inline-flex")}
+          className={cn("truncate text-xs", collapsible ? "hidden lg:inline-flex" : "inline-flex")}
         >
           {buttonText}
         </span>

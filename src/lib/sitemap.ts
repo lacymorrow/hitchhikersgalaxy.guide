@@ -9,6 +9,8 @@ interface SitemapEntry {
   priority?: number;
 }
 
+// Async signature kept stable for callers that await this API.
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function generateSitemapEntries(): Promise<SitemapEntry[]> {
   const entries: SitemapEntry[] = [];
 

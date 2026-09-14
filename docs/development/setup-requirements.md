@@ -1,3 +1,8 @@
+---
+title: "Setup Requirements"
+description: "Everything you need to get a Shipkit downstream project fully operational."
+---
+
 # Setup Requirements
 
 Everything you need to get a Shipkit downstream project fully operational.

@@ -60,7 +60,7 @@ export const UserMenu = ({
         if (!result.success) {
           toast({
             title: "Failed to save theme preference",
-            description: result.error || "Your theme preference could not be saved.",
+            description: result.error ?? "Your theme preference could not be saved.",
             variant: "destructive",
           });
         }
@@ -85,15 +85,10 @@ export const UserMenu = ({
     onThemeChange: handleThemePersist,
   });
 
-  // Detect invalid session state: user object exists but is missing required fields
-  // This can happen after deployment or session invalidation
+  // Detect invalid session state: user object exists but is missing the id field
   const isInvalidSession = React.useMemo(() => {
     if (!currentUser) return false;
-    // A valid user must have an id - if currentUser exists but has no id, session is invalid
     if (!currentUser.id) return true;
-    // If user has no name AND no image, the session data is likely corrupted/stale
-    // This causes the "?" avatar fallback which indicates an invalid session
-    if (!currentUser.name && !currentUser.image) return true;
     return false;
   }, [currentUser]);
 
@@ -203,7 +198,7 @@ export const UserMenu = ({
   return (
     <div
       className={cn(
-        "relative rounded-full flex items-center justify-center aspect-square",
+        "relative flex aspect-square items-center justify-center rounded-full",
         size === "sm" ? "size-9" : "size-9"
       )}
     >
@@ -232,32 +227,28 @@ export const UserMenu = ({
           >
             <Avatar className={cn(size === "sm" ? "size-6" : "size-8")}>
               <AvatarImage
-                src={currentUser?.image || ""}
-                alt={currentUser?.name || "User avatar"}
+                src={currentUser?.image ?? ""}
+                alt={currentUser?.name ?? "User avatar"}
                 draggable={false}
               />
-              <AvatarFallback>{currentUser?.name?.[0]?.toUpperCase() || "?"}</AvatarFallback>
+              <AvatarFallback>{currentUser?.name?.[0]?.toUpperCase() ?? "?"}</AvatarFallback>
             </Avatar>
           </Button>
         </UserMenuDropdown>
-      ) : (
-        <>
-          {pathname !== routes.auth.signIn && pathname !== routes.auth.signUp ? (
-            <Link
-              href={signInRedirectUrl}
-              className={cn(
-                buttonVariants({ variant: "ghost", size: "icon" }),
-                "rounded-full cursor-pointer"
-              )}
-            >
-              <UserIcon className="size-6" />
-            </Link>
-          ) : (
-            <Button variant="ghost" size="icon" className={cn("relative rounded-full", className)}>
-              <UserIcon className="size-6" />
-            </Button>
+      ) : pathname !== routes.auth.signIn && pathname !== routes.auth.signUp ? (
+        <Link
+          href={signInRedirectUrl}
+          className={cn(
+            buttonVariants({ variant: "ghost", size: "icon" }),
+            "cursor-pointer rounded-full"
           )}
-        </>
+        >
+          <UserIcon className="size-6" />
+        </Link>
+      ) : (
+        <Button variant="ghost" size="icon" className={cn("relative rounded-full", className)}>
+          <UserIcon className="size-6" />
+        </Button>
       )}
     </div>
   );

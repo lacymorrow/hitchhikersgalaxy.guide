@@ -35,7 +35,7 @@ export function RecentActivity({ activities = [] }: RecentActivityProps) {
           <ScrollArea className="h-[300px]">
             <div className="space-y-4">
               {activities.map((activity) => {
-                const Icon = activityIcons[activity.type] || AlertCircle;
+                const Icon = activityIcons[activity.type] ?? AlertCircle;
                 return (
                   <div key={activity.id} className="flex items-center">
                     <Avatar className="h-9 w-9">

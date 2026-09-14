@@ -43,6 +43,7 @@
 		--color-3: 210 100% 63%;
 		--color-4: 195 100% 63%;
 		--color-5: 90 100% 63%;
+		--loader-color: linear-gradient(90deg, hsl(var(--color-1)), hsl(var(--color-2)), hsl(var(--color-3)), hsl(var(--color-1)));
 	}
 
 	.dark {
@@ -83,6 +84,7 @@
 		--color-3: 210 100% 63%;
 		--color-4: 195 100% 63%;
 		--color-5: 90 100% 63%;
+		--loader-color: linear-gradient(90deg, hsl(var(--color-1)), hsl(var(--color-2)), hsl(var(--color-3)), hsl(var(--color-1)));
 	}
 }
 

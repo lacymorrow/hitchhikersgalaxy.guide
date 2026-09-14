@@ -61,8 +61,8 @@ export function OAuthButtons({
   const options = nextUrl ? { redirectTo: nextUrl } : {};
   const [currentVariant, setCurrentVariant] = useState<"default" | "icons">(variant);
 
-  const handleSignIn = (providerId: string) => {
-    void signInWithOAuthAction({ providerId, options });
+  const handleSignIn = async (providerId: string) => {
+    await signInWithOAuthAction({ providerId, options });
   };
 
   const toggleVariant = () => {
@@ -97,7 +97,7 @@ export function OAuthButtons({
     <>
       <div
         className={cn(
-          "relative flex gap-xs w-full items-center",
+          "relative flex w-full items-center gap-xs",
           currentVariant === "icons" ? "flex-row justify-center" : "flex-col items-stretch",
           className
         )}
@@ -105,7 +105,7 @@ export function OAuthButtons({
         {collapsible && oauthProviders.length > 3 && (
           <div
             className={cn(
-              "flex justify-center items-center",
+              "flex items-center justify-center",
               currentVariant === "icons" ? "order-last" : "absolute right-1 top-[2px]"
             )}
           >
@@ -135,12 +135,7 @@ export function OAuthButtons({
           );
 
           return (
-            <form
-              key={id}
-              action={() => {
-                handleSignIn(id);
-              }}
-            >
+            <form key={id} action={() => handleSignIn(id)}>
               {currentVariant === "icons" ? (
                 <Tooltip>
                   <TooltipTrigger asChild>{button}</TooltipTrigger>

@@ -215,7 +215,7 @@ export const siteConfig: SiteConfig = {
     twitter_follow: "https://twitter.com/intent/follow?screen_name=lacybuilds",
     x: "https://x.com/lacybuilds",
     x_follow: "https://x.com/intent/follow?screen_name=lacybuilds",
-    github: "https://github.com/lacymorrow/shipkit",
+    github: "https://github.com/shipkit-io/bones",
   },
 
   // Configure social profiles here. Leave any you don't use as empty strings.
@@ -298,7 +298,7 @@ export const siteConfig: SiteConfig = {
       dark: "black",
     },
     locale: "en-US",
-    generator: "Next.js", // Use Next.js as generator
+    generator: "Next.js, shipkit.io",
     referrer: "origin-when-cross-origin",
     category: "technology", // Use technology as category
     classification: "Business Software",
@@ -389,7 +389,7 @@ siteConfig.payload.adminTitleSuffix = ` - ${siteConfig.title} CMS`;
 
 // Make sure alternates exists before assigning canonical
 siteConfig.metadata.alternates ??= {};
-siteConfig.metadata.alternates.canonical = siteConfig.url;
+siteConfig.metadata.alternates.canonical = "./";
 // Advertise RSS feed for SEO and feed discovery (only when blog is enabled)
 if (process.env.NEXT_PUBLIC_HAS_BLOG === "true") {
   siteConfig.metadata.alternates.types = {

@@ -76,11 +76,11 @@ export default async function VercelDeployPage({
   return (
     <>
       <ConfettiSideCannons />
-      <div className="container max-w-2xl mx-auto py-10">
+      <div className="container mx-auto max-w-2xl py-10">
         <Card>
           <CardHeader className="text-center">
-            <div className="mx-auto w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center mb-4">
-              <CheckCircle className="w-6 h-6 text-green-600 dark:text-green-400" />
+            <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+              <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
             </div>
             <CardTitle className="text-2xl">Deployment Successful!</CardTitle>
             <CardDescription>
@@ -109,8 +109,8 @@ export default async function VercelDeployPage({
                 <Link href={deploymentInfo.repositoryUrl} className="text-sm underline">
                   GitHub Repository →
                 </Link>
-                <div className="flex items-center space-x-2 bg-muted p-2 rounded-md">
-                  <code className="text-sm flex-grow overflow-x-auto">
+                <div className="flex items-center space-x-2 rounded-md bg-muted p-2">
+                  <code className="flex-grow overflow-x-auto text-sm">
                     git clone {deploymentInfo.repositoryUrl}
                   </code>
                   <CopyButton
@@ -127,7 +127,7 @@ export default async function VercelDeployPage({
               className={buttonVariants({ variant: "default" })}
               href={deploymentInfo.deploymentUrl}
             >
-              Visit Site <ArrowUpRight className="w-4 h-4" />
+              Visit Site <ArrowUpRight className="h-4 w-4" />
             </Link>
             <Button asChild variant="outline">
               <Link href={routes.app.dashboard}>Shipkit Dashboard</Link>

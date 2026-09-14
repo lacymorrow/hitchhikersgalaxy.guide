@@ -39,7 +39,7 @@ export function routeRedirect(
     url = new URL(destination, BASE_URL);
     url.searchParams.set(SEARCH_PARAM_KEYS.statusCode, options);
   } else {
-    const baseUrl = options.request?.url || BASE_URL;
+    const baseUrl = options.request?.url ?? BASE_URL;
     url = new URL(destination, baseUrl);
 
     if (options?.nextUrl) {
@@ -54,4 +54,3 @@ export function routeRedirect(
   logger.info(`routeRedirect: Redirecting to ${url}`);
   return NextResponse.redirect(url);
 }
-

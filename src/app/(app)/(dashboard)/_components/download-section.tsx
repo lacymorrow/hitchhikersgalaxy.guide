@@ -55,14 +55,14 @@ export const DownloadSection = ({
       <div className="flex w-full flex-wrap items-stretch justify-stretch gap-3">
         <Link
           href={routes.api.download}
-          className={cn(buttonVariants({ variant: "default" }), "grow min-w-1/2 w-full")}
+          className={cn(buttonVariants({ variant: "default" }), "min-w-1/2 w-full grow")}
         >
           <DownloadIcon className="mr-2 h-4 w-4" />
           Download {siteConfig.title}
         </Link>
         {hasGitHubConnection && hasVercelConnection && (
           <DashboardVercelDeploy
-            className="grow min-w-1/2"
+            className="min-w-1/2 grow"
             isVercelConnected={hasVercelConnection}
           />
         )}

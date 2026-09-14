@@ -1,4 +1,4 @@
-import crypto from "crypto";
+import crypto from "node:crypto";
 import { and, eq, isNull } from "drizzle-orm";
 import { siteConfig } from "@/config/site-config";
 import { db } from "@/server/db";
@@ -93,14 +93,14 @@ export class ApiKeyService {
         ?.insert(apiKeys)
         .values({
           key,
-          userId: userId || null,
-          name: name || null,
-          description: description || null,
+          userId: userId ?? null,
+          name: name ?? null,
+          description: description ?? null,
           expiresAt,
           createdAt: new Date(),
           updatedAt: new Date(),
         } as any) // Type assertion to bypass type check
-        .returning()) || [];
+        .returning()) ?? [];
 
     return apiKey;
   }
@@ -120,7 +120,7 @@ export class ApiKeyService {
         .from(apiKeys)
         .leftJoin(users, eq(apiKeys.userId, users.id))
         .where(and(eq(apiKeys.key, key), isNull(apiKeys.deletedAt)))
-        .limit(1)) || [];
+        .limit(1)) ?? [];
 
     if (!result) {
       throw new Error("Invalid API key");
@@ -156,7 +156,7 @@ export class ApiKeyService {
           updatedAt: new Date(),
         })
         .where(eq(apiKeys.id, id))
-        .returning()) || [];
+        .returning()) ?? [];
     return !!deleted;
   }
 }

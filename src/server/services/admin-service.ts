@@ -52,7 +52,7 @@ export async function isAdmin({
   }
 
   // 3. Check RBAC permissions if userId is provided or we found it in the database
-  const userIdToCheck = userId || user?.id;
+  const userIdToCheck = userId ?? user?.id;
   if (userIdToCheck) {
     try {
       const hasRbacPermission = await rbacService.hasPermission(userIdToCheck, "system", "admin");

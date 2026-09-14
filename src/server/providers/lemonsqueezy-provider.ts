@@ -1,10 +1,9 @@
 import { lemonSqueezySetup, listOrders, listProducts } from "@lemonsqueezy/lemonsqueezy.js";
-import crypto from "crypto";
 import { eq } from "drizzle-orm";
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
 import { db } from "@/server/db";
-import { payments, users } from "@/server/db/schema";
+import { payments } from "@/server/db/schema";
 import { userService } from "../services/user-service";
 import { BasePaymentProvider } from "./base-provider";
 import type { CheckoutOptions, ImportStats, OrderData, ProductData } from "./types";
@@ -38,7 +37,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
       return;
     }
 
-    this.apiKey = this._config.apiKey || env.LEMONSQUEEZY_API_KEY;
+    this.apiKey = this._config.apiKey ?? env.LEMONSQUEEZY_API_KEY;
 
     if (!this.apiKey) {
       logger.warn("Lemon Squeezy API key not provided");
@@ -75,7 +74,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
       const userOrders =
         orders.data?.data?.filter((order) => {
           const attributes = order.attributes as any;
-          const customData = attributes.custom_data || {};
+          const customData = attributes.custom_data ?? {};
 
           // Check if either the user ID matches or the email matches
           return (
@@ -115,12 +114,12 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 
       // Get user orders
       const orders = await listOrders({});
-      logger.debug(`Retrieved ${orders.data?.data?.length || 0} orders from LemonSqueezy`);
+      logger.debug(`Retrieved ${orders.data?.data?.length ?? 0} orders from LemonSqueezy`);
 
       const userOrders =
         orders.data?.data?.filter((order) => {
           const attributes = order.attributes as any;
-          const customData = attributes.custom_data || {};
+          const customData = attributes.custom_data ?? {};
 
           // Check if either the user ID matches or the email matches
           const isUserOrder =
@@ -198,7 +197,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
       const userOrders =
         orders.data?.data?.filter((order) => {
           const attributes = order.attributes as any;
-          const customData = attributes.custom_data || {};
+          const customData = attributes.custom_data ?? {};
 
           // Check if either the user ID matches or the email matches
           return (
@@ -258,7 +257,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
         const userSubscriptions =
           response?.data?.data?.filter((subscription: any) => {
             const attributes = subscription.attributes;
-            const customData = attributes.custom_data || {};
+            const customData = attributes.custom_data ?? {};
 
             // Check if either the user ID matches or the email matches
             return (
@@ -307,7 +306,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
       const userOrders =
         orders.data?.data?.filter((order) => {
           const attributes = order.attributes as any;
-          const customData = attributes.custom_data || {};
+          const customData = attributes.custom_data ?? {};
 
           // Check if either the user ID matches or the email matches
           return (
@@ -327,10 +326,10 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
         }
 
         const productName = orderItem.product_name;
-        const variantName = orderItem.variant_name;
+        const _variantName = orderItem.variant_name;
 
         // Return just the product name since we now show variant separately
-        return productName || "Unknown Product";
+        return productName ?? "Unknown Product";
       };
 
       // Use for...of loop instead of forEach
@@ -441,7 +440,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
           productName: getProductName(),
           purchaseDate: new Date(attributes.created_at),
           processor: this.id,
-          discountCode: (attr.discount_code || null) as string | null,
+          discountCode: (attr.discount_code ?? null) as string | null,
           isFreeProduct: amount === 0,
           attributes,
         };
@@ -515,7 +514,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
           productName: getProductName(),
           purchaseDate: new Date(attributes.created_at),
           processor: this.id,
-          discountCode: (attr.discount_code || null) as string | null,
+          discountCode: (attr.discount_code ?? null) as string | null,
           isFreeProduct: amount === 0,
           attributes,
         };
@@ -690,7 +689,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
       .from(payments)
       .where(eq(payments.orderId, order.orderId))
       .limit(1)
-      .then((rows) => rows[0] || null);
+      .then((rows) => rows[0] ?? null);
 
     if (existingPayment) {
       logger.debug(`Order ${order.orderId} already exists`);
@@ -732,14 +731,14 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
 
     // Create payment metadata
     const paymentMetadata = {
-      productName: firstOrderItem?.product_name || "Unknown Product",
-      variantName: firstOrderItem?.variant_name || null,
-      product_name: firstOrderItem?.product_name || "Unknown Product",
-      variant_name: firstOrderItem?.variant_name || null,
-      productId: firstOrderItem?.product_id || null,
-      variantId: firstOrderItem?.variant_id || null,
-      product_id: firstOrderItem?.product_id || null,
-      variant_id: firstOrderItem?.variant_id || null,
+      productName: firstOrderItem?.product_name ?? "Unknown Product",
+      variantName: firstOrderItem?.variant_name ?? null,
+      product_name: firstOrderItem?.product_name ?? "Unknown Product",
+      variant_name: firstOrderItem?.variant_name ?? null,
+      productId: firstOrderItem?.product_id ?? null,
+      variantId: firstOrderItem?.variant_id ?? null,
+      product_id: firstOrderItem?.product_id ?? null,
+      variant_id: firstOrderItem?.variant_id ?? null,
       order_identifier: orderAttributes.identifier,
       order_number: orderAttributes.order_number,
       customer_id: orderAttributes.customer_id,
@@ -756,7 +755,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
       amount: Math.round(order.amount * 100), // Convert to cents
       status: "completed",
       processor: this.id,
-      productName: firstOrderItem?.product_name || "Unknown Product",
+      productName: firstOrderItem?.product_name ?? "Unknown Product",
       createdAt: order.purchaseDate,
       updatedAt: new Date(),
       metadata: JSON.stringify(paymentMetadata),
@@ -770,6 +769,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
    * Handle a webhook event
    * @param event The webhook event
    */
+  // eslint-disable-next-line @typescript-eslint/require-await -- provider interface contract requires async
   async handleWebhookEvent(event: any): Promise<void> {
     try {
       this.checkProviderReady();
@@ -799,6 +799,7 @@ export class LemonSqueezyProvider extends BasePaymentProvider {
    * @param options Checkout options
    * @returns The checkout URL
    */
+  // eslint-disable-next-line @typescript-eslint/require-await -- provider interface contract requires async
   async createCheckoutUrl(options: CheckoutOptions): Promise<string | null> {
     try {
       this.checkProviderReady();

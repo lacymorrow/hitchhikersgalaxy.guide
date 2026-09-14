@@ -56,26 +56,26 @@ const stats = [
 
 export function WaitlistSocialProof() {
   return (
-    <div className="py-24 bg-white dark:bg-slate-950">
+    <div className="bg-white py-24 dark:bg-slate-950">
       <div className="container px-4 md:px-6">
         {/* Stats Section */}
         <div className="mb-20">
-          <div className="text-center mb-12">
+          <div className="mb-12 text-center">
             <Badge
               variant="outline"
               className="mb-4 border-violet-200 text-violet-700 dark:border-violet-800 dark:text-violet-300"
             >
               Join the Movement
             </Badge>
-            <h2 className="mb-4 text-3xl md:text-4xl font-bold tracking-tight">
+            <h2 className="mb-4 text-3xl font-bold tracking-tight md:text-4xl">
               Developers Are Already Shipping
             </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-300">
               Real developers, real results, real time saved.
             </p>
           </div>
 
-          <div className="grid gap-8 sm:grid-cols-3 max-w-3xl mx-auto">
+          <div className="mx-auto grid max-w-3xl gap-8 sm:grid-cols-3">
             {stats.map((stat) => {
               const Icon = stat.icon;
               return (
@@ -91,7 +91,7 @@ export function WaitlistSocialProof() {
                   <div className="mb-1 font-medium text-slate-700 dark:text-slate-300">
                     {stat.label}
                   </div>
-                  <div className="text-sm text-green-600 dark:text-green-400 font-medium">
+                  <div className="text-sm font-medium text-green-600 dark:text-green-400">
                     {stat.description}
                   </div>
                 </div>
@@ -101,9 +101,9 @@ export function WaitlistSocialProof() {
         </div>
 
         {/* Testimonials Section */}
-        <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
-            <h3 className="mb-4 text-2xl md:text-3xl font-bold">What Developers Are Saying</h3>
+        <div className="mx-auto max-w-4xl">
+          <div className="mb-12 text-center">
+            <h3 className="mb-4 text-2xl font-bold md:text-3xl">What Developers Are Saying</h3>
             <p className="text-lg text-slate-600 dark:text-slate-300">
               From side projects to enterprise apps, developers love shipping faster.
             </p>
@@ -113,24 +113,25 @@ export function WaitlistSocialProof() {
             {testimonials.map((testimonial) => (
               <Card
                 key={testimonial.name}
-                className="border-slate-200 dark:border-slate-800 hover:shadow-lg transition-all duration-300"
+                className="border-slate-200 transition-all duration-300 hover:shadow-lg dark:border-slate-800"
               >
                 <CardContent className="p-6">
                   <div className="mb-4 flex items-center gap-1">
                     {Array.from({ length: testimonial.rating }).map((_, i) => (
                       <Star
+                        // biome-ignore lint/suspicious/noArrayIndexKey: static star rating, index is the only identity
                         key={`star-${testimonial.name}-${i}`}
                         className="h-4 w-4 fill-yellow-400 text-yellow-400"
                       />
                     ))}
                   </div>
                   <p className="mb-6 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                    "{testimonial.content}"
+                    &quot;{testimonial.content}&quot;
                   </p>
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
                       <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                      <AvatarFallback className="bg-violet-100 dark:bg-violet-900/20 text-violet-600 dark:text-violet-400">
+                      <AvatarFallback className="bg-violet-100 text-violet-600 dark:bg-violet-900/20 dark:text-violet-400">
                         {testimonial.name
                           .split(" ")
                           .map((n) => n[0])
@@ -138,7 +139,7 @@ export function WaitlistSocialProof() {
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <div className="font-medium text-sm text-slate-900 dark:text-slate-100">
+                      <div className="text-sm font-medium text-slate-900 dark:text-slate-100">
                         {testimonial.name}
                       </div>
                       <div className="text-xs text-slate-500 dark:text-slate-400">

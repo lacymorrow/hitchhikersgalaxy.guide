@@ -1,9 +1,11 @@
 "use server";
 
-import { existsSync } from "fs";
-import { join } from "path";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 
 // Detect whether the project uses /app or /src/app structure
+// Server actions must be async; suppress require-await.
+// eslint-disable-next-line @typescript-eslint/require-await
 export async function detectDirectoryStructure(): Promise<string> {
   try {
     // Check if src/app exists

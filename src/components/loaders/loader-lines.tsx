@@ -97,125 +97,126 @@ export const LoaderLines = ({
     >
       <div className="loader-inner">
         {[...Array(5)].map((_, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
           <div key={i} className="loader-line-wrap">
             <div className="loader-line" />
           </div>
         ))}
       </div>
 
+      {/* eslint-disable-next-line react/no-unknown-property -- styled-jsx attributes */}
       <style jsx>{`
-				.loader {
-					position: relative;
-					width: var(--base);
-					height: var(--height);
-				}
+        .loader {
+          position: relative;
+          width: var(--base);
+          height: var(--height);
+        }
 
-				.loader-fullscreen {
-					background: #000;
-					background: radial-gradient(#1a1a1a, #000);
-					bottom: 0;
-					left: 0;
-					overflow: hidden;
-					position: fixed;
-					right: 0;
-					top: 0;
-					z-index: 99999;
-				}
+        .loader-fullscreen {
+          background: #000;
+          background: radial-gradient(#1a1a1a, #000);
+          bottom: 0;
+          left: 0;
+          overflow: hidden;
+          position: fixed;
+          right: 0;
+          top: 0;
+          z-index: 99999;
+        }
 
-				.loader-inner {
-					bottom: 0;
-					height: var(--height);
-					left: 0;
-					margin: auto;
-					position: absolute;
-					right: 0;
-					top: 0;
-					width: var(--base);
-				}
+        .loader-inner {
+          bottom: 0;
+          height: var(--height);
+          left: 0;
+          margin: auto;
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: var(--base);
+        }
 
-				.loader-line-wrap {
-					animation: spin var(--speed) cubic-bezier(0.175, 0.885, 0.32, 1.275)
-						infinite;
-					box-sizing: border-box;
-					height: calc(var(--base) * 0.5);
-					left: 0;
-					overflow: hidden;
-					position: absolute;
-					top: 0;
-					transform-origin: 50% 100%;
-					width: var(--base);
-				}
+        .loader-line-wrap {
+          animation: spin var(--speed) cubic-bezier(0.175, 0.885, 0.32, 1.275) infinite;
+          box-sizing: border-box;
+          height: calc(var(--base) * 0.5);
+          left: 0;
+          overflow: hidden;
+          position: absolute;
+          top: 0;
+          transform-origin: 50% 100%;
+          width: var(--base);
+        }
 
-				.loader-line {
-					border: 4px solid transparent;
-					border-radius: 100%;
-					box-sizing: border-box;
-					height: var(--base);
-					left: 0;
-					margin: 0 auto;
-					position: absolute;
-					right: 0;
-					top: 0;
-					width: var(--base);
-				}
+        .loader-line {
+          border: 4px solid transparent;
+          border-radius: 100%;
+          box-sizing: border-box;
+          height: var(--base);
+          left: 0;
+          margin: 0 auto;
+          position: absolute;
+          right: 0;
+          top: 0;
+          width: var(--base);
+        }
 
-				.loader-line-wrap:nth-child(1) {
-					animation-delay: calc(var(--speed) * -0.025);
-				}
-				.loader-line-wrap:nth-child(2) {
-					animation-delay: calc(var(--speed) * -0.05);
-				}
-				.loader-line-wrap:nth-child(3) {
-					animation-delay: calc(var(--speed) * -0.075);
-				}
-				.loader-line-wrap:nth-child(4) {
-					animation-delay: calc(var(--speed) * -0.1);
-				}
-				.loader-line-wrap:nth-child(5) {
-					animation-delay: calc(var(--speed) * -0.125);
-				}
+        .loader-line-wrap:nth-child(1) {
+          animation-delay: calc(var(--speed) * -0.025);
+        }
+        .loader-line-wrap:nth-child(2) {
+          animation-delay: calc(var(--speed) * -0.05);
+        }
+        .loader-line-wrap:nth-child(3) {
+          animation-delay: calc(var(--speed) * -0.075);
+        }
+        .loader-line-wrap:nth-child(4) {
+          animation-delay: calc(var(--speed) * -0.1);
+        }
+        .loader-line-wrap:nth-child(5) {
+          animation-delay: calc(var(--speed) * -0.125);
+        }
 
-				.loader-line-wrap:nth-child(1) .loader-line {
-					border-color: var(--color-1);
-					height: calc(var(--base) * 0.9);
-					width: calc(var(--base) * 0.9);
-					top: calc(var(--base) * 0.07);
-				}
-				.loader-line-wrap:nth-child(2) .loader-line {
-					border-color: var(--color-2);
-					height: calc(var(--base) * 0.76);
-					width: calc(var(--base) * 0.76);
-					top: calc(var(--base) * 0.14);
-				}
-				.loader-line-wrap:nth-child(3) .loader-line {
-					border-color: var(--color-3);
-					height: calc(var(--base) * 0.62);
-					width: calc(var(--base) * 0.62);
-					top: calc(var(--base) * 0.21);
-				}
-				.loader-line-wrap:nth-child(4) .loader-line {
-					border-color: var(--color-4);
-					height: calc(var(--base) * 0.48);
-					width: calc(var(--base) * 0.48);
-					top: calc(var(--base) * 0.28);
-				}
-				.loader-line-wrap:nth-child(5) .loader-line {
-					border-color: var(--color-5);
-					height: calc(var(--base) * 0.34);
-					width: calc(var(--base) * 0.34);
-					top: calc(var(--base) * 0.35);
-				}
+        .loader-line-wrap:nth-child(1) .loader-line {
+          border-color: var(--color-1);
+          height: calc(var(--base) * 0.9);
+          width: calc(var(--base) * 0.9);
+          top: calc(var(--base) * 0.07);
+        }
+        .loader-line-wrap:nth-child(2) .loader-line {
+          border-color: var(--color-2);
+          height: calc(var(--base) * 0.76);
+          width: calc(var(--base) * 0.76);
+          top: calc(var(--base) * 0.14);
+        }
+        .loader-line-wrap:nth-child(3) .loader-line {
+          border-color: var(--color-3);
+          height: calc(var(--base) * 0.62);
+          width: calc(var(--base) * 0.62);
+          top: calc(var(--base) * 0.21);
+        }
+        .loader-line-wrap:nth-child(4) .loader-line {
+          border-color: var(--color-4);
+          height: calc(var(--base) * 0.48);
+          width: calc(var(--base) * 0.48);
+          top: calc(var(--base) * 0.28);
+        }
+        .loader-line-wrap:nth-child(5) .loader-line {
+          border-color: var(--color-5);
+          height: calc(var(--base) * 0.34);
+          width: calc(var(--base) * 0.34);
+          top: calc(var(--base) * 0.35);
+        }
 
-				@keyframes spin {
-					0%,
-					15% {
-						transform: rotate(0);
-					}
-					100% {
-						transform: rotate(360deg);
-					}
-				}
-			`}</style>
+        @keyframes spin {
+          0%,
+          15% {
+            transform: rotate(0);
+          }
+          100% {
+            transform: rotate(360deg);
+          }
+        }
+      `}</style>
     </div>
   );
 };

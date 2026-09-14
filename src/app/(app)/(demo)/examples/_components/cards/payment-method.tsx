@@ -71,7 +71,7 @@ export function CardsPaymentMethod() {
             <RadioGroupItem value="apple" id="apple" className="peer sr-only" aria-label="Apple" />
             <Label
               htmlFor="apple"
-              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary "
+              className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-transparent p-4 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
             >
               <Icons.apple className="mb-3 h-6 w-6" />
               Apple
@@ -121,6 +121,7 @@ export function CardsPaymentMethod() {
               </SelectTrigger>
               <SelectContent>
                 {Array.from({ length: 10 }, (_, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
                   <SelectItem key={i} value={`${new Date().getFullYear() + i}`}>
                     {new Date().getFullYear() + i}
                   </SelectItem>

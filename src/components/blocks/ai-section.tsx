@@ -76,23 +76,23 @@ export function ${prompt
 
   return (
     <section className="flex flex-col items-center justify-center px-4 py-20">
-      <div className="w-full max-w-[860px] mx-auto space-y-20">
-        <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-[80px] font-medium tracking-[-0.02em] text-center text-white">
+      <div className="mx-auto w-full max-w-[860px] space-y-20">
+        <h1 className="text-center text-4xl font-medium tracking-[-0.02em] text-white sm:text-5xl md:text-6xl lg:text-[80px]">
           What can I help you ship?
         </h1>
 
         <div className="relative">
-          <div className="relative bg-[#1C1C1C] rounded-xl border border-white/[0.08] shadow-[0_0_1px_1px_rgba(0,0,0,0.3)]">
+          <div className="relative rounded-xl border border-white/[0.08] bg-[#1C1C1C] shadow-[0_0_1px_1px_rgba(0,0,0,0.3)]">
             <Input
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask v0 a question..."
-              className="border-0 bg-transparent h-[60px] px-6 text-lg text-white placeholder:text-white/50 shadow-none outline-none ring-0 focus-visible:ring-0"
+              className="h-[60px] border-0 bg-transparent px-6 text-lg text-white shadow-none outline-none ring-0 placeholder:text-white/50 focus-visible:ring-0"
               disabled={isGenerating}
             />
-            <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
-              <div className="w-px h-6 bg-white/10" />
+            <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1.5">
+              <div className="h-6 w-px bg-white/10" />
               <Button
                 size="icon"
                 variant="ghost"
@@ -113,12 +113,12 @@ export function ${prompt
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="w-full max-w-[860px] mx-auto mt-8 relative"
+            className="relative mx-auto mt-8 w-full max-w-[860px]"
           >
-            <div className="bg-[#1C1C1C] rounded-xl border border-white/[0.08] overflow-hidden">
+            <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-[#1C1C1C]">
               <pre
                 ref={responseRef}
-                className="text-sm text-white/70 font-mono p-6 h-[200px] overflow-hidden"
+                className="h-[200px] overflow-hidden p-6 font-mono text-sm text-white/70"
               >
                 <code>{response}</code>
               </pre>
@@ -132,24 +132,24 @@ export function ${prompt
                     className="absolute inset-0 flex items-end justify-center p-6"
                   >
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-b from-transparent via-black/80 to-black backdrop-blur-sm opacity-90"
+                      className="absolute inset-0 bg-gradient-to-b from-transparent via-black/80 to-black opacity-90 backdrop-blur-sm"
                       initial={{ backdropFilter: "blur(0px)" }}
                       animate={{ backdropFilter: "blur(8px)" }}
                       exit={{ backdropFilter: "blur(0px)" }}
                       transition={{ duration: 0.3 }}
                     />
                     <motion.div
-                      className="w-full max-w-md text-center relative z-10 space-y-4"
+                      className="relative z-10 w-full max-w-md space-y-4 text-center"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: 10 }}
                       transition={{ duration: 0.3, delay: 0.15 }}
                     >
-                      <p className="text-white/70 ">
-                        We <HeartFilledIcon className="w-4 h-4 inline-block" /> v0.
+                      <p className="text-white/70">
+                        We <HeartFilledIcon className="inline-block h-4 w-4" /> v0.
                       </p>
                       <BuyButton />
-                      <p className="text-white/70 text-xs">
+                      <p className="text-xs text-white/70">
                         See more at{" "}
                         <Link
                           href={"https://v0.dev"}

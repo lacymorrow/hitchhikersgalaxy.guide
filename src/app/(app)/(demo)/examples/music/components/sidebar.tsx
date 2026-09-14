@@ -166,6 +166,7 @@ export function Sidebar({ className, playlists }: SidebarProps) {
             <div className="space-y-1 p-2">
               {playlists?.map((playlist, i) => (
                 <Button
+                  // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
                   key={`${playlist}-${i}`}
                   variant="ghost"
                   className="w-full justify-start font-normal"

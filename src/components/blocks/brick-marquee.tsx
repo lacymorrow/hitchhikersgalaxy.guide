@@ -10,6 +10,14 @@ const links = [
   { name: "cloud0.dev", href: "https://cloud0.dev" },
   { name: "junebug.ai", href: "https://junebug.ai" },
   { name: "thneed.ai", href: "https://thneed.ai" },
+  { name: "vibe.rehab", href: "https://vibe.rehab" },
+  { name: "cliphub.fyi", href: "https://cliphub.fyi" },
+  { name: "flit.my", href: "https://flit.my" },
+  { name: "buildandserve.com", href: "https://buildandserve.com" },
+  { name: "coderev.dev", href: "https://coderev.dev" },
+  { name: "hitchhikersgalaxy.guide", href: "https://hitchhikersgalaxy.guide" },
+  { name: "resume.lacy.sh", href: "https://resume.lacy.sh" },
+  { name: "lash.lacy.sh", href: "https://lash.lacy.sh" },
   { name: "lacy.sh", href: "https://lacy.sh" },
   { name: "lacy.is", href: "https://lacy.is" },
   { name: "lacymorrow.com", href: "https://lacymorrow.com" },
@@ -92,95 +100,99 @@ export function BrickMarquee() {
   return (
     <>
       <style jsx>{`
-  /* Base styles */
-  .dev-tools-container {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    z-index: 50;
-    width: 100%;
-    overflow: hidden;
-  }
+        /* Base styles */
+        .dev-tools-container {
+          position: fixed;
+          bottom: 0;
+          right: 0;
+          z-index: 50;
+          width: 100%;
+          overflow: hidden;
+        }
 
+        /* Combined bar and square as a single element with smooth transitions */
+        .bar {
+          opacity: 0.5;
+          position: fixed;
+          bottom: 0;
+          right: 0;
+          height: 16px;
+          width: 16px; /* Square width when collapsed */
+          cursor: pointer;
+          transform-origin: bottom right;
+          /* Smooth transition for width change */
+          transition: width 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
 
-  /* Combined bar and square as a single element with smooth transitions */
-  .bar {
-	opacity: 0.5;
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    height: 16px;
-    width: 16px; /* Square width when collapsed */
-    cursor: pointer;
-    transform-origin: bottom right;
-    /* Smooth transition for width change */
-    transition: width 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
-  }
+        /* When nearby, grow in width instead of translating */
+        .bar.nearby {
+          opacity: 1;
+          width: 20px; /* Grow by 4px instead of translating */
+        }
 
-  /* When nearby, grow in width instead of translating */
-  .bar.nearby {
-	opacity: 1;
-    width: 20px; /* Grow by 4px instead of translating */
-  }
+        /* When expanded, show full bar with square */
+        .bar.expanded {
+          opacity: 1;
+          width: 316px; /* 300px bar + 16px square */
+        }
 
-  /* When expanded, show full bar with square */
-  .bar.expanded {
-	opacity: 1;
-    width: 316px; /* 300px bar + 16px square */
-  }
+        /* Marquee styles */
+        .marquee-container {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 16px; /* Leave space for square */
+          height: 16px;
+          overflow: hidden;
+          display: flex;
+          align-items: center;
+          opacity: 0;
+          transition: opacity 400ms ease;
+        }
 
-  /* Marquee styles */
-  .marquee-container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 16px; /* Leave space for square */
-    height: 16px;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    opacity: 0;
-    transition: opacity 400ms ease;
-  }
+        .marquee-container.visible {
+          opacity: 1;
+        }
 
-  .marquee-container.visible {
-    opacity: 1;
-  }
+        .marquee {
+          white-space: nowrap;
+          display: flex;
+          align-items: center;
+          height: 100%;
+          padding-top: 2px;
+          padding-bottom: 2px;
+          padding-left: 22px;
+          font-size: 10px;
+          line-height: 1;
+          font-weight: 500;
+          font-family:
+            ui-sans-serif,
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            sans-serif;
+        }
 
-  .marquee {
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    height: 100%;
-    padding-top:2px;
-    padding-bottom:2px;
-    padding-left: 22px;
-    font-size: 10px;
-    line-height: 1;
-    font-weight: 500;
-    font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-  }
+        .marquee span:hover {
+          transform: scale(1.2);
+          color: #f0f0f0;
+        }
 
-  .marquee span:hover {
-    transform: scale(1.2);
-    color: #f0f0f0;
-  }
+        /* Animation for marquee */
+        @keyframes marquee {
+          0% {
+            transform: translateX(0);
+          }
+          100% {
+            transform: translateX(-100%);
+          }
+        }
 
-  /* Animation for marquee */
-  @keyframes marquee {
-    0% {
-      transform: translateX(0);
-    }
-    100% {
-      transform: translateX(-100%);
-    }
-  }
-
-  .animate-marquee {
-    display: inline-block;
-    animation: marquee 20s linear infinite;
-  }
-`}</style>
+        .animate-marquee {
+          display: inline-block;
+          animation: marquee 20s linear infinite;
+        }
+      `}</style>
 
       <div ref={containerRef} className="dev-tools-container">
         {/* Hidden checkbox for state */}
@@ -188,7 +200,7 @@ export function BrickMarquee() {
           ref={checkboxRef}
           type="checkbox"
           id="bar-toggle"
-          className="sr-only peer"
+          className="peer sr-only"
           aria-label="Toggle animation"
         />
 
@@ -209,7 +221,7 @@ export function BrickMarquee() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-block transform transition-transform duration-300 ease-in-out hover:scale-120 text-primary-foreground hover:text-primary-foreground/80 mx-2"
+                  className="hover:scale-120 mx-2 inline-block transform text-primary-foreground transition-transform duration-300 ease-in-out hover:text-primary-foreground/80"
                   style={{ textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}
                 >
                   <span>{link.name}</span>

@@ -1,6 +1,6 @@
 "use client";
 
-import Meteors from "@/components/ui/meteors";
+import { Meteors } from "@/components/ui/meteors";
 import { cn } from "@/lib/utils";
 
 export function MeteorsHero({

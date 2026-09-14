@@ -1,4 +1,3 @@
-import * as React from "react";
 import { Button } from "@/components/ui/button";
 
 interface HeroProps {
@@ -11,7 +10,7 @@ interface HeroProps {
 
 export const Hero = ({ title, subtitle, buttonText, buttonLink, backgroundImage }: HeroProps) => {
   return (
-    <div className="relative min-h-[600px] flex items-center justify-center">
+    <div className="relative flex min-h-[600px] items-center justify-center">
       {/* Background Image with Overlay */}
       {backgroundImage && (
         <div
@@ -27,9 +26,9 @@ export const Hero = ({ title, subtitle, buttonText, buttonLink, backgroundImage 
       )}
 
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 text-center">
-        <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">{title}</h1>
-        <p className="text-xl md:text-2xl mb-8 text-gray-200 max-w-2xl mx-auto">{subtitle}</p>
+      <div className="container relative z-10 mx-auto px-4 text-center">
+        <h1 className="mb-6 text-balance text-4xl font-bold text-white md:text-6xl">{title}</h1>
+        <p className="mx-auto mb-8 max-w-2xl text-xl text-gray-200 md:text-2xl">{subtitle}</p>
         <Button size="lg" asChild className="bg-primary hover:bg-primary/90">
           <a href={buttonLink}>{buttonText}</a>
         </Button>

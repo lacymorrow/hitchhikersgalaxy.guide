@@ -30,8 +30,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const owner = env.GITHUB_REPO_OWNER || "lacymorrow";
-    const repo = env.GITHUB_REPO_NAME || "shipkit";
+    const owner = env.GITHUB_REPO_OWNER ?? "lacymorrow";
+    const repo = env.GITHUB_REPO_NAME ?? "shipkit";
 
     // Sanitize and validate all file paths
     const sanitizedFiles = files.map((file) => ({
@@ -157,7 +157,7 @@ export async function POST(req: Request) {
     if (isGitHubError) {
       const gitHubError = error as any;
       errorMessage = `GitHub API error (${gitHubError.status})`;
-      errorDetails = gitHubError.message || errorDetails;
+      errorDetails = gitHubError.message ?? errorDetails;
 
       // Additional helpful information for common GitHub errors
       if (gitHubError.status === 422) {

@@ -17,9 +17,7 @@ let containerManagerInstance: ContainerManager | null = null;
 
 // Get or create the container manager instance
 function getContainerManager(): ContainerManager {
-  if (!containerManagerInstance) {
-    containerManagerInstance = new ContainerManager();
-  }
+  containerManagerInstance ??= new ContainerManager();
   return containerManagerInstance;
 }
 
@@ -62,7 +60,7 @@ export const ShadcnCommand = ({
   const makeCommand = useCallback(() => {
     const parts = command.split(" ");
     // If the command already contains npx shadcn@latest, just return it
-    if (parts[0] === "npx" && parts.length > 1 && parts[1] && parts[1].includes("shadcn")) {
+    if (parts[0] === "npx" && parts.length > 1 && parts[1]?.includes("shadcn")) {
       return command;
     }
     // Otherwise, extract just the component name or command parts
@@ -111,7 +109,7 @@ export const ShadcnCommand = ({
 
           // Write to terminal if available
           if (terminalRef.current?.terminal) {
-            terminalRef.current.write(`${window.webContainerLogs}`);
+            terminalRef.current.write(JSON.stringify(window.webContainerLogs));
           }
         }
       }, TERMINAL_REFRESH_INTERVAL); // Update more frequently for smoother animations
@@ -210,7 +208,7 @@ export const ShadcnCommand = ({
         .map((log) => {
           // Color coding for logs
           const formattedMsg = `${log.message}`;
-          let formattedData = log.data || "";
+          let formattedData = log.data ?? "";
 
           // Format prompt outputs and responses
           if (typeof formattedData === "string") {
@@ -229,7 +227,7 @@ export const ShadcnCommand = ({
         .join("\n");
 
       // Process terminal output to clean up repetitive messages
-      const processedOutput =
+      const _processedOutput =
         processTerminalOutput(formattedLogs) || "Command completed successfully";
       // setCommandOutput(processedOutput);
       setProgressMessage("Command completed successfully");
@@ -329,11 +327,11 @@ export const ShadcnCommand = ({
       <div className="space-y-4">
         <div className="flex flex-col gap-3">
           <div className="relative flex w-full items-center">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
               <TerminalIcon className="h-4 w-4 text-muted-foreground" />
             </div>
             <Input
-              className="pl-10 pr-20 font-mono text-sm h-12 bg-muted/40 border-muted focus:border-primary/50 focus:ring-1 focus:ring-primary/50"
+              className="h-12 border-muted bg-muted/40 pl-10 pr-20 font-mono text-sm focus:border-primary/50 focus:ring-1 focus:ring-primary/50"
               placeholder="npx shadcn@latest add button"
               value={command}
               onChange={(e) => setCommand(e.target.value)}
@@ -342,23 +340,23 @@ export const ShadcnCommand = ({
             <Button
               onClick={runCommand}
               disabled={isLoading || !webContainerSupported || isLoadingFiles}
-              className="absolute right-1 px-4 py-1 h-10"
+              className="absolute right-1 h-10 px-4 py-1"
               size="sm"
               variant={isLoading || isCommandQueued || isLoadingFiles ? "outline" : "default"}
             >
               {isLoading ? (
                 <span className="flex items-center">
-                  <span className="animate-spin mr-2 h-3 w-3 border-2 border-current border-t-transparent rounded-full" />
+                  <span className="mr-2 h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
                   Running
                 </span>
               ) : isLoadingFiles ? (
                 <span className="flex items-center">
-                  <span className="animate-spin mr-2 h-3 w-3 border-2 border-current border-t-transparent rounded-full" />
+                  <span className="mr-2 h-3 w-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
                   Loading
                 </span>
               ) : isCommandQueued ? (
                 <span className="flex items-center">
-                  <span className="animate-pulse mr-2">⏱️</span>
+                  <span className="mr-2 animate-pulse">⏱️</span>
                   Queued
                 </span>
               ) : (
@@ -378,18 +376,18 @@ export const ShadcnCommand = ({
         </div>
 
         {isLoadingFiles && (
-          <div className="flex items-center justify-center p-3 bg-muted/30 rounded-md text-sm text-muted-foreground border border-dashed">
-            <div className="animate-spin mr-2 h-3 w-3 border-2 border-primary border-t-transparent rounded-full" />
+          <div className="flex items-center justify-center rounded-md border border-dashed bg-muted/30 p-3 text-sm text-muted-foreground">
+            <div className="mr-2 h-3 w-3 animate-spin rounded-full border-2 border-primary border-t-transparent" />
             <span>{loadingMessage}</span>
           </div>
         )}
 
         {(isLoading || isCommandQueued) && progressMessage && (
-          <div className="flex items-center justify-center p-3 bg-muted/30 rounded-md text-sm text-muted-foreground border border-dashed">
+          <div className="flex items-center justify-center rounded-md border border-dashed bg-muted/30 p-3 text-sm text-muted-foreground">
             {isLoading && (
-              <div className="animate-spin mr-2 h-3 w-3 border-2 border-primary border-t-transparent rounded-full" />
+              <div className="mr-2 h-3 w-3 animate-spin rounded-full border-2 border-primary border-t-transparent" />
             )}
-            {isCommandQueued && <span className="animate-pulse mr-2">⏱️</span>}
+            {isCommandQueued && <span className="mr-2 animate-pulse">⏱️</span>}
             <span>{progressMessage}</span>
           </div>
         )}
@@ -407,24 +405,24 @@ export const ShadcnCommand = ({
         )}
 
         {(commandOutput || changedFiles.length > 0) && (
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full mt-4">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="mt-4 w-full">
             <TabsList className="grid w-full grid-cols-2">
               <TabsTrigger value="command" className="text-xs">
-                <InfoIcon className="h-3 w-3 mr-2" />
+                <InfoIcon className="mr-2 h-3 w-3" />
                 Terminal Output
               </TabsTrigger>
               <TabsTrigger value="files" disabled={changedFiles.length === 0} className="text-xs">
-                <FileIcon className="h-3 w-3 mr-2" />
+                <FileIcon className="mr-2 h-3 w-3" />
                 Changed Files {changedFiles.length > 0 && `(${changedFiles.length})`}
               </TabsTrigger>
             </TabsList>
             <TabsContent value="command" className="mt-2">
-              <div className="w-full p-0 bg-black rounded-md text-white overflow-hidden h-[300px] font-mono text-sm">
+              <div className="h-[300px] w-full overflow-hidden rounded-md bg-black p-0 font-mono text-sm text-white">
                 <XTermComponent initialText={commandOutput} ref={terminalRef} />
               </div>
             </TabsContent>
             <TabsContent value="files" className="mt-2 max-h-[300px] overflow-auto">
-              <FileChangeDisplay changedFiles={changedFiles} onDownloadAll={() => {}} />
+              <FileChangeDisplay changedFiles={changedFiles} />
             </TabsContent>
           </Tabs>
         )}

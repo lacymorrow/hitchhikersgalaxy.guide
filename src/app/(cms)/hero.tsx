@@ -36,7 +36,9 @@ export const Hero = ({ block, className }: HeroProps) => {
         })}
       >
         <div className="space-y-6">
-          <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">{heading}</h1>
+          <h1 className="text-balance text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
+            {heading}
+          </h1>
           {subheading && <p className="text-xl text-muted-foreground">{subheading}</p>}
           {ctaText && ctaLink && (
             <div className="pt-4">

@@ -40,7 +40,7 @@ function SortableListItem({
 }: SortableListItemProps) {
   const [ref, bounds] = useMeasure();
   const [isDragging, setIsDragging] = useState(false);
-  const [isDraggable, setIsDraggable] = useState(true);
+  const [isDraggable, _setIsDraggable] = useState(true);
   const dragControls = useDragControls();
 
   const handleDragStart = (event: any) => {
@@ -156,7 +156,7 @@ function SortableListItem({
               </AnimatePresence>
 
               {/* List Item Children */}
-              {renderExtra && renderExtra(item)}
+              {renderExtra?.(item)}
             </motion.div>
           </div>
           <div
@@ -220,6 +220,7 @@ function SortableListItem({
               className="inset-0 z-0 border-spacing-1 rounded-l-sm rounded-r-xl border-r-2 border-r-red-300/60 bg-[#161716]/80 shadow-[0_1px_0_0_rgba(255,255,255,0.03)_inset,0_0_0_1px_rgba(255,255,255,0.03)_inset,0_0_0_1px_rgba(0,0,0,0.1),0_2px_2px_0_rgba(0,0,0,0.1),0_4px_4px_0_rgba(0,0,0,0.1),0_8px_8px_0_rgba(0,0,0,0.1)] dark:bg-[#161716]/50"
             >
               <button
+                type="button"
                 className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
                 onClick={() => onRemoveItem(item.id)}
               >

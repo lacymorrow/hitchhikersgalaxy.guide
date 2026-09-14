@@ -46,7 +46,6 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
         <PopoverTrigger asChild>
           <Button
             variant="outline"
-            // biome-ignore lint/a11y/useSemanticElements: custom combobox
             role="combobox"
             aria-expanded={open}
             aria-label="Select a model"

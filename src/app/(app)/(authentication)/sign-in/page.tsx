@@ -10,6 +10,7 @@ import { env } from "@/env";
 export const metadata: Metadata = constructMetadata({
   title: "Sign In",
   description: `Sign in to your ${siteConfig.name} account to access your dashboard, projects, and settings.`,
+  noIndex: true,
 });
 
 export default function SignInPage() {
@@ -24,7 +25,7 @@ export default function SignInPage() {
           </div>
           {siteConfig.title}
         </div>
-        <div className="text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
+        <div className="flex items-center justify-center gap-2 text-center text-xs text-muted-foreground">
           <span aria-hidden="true">&gt;</span>
           <span>Login and sign-up are not available at this time.</span>
         </div>

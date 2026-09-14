@@ -21,7 +21,7 @@ export default function AppearancePage() {
   const [isPending, startTransition] = React.useTransition();
   const { theme, setTheme } = useTheme();
 
-  async function handleThemeChange(newTheme: Theme) {
+  function handleThemeChange(newTheme: Theme) {
     if (isPending) return;
 
     startTransition(async () => {

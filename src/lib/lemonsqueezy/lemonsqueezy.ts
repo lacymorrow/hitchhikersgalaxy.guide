@@ -170,10 +170,10 @@ export const getAllOrders = async () => {
         userEmail: attributes.user_email ?? "Unknown",
         userName: attributes.user_name,
         // Include additional user fields if available
-        userAddress: attr.user_address || null,
-        userCity: attr.user_city || null,
-        userCountry: attr.user_country || null,
-        userPhone: attr.user_phone || null,
+        userAddress: attr.user_address ?? null,
+        userCity: attr.user_city ?? null,
+        userCountry: attr.user_country ?? null,
+        userPhone: attr.user_phone ?? null,
         // Include any custom user properties
         customUserData,
         amount,
@@ -181,7 +181,7 @@ export const getAllOrders = async () => {
         productName: getProductName(),
         purchaseDate: new Date(attributes.created_at),
         // Include discount code if available - use type assertion to avoid TypeScript error
-        discountCode: (attr.discount_code || null) as string | null,
+        discountCode: (attr.discount_code ?? null) as string | null,
         isFreeProduct, // Add this field to distinguish free vs discounted products
         attributes,
       };
@@ -213,7 +213,7 @@ export const getLemonSqueezyPaymentStatus = async (userId: string): Promise<bool
     const userOrders =
       orders.data?.data?.filter((order) => {
         const attributes = order.attributes as LemonSqueezyOrderAttributes;
-        const customData = attributes.custom_data || {};
+        const customData = attributes.custom_data ?? {};
 
         // Check if either the user ID matches or the email matches
         return (
@@ -338,7 +338,7 @@ export const hasUserPurchasedProduct = async (
     const userOrders =
       orders.data?.data?.filter((order) => {
         const attributes = order.attributes as LemonSqueezyOrderAttributes;
-        const customData = attributes.custom_data || {};
+        const customData = attributes.custom_data ?? {};
 
         // Check if either the user ID matches or the email matches
         return (
@@ -404,7 +404,7 @@ export const hasUserActiveSubscription = async (userId: string): Promise<boolean
       const userSubscriptions =
         response?.data?.data?.filter((subscription: any) => {
           const attributes = subscription.attributes;
-          const customData = attributes.custom_data || {};
+          const customData = attributes.custom_data ?? {};
 
           // Check if either the user ID matches or the email matches
           return (
@@ -455,7 +455,7 @@ export const getUserPurchasedProducts = async (userId: string): Promise<any[]> =
     const userOrders =
       orders.data?.data?.filter((order) => {
         const attributes = order.attributes as LemonSqueezyOrderAttributes;
-        const customData = attributes.custom_data || {};
+        const customData = attributes.custom_data ?? {};
 
         // Check if either the user ID matches or the email matches
         return (
@@ -511,7 +511,7 @@ export const getUserPurchasedProducts = async (userId: string): Promise<any[]> =
 export const getVariantIdForProduct = async (productKey: string): Promise<string | null> => {
   try {
     const { siteConfig } = await import("@/config/site-config");
-    return siteConfig.store.products[productKey] || null;
+    return siteConfig.store.products[productKey] ?? null;
   } catch (error) {
     logger.error("Error getting variant ID for product:", error);
     return null;
@@ -543,7 +543,7 @@ export const getProductKeyForVariant = async (variantId: string): Promise<string
     const productKey = Object.keys(siteConfig.store.products).find(
       (key) => siteConfig.store.products[key] === variantId
     );
-    return productKey || null;
+    return productKey ?? null;
   } catch (error) {
     logger.error("Error getting product key for variant:", error);
     return null;

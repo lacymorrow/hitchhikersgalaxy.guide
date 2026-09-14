@@ -24,7 +24,7 @@ export function HeroSection() {
               <PageHeaderHeading className="text-3xl tracking-tighter sm:text-5xl xl:text-6xl/none">
                 {siteConfig.title}:
                 <br />
-                The Next.js 15 Accelerator.
+                The Next.js 16 Accelerator.
               </PageHeaderHeading>
               <PageHeaderDescription className="max-w-[600px] md:text-xl">
                 Launch your Next.js projects with {siteConfig.title}. Fast, flexible, and

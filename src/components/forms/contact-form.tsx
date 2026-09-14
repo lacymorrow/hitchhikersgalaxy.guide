@@ -63,11 +63,11 @@ export function ContactForm({ defaultValues, onSuccess, className }: ContactForm
       } else {
         toast({
           title: "Error",
-          description: result.error || "Something went wrong. Please try again.",
+          description: result.error ?? "Something went wrong. Please try again.",
           variant: "destructive",
         });
       }
-    } catch (error) {
+    } catch (_error) {
       toast({
         title: "Error",
         description: "Something went wrong. Please try again.",
@@ -82,7 +82,7 @@ export function ContactForm({ defaultValues, onSuccess, className }: ContactForm
         <div
           className={cn(
             "grid gap-6",
-            form.formState.isSubmitting && "opacity-60 pointer-events-none"
+            form.formState.isSubmitting && "pointer-events-none opacity-60"
           )}
         >
           {/* Name Field */}

@@ -179,8 +179,8 @@ export const WhyNow = () => {
             Market Timing
           </Badge>
         </div>
-        <h2 className="text-3xl font-bold text-center">The Perfect Storm of Opportunity</h2>
-        <p className="text-lg text-center text-muted-foreground max-w-2xl mx-auto">
+        <h2 className="text-center text-3xl font-bold">The Perfect Storm of Opportunity</h2>
+        <p className="mx-auto max-w-2xl text-center text-lg text-muted-foreground">
           Three major market shifts are creating unprecedented opportunities for founders who can
           move fast.
         </p>
@@ -201,7 +201,7 @@ export const WhyNow = () => {
             }}
             viewport={{ once: true }}
           >
-            <Card className="p-6 h-full flex flex-col hover:shadow-lg transition-all duration-300">
+            <Card className="flex h-full flex-col p-6 transition-all duration-300 hover:shadow-lg">
               <motion.div
                 className="mb-4"
                 whileHover={{ rotate: [0, -10, 10, -5, 5, 0], scale: 1.1 }}
@@ -209,8 +209,8 @@ export const WhyNow = () => {
               >
                 <trend.icon className="h-8 w-8 text-primary" />
               </motion.div>
-              <h3 className="text-xl font-semibold mb-2">{trend.title}</h3>
-              <p className="text-muted-foreground mb-6 flex-grow">{trend.description}</p>
+              <h3 className="mb-2 text-xl font-semibold">{trend.title}</h3>
+              <p className="mb-6 flex-grow text-muted-foreground">{trend.description}</p>
               <div className="border-t pt-4">
                 <div className="text-2xl font-bold text-primary">{trend.metric}</div>
                 <div className="flex items-center justify-between">
@@ -239,9 +239,9 @@ export const WhyNow = () => {
             }}
             viewport={{ once: true }}
           >
-            <Card className="p-4 hover:shadow-md transition-all duration-300">
+            <Card className="p-4 transition-all duration-300 hover:shadow-md">
               <motion.div
-                className="flex items-center gap-2 mb-2"
+                className="mb-2 flex items-center gap-2"
                 whileHover={{ x: 5 }}
                 transition={{ duration: 0.2 }}
               >
@@ -256,7 +256,7 @@ export const WhyNow = () => {
               >
                 {stat.value}
               </motion.div>
-              <div className="flex items-center justify-between mt-1">
+              <div className="mt-1 flex items-center justify-between">
                 <span className="text-xs text-muted-foreground">{stat.subtext}</span>
                 <Badge variant="outline" className="text-[10px]">
                   {stat.source}
@@ -268,15 +268,15 @@ export const WhyNow = () => {
       </div>
 
       <div className="space-y-8">
-        <div className="text-center space-y-4">
+        <div className="space-y-4 text-center">
           <Badge variant="outline" className="gap-2">
             <Building2 className="h-4 w-4" />
             Industry Verticals
           </Badge>
-          <h3 className="text-3xl font-bold mb-2 bg-gradient-to-r from-primary/80 via-primary to-primary/80 bg-clip-text text-transparent">
+          <h3 className="mb-2 bg-gradient-to-r from-primary/80 via-primary to-primary/80 bg-clip-text text-3xl font-bold text-transparent">
             High-Growth Sectors
           </h3>
-          <p className="text-muted-foreground max-w-2xl mx-auto text-lg">
+          <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
             AI adoption is accelerating across industries, creating massive opportunities in these
             key verticals.
           </p>
@@ -310,21 +310,21 @@ export const WhyNow = () => {
                   )}
                 </AnimatePresence>
 
-                <div className="relative p-6 h-full flex flex-col">
+                <div className="relative flex h-full flex-col p-6">
                   <motion.div
-                    className="flex items-center justify-between mb-4"
+                    className="mb-4 flex items-center justify-between"
                     whileHover={{ x: 5 }}
                     transition={{ duration: 0.2 }}
                   >
                     <div className="flex items-center gap-3">
                       <motion.div
-                        className="p-2 rounded-lg bg-primary/10 text-primary"
+                        className="rounded-lg bg-primary/10 p-2 text-primary"
                         whileHover={{ rotate: 360 }}
                         transition={{ duration: 0.5 }}
                       >
                         <vertical.icon className="h-5 w-5" />
                       </motion.div>
-                      <h4 className="font-semibold text-lg">{vertical.industry}</h4>
+                      <h4 className="text-lg font-semibold">{vertical.industry}</h4>
                     </div>
                     <motion.div whileHover={{ scale: 1.1 }}>
                       <Badge variant="secondary" className="text-xs font-medium">
@@ -334,21 +334,21 @@ export const WhyNow = () => {
                   </motion.div>
 
                   <motion.div
-                    className="mb-4 p-3 rounded-lg bg-muted/50"
+                    className="mb-4 rounded-lg bg-muted/50 p-3"
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div className="text-3xl font-bold text-primary bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+                    <div className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-3xl font-bold text-primary text-transparent">
                       {vertical.growth}
                     </div>
                     <div className="text-sm text-muted-foreground">{vertical.projection}</div>
                   </motion.div>
 
-                  <p className="text-sm text-muted-foreground mb-6 flex-grow leading-relaxed">
+                  <p className="mb-6 flex-grow text-sm leading-relaxed text-muted-foreground">
                     {vertical.description}
                   </p>
 
-                  <div className="flex flex-wrap gap-2 pt-4 border-t border-dashed border-muted-foreground/20">
+                  <div className="flex flex-wrap gap-2 border-t border-dashed border-muted-foreground/20 pt-4">
                     {vertical.trends.map((trend) => (
                       <motion.div
                         key={trend}
@@ -358,9 +358,9 @@ export const WhyNow = () => {
                       >
                         <Badge
                           variant="outline"
-                          className={`text-xs bg-background transition-all duration-300 ${
+                          className={`bg-background text-xs transition-all duration-300 ${
                             hoveredTrend === trend
-                              ? "bg-primary/10 scale-110"
+                              ? "scale-110 bg-primary/10"
                               : "hover:bg-primary/5"
                           }`}
                         >
@@ -388,7 +388,7 @@ export const WhyNow = () => {
       </div>
 
       <div className="rounded-lg bg-muted/50 p-8">
-        <div className="flex items-center justify-between mb-6">
+        <div className="mb-6 flex items-center justify-between">
           <h3 className="text-xl font-semibold">Market Opportunities</h3>
           <Badge variant="secondary" className="gap-1">
             <Zap className="h-4 w-4" />
@@ -399,7 +399,7 @@ export const WhyNow = () => {
           {opportunities.map((opportunity) => (
             <div
               key={opportunity.title}
-              className="flex items-center justify-between p-4 rounded-lg bg-background hover:bg-muted/50 transition-colors"
+              className="flex items-center justify-between rounded-lg bg-background p-4 transition-colors hover:bg-muted/50"
             >
               <div className="space-y-1">
                 <div className="font-medium">{opportunity.title}</div>
@@ -417,7 +417,7 @@ export const WhyNow = () => {
         </div>
       </div>
 
-      <div className="text-center space-y-4">
+      <div className="space-y-4 text-center">
         <Badge variant="destructive" className="gap-2">
           <Clock className="h-4 w-4" />
           Limited Time Offer

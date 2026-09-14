@@ -19,7 +19,7 @@ import { AccountSwitcher } from "@/app/(app)/(demo)/examples/mail/components/acc
 import { MailDisplay } from "@/app/(app)/(demo)/examples/mail/components/mail-display";
 import { MailList } from "@/app/(app)/(demo)/examples/mail/components/mail-list";
 import { Nav } from "@/app/(app)/(demo)/examples/mail/components/nav";
-import type { Mail } from "@/app/(app)/(demo)/examples/mail/data";
+import type { Mail as MailData } from "@/app/(app)/(demo)/examples/mail/data";
 import { useMail } from "@/app/(app)/(demo)/examples/mail/use-mail";
 import { Input } from "@/components/ui/input";
 import { ResizableHandle, ResizablePanel, ResizablePanelGroup } from "@/components/ui/resizable";
@@ -34,7 +34,7 @@ interface MailProps {
     email: string;
     icon: React.ReactNode;
   }[];
-  mails: Mail[];
+  mails: MailData[];
   defaultLayout: number[] | undefined;
   defaultCollapsed?: boolean;
   navCollapsedSize: number;

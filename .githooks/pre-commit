@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Pre-commit secret scan (see LAC-3163).
+# Runs `gitleaks protect --staged` on staged changes only.
+# To bypass in a true emergency: git commit --no-verify (do not use for
+# routine work — the whole point of this hook is to stop leaks pre-push).
+
+set -euo pipefail
+
+if ! command -v gitleaks >/dev/null 2>&1; then
+  cat >&2 <<'EOM'
+gitleaks not found on PATH.
+
+Install it once, then retry the commit:
+  macOS:   brew install gitleaks
+  Linux:   see https://github.com/gitleaks/gitleaks#installing
+
+CI (.github/workflows/gitleaks.yml) will still scan the PR delta, so the
+missing hook does not silently let a secret through — but local scanning
+catches it before it hits any remote.
+EOM
+  exit 1
+fi
+
+gitleaks protect --staged --no-banner --redact

@@ -7,6 +7,8 @@ import { siteConfig } from "@/config/site-config";
 import { type BlogPost, getBlogPosts } from "@/lib/blog";
 import { formatDate } from "@/lib/utils/format-date";
 
+export const dynamic = "force-dynamic";
+
 export const metadata: Metadata = constructMetadata({
   title: "Blog - Latest Updates & Guides | Shipkit",
   description:
@@ -20,13 +22,15 @@ interface EnhancedBlogPost extends BlogPost {
 }
 
 const BlogPage = async () => {
-  const posts: BlogPost[] = await getBlogPosts();
+  const posts: BlogPost[] = (await getBlogPosts()).sort((a, b) => {
+    if (!a.publishedAt || !b.publishedAt) return 0;
+    return new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime();
+  });
 
-  // Transform posts to LogSpot format with demo data
   const logSpotPosts: EnhancedBlogPost[] = posts.map((post, index) => ({
     ...post,
-    badge: post.badge || `v1.${index.toString().padStart(2, "0")}`,
-    authors: post.authors || [
+    badge: post.badge ?? `v1.${index.toString().padStart(2, "0")}`,
+    authors: post.authors ?? [
       {
         name: siteConfig.creator.fullName,
         avatar: siteConfig.creator.avatar,

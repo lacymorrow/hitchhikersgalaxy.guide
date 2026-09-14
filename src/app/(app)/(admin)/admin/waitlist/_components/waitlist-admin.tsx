@@ -60,12 +60,12 @@ export async function WaitlistAdmin() {
         <CardContent>
           <div className="space-y-4">
             {entries.length === 0 ? (
-              <p className="text-center text-muted-foreground py-8">No waitlist entries yet</p>
+              <p className="py-8 text-center text-muted-foreground">No waitlist entries yet</p>
             ) : (
               entries.map((entry) => (
                 <div
                   key={entry.id}
-                  className="flex items-center justify-between p-4 border rounded-lg"
+                  className="flex items-center justify-between rounded-lg border p-4"
                 >
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -84,7 +84,7 @@ export async function WaitlistAdmin() {
                       {entry.timeline && <span>⏰ {entry.timeline}</span>}
                     </div>
                     {entry.interests && (
-                      <p className="text-sm text-muted-foreground max-w-2xl">
+                      <p className="max-w-2xl text-sm text-muted-foreground">
                         💭 {entry.interests}
                       </p>
                     )}

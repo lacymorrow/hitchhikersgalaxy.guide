@@ -13,11 +13,13 @@ const UPSTREAM_REMOTE = "upstream";
 const UPSTREAM_BRANCH = "main";
 const CURRENT_BRANCH = "main";
 
-// Upstream repos in order of preference (premium first, then public fallback)
-const UPSTREAM_REPOS = [
-  "https://github.com/shipkit-io/shipkit.git", // Premium (try first)
-  "https://github.com/shipkit-io/bones.git", // Public fallback
-];
+// If UPSTREAM_REPO_URL is set, use it exclusively. Otherwise fall through the default list.
+const UPSTREAM_REPOS: string[] = process.env.UPSTREAM_REPO_URL
+  ? [process.env.UPSTREAM_REPO_URL]
+  : [
+      "https://github.com/lacymorrow/shipkit.git", // Premium (try first)
+      "https://github.com/shipkit-io/bones.git", // Public fallback
+    ];
 
 interface SyncOptions {
   direct: boolean;

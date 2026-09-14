@@ -1,11 +1,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Section, SectionBadge } from "@/components/primitives/section";
+import { Section } from "@/components/primitives/section";
 import { Separator } from "@/components/ui/separator";
-import { siteConfig } from "@/config/site-config";
 import { BrandLogos } from "./brand-logos";
-import { CustomerAvatars } from "./customer-avatars";
+import { SocialMarquee } from "./social-marquee";
 
 const stats = [
   {
@@ -28,11 +27,6 @@ const stats = [
 export const SocialProof = () => {
   return (
     <Section className="relative overflow-hidden">
-      {/* Trust Badge */}
-      <div className="flex justify-center">
-        <SectionBadge>Trusted by developers worldwide</SectionBadge>
-      </div>
-
       {/* Stats Grid */}
       <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-3">
         {stats.map((stat, idx) => (
@@ -51,23 +45,19 @@ export const SocialProof = () => {
         ))}
       </div>
 
-      {/* Customer Avatars */}
+      {/* Real Projects Marquee */}
       <div className="mb-16">
-        <div className="text-center">
-          <CustomerAvatars />
-          <p className="mt-4 text-sm text-muted-foreground">
-            Real projects running on {siteConfig.title}
-          </p>
-        </div>
+        <p className="mb-4 text-center text-sm text-muted-foreground">
+          Real projects built with Shipkit
+        </p>
+        <SocialMarquee />
       </div>
 
       <Separator className="mb-16" />
 
-      {/* Brand Logos */}
+      {/* Tech Stack Logos */}
       <div className="mb-16">
-        <h3 className="mb-8 text-center text-sm font-semibold text-muted-foreground">
-          Built with the same tools used at
-        </h3>
+        <h3 className="mb-8 text-center text-sm font-semibold text-muted-foreground">Built on</h3>
         <BrandLogos />
       </div>
     </Section>

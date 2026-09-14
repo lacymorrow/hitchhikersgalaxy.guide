@@ -1,5 +1,5 @@
 import { FILE_UPLOAD_MAX_SIZE } from "@/config/file";
-import { redirects } from "@/config/routes";
+import { redirects } from "@/config/redirects";
 import createMDX from "@next/mdx";
 import type { NextConfig } from "next";
 
@@ -129,6 +129,11 @@ let nextConfig: NextConfig = {
 		serverActions: {
 			bodySizeLimit: FILE_UPLOAD_MAX_SIZE,
 		},
+		/*
+		 * Limit build concurrency. Vercel's standard build container has 8 GB;
+		 * parallel workers push peak memory past it and the build is SIGKILLed.
+		 */
+		cpus: 1,
 		webVitalsAttribution: ["CLS", "LCP", "TTFB", "FCP", "FID"],
 	},
 	/*

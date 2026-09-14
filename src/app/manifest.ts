@@ -151,6 +151,6 @@ export default function manifest(): MetadataRoute.Manifest {
      * Links to related native applications
      * @see https://developer.mozilla.org/en-US/docs/Web/Manifest/related_applications
      */
-    related_applications: siteConfig.manifest.relatedApplications || [], // Use config value, ensure array
+    related_applications: siteConfig.manifest.relatedApplications ?? [], // Use config value, ensure array
   };
 }

@@ -144,7 +144,7 @@ export class VercelAPIService {
 
       // Try using project name instead of ID, as the API might expect that
       const deploymentData: any = {
-        name: projectName || projectId,
+        name: projectName ?? projectId,
         target: "production" as const,
       };
 
@@ -421,7 +421,7 @@ export class VercelAPIService {
       return !projects.projects.some(
         (project: any) => project.name.toLowerCase() === name.toLowerCase()
       );
-    } catch (error) {
+    } catch (_error) {
       return false;
     }
   }
@@ -521,7 +521,7 @@ export class VercelAPIService {
         return "GitHub integration not connected to your Vercel account. Please connect GitHub in your Vercel dashboard first.";
       }
       if (errorData?.error?.code === "bad_request") {
-        return `Vercel Error: ${errorData?.error?.message || "Invalid request"}`;
+        return `Vercel Error: ${errorData?.error?.message ?? "Invalid request"}`;
       }
       if (errorData?.error?.message) {
         return `Vercel API Error: ${errorData.error.message}`;

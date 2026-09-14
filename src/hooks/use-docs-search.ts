@@ -94,7 +94,7 @@ export function useDocsSearch(options: UseDocsSearchOptions = {}): UseDocsSearch
         }
 
         const data = await response.json();
-        const searchResults = data.results || [];
+        const searchResults = data.results ?? [];
 
         // Cache the results
         cacheRef.current.set(cacheKey, searchResults);

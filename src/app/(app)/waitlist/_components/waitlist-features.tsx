@@ -108,7 +108,7 @@ const realFeatures = [
 ];
 
 const techStack = [
-  { name: "Next.js 15", description: "App Router, Server Components", emoji: "⚡" },
+  { name: "Next.js 16", description: "App Router, Server Components", emoji: "⚡" },
   { name: "TypeScript", description: "End-to-end type safety", emoji: "🛡️" },
   { name: "Tailwind CSS", description: "Utility-first styling", emoji: "🎨" },
   { name: "Drizzle ORM", description: "Type-safe database", emoji: "🗄️" },
@@ -120,21 +120,21 @@ const techStack = [
 
 export function WaitlistFeatures() {
   return (
-    <div className="py-24 bg-slate-50/50 dark:bg-slate-900/50">
+    <div className="bg-slate-50/50 py-24 dark:bg-slate-900/50">
       <div className="container px-4 md:px-6">
         {/* Pain Points Section */}
         <div className="mb-24">
-          <div className="text-center mb-16">
+          <div className="mb-16 text-center">
             <Badge
               variant="outline"
               className="mb-4 border-red-200 text-red-700 dark:border-red-800 dark:text-red-300"
             >
-              We've All Been There
+              We&apos;ve All Been There
             </Badge>
-            <h2 className="mb-6 text-3xl md:text-4xl font-bold tracking-tight">
+            <h2 className="mb-6 text-3xl font-bold tracking-tight md:text-4xl">
               Tired of Building the Same Stuff?
             </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-300">
               Every project starts the same way. Authentication, payments, email, database...
               <br />
               How many times have you built a user table?
@@ -147,7 +147,7 @@ export function WaitlistFeatures() {
               return (
                 <Card
                   key={item.problem}
-                  className="relative overflow-hidden group hover:shadow-lg transition-all duration-300"
+                  className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg"
                 >
                   <CardContent className="p-6">
                     <div className="relative">
@@ -157,7 +157,7 @@ export function WaitlistFeatures() {
                         <Icon className="h-6 w-6 text-white" />
                       </div>
                       <div className="space-y-3">
-                        <p className="text-sm text-slate-600 dark:text-slate-400 line-through">
+                        <p className="text-sm text-slate-600 line-through dark:text-slate-400">
                           {item.problem}
                         </p>
                         <p className="font-semibold text-slate-900 dark:text-slate-100">
@@ -174,17 +174,17 @@ export function WaitlistFeatures() {
 
         {/* Real Features */}
         <div className="mb-24">
-          <div className="text-center mb-16">
+          <div className="mb-16 text-center">
             <Badge
               variant="outline"
               className="mb-4 border-green-200 text-green-700 dark:border-green-800 dark:text-green-300"
             >
               Everything Included
             </Badge>
-            <h2 className="mb-6 text-3xl md:text-4xl font-bold tracking-tight">
+            <h2 className="mb-6 text-3xl font-bold tracking-tight md:text-4xl">
               Actually Useful Features
             </h2>
-            <p className="text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto">
+            <p className="mx-auto max-w-2xl text-lg text-slate-600 dark:text-slate-300">
               Not a kitchen sink. Not a toy project. Real features that solve real problems for real
               applications.
             </p>
@@ -196,15 +196,15 @@ export function WaitlistFeatures() {
               return (
                 <Card
                   key={feature.title}
-                  className="relative group hover:shadow-lg transition-all duration-300 border-slate-200 dark:border-slate-700"
+                  className="group relative border-slate-200 transition-all duration-300 hover:shadow-lg dark:border-slate-700"
                 >
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-violet-100 dark:bg-violet-900/20 group-hover:bg-violet-200 dark:group-hover:bg-violet-900/40 transition-colors">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-violet-100 transition-colors group-hover:bg-violet-200 dark:bg-violet-900/20 dark:group-hover:bg-violet-900/40">
                         <Icon className="h-6 w-6 text-violet-600 dark:text-violet-400" />
                       </div>
                       <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
+                        <div className="mb-2 flex items-center gap-2">
                           <h3 className="font-semibold text-slate-900 dark:text-slate-100">
                             {feature.title}
                           </h3>
@@ -212,7 +212,7 @@ export function WaitlistFeatures() {
                             {feature.tag}
                           </Badge>
                         </div>
-                        <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed">
+                        <p className="text-sm leading-relaxed text-slate-600 dark:text-slate-400">
                           {feature.description}
                         </p>
                       </div>
@@ -238,12 +238,12 @@ export function WaitlistFeatures() {
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
             {techStack.map((tech) => (
               <div key={tech.name} className="group">
-                <div className="p-4 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 hover:border-violet-300 dark:hover:border-violet-700 transition-colors">
-                  <div className="text-2xl mb-2">{tech.emoji}</div>
-                  <div className="font-semibold text-slate-900 dark:text-slate-100 text-sm">
+                <div className="rounded-xl border border-slate-200 bg-white p-4 transition-colors hover:border-violet-300 dark:border-slate-700 dark:bg-slate-800 dark:hover:border-violet-700">
+                  <div className="mb-2 text-2xl">{tech.emoji}</div>
+                  <div className="text-sm font-semibold text-slate-900 dark:text-slate-100">
                     {tech.name}
                   </div>
-                  <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                  <div className="mt-1 text-xs text-slate-500 dark:text-slate-400">
                     {tech.description}
                   </div>
                 </div>

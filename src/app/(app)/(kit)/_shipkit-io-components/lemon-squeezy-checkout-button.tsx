@@ -2,7 +2,10 @@
 
 import { useSession } from "next-auth/react";
 import { Button } from "@/components/ui/button";
+import { routes } from "@/config/routes";
 import { getUserPaymentStatus } from "@/server/actions/payments";
+
+const CHECKOUT_BASE_URL = routes.external.buy;
 
 export function LemonSqueezyCheckoutButton() {
   const { data: session } = useSession();
@@ -17,23 +20,22 @@ export function LemonSqueezyCheckoutButton() {
       const userId = session.user.id;
       const email = session.user.email;
 
-      // Check if user has already paid using Server Action
-      const hasPaid = await getUserPaymentStatus();
-
-      if (hasPaid) {
-        // console.log("User has already paid");
-        // Redirect logic or UI update can go here
-        // e.g., router.push("/dashboard");
+      if (!userId) {
+        console.error("No user ID found in session");
         return;
       }
 
-      // Create checkout URL
-      const checkoutUrl = `https://shipkit.lemonsqueezy.com/checkout/buy/xxx?checkout[email]=${encodeURIComponent(
-        email
-      )}&checkout[custom][user_id]=${encodeURIComponent(userId)}`;
+      const hasPaid = await getUserPaymentStatus();
 
-      // Redirect to checkout
-      window.location.href = checkoutUrl;
+      if (hasPaid) {
+        return;
+      }
+
+      const url = new URL(CHECKOUT_BASE_URL);
+      url.searchParams.set("checkout[email]", email);
+      url.searchParams.set("checkout[custom][user_id]", userId);
+
+      window.location.href = url.toString();
     } catch (error) {
       console.error("Error creating checkout:", error);
     }

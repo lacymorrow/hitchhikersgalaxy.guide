@@ -190,7 +190,7 @@ export class LocalTeamStorage {
       (t) => t.id === personalTeamMember.teamId && t.type === "personal" && !t.deletedAt
     );
 
-    return personalTeam || null;
+    return personalTeam ?? null;
   }
 
   /**
@@ -410,8 +410,8 @@ export class LocalTeamStorage {
     // Store user data
     const user: LocalUser = {
       id: userId,
-      name: userName || `User ${userId.slice(0, 8)}`,
-      email: userEmail || `user-${userId.slice(0, 8)}@example.com`,
+      name: userName ?? `User ${userId.slice(0, 8)}`,
+      email: userEmail ?? `user-${userId.slice(0, 8)}@example.com`,
       createdAt: new Date(),
       updatedAt: new Date(),
     };

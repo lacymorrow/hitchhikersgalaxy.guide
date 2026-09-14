@@ -38,7 +38,7 @@ const useTree = () => {
   return context;
 };
 
-interface TreeViewComponentProps extends HTMLAttributes<HTMLDivElement> {}
+type TreeViewComponentProps = HTMLAttributes<HTMLDivElement>;
 
 type Direction = "rtl" | "ltr" | undefined;
 
@@ -200,7 +200,7 @@ const TreeIndicator = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTML
 TreeIndicator.displayName = "TreeIndicator";
 
 const Folder = React.forwardRef<HTMLDivElement, FolderProps & React.HTMLAttributes<HTMLDivElement>>(
-  ({ className, element, value, isSelectable = true, isSelect, children, ...props }, ref) => {
+  ({ className, element, value, isSelectable = true, isSelect, children, ...props }, _ref) => {
     const {
       direction,
       handleExpand,
@@ -215,7 +215,7 @@ const Folder = React.forwardRef<HTMLDivElement, FolderProps & React.HTMLAttribut
       <AccordionPrimitive.Item {...props} value={value} className="relative h-full overflow-hidden">
         <AccordionPrimitive.Trigger
           className={cn("flex items-center gap-1 rounded-md text-sm", className, {
-            "bg-muted rounded-md": isSelect && isSelectable,
+            "rounded-md bg-muted": isSelect && isSelectable,
             "cursor-pointer": isSelectable,
             "cursor-not-allowed opacity-50": !isSelectable,
           })}

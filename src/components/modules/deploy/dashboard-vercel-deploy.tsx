@@ -416,18 +416,18 @@ export const DashboardVercelDeploy = ({
         )}
       >
         {deploymentInitiated ? (
-          <div className="py-8 flex flex-col items-center justify-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-4 py-8">
             <div className="rounded-full bg-primary/10 p-3">
               <Rocket className="h-8 w-8 text-primary" />
             </div>
-            <div className="text-center space-y-2">
+            <div className="space-y-2 text-center">
               <p className="text-lg font-semibold">Deployment Started</p>
               <p className="text-sm text-muted-foreground">
                 Your project is being deployed. You can monitor the progress on the deployments
                 page.
               </p>
             </div>
-            <div className="flex flex-col items-center gap-3 w-full">
+            <div className="flex w-full flex-col items-center gap-3">
               <LinkWithTransition
                 href={routes.app.deployments}
                 prefetch={false}
@@ -447,11 +447,11 @@ export const DashboardVercelDeploy = ({
             </div>
           </div>
         ) : hasActiveDeployment && !acknowledgedActiveDeployment ? (
-          <div className="py-6 flex flex-col items-center justify-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-4 py-6">
             <div className="rounded-full bg-yellow-500/10 p-3">
               <AlertTriangle className="h-8 w-8 text-yellow-500" />
             </div>
-            <div className="text-center space-y-2">
+            <div className="space-y-2 text-center">
               <p className="text-lg font-semibold">Deployment in Progress</p>
               <p className="text-sm text-muted-foreground">
                 You already have an active deployment. Starting a new one may cause conflicts.
@@ -464,7 +464,7 @@ export const DashboardVercelDeploy = ({
                 View current deployments →
               </LinkWithTransition>
             </div>
-            <div className="flex gap-2 w-full">
+            <div className="flex w-full gap-2">
               <Button variant="outline" onClick={() => setOpen(false)} className="flex-1">
                 Cancel
               </Button>
@@ -474,26 +474,26 @@ export const DashboardVercelDeploy = ({
             </div>
           </div>
         ) : isDeploying ? (
-          <div className="py-8 flex flex-col items-center justify-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-4 py-8">
             <Loader2 className="h-8 w-8 animate-spin text-primary" />
             <p className="text-sm text-muted-foreground">Starting deployment...</p>
           </div>
         ) : pendingInvitation.justAccepted ? (
-          <div className="py-8 flex flex-col items-center justify-center gap-4">
+          <div className="flex flex-col items-center justify-center gap-4 py-8">
             <div className="rounded-full bg-muted p-3">
               <CheckCircle2 className="h-8 w-8 text-primary" />
             </div>
-            <div className="text-center space-y-1">
+            <div className="space-y-1 text-center">
               <p className="text-lg font-semibold">Access Granted</p>
               <p className="text-sm text-muted-foreground">Preparing deployment form...</p>
             </div>
           </div>
         ) : pendingInvitation.isChecking ? (
-          <div className="py-8 flex items-center justify-center">
+          <div className="flex items-center justify-center py-8">
             <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
           </div>
         ) : pendingInvitation.hasPending ? (
-          <div className="py-6 space-y-6">
+          <div className="space-y-6 py-6">
             {/* Avatar section */}
             <div className="flex items-center justify-center gap-2">
               <Avatar className="h-12 w-12 border">
@@ -505,7 +505,7 @@ export const DashboardVercelDeploy = ({
                   />
                 </AvatarFallback>
               </Avatar>
-              <span className="text-muted-foreground text-lg">+</span>
+              <span className="text-lg text-muted-foreground">+</span>
               <Avatar className="h-12 w-12 border">
                 <AvatarImage
                   src={currentUser?.image ?? undefined}
@@ -518,13 +518,13 @@ export const DashboardVercelDeploy = ({
             </div>
 
             {/* Invitation text */}
-            <div className="text-center space-y-1">
+            <div className="space-y-1 text-center">
               <p className="text-lg">
                 <a
                   href={`https://github.com/${siteConfig.repo.owner}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-primary hover:underline font-medium"
+                  className="font-medium text-primary hover:underline"
                 >
                   {siteConfig.branding.githubOrg}
                 </a>{" "}
@@ -552,7 +552,7 @@ export const DashboardVercelDeploy = ({
                     >
                       {pendingInvitation.isRechecking ? (
                         <>
-                          <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                           Checking...
                         </>
                       ) : (
@@ -563,7 +563,7 @@ export const DashboardVercelDeploy = ({
                       Cancel
                     </Button>
                   </div>
-                  <p className="text-xs text-muted-foreground text-center">
+                  <p className="text-center text-xs text-muted-foreground">
                     We&apos;ll automatically detect when you accept the invitation
                   </p>
                 </>
@@ -573,7 +573,7 @@ export const DashboardVercelDeploy = ({
                   <div className="flex items-center gap-3">
                     <Button
                       asChild
-                      className="bg-[#2da44e] hover:bg-[#2c974b] text-white font-semibold"
+                      className="bg-[#2da44e] font-semibold text-white hover:bg-[#2c974b]"
                       onClick={handleAcceptInvitationClick}
                     >
                       <a
@@ -655,7 +655,7 @@ export const DashboardVercelDeploy = ({
                 </Button>
               </div>
 
-              <p className="text-xs text-center text-muted-foreground">
+              <p className="text-center text-xs text-muted-foreground">
                 Ensure you&apos;ve connected GitHub and Vercel in{" "}
                 <LinkWithTransition href={routes.settings.account} onClick={() => setOpen(false)}>
                   <span className="text-primary hover:underline">Settings</span>

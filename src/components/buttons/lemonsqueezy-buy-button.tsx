@@ -76,7 +76,7 @@ const toggleBodyScroll = (disable: boolean) => {
     document.body.style.top = `-${scrollY}px`;
   } else {
     // Restore the scroll position
-    const scrollY = document.body.style.top;
+    const _scrollY = document.body.style.top;
     document.body.style.position = "";
     document.body.style.width = "";
     document.body.style.top = "";
@@ -149,7 +149,7 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
               orderId: orderData.attributes.identifier, // Use identifier as primary orderId
               orderIdentifier: orderData.attributes.identifier, // Keep for backward compatibility
               userId,
-              userEmail: orderData.attributes.user_email || undefined,
+              userEmail: orderData.attributes.user_email ?? undefined,
               customData: event.data.custom_data,
               status: orderData.attributes.status,
               total: orderData.attributes.total,
@@ -179,7 +179,7 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
 
             // Add order data to URL
             successUrl.searchParams.set("order_id", orderData.attributes.identifier);
-            successUrl.searchParams.set("email", orderData.attributes.user_email || "");
+            successUrl.searchParams.set("email", orderData.attributes.user_email ?? "");
             successUrl.searchParams.set("status", orderData.attributes.status);
 
             // Add custom data that was passed during checkout
@@ -245,7 +245,7 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
     script.onerror = (error) => {
       logger.error("Error loading Lemon.js script", {
         checkoutId,
-        error: String(error),
+        error: error instanceof Event ? error.type : String(error),
       });
     };
 
@@ -299,10 +299,8 @@ export const BuyButton = ({ className, ...props }: BuyButtonProps) => {
   };
 
   return (
-    <>
-      <Button onClick={handleClick} variant="default" className={cn(className)}>
-        Get {siteConfig.title}
-      </Button>
-    </>
+    <Button onClick={handleClick} variant="default" className={cn(className)}>
+      Get {siteConfig.title}
+    </Button>
   );
 };

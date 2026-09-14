@@ -2,7 +2,6 @@
 
 import { animate, motion, useMotionValue, useMotionValueEvent, useTransform } from "framer-motion";
 import { Volume2Icon, VolumeXIcon } from "lucide-react";
-// biome-ignore lint/style/noNamespaceImport: <explanation>
 import { Slider as RadixSlider } from "radix-ui";
 import { type ElementRef, useRef, useState } from "react";
 

@@ -121,6 +121,8 @@ export const providers: NextAuthConfig["providers"] = [
               placeholder: "Enter your name to continue",
             },
           },
+          // NextAuth authorize signature requires async.
+          // eslint-disable-next-line @typescript-eslint/require-await
           async authorize(credentials) {
             if (!credentials?.name || typeof credentials.name !== "string") {
               console.error("Missing name in guest credentials");
@@ -201,7 +203,7 @@ export const providers: NextAuthConfig["providers"] = [
               githubUsername: profile.login,
             };
           },
-          checks: ["state", "pkce"],
+          checks: ["state"],
           allowDangerousEmailAccountLinking: true,
         }),
       ]
@@ -226,7 +228,7 @@ export const providers: NextAuthConfig["providers"] = [
               ...profile,
               id: profile.sub,
               emailVerified: profile.email_verified ? new Date() : null,
-              name: profile.name || profile.given_name || profile.email?.split("@")[0] || null,
+              name: profile.name ?? profile.given_name ?? profile.email?.split("@")[0] ?? null,
             };
           },
         }),
@@ -272,10 +274,10 @@ export const providers: NextAuthConfig["providers"] = [
           },
           profile(profile: VercelUserProfile) {
             return {
-              id: profile.id || profile.uid || "",
-              name: profile.name || profile.username || "",
+              id: profile.id ?? profile.uid ?? "",
+              name: profile.name ?? profile.username ?? "",
               email: profile.email,
-              image: profile.avatar?.url || null,
+              image: profile.avatar?.url ?? null,
               emailVerified: null,
             };
           },

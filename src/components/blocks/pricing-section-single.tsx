@@ -74,7 +74,7 @@ export function PricingSectionSingle({ plans, plan, children }: PricingSectionSi
                   href={selectedPlan.href}
                   className={cn(
                     buttonVariants({ variant: "default" }),
-                    "w-full bg-purple-500 text-lg text-white transition-all duration-200 hover:bg-purple-600 hover:scale-[1.02] active:scale-[0.98]"
+                    "w-full bg-purple-500 text-lg text-white transition-all duration-200 hover:scale-[1.02] hover:bg-purple-600 active:scale-[0.98]"
                   )}
                 >
                   Get {selectedPlan.title} Now

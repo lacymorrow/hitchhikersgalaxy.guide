@@ -63,12 +63,12 @@ export interface AILoadingStateProps {
 }
 
 const LoadingAnimation = ({ progress }: { progress: number }) => (
-  <div className="relative w-6 h-6">
+  <div className="relative h-6 w-6">
     <svg
       viewBox="0 0 240 240"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="w-full h-full"
+      className="h-full w-full"
       aria-label={`Loading progress: ${Math.round(progress)}%`}
     >
       <title>Loading Progress Indicator</title>
@@ -129,7 +129,7 @@ export default function AILoadingState({
   className,
 }: AILoadingStateProps) {
   const [sequenceIndex, setSequenceIndex] = useState(0);
-  const [visibleLines, setVisibleLines] = useState<Array<{ text: string; number: number }>>([]);
+  const [visibleLines, setVisibleLines] = useState<{ text: string; number: number }[]>([]);
   const [scrollPosition, setScrollPosition] = useState(0);
   const codeContainerRef = useRef<HTMLDivElement>(null);
   const lineHeight = 28;
@@ -139,7 +139,7 @@ export default function AILoadingState({
 
   useEffect(() => {
     if (!currentSequence) return;
-    const initialLines: Array<{ text: string; number: number }> = [];
+    const initialLines: { text: string; number: number }[] = [];
     for (let i = 0; i < Math.min(5, totalLines); i++) {
       const text = currentSequence.lines[i];
       if (text) {
@@ -149,6 +149,7 @@ export default function AILoadingState({
         });
       }
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- resets animation state when task sequence changes
     setVisibleLines(initialLines);
     setScrollPosition(0);
   }, [sequenceIndex, currentSequence, totalLines]);
@@ -205,9 +206,9 @@ export default function AILoadingState({
   }, [scrollPosition]);
 
   return (
-    <div className={className ?? "flex items-center justify-center min-h-full w-full"}>
-      <div className="space-y-4 w-auto">
-        <div className="ml-2 flex items-center space-x-2 text-gray-600 dark:text-gray-300 font-medium">
+    <div className={className ?? "flex min-h-full w-full items-center justify-center"}>
+      <div className="w-auto space-y-4">
+        <div className="ml-2 flex items-center space-x-2 font-medium text-gray-600 dark:text-gray-300">
           <LoadingAnimation progress={(sequenceIndex / taskSequences.length) * 100} />
           <span className="text-sm">{currentSequence?.status}...</span>
         </div>
@@ -215,27 +216,27 @@ export default function AILoadingState({
         <div className="relative">
           <div
             ref={codeContainerRef}
-            className="font-mono text-xs overflow-hidden w-full h-[84px] relative rounded-lg"
+            className="relative h-[84px] w-full overflow-hidden rounded-lg font-mono text-xs"
             style={{ scrollBehavior: "smooth" }}
           >
             <div>
-              {visibleLines.map((line, index) => (
+              {visibleLines.map((line, _index) => (
                 <div
                   key={`${line.number}-${line.text}`}
                   className="flex h-[28px] items-center px-2"
                 >
-                  <div className="text-gray-400 dark:text-gray-500 pr-3 select-none w-6 text-right">
+                  <div className="w-6 select-none pr-3 text-right text-gray-400 dark:text-gray-500">
                     {line.number}
                   </div>
 
-                  <div className="text-gray-800 dark:text-gray-200 flex-1 ml-1">{line.text}</div>
+                  <div className="ml-1 flex-1 text-gray-800 dark:text-gray-200">{line.text}</div>
                 </div>
               ))}
             </div>
           </div>
 
           <div
-            className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none rounded-lg from-white/90 via-white/50 to-transparent dark:from-black/90 dark:via-black/50 dark:to-transparent"
+            className="pointer-events-none absolute bottom-0 left-0 right-0 top-0 rounded-lg from-white/90 via-white/50 to-transparent dark:from-black/90 dark:via-black/50 dark:to-transparent"
             style={{
               background:
                 "linear-gradient(to bottom, var(--tw-gradient-from) 0%, var(--tw-gradient-via) 30%, var(--tw-gradient-to) 100%)",

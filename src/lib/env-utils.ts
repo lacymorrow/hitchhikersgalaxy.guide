@@ -35,7 +35,7 @@ export function loadEnvironment(isDev = process.env.NODE_ENV !== "production") {
  * This handles the common pattern of checking if an env var exists and using a default if not
  */
 export function getEnvVar(name: string, defaultValue = ""): string {
-  return process.env[name] || defaultValue;
+  return process.env[name] ?? defaultValue;
 }
 
 /**

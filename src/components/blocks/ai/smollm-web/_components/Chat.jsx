@@ -30,6 +30,7 @@ export default function Chat({ messages }) {
         <div className="text-xl">Ready!</div>
       ) : (
         messages.map((msg, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
           <div key={`message-${i}`} className="flex items-start space-x-4">
             {msg.role === "assistant" ? (
               <>
@@ -39,6 +40,7 @@ export default function Chat({ messages }) {
                     {msg.content.length > 0 ? (
                       <span
                         className="markdown"
+                        // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted internal HTML source
                         dangerouslySetInnerHTML={{
                           __html: render(msg.content),
                         }}

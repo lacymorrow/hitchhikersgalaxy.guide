@@ -31,9 +31,12 @@ node_modules/playwright
 **/test/**
 **/__tests__/**
 **/__mocks__/**
-docs/**
+# docs/ ships: fumadocs-mdx compiles it at build time, and /docs 404s when the
+# collection is empty. The upstream sync moved the docs source from
+# src/content/docs to docs/, so excluding it broke the route.
 *.md
 !README.md
+!docs/**/*.md
 
 # IDE and config files
 .vscode

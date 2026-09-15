@@ -13,8 +13,8 @@
   "type": "module",
   "scripts": {
     "prebuild": "node scripts/prebuild-content.mjs && node scripts/sync-docs-images.mjs && fumadocs-mdx",
-    "build": "node scripts/prebuild-content.mjs && node scripts/sync-docs-images.mjs && fumadocs-mdx && next build --webpack",
-    "build:vercel": "node scripts/prebuild-content.mjs && NODE_OPTIONS='--max-old-space-size=6144' next build --webpack",
+    "build": "node scripts/prebuild-content.mjs && node scripts/sync-docs-images.mjs && fumadocs-mdx && next build --turbopack",
+    "build:vercel": "node scripts/prebuild-content.mjs && NODE_OPTIONS='--max-old-space-size=6144' next build --turbopack",
     "clean": "rm next-env.d.ts ; rm package-lock.json ; rm pnpm-lock.yaml ; rm bun.lockb ; rm -rf .next ; rm -rf node_modules ; rm -rf .turbo",
     "clean:cache": "rm -rf .next/cache",
     "doctor": "npm run clean && npm run payload generate:types && npm run payload generate:importmap",
@@ -350,24 +350,25 @@
   "overrides": {
     "@babel/plugin-transform-modules-systemjs": "^7.29.4",
     "@xmldom/xmldom": "^0.9.9",
+    "amazon-cognito-identity-js": "^6.3.20",
+    "brace-expansion": "^1.1.21",
     "defu": "^6.1.5",
     "fast-uri": "^3.1.6",
     "fast-xml-builder": "^1.1.7",
+    "fast-xml-parser": "^5.5.6",
     "glob": "^10.5.0",
     "happy-dom": "^20.8.9",
+    "immutable": "^4.3.9",
     "isolated-vm": "^7.0.1",
     "js-cookie": "^3.0.6",
+    "linkify-it": "^5.0.2",
     "lodash": "^4.18.1",
     "protobufjs": "^7.5.5",
+    "serialize-javascript": "^7.1.1",
     "sharp": "^0.35.4",
     "tar": "^7.5.21",
     "toml": "^4.2.0",
-    "undici": "^7.29.0",
-    "brace-expansion": "^1.1.21",
-    "fast-xml-parser": "^5.5.6",
-    "immutable": "^4.3.9",
-    "linkify-it": "^5.0.2",
-    "serialize-javascript": "^7.1.1"
+    "undici": "^7.29.0"
   },
   "pnpm": {
     "overrides": {

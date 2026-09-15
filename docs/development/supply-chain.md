@@ -103,6 +103,26 @@ Pin exactly where you mean to pin, and write down why. A tilde or an exact pin
 on a security-relevant package is a standing decision to not receive fixes, so
 it needs a reason next to it.
 
+## Transitive fixes go through overrides
+
+Most remaining advisories sit in packages nothing declares directly, so the only
+lever is a top-level `overrides` entry. Pin to the lowest patched version inside
+the current major wherever one exists, so the override closes the advisory
+without dragging in a breaking change.
+
+Two of the current entries are worth knowing about:
+
+- `isolated-vm` is pinned to `^7.0.1`. It arrives through `@builder.io/react`,
+  and 6.x cannot compile against the V8 API in Node 26, which broke every
+  `bun install` that ran install scripts. 7.0.1 builds and ships prebuilds.
+- `sharp` is pinned to `^0.35.4` because `@huggingface/transformers` asks for
+  `^0.34.1`, and a caret on a `0.x` range cannot reach the patched line.
+
+Check that an override actually took effect. `node -e "console.log(require('./node_modules/<pkg>/package.json').version)"`
+is the only reliable confirmation, and a stale nested copy under another
+package's `node_modules` will silently keep the old version even after the
+lockfile updates.
+
 ## Overrides
 
 Bun reads top-level `overrides` and `resolutions`. It does **not** read

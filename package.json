@@ -348,7 +348,26 @@
     ]
   },
   "overrides": {
-    "fast-uri": "^3.1.6"
+    "@babel/plugin-transform-modules-systemjs": "^7.29.4",
+    "@xmldom/xmldom": "^0.9.9",
+    "defu": "^6.1.5",
+    "fast-uri": "^3.1.6",
+    "fast-xml-builder": "^1.1.7",
+    "glob": "^10.5.0",
+    "happy-dom": "^20.8.9",
+    "isolated-vm": "^7.0.1",
+    "js-cookie": "^3.0.6",
+    "lodash": "^4.18.1",
+    "protobufjs": "^7.5.5",
+    "sharp": "^0.35.4",
+    "tar": "^7.5.21",
+    "toml": "^4.2.0",
+    "undici": "^7.29.0",
+    "brace-expansion": "^1.1.21",
+    "fast-xml-parser": "^5.5.6",
+    "immutable": "^4.3.9",
+    "linkify-it": "^5.0.2",
+    "serialize-javascript": "^7.1.1"
   },
   "pnpm": {
     "overrides": {

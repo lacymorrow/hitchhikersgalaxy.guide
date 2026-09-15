@@ -239,6 +239,10 @@ const nextConfig: NextConfig = {
     "mysql2",
     // ESM-only packages that need to be externalized
     "@octokit/rest",
+    // evlog reads node:fs/node:module. src/instrumentation.ts imports it at
+    // runtime behind webpackIgnore/turbopackIgnore; this keeps output tracing
+    // shipping the package instead of trying to bundle it.
+    "evlog",
   ],
 
   // Compile this app's components with the React Compiler (auto-memoization).

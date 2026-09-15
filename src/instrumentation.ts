@@ -5,7 +5,6 @@
  */
 
 import { registerOTel } from "@vercel/otel";
-import { defineNodeInstrumentation } from "evlog/next/instrumentation";
 import type { Instrumentation } from "next";
 import { isEvlogEnabled } from "@/lib/evlog";
 import { displayLaunchMessage } from "@/lib/utils/kit-launch-message";
@@ -17,16 +16,44 @@ import { displayLaunchMessage } from "@/lib/utils/kit-launch-message";
  * The drain reuses the existing OTel pipeline (OTEL_EXPORTER_OTLP_ENDPOINT) —
  * without an endpoint, events still log locally.
  */
-const evlog = defineNodeInstrumentation(async () => {
-  const [{ createInstrumentation }, { createOTLPDrain }] = await Promise.all([
-    import("evlog/next/instrumentation/create"),
-    import("evlog/otlp"),
-  ]);
-  return createInstrumentation({
-    service: "shipkit",
-    drain: process.env.OTEL_EXPORTER_OTLP_ENDPOINT ? createOTLPDrain() : undefined,
-  });
-});
+/**
+ * evlog trial (LAC-3361). evlog reads node:fs and node:module, which webpack
+ * cannot resolve — a static import here breaks `next dev --webpack` for every
+ * route, flag on or off, because Next compiles this file through webpack. The
+ * ignore comments keep both bundlers out of it so the import happens at runtime
+ * on Node only; "evlog" is also in serverExternalPackages so tracing keeps it.
+ * The drain reuses the existing OTel pipeline (OTEL_EXPORTER_OTLP_ENDPOINT) —
+ * without an endpoint, events still log locally.
+ */
+type EvlogInstrumentation = {
+  register: () => Promise<void>;
+  onRequestError: NonNullable<Instrumentation.onRequestError>;
+};
+
+let evlogPromise: Promise<EvlogInstrumentation> | null = null;
+
+const loadEvlog = (): Promise<EvlogInstrumentation> => {
+  if (!evlogPromise) {
+    evlogPromise = (async () => {
+      const [{ defineNodeInstrumentation }, { createInstrumentation }, { createOTLPDrain }] =
+        await Promise.all([
+          import(/* webpackIgnore: true */ /* turbopackIgnore: true */ "evlog/next/instrumentation"),
+          import(
+            /* webpackIgnore: true */ /* turbopackIgnore: true */ "evlog/next/instrumentation/create"
+          ),
+          import(/* webpackIgnore: true */ /* turbopackIgnore: true */ "evlog/otlp"),
+        ]);
+      return defineNodeInstrumentation(async () =>
+        createInstrumentation({
+          service: "shipkit",
+          drain: process.env.OTEL_EXPORTER_OTLP_ENDPOINT ? createOTLPDrain() : undefined,
+        })
+      ) as EvlogInstrumentation;
+    })();
+  }
+  return evlogPromise;
+};
+
 
 /**
  * Registers OpenTelemetry for observability in the application.
@@ -49,6 +76,7 @@ export async function register() {
   });
 
   if (isEvlogEnabled()) {
+    const evlog = await loadEvlog();
     await evlog.register();
   }
 }
@@ -63,9 +91,6 @@ export async function register() {
  */
 export const onRequestError: Instrumentation.onRequestError = async (error, request, context) => {
   if (!isEvlogEnabled()) return;
-  await evlog.onRequestError(
-    error as Parameters<typeof evlog.onRequestError>[0],
-    request as Parameters<typeof evlog.onRequestError>[1],
-    context as Parameters<typeof evlog.onRequestError>[2]
-  );
+  const evlog = await loadEvlog();
+  await evlog.onRequestError(error, request, context);
 };

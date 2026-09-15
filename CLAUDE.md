@@ -181,7 +181,9 @@ Shipkit uses environment variables for feature toggles:
 - **Multi-zone navigation** - Use anchor tags (`<a>`) for cross-zone links
 
 ### CI Minutes and Local Verification
+
 GitHub Actions minutes are billed on this private repo, and automated upstream syncs and agent-authored PRs burn them on checks that were already run locally.
+
 - **Run `bun run verify` before opening a PR** - `scripts/verify.sh` runs typecheck, lint, unit and node tests, a production build, and a `next start` smoke (`--routes "/ /blog /blog/nope-xyz=404 /nope-404=404"` to customize). Paste its Markdown summary in the PR body.
 - **Skip Actions when you verified locally** - put `[skip ci]` in the commit message (GitHub-native; also skips gitleaks, so run `gitleaks protect --staged` locally). Vercel still builds, and the Deployment Check smoke still runs because it triggers off the Vercel deployment.
 - **Cheap jobs run on every PR, expensive ones on demand** - `ci.yml` runs typecheck, lint, and unit tests on every PR; integration, production build, Playwright e2e, and the docs link check run on pushes to `main` and on PRs labeled `ci:full`. Add the label for changes to auth, payments, the build pipeline, or docs routing.

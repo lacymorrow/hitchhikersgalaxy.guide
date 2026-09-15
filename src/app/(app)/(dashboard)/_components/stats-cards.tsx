@@ -9,7 +9,7 @@ export function StatsCards() {
       {stats.map((stat) => (
         <div
           key={stat.title}
-          className="flex flex-col gap-1.5 px-4 py-3.5 [&:nth-child(n+2)]:shadow-[-0.5px_0_0_var(--hairline)] max-lg:[&:nth-child(3)]:shadow-[0_-0.5px_0_var(--hairline)] max-lg:[&:nth-child(4)]:shadow-[-0.5px_0_0_var(--hairline),0_-0.5px_0_var(--hairline)]"
+          className="flex flex-col gap-1.5 px-4 py-3.5 max-lg:[&:nth-child(3)]:shadow-[0_-0.5px_0_var(--hairline)] max-lg:[&:nth-child(4)]:shadow-[-0.5px_0_0_var(--hairline),0_-0.5px_0_var(--hairline)] [&:nth-child(n+2)]:shadow-[-0.5px_0_0_var(--hairline)]"
         >
           <span className="text-xs text-muted-foreground">{stat.title}</span>
           <CountUp

@@ -7,6 +7,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
 	title: "Popular Entries",
 	description: "Explore the most popular entries in the Hitchhiker's Guide to the Galaxy. Discover the best-loved topics, from Vogons to the Answer to Life, the Universe, and Everything.",
+	alternates: {
+		canonical: "/popular",
+	},
 };
 
 export default async function PopularEntriesPage() {

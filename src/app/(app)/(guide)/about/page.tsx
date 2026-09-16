@@ -5,6 +5,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
 	title: "About the Guide",
 	description: "Learn about the Hitchhiker's Guide to the Galaxy Guide — a community-driven digital companion inspired by Douglas Adams' legendary encyclopedia of all knowledge.",
+	alternates: {
+		canonical: "/about",
+	},
 };
 
 export default function AboutPage() {

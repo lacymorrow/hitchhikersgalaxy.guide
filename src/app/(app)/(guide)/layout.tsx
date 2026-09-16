@@ -42,11 +42,14 @@ export default function GuideLayout({
 								Popular
 							</Link>
 							<Link
-								href="/submit"
+								href="/browse"
 								className="font-mono text-sm text-[#70c8cd]/80 transition-colors hover:text-[#70c8cd]"
 							>
-								Submit Entry
+								Index
 							</Link>
+							{/* No Submit link: /submit sits in the (dev) route group and
+							    404s in production, so this nav pointed every page at a
+							    dead URL (LAC-3918). */}
 							<Link
 								href="/about"
 								className="font-mono text-sm text-[#70c8cd]/80 transition-colors hover:text-[#70c8cd]"

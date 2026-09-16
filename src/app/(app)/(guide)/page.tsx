@@ -114,13 +114,16 @@ export default function GuidePage() {
 								Popular Entries
 							</Button>
 						</Link>
-						<Link href="/submit">
+						{/* /submit is dev-only ((dev) route group) and 404s in
+						    production, so this button points at the entry index
+						    instead (LAC-3918). */}
+						<Link href="/browse">
 							<Button
 								variant="outline"
 								className="border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10"
 							>
 								<BookOpen className="mr-2 h-4 w-4" />
-								Submit Entry
+								Guide Index
 							</Button>
 						</Link>
 						<Link href="/about">

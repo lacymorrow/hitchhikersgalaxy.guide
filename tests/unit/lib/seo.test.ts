@@ -1,5 +1,11 @@
 import { describe, expect, it } from "vitest";
-import { clampAtWord, guideEntrySeo, SEO_TITLE_BRAND } from "@/lib/seo";
+import {
+	clampAtWord,
+	dedupeGuideEntries,
+	guideEntryPath,
+	guideEntrySeo,
+	SEO_TITLE_BRAND,
+} from "@/lib/seo";
 
 describe("clampAtWord", () => {
   it("returns short text unchanged", () => {
@@ -37,5 +43,56 @@ describe("guideEntrySeo", () => {
     const seo = guideEntrySeo("A Very Long Search Term About Pan Galactic Gargle Blasters");
     expect(seo.description.length).toBeLessThanOrEqual(160);
     expect(seo.description).toContain("Hitchhiker's Guide to the Galaxy");
+  });
+});
+
+describe("guideEntryPath", () => {
+  it("encodes spaces so the path matches sitemap URLs", () => {
+    expect(guideEntryPath("thai food")).toBe("/thai%20food");
+  });
+
+  it("preserves hyphenated terms as-is", () => {
+    expect(guideEntryPath("skibidi-toilet")).toBe("/skibidi-toilet");
+  });
+
+  it("encodes characters that are unsafe in URLs", () => {
+    expect(guideEntryPath("fish & chips")).toBe("/fish%20%26%20chips");
+  });
+});
+
+describe("dedupeGuideEntries", () => {
+  // Regression for LAC-3918: the DB holds duplicate rows per search term
+  // ("test" x3, "tribble" x2, ...), which put 38 duplicate URLs in the
+  // sitemap (Ahrefs "Duplicate pages without canonical" / GSC "Duplicate,
+  // Google chose different canonical than user").
+  it("collapses rows with the same search term", () => {
+    const entries = [
+      { searchTerm: "tribble", updatedAt: new Date("2026-01-01") },
+      { searchTerm: "tribble", updatedAt: new Date("2026-03-01") },
+      { searchTerm: "towel", updatedAt: new Date("2026-02-01") },
+    ];
+    const deduped = dedupeGuideEntries(entries);
+    expect(deduped.map((e) => e.searchTerm)).toEqual(["tribble", "towel"]);
+  });
+
+  it("keeps the most recent updatedAt among duplicates", () => {
+    const deduped = dedupeGuideEntries([
+      { searchTerm: "tribble", updatedAt: new Date("2026-01-01") },
+      { searchTerm: "tribble", updatedAt: new Date("2026-03-01") },
+    ]);
+    expect(deduped[0]?.updatedAt).toEqual(new Date("2026-03-01"));
+  });
+
+  it("collapses rows that only differ by case or surrounding whitespace", () => {
+    const deduped = dedupeGuideEntries([
+      { searchTerm: "Tribble", updatedAt: null },
+      { searchTerm: "tribble ", updatedAt: null },
+    ]);
+    expect(deduped).toHaveLength(1);
+    expect(deduped[0]?.searchTerm).toBe("tribble");
+  });
+
+  it("drops rows whose term normalizes to nothing", () => {
+    expect(dedupeGuideEntries([{ searchTerm: "  ", updatedAt: null }])).toEqual([]);
   });
 });

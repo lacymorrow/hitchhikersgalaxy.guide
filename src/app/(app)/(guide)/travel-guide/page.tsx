@@ -6,6 +6,9 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
 	title: "Travel Guide",
 	description: "Your essential galactic travel guide. Tips on navigating the universe, avoiding Vogon poetry, and always knowing where your towel is.",
+	alternates: {
+		canonical: "/travel-guide",
+	},
 };
 
 export default function TravelGuidePage() {

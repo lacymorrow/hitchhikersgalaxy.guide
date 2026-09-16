@@ -7,8 +7,41 @@
  * name>` template output).
  */
 
+import { normalizeSlug } from "@/lib/utils";
+
 /** Short brand used in page titles; the full site name is too long for SERPs. */
 export const SEO_TITLE_BRAND = "The Hitchhiker's Guide";
+
+/**
+ * Canonical site-relative path for a guide entry. Every internal link,
+ * canonical tag, and sitemap URL must go through this so an entry only ever
+ * has one URL (LAC-3918: hyphen/space and case variants of the same entry
+ * were each self-canonicalizing, so Google picked its own canonical).
+ */
+export function guideEntryPath(searchTerm: string): string {
+  return `/${encodeURIComponent(searchTerm)}`;
+}
+
+/**
+ * Collapse guide-entry rows that resolve to the same entry URL. The DB holds
+ * duplicate rows per term ("test" x3, "tribble" x2, case/whitespace variants),
+ * which produced 38 duplicate sitemap URLs. Returns normalized terms, keeping
+ * the newest `updatedAt` among duplicates.
+ */
+export function dedupeGuideEntries<T extends { searchTerm: string; updatedAt: Date | null }>(
+  entries: T[]
+): T[] {
+  const byTerm = new Map<string, T>();
+  for (const entry of entries) {
+    const term = normalizeSlug(entry.searchTerm);
+    if (!term) continue;
+    const existing = byTerm.get(term);
+    if (!existing || (entry.updatedAt?.getTime() ?? 0) > (existing.updatedAt?.getTime() ?? 0)) {
+      byTerm.set(term, { ...entry, searchTerm: term });
+    }
+  }
+  return [...byTerm.values()];
+}
 
 const TITLE_MAX = 60;
 const DESCRIPTION_MAX = 160;

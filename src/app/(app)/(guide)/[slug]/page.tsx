@@ -3,7 +3,7 @@ import { Link } from "@/components/primitives/link-with-transition";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/config/site";
-import { guideEntrySeo } from "@/lib/seo";
+import { guideEntryPath, guideEntrySeo } from "@/lib/seo";
 import { normalizeSlug } from "@/lib/utils";
 import { searchGuide } from "@/server/actions/guide-search";
 import type { GuideCrossReference as GuideCrossReferenceSchemaType, GuideEntry as GuideEntrySchemaType } from "@/server/db/schema";
@@ -12,7 +12,7 @@ import { StarFilledIcon } from "@radix-ui/react-icons";
 import { formatDistanceToNow } from "date-fns";
 import { BookOpen, Rocket, Shield } from "lucide-react";
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import { Suspense } from "react";
 
 export async function generateMetadata({
@@ -27,11 +27,15 @@ export async function generateMetadata({
 	} catch {
 		// use raw slug as fallback
 	}
-	const displayName = rawSlug.replace(/-/g, " ");
+	// Canonicalize on the normalized slug: case/whitespace variants of the same
+	// entry all render identical content, so each must declare the same
+	// canonical URL (GSC: "Duplicate, Google chose different canonical").
+	const canonicalSlug = normalizeSlug(rawSlug) || rawSlug;
+	const displayName = canonicalSlug.replace(/-/g, " ");
 	const capitalizedName = displayName.replace(/\b\w/g, (c) => c.toUpperCase());
 
 	const { title, displayTitle, description } = guideEntrySeo(capitalizedName);
-	const pageUrl = `${siteConfig.url}/${encodeURIComponent(rawSlug)}`;
+	const pageUrl = `${siteConfig.url}${guideEntryPath(canonicalSlug)}`;
 
 	return {
 		title,
@@ -132,6 +136,13 @@ async function GuideEntry({ slug }: { slug: string }) {
 	}
 
 	const entry = searchResult.data; // This is the found or newly generated entry
+
+	// The lookup also matches hyphen/space alternates of the stored term
+	// (e.g. /skibidi%20toilet finds "skibidi-toilet"). Send those to the
+	// entry's one canonical URL instead of serving duplicate content.
+	if (entry.searchTerm !== slug) {
+		permanentRedirect(guideEntryPath(entry.searchTerm));
+	}
 
 	// Define types for clarity and to help TypeScript
 	type GuideEntryWithPotentialRelations = GuideEntrySchemaType & {
@@ -254,7 +265,10 @@ async function GuideEntry({ slug }: { slug: string }) {
 						return (
 							<Link
 								key={relatedEntry?.id}
-								href={`/${encodeURIComponent(relatedDisplayTerm || '')}`}
+								// Link the stored term, not the display term: linking
+								// "skibidi-toilet" as /skibidi%20toilet minted a second
+								// URL for the same entry on every page (LAC-3918).
+								href={guideEntryPath(relatedEntry?.searchTerm || '')}
 								className="transition-transform hover:scale-[1.02]"
 							>
 								<Card className="h-full border-[#70c8cd]/20 bg-black hover:border-[#70c8cd]/40">
@@ -303,7 +317,16 @@ export default async function GuidePage({
 
 	// Normalize the raw slug using the same logic as the service
 	const normalizedSlugForPage = normalizeSlug(rawSlug);
-	console.log(`[GuidePage] Decoded raw slug: "${rawSlug}", Normalized slug for page: "${normalizedSlugForPage}"`);
+	if (!normalizedSlugForPage) {
+		notFound();
+	}
+
+	// Case/whitespace variants (/TRIBBLE, /Tribble) all served 200 with
+	// self-referencing canonicals, so Google indexed them as competing
+	// duplicates (LAC-3918). Redirect them to the normalized URL instead.
+	if (rawSlug !== normalizedSlugForPage) {
+		permanentRedirect(guideEntryPath(normalizedSlugForPage));
+	}
 
 	return (
 		<div className="container relative min-h-screen max-w-4xl py-6 lg:py-10">

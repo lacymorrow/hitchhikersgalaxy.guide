@@ -4,6 +4,7 @@ import type { MetadataRoute } from "next";
 import { join } from "path";
 import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
+import { dedupeGuideEntries, guideEntryPath } from "@/lib/seo";
 import { db } from "@/server/db";
 import { guideEntries } from "@/server/db/schema";
 
@@ -72,22 +73,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: "daily" as const, priority: 1 },
     { url: `${baseUrl}/popular`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
+    { url: `${baseUrl}/browse`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
     { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
     { url: `${baseUrl}/travel-guide`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 },
-    { url: `${baseUrl}/submit`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
+    // /submit is intentionally absent: it lives in the (dev) route group and
+    // returns 404 in production, so listing it broke the sitemap (LAC-3918).
     { url: `${baseUrl}/contact`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.5 },
     { url: `${baseUrl}/privacy-policy`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.3 },
     { url: `${baseUrl}/terms-of-service`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.3 },
   ];
 
-  // Dynamic guide entries from database
-  const entries = await getGuideEntries();
-  const entryPages: MetadataRoute.Sitemap = entries.map((entry) => ({
-    url: `${baseUrl}/${encodeURIComponent(entry.searchTerm)}`,
-    lastModified: entry.updatedAt ?? new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+  // Dynamic guide entries from database. The table holds duplicate rows per
+  // term, which emitted 38 duplicate sitemap URLs (LAC-3918); dedupe on the
+  // normalized term the entry pages canonicalize to.
+  // Static routes shadow the [slug] catch-all, so a DB entry whose term
+  // matches one (e.g. "contact") would emit the same URL twice.
+  const staticUrls = new Set(staticPages.map((page) => page.url));
+  const entries = dedupeGuideEntries(await getGuideEntries());
+  const entryPages: MetadataRoute.Sitemap = entries
+    .map((entry) => ({
+      url: `${baseUrl}${guideEntryPath(entry.searchTerm)}`,
+      lastModified: entry.updatedAt ?? new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }))
+    .filter((page) => !staticUrls.has(page.url));
 
   // Blog posts + docs (only when blog is enabled)
   const contentPages: MetadataRoute.Sitemap = [];

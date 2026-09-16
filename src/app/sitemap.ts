@@ -86,13 +86,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic guide entries from database. The table holds duplicate rows per
   // term, which emitted 38 duplicate sitemap URLs (LAC-3918); dedupe on the
   // normalized term the entry pages canonicalize to.
+  // Static routes shadow the [slug] catch-all, so a DB entry whose term
+  // matches one (e.g. "contact") would emit the same URL twice.
+  const staticUrls = new Set(staticPages.map((page) => page.url));
   const entries = dedupeGuideEntries(await getGuideEntries());
-  const entryPages: MetadataRoute.Sitemap = entries.map((entry) => ({
-    url: `${baseUrl}${guideEntryPath(entry.searchTerm)}`,
-    lastModified: entry.updatedAt ?? new Date(),
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+  const entryPages: MetadataRoute.Sitemap = entries
+    .map((entry) => ({
+      url: `${baseUrl}${guideEntryPath(entry.searchTerm)}`,
+      lastModified: entry.updatedAt ?? new Date(),
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }))
+    .filter((page) => !staticUrls.has(page.url));
 
   // Blog posts + docs (only when blog is enabled)
   const contentPages: MetadataRoute.Sitemap = [];

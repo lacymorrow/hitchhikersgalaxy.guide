@@ -13,7 +13,7 @@ import { isAdmin } from "@/server/services/admin-service";
 export async function seedCMSAction() {
   const session = await auth({ protect: true });
 
-  if (!isAdmin({ email: session?.user?.email })) {
+  if (!(await isAdmin({ email: session?.user?.email }))) {
     throw new Error("Unauthorized");
   }
 
@@ -43,7 +43,7 @@ export async function seedCMSAction() {
 export async function getCMSStatusAction() {
   const session = await auth({ protect: true });
 
-  if (!isAdmin({ email: session?.user?.email })) {
+  if (!(await isAdmin({ email: session?.user?.email }))) {
     // Return a specific status for unauthorized access
     return { configured: false, message: "Unauthorized to check status." };
   }

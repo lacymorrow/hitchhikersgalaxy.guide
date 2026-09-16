@@ -25,16 +25,22 @@ export function getAuthStrategy(): AuthStrategy {
   // 	return "better-auth";
   // }
 
-  // Check if any Auth.js providers are configured
-  const hasAuthJS =
-    env.NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED ??
-    env.NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED ??
-    env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED ??
-    env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED ??
-    env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED ??
-    env.NEXT_PUBLIC_FEATURE_AUTH_GITLAB_ENABLED ??
-    env.NEXT_PUBLIC_FEATURE_AUTH_BITBUCKET_ENABLED ??
-    env.NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED;
+  // Check if any Auth.js providers are configured.
+  //
+  // This has to be `.some`, not a `??` chain. These flags are optional booleans,
+  // so an explicit `NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED=false` is non-nullish
+  // and a `??` chain stops right there, reporting guest mode even when GitHub or
+  // Google is switched on.
+  const hasAuthJS = [
+    env.NEXT_PUBLIC_FEATURE_AUTH_RESEND_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_CREDENTIALS_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_GOOGLE_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_DISCORD_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_GITLAB_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_BITBUCKET_ENABLED,
+    env.NEXT_PUBLIC_FEATURE_AUTH_TWITTER_ENABLED,
+  ].some(Boolean);
 
   if (hasAuthJS) {
     return "authjs";

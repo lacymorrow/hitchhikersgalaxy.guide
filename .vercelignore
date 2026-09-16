@@ -31,9 +31,12 @@ node_modules/playwright
 **/test/**
 **/__tests__/**
 **/__mocks__/**
-docs/**
-*.md
-!README.md
+# docs/ is build input, not documentation-for-humans: fumadocs-mdx compiles it
+# into .source and /docs prerenders from that. Ignoring it shipped an empty docs
+# site. Same for src/content/*.md, which prebuild-content.mjs turns into the
+# changelog. Only strip markdown that nothing reads at build time.
+/*.md
+!/README.md
 
 # IDE and config files
 .vscode
@@ -59,4 +62,3 @@ docs/**
 .env.test
 CLAUDE.md
 TODO.md
-CHANGELOG.md

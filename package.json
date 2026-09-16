@@ -332,7 +332,7 @@
     "react-grab": "^0.1.50",
     "tailwindcss": "3.4.17",
     "testcontainers": "^12.1.0",
-    "typescript": "^5",
+    "typescript": "^6.0.3",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^4.1.11",
     "vitest-browser-react": "^2.3.0",

@@ -29,6 +29,8 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
+import { ShortcutAction, type ShortcutActionType } from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
 import { cn } from "@/lib/utils";
 import type { User } from "@/types/user";
@@ -37,7 +39,11 @@ export interface MenuItemProps {
   onClick?: () => void;
   label: string;
   icon?: React.ReactNode;
-  shortcut?: string;
+  /**
+   * The action this row triggers, when a shortcut also fires it. The key is
+   * read from `shortcutConfig`, never passed as text.
+   */
+  action?: ShortcutActionType;
   className?: string;
 }
 
@@ -128,7 +134,7 @@ export function UserMenuDropdown({
               <Link href={routes.admin.index}>
                 <PersonIcon className="mr-2 size-4" />
                 Admin
-                <DropdownMenuShortcut>⌘A</DropdownMenuShortcut>
+                <ShortcutDisplay action={ShortcutAction.GOTO_ADMIN} as={DropdownMenuShortcut} />
               </Link>
             </DropdownMenuItem>
           )}
@@ -136,14 +142,13 @@ export function UserMenuDropdown({
             <Link href={routes.app.dashboard}>
               <RocketIcon className="mr-2 size-4" />
               Dashboard
-              <DropdownMenuShortcut>⌘D</DropdownMenuShortcut>
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
             <Link href={routes.settings.index}>
               <GearIcon className="mr-2 size-4" />
               Settings
-              <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+              <ShortcutDisplay action={ShortcutAction.GOTO_SETTINGS} as={DropdownMenuShortcut} />
             </Link>
           </DropdownMenuItem>
           {showOnboarding && (
@@ -167,13 +172,17 @@ export function UserMenuDropdown({
                 <Link href={item.href}>
                   {item.icon && <span className="mr-2">{item.icon}</span>}
                   {item.label}
-                  {item.shortcut && <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>}
+                  {item.action ? (
+                    <ShortcutDisplay action={item.action} as={DropdownMenuShortcut} />
+                  ) : null}
                 </Link>
               ) : (
                 <>
                   {item.icon && <span className="mr-2">{item.icon}</span>}
                   {item.label}
-                  {item.shortcut && <DropdownMenuShortcut>{item.shortcut}</DropdownMenuShortcut>}
+                  {item.action ? (
+                    <ShortcutDisplay action={item.action} as={DropdownMenuShortcut} />
+                  ) : null}
                 </>
               )}
             </DropdownMenuItem>
@@ -193,17 +202,26 @@ export function UserMenuDropdown({
                   <DropdownMenuRadioItem value="light" className="flex items-center gap-2">
                     <SunIcon className="size-4" />
                     <span>Light</span>
-                    <DropdownMenuShortcut>⌘L</DropdownMenuShortcut>
+                    <ShortcutDisplay
+                      action={ShortcutAction.SET_THEME_LIGHT}
+                      as={DropdownMenuShortcut}
+                    />
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="dark" className="flex items-center gap-2">
                     <MoonIcon className="size-4" />
                     <span>Dark</span>
-                    <DropdownMenuShortcut>⇧⌘D</DropdownMenuShortcut>
+                    <ShortcutDisplay
+                      action={ShortcutAction.SET_THEME_DARK}
+                      as={DropdownMenuShortcut}
+                    />
                   </DropdownMenuRadioItem>
                   <DropdownMenuRadioItem value="system" className="flex items-center gap-2">
                     <DesktopIcon className="size-4" />
                     <span>System</span>
-                    <DropdownMenuShortcut>⌘B</DropdownMenuShortcut>
+                    <ShortcutDisplay
+                      action={ShortcutAction.SET_THEME_SYSTEM}
+                      as={DropdownMenuShortcut}
+                    />
                   </DropdownMenuRadioItem>
                 </DropdownMenuRadioGroup>
               </DropdownMenuSubContent>
@@ -215,7 +233,7 @@ export function UserMenuDropdown({
         <DropdownMenuItem className="text-red-600 dark:text-red-400" onClick={handleSignOut}>
           <ExitIcon className="mr-2 size-4" />
           Sign out
-          <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+          <ShortcutDisplay action={ShortcutAction.LOGOUT_USER} as={DropdownMenuShortcut} />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

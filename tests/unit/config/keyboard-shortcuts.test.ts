@@ -38,7 +38,7 @@ describe("formatShortcut", () => {
 describe("shortcutLabel", () => {
   it("resolves the keys the user menu shows", () => {
     expect(shortcutLabel(ShortcutAction.GOTO_ADMIN, true)).toBe("⇧⌘A");
-    expect(shortcutLabel(ShortcutAction.GOTO_SETTINGS, true)).toBe("⇧⌘,");
+    expect(shortcutLabel(ShortcutAction.GOTO_SETTINGS, true)).toBe("⇧⌘S");
     expect(shortcutLabel(ShortcutAction.SET_THEME_LIGHT, true)).toBe("⇧⌘L");
     expect(shortcutLabel(ShortcutAction.SET_THEME_DARK, true)).toBe("⇧⌘D");
     expect(shortcutLabel(ShortcutAction.SET_THEME_SYSTEM, true)).toBe("⇧⌘Y");
@@ -63,5 +63,26 @@ describe("shortcutConfig", () => {
   it("binds no key twice", () => {
     const keys = shortcutConfig.map(([hotkey]) => hotkey.toLowerCase());
     expect(new Set(keys).size).toBe(keys.length);
+  });
+
+  /**
+   * Shift changes what a punctuation key reports. Holding shift and pressing
+   * the comma key gives `event.key === "<"`, and Mantine's `isExactHotkey`
+   * matches on `event.key`, so `mod+shift+,` never fires -- while
+   * `shortcutLabel` still renders a perfectly convincing "⇧⌘,". That
+   * combination shipped here and in a downstream fork, and survived a browser
+   * test that pressed the literal character instead of the physical key.
+   */
+  it("never combines shift with a punctuation key", () => {
+    for (const [hotkey] of shortcutConfig) {
+      const parts = hotkey.split("+").map((part) => part.trim());
+      const key = parts[parts.length - 1] ?? "";
+      const hasShift = parts.slice(0, -1).some((part) => part.toLowerCase() === "shift");
+      if (!hasShift) continue;
+      expect(
+        key.length > 1 || /^[a-z0-9]$/i.test(key),
+        `"${hotkey}" puts shift on "${key}"; shift rewrites event.key for punctuation, so it can never fire`
+      ).toBe(true);
+    }
   });
 });

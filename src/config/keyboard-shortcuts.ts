@@ -43,6 +43,14 @@ export type ShortcutActionType = (typeof ShortcutAction)[keyof typeof ShortcutAc
  * Mantine ignores hotkeys raised from an INPUT, TEXTAREA or SELECT, so none
  * of these fire while someone is typing. That is the right behaviour and is
  * worth knowing before you file "mod+K does nothing" as a bug.
+ *
+ * **Never put shift with a punctuation key here.** Mantine matches on
+ * `event.key`, and shift rewrites what a punctuation key reports: holding
+ * shift and pressing the comma key gives `event.key === "<"`, never ",", so
+ * `mod+shift+,` could not fire and settings had no working shortcut. The
+ * label rendered correctly the whole time, which is why it survived review.
+ * `shortcutConfig` is tested for this; letters and digits are safe because
+ * shift leaves `event.key` alone apart from case, which `normalizeKey` folds.
  */
 export const shortcutConfig: readonly (readonly [string, ShortcutActionType])[] = [
   // Universal search - works with whatever search component is visible
@@ -61,7 +69,7 @@ export const shortcutConfig: readonly (readonly [string, ShortcutActionType])[] 
 
   // Navigation
   ["mod+shift+A", ShortcutAction.GOTO_ADMIN],
-  ["mod+shift+,", ShortcutAction.GOTO_SETTINGS],
+  ["mod+shift+S", ShortcutAction.GOTO_SETTINGS],
 ];
 
 /** The raw hotkey bound to an action, or null when the action has no key. */

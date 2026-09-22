@@ -10,6 +10,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { constructMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
 import { getChangelogEntries, getChangelogEntry } from "@/lib/changelog";
+import { describeEntrySize } from "@/lib/changelog-types";
 import { cn } from "@/lib/utils";
 import { formatDate, formatDateTimeAttribute } from "@/lib/utils/format-date";
 
@@ -56,6 +57,7 @@ export default async function ChangelogEntryPage({ params }: Props) {
 
   const dateTimeAttr = formatDateTimeAttribute(entry.publishedAt);
   const displayDate = formatDate(entry.publishedAt);
+  const entrySize = describeEntrySize(entry);
 
   return (
     <div className="mx-auto w-full max-w-3xl">
@@ -83,10 +85,7 @@ export default async function ChangelogEntryPage({ params }: Props) {
                 {displayDate}
               </time>
             )}
-            <span className="text-xs text-muted-foreground">
-              {entry.commitCount} commit
-              {entry.commitCount !== 1 ? "s" : ""}
-            </span>
+            {entrySize && <span className="text-xs text-muted-foreground">{entrySize}</span>}
           </div>
           <h1 className="text-3xl font-bold tracking-tight">{entry.title}</h1>
           {entry.description && (

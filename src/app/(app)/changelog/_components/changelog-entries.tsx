@@ -2,6 +2,7 @@ import { headers } from "next/headers";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { getChangelogEntries } from "@/lib/changelog";
+import { describeEntrySize } from "@/lib/changelog-types";
 import { formatDate } from "@/lib/utils/format-date";
 
 /**
@@ -24,6 +25,7 @@ export async function ChangelogEntries() {
 
       {entries.map((entry) => {
         const date = formatDate(entry.publishedAt);
+        const size = describeEntrySize(entry);
         return (
           <div key={entry.slug} className="relative pb-10 pl-8">
             <div className="absolute left-0 top-1.5 h-[15px] w-[15px] rounded-full border-2 border-primary bg-background" />
@@ -35,10 +37,7 @@ export async function ChangelogEntries() {
                 </Badge>
               )}
               {date && <span className="text-sm text-muted-foreground">{date}</span>}
-              <span className="text-xs text-muted-foreground">
-                {entry.commitCount} commit
-                {entry.commitCount !== 1 ? "s" : ""}
-              </span>
+              {size && <span className="text-xs text-muted-foreground">{size}</span>}
             </div>
 
             <Link href={`/changelog/${entry.slug}`} className="group">

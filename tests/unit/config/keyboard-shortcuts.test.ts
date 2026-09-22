@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   formatShortcut,
   getShortcutDisplay,
+  ON_DEMAND_ACTIONS,
   ShortcutAction,
   shortcutConfig,
   shortcutLabel,
@@ -83,6 +84,38 @@ describe("shortcutConfig", () => {
         key.length > 1 || /^[a-z0-9]$/i.test(key),
         `"${hotkey}" puts shift on "${key}"; shift rewrites event.key for punctuation, so it can never fire`
       ).toBe(true);
+    }
+  });
+});
+
+/**
+ * Mantine's `useHotkeys` calls `preventDefault` on every binding unless told
+ * otherwise. That is right for a key the app owns outright and wrong for one
+ * the browser shares: Escape was bound globally with the default, so every
+ * Escape press anywhere was consumed to close a popover that was usually not
+ * mounted.
+ */
+describe("binding options", () => {
+  const optionsFor = (hotkey: string) => shortcutConfig.find(([key]) => key === hotkey)?.[2];
+
+  it("does not swallow Escape", () => {
+    expect(optionsFor("Escape")?.preventDefault).toBe(false);
+  });
+
+  it("exempts the popover from the unhandled-shortcut warning", () => {
+    expect(optionsFor("Escape")?.onDemand).toBe(true);
+    expect(ON_DEMAND_ACTIONS).toContain(ShortcutAction.CLOSE_POPOVER);
+  });
+
+  it("swallows the keys the app owns outright", () => {
+    for (const hotkey of ["mod+K", "mod+shift+S", "mod+shift+B"]) {
+      expect(optionsFor(hotkey)?.preventDefault ?? true).toBe(true);
+    }
+  });
+
+  it("keeps every on-demand action bound to a key", () => {
+    for (const action of ON_DEMAND_ACTIONS) {
+      expect(getShortcutDisplay(action)).not.toBeNull();
     }
   });
 });

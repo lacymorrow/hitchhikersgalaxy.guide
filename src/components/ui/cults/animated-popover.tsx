@@ -124,9 +124,12 @@ export function PopoverContent({ children, className, align = "start" }: Popover
 
   useClickOutside(formContainerRef as React.RefObject<HTMLElement>, closePopover);
 
+  // Escape is not swallowed globally (see `shortcutConfig`), so the popover
+  // consumes it only on the presses it actually handles.
   useKeyboardShortcut(
     ShortcutAction.CLOSE_POPOVER,
-    (_event) => {
+    (event) => {
+      event.preventDefault();
       closePopover();
     },
     () => isOpen,

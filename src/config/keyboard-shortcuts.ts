@@ -36,6 +36,26 @@ export const ShortcutAction = {
 
 export type ShortcutActionType = (typeof ShortcutAction)[keyof typeof ShortcutAction];
 
+/** How a binding behaves. Both default to the strict reading. */
+export interface ShortcutBinding {
+  /**
+   * Swallow the key with `preventDefault`. Mantine's `useHotkeys` does this
+   * for every binding unless told otherwise, which is right for a key the app
+   * owns outright like mod+K, and wrong for one the browser and every other
+   * widget also use. Escape is the case that matters: bound globally with the
+   * default, it was consumed on every press anywhere in the app, whether or
+   * not anything was open to close.
+   */
+  preventDefault?: boolean;
+  /**
+   * The handler mounts with something transient -- an open popover, a visible
+   * dialog -- so it is legitimately absent most of the time. Exempt from the
+   * unhandled-shortcut warning, which would otherwise name it on every page
+   * and train everyone to ignore the warning.
+   */
+  onDemand?: boolean;
+}
+
 /**
  * Maps keyboard shortcuts (using Mantine's HotkeyItem format) to actions.
  * @see https://mantine.dev/hooks/use-hotkeys/
@@ -52,25 +72,33 @@ export type ShortcutActionType = (typeof ShortcutAction)[keyof typeof ShortcutAc
  * `shortcutConfig` is tested for this; letters and digits are safe because
  * shift leaves `event.key` alone apart from case, which `normalizeKey` folds.
  */
-export const shortcutConfig: readonly (readonly [string, ShortcutActionType])[] = [
-  // Universal search - works with whatever search component is visible
-  ["mod+K", ShortcutAction.OPEN_SEARCH],
-  ["/", ShortcutAction.OPEN_SEARCH],
+export const shortcutConfig: readonly (readonly [string, ShortcutActionType, ShortcutBinding?])[] =
+  [
+    // Universal search - works with whatever search component is visible
+    ["mod+K", ShortcutAction.OPEN_SEARCH],
+    ["/", ShortcutAction.OPEN_SEARCH],
 
-  // App Actions
-  ["mod+shift+X", ShortcutAction.LOGOUT_USER],
-  ["mod+shift+B", ShortcutAction.TOGGLE_SIDEBAR],
-  ["Escape", ShortcutAction.CLOSE_POPOVER],
+    // App Actions
+    ["mod+shift+X", ShortcutAction.LOGOUT_USER],
+    ["mod+shift+B", ShortcutAction.TOGGLE_SIDEBAR],
+    // Escape belongs to whatever is open, not to the app. It is not swallowed,
+    // and its handler only exists while a popover is mounted.
+    ["Escape", ShortcutAction.CLOSE_POPOVER, { preventDefault: false, onDemand: true }],
 
-  // Theme
-  ["mod+shift+L", ShortcutAction.SET_THEME_LIGHT],
-  ["mod+shift+D", ShortcutAction.SET_THEME_DARK],
-  ["mod+shift+Y", ShortcutAction.SET_THEME_SYSTEM],
+    // Theme
+    ["mod+shift+L", ShortcutAction.SET_THEME_LIGHT],
+    ["mod+shift+D", ShortcutAction.SET_THEME_DARK],
+    ["mod+shift+Y", ShortcutAction.SET_THEME_SYSTEM],
 
-  // Navigation
-  ["mod+shift+A", ShortcutAction.GOTO_ADMIN],
-  ["mod+shift+S", ShortcutAction.GOTO_SETTINGS],
-];
+    // Navigation
+    ["mod+shift+A", ShortcutAction.GOTO_ADMIN],
+    ["mod+shift+S", ShortcutAction.GOTO_SETTINGS],
+  ];
+
+/** Actions whose handler mounts on demand, so absence is not a defect. */
+export const ON_DEMAND_ACTIONS: readonly ShortcutActionType[] = shortcutConfig
+  .filter(([, , binding]) => binding?.onDemand)
+  .map(([, action]) => action);
 
 /** The raw hotkey bound to an action, or null when the action has no key. */
 export function getShortcutDisplay(action: ShortcutActionType): string | null {

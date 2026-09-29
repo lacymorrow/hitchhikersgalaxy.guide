@@ -12,13 +12,7 @@
   ],
   "registryDependencies": [
     "@shipkit/cn",
-    "@shipkit/routes-config",
-    "accordion",
-    "scroll-area",
-    "skeleton",
-    "badge",
-    "command",
-    "input"
+    "@shipkit/routes-config"
   ],
   "files": [
     {

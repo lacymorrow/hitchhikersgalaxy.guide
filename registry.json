@@ -234,13 +234,7 @@
         "@tanstack/react-table"
       ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "button",
-        "input",
-        "dialog",
-        "dropdown-menu",
-        "table",
-        "select"
+        "@shipkit/cn"
       ],
       "files": [
         {
@@ -308,8 +302,7 @@
         }
       ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "accordion"
+        "@shipkit/cn"
       ],
       "docs": "Static FAQ page with accordion UI. Optionally integrates with Payload CMS for dynamic FAQ management."
     },
@@ -331,13 +324,7 @@
       ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config",
-        "accordion",
-        "scroll-area",
-        "skeleton",
-        "badge",
-        "command",
-        "input"
+        "@shipkit/routes-config"
       ],
       "files": [
         {
@@ -436,14 +423,7 @@
       ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config",
-        "badge",
-        "button",
-        "input",
-        "scroll-area",
-        "separator",
-        "sheet",
-        "skeleton"
+        "@shipkit/routes-config"
       ],
       "files": [
         {
@@ -996,10 +976,6 @@
         "@shipkit/cn",
         "@shipkit/features-config",
         "@shipkit/builder-io",
-        "button",
-        "card",
-        "carousel",
-        "avatar",
         "@shipkit/payload"
       ],
       "files": [
@@ -1397,9 +1373,7 @@
       ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config",
-        "badge",
-        "button"
+        "@shipkit/routes-config"
       ],
       "files": [
         {
@@ -1462,14 +1436,7 @@
       ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config",
-        "button",
-        "card",
-        "input",
-        "form",
-        "label",
-        "checkbox",
-        "textarea"
+        "@shipkit/routes-config"
       ],
       "files": [
         {
@@ -1514,12 +1481,7 @@
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "@shipkit/features-config",
-        "button",
-        "input",
-        "card",
-        "badge",
-        "accordion"
+        "@shipkit/features-config"
       ],
       "files": [
         {
@@ -1595,13 +1557,6 @@
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card",
-        "badge",
-        "input",
-        "separator",
-        "table",
-        "skeleton",
         "@shipkit/auth",
         "@shipkit/data-table",
         "@shipkit/payments",
@@ -1788,12 +1743,6 @@
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "button",
-        "card",
-        "input",
-        "separator",
-        "form",
-        "label",
         "@shipkit/auth",
         "@shipkit/payments",
         "@shipkit/github-connect",
@@ -1886,29 +1835,6 @@
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "button",
-        "card",
-        "badge",
-        "input",
-        "separator",
-        "tabs",
-        "avatar",
-        "dialog",
-        "dropdown-menu",
-        "popover",
-        "select",
-        "textarea",
-        "tooltip",
-        "scroll-area",
-        "command",
-        "label",
-        "switch",
-        "slider",
-        "radio-group",
-        "calendar",
-        "checkbox",
-        "table",
-        "form",
         "@shipkit/storage",
         "@shipkit/blog"
       ],
@@ -2395,10 +2321,7 @@
         "zod"
       ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "button",
-        "input",
-        "label"
+        "@shipkit/cn"
       ],
       "files": [
         {
@@ -2483,13 +2406,7 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "button",
-        "dialog",
-        "popover",
-        "textarea",
-        "label",
-        "input"
+        "@shipkit/cn"
       ],
       "files": [
         {
@@ -2654,9 +2571,7 @@
         "@aws-sdk/s3-request-presigner"
       ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "button",
-        "input"
+        "@shipkit/cn"
       ],
       "files": [
         {
@@ -2719,12 +2634,7 @@
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "@shipkit/features-config",
-        "button",
-        "card",
-        "badge",
-        "separator",
-        "tabs"
+        "@shipkit/features-config"
       ],
       "files": [
         {
@@ -2976,18 +2886,6 @@
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card",
-        "badge",
-        "input",
-        "separator",
-        "tabs",
-        "table",
-        "dialog",
-        "dropdown-menu",
-        "skeleton",
-        "avatar",
-        "scroll-area",
         "@shipkit/data-table",
         "@shipkit/auth",
         "@shipkit/payments",
@@ -3420,11 +3318,6 @@
       ],
       "registryDependencies": [
         "@shipkit/cn",
-        "button",
-        "card",
-        "input",
-        "textarea",
-        "scroll-area",
         "@shipkit/payments",
         "@shipkit/auth",
         "@shipkit/better-auth"

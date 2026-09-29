@@ -7,13 +7,7 @@
     "@tanstack/react-table"
   ],
   "registryDependencies": [
-    "@shipkit/cn",
-    "button",
-    "input",
-    "dialog",
-    "dropdown-menu",
-    "table",
-    "select"
+    "@shipkit/cn"
   ],
   "files": [
     {

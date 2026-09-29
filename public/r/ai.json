@@ -10,11 +10,6 @@
   ],
   "registryDependencies": [
     "@shipkit/cn",
-    "button",
-    "card",
-    "input",
-    "textarea",
-    "scroll-area",
     "@shipkit/payments",
     "@shipkit/auth",
     "@shipkit/better-auth"

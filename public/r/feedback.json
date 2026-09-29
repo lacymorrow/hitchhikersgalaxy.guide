@@ -8,13 +8,7 @@
     "lucide-react"
   ],
   "registryDependencies": [
-    "@shipkit/cn",
-    "button",
-    "dialog",
-    "popover",
-    "textarea",
-    "label",
-    "input"
+    "@shipkit/cn"
   ],
   "files": [
     {

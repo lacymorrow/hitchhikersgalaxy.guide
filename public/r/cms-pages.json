@@ -11,10 +11,6 @@
     "@shipkit/cn",
     "@shipkit/features-config",
     "@shipkit/builder-io",
-    "button",
-    "card",
-    "carousel",
-    "avatar",
     "@shipkit/payload"
   ],
   "files": [

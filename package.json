@@ -289,6 +289,7 @@
     "@react-grab/claude-code": "^0.1.29",
     "@react-grab/codex": "^0.1.29",
     "@react-grab/gemini": "^0.1.29",
+    "@shadcn/lint": "0.2.0",
     "@tailwindcss/postcss": "^4.3.3",
     "@testcontainers/postgresql": "^12.1.0",
     "@testing-library/dom": "^10.4.1",

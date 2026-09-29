@@ -32,6 +32,11 @@ bun run lint:fix       # Fix all linting issues
 bun run typecheck      # Run TypeScript type checking
 ```
 
+`bun run lint:eslint` also runs [`@shadcn/lint`](https://github.com/shadcn-ui/lint), which checks
+Tailwind v4 usage against Shipkit's design system (Button, Card, theme scale). It reports at
+`warn`, not `error`, so it won't fail CI on its own. See [`docs/development/index.mdx`](./docs/development/index.mdx#design-system-lint-shadcnlint)
+for the rules and where the contracts live in `eslint.config.mjs`.
+
 ### Database Operations
 
 ```bash

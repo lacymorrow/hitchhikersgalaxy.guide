@@ -143,6 +143,43 @@ NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED=true
 
 Features auto-enable when you add the required env vars.
 
+## Design-system lint (@shadcn/lint)
+
+`bun run lint:eslint` includes [`@shadcn/lint`](https://github.com/shadcn-ui/lint), an
+ESLint plugin that checks Tailwind v4 usage against Shipkit's own design system: it reads
+`components.json`, `src/styles/theme.css`, and each component's variants, and reports when a
+call site restyles a component or hardcodes an off-token value instead of using what the
+component already offers.
+
+Two rules are enabled, both in `eslint.config.mjs`:
+
+- **`shadcn/no-restyle`** flags `className` overrides on design-system components.
+  Contracts (also in `eslint.config.mjs`) set what each component accepts:
+  - `Button`: layout/margin/width only; padding, height, radius, and type come from `size`
+    (`src/components/ui/button.tsx`).
+  - `CardTitle` may resize text, not change font family or weight
+    (`src/components/ui/card.tsx`).
+  - `CardContent` may change spacing (padding/gap), not typography or color.
+  - Every other recognized `src/components/ui/**` component defaults to layout-only.
+- **`shadcn/no-arbitrary-values`** flags off-scale values like `p-[13px]` in favor of the
+  theme's spacing/radius/color scale (layout values such as `w-[320px]` are still allowed).
+
+Both rules are set to `warn`, not `error`, because existing code already has hundreds of
+findings and `error` would fail CI on unrelated, pre-existing code. Fix findings as you touch those files; promote a rule to `error` once it's
+clean.
+
+`src/components/ui/**` and `src/components/blocks/**` are excluded from ESLint entirely (see
+the ignores in `eslint.config.mjs`), so these rules only apply at call sites, not inside the
+components themselves.
+
+To add or loosen a contract, edit the `contracts` array under `shadcn/no-restyle` in
+`eslint.config.mjs`. See the [design-systems docs](https://github.com/shadcn-ui/lint/blob/main/docs/design-systems.md)
+for the contract and custom-message format. To silence a specific, reviewed exception:
+
+```tsx
+{/* eslint-disable-next-line shadcn/no-restyle -- reason */}
+```
+
 ## Before Production
 
 Run these checks:

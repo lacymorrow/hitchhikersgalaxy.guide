@@ -272,6 +272,11 @@
           "path": "src/config/features-config.ts",
           "type": "registry:lib",
           "target": "~/src/config/features-config.ts"
+        },
+        {
+          "path": "src/config/features-table.ts",
+          "type": "registry:lib",
+          "target": "~/src/config/features-table.ts"
         }
       ]
     },

@@ -65,6 +65,14 @@ bun run build:registry # Build shadcn registry (npx shadcn build)
 
 Source: `registry.json` (project root). Output: `public/r/*.json`. See `docs/features/registry.mdx` for full documentation.
 
+### Doctor
+
+```bash
+bun run doctor         # Which features are on, waiting on a key, or off (reads .env.local then .env)
+```
+
+One table: feature, status (`on`, `waiting`, `off`), and the missing keys with a URL for where each comes from. `waiting` means some keys are set but not all, or a feature it depends on is off. Exit code is always 0; it is a report, not a gate. Every feature is declared once in `src/config/features-table.ts`; `features-config.ts` and the doctor both read that table, so add new features there.
+
 ## Architecture Overview
 
 ### Core Framework Stack
@@ -157,7 +165,7 @@ src/
 
 Shipkit uses environment variables for feature toggles:
 
-- Features turn on when their env vars are present. Set `DISABLE_<FEATURE>=true` to force one off. Logic: `src/config/features-config.ts`
+- Features turn on when their env vars are present. Set `DISABLE_<FEATURE>=true` to force one off. Table: `src/config/features-table.ts`; evaluation: `src/config/features-config.ts`; report: `bun run doctor`
 - Each enabled feature is exposed to the client as `NEXT_PUBLIC_FEATURE_<NAME>_ENABLED`, for example `NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED`, `NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED`, `NEXT_PUBLIC_FEATURE_STRIPE_ENABLED`, `NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED`. The full list is in `src/env.ts`
 - Auth: Auth.js v5 runs today; Better Auth is the chosen default and the switch is in progress. Both are detected (`NEXT_PUBLIC_FEATURE_AUTH_JS_ENABLED`, `NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED`)
 - **Graceful degradation** - Features disable cleanly when not configured

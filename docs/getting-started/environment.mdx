@@ -108,6 +108,10 @@ LEMONSQUEEZY_STORE_ID=""
 NODE_ENV="development"
 ```
 
+## Check what is on
+
+`bun run doctor` (or `npx tsx scripts/doctor.ts`) reads `.env.local` then `.env` and prints one table: each feature, whether it is `on`, `waiting` (some keys set, not all, or a dependency is off), or `off`, the keys still missing, and where each key comes from. It never prints values and always exits 0. Every feature is declared once in `src/config/features-table.ts`.
+
 ## Type Safety
 
 Environment variables are validated using T3 Env and Zod schemas:

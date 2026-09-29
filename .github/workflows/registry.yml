@@ -26,3 +26,5 @@ jobs:
         with:
           node-version: 22
       - run: bash scripts/registry-check.sh
+      - uses: oven-sh/setup-bun@v2
+      - run: bun scripts/registry-closure.ts

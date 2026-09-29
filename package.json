@@ -60,6 +60,8 @@
     "typecheck": "fumadocs-mdx && tsc --noEmit",
     "build:registry": "npx --yes shadcn@latest build",
     "registry:check": "bash scripts/registry-check.sh",
+    "registry:closure": "bun scripts/registry-closure.ts",
+    "registry:smoke": "bash scripts/registry-smoke.sh",
     "payload": "cross-env PAYLOAD_CONFIG_PATH=src/payload.config.ts payload",
     "build:storybook": "storybook build",
     "test:e2e": "playwright test",

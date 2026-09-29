@@ -8,7 +8,10 @@
     "zod"
   ],
   "registryDependencies": [
-    "@shipkit/cn"
+    "@shipkit/cn",
+    "button",
+    "input",
+    "label"
   ],
   "files": [
     {

@@ -1,11 +1,15 @@
 import type { User } from "@clerk/nextjs/server";
 import { auth, currentUser } from "@clerk/nextjs/server";
+import { mapClerkSession } from "@/lib/auth/session-mapping";
+import { logger } from "@/lib/logger";
 
 /**
- * Clerk Authentication Utilities
+ * Server-side helpers on top of Clerk's `auth()` and `currentUser()`.
  *
- * This file provides utility functions for working with Clerk authentication.
- * Only used when Clerk is the active authentication strategy.
+ * Only used when Clerk is the active authentication strategy. App code should
+ * read the session through `auth()` from `@/server/auth`, which dispatches to
+ * `src/server/clerk/facade.ts`; these are for code that needs Clerk-specific
+ * data (organizations, roles) the app's session shape does not carry.
  */
 
 /**
@@ -13,10 +17,9 @@ import { auth, currentUser } from "@clerk/nextjs/server";
  */
 export async function getClerkUser(): Promise<User | null> {
   try {
-    const user = await currentUser();
-    return user;
+    return await currentUser();
   } catch (error) {
-    console.error("Error getting Clerk user:", error);
+    logger.error("Clerk: failed to read the current user", error);
     return null;
   }
 }
@@ -34,7 +37,7 @@ export async function getClerkSession() {
       isAuthenticated: !!userId,
     };
   } catch (error) {
-    console.error("Error getting Clerk session:", error);
+    logger.error("Clerk: failed to read the session", error);
     return {
       userId: null,
       sessionId: null,
@@ -61,26 +64,11 @@ export async function getClerkUserId(): Promise<string | null> {
 }
 
 /**
- * Convert Clerk user to Shipkit user format
- * This ensures compatibility with existing user interfaces
+ * Convert a Clerk user to the app's `User` shape (the same mapping the
+ * session facade uses).
  */
 export function formatClerkUser(clerkUser: User) {
-  return {
-    id: clerkUser.id,
-    name: clerkUser.fullName ?? clerkUser.firstName ?? "Unknown",
-    email: clerkUser.primaryEmailAddress?.emailAddress ?? "",
-    image: clerkUser.imageUrl ?? null,
-    emailVerified:
-      clerkUser.primaryEmailAddress?.verification?.status === "verified" ? new Date() : null,
-    // Additional Clerk-specific fields that might be useful
-    clerkId: clerkUser.id,
-    firstName: clerkUser.firstName,
-    lastName: clerkUser.lastName,
-    username: clerkUser.username,
-    phoneNumber: clerkUser.primaryPhoneNumber?.phoneNumber,
-    createdAt: new Date(clerkUser.createdAt),
-    updatedAt: new Date(clerkUser.updatedAt),
-  };
+  return mapClerkSession(clerkUser, null)?.user ?? null;
 }
 
 /**
@@ -89,7 +77,6 @@ export function formatClerkUser(clerkUser: User) {
 export async function getCurrentFormattedUser() {
   const clerkUser = await getClerkUser();
   if (!clerkUser) return null;
-
   return formatClerkUser(clerkUser);
 }
 
@@ -101,7 +88,7 @@ export async function hasClerkRole(role: string): Promise<boolean> {
     const { orgRole } = await auth();
     return orgRole === role;
   } catch (error) {
-    console.error("Error checking Clerk role:", error);
+    logger.error("Clerk: failed to check the organization role", error);
     return false;
   }
 }
@@ -126,7 +113,7 @@ export async function getClerkOrganization() {
       hasOrganization: !!orgId,
     };
   } catch (error) {
-    console.error("Error getting Clerk organization:", error);
+    logger.error("Clerk: failed to read the organization", error);
     return {
       id: null,
       role: null,
@@ -134,24 +121,4 @@ export async function getClerkOrganization() {
       hasOrganization: false,
     };
   }
-}
-
-/**
- * Redirect URLs helper for Clerk
- */
-export function getClerkRedirectUrls() {
-  const baseUrl =
-    process.env.NODE_ENV === "production"
-      ? process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : "https://your-domain.com" // Replace with your production domain
-      : "http://localhost:3000";
-
-  return {
-    signIn: `${baseUrl}/sign-in`,
-    signUp: `${baseUrl}/sign-up`,
-    afterSignIn: `${baseUrl}/dashboard`,
-    afterSignUp: `${baseUrl}/dashboard`,
-    userProfile: `${baseUrl}/settings/profile`,
-  };
 }

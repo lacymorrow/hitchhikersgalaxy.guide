@@ -8,12 +8,18 @@
     "next-mdx-remote",
     "remark-gfm",
     "lucide-react",
-    "@emblemvault/ask-ai",
-    "react-error-boundary@6.1.5"
+    "@emblemvault/ask-ai"
   ],
   "registryDependencies": [
     "@shipkit/cn",
-    "@shipkit/routes-config"
+    "@shipkit/routes-config",
+    "badge",
+    "button",
+    "input",
+    "scroll-area",
+    "separator",
+    "sheet",
+    "skeleton"
   ],
   "files": [
     {

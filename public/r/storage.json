@@ -8,7 +8,9 @@
     "@aws-sdk/s3-request-presigner"
   ],
   "registryDependencies": [
-    "@shipkit/cn"
+    "@shipkit/cn",
+    "button",
+    "input"
   ],
   "files": [
     {

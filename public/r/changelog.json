@@ -11,7 +11,9 @@
   ],
   "registryDependencies": [
     "@shipkit/cn",
-    "@shipkit/routes-config"
+    "@shipkit/routes-config",
+    "badge",
+    "button"
   ],
   "files": [
     {

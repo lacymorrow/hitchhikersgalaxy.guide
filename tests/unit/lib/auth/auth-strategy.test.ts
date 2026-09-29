@@ -63,11 +63,52 @@ describe("getAuthStrategy", () => {
     expect(isGuestModeActive()).toBe(true);
   });
 
-  it("does not claim Clerk is active", async () => {
-    const { isClerkActive } = await loadStrategy({
-      NEXT_PUBLIC_FEATURE_AUTH_CLERK_ENABLED: true,
+  describe("Clerk", () => {
+    it("is never picked from the keys alone", async () => {
+      const { getAuthStrategy, isClerkActive } = await loadStrategy({
+        NEXT_PUBLIC_FEATURE_AUTH_CLERK_ENABLED: true,
+        NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED: true,
+      });
+      expect(getAuthStrategy()).toBe("better-auth");
+      expect(isClerkActive()).toBe(false);
     });
-    expect(isClerkActive()).toBe(false);
+
+    it("is active with AUTH_STRATEGY=clerk and both keys", async () => {
+      const { getAuthStrategy, isClerkActive, isAuthenticationAvailable } = await loadStrategy({
+        AUTH_STRATEGY: "clerk",
+        NEXT_PUBLIC_FEATURE_AUTH_CLERK_ENABLED: true,
+        NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED: true,
+        NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED: true,
+      });
+      expect(getAuthStrategy()).toBe("clerk");
+      expect(isClerkActive()).toBe(true);
+      expect(isAuthenticationAvailable()).toBe(true);
+    });
+
+    it("honours the NEXT_PUBLIC mirror the client bundle receives", async () => {
+      const { getAuthStrategy } = await loadStrategy({
+        NEXT_PUBLIC_AUTH_STRATEGY: "clerk",
+        NEXT_PUBLIC_FEATURE_AUTH_CLERK_ENABLED: true,
+      });
+      expect(getAuthStrategy()).toBe("clerk");
+    });
+
+    it("falls through when selected but the keys are missing", async () => {
+      const { getAuthStrategy, isClerkActive } = await loadStrategy({
+        AUTH_STRATEGY: "clerk",
+        NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED: true,
+      });
+      expect(getAuthStrategy()).toBe("authjs");
+      expect(isClerkActive()).toBe(false);
+    });
+
+    it("does not let the Better Auth default in when clerk is selected but unconfigured", async () => {
+      const { getAuthStrategy } = await loadStrategy({
+        AUTH_STRATEGY: "clerk",
+        NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED: true,
+      });
+      expect(getAuthStrategy()).toBe("guest");
+    });
   });
 
   describe("Better Auth", () => {

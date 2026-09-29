@@ -4,10 +4,16 @@
   "title": "Data Table",
   "description": "Feature-rich data table with search, pagination, column visibility, and row actions built on TanStack Table.",
   "dependencies": [
-    "@tanstack/react-table@8.21.3"
+    "@tanstack/react-table"
   ],
   "registryDependencies": [
-    "@shipkit/cn"
+    "@shipkit/cn",
+    "button",
+    "input",
+    "dialog",
+    "dropdown-menu",
+    "table",
+    "select"
   ],
   "files": [
     {

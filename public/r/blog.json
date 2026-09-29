@@ -8,7 +8,8 @@
     "next-mdx-remote",
     "remark-gfm",
     "lucide-react",
-    "@emblemvault/ask-ai"
+    "@emblemvault/ask-ai",
+    "react-error-boundary@6.1.5"
   ],
   "registryDependencies": [
     "@shipkit/cn",

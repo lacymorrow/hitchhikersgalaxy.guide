@@ -1,0 +1,41 @@
+---
+title: "Install with your coding agent"
+description: "Paste one prompt into Claude Code, Cursor or Codex. It asks five questions, then sets ShipKit up for you."
+---
+
+# Install with your coding agent
+
+Paste this into Claude Code, Cursor, Codex or any coding agent. It reads the [install spec](https://github.com/shipkit-io/bones/blob/main/docs/agents/install.md) in Bones, asks you five questions, shows you the commands, and runs them after you say yes.
+
+```text
+Install ShipKit for me.
+
+Read https://raw.githubusercontent.com/shipkit-io/bones/main/docs/agents/install.md and follow it exactly. If a step is not in that file, do not do it.
+
+Ask me the five questions from the file one at a time, with the recommended answer first. If I say "defaults", skip straight to the plan. Show me the exact commands before you run anything and wait for my yes. Do not ask me to paste secrets into this chat: shadcn writes empty keys to .env.local, and you tell me where each value comes from. Touch only .env.local, the "shipkit" block in package.json, and files the CLI or shadcn created. When it is done, run the verify step and show me which features are on.
+```
+
+<p>
+  <a href="claude-cli://open?q=Install%20ShipKit%20for%20me.%0A%0ARead%20https%3A%2F%2Fraw.githubusercontent.com%2Fshipkit-io%2Fbones%2Fmain%2Fdocs%2Fagents%2Finstall.md%20and%20follow%20it%20exactly.%20If%20a%20step%20is%20not%20in%20that%20file%2C%20do%20not%20do%20it.%0A%0AAsk%20me%20the%20five%20questions%20from%20the%20file%20one%20at%20a%20time%2C%20with%20the%20recommended%20answer%20first.%20If%20I%20say%20%22defaults%22%2C%20skip%20straight%20to%20the%20plan.%20Show%20me%20the%20exact%20commands%20before%20you%20run%20anything%20and%20wait%20for%20my%20yes.%20Do%20not%20ask%20me%20to%20paste%20secrets%20into%20this%20chat%3A%20shadcn%20writes%20empty%20keys%20to%20.env.local%2C%20and%20you%20tell%20me%20where%20each%20value%20comes%20from.%20Touch%20only%20.env.local%2C%20the%20%22shipkit%22%20block%20in%20package.json%2C%20and%20files%20the%20CLI%20or%20shadcn%20created.%20When%20it%20is%20done%2C%20run%20the%20verify%20step%20and%20show%20me%20which%20features%20are%20on.">
+    Open in Claude Code
+  </a>
+  {" · "}
+  <a href="cursor://anysphere.cursor-deeplink/prompt?text=Install%20ShipKit%20for%20me.%0A%0ARead%20https%3A%2F%2Fraw.githubusercontent.com%2Fshipkit-io%2Fbones%2Fmain%2Fdocs%2Fagents%2Finstall.md%20and%20follow%20it%20exactly.%20If%20a%20step%20is%20not%20in%20that%20file%2C%20do%20not%20do%20it.%0A%0AAsk%20me%20the%20five%20questions%20from%20the%20file%20one%20at%20a%20time%2C%20with%20the%20recommended%20answer%20first.%20If%20I%20say%20%22defaults%22%2C%20skip%20straight%20to%20the%20plan.%20Show%20me%20the%20exact%20commands%20before%20you%20run%20anything%20and%20wait%20for%20my%20yes.%20Do%20not%20ask%20me%20to%20paste%20secrets%20into%20this%20chat%3A%20shadcn%20writes%20empty%20keys%20to%20.env.local%2C%20and%20you%20tell%20me%20where%20each%20value%20comes%20from.%20Touch%20only%20.env.local%2C%20the%20%22shipkit%22%20block%20in%20package.json%2C%20and%20files%20the%20CLI%20or%20shadcn%20created.%20When%20it%20is%20done%2C%20run%20the%20verify%20step%20and%20show%20me%20which%20features%20are%20on.">
+    Open in Cursor
+  </a>
+</p>
+
+Both links pre-fill the prompt and wait for you to press Enter. Nothing runs until you do.
+
+## What happens
+
+1. The agent asks about your app's name, auth, payments, content and services. Say "defaults" for Neon Postgres, Better Auth with GitHub and Google, MDX content, Resend and no payments yet.
+2. It creates the project from [Bones](https://github.com/shipkit-io/bones) with `npm create shipkit-app@latest` and adds the integrations you chose from the [ShipKit registry](/docs/features/registry) with `npx shadcn add @shipkit/<item>`.
+3. Every env key the integrations need lands in `.env.local` empty. The agent prints where each value comes from; you fill them in.
+4. It runs typecheck and the dev server and reports which features are on.
+
+## Why a prompt and not an installer
+
+The spec lives in the repo, next to the code, so it changes when the code changes. The prompt above never has to. Everything the agent does is a command you could run yourself; the agent only asks the questions and keeps the order straight.
+
+If you would rather not use an agent, the [quick start](/docs/getting-started) has the same steps by hand.

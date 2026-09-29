@@ -3325,9 +3325,9 @@
         "ai"
       ],
       "dependencies": [
-        "openai",
+        "openai@6.49.0",
         "@anthropic-ai/sdk",
-        "@emblemvault/ask-ai"
+        "@emblemvault/ask-ai@0.1.1"
       ],
       "registryDependencies": [
         "@shipkit/cn",

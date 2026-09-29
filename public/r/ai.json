@@ -4,9 +4,9 @@
   "title": "AI",
   "description": "Browser-based AI with SmolLM via WebGPU and cloud AI with OpenAI: demo components, utilities, and worker scripts.",
   "dependencies": [
-    "openai",
+    "openai@6.49.0",
     "@anthropic-ai/sdk",
-    "@emblemvault/ask-ai"
+    "@emblemvault/ask-ai@0.1.1"
   ],
   "registryDependencies": [
     "@shipkit/cn",

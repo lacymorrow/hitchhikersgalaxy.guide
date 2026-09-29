@@ -16,7 +16,13 @@
     "input",
     "separator",
     "table",
-    "skeleton"
+    "skeleton",
+    "@shipkit/auth",
+    "@shipkit/data-table",
+    "@shipkit/payments",
+    "@shipkit/payload",
+    "@shipkit/github-connect",
+    "@shipkit/waitlist"
   ],
   "files": [
     {

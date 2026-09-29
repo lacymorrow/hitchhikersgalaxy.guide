@@ -14,7 +14,11 @@
     "input",
     "separator",
     "form",
-    "label"
+    "label",
+    "@shipkit/auth",
+    "@shipkit/payments",
+    "@shipkit/github-connect",
+    "@shipkit/vercel-connect"
   ],
   "files": [
     {

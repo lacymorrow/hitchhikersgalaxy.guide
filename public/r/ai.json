@@ -2,10 +2,11 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "ai",
   "title": "AI",
-  "description": "Browser-based AI with SmolLM via WebGPU and cloud AI with OpenAI — demo components, utilities, and worker scripts.",
+  "description": "Browser-based AI with SmolLM via WebGPU and cloud AI with OpenAI: demo components, utilities, and worker scripts.",
   "dependencies": [
     "openai",
-    "@anthropic-ai/sdk"
+    "@anthropic-ai/sdk",
+    "@emblemvault/ask-ai"
   ],
   "registryDependencies": [
     "@shipkit/cn",
@@ -13,7 +14,9 @@
     "card",
     "input",
     "textarea",
-    "scroll-area"
+    "scroll-area",
+    "@shipkit/payments",
+    "@shipkit/auth"
   ],
   "files": [
     {
@@ -105,6 +108,30 @@
       "content": "\"use client\";\n\nimport { AskAiGroup } from \"@emblemvault/ask-ai\";\n\ninterface AskAiButtonsProps {\n  content: string;\n  goal?: string;\n  className?: string;\n}\n\nexport const AskAiButtons = ({\n  content,\n  goal = \"Summarize this page\",\n  className,\n}: AskAiButtonsProps) => {\n  return (\n    <div className={className}>\n      <AskAiGroup\n        goal={goal}\n        content={content}\n        services={{\n          claude: true,\n          chatgpt: true,\n          gemini: true,\n          perplexity: true,\n        }}\n        size=\"sm\"\n        variant=\"outline\"\n      />\n    </div>\n  );\n};\n",
       "type": "registry:component",
       "target": "~/src/components/primitives/ask-ai-buttons.tsx"
+    },
+    {
+      "path": "src/components/blocks/ai/smollm-web/_components/icons/ArrowRightIcon.jsx",
+      "content": "// @ts-nocheck\nexport default function ArrowRightIcon(props) {\n  return (\n    <svg\n      {...props}\n      xmlns=\"http://www.w3.org/2000/svg\"\n      width=\"24\"\n      height=\"24\"\n      viewBox=\"0 0 24 24\"\n      fill=\"none\"\n      stroke=\"currentColor\"\n      strokeWidth=\"2\"\n      strokeLinecap=\"round\"\n      strokeLinejoin=\"round\"\n    >\n      <path d=\"M5 12h14\" />\n      <path d=\"m12 5 7 7-7 7\" />\n    </svg>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "~/src/components/blocks/ai/smollm-web/_components/icons/ArrowRightIcon.jsx"
+    },
+    {
+      "path": "src/components/blocks/ai/smollm-web/_components/icons/BotIcon.jsx",
+      "content": "// @ts-nocheck\n\nexport default function BotIcon(props) {\n  return (\n    <svg\n      {...props}\n      xmlns=\"http://www.w3.org/2000/svg\"\n      width=\"24\"\n      height=\"24\"\n      viewBox=\"0 0 24 24\"\n      fill=\"none\"\n      stroke=\"currentColor\"\n      strokeWidth=\"2\"\n      strokeLinecap=\"round\"\n      strokeLinejoin=\"round\"\n    >\n      <path d=\"M12 8V4H8\" />\n      <rect width=\"16\" height=\"12\" x=\"4\" y=\"8\" rx=\"2\" />\n      <path d=\"M2 14h2\" />\n      <path d=\"M20 14h2\" />\n      <path d=\"M15 13v2\" />\n      <path d=\"M9 13v2\" />\n    </svg>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "~/src/components/blocks/ai/smollm-web/_components/icons/BotIcon.jsx"
+    },
+    {
+      "path": "src/components/blocks/ai/smollm-web/_components/icons/StopIcon.jsx",
+      "content": "// @ts-nocheck\n\nexport default function StopIcon(props) {\n  return (\n    <svg\n      {...props}\n      xmlns=\"http://www.w3.org/2000/svg\"\n      width=\"24\"\n      height=\"24\"\n      viewBox=\"0 0 24 24\"\n      fill=\"none\"\n      stroke=\"currentColor\"\n      strokeWidth=\"2\"\n      strokeLinecap=\"round\"\n      strokeLinejoin=\"round\"\n    >\n      <path d=\"M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z\" />\n      <path\n        fill=\"currentColor\"\n        d=\"M9 9.563C9 9.252 9.252 9 9.563 9h4.874c.311 0 .563.252.563.563v4.874c0 .311-.252.563-.563.563H9.564A.562.562 0 0 1 9 14.437V9.564Z\"\n      />\n    </svg>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "~/src/components/blocks/ai/smollm-web/_components/icons/StopIcon.jsx"
+    },
+    {
+      "path": "src/components/blocks/ai/smollm-web/_components/icons/UserIcon.jsx",
+      "content": "// @ts-nocheck\n\nexport default function UserIcon(props) {\n  return (\n    <svg\n      {...props}\n      xmlns=\"http://www.w3.org/2000/svg\"\n      width=\"24\"\n      height=\"24\"\n      viewBox=\"0 0 24 24\"\n      fill=\"none\"\n      stroke=\"currentColor\"\n      strokeWidth=\"2\"\n      strokeLinecap=\"round\"\n      strokeLinejoin=\"round\"\n    >\n      <path d=\"M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2\" />\n      <circle cx=\"12\" cy=\"7\" r=\"4\" />\n    </svg>\n  );\n}\n",
+      "type": "registry:component",
+      "target": "~/src/components/blocks/ai/smollm-web/_components/icons/UserIcon.jsx"
     }
   ],
   "envVars": {

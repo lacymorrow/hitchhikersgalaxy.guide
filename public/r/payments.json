@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "payments",
   "title": "Payments",
-  "description": "Unified payment system with Stripe, Lemon Squeezy, and Polar providers — checkout flows, webhook handlers, and subscription management.",
+  "description": "Unified payment system with Stripe, Lemon Squeezy, and Polar providers: checkout flows, webhook handlers, and subscription management.",
   "dependencies": [
     "stripe",
     "@lemonsqueezy/lemonsqueezy.js",
@@ -18,7 +18,8 @@
     "@shipkit/features-config",
     "button",
     "card",
-    "badge"
+    "badge",
+    "@shipkit/auth"
   ],
   "files": [
     {
@@ -218,7 +219,7 @@
     "LEMONSQUEEZY_WEBHOOK_SECRET": "",
     "POLAR_ACCESS_TOKEN": ""
   },
-  "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` (Stripe, plus `STRIPE_WEBHOOK_SECRET` for webhooks), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records.",
+  "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` (Stripe, plus `STRIPE_WEBHOOK_SECRET` for webhooks), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records. Overwrites the Bones stubs `src/server/providers/stripe-provider.ts`, `src/server/providers/lemonsqueezy-provider.ts`, `src/server/providers/polar-provider.ts` and `src/lib/lemonsqueezy/lemonsqueezy.ts`; run with --overwrite.",
   "categories": [
     "shipkit",
     "payments"

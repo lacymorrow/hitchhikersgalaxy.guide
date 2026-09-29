@@ -6,8 +6,10 @@
 #   REGISTRY_BUILD=1 bash scripts/registry-smoke.sh x   # also run `pnpm build` after typecheck
 #
 # What it does, per item: clone shipkit-io/bones (shallow), point @shipkit at a
-# local copy of public/r served on a random port, `npx shadcn add @shipkit/<item>
-# -y --overwrite` with stdin closed (no prompts), then `pnpm typecheck`.
+# local copy of public/r served on a random port, `pnpm install` (shadcn only
+# installs when an item brings a new package, and typecheck needs node_modules),
+# `npx shadcn add @shipkit/<item> -y --overwrite` with stdin closed (no prompts),
+# then `pnpm typecheck`.
 # Needs Node 22 (Bones' .nvmrc) on PATH and pnpm.
 set -euo pipefail
 cd "$(dirname "$0")/.."
@@ -38,6 +40,7 @@ for item in "${items[@]}"; do
     fs.writeFileSync(p, JSON.stringify(c, null, 2) + "\n");
   ' "$dir" "http://localhost:$port/{name}.json"
   if (cd "$dir" \
+      && pnpm install --frozen-lockfile >"$work/$item.install.log" 2>&1 \
       && CI=1 npx --yes shadcn@latest add "@shipkit/$item" -y --overwrite </dev/null >"$work/$item.add.log" 2>&1 \
       && pnpm typecheck >"$work/$item.typecheck.log" 2>&1 \
       && { [[ -z "${REGISTRY_BUILD:-}" ]] || pnpm build >"$work/$item.build.log" 2>&1; }); then

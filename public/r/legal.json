@@ -2,7 +2,7 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "legal",
   "title": "Legal Pages",
-  "description": "Legal pages with privacy policy, terms of service, EULA, and legal information — all in MDX with shared layout and header navigation.",
+  "description": "Legal pages with privacy policy, terms of service, EULA, and legal information, all in MDX with shared layout and header navigation.",
   "registryDependencies": [
     "@shipkit/cn",
     "@shipkit/routes-config"

@@ -35,7 +35,9 @@
     "calendar",
     "checkbox",
     "table",
-    "form"
+    "form",
+    "@shipkit/storage",
+    "@shipkit/blog"
   ],
   "files": [
     {

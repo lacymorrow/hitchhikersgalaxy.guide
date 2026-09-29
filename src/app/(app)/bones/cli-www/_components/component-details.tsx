@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { BookOpen, Copy, FileJson, X } from "lucide-react";
 import type { KeyboardEvent, MouseEvent } from "react";
 import { useState } from "react";
+import { toast } from "sonner";
 import {
   Accordion,
   AccordionContent,
@@ -15,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { getDocumentationUrl, getInstallCommand } from "../_lib/registry-service";
 import { getColor } from "./colors";
@@ -26,8 +26,7 @@ import type { ComponentDetailsProps } from "./types";
 
 const copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
-  toast({
-    title: "Copied to clipboard",
+  toast.success("Copied to clipboard", {
     description: "The content has been copied to your clipboard.",
   });
 };

@@ -2,16 +2,15 @@
 
 import { ArrowRight, CheckCircle2, Sparkles, Zap } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import { addToWaitlistSimple } from "@/server/actions/waitlist-actions";
 
 export function WaitlistHero() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const { toast } = useToast();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -23,26 +22,21 @@ export function WaitlistHero() {
       if (result.success) {
         setStatus("success");
         setEmail("");
-        toast({
-          title: "Welcome aboard! 🚀",
+        toast.success("Welcome aboard! 🚀", {
           description: "You're now on the exclusive early access list. We'll be in touch soon!",
         });
       } else {
         console.error("Error adding to waitlist:", result.error);
         setStatus("error");
-        toast({
-          title: "Oops, something went wrong",
+        toast.error("Oops, something went wrong", {
           description: result.error ?? "Mind trying again? We promise it'll work this time.",
-          variant: "destructive",
         });
       }
     } catch (error) {
       console.error("Error submitting form:", error);
       setStatus("error");
-      toast({
-        title: "Oops, something went wrong",
+      toast.error("Oops, something went wrong", {
         description: "Mind trying again? We promise it'll work this time.",
-        variant: "destructive",
       });
     }
   };

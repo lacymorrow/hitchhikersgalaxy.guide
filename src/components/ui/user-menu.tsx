@@ -6,6 +6,7 @@ import Link from "next/link";
 import { signOut, useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
 import * as React from "react";
+import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button, buttonVariants } from "@/components/ui/button";
 import {
@@ -28,7 +29,6 @@ import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { Skeleton } from "@/components/ui/skeleton";
 import { routes } from "@/config/routes";
 import { useSignInRedirectUrl } from "@/hooks/use-sign-in-redirect-url";
-import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { updateTheme } from "@/server/actions/settings";
 
@@ -43,7 +43,6 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
   const { data: session, status } = useSession();
   const signInRedirectUrl = useSignInRedirectUrl();
   const { theme, setTheme } = useTheme();
-  const { toast } = useToast();
   const [isOpen, setIsOpen] = React.useState(false);
 
   const isAdmin = session?.user?.isAdmin === true;
@@ -59,28 +58,23 @@ export const UserMenu: React.FC<UserMenuProps> = ({ size = "default", className 
         try {
           const result = await updateTheme(newTheme);
           if (!result.success) {
-            toast({
-              title: "Failed to save theme preference",
+            toast.error("Failed to save theme preference", {
               description: result.error || "Your theme preference will reset on next visit.",
-              variant: "destructive",
             });
             return;
           }
-          toast({
-            title: "Theme updated",
+          toast.success("Theme updated", {
             description: result.message,
           });
         } catch (error) {
           console.error("Failed to update theme:", error);
-          toast({
-            title: "Failed to save theme preference",
+          toast.error("Failed to save theme preference", {
             description: "Your theme preference will reset on next visit.",
-            variant: "destructive",
           });
         }
       }
     },
-    [session?.user, setTheme, toast]
+    [session?.user, setTheme]
   );
 
   // Handle keyboard shortcuts

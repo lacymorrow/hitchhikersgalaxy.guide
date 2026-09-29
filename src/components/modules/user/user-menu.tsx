@@ -4,6 +4,7 @@ import { UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import * as React from "react";
+import { toast } from "sonner";
 import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";
 import { Link } from "@/components/primitives/link";
 import { useKeyboardShortcut } from "@/components/providers/keyboard-shortcut-provider";
@@ -11,13 +12,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { BorderBeam } from "@/components/ui/border-beam";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { type Theme, useThemeToggle } from "@/components/ui/shipkit/theme";
-import { ToastAction } from "@/components/ui/toast";
 import { ShortcutAction, type ShortcutActionType } from "@/config/keyboard-shortcuts";
 import { routes } from "@/config/routes";
 import { useSignInRedirectUrl } from "@/hooks/use-auth-redirect";
 import { useIsAdmin } from "@/hooks/use-is-admin";
 import { useSubscription } from "@/hooks/use-subscription";
-import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { updateTheme } from "@/server/actions/settings";
 import type { User } from "@/types/user";
@@ -38,7 +37,6 @@ export const UserMenu = ({
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const signInRedirectUrl = useSignInRedirectUrl();
-  const { toast } = useToast();
   const [isOpen, setIsOpen] = React.useState(false);
   const { hasActiveSubscription } = useSubscription();
   const router = useRouter();
@@ -58,27 +56,22 @@ export const UserMenu = ({
       try {
         const result = await updateTheme(newTheme);
         if (!result.success) {
-          toast({
-            title: "Failed to save theme preference",
+          toast.error("Failed to save theme preference", {
             description: result.error ?? "Your theme preference could not be saved.",
-            variant: "destructive",
           });
         }
 
-        toast({
-          title: "Theme updated",
+        toast.success("Theme updated", {
           description: result.message,
         });
       } catch (error) {
         console.error("Failed to save theme preference:", error);
-        toast({
-          title: "Failed to save theme preference",
+        toast.error("Failed to save theme preference", {
           description: "An unexpected error occurred while saving your theme.",
-          variant: "destructive",
         });
       }
     },
-    [currentUser, toast]
+    [currentUser]
   );
 
   const { theme, setLightTheme, setDarkTheme, setSystemTheme } = useThemeToggle({
@@ -97,18 +90,16 @@ export const UserMenu = ({
     if (isInvalidSession && status !== "loading") {
       // Sign out without redirect to avoid navigation loop
       void signOut({ redirect: false }).then(() => {
-        toast({
-          title: "Session expired",
+        toast.error("Session expired", {
           description: "Your session has expired. Would you like to sign in again?",
-          action: (
-            <ToastAction altText="Sign in" asChild>
-              <Link href={signInRedirectUrl}>Sign in</Link>
-            </ToastAction>
-          ),
+          action: {
+            label: "Sign in",
+            onClick: () => router.push(signInRedirectUrl),
+          },
         });
       });
     }
-  }, [isInvalidSession, status, toast, signInRedirectUrl]);
+  }, [isInvalidSession, status, signInRedirectUrl, router]);
 
   const handleThemeChange = React.useCallback(
     (value: string) => {

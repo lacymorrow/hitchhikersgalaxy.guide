@@ -2,6 +2,7 @@
 
 import { ArrowRight, CheckCircle, Coffee, Gift, Heart, Sparkles } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,7 +16,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
 import { addToWaitlist, type WaitlistFormData } from "@/server/actions/waitlist-actions";
 
 export function WaitlistForm() {
@@ -29,7 +29,6 @@ export function WaitlistForm() {
     interests: "",
   });
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const { toast } = useToast();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
@@ -49,26 +48,21 @@ export function WaitlistForm() {
           timeline: "",
           interests: "",
         });
-        toast({
-          title: "You're officially on the list! 🎉",
+        toast.success("You're officially on the list! 🎉", {
           description: "We'll send you updates and early access when it's ready.",
         });
       } else {
         console.error("Error adding to waitlist:", result.error);
         setStatus("error");
-        toast({
-          title: "Something went wrong",
+        toast.error("Something went wrong", {
           description: result.error ?? "Please try again or contact support.",
-          variant: "destructive",
         });
       }
     } catch (error) {
       console.error("Error submitting form:", error);
       setStatus("error");
-      toast({
-        title: "Something went wrong",
+      toast.error("Something went wrong", {
         description: "Please try again or contact support if the issue persists.",
-        variant: "destructive",
       });
     }
   };

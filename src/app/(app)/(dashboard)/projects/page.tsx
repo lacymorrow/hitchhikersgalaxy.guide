@@ -4,6 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table";
 import { redirect } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,7 +21,6 @@ import { DataTableDialog } from "@/components/ui/data-table/data-table-dialog";
 import { routes } from "@/config/routes";
 import { env } from "@/env";
 import { useTeamId } from "@/hooks/use-team-id";
-import { useToast } from "@/hooks/use-toast";
 import { LocalProjectStorage } from "@/lib/local-storage/project-storage";
 import { LocalTeamStorage } from "@/lib/local-storage/team-storage";
 import { createProject, deleteProject, updateProject } from "@/server/actions/projects";
@@ -61,7 +61,6 @@ export default function ProjectsPage() {
     redirect(routes.auth.signIn);
   }
 
-  const { toast } = useToast();
   const selectedTeamId = useTeamId();
 
   const [projects, setProjects] = useState<Project[]>([]);
@@ -101,10 +100,8 @@ export default function ProjectsPage() {
       setProjects(mapProjects(fetchedProjects || []));
     } catch (error) {
       console.error("Failed to load projects:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to load projects. Please try again.",
-        variant: "destructive",
       });
     }
   };
@@ -126,16 +123,13 @@ export default function ProjectsPage() {
       await loadProjects();
       setShowCreateDialog(false);
       setNewProjectName("");
-      toast({
-        title: "Success",
+      toast.success("Success", {
         description: "Project created successfully.",
       });
     } catch (error) {
       console.error("Failed to create project:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to create project. Please try again.",
-        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -152,16 +146,13 @@ export default function ProjectsPage() {
       setShowEditDialog(false);
       setSelectedProject(null);
       setNewProjectName("");
-      toast({
-        title: "Success",
+      toast.success("Success", {
         description: "Project updated successfully.",
       });
     } catch (error) {
       console.error("Failed to update project:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to update project. Please try again.",
-        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);
@@ -172,16 +163,13 @@ export default function ProjectsPage() {
     try {
       await deleteProject(project.id);
       await loadProjects();
-      toast({
-        title: "Success",
+      toast.success("Success", {
         description: "Project deleted successfully.",
       });
     } catch (error) {
       console.error("Failed to delete project:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to delete project. Please try again.",
-        variant: "destructive",
       });
     }
   };

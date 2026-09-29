@@ -13,11 +13,11 @@ import {
   useRef,
   useState,
 } from "react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
-import { toast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { installComponent } from "../_actions/install";
 import { getInstalledComponents } from "../_actions/registry";
@@ -60,8 +60,7 @@ interface ComponentBrowserProps {
 
 const _copyToClipboard = (text: string) => {
   navigator.clipboard.writeText(text);
-  toast({
-    title: "Copied to clipboard",
+  toast.success("Copied to clipboard", {
     description: "The content has been copied to your clipboard.",
   });
 };
@@ -111,8 +110,7 @@ const ComponentCard = memo(
         e.stopPropagation();
         const installCommand = getInstallCommand(component, currentRegistry);
         navigator.clipboard.writeText(installCommand);
-        toast({
-          title: "Copied to clipboard",
+        toast.success("Copied to clipboard", {
           description: "Install command has been copied to your clipboard.",
         });
       },
@@ -279,20 +277,16 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
       // Find the registry for this component
       const registryName = component.registry;
       if (!registryName) {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Component has no registry specified",
-          variant: "destructive",
         });
         return;
       }
 
       const registry = registries.find((r) => r.name === registryName);
       if (!registry) {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Could not find registry for component",
-          variant: "destructive",
         });
         return;
       }
@@ -300,10 +294,8 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
       const installCommand = getInstallCommand(component, registry);
       const componentUrl = installCommand.split('"')[1]; // Extract URL from command
       if (!componentUrl) {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: "Could not parse install command",
-          variant: "destructive",
         });
         return;
       }
@@ -447,10 +439,8 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
             setRegistries((prev: Registry[]) => [...prev, registryWithCustom]);
             setCurrentRegistry(registryWithCustom);
           } catch (error) {
-            toast({
-              title: "Failed to add registry",
+            toast.error("Failed to add registry", {
               description: error instanceof Error ? error.message : "Unknown error occurred",
-              variant: "destructive",
             });
           }
         }}
@@ -467,10 +457,8 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
               }
             }
           } catch (error) {
-            toast({
-              title: "Failed to remove registry",
+            toast.error("Failed to remove registry", {
               description: error instanceof Error ? error.message : "Unknown error occurred",
-              variant: "destructive",
             });
           }
         }}

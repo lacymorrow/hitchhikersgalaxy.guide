@@ -3,11 +3,11 @@
 import type { ColumnDef, Row } from "@tanstack/react-table";
 import { format } from "date-fns";
 import { ExternalLink, Trash2, Users } from "lucide-react";
+import { toast } from "sonner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
-import { useToast } from "@/hooks/use-toast";
 import type { GitHubProfile } from "@/server/services/github/github-service";
 import { revokeGitHubAccessAction } from "../actions";
 
@@ -28,28 +28,22 @@ function formatDate(date: Date | null) {
 }
 
 function GitHubAccessActionsCell({ row }: { row: Row<GitHubUserData> }) {
-  const { toast } = useToast();
   const handleRevoke = async () => {
     try {
       const result = await revokeGitHubAccessAction(row.original.id);
       if (result.success) {
-        toast({
-          title: "Access Revoked",
+        toast.success("Access Revoked", {
           description: "GitHub access has been revoked successfully.",
         });
         window.location.reload();
       } else {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: result.error ?? "Failed to revoke GitHub access",
-          variant: "destructive",
         });
       }
     } catch (_error) {
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to revoke GitHub access",
-        variant: "destructive",
       });
     }
   };

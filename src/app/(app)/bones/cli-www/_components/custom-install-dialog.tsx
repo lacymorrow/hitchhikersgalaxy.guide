@@ -3,11 +3,11 @@
 import { ReloadIcon } from "@radix-ui/react-icons";
 import { Terminal as TerminalIcon } from "lucide-react";
 import { type FormEvent, memo, useCallback, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { toast } from "@/hooks/use-toast";
 import { formatUrlToCommand, isValidCommand, isValidUrl } from "../_lib/registry-service";
 import type { InstallationProgress } from "./types";
 
@@ -40,16 +40,13 @@ export const CustomInstallDialog = memo(({ onInstall }: CustomInstallDialogProps
 
         setOpen(false);
         setInput("");
-        toast({
-          title: "Command accepted",
+        toast.success("Command accepted", {
           description: "Starting installation...",
         });
         onInstall(finalCommand);
       } catch (error) {
-        toast({
-          title: "Invalid input",
+        toast.error("Invalid input", {
           description: error instanceof Error ? error.message : "Please check the format",
-          variant: "destructive",
         });
       } finally {
         setLoading(false);

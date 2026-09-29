@@ -3,6 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,7 +19,6 @@ import { Badge } from "@/components/ui/badge";
 import { DataTable } from "@/components/ui/data-table/data-table";
 import { DataTableDialog } from "@/components/ui/data-table/data-table-dialog";
 import { routes } from "@/config/routes";
-import { useToast } from "@/hooks/use-toast";
 import { createTeam, deleteTeam, updateTeam } from "@/server/actions/teams";
 import type { Team } from "@/types/team";
 
@@ -34,7 +34,6 @@ async function fetchUserTeams(): Promise<Team[]> {
 
 export default function TeamsPage() {
   const { data: session } = useSession();
-  const { toast } = useToast();
   const [teams, setTeams] = useState<Team[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [showAddDialog, setShowAddDialog] = useState(false);
@@ -51,15 +50,13 @@ export default function TeamsPage() {
       setTeams(teams);
     } catch (error) {
       console.error("Failed to load teams:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to load teams",
-        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
     }
-  }, [session?.user?.id, toast]);
+  }, [session?.user?.id]);
 
   useEffect(() => {
     if (session?.user?.id) {
@@ -79,10 +76,8 @@ export default function TeamsPage() {
 
   const handleDelete = async (team: Team) => {
     if (team.team.type === "personal") {
-      toast({
-        title: "Cannot delete personal team",
+      toast.error("Cannot delete personal team", {
         description: "Your personal team cannot be deleted.",
-        variant: "destructive",
       });
       return;
     }
@@ -91,16 +86,13 @@ export default function TeamsPage() {
       await deleteTeam(team.team.id);
       await loadTeams();
 
-      toast({
-        title: "Success",
+      toast.success("Success", {
         description: "Team deleted successfully",
       });
     } catch (error) {
       console.error("Failed to delete team:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to delete team",
-        variant: "destructive",
       });
     }
   };
@@ -113,16 +105,14 @@ export default function TeamsPage() {
         // Update existing team
         await updateTeam(selectedTeam.team.id, { name: newTeamName });
 
-        toast({
-          title: "Success",
+        toast.success("Success", {
           description: "Team updated successfully",
         });
       } else {
         // Create new team
         await createTeam(session.user.id, newTeamName);
 
-        toast({
-          title: "Success",
+        toast.success("Success", {
           description: "Team created successfully",
         });
       }
@@ -133,10 +123,8 @@ export default function TeamsPage() {
       setNewTeamName("");
     } catch (error) {
       console.error("Failed to save team:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to save team",
-        variant: "destructive",
       });
     } finally {
       setIsSubmitting(false);

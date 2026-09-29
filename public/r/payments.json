@@ -4,12 +4,12 @@
   "title": "Payments",
   "description": "Unified payment system with Stripe, Lemon Squeezy, and Polar providers: checkout flows, webhook handlers, and subscription management.",
   "dependencies": [
-    "stripe",
-    "@lemonsqueezy/lemonsqueezy.js",
     "zod",
     "lucide-react",
-    "@polar-sh/nextjs",
-    "canvas-confetti",
+    "@polar-sh/nextjs@0.9.6",
+    "stripe@20.3.1",
+    "@lemonsqueezy/lemonsqueezy.js@4.0.0",
+    "canvas-confetti@1.9.4",
     "@polar-sh/sdk@0.43.1"
   ],
   "devDependencies": [

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import {

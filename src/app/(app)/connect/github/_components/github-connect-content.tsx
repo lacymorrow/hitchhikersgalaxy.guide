@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { useEffect, useState } from "react";
 import { Icons } from "@/components/assets/icons";
 import { GitHubOAuthButton } from "@/components/buttons/github-oauth-button";

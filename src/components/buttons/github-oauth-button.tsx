@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn } from "@/lib/auth/use-session";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Icons } from "@/components/assets/icons";

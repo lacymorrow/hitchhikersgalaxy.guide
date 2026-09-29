@@ -2,7 +2,7 @@
 
 import { DotsHorizontalIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { toast } from "sonner";
 import {
   DropdownMenu,

@@ -11,7 +11,7 @@ import {
 } from "@radix-ui/react-icons";
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
-import { signOut } from "next-auth/react";
+import { signOut } from "@/lib/auth/use-session";
 import type * as React from "react";
 import { RestartOnboardingButton } from "@/components/modules/onboarding/onboarding-check";
 import {

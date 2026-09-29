@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table";
 import { redirect } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import {

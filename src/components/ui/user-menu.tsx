@@ -3,7 +3,7 @@
 import { DesktopIcon, MoonIcon, SunIcon } from "@radix-ui/react-icons";
 import { UserIcon } from "lucide-react";
 import Link from "next/link";
-import { signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "@/lib/auth/use-session";
 import { useTheme } from "next-themes";
 import * as React from "react";
 import { toast } from "sonner";

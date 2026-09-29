@@ -4,7 +4,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useWindowScroll } from "@uidotdev/usehooks";
 import { cva } from "class-variance-authority";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import type React from "react";
 
 import { Icon } from "@/components/assets/icon";

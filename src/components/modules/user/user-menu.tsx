@@ -2,7 +2,7 @@
 
 import { UserIcon } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { signOut, useSession } from "next-auth/react";
+import { signOut, useSession } from "@/lib/auth/use-session";
 import * as React from "react";
 import { toast } from "sonner";
 import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";

@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import * as React from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";

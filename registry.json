@@ -1044,7 +1044,8 @@
         "form",
         "label",
         "tooltip",
-        "@shipkit/github-connect"
+        "@shipkit/github-connect",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -1268,7 +1269,7 @@
       "name": "better-auth",
       "type": "registry:block",
       "title": "Better Auth",
-      "description": "Better Auth server config, Drizzle schema, session service, React client, OAuth buttons, provider, and the API route handler.",
+      "description": "Better Auth on the app's own user tables: server config, session facade, session service, React client, the strategy-aware useSession/signIn/signOut hook, OAuth buttons, provider, and the API route handler.",
       "categories": [
         "shipkit",
         "auth",
@@ -1289,9 +1290,9 @@
           "target": "~/src/server/better-auth/config.ts"
         },
         {
-          "path": "src/server/better-auth/schema.ts",
+          "path": "src/server/better-auth/facade.ts",
           "type": "registry:lib",
-          "target": "~/src/server/better-auth/schema.ts"
+          "target": "~/src/server/better-auth/facade.ts"
         },
         {
           "path": "src/server/better-auth/service.ts",
@@ -1317,9 +1318,25 @@
           "path": "src/components/providers/better-auth-provider.tsx",
           "type": "registry:component",
           "target": "~/src/components/providers/better-auth-provider.tsx"
+        },
+        {
+          "path": "src/lib/auth/auth-strategy.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/auth-strategy.ts"
+        },
+        {
+          "path": "src/lib/auth/session-mapping.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/session-mapping.ts"
+        },
+        {
+          "path": "src/lib/auth/use-session.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/use-session.ts"
         }
       ],
       "envVars": {
+        "AUTH_STRATEGY": "better-auth",
         "APP_SECRET": "",
         "BETTER_AUTH_SECRET": "",
         "BETTER_AUTH_BASE_URL": "",
@@ -1328,7 +1345,7 @@
         "AUTH_GOOGLE_ID": "",
         "AUTH_GOOGLE_SECRET": ""
       },
-      "docs": "Better Auth with email/password and GitHub/Google OAuth. Set `APP_SECRET` (it derives `BETTER_AUTH_SECRET`) or set `BETTER_AUTH_SECRET` directly, and `BETTER_AUTH_BASE_URL` if it differs from the site URL. Add `AUTH_GITHUB_ID`/`AUTH_GITHUB_SECRET` and/or `AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET` for OAuth. The handler mounts at `/api/better-auth`. Bones already has the `better_auth_*` tables in its schema, so run `pnpm db:push` and no schema file is added."
+      "docs": "Better Auth with email/password and GitHub/Google OAuth, reading and writing the app's own `users`, `accounts`, `sessions` and `verificationTokens` tables. Set `DATABASE_URL` and `APP_SECRET` (it derives `BETTER_AUTH_SECRET`) or set `BETTER_AUTH_SECRET` directly, and `BETTER_AUTH_BASE_URL` if it differs from the site URL. `AUTH_STRATEGY=better-auth` makes it the active strategy behind `@/server/auth`; leave it unset and Better Auth is picked whenever nothing Auth.js-specific is configured. Add `AUTH_GITHUB_ID`/`AUTH_GITHUB_SECRET` and/or `AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET` for OAuth. The handler mounts at `/api/better-auth`. Run `pnpm db:push` so the nullable Better Auth columns exist on the auth tables."
     },
     {
       "name": "legal",
@@ -1599,7 +1616,8 @@
         "@shipkit/payments",
         "@shipkit/payload",
         "@shipkit/github-connect",
-        "@shipkit/waitlist"
+        "@shipkit/waitlist",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -1788,7 +1806,8 @@
         "@shipkit/auth",
         "@shipkit/payments",
         "@shipkit/github-connect",
-        "@shipkit/vercel-connect"
+        "@shipkit/vercel-connect",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -2775,7 +2794,8 @@
         "button",
         "card",
         "badge",
-        "@shipkit/auth"
+        "@shipkit/auth",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -2981,7 +3001,8 @@
         "@shipkit/auth",
         "@shipkit/payments",
         "@shipkit/vercel-connect",
-        "@shipkit/github-connect"
+        "@shipkit/github-connect",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -3367,7 +3388,8 @@
       ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config"
+        "@shipkit/routes-config",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -3413,7 +3435,8 @@
         "textarea",
         "scroll-area",
         "@shipkit/payments",
-        "@shipkit/auth"
+        "@shipkit/auth",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -3530,8 +3553,7 @@
       ],
       "dependencies": [
         "octokit",
-        "@octokit/rest",
-        "jszip"
+        "@octokit/rest"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -3540,7 +3562,8 @@
         "button",
         "card",
         "input",
-        "@shipkit/vercel-connect"
+        "@shipkit/vercel-connect",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -3636,7 +3659,8 @@
         "@shipkit/features-config",
         "button",
         "card",
-        "@shipkit/github-connect"
+        "@shipkit/github-connect",
+        "@shipkit/better-auth"
       ],
       "files": [
         {

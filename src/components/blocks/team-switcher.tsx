@@ -3,7 +3,7 @@
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import * as React from "react";
 import { toast } from "sonner";
 import { useTeam } from "@/components/providers/team-provider";

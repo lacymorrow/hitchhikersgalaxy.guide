@@ -16,7 +16,8 @@
     "textarea",
     "scroll-area",
     "@shipkit/payments",
-    "@shipkit/auth"
+    "@shipkit/auth",
+    "@shipkit/better-auth"
   ],
   "files": [
     {

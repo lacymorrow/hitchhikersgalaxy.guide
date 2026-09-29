@@ -22,7 +22,8 @@
     "@shipkit/payments",
     "@shipkit/payload",
     "@shipkit/github-connect",
-    "@shipkit/waitlist"
+    "@shipkit/waitlist",
+    "@shipkit/better-auth"
   ],
   "files": [
     {
@@ -195,7 +196,7 @@
     },
     {
       "path": "src/hooks/use-is-admin.ts",
-      "content": "import { useSession } from \"next-auth/react\";\n\nexport const useIsAdmin = () => {\n  const { data: session } = useSession();\n  return session?.user?.isAdmin ?? false;\n};\n",
+      "content": "import { useSession } from \"@/lib/auth/use-session\";\n\nexport const useIsAdmin = () => {\n  const { data: session } = useSession();\n  return session?.user?.isAdmin ?? false;\n};\n",
       "type": "registry:hook",
       "target": "~/src/hooks/use-is-admin.ts"
     },

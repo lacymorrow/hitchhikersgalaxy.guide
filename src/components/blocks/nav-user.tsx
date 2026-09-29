@@ -1,7 +1,7 @@
 "use client";
 
 import { CaretSortIcon } from "@radix-ui/react-icons";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { useState } from "react";
 import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

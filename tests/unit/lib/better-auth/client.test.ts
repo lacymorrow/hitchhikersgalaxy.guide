@@ -35,10 +35,10 @@ describe("better auth client", () => {
     vi.doUnmock("@/config/base-url");
   });
 
-  it("builds the client against the site base URL", async () => {
+  it("builds the client against the site base URL and the server's base path", async () => {
     await loadClient();
     expect(createAuthClient).toHaveBeenCalledWith(
-      expect.objectContaining({ baseURL: "https://example.test" })
+      expect.objectContaining({ baseURL: "https://example.test", basePath: "/api/better-auth" })
     );
   });
 

@@ -1,7 +1,7 @@
 "use client";
 
 import { AlertCircle, CheckCircle, ExternalLink } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { useCallback, useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Icons } from "@/components/assets/icons";

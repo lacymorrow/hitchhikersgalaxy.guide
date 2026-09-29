@@ -1,15 +1,21 @@
 import { DrizzleAdapter } from "@auth/drizzle-adapter";
-import type { Session } from "next-auth";
+import type { NextAuthResult, Session } from "next-auth";
 import NextAuth from "next-auth";
 import { cache } from "react";
 import { buildTimeFeatures } from "@/config/features-config";
 import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { env } from "@/env";
+import { isBetterAuthActive } from "@/lib/auth/auth-strategy";
 import { logger } from "@/lib/logger";
 import { redirect, routeRedirect } from "@/lib/utils/redirect";
 import { authOptions } from "@/server/auth-js/auth.config";
 import { isGuestOnlyMode } from "@/server/auth-js/auth-providers-utils";
+import {
+  betterAuthSignIn,
+  betterAuthSignOut,
+  getBetterAuthSession,
+} from "@/server/better-auth/facade";
 import { db } from "@/server/db";
 import { accounts, sessions, users, verificationTokens } from "@/server/db/schema";
 import type { UserRole } from "@/types/user";
@@ -42,9 +48,9 @@ const shouldUseDatabaseAdapter = env.NEXT_PUBLIC_FEATURE_DATABASE_ENABLED && db 
 const {
   auth: nextAuthAuth,
   handlers,
-  signIn,
-  signOut,
-  unstable_update: update,
+  signIn: nextAuthSignIn,
+  signOut: nextAuthSignOut,
+  unstable_update: nextAuthUpdate,
 } = buildTimeFeatures.AUTH_ENABLED
   ? NextAuth({
       ...authOptions,
@@ -115,6 +121,35 @@ const {
       signOut: () => Promise.resolve(),
       unstable_update: () => Promise.resolve({} as any),
     };
+/**
+ * Strategy dispatch. `getAuthStrategy()` picks Better Auth or Auth.js from the
+ * environment; the exports below keep the Auth.js signatures either way so the
+ * 50-odd importers of this module never see the difference. Auth.js stays
+ * exactly as it was when it is the active strategy.
+ */
+type NextAuthSignIn = NextAuthResult["signIn"];
+type NextAuthSignOut = NextAuthResult["signOut"];
+type NextAuthUpdate = NextAuthResult["unstable_update"];
+
+const signIn = (async (...args: Parameters<NextAuthSignIn>) => {
+  if (isBetterAuthActive()) return betterAuthSignIn(args[0], args[1]);
+  return (nextAuthSignIn as NextAuthSignIn)(...args);
+}) as NextAuthSignIn;
+
+const signOut = (async (...args: Parameters<NextAuthSignOut>) => {
+  if (isBetterAuthActive()) return betterAuthSignOut(args[0]);
+  return (nextAuthSignOut as NextAuthSignOut)(...args);
+}) as NextAuthSignOut;
+
+const update = (async (...args: Parameters<NextAuthUpdate>) => {
+  if (isBetterAuthActive()) {
+    // Better Auth sessions are rows, not tokens; there is nothing to refresh here.
+    logger.debug("[auth] update() is a no-op under Better Auth");
+    return null;
+  }
+  return (nextAuthUpdate as NextAuthUpdate)(...args);
+}) as NextAuthUpdate;
+
 interface AuthProps {
   errorCode?: string;
   nextUrl?: string;
@@ -129,7 +164,7 @@ type ProtectedSession = Session & { user: NonNullable<Session["user"]> };
 function authWithOptions(props: { protect: true } & AuthProps): Promise<ProtectedSession>;
 function authWithOptions(props?: AuthProps): Promise<Session | null>;
 async function authWithOptions(props?: AuthProps) {
-  const session = await nextAuthAuth();
+  const session = isBetterAuthActive() ? await getBetterAuthSession() : await nextAuthAuth();
   const { errorCode, redirect: shouldRedirect, nextUrl } = props ?? {};
 
   // Route protected

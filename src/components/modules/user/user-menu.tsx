@@ -234,11 +234,11 @@ export const UserMenu = ({
             "cursor-pointer rounded-full"
           )}
         >
-          <UserIcon className="size-6" />
+          <UserIcon className="size-4" />
         </Link>
       ) : (
         <Button variant="ghost" size="icon" className={cn("relative rounded-full", className)}>
-          <UserIcon className="size-6" />
+          <UserIcon className="size-4" />
         </Button>
       )}
     </div>

@@ -56,7 +56,7 @@ export function WaitlistFAQ() {
             </p>
           </div>
 
-          <Card className="mb-8 border-slate-200 dark:border-slate-800">
+          <Card className="mb-8 gap-0 border-slate-200 py-0 dark:border-slate-800">
             <CardContent className="p-8">
               <Accordion type="single" collapsible className="w-full">
                 {faqs.map((faq, index) => (

@@ -149,8 +149,8 @@ export function FeatureGrid() {
         {features.map((feature) => {
           const Icon = feature.icon;
           return (
-            <Card key={feature.name} className="relative transition-all hover:shadow-lg">
-              <CardHeader className="pb-3">
+            <Card key={feature.name} className="relative gap-0 py-0 transition-all hover:shadow-lg">
+              <CardHeader className="p-6 pb-3">
                 <div className="flex items-start justify-between">
                   <Icon />
                   <div className="flex items-center gap-2">
@@ -185,7 +185,7 @@ export function FeatureGrid() {
                 <CardTitle className="text-lg">{feature.name}</CardTitle>
                 <CardDescription>{feature.description}</CardDescription>
               </CardHeader>
-              <CardContent className="space-y-4">
+              <CardContent className="space-y-4 p-6 pt-0">
                 {feature.dependencies && feature.dependencies.length > 0 && (
                   <div className="space-y-2">
                     <span className="text-sm font-medium">Required Variables:</span>

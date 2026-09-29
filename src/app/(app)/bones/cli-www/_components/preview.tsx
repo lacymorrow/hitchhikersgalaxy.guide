@@ -14,7 +14,7 @@ export function Preview({ component, currentStyle }: PreviewProps) {
     >
       <Card
         className={cn(
-          "flex h-full w-full items-center justify-center",
+          "flex h-full w-full items-center justify-center gap-0 py-0",
           currentStyle === "brutalist"
             ? "rounded-none border-2 border-primary"
             : "rounded-md border"

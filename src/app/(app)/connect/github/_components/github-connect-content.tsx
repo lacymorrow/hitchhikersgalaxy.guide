@@ -85,12 +85,12 @@ export function GitHubConnectContent() {
   if (status === "loading") {
     return (
       <div className="container mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center">
-        <Card className="w-full">
-          <CardHeader className="gap-y-1">
+        <Card className="w-full gap-0 py-0">
+          <CardHeader className="gap-y-1 p-6">
             <CardTitle className="text-2xl">Connecting GitHub Account</CardTitle>
             <CardDescription>Please wait while we process your GitHub connection</CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center gap-4 py-8">
+          <CardContent className="flex flex-col items-center justify-center gap-4 p-6 py-8">
             <Icons.spinner className="h-8 w-8 animate-spin text-primary" />
           </CardContent>
         </Card>
@@ -101,8 +101,8 @@ export function GitHubConnectContent() {
   return (
     <ClientOnly>
       <div className="container mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center">
-        <Card className="w-full">
-          <CardHeader className="gap-y-1">
+        <Card className="w-full gap-0 py-0">
+          <CardHeader className="gap-y-1 p-6">
             <CardTitle className="text-2xl">GitHub Connection</CardTitle>
             <CardDescription>
               {isSuccess
@@ -112,7 +112,7 @@ export function GitHubConnectContent() {
                   : "Connect your GitHub account to access repository features"}
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center gap-4 py-8">
+          <CardContent className="flex flex-col items-center justify-center gap-4 p-6 py-8">
             {error ? (
               <div className="rounded-lg bg-destructive/10 p-4 text-destructive">
                 <p>{error}</p>
@@ -163,7 +163,7 @@ export function GitHubConnectContent() {
               </div>
             )}
           </CardContent>
-          <CardFooter className="flex justify-center">
+          <CardFooter className="flex justify-center p-6 pt-0">
             <Link
               href={routes.settings.profile}
               className={cn(buttonVariants({ variant: "outline" }))}

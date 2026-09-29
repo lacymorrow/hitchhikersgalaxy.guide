@@ -28,7 +28,7 @@ export function PricingSectionSingle({ plans, plan, children }: PricingSectionSi
     <div className="relative w-full text-white">
       {/* Background gradient effect */}
       <div className="container mx-auto p-4">
-        <Card className="relative mx-auto max-w-3xl overflow-hidden border-purple-500/50 backdrop-blur-xs transition-shadow duration-300 hover:shadow-xl hover:shadow-purple-500/10">
+        <Card className="relative mx-auto max-w-3xl gap-0 overflow-hidden border-purple-500/50 py-0 backdrop-blur-xs transition-shadow duration-300 hover:shadow-xl hover:shadow-purple-500/10">
           <div className="absolute inset-0 bg-linear-to-br from-purple-500/10 via-transparent to-transparent" />
           <div className="absolute -top-32 -right-32 h-64 w-64 rounded-full bg-purple-500/10 blur-[100px]" />
 

@@ -49,7 +49,7 @@ export const ROICalculator = () => {
   const burnSavings = monthlyBurn * timeToMarket;
 
   return (
-    <Card className="p-6">
+    <Card className="gap-0 p-6">
       <div className="grid gap-8 md:grid-cols-2">
         <div className="space-y-8">
           <div className="space-y-4">

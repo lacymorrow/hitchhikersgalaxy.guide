@@ -201,7 +201,7 @@ export const WhyNow = () => {
             }}
             viewport={{ once: true }}
           >
-            <Card className="flex h-full flex-col p-6 transition-all duration-300 hover:shadow-lg">
+            <Card className="flex h-full flex-col gap-0 p-6 transition-all duration-300 hover:shadow-lg">
               <motion.div
                 className="mb-4"
                 whileHover={{ rotate: [0, -10, 10, -5, 5, 0], scale: 1.1 }}
@@ -239,7 +239,7 @@ export const WhyNow = () => {
             }}
             viewport={{ once: true }}
           >
-            <Card className="p-4 transition-all duration-300 hover:shadow-md">
+            <Card className="gap-0 p-4 transition-all duration-300 hover:shadow-md">
               <motion.div
                 className="mb-2 flex items-center gap-2"
                 whileHover={{ x: 5 }}
@@ -298,7 +298,7 @@ export const WhyNow = () => {
               }}
               viewport={{ once: true }}
             >
-              <Card className="group relative overflow-hidden border-primary/10 transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
+              <Card className="group relative gap-0 overflow-hidden border-primary/10 py-0 transition-all duration-300 hover:border-primary/30 hover:shadow-lg hover:shadow-primary/5">
                 <AnimatePresence>
                   {hoveredCard === vertical.industry && (
                     <motion.div

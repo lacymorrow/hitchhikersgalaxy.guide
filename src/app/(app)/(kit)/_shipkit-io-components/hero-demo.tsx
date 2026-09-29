@@ -39,7 +39,7 @@ const tabs = [
 
 export const HeroDemo = () => {
   return (
-    <Card className="overflow-hidden border-0 bg-linear-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+    <Card className="gap-0 overflow-hidden border-0 bg-linear-to-b from-gray-50 to-white py-0 dark:from-gray-950 dark:to-gray-900">
       <Tabs defaultValue="auth" className="w-full">
         <div className="border-b border-gray-100 px-6 py-4 dark:border-gray-800">
           <TabsList className="inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1">

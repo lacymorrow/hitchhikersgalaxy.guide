@@ -16,12 +16,12 @@ import { Separator } from "@/components/ui/separator";
 
 export function CardsShare() {
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="gap-0 py-0">
+      <CardHeader className="p-6 pb-3">
         <CardTitle>Share this document</CardTitle>
         <CardDescription>Anyone with the link can view this document.</CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="p-6 pt-0">
         <div className="flex gap-x-2">
           <Label htmlFor="link" className="sr-only">
             Link

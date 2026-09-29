@@ -84,7 +84,7 @@ export default function Dashboard() {
             </nav>
           </div>
           <div className="mt-auto p-4">
-            <Card x-chunk="A card with a call to action">
+            <Card className="gap-0 py-0" x-chunk="A card with a call to action">
               <CardHeader className="p-2 pt-0 md:p-4">
                 <CardTitle>Upgrade to Pro</CardTitle>
                 <CardDescription>

@@ -304,14 +304,17 @@ export default function Dashboard() {
                     </div>
                   </CardContent>
                 </Card>
-                <Card x-chunk="A card with a form to edit the product stock and variants">
-                  <CardHeader>
+                <Card
+                  className="gap-0 py-0"
+                  x-chunk="A card with a form to edit the product stock and variants"
+                >
+                  <CardHeader className="p-6">
                     <CardTitle>Stock</CardTitle>
                     <CardDescription>
                       Lipsum dolor sit amet, consectetur adipiscing elit
                     </CardDescription>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-6 pt-0">
                     <Table>
                       <TableHeader>
                         <TableRow>

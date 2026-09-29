@@ -130,7 +130,7 @@ const ComponentCard = memo(
         key={component.name}
         className={cn(
           componentCardStyles({ style: currentStyle }),
-          "relative min-h-[150px] overflow-hidden bg-card text-card-foreground",
+          "relative min-h-[150px] gap-0 overflow-hidden bg-card py-0 text-card-foreground",
           isInstalled &&
             (currentStyle === "brutalist"
               ? "border-2 border-emerald-500"
@@ -155,7 +155,7 @@ const ComponentCard = memo(
             </Tooltip>
           </TooltipProvider>
         )}
-        <CardHeader className="pb-2">
+        <CardHeader className="p-6 pb-2">
           <div className="mb-2 flex items-start justify-between">
             <CardTitle className="text-base font-bold">{component.name}</CardTitle>
             <div className="flex items-center gap-2">
@@ -188,7 +188,7 @@ const ComponentCard = memo(
             {component.type === "registry:ui" ? "Component" : "Block"}
           </Badge>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 pt-0">
           <p className="text-sm text-muted-foreground">{component.description}</p>
         </CardContent>
       </Card>
@@ -496,7 +496,7 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
           exit={{ opacity: 0, y: 20 }}
           className="fixed right-4 bottom-4 z-50 w-[500px]"
         >
-          <Card className="border-black/10 bg-[#1E1E1E] shadow-2xl">
+          <Card className="gap-0 border-black/10 bg-[#1E1E1E] py-0 shadow-2xl">
             <div className="relative">
               <div className="flex h-8 items-center justify-between rounded-t-lg bg-[#323233] px-3">
                 <div className="absolute left-3 flex items-center gap-2 text-xs">

@@ -4,12 +4,12 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 
 export function DemoNotifications() {
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="gap-0 py-0">
+      <CardHeader className="p-6 pb-3">
         <CardTitle>Notifications</CardTitle>
         <CardDescription>Choose what you want to be notified about.</CardDescription>
       </CardHeader>
-      <CardContent className="grid gap-1">
+      <CardContent className="grid gap-1 p-6 pt-0">
         <div className="-mx-2 flex items-start gap-x-4 rounded-md p-2 transition-all hover:bg-accent hover:text-accent-foreground">
           <Bell className="mt-px h-5 w-5" />
           <div className="space-y-1">

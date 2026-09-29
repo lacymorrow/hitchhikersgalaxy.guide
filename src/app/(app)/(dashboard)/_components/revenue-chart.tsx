@@ -23,8 +23,8 @@ const chartConfig = {
 
 export const RevenueChart = () => {
   return (
-    <Card>
-      <CardHeader className="pb-2">
+    <Card className="gap-0 py-0">
+      <CardHeader className="p-6 pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="text-sm">
             Revenue <span className="ml-1.5 font-normal text-muted-foreground">Jan to Dec</span>
@@ -45,7 +45,7 @@ export const RevenueChart = () => {
           <span className="text-xs text-muted-foreground">today</span>
         </div>
       </CardHeader>
-      <CardContent className="px-2 pb-2">
+      <CardContent className="p-6 px-2 pt-0 pb-2">
         <ChartContainer config={chartConfig} className="aspect-auto h-[280px] w-full">
           <AreaChart data={revenueChartData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
             <defs>

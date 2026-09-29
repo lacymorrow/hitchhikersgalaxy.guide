@@ -155,7 +155,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
               <section>
                 <h3 className="text-lg font-semibold">Basic Information</h3>
                 <div className="mt-4 grid gap-4">
-                  <Card className="overflow-hidden">
+                  <Card className="gap-0 overflow-hidden py-0">
                     <div className="bg-muted/40 p-6">
                       <div className="flex items-center gap-4">
                         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
@@ -232,7 +232,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
               <section>
                 <h3 className="text-lg font-semibold">Payment Information</h3>
                 <div className="mt-4 grid gap-4">
-                  <Card>
+                  <Card className="gap-0 py-0">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -253,7 +253,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
                     </CardContent>
                   </Card>
 
-                  <Card>
+                  <Card className="gap-0 py-0">
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between">
                         <div>
@@ -296,7 +296,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
                 </div>
 
                 {user.purchases && user.purchases.length > 0 ? (
-                  <Card>
+                  <Card className="gap-0 py-0">
                     <div className="border-b p-4">
                       <div className="flex flex-wrap gap-3">
                         <Badge variant="outline" className="px-3 py-1">
@@ -405,8 +405,8 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
                     </Table>
                   </Card>
                 ) : (
-                  <Card>
-                    <CardContent className="flex flex-col items-center justify-center py-6 text-center">
+                  <Card className="gap-0 py-0">
+                    <CardContent className="flex flex-col items-center justify-center p-6 py-6 text-center">
                       <Package className="mb-2 h-8 w-8 text-muted-foreground" />
                       <p className="text-sm text-muted-foreground">No purchase history available</p>
                     </CardContent>

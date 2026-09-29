@@ -36,9 +36,9 @@ export default function Charts() {
       <div className="grid w-full gap-6 sm:grid-cols-2 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[25rem]">
         <Card
           x-chunk="A bar chart showing the number of steps you have walked in the past 7 days."
-          className="lg:max-w-md"
+          className="gap-0 py-0 lg:max-w-md"
         >
-          <CardHeader className="gap-y-0 pb-2">
+          <CardHeader className="gap-y-0 p-6 pb-2">
             <CardDescription>Today</CardDescription>
             <CardTitle className="text-4xl tabular-nums">
               12,584{" "}
@@ -47,7 +47,7 @@ export default function Charts() {
               </span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6 pt-0">
             <ChartContainer
               config={{
                 steps: {
@@ -151,7 +151,7 @@ export default function Charts() {
               </BarChart>
             </ChartContainer>
           </CardContent>
-          <CardFooter className="flex-col items-start gap-1">
+          <CardFooter className="flex-col items-start gap-1 p-6 pt-0">
             <CardDescription>
               Over the past 7 days, you have walked{" "}
               <span className="font-medium text-foreground">53,305</span> steps.
@@ -164,9 +164,9 @@ export default function Charts() {
         </Card>
         <Card
           x-chunk="A line chart showing the resting heart rate for the past 7 days."
-          className="flex flex-col lg:max-w-md"
+          className="flex flex-col gap-0 py-0 lg:max-w-md"
         >
-          <CardHeader className="flex flex-row items-center gap-4 gap-y-0 pb-2 [&>div]:flex-1">
+          <CardHeader className="flex flex-row items-center gap-4 gap-y-0 p-6 pb-2 [&>div]:flex-1">
             <div>
               <CardDescription>Resting HR</CardDescription>
               <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
@@ -186,7 +186,7 @@ export default function Charts() {
               </CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="flex flex-1 items-center">
+          <CardContent className="flex flex-1 items-center p-6 pt-0">
             <ChartContainer
               config={{
                 resting: {
@@ -389,7 +389,7 @@ export default function Charts() {
         </Card>
         <Card
           x-chunk="A bar chart showing the walking and running distance for the past 7 days."
-          className="max-w-xs"
+          className="max-w-xs gap-0 py-0"
         >
           <CardHeader className="p-4 pb-0">
             <CardTitle>Walking Distance</CardTitle>
@@ -458,7 +458,7 @@ export default function Charts() {
         </Card>
         <Card
           x-chunk="A bar chart showing move, exercise, and stand progress."
-          className="max-w-xs"
+          className="max-w-xs gap-0 py-0"
         >
           <CardContent className="flex gap-4 p-4 pb-2">
             <ChartContainer
@@ -562,7 +562,7 @@ export default function Charts() {
       <div className="grid w-full flex-1 gap-6">
         <Card
           x-chunk="A radial bar chart showing the percentage of time spent moving, exercising, and standing."
-          className="max-w-xs"
+          className="max-w-xs gap-0 py-0"
         >
           <CardContent className="flex gap-4 p-4">
             <div className="grid items-center gap-2">
@@ -640,7 +640,10 @@ export default function Charts() {
             </ChartContainer>
           </CardContent>
         </Card>
-        <Card x-chunk="A bar chart showing active energy in the past 7 days." className="max-w-xs">
+        <Card
+          x-chunk="A bar chart showing active energy in the past 7 days."
+          className="max-w-xs gap-0 py-0"
+        >
           <CardHeader className="p-4 pb-0">
             <CardTitle>Active Energy</CardTitle>
             <CardDescription>
@@ -708,9 +711,9 @@ export default function Charts() {
         </Card>
         <Card
           x-chunk="An area chart showing the time spent in bed for the past 7 days."
-          className="max-w-xs"
+          className="max-w-xs gap-0 py-0"
         >
-          <CardHeader className="gap-y-0 pb-0">
+          <CardHeader className="gap-y-0 p-6 pb-0">
             <CardDescription>Time in Bed</CardDescription>
             <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
               8

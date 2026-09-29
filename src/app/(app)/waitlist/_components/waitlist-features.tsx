@@ -147,7 +147,7 @@ export function WaitlistFeatures() {
               return (
                 <Card
                   key={item.problem}
-                  className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg"
+                  className="group relative gap-0 overflow-hidden py-0 transition-all duration-300 hover:shadow-lg"
                 >
                   <CardContent className="p-6">
                     <div className="relative">
@@ -196,7 +196,7 @@ export function WaitlistFeatures() {
               return (
                 <Card
                   key={feature.title}
-                  className="group relative border-slate-200 transition-all duration-300 hover:shadow-lg dark:border-slate-700"
+                  className="group relative gap-0 border-slate-200 py-0 transition-all duration-300 hover:shadow-lg dark:border-slate-700"
                 >
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">

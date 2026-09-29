@@ -90,7 +90,7 @@ export const AIDemo: React.FC = () => {
       />
 
       <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2">
-        <Card className="relative overflow-hidden p-6">
+        <Card className="relative gap-0 overflow-hidden p-6">
           <div className="absolute top-0 right-0 p-2">
             <Bot className="h-5 w-5 text-primary" />
           </div>
@@ -137,7 +137,7 @@ export const AIDemo: React.FC = () => {
           </div>
         </Card>
 
-        <Card className="relative overflow-hidden p-6">
+        <Card className="relative gap-0 overflow-hidden p-6">
           <div className="absolute top-0 right-0 p-2">
             <Sparkles className="h-5 w-5 text-yellow-500" />
           </div>

@@ -110,13 +110,13 @@ export function NextStepsSection() {
         {nextSteps.map((step, _index) => (
           <Card
             key={step.title}
-            className={`transition-all ${
+            className={`gap-0 py-0 transition-all ${
               step.isComplete
                 ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950/20"
                 : "hover:shadow-md"
             }`}
           >
-            <CardHeader className="pb-3">
+            <CardHeader className="p-6 pb-3">
               <div className="flex items-start gap-4">
                 <div className="mt-1 shrink-0">
                   {step.isComplete ? (
@@ -164,8 +164,8 @@ export function NextStepsSection() {
       </div>
 
       {completedSteps === totalSteps && (
-        <Card className="border-green-200 bg-linear-to-r from-green-50 to-green-100 dark:border-green-800 dark:from-green-950/20 dark:to-green-900/20">
-          <CardContent className="pt-6">
+        <Card className="gap-0 border-green-200 bg-linear-to-r from-green-50 to-green-100 py-0 dark:border-green-800 dark:from-green-950/20 dark:to-green-900/20">
+          <CardContent className="p-6">
             <div className="text-center">
               <CheckCircle className="mx-auto mb-4 h-12 w-12 text-green-500" />
               <h3 className="mb-2 text-xl font-semibold text-green-800 dark:text-green-200">

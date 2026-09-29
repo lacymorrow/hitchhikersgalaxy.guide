@@ -67,7 +67,7 @@ export const PaymentDrawer = ({ payment, open, onClose }: PaymentDrawerProps) =>
               <section>
                 <h3 className="text-lg font-semibold">Payment Information</h3>
                 <div className="mt-4 grid gap-4">
-                  <Card className="overflow-hidden">
+                  <Card className="gap-0 overflow-hidden py-0">
                     <div className="bg-muted/40 p-6">
                       <div className="flex items-center gap-4">
                         <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10">
@@ -160,7 +160,7 @@ export const PaymentDrawer = ({ payment, open, onClose }: PaymentDrawerProps) =>
                 <section>
                   <h3 className="text-lg font-semibold">Customer Information</h3>
                   <div className="mt-4">
-                    <Card>
+                    <Card className="gap-0 py-0">
                       <CardContent className="p-4">
                         <div className="flex items-center gap-3">
                           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-primary/10">

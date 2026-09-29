@@ -78,7 +78,7 @@ export function WaitlistForm() {
           <div className="mx-auto max-w-2xl text-center">
             <div className="relative">
               <div className="absolute -inset-1 rounded-2xl bg-linear-to-r from-green-600 to-emerald-600 opacity-25 blur-sm" />
-              <Card className="relative border-green-200 bg-white/90 backdrop-blur-xs dark:border-green-800 dark:bg-slate-900/90">
+              <Card className="relative gap-0 border-green-200 bg-white/90 py-0 backdrop-blur-xs dark:border-green-800 dark:bg-slate-900/90">
                 <CardContent className="p-12">
                   <div className="mb-6 flex justify-center">
                     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">

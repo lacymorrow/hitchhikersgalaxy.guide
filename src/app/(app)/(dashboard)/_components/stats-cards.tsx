@@ -5,7 +5,7 @@ import { stats } from "./mock-data";
 /** One strip, four cells, hairlines between. Not four cards. */
 export function StatsCards() {
   return (
-    <Card className="grid grid-cols-2 lg:grid-cols-4">
+    <Card className="grid grid-cols-2 gap-0 py-0 lg:grid-cols-4">
       {stats.map((stat) => (
         <div
           key={stat.title}

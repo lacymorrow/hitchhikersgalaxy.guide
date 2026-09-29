@@ -38,7 +38,7 @@ export const AuthorProfile = ({
   // Compact version for sidebars or small spaces
   if (showCompact) {
     return (
-      <Card className={cn("w-full", className)}>
+      <Card className={cn("w-full gap-0 py-0", className)}>
         <CardContent className="p-4">
           <div className="flex items-center gap-3">
             <div className="relative">
@@ -76,8 +76,8 @@ export const AuthorProfile = ({
 
   // Full version for author pages or detailed displays
   return (
-    <Card className={cn("w-full", className)}>
-      <CardHeader className="pb-4">
+    <Card className={cn("w-full gap-0 py-0", className)}>
+      <CardHeader className="p-6 pb-4">
         <div className="flex flex-col items-start gap-4 sm:flex-row">
           <div className="relative">
             {!imageError ? (
@@ -128,7 +128,7 @@ export const AuthorProfile = ({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 p-6 pt-0">
         {author.bio && (
           <div>
             <h2 className="mb-2 font-medium">About</h2>

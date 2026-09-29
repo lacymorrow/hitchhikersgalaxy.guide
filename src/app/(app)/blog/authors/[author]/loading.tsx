@@ -9,8 +9,8 @@ export default function AuthorPageLoading() {
         <div className="flex flex-col items-start gap-8 lg:flex-row">
           {/* Author Profile Card Skeleton */}
           <div className="w-full shrink-0 lg:w-96">
-            <Card className="w-full max-w-md">
-              <CardHeader className="pb-4">
+            <Card className="w-full max-w-md gap-0 py-0">
+              <CardHeader className="p-6 pb-4">
                 <div className="flex flex-col items-start gap-4 sm:flex-row">
                   <div className="relative">
                     <Skeleton className="h-20 w-20 rounded-full" />
@@ -28,7 +28,7 @@ export default function AuthorPageLoading() {
                   </div>
                 </div>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 p-6 pt-0">
                 {/* About section */}
                 <div>
                   <Skeleton className="mb-3 h-5 w-16" />

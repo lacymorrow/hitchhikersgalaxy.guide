@@ -15,7 +15,7 @@ export const DocLayout = ({ children, toc }: DocLayoutProps) => {
   return (
     <div className="container flex gap-10 py-8">
       <article className="prose max-w-3xl flex-1 prose-slate dark:prose-invert">
-        <Card className="p-6">
+        <Card className="gap-0 p-6">
           <div
             className={`/* Headings */ /* Paragraphs */ /* Lists */ /* Decimal Leading Zero Lists */ [&>ol[style*='decimal-leading-zero']]:counter-reset-[section] [&>ol[style*='decimal-leading-zero']>li]:counter-increment-[section] text-base leading-relaxed prose-headings:scroll-mt-md [&>h1]:mt-6 [&>h1]:mb-4 [&>h1]:text-3xl [&>h1]:font-bold [&>h2]:mt-6 [&>h2]:mb-4 [&>h2]:text-2xl [&>h2]:font-bold [&>h3]:mt-6 [&>h3]:mb-4 [&>h3]:text-xl [&>h3]:font-bold [&>h4]:mt-6 [&>h4]:mb-4 [&>h4]:text-lg [&>h4]:font-bold [&>ol]:mb-4 [&>ol]:list-decimal [&>ol]:pl-8 [&>ol>li]:mb-2 [&>ol[style*='decimal-leading-zero']]:list-none [&>ol[style*='decimal-leading-zero']>li]:relative [&>ol[style*='decimal-leading-zero']>li]:pl-12 [&>ol[style*='decimal-leading-zero']>li:before]:absolute [&>ol[style*='decimal-leading-zero']>li:before]:left-0 [&>ol[style*='decimal-leading-zero']>li:before]:font-normal [&>ol[style*='decimal-leading-zero']>li:before]:text-gray-600 [&>ol[style*='decimal-leading-zero']>li:before]:content-[counter(section,decimal-leading-zero)'.'] [&>p]:mb-4 [&>ul]:mb-4 [&>ul]:list-disc [&>ul]:pl-8 [&>ul>li]:mb-2`}
           >

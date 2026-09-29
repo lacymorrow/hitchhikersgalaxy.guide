@@ -44,12 +44,12 @@ export default async function DashboardPage() {
         <div className="col-span-4">
           <RevenueChart />
         </div>
-        <Card className="col-span-3">
-          <CardHeader className="pb-4">
+        <Card className="col-span-3 gap-0 py-0">
+          <CardHeader className="p-6 pb-4">
             <CardTitle className="text-sm">Recent sales</CardTitle>
             <CardDescription className="text-xs">265 this month</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6 pt-0">
             <RecentSales />
           </CardContent>
         </Card>

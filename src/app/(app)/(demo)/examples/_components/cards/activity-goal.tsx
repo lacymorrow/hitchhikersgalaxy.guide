@@ -72,12 +72,12 @@ export function CardsActivityGoal() {
   }
 
   return (
-    <Card>
-      <CardHeader className="pb-4">
+    <Card className="gap-0 py-0">
+      <CardHeader className="p-6 pb-4">
         <CardTitle>Move Goal</CardTitle>
         <CardDescription>Set your daily activity goal.</CardDescription>
       </CardHeader>
-      <CardContent className="pb-2">
+      <CardContent className="p-6 pt-0 pb-2">
         <div className="flex items-center justify-center gap-x-2">
           <Button
             variant="outline"
@@ -112,7 +112,7 @@ export function CardsActivityGoal() {
           </ChartContainer>
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="p-6 pt-0">
         <Button className="w-full">Set Goal</Button>
       </CardFooter>
     </Card>

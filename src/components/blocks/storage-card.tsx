@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 
 export function StorageCard() {
   return (
-    <Card className="rounded-md text-xs shadow-xs">
+    <Card className="gap-0 rounded-md py-0 text-xs shadow-xs">
       <CardContent className="flex items-start gap-2.5 p-2.5">
         <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-accent text-accent-foreground">
           <Database className="h-5 w-5 text-muted-foreground" />

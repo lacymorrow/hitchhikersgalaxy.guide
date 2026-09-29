@@ -73,7 +73,7 @@ export default function FeaturesPage() {
           {/* Features Grid */}
           <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
-              <Card key={feature.id} className="p-6 transition-shadow hover:shadow-lg">
+              <Card key={feature.id} className="gap-0 p-6 transition-shadow hover:shadow-lg">
                 <div className={`${feature.color} mb-4`}>
                   <feature.icon size={24} />
                 </div>

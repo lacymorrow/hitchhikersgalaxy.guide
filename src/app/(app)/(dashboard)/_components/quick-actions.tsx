@@ -5,12 +5,12 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 export function QuickActions() {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <Card className="gap-0 py-0">
+        <CardHeader className="flex flex-row items-center justify-between p-6 pb-2">
           <CardTitle className="text-sm font-medium">Security Status</CardTitle>
           <Shield className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 pt-0">
           <div className="text-2xl font-bold text-green-500">Secure</div>
           <div className="mt-2 flex gap-x-2">
             <Badge variant="outline" className="">
@@ -22,12 +22,12 @@ export function QuickActions() {
           </div>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <Card className="gap-0 py-0">
+        <CardHeader className="flex flex-row items-center justify-between p-6 pb-2">
           <CardTitle className="text-sm font-medium">Storage Usage</CardTitle>
           <HardDrive className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 pt-0">
           <div className="text-2xl font-bold tabular-nums">75%</div>
           <div className="mt-2">
             <div className="h-2 w-full rounded-full bg-muted">
@@ -36,22 +36,22 @@ export function QuickActions() {
           </div>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <Card className="gap-0 py-0">
+        <CardHeader className="flex flex-row items-center justify-between p-6 pb-2">
           <CardTitle className="text-sm font-medium">API Usage</CardTitle>
           <LineChart className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 pt-0">
           <div className="text-2xl font-bold tabular-nums">89%</div>
           <div className="text-xs text-muted-foreground">Of monthly quota</div>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between pb-2">
+      <Card className="gap-0 py-0">
+        <CardHeader className="flex flex-row items-center justify-between p-6 pb-2">
           <CardTitle className="text-sm font-medium">Latest Backup</CardTitle>
           <History className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 pt-0">
           <div className="text-2xl font-bold tabular-nums">2h ago</div>
           <div className="text-xs text-muted-foreground">Next backup in 4h</div>
         </CardContent>

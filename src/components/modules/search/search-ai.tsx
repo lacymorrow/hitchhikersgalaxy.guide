@@ -284,7 +284,9 @@ export const SearchAi = ({
         size="sm"
         className={cn(
           "relative bg-muted/50 text-sm font-normal text-muted-foreground shadow-none",
-          collapsible ? "justify-center lg:justify-start lg:pr-12" : "justify-start sm:pr-12",
+          collapsible
+            ? "justify-center lg:justify-start lg:pr-12 lg:has-[>svg]:pr-12"
+            : "justify-start sm:pr-12 sm:has-[>svg]:pr-12",
           className
         )}
         {...props}

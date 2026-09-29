@@ -45,7 +45,7 @@ export default function ContactPage() {
           {/* Contact Methods */}
           <div className="flex flex-col gap-4 lg:gap-6">
             {/* Email Card */}
-            <Card className="flex flex-col items-center p-6 text-center transition-all hover:shadow-lg">
+            <Card className="flex flex-col items-center gap-0 p-6 text-center transition-all hover:shadow-lg">
               <div className="mb-4 rounded-full bg-primary/10 p-3">
                 <MailIcon className="h-6 w-6 text-primary" />
               </div>
@@ -90,7 +90,7 @@ export default function ContactPage() {
           </div>
 
           {/* Contact Form */}
-          <Card className="col-span-2 p-6 lg:p-8">
+          <Card className="col-span-2 gap-0 p-6 lg:p-8">
             <div className="mb-6">
               <h2 className="mb-2 text-2xl font-semibold">Send us a Message</h2>
               <p className="text-muted-foreground">

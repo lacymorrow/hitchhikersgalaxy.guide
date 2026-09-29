@@ -103,7 +103,7 @@ export function ComponentStats({ component, currentStyle }: ComponentStatsProps)
       {/* Dependencies */}
       <Card
         className={cn(
-          "p-4",
+          "gap-0 p-4",
           currentStyle === "brutalist"
             ? "rounded-none border-2 border-primary"
             : "rounded-md border"
@@ -156,7 +156,7 @@ export function ComponentStats({ component, currentStyle }: ComponentStatsProps)
       {/* Registry Dependencies */}
       <Card
         className={cn(
-          "p-4",
+          "gap-0 p-4",
           currentStyle === "brutalist"
             ? "rounded-none border-2 border-primary"
             : "rounded-md border"

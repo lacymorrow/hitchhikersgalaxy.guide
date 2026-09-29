@@ -1,6 +1,6 @@
-// @ts-nocheck
+import type { SVGProps } from "react";
 
-export default function BotIcon(props) {
+export default function BotIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

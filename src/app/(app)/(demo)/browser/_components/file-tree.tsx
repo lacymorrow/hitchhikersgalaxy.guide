@@ -1,7 +1,7 @@
 "use client";
 
-import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { FileIcon, FolderIcon, FolderOpenIcon } from "lucide-react";
+import { Accordion as AccordionPrimitive } from "radix-ui";
 import type { HTMLAttributes, ReactNode } from "react";
 import * as React from "react";
 

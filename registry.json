@@ -1937,9 +1937,9 @@
       "dependencies": [
         "recharts",
         "date-fns",
-        "react-day-picker",
         "lucide-react",
-        "react-resizable-panels"
+        "react-resizable-panels",
+        "react-day-picker@9.13.2"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -3424,7 +3424,9 @@
         "openai@6.49.0",
         "@anthropic-ai/sdk",
         "@emblemvault/ask-ai@0.1.1",
-        "@huggingface/transformers@3.8.1"
+        "@huggingface/transformers@3.8.1",
+        "dompurify@3.4.15",
+        "marked@17.0.6"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -3484,14 +3486,19 @@
           "target": "~/src/components/blocks/ai/smollm-web/page.tsx"
         },
         {
-          "path": "src/components/blocks/ai/smollm-web/worker.js",
+          "path": "src/components/blocks/ai/smollm-web/worker.ts",
           "type": "registry:lib",
-          "target": "~/src/components/blocks/ai/smollm-web/worker.js"
+          "target": "~/src/components/blocks/ai/smollm-web/worker.ts"
         },
         {
-          "path": "src/components/blocks/ai/smollm-web/_components/Chat.jsx",
+          "path": "src/components/blocks/ai/smollm-web/types.ts",
+          "type": "registry:lib",
+          "target": "~/src/components/blocks/ai/smollm-web/types.ts"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/_components/Chat.tsx",
           "type": "registry:component",
-          "target": "~/src/components/blocks/ai/smollm-web/_components/Chat.jsx"
+          "target": "~/src/components/blocks/ai/smollm-web/_components/Chat.tsx"
         },
         {
           "path": "src/components/blocks/ai/smollm-web/_components/Chat.css",
@@ -3499,9 +3506,9 @@
           "target": "~/src/components/blocks/ai/smollm-web/_components/Chat.css"
         },
         {
-          "path": "src/components/blocks/ai/smollm-web/_components/Progress.jsx",
+          "path": "src/components/blocks/ai/smollm-web/_components/Progress.tsx",
           "type": "registry:component",
-          "target": "~/src/components/blocks/ai/smollm-web/_components/Progress.jsx"
+          "target": "~/src/components/blocks/ai/smollm-web/_components/Progress.tsx"
         },
         {
           "path": "src/components/primitives/ask-ai-buttons.tsx",
@@ -3509,24 +3516,24 @@
           "target": "~/src/components/primitives/ask-ai-buttons.tsx"
         },
         {
-          "path": "src/components/blocks/ai/smollm-web/_components/icons/ArrowRightIcon.jsx",
+          "path": "src/components/blocks/ai/smollm-web/_components/icons/ArrowRightIcon.tsx",
           "type": "registry:component",
-          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/ArrowRightIcon.jsx"
+          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/ArrowRightIcon.tsx"
         },
         {
-          "path": "src/components/blocks/ai/smollm-web/_components/icons/BotIcon.jsx",
+          "path": "src/components/blocks/ai/smollm-web/_components/icons/BotIcon.tsx",
           "type": "registry:component",
-          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/BotIcon.jsx"
+          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/BotIcon.tsx"
         },
         {
-          "path": "src/components/blocks/ai/smollm-web/_components/icons/StopIcon.jsx",
+          "path": "src/components/blocks/ai/smollm-web/_components/icons/StopIcon.tsx",
           "type": "registry:component",
-          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/StopIcon.jsx"
+          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/StopIcon.tsx"
         },
         {
-          "path": "src/components/blocks/ai/smollm-web/_components/icons/UserIcon.jsx",
+          "path": "src/components/blocks/ai/smollm-web/_components/icons/UserIcon.tsx",
           "type": "registry:component",
-          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/UserIcon.jsx"
+          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/UserIcon.tsx"
         }
       ],
       "envVars": {

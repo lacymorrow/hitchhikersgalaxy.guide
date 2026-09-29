@@ -1,6 +1,6 @@
-// @ts-nocheck
+import type { SVGProps } from "react";
 
-export default function UserIcon(props) {
+export default function UserIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

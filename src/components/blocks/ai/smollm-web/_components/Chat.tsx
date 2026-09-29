@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 "use client";
 
 import DOMPurify from "dompurify";
@@ -10,16 +8,21 @@ import UserIcon from "./icons/UserIcon";
 
 import "./Chat.css";
 import { useEffect } from "react";
+import type { ChatMessage } from "../types";
 
-function render(text) {
-  return DOMPurify.sanitize(marked.parse(text));
+function render(text: string): string {
+  return DOMPurify.sanitize(marked.parse(text, { async: false }));
 }
 
-export default function Chat({ messages }) {
+interface ChatProps {
+  messages: ChatMessage[];
+}
+
+export default function Chat({ messages }: ChatProps) {
   const empty = messages.length === 0;
 
   useEffect(() => {
-    window.MathJax.typeset();
+    window.MathJax?.typeset?.();
   }, [messages]);
 
   return (
@@ -30,7 +33,7 @@ export default function Chat({ messages }) {
         <div className="text-xl">Ready!</div>
       ) : (
         messages.map((msg, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
+          // biome-ignore lint/suspicious/noArrayIndexKey: messages are append-only, so the index is stable
           <div key={`message-${i}`} className="flex items-start space-x-4">
             {msg.role === "assistant" ? (
               <>
@@ -40,7 +43,7 @@ export default function Chat({ messages }) {
                     {msg.content.length > 0 ? (
                       <span
                         className="markdown"
-                        // biome-ignore lint/security/noDangerouslySetInnerHtml: trusted internal HTML source
+                        // biome-ignore lint/security/noDangerouslySetInnerHtml: model output is sanitized by DOMPurify in render()
                         dangerouslySetInnerHTML={{
                           __html: render(msg.content),
                         }}

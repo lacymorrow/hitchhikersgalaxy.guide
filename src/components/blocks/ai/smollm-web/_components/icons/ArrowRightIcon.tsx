@@ -1,5 +1,6 @@
-// @ts-nocheck
-export default function ArrowRightIcon(props) {
+import type { SVGProps } from "react";
+
+export default function ArrowRightIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 "use client";
 
 import { Bot, Loader2, Send, Sparkles, Terminal, Wand2 } from "lucide-react";

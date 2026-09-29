@@ -1,6 +1,6 @@
-// @ts-nocheck
+import type { SVGProps } from "react";
 
-export default function StopIcon(props) {
+export default function StopIcon(props: SVGProps<SVGSVGElement>) {
   return (
     <svg
       {...props}

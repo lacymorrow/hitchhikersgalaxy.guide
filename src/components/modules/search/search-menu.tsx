@@ -1,6 +1,5 @@
 "use client";
 
-import type { DialogProps } from "@radix-ui/react-dialog";
 import {
   FileIcon,
   LaptopIcon,
@@ -10,6 +9,7 @@ import {
 } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import type { Dialog as DialogPrimitive } from "radix-ui";
 import * as React from "react";
 import { docsConfig } from "@/components/modules/search/example";
 import { ShortcutDisplay } from "@/components/primitives/shortcut-display";
@@ -29,7 +29,7 @@ import { ShortcutAction } from "@/config/keyboard-shortcuts";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 
-export interface SearchMenuProps extends DialogProps {
+export interface SearchMenuProps extends DialogPrimitive.DialogProps {
   /**
    * The title to display in the search menu dialog
    * @default "Search Documentation"

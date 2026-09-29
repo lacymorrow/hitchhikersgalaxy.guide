@@ -1,6 +1,5 @@
 "use client";
 
-import { DialogTitle } from "@radix-ui/react-dialog";
 import {
   ChevronRightIcon,
   ClockIcon,
@@ -8,6 +7,7 @@ import {
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
+import { Dialog as DialogPrimitive } from "radix-ui";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -311,7 +311,7 @@ export function DocsSearch() {
 
       <CommandDialog open={open} onOpenChange={handleOpenChange}>
         <div className="flex h-[300px] w-full flex-col">
-          <DialogTitle className="sr-only">Search Documentation</DialogTitle>
+          <DialogPrimitive.Title className="sr-only">Search Documentation</DialogPrimitive.Title>
           <CommandInput
             ref={inputRef}
             placeholder="Type to search documentation..."

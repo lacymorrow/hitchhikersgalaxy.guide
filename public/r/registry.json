@@ -1037,13 +1037,6 @@
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "input",
-        "card",
-        "separator",
-        "form",
-        "label",
-        "tooltip",
         "@shipkit/github-connect",
         "@shipkit/better-auth"
       ],
@@ -1279,9 +1272,7 @@
         "better-auth@^1.6.33"
       ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "button",
-        "tooltip"
+        "@shipkit/cn"
       ],
       "files": [
         {
@@ -2781,19 +2772,16 @@
       "dependencies": [
         "stripe",
         "@lemonsqueezy/lemonsqueezy.js",
-        "@polar-sh/sdk",
         "zod",
         "lucide-react",
         "@polar-sh/nextjs",
-        "canvas-confetti"
+        "canvas-confetti",
+        "@polar-sh/sdk@0.43.1"
       ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card",
-        "badge",
         "@shipkit/auth",
         "@shipkit/better-auth"
       ],
@@ -2964,7 +2952,10 @@
         "LEMONSQUEEZY_WEBHOOK_SECRET": "",
         "POLAR_ACCESS_TOKEN": ""
       },
-      "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` (Stripe, plus `STRIPE_WEBHOOK_SECRET` for webhooks), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records. Overwrites the Bones stubs `src/server/providers/stripe-provider.ts`, `src/server/providers/lemonsqueezy-provider.ts`, `src/server/providers/polar-provider.ts` and `src/lib/lemonsqueezy/lemonsqueezy.ts`; run with --overwrite."
+      "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` (Stripe, plus `STRIPE_WEBHOOK_SECRET` for webhooks), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records. Overwrites the Bones stubs `src/server/providers/stripe-provider.ts`, `src/server/providers/lemonsqueezy-provider.ts`, `src/server/providers/polar-provider.ts` and `src/lib/lemonsqueezy/lemonsqueezy.ts`; run with --overwrite.",
+      "devDependencies": [
+        "@types/canvas-confetti@1.9.0"
+      ]
     },
     {
       "name": "dashboard",
@@ -3553,15 +3544,13 @@
       ],
       "dependencies": [
         "octokit",
-        "@octokit/rest"
+        "@octokit/rest",
+        "jszip@3.10.2"
       ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card",
-        "input",
         "@shipkit/vercel-connect",
         "@shipkit/better-auth"
       ],
@@ -3657,8 +3646,6 @@
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card",
         "@shipkit/github-connect",
         "@shipkit/better-auth"
       ],
@@ -3749,7 +3736,10 @@
         "VERCEL_CLIENT_ID": "",
         "VERCEL_CLIENT_SECRET": ""
       },
-      "docs": "Vercel deployment integration. Set `VERCEL_INTEGRATION_SLUG`, `VERCEL_CLIENT_ID` and `VERCEL_CLIENT_SECRET` from your Vercel integration. Provides OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components."
+      "docs": "Vercel deployment integration. Set `VERCEL_INTEGRATION_SLUG`, `VERCEL_CLIENT_ID` and `VERCEL_CLIENT_SECRET` from your Vercel integration. Provides OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components.",
+      "devDependencies": [
+        "@types/canvas-confetti@1.9.0"
+      ]
     }
   ]
 }

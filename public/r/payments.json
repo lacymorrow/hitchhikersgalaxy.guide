@@ -6,19 +6,19 @@
   "dependencies": [
     "stripe",
     "@lemonsqueezy/lemonsqueezy.js",
-    "@polar-sh/sdk",
     "zod",
     "lucide-react",
     "@polar-sh/nextjs",
-    "canvas-confetti"
+    "canvas-confetti",
+    "@polar-sh/sdk@0.43.1"
+  ],
+  "devDependencies": [
+    "@types/canvas-confetti@1.9.0"
   ],
   "registryDependencies": [
     "@shipkit/cn",
     "@shipkit/routes-config",
     "@shipkit/features-config",
-    "button",
-    "card",
-    "badge",
     "@shipkit/auth",
     "@shipkit/better-auth"
   ],

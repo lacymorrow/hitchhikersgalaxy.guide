@@ -7,12 +7,13 @@
     "lucide-react",
     "canvas-confetti"
   ],
+  "devDependencies": [
+    "@types/canvas-confetti@1.9.0"
+  ],
   "registryDependencies": [
     "@shipkit/cn",
     "@shipkit/routes-config",
     "@shipkit/features-config",
-    "button",
-    "card",
     "@shipkit/github-connect",
     "@shipkit/better-auth"
   ],

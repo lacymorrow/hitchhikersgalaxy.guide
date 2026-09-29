@@ -5,15 +5,13 @@
   "description": "GitHub OAuth integration with repo creation, collaborator management, invitation checks, and download service.",
   "dependencies": [
     "octokit",
-    "@octokit/rest"
+    "@octokit/rest",
+    "jszip@3.10.2"
   ],
   "registryDependencies": [
     "@shipkit/cn",
     "@shipkit/routes-config",
     "@shipkit/features-config",
-    "button",
-    "card",
-    "input",
     "@shipkit/vercel-connect",
     "@shipkit/better-auth"
   ],

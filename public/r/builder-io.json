@@ -4,9 +4,9 @@
   "title": "Builder.io",
   "description": "Visual page builder integration with Builder.io for no-code content editing.",
   "dependencies": [
-    "@builder.io/react",
-    "@builder.io/sdk",
-    "@builder.io/dev-tools"
+    "@builder.io/react@9.4.6",
+    "@builder.io/sdk@6.3.3",
+    "@builder.io/dev-tools@1.83.1"
   ],
   "registryDependencies": [
     "@shipkit/cn"

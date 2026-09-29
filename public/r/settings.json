@@ -4,7 +4,7 @@
   "title": "Settings",
   "description": "User settings pages with profile, appearance, account management, sidebar navigation, and server actions for profile/theme updates.",
   "dependencies": [
-    "lucide-react"
+    "lucide-react@0.564.0"
   ],
   "registryDependencies": [
     "@shipkit/cn",

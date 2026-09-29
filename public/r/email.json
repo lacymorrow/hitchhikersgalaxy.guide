@@ -4,8 +4,8 @@
   "title": "Email",
   "description": "Resend email integration with client setup, subscribe/audience actions, email service, and newsletter form component.",
   "dependencies": [
-    "resend",
-    "zod"
+    "resend@6.28.0",
+    "zod@3.25.76"
   ],
   "registryDependencies": [
     "@shipkit/cn"

@@ -4,8 +4,8 @@
   "title": "Caching & Rate Limiting",
   "description": "Redis-based caching and rate limiting via Upstash with configurable per-route limits.",
   "dependencies": [
-    "@upstash/redis",
-    "@upstash/ratelimit"
+    "@upstash/redis@1.38.4",
+    "@upstash/ratelimit@2.1.0"
   ],
   "registryDependencies": [
     "@shipkit/features-config"

@@ -4,8 +4,8 @@
   "title": "Storage",
   "description": "File storage with AWS S3 presigned uploads, file service, server actions, and upload components.",
   "dependencies": [
-    "@aws-sdk/client-s3",
-    "@aws-sdk/s3-request-presigner"
+    "@aws-sdk/client-s3@3.1131.0",
+    "@aws-sdk/s3-request-presigner@3.1131.0"
   ],
   "registryDependencies": [
     "@shipkit/cn"

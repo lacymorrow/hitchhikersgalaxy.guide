@@ -4,8 +4,8 @@
   "title": "Vercel Connect",
   "description": "Vercel integration with OAuth, deploy triggers, webhook handling, deployment status, and deploy button components.",
   "dependencies": [
-    "lucide-react",
-    "canvas-confetti"
+    "lucide-react@0.564.0",
+    "canvas-confetti@1.9.4"
   ],
   "devDependencies": [
     "@types/canvas-confetti@1.9.0"

@@ -4,10 +4,10 @@
   "title": "Contact",
   "description": "Contact page with animated background, email card, and contact form with Resend email integration and newsletter opt-in.",
   "dependencies": [
-    "zod",
-    "react-hook-form",
-    "@hookform/resolvers",
-    "lucide-react"
+    "zod@3.25.76",
+    "react-hook-form@7.88.0",
+    "@hookform/resolvers@5.9.1",
+    "lucide-react@0.564.0"
   ],
   "registryDependencies": [
     "@shipkit/cn",

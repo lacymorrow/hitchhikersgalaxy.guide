@@ -16,8 +16,8 @@
         }
       ],
       "dependencies": [
-        "clsx",
-        "tailwind-merge"
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
       ],
       "registryDependencies": []
     },
@@ -195,8 +195,8 @@
         }
       ],
       "dependencies": [
-        "framer-motion",
-        "class-variance-authority"
+        "framer-motion@12.43.0",
+        "class-variance-authority@0.7.1"
       ],
       "registryDependencies": [
         "@shipkit/cn"
@@ -326,11 +326,11 @@
         "docs"
       ],
       "dependencies": [
-        "next-mdx-remote",
-        "remark-gfm",
-        "gray-matter",
-        "zod",
-        "openai",
+        "next-mdx-remote@6.0.0",
+        "remark-gfm@4.0.1",
+        "gray-matter@4.0.3",
+        "zod@3.25.76",
+        "openai@6.49.0",
         "fumadocs-core@16.14.5",
         "fumadocs-mdx@15.2.3"
       ],
@@ -432,11 +432,11 @@
         "blog"
       ],
       "dependencies": [
-        "gray-matter",
-        "next-mdx-remote",
-        "remark-gfm",
-        "lucide-react",
-        "@emblemvault/ask-ai",
+        "gray-matter@4.0.3",
+        "next-mdx-remote@6.0.0",
+        "remark-gfm@4.0.1",
+        "lucide-react@0.564.0",
+        "@emblemvault/ask-ai@0.1.1",
         "react-error-boundary@6.1.5"
       ],
       "registryDependencies": [
@@ -583,9 +583,9 @@
         "builder"
       ],
       "dependencies": [
-        "@builder.io/react",
-        "@builder.io/sdk",
-        "@builder.io/dev-tools"
+        "@builder.io/react@9.4.6",
+        "@builder.io/sdk@6.3.3",
+        "@builder.io/dev-tools@1.83.1"
       ],
       "registryDependencies": [
         "@shipkit/cn"
@@ -672,7 +672,7 @@
         "@payloadcms/storage-s3@^3.89.0",
         "@payloadcms/storage-vercel-blob@^3.89.0",
         "sharp@^0.35.4",
-        "ogl"
+        "ogl@1.0.11"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -987,8 +987,8 @@
         "cms"
       ],
       "dependencies": [
-        "@builder.io/sdk",
-        "uuid"
+        "@builder.io/sdk@6.3.3",
+        "uuid@13.0.2"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -1021,10 +1021,10 @@
       ],
       "dependencies": [
         "next-auth@beta",
-        "@auth/drizzle-adapter",
+        "@auth/drizzle-adapter@1.11.3",
         "bcryptjs",
-        "zod",
-        "zsa",
+        "zod@3.25.76",
+        "zsa@0.6.0",
         "@auth/core@0.41.3"
       ],
       "registryDependencies": [
@@ -1475,10 +1475,10 @@
         "changelog"
       ],
       "dependencies": [
-        "react-markdown",
-        "remark-gfm",
-        "lucide-react",
-        "gray-matter"
+        "react-markdown@10.1.0",
+        "remark-gfm@4.0.1",
+        "lucide-react@0.564.0",
+        "gray-matter@4.0.3"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -1538,10 +1538,10 @@
         "contact"
       ],
       "dependencies": [
-        "zod",
-        "react-hook-form",
-        "@hookform/resolvers",
-        "lucide-react"
+        "zod@3.25.76",
+        "react-hook-form@7.88.0",
+        "@hookform/resolvers@5.9.1",
+        "lucide-react@0.564.0"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -1584,8 +1584,8 @@
         "waitlist"
       ],
       "dependencies": [
-        "zod",
-        "lucide-react"
+        "zod@3.25.76",
+        "lucide-react@0.564.0"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -1660,7 +1660,7 @@
         "admin"
       ],
       "dependencies": [
-        "lucide-react"
+        "lucide-react@0.564.0"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -1847,7 +1847,7 @@
         "settings"
       ],
       "dependencies": [
-        "lucide-react"
+        "lucide-react@0.564.0"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -1935,10 +1935,10 @@
         "demo"
       ],
       "dependencies": [
-        "recharts",
-        "date-fns",
-        "lucide-react",
-        "react-resizable-panels",
+        "recharts@3.10.1",
+        "date-fns@4.4.0",
+        "lucide-react@0.564.0",
+        "react-resizable-panels@4.12.4",
         "react-day-picker@9.13.2"
       ],
       "registryDependencies": [
@@ -2426,8 +2426,8 @@
         "email"
       ],
       "dependencies": [
-        "resend",
-        "zod"
+        "resend@6.28.0",
+        "zod@3.25.76"
       ],
       "registryDependencies": [
         "@shipkit/cn"
@@ -2511,8 +2511,8 @@
         "feedback"
       ],
       "dependencies": [
-        "zod",
-        "lucide-react"
+        "zod@3.25.76",
+        "lucide-react@0.564.0"
       ],
       "registryDependencies": [
         "@shipkit/cn"
@@ -2555,7 +2555,7 @@
         "analytics"
       ],
       "dependencies": [
-        "posthog-js"
+        "posthog-js@1.431.6"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -2631,8 +2631,8 @@
         "infrastructure"
       ],
       "dependencies": [
-        "@upstash/redis",
-        "@upstash/ratelimit"
+        "@upstash/redis@1.38.4",
+        "@upstash/ratelimit@2.1.0"
       ],
       "registryDependencies": [
         "@shipkit/features-config"
@@ -2676,8 +2676,8 @@
         "infrastructure"
       ],
       "dependencies": [
-        "@aws-sdk/client-s3",
-        "@aws-sdk/s3-request-presigner"
+        "@aws-sdk/client-s3@3.1131.0",
+        "@aws-sdk/s3-request-presigner@3.1131.0"
       ],
       "registryDependencies": [
         "@shipkit/cn"
@@ -2738,7 +2738,7 @@
         "marketing"
       ],
       "dependencies": [
-        "lucide-react"
+        "lucide-react@0.564.0"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -2789,12 +2789,12 @@
         "payments"
       ],
       "dependencies": [
-        "stripe",
-        "@lemonsqueezy/lemonsqueezy.js",
-        "zod",
-        "lucide-react",
-        "@polar-sh/nextjs",
-        "canvas-confetti",
+        "stripe@20.3.1",
+        "@lemonsqueezy/lemonsqueezy.js@4.0.0",
+        "zod@3.25.76",
+        "lucide-react@0.564.0",
+        "@polar-sh/nextjs@0.9.6",
+        "canvas-confetti@1.9.4",
         "@polar-sh/sdk@0.43.1"
       ],
       "registryDependencies": [
@@ -2986,10 +2986,10 @@
         "dashboard"
       ],
       "dependencies": [
-        "recharts",
-        "lucide-react",
-        "date-fns",
-        "evlog"
+        "recharts@3.10.1",
+        "lucide-react@0.564.0",
+        "date-fns@4.4.0",
+        "evlog@2.29.0"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -3554,7 +3554,7 @@
       ],
       "dependencies": [
         "octokit",
-        "@octokit/rest",
+        "@octokit/rest@22.0.1",
         "jszip@3.10.2"
       ],
       "registryDependencies": [
@@ -3649,8 +3649,8 @@
         "integration"
       ],
       "dependencies": [
-        "lucide-react",
-        "canvas-confetti"
+        "lucide-react@0.564.0",
+        "canvas-confetti@1.9.4"
       ],
       "registryDependencies": [
         "@shipkit/cn",

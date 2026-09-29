@@ -4,11 +4,11 @@
   "title": "Blog",
   "description": "Complete blog system with MDX posts, author profiles, categories, sidebar, and feed-style timeline layout.",
   "dependencies": [
-    "gray-matter",
-    "next-mdx-remote",
-    "remark-gfm",
-    "lucide-react",
-    "@emblemvault/ask-ai",
+    "gray-matter@4.0.3",
+    "next-mdx-remote@6.0.0",
+    "remark-gfm@4.0.1",
+    "lucide-react@0.564.0",
+    "@emblemvault/ask-ai@0.1.1",
     "react-error-boundary@6.1.5"
   ],
   "registryDependencies": [

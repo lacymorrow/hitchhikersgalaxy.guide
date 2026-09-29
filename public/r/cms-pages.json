@@ -4,8 +4,8 @@
   "title": "CMS Pages",
   "description": "Shared catch-all route that renders dynamic pages from Payload CMS and/or Builder.io with automatic fallback.",
   "dependencies": [
-    "@builder.io/sdk",
-    "uuid"
+    "@builder.io/sdk@6.3.3",
+    "uuid@13.0.2"
   ],
   "registryDependencies": [
     "@shipkit/cn",

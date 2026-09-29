@@ -4,11 +4,11 @@
   "title": "Docs",
   "description": "Full documentation system with sidebar navigation, search, and MDX rendering.",
   "dependencies": [
-    "next-mdx-remote",
-    "remark-gfm",
-    "gray-matter",
-    "zod",
-    "openai",
+    "next-mdx-remote@6.0.0",
+    "remark-gfm@4.0.1",
+    "gray-matter@4.0.3",
+    "zod@3.25.76",
+    "openai@6.49.0",
     "fumadocs-core@16.14.5",
     "fumadocs-mdx@15.2.3"
   ],

@@ -4,8 +4,8 @@
   "title": "Waitlist",
   "description": "Pre-launch waitlist with signup form, hero section, social proof, FAQ, database storage, and Resend email notifications.",
   "dependencies": [
-    "zod",
-    "lucide-react"
+    "zod@3.25.76",
+    "lucide-react@0.564.0"
   ],
   "registryDependencies": [
     "@shipkit/cn",

@@ -4,7 +4,7 @@
   "title": "Pricing",
   "description": "Pricing page with plan cards, features showcase, testimonials, and static content data files.",
   "dependencies": [
-    "lucide-react"
+    "lucide-react@0.564.0"
   ],
   "registryDependencies": [
     "@shipkit/cn",

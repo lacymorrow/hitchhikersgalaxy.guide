@@ -4,7 +4,7 @@
   "title": "Analytics",
   "description": "Multi-provider analytics with PostHog, Umami, DataFast, Google Analytics, Google Tag Manager, and Statsig, all behind feature flags.",
   "dependencies": [
-    "posthog-js"
+    "posthog-js@1.431.6"
   ],
   "registryDependencies": [
     "@shipkit/cn",

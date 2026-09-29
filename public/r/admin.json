@@ -4,7 +4,7 @@
   "title": "Admin Dashboard",
   "description": "Role-based admin panel with user management, payments, GitHub repos, integrations, feedback, waitlist, and CMS admin sections.",
   "dependencies": [
-    "lucide-react"
+    "lucide-react@0.564.0"
   ],
   "registryDependencies": [
     "@shipkit/cn",

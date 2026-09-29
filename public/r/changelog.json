@@ -4,10 +4,10 @@
   "title": "Changelog",
   "description": "Changelog with markdown file support and GitHub commit fallback, timeline view, and individual entry pages.",
   "dependencies": [
-    "react-markdown",
-    "remark-gfm",
-    "lucide-react",
-    "gray-matter"
+    "react-markdown@10.1.0",
+    "remark-gfm@4.0.1",
+    "lucide-react@0.564.0",
+    "gray-matter@4.0.3"
   ],
   "registryDependencies": [
     "@shipkit/cn",

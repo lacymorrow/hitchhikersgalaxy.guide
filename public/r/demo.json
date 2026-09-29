@@ -4,10 +4,10 @@
   "title": "Demo Pages",
   "description": "Showcase demo pages with UI examples including dashboard, mail, music, playground, forms, cards, authentication, file browser, and more.",
   "dependencies": [
-    "recharts",
-    "date-fns",
-    "lucide-react",
-    "react-resizable-panels",
+    "recharts@3.10.1",
+    "date-fns@4.4.0",
+    "lucide-react@0.564.0",
+    "react-resizable-panels@4.12.4",
     "react-day-picker@9.13.2"
   ],
   "registryDependencies": [

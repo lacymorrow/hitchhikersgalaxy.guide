@@ -4,8 +4,8 @@
   "title": "Dock",
   "description": "A macOS-style dock with magnification effect on hover.",
   "dependencies": [
-    "framer-motion",
-    "class-variance-authority"
+    "framer-motion@12.43.0",
+    "class-variance-authority@0.7.1"
   ],
   "registryDependencies": [
     "@shipkit/cn"

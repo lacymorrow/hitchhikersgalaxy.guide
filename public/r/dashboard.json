@@ -4,10 +4,10 @@
   "title": "Dashboard",
   "description": "User dashboard with projects, teams, API keys, deployments, downloads, tools, stats, and revenue chart.",
   "dependencies": [
-    "recharts",
-    "lucide-react",
-    "date-fns",
-    "evlog"
+    "recharts@3.10.1",
+    "lucide-react@0.564.0",
+    "date-fns@4.4.0",
+    "evlog@2.29.0"
   ],
   "registryDependencies": [
     "@shipkit/cn",

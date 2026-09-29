@@ -4,8 +4,8 @@
   "title": "Feedback",
   "description": "User feedback system with dialog and popover components, server actions, and database-backed feedback service.",
   "dependencies": [
-    "zod",
-    "lucide-react"
+    "zod@3.25.76",
+    "lucide-react@0.564.0"
   ],
   "registryDependencies": [
     "@shipkit/cn"

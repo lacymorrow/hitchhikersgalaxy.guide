@@ -15,7 +15,10 @@
           "target": "~/src/lib/utils/cn.ts"
         }
       ],
-      "dependencies": ["clsx", "tailwind-merge"]
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ]
     },
     {
       "name": "marquee",
@@ -28,7 +31,9 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["@shipkit/cn"],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "tailwind": {
         "config": {
           "theme": {
@@ -71,7 +76,9 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["@shipkit/cn"],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "tailwind": {
         "config": {
           "theme": {
@@ -102,7 +109,9 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["@shipkit/cn"],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "tailwind": {
         "config": {
           "theme": {
@@ -136,7 +145,9 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["@shipkit/cn"],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "tailwind": {
         "config": {
           "theme": {
@@ -182,8 +193,13 @@
           "type": "registry:ui"
         }
       ],
-      "dependencies": ["framer-motion", "class-variance-authority"],
-      "registryDependencies": ["@shipkit/cn"]
+      "dependencies": [
+        "framer-motion",
+        "class-variance-authority"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ]
     },
     {
       "name": "use-copy-to-clipboard",
@@ -214,7 +230,9 @@
       "type": "registry:ui",
       "title": "Data Table",
       "description": "Feature-rich data table with search, pagination, column visibility, and row actions built on TanStack Table.",
-      "dependencies": ["@tanstack/react-table"],
+      "dependencies": [
+        "@tanstack/react-table"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "button",
@@ -268,7 +286,10 @@
       "type": "registry:block",
       "title": "FAQ",
       "description": "A full FAQ page with accordion layout, CMS integration, and static content fallback.",
-      "categories": ["shipkit", "faq"],
+      "categories": [
+        "shipkit",
+        "faq"
+      ],
       "files": [
         {
           "path": "src/app/(app)/faq/page.tsx",
@@ -286,7 +307,10 @@
           "target": "~/src/content/faq/faq-content.tsx"
         }
       ],
-      "registryDependencies": ["@shipkit/cn", "accordion"],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "accordion"
+      ],
       "docs": "Static FAQ page with accordion UI. Optionally integrates with Payload CMS for dynamic FAQ management."
     },
     {
@@ -294,8 +318,16 @@
       "type": "registry:block",
       "title": "Docs",
       "description": "Full documentation system with sidebar navigation, search, and MDX rendering.",
-      "categories": ["shipkit", "docs"],
-      "dependencies": ["next-mdx-remote", "remark-gfm", "gray-matter", "zod"],
+      "categories": [
+        "shipkit",
+        "docs"
+      ],
+      "dependencies": [
+        "next-mdx-remote",
+        "remark-gfm",
+        "gray-matter",
+        "zod"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
@@ -370,8 +402,16 @@
       "type": "registry:block",
       "title": "Blog",
       "description": "Complete blog system with MDX posts, author profiles, categories, sidebar, and feed-style timeline layout.",
-      "categories": ["shipkit", "blog"],
-      "dependencies": ["gray-matter", "next-mdx-remote", "remark-gfm", "lucide-react"],
+      "categories": [
+        "shipkit",
+        "blog"
+      ],
+      "dependencies": [
+        "gray-matter",
+        "next-mdx-remote",
+        "remark-gfm",
+        "lucide-react"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
@@ -507,9 +547,19 @@
       "type": "registry:block",
       "title": "Builder.io",
       "description": "Visual page builder integration with Builder.io for no-code content editing.",
-      "categories": ["shipkit", "cms", "builder"],
-      "dependencies": ["@builder.io/react", "@builder.io/sdk", "@builder.io/dev-tools"],
-      "registryDependencies": ["@shipkit/cn"],
+      "categories": [
+        "shipkit",
+        "cms",
+        "builder"
+      ],
+      "dependencies": [
+        "@builder.io/react",
+        "@builder.io/sdk",
+        "@builder.io/dev-tools"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "files": [
         {
           "path": "src/app/(app)/(integrations)/builder.io/[...slug]/page.tsx",
@@ -567,15 +617,24 @@
           "target": "~/src/styles/builder-io.css"
         }
       ],
-      "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add your `BUILDER_API_KEY` to `.env`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard."
+      "envVars": {
+        "NEXT_PUBLIC_BUILDER_API_KEY": ""
+      },
+      "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add `NEXT_PUBLIC_BUILDER_API_KEY` to `.env.local`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard."
     },
     {
       "name": "cms-pages",
       "type": "registry:block",
       "title": "CMS Pages",
       "description": "Shared catch-all route that renders dynamic pages from Payload CMS and/or Builder.io with automatic fallback.",
-      "categories": ["shipkit", "cms"],
-      "dependencies": ["@builder.io/sdk", "uuid"],
+      "categories": [
+        "shipkit",
+        "cms"
+      ],
+      "dependencies": [
+        "@builder.io/sdk",
+        "uuid"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/features-config",
@@ -642,15 +701,29 @@
           "target": "~/src/styles/builder-io.css"
         }
       ],
-      "docs": "Shared CMS catch-all route. Checks Payload CMS first, then falls back to Builder.io. Both CMS systems coexist on the same URL space. Requires `features-config` to detect which CMS is enabled via env vars. Install `builder-io` block for Builder.io support and/or configure Payload CMS separately."
+      "envVars": {
+        "DATABASE_URL": "",
+        "PAYLOAD_SECRET": "",
+        "NEXT_PUBLIC_BUILDER_API_KEY": ""
+      },
+      "docs": "Shared CMS catch-all route. Checks Payload CMS first, then falls back to Builder.io. Both CMS systems coexist on the same URL space. Requires `features-config` to detect which CMS is enabled via env vars. Install `builder-io` for Builder.io support. Payload CMS needs `DATABASE_URL` and `PAYLOAD_SECRET` (or `APP_SECRET`); the Payload item itself is not in the registry yet."
     },
     {
       "name": "auth",
       "type": "registry:block",
       "title": "Auth",
       "description": "Full authentication system with NextAuth.js v5, multi-provider OAuth, credentials, magic link, and guest access.",
-      "categories": ["shipkit", "auth"],
-      "dependencies": ["next-auth@beta", "@auth/drizzle-adapter", "bcryptjs", "zod", "zsa"],
+      "categories": [
+        "shipkit",
+        "auth"
+      ],
+      "dependencies": [
+        "next-auth@beta",
+        "@auth/drizzle-adapter",
+        "bcryptjs",
+        "zod",
+        "zsa"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
@@ -875,15 +948,30 @@
           "target": "~/src/components/assets/kit-icon.tsx"
         }
       ],
-      "docs": "Full auth system with NextAuth.js v5. Run `npx auth secret` to generate `AUTH_SECRET`. Configure at least one OAuth provider (e.g. `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`) or enable guest access with `ENABLE_AUTH_GUEST=true`. Requires a database \u2014 set `DATABASE_URL` and run Drizzle migrations."
+      "envVars": {
+        "DATABASE_URL": "",
+        "APP_SECRET": "",
+        "AUTH_URL": "",
+        "AUTH_GITHUB_ID": "",
+        "AUTH_GITHUB_SECRET": "",
+        "AUTH_GOOGLE_ID": "",
+        "AUTH_GOOGLE_SECRET": ""
+      },
+      "docs": "Auth.js v5 auth system (Better Auth is ShipKit's default; this item is the Auth.js alternative). Set `APP_SECRET` (one secret derives `AUTH_SECRET` and the others) or run `npx auth secret` for `AUTH_SECRET`. Configure at least one OAuth provider (e.g. `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`) or enable guest access with `ENABLE_AUTH_GUEST=true`. Requires a database \u2014 set `DATABASE_URL` and run Drizzle migrations."
     },
     {
       "name": "legal",
       "type": "registry:block",
       "title": "Legal Pages",
       "description": "Legal pages with privacy policy, terms of service, EULA, and legal information \u2014 all in MDX with shared layout and header navigation.",
-      "categories": ["shipkit", "legal"],
-      "registryDependencies": ["@shipkit/cn", "@shipkit/routes-config"],
+      "categories": [
+        "shipkit",
+        "legal"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "@shipkit/routes-config"
+      ],
       "files": [
         {
           "path": "src/app/(app)/(legal)/layout.tsx",
@@ -918,9 +1006,22 @@
       "type": "registry:block",
       "title": "Changelog",
       "description": "Changelog with markdown file support and GitHub commit fallback, timeline view, and individual entry pages.",
-      "categories": ["shipkit", "changelog"],
-      "dependencies": ["react-markdown", "remark-gfm", "lucide-react", "gray-matter"],
-      "registryDependencies": ["@shipkit/cn", "@shipkit/routes-config", "badge", "button"],
+      "categories": [
+        "shipkit",
+        "changelog"
+      ],
+      "dependencies": [
+        "react-markdown",
+        "remark-gfm",
+        "lucide-react",
+        "gray-matter"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "@shipkit/routes-config",
+        "badge",
+        "button"
+      ],
       "files": [
         {
           "path": "src/app/(app)/changelog/layout.tsx",
@@ -948,15 +1049,28 @@
           "target": "~/src/lib/changelog.ts"
         }
       ],
-      "docs": "Auto-generated changelog from your GitHub repo's commits and tags. Set `GITHUB_REPO_OWNER` and `GITHUB_REPO_NAME` env vars (defaults to lacymorrow/shipkit). Optionally set `GITHUB_TOKEN` for higher API rate limits."
+      "envVars": {
+        "GITHUB_REPO_OWNER": "",
+        "GITHUB_REPO_NAME": "",
+        "GITHUB_ACCESS_TOKEN": ""
+      },
+      "docs": "Auto-generated changelog from your GitHub repo's commits and tags. Set `GITHUB_REPO_OWNER` and `GITHUB_REPO_NAME` env vars (defaults to lacymorrow/shipkit). Optionally set `GITHUB_ACCESS_TOKEN` for higher API rate limits."
     },
     {
       "name": "contact",
       "type": "registry:block",
       "title": "Contact",
       "description": "Contact page with animated background, email card, and contact form with Resend email integration and newsletter opt-in.",
-      "categories": ["shipkit", "contact"],
-      "dependencies": ["zod", "react-hook-form", "@hookform/resolvers", "lucide-react"],
+      "categories": [
+        "shipkit",
+        "contact"
+      ],
+      "dependencies": [
+        "zod",
+        "react-hook-form",
+        "@hookform/resolvers",
+        "lucide-react"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
@@ -990,6 +1104,9 @@
           "target": "~/src/types/contact.ts"
         }
       ],
+      "envVars": {
+        "RESEND_API_KEY": ""
+      },
       "docs": "Contact page with form that sends emails via Resend. Set `RESEND_API_KEY` to enable email delivery. The form includes name, contact info, message, and optional newsletter opt-in."
     },
     {
@@ -997,8 +1114,14 @@
       "type": "registry:block",
       "title": "Waitlist",
       "description": "Pre-launch waitlist with signup form, hero section, social proof, FAQ, database storage, and Resend email notifications.",
-      "categories": ["shipkit", "waitlist"],
-      "dependencies": ["zod", "lucide-react"],
+      "categories": [
+        "shipkit",
+        "waitlist"
+      ],
+      "dependencies": [
+        "zod",
+        "lucide-react"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
@@ -1061,6 +1184,10 @@
           "target": "~/src/server/services/waitlist-service.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": "",
+        "RESEND_API_KEY": ""
+      },
       "docs": "Pre-launch waitlist page with email signup, social proof, and FAQ. Requires a database (`DATABASE_URL`) for storing entries. Optionally set `RESEND_API_KEY` for confirmation emails."
     },
     {
@@ -1068,8 +1195,13 @@
       "type": "registry:block",
       "title": "Admin Dashboard",
       "description": "Role-based admin panel with user management, payments, GitHub repos, integrations, feedback, waitlist, and CMS admin sections.",
-      "categories": ["shipkit", "admin"],
-      "dependencies": ["lucide-react"],
+      "categories": [
+        "shipkit",
+        "admin"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
@@ -1239,6 +1371,10 @@
           "target": "~/src/server/services/integration-service.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": "",
+        "ADMIN_EMAIL": ""
+      },
       "docs": "Role-based admin dashboard. Set `ADMIN_EMAIL` (comma-separated) to grant admin access by email. Requires auth block for session management and database for user/role queries."
     },
     {
@@ -1246,8 +1382,13 @@
       "type": "registry:block",
       "title": "Settings",
       "description": "User settings pages with profile, appearance, account management, sidebar navigation, and server actions for profile/theme updates.",
-      "categories": ["shipkit", "settings"],
-      "dependencies": ["lucide-react"],
+      "categories": [
+        "shipkit",
+        "settings"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
@@ -1320,6 +1461,9 @@
           "target": "~/src/components/blocks/settings-dialog.tsx"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": ""
+      },
       "docs": "User settings with profile editing, appearance/theme picker, account deletion, and provider disconnect. Requires auth block for session management and database for persisting changes."
     },
     {
@@ -1327,7 +1471,10 @@
       "type": "registry:block",
       "title": "Demo Pages",
       "description": "Showcase demo pages with UI examples including dashboard, mail, music, playground, forms, cards, authentication, file browser, and more.",
-      "categories": ["shipkit", "demo"],
+      "categories": [
+        "shipkit",
+        "demo"
+      ],
       "dependencies": [
         "recharts",
         "date-fns",
@@ -1836,9 +1983,20 @@
       "type": "registry:block",
       "title": "Email",
       "description": "Resend email integration with client setup, subscribe/audience actions, email service, and newsletter form component.",
-      "categories": ["shipkit", "email"],
-      "dependencies": ["resend", "zod"],
-      "registryDependencies": ["@shipkit/cn", "button", "input", "label"],
+      "categories": [
+        "shipkit",
+        "email"
+      ],
+      "dependencies": [
+        "resend",
+        "zod"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "button",
+        "input",
+        "label"
+      ],
       "files": [
         {
           "path": "src/lib/resend.ts",
@@ -1871,6 +2029,10 @@
           "target": "~/src/components/forms/subscribe-form.tsx"
         }
       ],
+      "envVars": {
+        "RESEND_API_KEY": "",
+        "RESEND_AUDIENCE_ID": ""
+      },
       "docs": "Email integration via Resend. Set `RESEND_API_KEY` to enable. Optionally set `RESEND_AUDIENCE_ID` for newsletter audience management. Includes subscribe form component and email utility functions."
     },
     {
@@ -1878,8 +2040,14 @@
       "type": "registry:block",
       "title": "Feedback",
       "description": "User feedback system with dialog and popover components, server actions, and database-backed feedback service.",
-      "categories": ["shipkit", "feedback"],
-      "dependencies": ["zod", "lucide-react"],
+      "categories": [
+        "shipkit",
+        "feedback"
+      ],
+      "dependencies": [
+        "zod",
+        "lucide-react"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "button",
@@ -1911,6 +2079,10 @@
           "target": "~/src/server/services/feedback-service.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": "",
+        "RESEND_API_KEY": ""
+      },
       "docs": "User feedback collection with dialog and popover UI. Stores feedback in the database and optionally emails it via Resend. Requires `DATABASE_URL` for storage."
     },
     {
@@ -1918,9 +2090,17 @@
       "type": "registry:block",
       "title": "Analytics",
       "description": "Multi-provider analytics with PostHog, Umami, DataFast, Google Analytics, Google Tag Manager, and Statsig \u2014 all behind feature flags.",
-      "categories": ["shipkit", "analytics"],
-      "dependencies": ["posthog-js"],
-      "registryDependencies": ["@shipkit/cn", "@shipkit/features-config"],
+      "categories": [
+        "shipkit",
+        "analytics"
+      ],
+      "dependencies": [
+        "posthog-js"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "@shipkit/features-config"
+      ],
       "files": [
         {
           "path": "src/lib/posthog/posthog-config.ts",
@@ -1968,16 +2148,35 @@
           "target": "~/src/components/providers/consent-provider.tsx"
         }
       ],
-      "docs": "Multi-provider analytics. Each provider auto-enables via env vars: `NEXT_PUBLIC_POSTHOG_KEY` (PostHog), `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Umami), `NEXT_PUBLIC_DATAFAST_ID` (DataFast), `NEXT_PUBLIC_GA_ID` (Google Analytics), `NEXT_PUBLIC_GTM_ID` (GTM), `NEXT_PUBLIC_STATSIG_CLIENT_KEY` (Statsig). Add `<AnalyticsProvider />` to your root layout."
+      "envVars": {
+        "NEXT_PUBLIC_POSTHOG_KEY": "",
+        "NEXT_PUBLIC_POSTHOG_HOST": "",
+        "NEXT_PUBLIC_UMAMI_WEBSITE_ID": "",
+        "NEXT_PUBLIC_DATAFAST_WEBSITE_ID": "",
+        "NEXT_PUBLIC_DATAFAST_DOMAIN": "",
+        "NEXT_PUBLIC_STATSIG_CLIENT_KEY": "",
+        "NEXT_PUBLIC_GOOGLE_ANALYTICS_ID": "",
+        "NEXT_PUBLIC_GOOGLE_GTM_ID": ""
+      },
+      "docs": "Multi-provider analytics. Each provider auto-enables via env vars: `NEXT_PUBLIC_POSTHOG_KEY` (PostHog), `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Umami), `NEXT_PUBLIC_DATAFAST_WEBSITE_ID` (DataFast), `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` (Google Analytics), `NEXT_PUBLIC_GOOGLE_GTM_ID` (GTM), `NEXT_PUBLIC_STATSIG_CLIENT_KEY` (Statsig). Add `<AnalyticsProvider />` to your root layout."
     },
     {
       "name": "caching",
       "type": "registry:block",
       "title": "Caching & Rate Limiting",
       "description": "Redis-based caching and rate limiting via Upstash with configurable per-route limits.",
-      "categories": ["shipkit", "caching", "infrastructure"],
-      "dependencies": ["@upstash/redis", "@upstash/ratelimit"],
-      "registryDependencies": ["@shipkit/features-config"],
+      "categories": [
+        "shipkit",
+        "caching",
+        "infrastructure"
+      ],
+      "dependencies": [
+        "@upstash/redis",
+        "@upstash/ratelimit"
+      ],
+      "registryDependencies": [
+        "@shipkit/features-config"
+      ],
       "files": [
         {
           "path": "src/server/services/redis-service.ts",
@@ -2000,6 +2199,10 @@
           "target": "~/src/config/rate-limits.ts"
         }
       ],
+      "envVars": {
+        "UPSTASH_REDIS_REST_URL": "",
+        "UPSTASH_REDIS_REST_TOKEN": ""
+      },
       "docs": "Redis caching and rate limiting via Upstash. Set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` to enable. Configure per-route rate limits in `config/rate-limits.ts`."
     },
     {
@@ -2007,9 +2210,20 @@
       "type": "registry:block",
       "title": "Storage",
       "description": "File storage with AWS S3 presigned uploads, file service, server actions, and upload components.",
-      "categories": ["shipkit", "storage", "infrastructure"],
-      "dependencies": ["@aws-sdk/client-s3", "@aws-sdk/s3-request-presigner"],
-      "registryDependencies": ["@shipkit/cn", "button", "input"],
+      "categories": [
+        "shipkit",
+        "storage",
+        "infrastructure"
+      ],
+      "dependencies": [
+        "@aws-sdk/client-s3",
+        "@aws-sdk/s3-request-presigner"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "button",
+        "input"
+      ],
       "files": [
         {
           "path": "src/server/services/s3.ts",
@@ -2042,15 +2256,27 @@
           "target": "~/src/components/inputs/file-input.tsx"
         }
       ],
-      "docs": "File storage via AWS S3 with presigned URL uploads. Set `AWS_S3_BUCKET_NAME`, `AWS_S3_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`. Includes file upload components and server actions for managing uploads."
+      "envVars": {
+        "AWS_REGION": "",
+        "AWS_ACCESS_KEY_ID": "",
+        "AWS_SECRET_ACCESS_KEY": "",
+        "AWS_BUCKET_NAME": ""
+      },
+      "docs": "File storage via AWS S3 with presigned URL uploads. Set `AWS_REGION`, `AWS_BUCKET_NAME`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`. Vercel Blob (`VERCEL_BLOB_READ_WRITE_TOKEN`) is detected too but ships with the Payload CMS item. Includes file upload components and server actions for managing uploads."
     },
     {
       "name": "pricing",
       "type": "registry:block",
       "title": "Pricing",
       "description": "Pricing page with plan cards, features showcase, testimonials, and static content data files.",
-      "categories": ["shipkit", "pricing", "marketing"],
-      "dependencies": ["lucide-react"],
+      "categories": [
+        "shipkit",
+        "pricing",
+        "marketing"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
@@ -2105,7 +2331,10 @@
       "type": "registry:block",
       "title": "Payments",
       "description": "Unified payment system with Stripe, Lemon Squeezy, and Polar providers \u2014 checkout flows, webhook handlers, and subscription management.",
-      "categories": ["shipkit", "payments"],
+      "categories": [
+        "shipkit",
+        "payments"
+      ],
       "dependencies": [
         "stripe",
         "@lemonsqueezy/lemonsqueezy.js",
@@ -2280,15 +2509,32 @@
           "target": "~/src/components/ui/magicui/confetti/confetti-side-cannons.tsx"
         }
       ],
-      "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY` (Stripe), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records."
+      "envVars": {
+        "DATABASE_URL": "",
+        "STRIPE_SECRET_KEY": "",
+        "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "",
+        "STRIPE_WEBHOOK_SECRET": "",
+        "LEMONSQUEEZY_API_KEY": "",
+        "LEMONSQUEEZY_STORE_ID": "",
+        "LEMONSQUEEZY_WEBHOOK_SECRET": "",
+        "POLAR_ACCESS_TOKEN": ""
+      },
+      "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` (Stripe, plus `STRIPE_WEBHOOK_SECRET` for webhooks), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records."
     },
     {
       "name": "dashboard",
       "type": "registry:block",
       "title": "Dashboard",
       "description": "User dashboard with projects, teams, API keys, deployments, downloads, tools, stats, and revenue chart.",
-      "categories": ["shipkit", "dashboard"],
-      "dependencies": ["recharts", "lucide-react", "date-fns"],
+      "categories": [
+        "shipkit",
+        "dashboard"
+      ],
+      "dependencies": [
+        "recharts",
+        "lucide-react",
+        "date-fns"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
@@ -2629,6 +2875,9 @@
           "target": "~/src/components/blocks/nav-secondary.tsx"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": ""
+      },
       "docs": "User dashboard with projects, teams, API keys, deployments, downloads, and analytics charts. Requires `auth` block for session management and `DATABASE_URL` for data persistence. Install `payments` block for subscription-aware features."
     },
     {
@@ -2636,8 +2885,15 @@
       "type": "registry:block",
       "title": "RBAC",
       "description": "Role-based access control with permission service, client-side hook, and API permission check endpoint.",
-      "categories": ["shipkit", "rbac", "auth"],
-      "registryDependencies": ["@shipkit/cn", "@shipkit/routes-config"],
+      "categories": [
+        "shipkit",
+        "rbac",
+        "auth"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "@shipkit/routes-config"
+      ],
       "files": [
         {
           "path": "src/server/services/rbac.ts",
@@ -2655,6 +2911,9 @@
           "target": "~/src/app/(app)/api/permissions/check/route.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": ""
+      },
       "docs": "Role-based access control. Provides `rbacService.hasPermission(userId, resource, action)` on the server and `usePermission()` hook on the client. Requires `auth` block and `DATABASE_URL` for permission storage."
     },
     {
@@ -2662,9 +2921,22 @@
       "type": "registry:block",
       "title": "AI",
       "description": "Browser-based AI with SmolLM via WebGPU and cloud AI with OpenAI \u2014 demo components, utilities, and worker scripts.",
-      "categories": ["shipkit", "ai"],
-      "dependencies": ["openai", "@anthropic-ai/sdk"],
-      "registryDependencies": ["@shipkit/cn", "button", "card", "input", "textarea", "scroll-area"],
+      "categories": [
+        "shipkit",
+        "ai"
+      ],
+      "dependencies": [
+        "openai",
+        "@anthropic-ai/sdk"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "button",
+        "card",
+        "input",
+        "textarea",
+        "scroll-area"
+      ],
       "files": [
         {
           "path": "src/lib/ai/ai-analyzer.ts",
@@ -2742,6 +3014,10 @@
           "target": "~/src/components/primitives/ask-ai-buttons.tsx"
         }
       ],
+      "envVars": {
+        "OPENAI_API_KEY": "",
+        "ANTHROPIC_API_KEY": ""
+      },
       "docs": "AI integration with browser-based SmolLM (WebGPU, no server) and cloud AI (OpenAI, Anthropic). Set `OPENAI_API_KEY` for cloud AI. SmolLM runs entirely in-browser with no API key needed. Includes demo components and WebGPU detection utility."
     },
     {
@@ -2749,8 +3025,15 @@
       "type": "registry:block",
       "title": "GitHub Connect",
       "description": "GitHub OAuth integration with repo creation, collaborator management, invitation checks, and download service.",
-      "categories": ["shipkit", "github", "integration"],
-      "dependencies": ["octokit", "@octokit/rest"],
+      "categories": [
+        "shipkit",
+        "github",
+        "integration"
+      ],
+      "dependencies": [
+        "octokit",
+        "@octokit/rest"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
@@ -2811,6 +3094,11 @@
           "target": "~/src/lib/utils/generate-project-name-suggestions.ts"
         }
       ],
+      "envVars": {
+        "AUTH_GITHUB_ID": "",
+        "AUTH_GITHUB_SECRET": "",
+        "GITHUB_ACCESS_TOKEN": ""
+      },
       "docs": "GitHub integration for repo management. Requires `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET` for OAuth. Provides repo creation, collaborator invitations, download service, and API routes for checking repo availability."
     },
     {
@@ -2818,8 +3106,14 @@
       "type": "registry:block",
       "title": "Vercel Connect",
       "description": "Vercel integration with OAuth, deploy triggers, webhook handling, deployment status, and deploy button components.",
-      "categories": ["shipkit", "vercel", "integration"],
-      "dependencies": ["lucide-react"],
+      "categories": [
+        "shipkit",
+        "vercel",
+        "integration"
+      ],
+      "dependencies": [
+        "lucide-react"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
@@ -2894,7 +3188,12 @@
           "target": "~/src/lib/schemas/deployment.ts"
         }
       ],
-      "docs": "Vercel deployment integration. Set `VERCEL_TOKEN` and `VERCEL_TEAM_ID` for API access. Provides OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components."
+      "envVars": {
+        "VERCEL_INTEGRATION_SLUG": "",
+        "VERCEL_CLIENT_ID": "",
+        "VERCEL_CLIENT_SECRET": ""
+      },
+      "docs": "Vercel deployment integration. Set `VERCEL_INTEGRATION_SLUG`, `VERCEL_CLIENT_ID` and `VERCEL_CLIENT_SECRET` from your Vercel integration. Provides OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components."
     }
   ]
 }

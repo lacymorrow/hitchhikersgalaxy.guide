@@ -42,6 +42,10 @@
       "target": "~/src/server/services/feedback-service.ts"
     }
   ],
+  "envVars": {
+    "DATABASE_URL": "",
+    "RESEND_API_KEY": ""
+  },
   "docs": "User feedback collection with dialog and popover UI. Stores feedback in the database and optionally emails it via Resend. Requires `DATABASE_URL` for storage.",
   "categories": [
     "shipkit",

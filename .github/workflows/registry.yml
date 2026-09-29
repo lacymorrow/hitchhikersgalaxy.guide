@@ -1,0 +1,28 @@
+name: Registry
+
+# The shadcn registry at public/r is built from registry.json and live source files.
+# This fails when someone changes a source file the registry ships without rebuilding.
+
+on:
+  pull_request:
+    paths:
+      - "registry.json"
+      - "public/r/**"
+      - "src/**"
+      - "scripts/registry-check.sh"
+  push:
+    branches: [main]
+    paths:
+      - "registry.json"
+      - "public/r/**"
+      - "src/**"
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: bash scripts/registry-check.sh

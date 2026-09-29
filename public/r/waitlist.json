@@ -79,6 +79,10 @@
       "target": "~/src/server/services/waitlist-service.ts"
     }
   ],
+  "envVars": {
+    "DATABASE_URL": "",
+    "RESEND_API_KEY": ""
+  },
   "docs": "Pre-launch waitlist page with email signup, social proof, and FAQ. Requires a database (`DATABASE_URL`) for storing entries. Optionally set `RESEND_API_KEY` for confirmation emails.",
   "categories": [
     "shipkit",

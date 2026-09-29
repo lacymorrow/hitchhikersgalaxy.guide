@@ -36,6 +36,10 @@
       "target": "~/src/config/rate-limits.ts"
     }
   ],
+  "envVars": {
+    "UPSTASH_REDIS_REST_URL": "",
+    "UPSTASH_REDIS_REST_TOKEN": ""
+  },
   "docs": "Redis caching and rate limiting via Upstash. Set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` to enable. Configure per-route rate limits in `config/rate-limits.ts`.",
   "categories": [
     "shipkit",

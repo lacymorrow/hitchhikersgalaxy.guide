@@ -77,6 +77,11 @@
       "target": "~/src/lib/utils/generate-project-name-suggestions.ts"
     }
   ],
+  "envVars": {
+    "AUTH_GITHUB_ID": "",
+    "AUTH_GITHUB_SECRET": "",
+    "GITHUB_ACCESS_TOKEN": ""
+  },
   "docs": "GitHub integration for repo management. Requires `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET` for OAuth. Provides repo creation, collaborator invitations, download service, and API routes for checking repo availability.",
   "categories": [
     "shipkit",

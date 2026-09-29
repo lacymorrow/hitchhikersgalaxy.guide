@@ -159,7 +159,7 @@ Shipkit uses environment variables for feature toggles:
 
 - Features turn on when their env vars are present. Set `DISABLE_<FEATURE>=true` to force one off. Logic: `src/config/features-config.ts`
 - Each enabled feature is exposed to the client as `NEXT_PUBLIC_FEATURE_<NAME>_ENABLED`, for example `NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED`, `NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED`, `NEXT_PUBLIC_FEATURE_STRIPE_ENABLED`, `NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED`. The full list is in `src/env.ts`
-- Auth: Better Auth is the default library. Auth.js v5 (`NEXT_PUBLIC_FEATURE_AUTH_JS_ENABLED`) stays supported
+- Auth: Auth.js v5 runs today; Better Auth is the chosen default and the switch is in progress. Both are detected (`NEXT_PUBLIC_FEATURE_AUTH_JS_ENABLED`, `NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED`)
 - **Graceful degradation** - Features disable cleanly when not configured
 
 ## Critical Development Rules

@@ -567,7 +567,10 @@
           "target": "~/src/styles/builder-io.css"
         }
       ],
-      "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add your `BUILDER_API_KEY` to `.env`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard."
+      "envVars": {
+        "NEXT_PUBLIC_BUILDER_API_KEY": ""
+      },
+      "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add `NEXT_PUBLIC_BUILDER_API_KEY` to `.env.local`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard."
     },
     {
       "name": "cms-pages",
@@ -642,7 +645,12 @@
           "target": "~/src/styles/builder-io.css"
         }
       ],
-      "docs": "Shared CMS catch-all route. Checks Payload CMS first, then falls back to Builder.io. Both CMS systems coexist on the same URL space. Requires `features-config` to detect which CMS is enabled via env vars. Install `builder-io` block for Builder.io support and/or configure Payload CMS separately."
+      "envVars": {
+        "DATABASE_URL": "",
+        "PAYLOAD_SECRET": "",
+        "NEXT_PUBLIC_BUILDER_API_KEY": ""
+      },
+      "docs": "Shared CMS catch-all route. Checks Payload CMS first, then falls back to Builder.io. Both CMS systems coexist on the same URL space. Requires `features-config` to detect which CMS is enabled via env vars. Install `builder-io` for Builder.io support. Payload CMS needs `DATABASE_URL` and `PAYLOAD_SECRET` (or `APP_SECRET`); the Payload item itself is not in the registry yet."
     },
     {
       "name": "auth",
@@ -875,7 +883,16 @@
           "target": "~/src/components/assets/kit-icon.tsx"
         }
       ],
-      "docs": "Full auth system with NextAuth.js v5. Run `npx auth secret` to generate `AUTH_SECRET`. Configure at least one OAuth provider (e.g. `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`) or enable guest access with `ENABLE_AUTH_GUEST=true`. Requires a database \u2014 set `DATABASE_URL` and run Drizzle migrations."
+      "envVars": {
+        "DATABASE_URL": "",
+        "APP_SECRET": "",
+        "AUTH_URL": "",
+        "AUTH_GITHUB_ID": "",
+        "AUTH_GITHUB_SECRET": "",
+        "AUTH_GOOGLE_ID": "",
+        "AUTH_GOOGLE_SECRET": ""
+      },
+      "docs": "Auth.js v5 auth system (Better Auth is ShipKit's default; this item is the Auth.js alternative). Set `APP_SECRET` (one secret derives `AUTH_SECRET` and the others) or run `npx auth secret` for `AUTH_SECRET`. Configure at least one OAuth provider (e.g. `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`) or enable guest access with `ENABLE_AUTH_GUEST=true`. Requires a database \u2014 set `DATABASE_URL` and run Drizzle migrations."
     },
     {
       "name": "legal",
@@ -948,7 +965,12 @@
           "target": "~/src/lib/changelog.ts"
         }
       ],
-      "docs": "Auto-generated changelog from your GitHub repo's commits and tags. Set `GITHUB_REPO_OWNER` and `GITHUB_REPO_NAME` env vars (defaults to lacymorrow/shipkit). Optionally set `GITHUB_TOKEN` for higher API rate limits."
+      "envVars": {
+        "GITHUB_REPO_OWNER": "",
+        "GITHUB_REPO_NAME": "",
+        "GITHUB_ACCESS_TOKEN": ""
+      },
+      "docs": "Auto-generated changelog from your GitHub repo's commits and tags. Set `GITHUB_REPO_OWNER` and `GITHUB_REPO_NAME` env vars (defaults to lacymorrow/shipkit). Optionally set `GITHUB_ACCESS_TOKEN` for higher API rate limits."
     },
     {
       "name": "contact",
@@ -990,6 +1012,9 @@
           "target": "~/src/types/contact.ts"
         }
       ],
+      "envVars": {
+        "RESEND_API_KEY": ""
+      },
       "docs": "Contact page with form that sends emails via Resend. Set `RESEND_API_KEY` to enable email delivery. The form includes name, contact info, message, and optional newsletter opt-in."
     },
     {
@@ -1061,6 +1086,10 @@
           "target": "~/src/server/services/waitlist-service.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": "",
+        "RESEND_API_KEY": ""
+      },
       "docs": "Pre-launch waitlist page with email signup, social proof, and FAQ. Requires a database (`DATABASE_URL`) for storing entries. Optionally set `RESEND_API_KEY` for confirmation emails."
     },
     {
@@ -1239,6 +1268,10 @@
           "target": "~/src/server/services/integration-service.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": "",
+        "ADMIN_EMAIL": ""
+      },
       "docs": "Role-based admin dashboard. Set `ADMIN_EMAIL` (comma-separated) to grant admin access by email. Requires auth block for session management and database for user/role queries."
     },
     {
@@ -1320,6 +1353,9 @@
           "target": "~/src/components/blocks/settings-dialog.tsx"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": ""
+      },
       "docs": "User settings with profile editing, appearance/theme picker, account deletion, and provider disconnect. Requires auth block for session management and database for persisting changes."
     },
     {
@@ -1871,6 +1907,10 @@
           "target": "~/src/components/forms/subscribe-form.tsx"
         }
       ],
+      "envVars": {
+        "RESEND_API_KEY": "",
+        "RESEND_AUDIENCE_ID": ""
+      },
       "docs": "Email integration via Resend. Set `RESEND_API_KEY` to enable. Optionally set `RESEND_AUDIENCE_ID` for newsletter audience management. Includes subscribe form component and email utility functions."
     },
     {
@@ -1911,6 +1951,10 @@
           "target": "~/src/server/services/feedback-service.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": "",
+        "RESEND_API_KEY": ""
+      },
       "docs": "User feedback collection with dialog and popover UI. Stores feedback in the database and optionally emails it via Resend. Requires `DATABASE_URL` for storage."
     },
     {
@@ -1968,7 +2012,17 @@
           "target": "~/src/components/providers/consent-provider.tsx"
         }
       ],
-      "docs": "Multi-provider analytics. Each provider auto-enables via env vars: `NEXT_PUBLIC_POSTHOG_KEY` (PostHog), `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Umami), `NEXT_PUBLIC_DATAFAST_ID` (DataFast), `NEXT_PUBLIC_GA_ID` (Google Analytics), `NEXT_PUBLIC_GTM_ID` (GTM), `NEXT_PUBLIC_STATSIG_CLIENT_KEY` (Statsig). Add `<AnalyticsProvider />` to your root layout."
+      "envVars": {
+        "NEXT_PUBLIC_POSTHOG_KEY": "",
+        "NEXT_PUBLIC_POSTHOG_HOST": "",
+        "NEXT_PUBLIC_UMAMI_WEBSITE_ID": "",
+        "NEXT_PUBLIC_DATAFAST_WEBSITE_ID": "",
+        "NEXT_PUBLIC_DATAFAST_DOMAIN": "",
+        "NEXT_PUBLIC_STATSIG_CLIENT_KEY": "",
+        "NEXT_PUBLIC_GOOGLE_ANALYTICS_ID": "",
+        "NEXT_PUBLIC_GOOGLE_GTM_ID": ""
+      },
+      "docs": "Multi-provider analytics. Each provider auto-enables via env vars: `NEXT_PUBLIC_POSTHOG_KEY` (PostHog), `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Umami), `NEXT_PUBLIC_DATAFAST_WEBSITE_ID` (DataFast), `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` (Google Analytics), `NEXT_PUBLIC_GOOGLE_GTM_ID` (GTM), `NEXT_PUBLIC_STATSIG_CLIENT_KEY` (Statsig). Add `<AnalyticsProvider />` to your root layout."
     },
     {
       "name": "caching",
@@ -2000,6 +2054,10 @@
           "target": "~/src/config/rate-limits.ts"
         }
       ],
+      "envVars": {
+        "UPSTASH_REDIS_REST_URL": "",
+        "UPSTASH_REDIS_REST_TOKEN": ""
+      },
       "docs": "Redis caching and rate limiting via Upstash. Set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` to enable. Configure per-route rate limits in `config/rate-limits.ts`."
     },
     {
@@ -2042,7 +2100,13 @@
           "target": "~/src/components/inputs/file-input.tsx"
         }
       ],
-      "docs": "File storage via AWS S3 with presigned URL uploads. Set `AWS_S3_BUCKET_NAME`, `AWS_S3_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`. Includes file upload components and server actions for managing uploads."
+      "envVars": {
+        "AWS_REGION": "",
+        "AWS_ACCESS_KEY_ID": "",
+        "AWS_SECRET_ACCESS_KEY": "",
+        "AWS_BUCKET_NAME": ""
+      },
+      "docs": "File storage via AWS S3 with presigned URL uploads. Set `AWS_REGION`, `AWS_BUCKET_NAME`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`. Vercel Blob (`VERCEL_BLOB_READ_WRITE_TOKEN`) is detected too but ships with the Payload CMS item. Includes file upload components and server actions for managing uploads."
     },
     {
       "name": "pricing",
@@ -2280,7 +2344,17 @@
           "target": "~/src/components/ui/magicui/confetti/confetti-side-cannons.tsx"
         }
       ],
-      "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY` (Stripe), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records."
+      "envVars": {
+        "DATABASE_URL": "",
+        "STRIPE_SECRET_KEY": "",
+        "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "",
+        "STRIPE_WEBHOOK_SECRET": "",
+        "LEMONSQUEEZY_API_KEY": "",
+        "LEMONSQUEEZY_STORE_ID": "",
+        "LEMONSQUEEZY_WEBHOOK_SECRET": "",
+        "POLAR_ACCESS_TOKEN": ""
+      },
+      "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` (Stripe, plus `STRIPE_WEBHOOK_SECRET` for webhooks), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records."
     },
     {
       "name": "dashboard",
@@ -2629,6 +2703,9 @@
           "target": "~/src/components/blocks/nav-secondary.tsx"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": ""
+      },
       "docs": "User dashboard with projects, teams, API keys, deployments, downloads, and analytics charts. Requires `auth` block for session management and `DATABASE_URL` for data persistence. Install `payments` block for subscription-aware features."
     },
     {
@@ -2655,6 +2732,9 @@
           "target": "~/src/app/(app)/api/permissions/check/route.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": ""
+      },
       "docs": "Role-based access control. Provides `rbacService.hasPermission(userId, resource, action)` on the server and `usePermission()` hook on the client. Requires `auth` block and `DATABASE_URL` for permission storage."
     },
     {
@@ -2742,6 +2822,10 @@
           "target": "~/src/components/primitives/ask-ai-buttons.tsx"
         }
       ],
+      "envVars": {
+        "OPENAI_API_KEY": "",
+        "ANTHROPIC_API_KEY": ""
+      },
       "docs": "AI integration with browser-based SmolLM (WebGPU, no server) and cloud AI (OpenAI, Anthropic). Set `OPENAI_API_KEY` for cloud AI. SmolLM runs entirely in-browser with no API key needed. Includes demo components and WebGPU detection utility."
     },
     {
@@ -2811,6 +2895,11 @@
           "target": "~/src/lib/utils/generate-project-name-suggestions.ts"
         }
       ],
+      "envVars": {
+        "AUTH_GITHUB_ID": "",
+        "AUTH_GITHUB_SECRET": "",
+        "GITHUB_ACCESS_TOKEN": ""
+      },
       "docs": "GitHub integration for repo management. Requires `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET` for OAuth. Provides repo creation, collaborator invitations, download service, and API routes for checking repo availability."
     },
     {
@@ -2894,7 +2983,12 @@
           "target": "~/src/lib/schemas/deployment.ts"
         }
       ],
-      "docs": "Vercel deployment integration. Set `VERCEL_TOKEN` and `VERCEL_TEAM_ID` for API access. Provides OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components."
+      "envVars": {
+        "VERCEL_INTEGRATION_SLUG": "",
+        "VERCEL_CLIENT_ID": "",
+        "VERCEL_CLIENT_SECRET": ""
+      },
+      "docs": "Vercel deployment integration. Set `VERCEL_INTEGRATION_SLUG`, `VERCEL_CLIENT_ID` and `VERCEL_CLIENT_SECRET` from your Vercel integration. Provides OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components."
     }
   ]
 }

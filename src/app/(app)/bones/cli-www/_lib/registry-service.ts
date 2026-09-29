@@ -8,6 +8,15 @@ import type { Registry, RegistryFilters, RegistryItem } from "./types";
  */
 const BUILT_IN_REGISTRIES = [
   {
+    name: "ShipKit",
+    url: "https://shipkit.io/r/registry.json",
+    description:
+      "ShipKit integrations and blocks: auth, payments, email, analytics, CMS, storage and more",
+    baseComponentUrl: "https://shipkit.io/r",
+    baseBlockUrl: "https://shipkit.io/r",
+    baseDocsUrl: "https://shipkit.io/docs/features/registry",
+  },
+  {
     name: "shadcn/ui",
     url: "https://ui.shadcn.com/r",
     description: "Official shadcn/ui component registry with customizable components and blocks",
@@ -34,6 +43,30 @@ const BUILT_IN_REGISTRIES = [
 ] as const;
 
 const STORAGE_KEY = "reg-browser:custom-registries";
+
+/**
+ * Registries come in two layouts:
+ * - shadcn style: `<base>/index.json` is an array, items live at `<base>/styles/<style>/<name>.json`
+ * - flat style (what `npx shadcn build` produces): `<base>/registry.json` is `{ items: [...] }`,
+ *   items live at `<base>/<name>.json`
+ */
+function isFlatRegistryUrl(url: string): boolean {
+  return url.endsWith("registry.json");
+}
+
+function registryIndexUrl(registryUrl: string): string {
+  const trimmed = registryUrl.replace(/\/$/, "");
+  if (isFlatRegistryUrl(trimmed) || trimmed.endsWith("index.json")) return trimmed;
+  return `${trimmed}/index.json`;
+}
+
+function itemsFromIndex(data: unknown): RegistryItem[] {
+  if (Array.isArray(data)) return data as RegistryItem[];
+  if (data && typeof data === "object" && Array.isArray((data as { items?: unknown }).items)) {
+    return (data as { items: RegistryItem[] }).items;
+  }
+  return [];
+}
 
 export type RegistryName = (typeof BUILT_IN_REGISTRIES)[number]["name"];
 
@@ -84,12 +117,7 @@ export async function validateRegistry(registry: Registry): Promise<void> {
   }
 
   try {
-    // Ensure URL ends with index.json for registry indexes
-    const url = registry.url.endsWith("index.json")
-      ? registry.url
-      : registry.url.endsWith("/")
-        ? `${registry.url}index.json`
-        : `${registry.url}/index.json`;
+    const url = registryIndexUrl(registry.url);
 
     // Try to fetch the registry index
     const response = await fetch(url);
@@ -97,11 +125,8 @@ export async function validateRegistry(registry: Registry): Promise<void> {
       throw new Error(`Failed to fetch registry: ${response.statusText}`);
     }
 
-    // Validate the registry structure
-    const items = await response.json();
-    if (!Array.isArray(items)) {
-      throw new Error("Registry index must be an array");
-    }
+    // Validate the registry structure (array, or `{ items }` from `npx shadcn build`)
+    const items = itemsFromIndex(await response.json());
 
     // Validate at least one item has the correct structure
     if (items.length === 0) {
@@ -163,11 +188,7 @@ export async function getRegistry(name: RegistryName): Promise<Registry> {
  * Fetch registry index with error handling and caching
  */
 export async function fetchRegistryIndex(registryUrl: string): Promise<RegistryItem[]> {
-  const url = new URL(
-    registryUrl.endsWith("index.json")
-      ? registryUrl
-      : `${registryUrl.replace(/\/$/, "")}/index.json`
-  );
+  const url = new URL(registryIndexUrl(registryUrl));
 
   try {
     const response = await fetch(url, {
@@ -181,8 +202,7 @@ export async function fetchRegistryIndex(registryUrl: string): Promise<RegistryI
       return [];
     }
 
-    const data = await response.json();
-    return Array.isArray(data) ? data : [];
+    return itemsFromIndex(await response.json());
   } catch (_error) {
     return [];
   }
@@ -196,8 +216,9 @@ export async function fetchItemDetails(
   itemName: string,
   style = "default"
 ): Promise<RegistryItem> {
-  const baseUrlWithoutIndex = baseUrl.replace(/\/index\.json$/, "");
-  const detailsUrl = new URL(`${baseUrlWithoutIndex}/styles/${style}/${itemName}.json`);
+  const detailsUrl = isFlatRegistryUrl(baseUrl)
+    ? new URL(`${baseUrl.replace(/\/registry\.json$/, "")}/${itemName}.json`)
+    : new URL(`${baseUrl.replace(/\/index\.json$/, "")}/styles/${style}/${itemName}.json`);
 
   try {
     const response = await fetch(detailsUrl, {

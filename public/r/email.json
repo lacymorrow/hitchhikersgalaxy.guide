@@ -51,6 +51,10 @@
       "target": "~/src/components/forms/subscribe-form.tsx"
     }
   ],
+  "envVars": {
+    "RESEND_API_KEY": "",
+    "RESEND_AUDIENCE_ID": ""
+  },
   "docs": "Email integration via Resend. Set `RESEND_API_KEY` to enable. Optionally set `RESEND_AUDIENCE_ID` for newsletter audience management. Includes subscribe form component and email utility functions.",
   "categories": [
     "shipkit",

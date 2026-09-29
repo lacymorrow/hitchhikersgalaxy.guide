@@ -84,7 +84,12 @@
       "target": "~/src/styles/builder-io.css"
     }
   ],
-  "docs": "Shared CMS catch-all route. Checks Payload CMS first, then falls back to Builder.io. Both CMS systems coexist on the same URL space. Requires `features-config` to detect which CMS is enabled via env vars. Install `builder-io` block for Builder.io support and/or configure Payload CMS separately.",
+  "envVars": {
+    "DATABASE_URL": "",
+    "PAYLOAD_SECRET": "",
+    "NEXT_PUBLIC_BUILDER_API_KEY": ""
+  },
+  "docs": "Shared CMS catch-all route. Checks Payload CMS first, then falls back to Builder.io. Both CMS systems coexist on the same URL space. Requires `features-config` to detect which CMS is enabled via env vars. Install `builder-io` for Builder.io support. Payload CMS needs `DATABASE_URL` and `PAYLOAD_SECRET` (or `APP_SECRET`); the Payload item itself is not in the registry yet.",
   "categories": [
     "shipkit",
     "cms"

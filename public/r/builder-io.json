@@ -79,7 +79,10 @@
       "target": "~/src/styles/builder-io.css"
     }
   ],
-  "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add your `BUILDER_API_KEY` to `.env`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard.",
+  "envVars": {
+    "NEXT_PUBLIC_BUILDER_API_KEY": ""
+  },
+  "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add `NEXT_PUBLIC_BUILDER_API_KEY` to `.env.local`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard.",
   "categories": [
     "shipkit",
     "cms",

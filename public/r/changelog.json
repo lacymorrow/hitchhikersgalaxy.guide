@@ -47,7 +47,12 @@
       "target": "~/src/lib/changelog.ts"
     }
   ],
-  "docs": "Auto-generated changelog from your GitHub repo's commits and tags. Set `GITHUB_REPO_OWNER` and `GITHUB_REPO_NAME` env vars (defaults to lacymorrow/shipkit). Optionally set `GITHUB_TOKEN` for higher API rate limits.",
+  "envVars": {
+    "GITHUB_REPO_OWNER": "",
+    "GITHUB_REPO_NAME": "",
+    "GITHUB_ACCESS_TOKEN": ""
+  },
+  "docs": "Auto-generated changelog from your GitHub repo's commits and tags. Set `GITHUB_REPO_OWNER` and `GITHUB_REPO_NAME` env vars (defaults to lacymorrow/shipkit). Optionally set `GITHUB_ACCESS_TOKEN` for higher API rate limits.",
   "categories": [
     "shipkit",
     "changelog"

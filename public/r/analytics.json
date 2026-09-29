@@ -66,7 +66,17 @@
       "target": "~/src/components/providers/consent-provider.tsx"
     }
   ],
-  "docs": "Multi-provider analytics. Each provider auto-enables via env vars: `NEXT_PUBLIC_POSTHOG_KEY` (PostHog), `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Umami), `NEXT_PUBLIC_DATAFAST_ID` (DataFast), `NEXT_PUBLIC_GA_ID` (Google Analytics), `NEXT_PUBLIC_GTM_ID` (GTM), `NEXT_PUBLIC_STATSIG_CLIENT_KEY` (Statsig). Add `<AnalyticsProvider />` to your root layout.",
+  "envVars": {
+    "NEXT_PUBLIC_POSTHOG_KEY": "",
+    "NEXT_PUBLIC_POSTHOG_HOST": "",
+    "NEXT_PUBLIC_UMAMI_WEBSITE_ID": "",
+    "NEXT_PUBLIC_DATAFAST_WEBSITE_ID": "",
+    "NEXT_PUBLIC_DATAFAST_DOMAIN": "",
+    "NEXT_PUBLIC_STATSIG_CLIENT_KEY": "",
+    "NEXT_PUBLIC_GOOGLE_ANALYTICS_ID": "",
+    "NEXT_PUBLIC_GOOGLE_GTM_ID": ""
+  },
+  "docs": "Multi-provider analytics. Each provider auto-enables via env vars: `NEXT_PUBLIC_POSTHOG_KEY` (PostHog), `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Umami), `NEXT_PUBLIC_DATAFAST_WEBSITE_ID` (DataFast), `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` (Google Analytics), `NEXT_PUBLIC_GOOGLE_GTM_ID` (GTM), `NEXT_PUBLIC_STATSIG_CLIENT_KEY` (Statsig). Add `<AnalyticsProvider />` to your root layout.",
   "categories": [
     "shipkit",
     "analytics"

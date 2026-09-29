@@ -27,6 +27,9 @@
       "target": "~/src/app/(app)/api/permissions/check/route.ts"
     }
   ],
+  "envVars": {
+    "DATABASE_URL": ""
+  },
   "docs": "Role-based access control. Provides `rbacService.hasPermission(userId, resource, action)` on the server and `usePermission()` hook on the client. Requires `auth` block and `DATABASE_URL` for permission storage.",
   "categories": [
     "shipkit",

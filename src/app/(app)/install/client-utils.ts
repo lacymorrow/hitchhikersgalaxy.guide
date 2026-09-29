@@ -303,42 +303,43 @@ async function ensureGlobalsCss(container: any): Promise<void> {
     }
 
     // If no alternative paths work, create a default globals.css
-    // Tailwind v4: CSS-first config, no tailwind.config.ts. Colors stay as
-    // bare HSL triplets on :root/.dark and get wrapped in hsl() only inside
-    // @theme, matching shadcn's current v4 template.
+    // Tailwind v4: CSS-first config, no tailwind.config.ts. Colors are full
+    // oklch() values directly on :root/.dark, so @theme references them with
+    // a plain var() (no hsl()/oklch() wrapper), matching shadcn's current
+    // v4 template. Values are converted 1:1 from the previous hsl palette.
     const defaultContent = `@import "tailwindcss";
 @import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 
 @theme inline {
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
 
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
 
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
 
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
 
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
 
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
 
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -347,65 +348,65 @@ async function ensureGlobalsCss(container: any): Promise<void> {
 }
 
 :root {
-  --background: 0 0% 100%;
-  --foreground: 222.2 84% 4.9%;
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.137 0.036 258.5);
 
-  --card: 0 0% 100%;
-  --card-foreground: 222.2 84% 4.9%;
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.137 0.036 258.5);
 
-  --popover: 0 0% 100%;
-  --popover-foreground: 222.2 84% 4.9%;
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.137 0.036 258.5);
 
-  --primary: 222.2 47.4% 11.2%;
-  --primary-foreground: 210 40% 98%;
+  --primary: oklch(0.208 0.04 265.7);
+  --primary-foreground: oklch(0.984 0.003 247.9);
 
-  --secondary: 210 40% 96.1%;
-  --secondary-foreground: 222.2 47.4% 11.2%;
+  --secondary: oklch(0.968 0.007 247.9);
+  --secondary-foreground: oklch(0.208 0.04 265.7);
 
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
+  --muted: oklch(0.968 0.007 247.9);
+  --muted-foreground: oklch(0.555 0.041 257.4);
 
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --accent: oklch(0.968 0.007 247.9);
+  --accent-foreground: oklch(0.208 0.04 265.7);
 
-  --destructive: 0 84.2% 60.2%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: oklch(0.637 0.208 25.3);
+  --destructive-foreground: oklch(0.984 0.003 247.9);
 
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
-  --ring: 222.2 84% 4.9%;
+  --border: oklch(0.929 0.013 255.5);
+  --input: oklch(0.929 0.013 255.5);
+  --ring: oklch(0.137 0.036 258.5);
 
   --radius: 0.5rem;
 }
 
 .dark {
-  --background: 222.2 84% 4.9%;
-  --foreground: 210 40% 98%;
+  --background: oklch(0.137 0.036 258.5);
+  --foreground: oklch(0.984 0.003 247.9);
 
-  --card: 222.2 84% 4.9%;
-  --card-foreground: 210 40% 98%;
+  --card: oklch(0.137 0.036 258.5);
+  --card-foreground: oklch(0.984 0.003 247.9);
 
-  --popover: 222.2 84% 4.9%;
-  --popover-foreground: 210 40% 98%;
+  --popover: oklch(0.137 0.036 258.5);
+  --popover-foreground: oklch(0.984 0.003 247.9);
 
-  --primary: 210 40% 98%;
-  --primary-foreground: 222.2 47.4% 11.2%;
+  --primary: oklch(0.984 0.003 247.9);
+  --primary-foreground: oklch(0.208 0.04 265.7);
 
-  --secondary: 217.2 32.6% 17.5%;
-  --secondary-foreground: 210 40% 98%;
+  --secondary: oklch(0.28 0.037 260);
+  --secondary-foreground: oklch(0.984 0.003 247.9);
 
-  --muted: 217.2 32.6% 17.5%;
-  --muted-foreground: 215 20.2% 65.1%;
+  --muted: oklch(0.28 0.037 260);
+  --muted-foreground: oklch(0.711 0.035 256.8);
 
-  --accent: 217.2 32.6% 17.5%;
-  --accent-foreground: 210 40% 98%;
+  --accent: oklch(0.28 0.037 260);
+  --accent-foreground: oklch(0.984 0.003 247.9);
 
-  --destructive: 0 62.8% 30.6%;
-  --destructive-foreground: 210 40% 98%;
+  --destructive: oklch(0.396 0.133 25.7);
+  --destructive-foreground: oklch(0.984 0.003 247.9);
 
-  --border: 217.2 32.6% 17.5%;
-  --input: 217.2 32.6% 17.5%;
-  --ring: 212.7 26.8% 83.9%;
+  --border: oklch(0.28 0.037 260);
+  --input: oklch(0.28 0.037 260);
+  --ring: oklch(0.869 0.02 252.8);
 }
 
 @layer base {

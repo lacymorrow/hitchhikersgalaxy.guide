@@ -23,33 +23,49 @@ In your project's `components.json`, add the Shipkit registry:
 }
 ```
 
+[Bones](https://github.com/shipkit-io/bones) ships with this entry already.
+
 ### 2. Install a block
 
 ```bash
-npx shadcn add @shipkit/auth
 npx shadcn add @shipkit/payments
+npx shadcn add @shipkit/caching
 npx shadcn add @shipkit/blog
-npx shadcn add @shipkit/analytics
 ```
 
 Or install directly via URL:
 
 ```bash
-npx shadcn add https://shipkit.io/r/auth.json
+npx shadcn add https://shipkit.io/r/payments.json
 ```
 
-## Available Blocks (35 items)
+### 3. Fill in the env vars
+
+Every integration block declares the env vars it reads. `shadcn add` appends them to `.env.local` with empty values and never overwrites a key you already have:
+
+```bash
+$ npx shadcn add @shipkit/caching
+✔ Added the following variables to .env.local:
+  + UPSTASH_REDIS_REST_URL
+  + UPSTASH_REDIS_REST_TOKEN
+```
+
+Fill in the values and restart the dev server. The feature turns on when its keys are present (see [feature flags](/docs/development/feature-flags)).
+
+If a file already exists in your project (for example `features-config.ts` or `cn.ts` in a Bones project), `shadcn add` asks before overwriting. Answer `n` to keep yours.
+
+## Available Blocks (36 items)
 
 ### Core Feature Blocks
 
 | Block       | Files | Description                                                       |
 | ----------- | ----- | ----------------------------------------------------------------- |
-| `auth`      | 41    | NextAuth.js v5 — OAuth, credentials, magic link, guest access     |
-| `payments`  | 30    | Stripe, Lemon Squeezy, Polar — checkout, webhooks, subscriptions  |
-| `dashboard` | 46    | User dashboard — projects, teams, API keys, deployments, charts   |
+| `auth`      | 42    | Auth.js v5 — OAuth, credentials, magic link, guest access         |
+| `payments`  | 31    | Stripe, Lemon Squeezy, Polar — checkout, webhooks, subscriptions  |
+| `dashboard` | 64    | User dashboard — projects, teams, API keys, deployments, charts   |
 | `blog`      | 24    | MDX blog with author profiles, categories, feed-style timeline    |
 | `docs`      | 12    | Documentation system — sidebar, search, MDX rendering             |
-| `admin`     | 30    | Role-based admin panel — users, payments, GitHub, integrations    |
+| `admin`     | 31    | Role-based admin panel — users, payments, GitHub, integrations    |
 | `settings`  | 12    | User settings — profile, appearance, account management           |
 | `rbac`      | 3     | Role-based access control — permission service, hook, API         |
 | `demo`      | 93    | Showcase pages — dashboard, mail, music, playground, forms, cards |
@@ -59,7 +75,7 @@ npx shadcn add https://shipkit.io/r/auth.json
 | Block       | Files | Description                                                  |
 | ----------- | ----- | ------------------------------------------------------------ |
 | `faq`       | 3     | Accordion FAQ page with optional Payload CMS integration     |
-| `pricing`   | 8     | Pricing page with plan cards, features, testimonials content |
+| `pricing`   | 7     | Pricing page with plan cards, features, testimonials content |
 | `legal`     | 5     | Privacy policy, terms of service, EULA, legal info (MDX)     |
 | `changelog` | 6     | Auto-generated changelog from GitHub commits and tags        |
 | `contact`   | 4     | Contact form with Resend email and newsletter opt-in         |
@@ -81,7 +97,7 @@ npx shadcn add https://shipkit.io/r/auth.json
 | `analytics`      | 9     | PostHog, Umami, DataFast, Google Analytics, GTM, Statsig           |
 | `ai`             | 15    | SmolLM browser AI (WebGPU) + cloud AI (OpenAI, Anthropic)          |
 | `github-connect` | 10    | GitHub OAuth, repo creation, collaborators, download service       |
-| `vercel-connect` | 11    | Vercel OAuth, deploy triggers, webhooks, status tracking           |
+| `vercel-connect` | 13    | Vercel OAuth, deploy triggers, webhooks, status tracking           |
 | `storage`        | 6     | AWS S3 presigned uploads, file service, upload components          |
 | `caching`        | 4     | Redis caching and rate limiting via Upstash                        |
 
@@ -111,10 +127,16 @@ Standalone components, also installable individually:
 
 ### Roadmap (not yet available)
 
-| Block         | Description                                  |
-| ------------- | -------------------------------------------- |
-| `onboarding`  | Multi-step setup wizard                      |
-| `payload-cms` | Full Payload CMS collections and admin panel |
+These exist in ShipKit's source but are not packaged as blocks yet. They are the next split, along with breaking `auth` and `payments` into one block per provider.
+
+| Block         | Description                                                       |
+| ------------- | ----------------------------------------------------------------- |
+| `better-auth` | Better Auth, the chosen default auth library (switch in progress) |
+| `clerk`       | Clerk auth provider and forms                                     |
+| `payload`     | Full Payload CMS config, collections and admin panel              |
+| `turnstile`   | Cloudflare Turnstile widget and verification                      |
+| `vercel-blob` | Vercel Blob storage adapter                                       |
+| `onboarding`  | Multi-step setup wizard                                           |
 
 ## Block Details
 
@@ -198,7 +220,7 @@ npx shadcn add @shipkit/builder-io
 
 **Dependencies:** `@builder.io/react`, `@builder.io/sdk`, `@builder.io/dev-tools`
 
-**Setup:** Sign up at [builder.io](https://builder.io), set `BUILDER_API_KEY` in `.env`. Wrap your Next.js config with `withBuilderConfig()`.
+**Setup:** Sign up at [builder.io](https://builder.io), set `NEXT_PUBLIC_BUILDER_API_KEY` in `.env.local`. Wrap your Next.js config with `withBuilderConfig()`.
 
 ### CMS Pages
 

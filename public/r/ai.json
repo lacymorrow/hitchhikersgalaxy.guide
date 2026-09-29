@@ -6,7 +6,8 @@
   "dependencies": [
     "openai@6.49.0",
     "@anthropic-ai/sdk",
-    "@emblemvault/ask-ai@0.1.1"
+    "@emblemvault/ask-ai@0.1.1",
+    "@huggingface/transformers@3.8.1"
   ],
   "registryDependencies": [
     "@shipkit/cn",

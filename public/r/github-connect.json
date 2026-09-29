@@ -5,7 +5,8 @@
   "description": "GitHub OAuth integration with repo creation, collaborator management, invitation checks, and download service.",
   "dependencies": [
     "octokit",
-    "@octokit/rest"
+    "@octokit/rest",
+    "jszip"
   ],
   "registryDependencies": [
     "@shipkit/cn",

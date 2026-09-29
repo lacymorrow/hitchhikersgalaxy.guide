@@ -3148,9 +3148,9 @@
           "target": "~/src/app/(app)/(dashboard)/deployments/page.tsx"
         },
         {
-          "path": "src/app/(app)/(dashboard)/deployments/deployment-actions.tsx",
+          "path": "src/app/(app)/(dashboard)/deployments/deployment-actions-menu.tsx",
           "type": "registry:component",
-          "target": "~/src/app/(app)/(dashboard)/deployments/deployment-actions.tsx"
+          "target": "~/src/app/(app)/(dashboard)/deployments/deployment-actions-menu.tsx"
         },
         {
           "path": "src/app/(app)/(dashboard)/deployments/deployments-list.tsx",

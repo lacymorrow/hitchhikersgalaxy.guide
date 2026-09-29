@@ -320,7 +320,9 @@
         "remark-gfm",
         "gray-matter",
         "zod",
-        "openai"
+        "openai",
+        "fumadocs-core@16.14.5",
+        "fumadocs-mdx@15.2.3"
       ],
       "registryDependencies": [
         "@shipkit/cn",
@@ -401,9 +403,14 @@
           "path": "src/lib/open-ai.ts",
           "type": "registry:lib",
           "target": "~/src/lib/open-ai.ts"
+        },
+        {
+          "path": "source.config.ts",
+          "type": "registry:file",
+          "target": "~/source.config.ts"
         }
       ],
-      "docs": "Full docs system powered by MDX. Place your `.mdx` files in `docs/` at the project root. Includes sidebar navigation, search with optional AI-powered answers, and responsive layout."
+      "docs": "Full docs system powered by MDX. Place your `.mdx` files in `docs/` at the project root. Includes sidebar navigation, search with optional AI-powered answers, and responsive layout. After install run `pnpm fumadocs-mdx` (ShipKit runs it in postinstall) to generate the `.source` folder the docs page imports."
     },
     {
       "name": "blog",
@@ -586,7 +593,7 @@
         {
           "path": "src/builder-registry.ts",
           "type": "registry:lib",
-          "target": "~/builder-registry.ts"
+          "target": "~/src/builder-registry.ts"
         },
         {
           "path": "src/components/modules/builder/index.ts",

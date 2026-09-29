@@ -8,7 +8,9 @@
     "remark-gfm",
     "gray-matter",
     "zod",
-    "openai"
+    "openai",
+    "fumadocs-core@16.14.5",
+    "fumadocs-mdx@15.2.3"
   ],
   "registryDependencies": [
     "@shipkit/cn",
@@ -104,9 +106,15 @@
       "content": "import OpenAI from \"openai\";\nimport { env } from \"@/env\";\n\n// Initialize OpenAI client only if the feature is enabled and the API key is present\nexport const openai =\n  env.NEXT_PUBLIC_FEATURE_OPENAI_ENABLED && env?.OPENAI_API_KEY\n    ? new OpenAI({\n        apiKey: env?.OPENAI_API_KEY,\n      })\n    : null; // Set to null if disabled or key is missing\n",
       "type": "registry:lib",
       "target": "~/src/lib/open-ai.ts"
+    },
+    {
+      "path": "source.config.ts",
+      "content": "import { rehypeCodeDefaultOptions } from \"fumadocs-core/mdx-plugins\";\nimport { defineConfig, defineDocs } from \"fumadocs-mdx/config\";\n\n/*\n * Fumadocs content collections.\n *\n * Shipkit uses fumadocs *headlessly*: `fumadocs-mdx` compiles `docs/**` and\n * `fumadocs-core` supplies the page tree and search index, while the rendering\n * layer stays Shipkit's own components. `fumadocs-ui` is deliberately not used —\n * it requires Tailwind v4 (via @fumadocs/tailwind) and Shipkit is on v3.\n *\n * See src/config/docs-provider.ts for the fumadocs/holocron provider switch.\n */\nexport const docs = defineDocs({\n  dir: \"docs\",\n});\n\nexport default defineConfig({\n  mdxOptions: {\n    rehypeCodeOptions: {\n      ...rehypeCodeDefaultOptions,\n      /*\n       * Shiki throws on unknown fence languages rather than degrading. The docs\n       * use ```env for .env samples, which Shiki calls \"dotenv\"; the fallback\n       * keeps any future unknown language from failing the build.\n       */\n      langs: [\n        \"bash\",\n        \"typescript\",\n        \"tsx\",\n        \"javascript\",\n        \"json\",\n        \"yaml\",\n        \"sql\",\n        \"md\",\n        \"mdx\",\n        \"dotenv\",\n      ],\n      langAlias: { env: \"dotenv\" },\n      fallbackLanguage: \"plaintext\",\n    },\n  },\n});\n",
+      "type": "registry:file",
+      "target": "~/source.config.ts"
     }
   ],
-  "docs": "Full docs system powered by MDX. Place your `.mdx` files in `docs/` at the project root. Includes sidebar navigation, search with optional AI-powered answers, and responsive layout.",
+  "docs": "Full docs system powered by MDX. Place your `.mdx` files in `docs/` at the project root. Includes sidebar navigation, search with optional AI-powered answers, and responsive layout. After install run `pnpm fumadocs-mdx` (ShipKit runs it in postinstall) to generate the `.source` folder the docs page imports.",
   "categories": [
     "shipkit",
     "docs"

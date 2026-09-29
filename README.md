@@ -53,7 +53,7 @@ No environment variables needed to start! The setup wizard guides you through co
 
 ```bash
 # Start from Bones (public) and add ShipKit integrations from the registry
-npx create-shipkit my-app
+npm create shipkit-app@latest my-app
 cd my-app
 bun dev
 

@@ -22,7 +22,7 @@ export default function CliPage() {
         </CardHeader>
         <CardContent>
           <pre className="overflow-x-auto rounded-md bg-muted p-4 text-sm">
-            <code>npx create-shipkit@latest my-app</code>
+            <code>npm create shipkit-app@latest my-app</code>
           </pre>
         </CardContent>
       </Card>
@@ -128,7 +128,7 @@ export default function CliPage() {
               <div>
                 <p className="font-medium">Create</p>
                 <pre className="mt-1 overflow-x-auto rounded-md bg-muted p-3 text-sm">
-                  <code>npx create-shipkit@latest my-app</code>
+                  <code>npm create shipkit-app@latest my-app</code>
                 </pre>
               </div>
             </div>
@@ -199,19 +199,19 @@ export default function CliPage() {
           <div>
             <h3 className="mb-2 font-medium">npx (recommended)</h3>
             <pre className="overflow-x-auto rounded-md bg-muted p-3 text-sm">
-              <code>npx create-shipkit@latest my-app</code>
+              <code>npm create shipkit-app@latest my-app</code>
             </pre>
           </div>
           <div>
             <h3 className="mb-2 font-medium">npm</h3>
             <pre className="overflow-x-auto rounded-md bg-muted p-3 text-sm">
-              <code>npm install -g create-shipkit</code>
+              <code>npm install -g create-shipkit-app</code>
             </pre>
           </div>
           <div>
             <h3 className="mb-2 font-medium">pnpm</h3>
             <pre className="overflow-x-auto rounded-md bg-muted p-3 text-sm">
-              <code>pnpm add -g create-shipkit</code>
+              <code>pnpm add -g create-shipkit-app</code>
             </pre>
           </div>
         </CardContent>

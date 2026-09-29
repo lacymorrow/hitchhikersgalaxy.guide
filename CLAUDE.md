@@ -300,16 +300,16 @@ Always run `bun run lint` and `bun run typecheck` before committing changes.
 
 ## Scaffolding New ShipKit Sites
 
-Use the ShipKit CLI to create new sites from this template. The CLI lives in its own repo: [lacymorrow/shipkit-cli](https://github.com/lacymorrow/shipkit-cli), published to npm as `create-shipkit`.
+Use the ShipKit CLI to create new sites from this template. The CLI lives in its own repo: [lacymorrow/shipkit-cli](https://github.com/lacymorrow/shipkit-cli), published to npm as `create-shipkit-app` (the npm name `create-shipkit` is not ours).
 
 ### Using the CLI
 
 ```bash
 # From anywhere — interactive
-npx create-shipkit my-new-site
+npm create shipkit-app@latest my-new-site
 
 # Non-interactive (CI/agent)
-npx create-shipkit create my-new-site --yes
+npx create-shipkit-app my-new-site --yes
 ```
 
 ### Manual Steps (if CLI unavailable)
@@ -338,13 +338,13 @@ bun dev
 
 ```bash
 # Via CLI (creates PR branch)
-npx create-shipkit sync --yes
+npx create-shipkit-app sync --yes
 
 # Via npm script (from within a ShipKit project)
 bun run upstream:pull
 
 # Direct merge (no PR)
-npx create-shipkit sync --yes --direct
+npx create-shipkit-app sync --yes --direct
 ```
 
 ### CLI Development

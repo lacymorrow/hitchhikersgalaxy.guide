@@ -6,7 +6,7 @@
 ShipKit is a production-ready Next.js 16 starter template. Clone it, configure it, deploy to Vercel. Auth, payments, CMS, email, AI, analytics, database, storage, all pre-wired.
 
 ## Quick Start
-npx create-shipkit my-app
+npm create shipkit-app@latest my-app
 cd my-app
 bun install --frozen-lockfile
 bun dev

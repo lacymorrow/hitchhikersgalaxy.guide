@@ -45,9 +45,9 @@ export function ResumeEntryCard({
   return (
     <div
       data-match={isMatched}
-      className="group relative border-l-2 border-border py-4 pl-6 transition-all duration-300 data-[match=false]:opacity-25 data-[match=false]:grayscale-[50%]"
+      className="group relative border-l-2 border-border py-4 pl-6 transition-all duration-300 data-[match=false]:opacity-25 data-[match=false]:grayscale-50"
     >
-      <div className="absolute -left-[5px] top-6 h-2 w-2 rounded-full bg-primary transition-colors group-data-[match=false]:bg-muted" />
+      <div className="absolute left-[-5px] top-6 h-2 w-2 rounded-full bg-primary transition-colors group-data-[match=false]:bg-muted" />
 
       <div className="flex items-start justify-between gap-2">
         <div>

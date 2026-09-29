@@ -46,7 +46,7 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Header />
-      <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
+      <main className="flex min-h-[calc(100vh-(--spacing(16)))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
         <div className="container space-y-6">
           <div className="space-y-0.5">
             <h2 className="text-2xl font-bold tracking-tight">Settings</h2>

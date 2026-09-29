@@ -202,7 +202,7 @@ export function IntroDisclosure({
                   />
                 ))}
               </div>
-              <div className="relative aspect-[16/9] overflow-hidden rounded-lg ring-2 ring-border ring-offset-8 ring-offset-background">
+              <div className="relative aspect-video overflow-hidden rounded-lg ring-2 ring-border ring-offset-8 ring-offset-background">
                 {steps[currentStep] && (
                   <StepPreview step={steps[currentStep]} direction={direction} />
                 )}

@@ -34,7 +34,7 @@ const columns: ColumnDef<ApiKey>[] = [
       const key = row.getValue<string>("key");
       return (
         <div className="flex items-center space-x-2">
-          <code className="rounded bg-muted px-2 py-1">
+          <code className="rounded-lg bg-muted px-2 py-1">
             {key.slice(0, 12)}...{key.slice(-4)}
           </code>
         </div>

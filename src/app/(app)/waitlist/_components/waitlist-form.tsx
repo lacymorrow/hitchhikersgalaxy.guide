@@ -79,12 +79,12 @@ export function WaitlistForm() {
 
   if (status === "success") {
     return (
-      <div className="bg-gradient-to-br from-green-50 to-emerald-50 py-24 dark:from-green-950/20 dark:to-emerald-950/20">
+      <div className="bg-linear-to-br from-green-50 to-emerald-50 py-24 dark:from-green-950/20 dark:to-emerald-950/20">
         <div className="container px-4 md:px-6">
           <div className="mx-auto max-w-2xl text-center">
             <div className="relative">
-              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-green-600 to-emerald-600 opacity-25 blur" />
-              <Card className="relative border-green-200 bg-white/90 backdrop-blur-sm dark:border-green-800 dark:bg-slate-900/90">
+              <div className="absolute -inset-1 rounded-2xl bg-linear-to-r from-green-600 to-emerald-600 opacity-25 blur-sm" />
+              <Card className="relative border-green-200 bg-white/90 backdrop-blur-xs dark:border-green-800 dark:bg-slate-900/90">
                 <CardContent className="p-12">
                   <div className="mb-6 flex justify-center">
                     <div className="flex h-20 w-20 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/20">
@@ -157,8 +157,8 @@ export function WaitlistForm() {
           </div>
 
           <div className="relative">
-            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-violet-600 to-purple-600 opacity-20 blur" />
-            <Card className="relative border-slate-200 bg-white/90 backdrop-blur-sm dark:border-slate-800 dark:bg-slate-900/90">
+            <div className="absolute -inset-1 rounded-2xl bg-linear-to-r from-violet-600 to-purple-600 opacity-20 blur-sm" />
+            <Card className="relative border-slate-200 bg-white/90 backdrop-blur-xs dark:border-slate-800 dark:bg-slate-900/90">
               <CardHeader className="text-center">
                 <CardTitle className="flex items-center justify-center gap-2">
                   <Sparkles className="h-5 w-5 text-violet-600 dark:text-violet-400" />
@@ -294,7 +294,7 @@ export function WaitlistForm() {
                     type="submit"
                     size="lg"
                     disabled={status === "loading"}
-                    className="h-14 w-full bg-gradient-to-r from-violet-600 to-purple-600 text-base hover:from-violet-700 hover:to-purple-700"
+                    className="h-14 w-full bg-linear-to-r from-violet-600 to-purple-600 text-base hover:from-violet-700 hover:to-purple-700"
                   >
                     {status === "loading" ? (
                       <div className="flex items-center gap-2">

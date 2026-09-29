@@ -86,7 +86,7 @@ export default async function SubscriptionsPage() {
                 </div>
               )}
             </CardHeader>
-            <CardContent className="flex-grow">
+            <CardContent className="grow">
               <p className="text-3xl font-bold">{tier.price}</p>
             </CardContent>
             <CardFooter>

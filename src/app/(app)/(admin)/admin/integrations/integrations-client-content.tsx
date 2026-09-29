@@ -39,12 +39,12 @@ const IntegrationCard = ({ status }: { status: IntegrationStatus }) => {
         </CardTitle>
         <CardDescription>Configuration Status</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-grow flex-col justify-between">
+      <CardContent className="flex grow flex-col justify-between">
         <div className="mb-4 flex items-start space-x-2 break-all text-sm">
           {status.configured ? (
-            <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600" />
+            <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
           ) : (
-            <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600" />
+            <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
           )}
           <p className="text-muted-foreground">{status.message}</p>
         </div>
@@ -103,12 +103,12 @@ const PayloadCMSCard: React.FC<{ status: IntegrationStatus }> = ({ status }) => 
         </CardTitle>
         <CardDescription>Configuration Status</CardDescription>
       </CardHeader>
-      <CardContent className="flex flex-grow flex-col justify-between space-y-4">
+      <CardContent className="flex grow flex-col justify-between space-y-4">
         <div className="flex items-start space-x-2 text-sm">
           {status.configured ? (
-            <CheckCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-green-600" />
+            <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
           ) : (
-            <XCircle className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-600" />
+            <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-red-600" />
           )}
           <p className="text-muted-foreground">{status.message}</p>
         </div>

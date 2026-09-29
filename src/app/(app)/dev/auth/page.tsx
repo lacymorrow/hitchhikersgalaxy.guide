@@ -25,7 +25,7 @@ export default async function AuthDebugPage() {
       </div>
 
       <div className="space-y-6">
-        <section className="rounded-lg border bg-white p-6 shadow-sm">
+        <section className="rounded-lg border bg-white p-6 shadow-xs">
           <h2 className="mb-4 text-xl font-semibold">Session Status</h2>
           <div className="rounded-md bg-slate-50 p-4">
             <pre className="whitespace-pre-wrap text-sm">
@@ -53,7 +53,7 @@ export default async function AuthDebugPage() {
           </div>
         </section>
 
-        <section className="rounded-lg border bg-white p-6 shadow-sm">
+        <section className="rounded-lg border bg-white p-6 shadow-xs">
           <h2 className="mb-4 text-xl font-semibold">Authentication Troubleshooting</h2>
 
           <div className="space-y-4">

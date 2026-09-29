@@ -32,7 +32,7 @@ export function AlbumArtwork({
   ...props
 }: AlbumArtworkProps) {
   return (
-    <div className={cn("space-y-3", className)} {...props}>
+    <div className={cn("flex flex-col gap-3", className)} {...props}>
       <ContextMenu>
         <ContextMenuTrigger>
           <div className="overflow-hidden rounded-md">
@@ -43,7 +43,7 @@ export function AlbumArtwork({
               height={height}
               className={cn(
                 "h-auto w-auto object-cover transition-all hover:scale-105",
-                aspectRatio === "portrait" ? "aspect-[3/4]" : "aspect-square"
+                aspectRatio === "portrait" ? "aspect-3/4" : "aspect-square"
               )}
             />
           </div>

@@ -32,7 +32,7 @@ const navigationVariants = cva(
 
 const buttonVariants = cva(
   // Base styles
-  "relative z-10 flex w-fit whitespace-nowrap rounded px-2 py-1 font-medium text-sm text-neutral-500",
+  "relative z-10 flex w-fit whitespace-nowrap rounded-lg px-2 py-1 font-medium text-sm text-neutral-500",
   {
     variants: {
       variant: {

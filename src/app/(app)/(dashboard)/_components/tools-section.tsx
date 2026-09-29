@@ -135,7 +135,7 @@ const tools: Tool[] = [
     href: "https://ui.aceternity.com/tools/box-shadows",
     isExternal: true,
     category: "Design",
-    keywords: ["box", "shadow", "ui", "component", "design"],
+    keywords: ["box", "shadow-sm", "ui", "component", "design"],
   },
   // https://socialscreenshots.com/editor
   {
@@ -566,14 +566,14 @@ const ToolCardContent = ({
   onToggleStar: (e: React.MouseEvent) => void;
 }) => (
   <>
-    <CardHeader className="flex-shrink-0">
+    <CardHeader className="shrink-0">
       <div className="flex items-center justify-between gap-2">
         <div className="flex min-w-0 flex-1 items-center space-x-2">
-          <div className="flex-shrink-0 rounded-md bg-primary/10 p-2 group-hover:bg-primary/20">
+          <div className="shrink-0 rounded-md bg-primary/10 p-2 group-hover:bg-primary/20">
             <tool.icon className={cn("h-5 w-5 text-primary")} />
           </div>
           <div className="min-w-0 flex-1">
-            <CardTitle className="line-clamp-2 break-words text-base leading-tight">
+            <CardTitle className="line-clamp-2 wrap-break-word text-base leading-tight">
               {tool.title}
             </CardTitle>
             <div className="text-xs text-muted-foreground">
@@ -581,7 +581,7 @@ const ToolCardContent = ({
             </div>
           </div>
         </div>
-        <div className="flex flex-shrink-0 items-center gap-2">
+        <div className="flex shrink-0 items-center gap-2">
           <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onToggleStar}>
             {isStarred ? (
               <StarFilledIcon className="h-4 w-4 fill-primary text-primary" />

@@ -4,7 +4,7 @@ const ScrollFade = () => {
   return (
     <div className="flex h-full w-full flex-col items-center justify-center gap-10 bg-muted">
       <div className="-mt-10 mb-20 grid content-start justify-items-center gap-6 text-center">
-        <span className="relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-gradient-to-b after:from-transparent after:to-foreground after:content-['']">
+        <span className="relative max-w-[12ch] text-xs uppercase leading-tight opacity-40 after:absolute after:left-1/2 after:top-full after:h-16 after:w-px after:bg-linear-to-b after:from-transparent after:to-foreground after:content-['']">
           see the fade while scroll
         </span>
       </div>

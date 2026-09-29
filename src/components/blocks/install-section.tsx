@@ -56,7 +56,7 @@ export function InstallSection() {
         >
           <h1
             className={cn(
-              "mb-6 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-4xl font-light text-transparent md:text-6xl lg:text-8xl",
+              "mb-6 bg-linear-to-r from-blue-400 to-purple-600 bg-clip-text text-4xl font-light text-transparent md:text-6xl lg:text-8xl",
               fontBungee.className
             )}
           >
@@ -102,7 +102,7 @@ export function InstallSection() {
             />
           </div>
           <motion.div
-            className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-600"
+            className="absolute bottom-0 left-0 h-1 bg-linear-to-r from-blue-500 to-purple-600"
             animate={controls}
             initial={{ width: 0 }}
             style={{ width: "100%" }}

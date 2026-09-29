@@ -61,7 +61,7 @@ export const PaymentDrawer = ({ payment, open, onClose }: PaymentDrawerProps) =>
           <DrawerDescription>Order ID: {payment.orderId}</DrawerDescription>
         </DrawerHeader>
 
-        <ScrollArea className="flex-grow overflow-y-auto">
+        <ScrollArea className="grow overflow-y-auto">
           <div className="mx-auto w-full max-w-2xl p-6">
             <div className="space-y-6">
               <section>

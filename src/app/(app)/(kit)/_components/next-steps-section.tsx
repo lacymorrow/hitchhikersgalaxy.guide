@@ -85,7 +85,7 @@ export function NextStepsSection() {
         </p>
       </div>
 
-      <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-primary/10">
+      <Card className="border-primary/20 bg-linear-to-r from-primary/5 to-primary/10">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-primary" />
@@ -118,7 +118,7 @@ export function NextStepsSection() {
           >
             <CardHeader className="pb-3">
               <div className="flex items-start gap-4">
-                <div className="mt-1 flex-shrink-0">
+                <div className="mt-1 shrink-0">
                   {step.isComplete ? (
                     <CheckCircle className="h-5 w-5 text-green-500" />
                   ) : (
@@ -140,7 +140,7 @@ export function NextStepsSection() {
                   </div>
                   <CardDescription>{step.description}</CardDescription>
                 </div>
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   {step.isComplete ? (
                     <Badge
                       variant="outline"
@@ -164,7 +164,7 @@ export function NextStepsSection() {
       </div>
 
       {completedSteps === totalSteps && (
-        <Card className="border-green-200 bg-gradient-to-r from-green-50 to-green-100 dark:border-green-800 dark:from-green-950/20 dark:to-green-900/20">
+        <Card className="border-green-200 bg-linear-to-r from-green-50 to-green-100 dark:border-green-800 dark:from-green-950/20 dark:to-green-900/20">
           <CardContent className="pt-6">
             <div className="text-center">
               <CheckCircle className="mx-auto mb-4 h-12 w-12 text-green-500" />

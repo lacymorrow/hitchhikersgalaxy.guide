@@ -181,7 +181,7 @@ const Carousel = forwardRef<
           {...props}
           ref={ref}
           onKeyDownCapture={handleKeyDown}
-          className={cn("relative grid w-full gap-2 focus:outline-none", className)}
+          className={cn("relative grid w-full gap-2 focus:outline-hidden", className)}
           dir={direction}
         >
           {children}
@@ -277,7 +277,7 @@ const SliderThumbItem = forwardRef<
     >
       <div
         className={`relative aspect-square h-20 w-full rounded-md opacity-50 transition-opacity ${
-          isSlideActive ? "!opacity-100" : ""
+          isSlideActive ? "opacity-100!" : ""
         }`}
       >
         {children}

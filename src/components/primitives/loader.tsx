@@ -69,7 +69,7 @@ export const Loader = React.forwardRef<HTMLDivElement, LoaderProps>(
         className={cn(
           "grid place-items-center",
           fullPage && "fixed inset-0 z-50 min-h-screen p-4",
-          backdrop && "bg-background/80 backdrop-blur-sm",
+          backdrop && "bg-background/80 backdrop-blur-xs",
           fade && "duration-300 animate-in fade-in",
           className
         )}

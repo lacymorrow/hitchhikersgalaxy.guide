@@ -210,7 +210,7 @@ export const WhyNow = () => {
                 <trend.icon className="h-8 w-8 text-primary" />
               </motion.div>
               <h3 className="mb-2 text-xl font-semibold">{trend.title}</h3>
-              <p className="mb-6 flex-grow text-muted-foreground">{trend.description}</p>
+              <p className="mb-6 grow text-muted-foreground">{trend.description}</p>
               <div className="border-t pt-4">
                 <div className="text-2xl font-bold text-primary">{trend.metric}</div>
                 <div className="flex items-center justify-between">
@@ -273,7 +273,7 @@ export const WhyNow = () => {
             <Building2 className="h-4 w-4" />
             Industry Verticals
           </Badge>
-          <h3 className="mb-2 bg-gradient-to-r from-primary/80 via-primary to-primary/80 bg-clip-text text-3xl font-bold text-transparent">
+          <h3 className="mb-2 bg-linear-to-r from-primary/80 via-primary to-primary/80 bg-clip-text text-3xl font-bold text-transparent">
             High-Growth Sectors
           </h3>
           <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
@@ -305,7 +305,7 @@ export const WhyNow = () => {
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-transparent"
+                      className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-transparent"
                     />
                   )}
                 </AnimatePresence>
@@ -338,13 +338,13 @@ export const WhyNow = () => {
                     whileHover={{ scale: 1.02 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <div className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-3xl font-bold text-primary text-transparent">
+                    <div className="bg-linear-to-r from-primary to-primary/70 bg-clip-text text-3xl font-bold text-primary text-transparent">
                       {vertical.growth}
                     </div>
                     <div className="text-sm text-muted-foreground">{vertical.projection}</div>
                   </motion.div>
 
-                  <p className="mb-6 flex-grow text-sm leading-relaxed text-muted-foreground">
+                  <p className="mb-6 grow text-sm leading-relaxed text-muted-foreground">
                     {vertical.description}
                   </p>
 

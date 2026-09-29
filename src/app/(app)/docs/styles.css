@@ -1,4 +1,6 @@
 /* Documentation Content Styles */
+@reference "../../../styles/theme.css";
+
 .docs-content {
   @apply prose prose-slate dark:prose-invert max-w-none;
 }
@@ -36,5 +38,5 @@
 }
 
 .docs-content code:not(pre code) {
-  @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm;
+  @apply relative rounded-lg bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm;
 }

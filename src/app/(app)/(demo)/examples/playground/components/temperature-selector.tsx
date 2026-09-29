@@ -31,7 +31,7 @@ export function TemperatureSelector({ defaultValue }: TemperatureSelectorProps) 
               defaultValue={value}
               step={0.1}
               onValueChange={setValue}
-              className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
+              className="**:[[role=slider]]:h-4 **:[[role=slider]]:w-4"
               aria-label="Temperature"
             />
           </div>

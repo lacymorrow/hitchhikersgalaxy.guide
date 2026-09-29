@@ -21,7 +21,7 @@ export default function ContactPage() {
       <div className="absolute inset-0 h-full w-full">
         <div className="relative h-full w-full">
           <Boxes />
-          <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+          <div className="absolute inset-0 bg-background/80 backdrop-blur-xs" />
         </div>
       </div>
 

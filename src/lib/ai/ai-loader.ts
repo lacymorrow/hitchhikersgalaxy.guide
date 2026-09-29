@@ -87,9 +87,9 @@ export class AILoader {
         keyFiles: {
           "package.json": "Project dependencies and scripts",
           "tsconfig.json": "TypeScript configuration",
-          "tailwind.config.js": "Tailwind CSS configuration",
+          "src/styles/theme.css": "Tailwind CSS v4 config (CSS-first `@theme`, no tailwind.config file)",
           "drizzle.config.ts": "Database configuration",
-          "next.config.js": "Next.js configuration",
+          "next.config.ts": "Next.js configuration",
         },
       },
       conventions: {

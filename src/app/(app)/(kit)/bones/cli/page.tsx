@@ -43,18 +43,18 @@ export default function CliPage() {
             </pre>
             <div className="space-y-1 text-sm text-muted-foreground">
               <p>
-                <code className="rounded bg-muted px-1 text-xs">-t, --template</code> Template repo
+                <code className="rounded-lg bg-muted px-1 text-xs">-t, --template</code> Template repo
                 (owner/name)
               </p>
               <p>
-                <code className="rounded bg-muted px-1 text-xs">-d, --directory</code> Target
+                <code className="rounded-lg bg-muted px-1 text-xs">-d, --directory</code> Target
                 directory
               </p>
               <p>
-                <code className="rounded bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
+                <code className="rounded-lg bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
               </p>
               <p>
-                <code className="rounded bg-muted px-1 text-xs">--no-install</code> Skip installing
+                <code className="rounded-lg bg-muted px-1 text-xs">--no-install</code> Skip installing
                 dependencies
               </p>
             </div>
@@ -75,11 +75,11 @@ export default function CliPage() {
             </pre>
             <div className="space-y-1 text-sm text-muted-foreground">
               <p>
-                <code className="rounded bg-muted px-1 text-xs">--direct</code> Merge directly
+                <code className="rounded-lg bg-muted px-1 text-xs">--direct</code> Merge directly
                 instead of a PR branch
               </p>
               <p>
-                <code className="rounded bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
+                <code className="rounded-lg bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
               </p>
             </div>
           </CardContent>
@@ -99,11 +99,11 @@ export default function CliPage() {
             </pre>
             <div className="space-y-1 text-sm text-muted-foreground">
               <p>
-                <code className="rounded bg-muted px-1 text-xs">--open</code> Open the Vercel import
+                <code className="rounded-lg bg-muted px-1 text-xs">--open</code> Open the Vercel import
                 page in your browser
               </p>
               <p>
-                <code className="rounded bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
+                <code className="rounded-lg bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
               </p>
             </div>
           </CardContent>

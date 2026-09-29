@@ -23,7 +23,7 @@ export const ScrollEdgeHeader = ({ className, children, ...props }: ComponentPro
     <header
       data-edge={edge}
       className={cn(
-        "bg-background/70 backdrop-blur-xl backdrop-saturate-150 supports-[backdrop-filter]:bg-background/70",
+        "bg-background/70 backdrop-blur-xl backdrop-saturate-150 supports-backdrop-filter:bg-background/70",
         "transition-shadow duration-200 ease-out-quart data-[edge=true]:shadow-hairline-b",
         className
       )}

@@ -65,7 +65,7 @@ export function ConsoleComponent({ onCreateTestKey, apiKey }: ConsoleComponentPr
   };
 
   return (
-    <div className="relative mx-auto mt-10 w-full max-w-screen-sm text-inherit">
+    <div className="relative mx-auto mt-10 w-full max-w-(--breakpoint-sm) text-inherit">
       <div className="overflow-hidden rounded-lg bg-gray-800 shadow-xl">
         {/* Mac-style chrome */}
         <div className="flex items-center justify-between bg-gray-700 px-4 py-2">
@@ -111,7 +111,7 @@ export function ConsoleComponent({ onCreateTestKey, apiKey }: ConsoleComponentPr
               </AnimatePresence>
             </ScrollArea>
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
               <Button onClick={handleStart} variant="outline">
                 {apiKey ? "Start Console" : "Live Demo"}
               </Button>

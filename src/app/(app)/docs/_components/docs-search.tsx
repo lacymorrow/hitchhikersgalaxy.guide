@@ -243,7 +243,7 @@ export function DocsSearch() {
         onSelect={() => handleResultSelect(result)}
         className={cn("flex cursor-pointer items-start gap-3 p-3", isSelected && "bg-accent")}
       >
-        <FileTextIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+        <FileTextIcon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="truncate text-sm font-medium">{result.title}</span>
@@ -255,7 +255,7 @@ export function DocsSearch() {
           </div>
           <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{result.content}</p>
         </div>
-        <ChevronRightIcon className="h-3 w-3 flex-shrink-0 text-muted-foreground" />
+        <ChevronRightIcon className="h-3 w-3 shrink-0 text-muted-foreground" />
       </CommandItem>
     );
   };

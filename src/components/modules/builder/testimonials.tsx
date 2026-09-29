@@ -62,7 +62,7 @@ export const Testimonials = ({ title, subtitle, testimonials }: TestimonialsProp
               {testimonials.map((testimonial, index) => (
                 // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
                 <div key={index} className="relative min-w-0 flex-[0_0_100%] pl-4">
-                  <div className="rounded-lg bg-white p-8 shadow-sm">
+                  <div className="rounded-lg bg-white p-8 shadow-xs">
                     <div className="mb-6 flex items-center">
                       {testimonial.image && (
                         <div className="mr-4">

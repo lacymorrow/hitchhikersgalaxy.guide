@@ -202,7 +202,7 @@ export function TeamSwitcher({
             variant === "header"
               ? "w-[260px]"
               : sidebarOpen
-                ? "w-[var(--radix-popover-trigger-width)]"
+                ? "w-(--radix-popover-trigger-width)"
                 : undefined
           )}
           align="start"

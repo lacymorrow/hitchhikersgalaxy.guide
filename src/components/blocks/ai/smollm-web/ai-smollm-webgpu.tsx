@@ -201,7 +201,7 @@ export const AISmollmWebGPU = () => {
   // Show loading state while checking WebGPU
   if (isWebGPUAvailable === null) {
     return (
-      <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-black bg-opacity-[92%] text-center text-2xl font-semibold text-white">
+      <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-black/[92%] text-center text-2xl font-semibold text-white">
         Checking WebGPU support...
       </div>
     );
@@ -210,7 +210,7 @@ export const AISmollmWebGPU = () => {
   // Show not supported message
   if (!isWebGPUAvailable) {
     return (
-      <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-black bg-opacity-[92%] text-center text-2xl font-semibold text-white">
+      <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-black/[92%] text-center text-2xl font-semibold text-white">
         WebGPU is not supported
         <br />
         by this browser :&#40;
@@ -360,7 +360,7 @@ export const AISmollmWebGPU = () => {
       <div className="relative mx-auto mb-3 mt-2 flex max-h-[200px] w-[600px] max-w-[80%] rounded-lg border dark:bg-gray-700">
         <textarea
           ref={textareaRef}
-          className="scrollbar-thin w-[550px] resize-none rounded-lg border-none bg-transparent px-3 py-4 text-gray-800 placeholder-gray-500 outline-none disabled:cursor-not-allowed disabled:text-gray-400 disabled:placeholder-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
+          className="scrollbar-thin w-[550px] resize-none rounded-lg border-none bg-transparent px-3 py-4 text-gray-800 placeholder-gray-500 outline-hidden disabled:cursor-not-allowed disabled:text-gray-400 disabled:placeholder-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
           placeholder="Type your message..."
           value={input}
           disabled={status !== "ready"}

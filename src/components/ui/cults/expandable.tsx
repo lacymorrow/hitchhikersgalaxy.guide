@@ -175,7 +175,7 @@ const ANIMATION_PRESETS = {
     exit: { opacity: 0, rotate: -10 },
     transition: { duration: 0.3 },
   },
-  "blur-sm": {
+  "blur-xs": {
     initial: { opacity: 0, filter: "blur(4px)" },
     animate: { opacity: 1, filter: "blur(0px)" },
     exit: { opacity: 0, filter: "blur(4px)" },
@@ -391,7 +391,7 @@ const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
       >
         <div
           className={cn(
-            "grid grid-cols-1 rounded-lg sm:rounded-xl md:rounded-[2rem]",
+            "grid grid-cols-1 rounded-lg sm:rounded-xl md:rounded-4xl",
             "shadow-[inset_0_0_1px_1px_#ffffff4d] sm:shadow-[inset_0_0_2px_1px_#ffffff4d]",
             "ring-1 ring-black/5",
             "max-w-[calc(100%-1rem)] sm:max-w-[calc(100%-2rem)] md:max-w-[calc(100%-4rem)]",
@@ -400,7 +400,7 @@ const ExpandableCard = React.forwardRef<HTMLDivElement, ExpandableCardProps>(
           )}
         >
           {/* Nested divs purely for styling and layout (the shadow ring around the card) */}
-          <div className="grid grid-cols-1 rounded-lg p-1 shadow-md shadow-black/5 sm:rounded-xl sm:p-1.5 md:rounded-[2rem] md:p-2">
+          <div className="grid grid-cols-1 rounded-lg p-1 shadow-md shadow-black/5 sm:rounded-xl sm:p-1.5 md:rounded-4xl md:p-2">
             <div className="rounded-md bg-white p-2 shadow-xl ring-1 ring-black/5 sm:rounded-lg sm:p-3 md:rounded-3xl md:p-4">
               <div className="h-full w-full overflow-hidden">
                 {/* Ref for measuring content dimensions (so we can let framer know to animate into the dimensions) */}
@@ -450,7 +450,7 @@ const ExpandableCardContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, children, ...props }, ref) => (
-  <div ref={ref} className={cn("flex-grow overflow-hidden p-6 px-4 pt-0", className)} {...props}>
+  <div ref={ref} className={cn("grow overflow-hidden p-6 px-4 pt-0", className)} {...props}>
     <motion.div layout>{children}</motion.div>
   </div>
 ));

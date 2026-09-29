@@ -70,7 +70,7 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
               </div>
             </HoverCardContent>
             <Command loop>
-              <CommandList className="h-[var(--cmdk-list-height)] max-h-[400px]">
+              <CommandList className="h-(--cmdk-list-height) max-h-[400px]">
                 <CommandInput placeholder="Search Models..." />
                 <CommandEmpty>No Models found.</CommandEmpty>
                 <HoverCardTrigger />

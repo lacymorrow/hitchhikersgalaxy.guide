@@ -8,7 +8,7 @@ import { Switch } from "@/components/ui/switch";
 
 const fadingBorderStyle = `
   relative before:absolute before:inset-0 before:border before:border-gray-700 before:rounded-lg
-  before:bg-gradient-to-b before:from-gray-700 before:to-transparent before:opacity-50
+  before:bg-linear-to-b before:from-gray-700 before:to-transparent before:opacity-50
   before:pointer-events-none
 `;
 
@@ -42,7 +42,7 @@ export function PricingPageComponent() {
               <div>Up to 50,000 log entries / mo</div>
               <div className="text-sm text-gray-400">1,000 log entries / day</div>
             </div>
-            <div className="flex-grow space-y-2">
+            <div className="grow space-y-2">
               <Feature included>Basic Log Search</Feature>
               <Feature included>1 Team Member</Feature>
               <Feature included>1-day Log Retention</Feature>
@@ -73,7 +73,7 @@ export function PricingPageComponent() {
               </div>
               <div className="text-sm text-gray-400">No daily sending limit</div>
             </div>
-            <div className="flex-grow space-y-2">
+            <div className="grow space-y-2">
               <Feature included>Advanced Log Search</Feature>
               <Feature included>Unlimited Team Members</Feature>
               <Feature included>30-day Log Retention</Feature>
@@ -93,7 +93,7 @@ export function PricingPageComponent() {
               <div>A plan based on your specific needs</div>
               <div className="text-sm text-gray-400">No log entry limits</div>
             </div>
-            <div className="flex-grow space-y-2">
+            <div className="grow space-y-2">
               <Feature included>Advanced Log Search</Feature>
               <Feature included>Unlimited Team Members</Feature>
               <Feature included>Customizable Log Retention</Feature>

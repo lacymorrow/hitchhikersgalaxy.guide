@@ -3,7 +3,10 @@
   "name": "cn",
   "title": "cn",
   "description": "Utility for merging Tailwind CSS classes with clsx and tailwind-merge.",
-  "dependencies": ["clsx", "tailwind-merge"],
+  "dependencies": [
+    "clsx",
+    "tailwind-merge"
+  ],
   "files": [
     {
       "path": "src/lib/utils/cn.ts",

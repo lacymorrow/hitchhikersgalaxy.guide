@@ -212,7 +212,7 @@ export const AIDemoCloud: React.FC = () => {
           </h3>
           <div className="relative">
             <div
-              className={`h-[200px] overflow-y-auto scroll-smooth rounded-lg bg-muted/50 p-4 ${isScrolled ? "bg-gradient-to-b from-muted/50 to-transparent" : ""}`}
+              className={`h-[200px] overflow-y-auto scroll-smooth rounded-lg bg-muted/50 p-4 ${isScrolled ? "bg-linear-to-b from-muted/50 to-transparent" : ""}`}
               ref={(el) => {
                 responseRef.current = el;
                 scrollToBottom(el);

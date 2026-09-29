@@ -66,7 +66,7 @@ const headerVariants = cva("translate-z-0 z-50 p-md", {
       default: "relative",
       floating: "fixed top-0 h-24 w-full",
       sticky:
-        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
       "logo-only": "relative",
       minimal: "relative",
     },
@@ -146,7 +146,7 @@ export const Header: React.FC<HeaderProps> = ({
         variant === "floating" && isOpaque && styles.opaque,
         variant === "floating" &&
           isOpaque &&
-          "-top-[12px] [--header-background:#fafafc70] dark:[--header-background:#1c1c2270]",
+          "top-[-12px] [--header-background:#fafafc70] dark:[--header-background:#1c1c2270]",
         className
       )}
     >

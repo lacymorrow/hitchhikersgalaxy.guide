@@ -105,7 +105,7 @@ function TableOfContentsInner({ headings }: TableOfContentsProps) {
                 onClick={() => handleClick(id)}
                 onKeyDown={(e) => handleKeyDown(e, id)}
                 className={cn(
-                  "block w-full rounded-md px-2 py-1.5 text-left text-sm transition-colors duration-200 hover:bg-muted/60 focus:bg-muted/60 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1",
+                  "block w-full rounded-md px-2 py-1.5 text-left text-sm transition-colors duration-200 hover:bg-muted/60 focus:bg-muted/60 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-1",
                   "toc-link",
                   activeId === id && "active bg-muted/80 font-medium text-foreground",
                   level === 2 && "pl-2",

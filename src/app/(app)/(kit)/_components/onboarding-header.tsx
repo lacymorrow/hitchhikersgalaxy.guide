@@ -6,7 +6,7 @@ import { routes } from "@/config/routes";
 
 export function OnboardingHeader() {
   return (
-    <div className="relative overflow-hidden bg-gradient-to-r from-primary/5 via-primary/10 to-primary/5 py-16">
+    <div className="relative overflow-hidden bg-linear-to-r from-primary/5 via-primary/10 to-primary/5 py-16">
       <div className="bg-grid-pattern absolute inset-0 opacity-5" />
       <div className="container relative mx-auto px-4">
         <div className="mx-auto max-w-4xl text-center">
@@ -19,7 +19,7 @@ export function OnboardingHeader() {
 
           <h1 className="mb-4 text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
             Welcome to{" "}
-            <span className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Shipkit
             </span>
           </h1>

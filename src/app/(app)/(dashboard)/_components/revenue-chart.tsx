@@ -13,11 +13,11 @@ import { revenueChartData } from "./mock-data";
 const chartConfig = {
   revenue: {
     label: "Revenue",
-    color: "hsl(var(--primary))",
+    color: "var(--primary)",
   },
   expenses: {
     label: "Expenses",
-    color: "hsl(var(--muted-foreground))",
+    color: "var(--muted-foreground)",
   },
 } satisfies ChartConfig;
 
@@ -61,7 +61,7 @@ export const RevenueChart = () => {
             <CartesianGrid
               vertical={false}
               strokeDasharray="3 3"
-              stroke="hsl(var(--border))"
+              stroke="var(--border)"
               strokeOpacity={0.5}
             />
             <XAxis

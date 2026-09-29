@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen flex-col">
       <main className="container grow">
-        <div className="mx-auto max-w-screen-sm">
+        <div className="mx-auto max-w-(--breakpoint-sm)">
           <InstallSection />
 
           <div className="mt-10 space-y-10">

@@ -31,7 +31,7 @@ export const FeatureCard: FC<FeatureCardProps> = ({ feature, className }) => {
               }
               className={cn(
                 "h-5 text-xs",
-                feature.badge === "pro" && "bg-gradient-to-r from-indigo-500 to-purple-500"
+                feature.badge === "pro" && "bg-linear-to-r from-indigo-500 to-purple-500"
               )}
             >
               {feature.badge}

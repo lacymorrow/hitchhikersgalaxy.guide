@@ -82,7 +82,7 @@ function MobileTocErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
           <button
             type="button"
             onClick={resetErrorBoundary}
-            className="text-xs text-primary hover:underline focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1"
+            className="text-xs text-primary hover:underline focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-1"
           >
             Try again
           </button>

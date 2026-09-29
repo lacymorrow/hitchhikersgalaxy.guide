@@ -51,14 +51,14 @@ export function WaitlistHero() {
     <section className="relative flex min-h-screen items-center justify-center overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0">
-        <div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800" />
+        <div className="absolute inset-0 bg-linear-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800" />
         <div className="absolute inset-0 opacity-40">
           <div
-            className="absolute -left-1/4 top-1/4 h-96 w-96 animate-pulse rounded-full bg-gradient-to-br from-violet-400/20 to-transparent blur-3xl"
+            className="absolute -left-1/4 top-1/4 h-96 w-96 animate-pulse rounded-full bg-linear-to-br from-violet-400/20 to-transparent blur-3xl"
             style={{ animationDuration: "6s" }}
           />
           <div
-            className="absolute -right-1/4 bottom-1/4 h-96 w-96 animate-pulse rounded-full bg-gradient-to-bl from-blue-400/20 to-transparent blur-3xl"
+            className="absolute -right-1/4 bottom-1/4 h-96 w-96 animate-pulse rounded-full bg-linear-to-bl from-blue-400/20 to-transparent blur-3xl"
             style={{ animationDuration: "8s", animationDelay: "2s" }}
           />
         </div>
@@ -74,7 +74,7 @@ export function WaitlistHero() {
           <div className="mb-8 flex justify-center">
             <Badge
               variant="outline"
-              className="border-violet-200 bg-white/90 px-4 py-2 text-sm font-medium text-violet-700 backdrop-blur-sm dark:border-violet-800 dark:bg-slate-900/90 dark:text-violet-300"
+              className="border-violet-200 bg-white/90 px-4 py-2 text-sm font-medium text-violet-700 backdrop-blur-xs dark:border-violet-800 dark:bg-slate-900/90 dark:text-violet-300"
             >
               <Sparkles className="mr-2 h-3.5 w-3.5" />
               50% OFF Early Access • March 2025
@@ -83,7 +83,7 @@ export function WaitlistHero() {
 
           {/* Main Headline */}
           <h1 className="mb-6 text-balance text-5xl font-bold tracking-tight md:text-6xl lg:text-7xl">
-            <span className="block bg-gradient-to-r from-violet-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <span className="block bg-linear-to-r from-violet-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
               Ship in Days
             </span>
             <span className="mt-2 block text-slate-900 dark:text-white">Not Weeks</span>
@@ -117,7 +117,7 @@ export function WaitlistHero() {
           {/* Email Signup */}
           <div className="mx-auto mb-8 max-w-md">
             <form onSubmit={handleSubmit} className="group relative">
-              <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 opacity-25 blur transition duration-500 group-hover:opacity-40" />
+              <div className="absolute -inset-1 rounded-2xl bg-linear-to-r from-violet-600 to-blue-600 opacity-25 blur-sm transition duration-500 group-hover:opacity-40" />
               <div className="relative flex gap-2 rounded-2xl border border-slate-200 bg-white p-2 dark:border-slate-700 dark:bg-slate-900">
                 <Input
                   type="email"
@@ -131,7 +131,7 @@ export function WaitlistHero() {
                 <Button
                   type="submit"
                   disabled={status === "loading" || status === "success"}
-                  className="h-12 bg-gradient-to-r from-violet-600 to-purple-600 px-6 hover:from-violet-700 hover:to-purple-700"
+                  className="h-12 bg-linear-to-r from-violet-600 to-purple-600 px-6 hover:from-violet-700 hover:to-purple-700"
                 >
                   {status === "loading" ? (
                     <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />

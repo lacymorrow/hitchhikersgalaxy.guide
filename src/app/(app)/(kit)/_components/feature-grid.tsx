@@ -191,7 +191,7 @@ export function FeatureGrid() {
                     <span className="text-sm font-medium">Required Variables:</span>
                     {feature.dependencies.map((dep) => (
                       <div key={dep} className="flex items-center justify-between">
-                        <code className="rounded bg-muted px-2 py-1 text-xs">{dep}</code>
+                        <code className="rounded-lg bg-muted px-2 py-1 text-xs">{dep}</code>
                         <TooltipProvider>
                           <Tooltip>
                             <TooltipTrigger asChild>

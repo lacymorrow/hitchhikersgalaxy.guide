@@ -73,7 +73,7 @@ export default function InstallPage() {
       setContainerStatus("loading-shadcn-files");
       setContainerProgress(80);
 
-      // Import essential project files (package.json, tailwind.config.ts, etc.)
+      // Import essential project files (package.json, globals.css, etc.)
       await manager.importProjectFiles();
 
       setContainerStatus("ready");
@@ -91,7 +91,7 @@ export default function InstallPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 dark:from-background dark:to-background/80">
+    <div className="min-h-screen bg-linear-to-b from-background to-muted/30 dark:from-background dark:to-background/80">
       <div className="bg-grid-pattern pointer-events-none absolute inset-0 opacity-[0.03]" />
 
       <div className="container relative mx-auto max-w-4xl px-4 py-12">
@@ -101,7 +101,7 @@ export default function InstallPage() {
             <div className="mr-4 flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10">
               <TerminalIcon className="h-6 w-6 text-primary" />
             </div>
-            <h1 className="bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-3xl font-bold text-transparent">
+            <h1 className="bg-linear-to-r from-primary to-primary/70 bg-clip-text text-3xl font-bold text-transparent">
               Install shadcn/ui
             </h1>
           </div>
@@ -195,19 +195,19 @@ export default function InstallPage() {
 
         {/* Additional Info */}
         <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-3">
-          <div className="rounded-lg border bg-card p-4 shadow-sm">
+          <div className="rounded-lg border bg-card p-4 shadow-xs">
             <h3 className="mb-2 text-sm font-medium">Pre-configured</h3>
             <p className="text-xs text-muted-foreground">
               Each component comes with accessibility features and flexible styling options.
             </p>
           </div>
-          <div className="rounded-lg border bg-card p-4 shadow-sm">
+          <div className="rounded-lg border bg-card p-4 shadow-xs">
             <h3 className="mb-2 text-sm font-medium">Tailwind Powered</h3>
             <p className="text-xs text-muted-foreground">
               Built with Tailwind CSS, fully customizable to match your design system.
             </p>
           </div>
-          <div className="rounded-lg border bg-card p-4 shadow-sm">
+          <div className="rounded-lg border bg-card p-4 shadow-xs">
             <h3 className="mb-2 text-sm font-medium">Code Ownership</h3>
             <p className="text-xs text-muted-foreground">
               Components are added to your project, giving you full control of the code.

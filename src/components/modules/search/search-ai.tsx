@@ -319,14 +319,14 @@ export const SearchAi = ({
 
           <div className="w-full shrink-0 py-4">
             <div className="relative mx-auto w-full max-w-full">
-              <div className="relative rounded-2xl border border-black/10 bg-black/[0.03] focus-within:border-black/20 dark:border-white/10 dark:bg-white/[0.03] dark:focus-within:border-white/20">
+              <div className="relative rounded-2xl border border-black/10 bg-black/3 focus-within:border-black/20 dark:border-white/10 dark:bg-white/3 dark:focus-within:border-white/20">
                 <div className="flex flex-col">
                   <div className="overflow-y-auto" style={{ maxHeight: `${MAX_HEIGHT - 48}px` }}>
                     <Textarea
                       ref={textareaRef}
                       placeholder="What would you like to know?"
                       className={cn(
-                        "w-full max-w-full resize-none text-wrap rounded-2xl border-none bg-transparent pb-3 pr-10 pt-3 leading-[1.2] text-black placeholder:text-black/70 focus:ring focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-white dark:placeholder:text-white/70",
+                        "w-full max-w-full resize-none text-wrap rounded-2xl border-none bg-transparent pb-3 pr-10 pt-3 leading-[1.2] text-black placeholder:text-black/70 focus:ring-3 focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-white dark:placeholder:text-white/70",
                         `min-h-[${MIN_HEIGHT}px]`
                       )}
                       value={query}
@@ -354,7 +354,7 @@ export const SearchAi = ({
                           disabled={isSearchInProgress}
                           className={cn(
                             "inline-flex items-center gap-1.5",
-                            "rounded-md border px-2 py-0.5 text-xs font-medium shadow-sm",
+                            "rounded-md border px-2 py-0.5 text-xs font-medium shadow-xs",
                             "animate-fadeIn transition-colors duration-200",
                             isSearchInProgress
                               ? "cursor-not-allowed opacity-50"
@@ -399,7 +399,7 @@ export const SearchAi = ({
                       "rounded-full px-3 py-1.5 text-xs font-medium",
                       "border transition-all duration-200",
                       "border-black/10 bg-white hover:bg-black/5 dark:border-white/10 dark:bg-gray-900 dark:hover:bg-white/5",
-                      "flex-shrink-0"
+                      "shrink-0"
                     )}
                     onClick={() => toggleSuggestion(text)}
                   >

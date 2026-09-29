@@ -208,7 +208,7 @@ export function BrickMarquee() {
         <label
           ref={barRef}
           htmlFor="bar-toggle"
-          className={`bar bg-primary [mask-image:linear-gradient(to_right,transparent,white_7%)] ${isNearby ? "nearby" : ""} ${isExpanded ? "expanded" : ""}`}
+          className={`bar bg-primary mask-[linear-gradient(to_right,transparent,white_7%)] ${isNearby ? "nearby" : ""} ${isExpanded ? "expanded" : ""}`}
         >
           {/* Marquee container */}
           <div className={`marquee-container ${isExpanded ? "visible" : ""}`}>

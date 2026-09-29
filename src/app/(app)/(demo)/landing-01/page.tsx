@@ -61,7 +61,7 @@ export default function FeaturesPage() {
       <section className="relative py-20">
         <div className="container mx-auto px-4">
           <PageHeader className="mx-auto mb-16 max-w-3xl text-center">
-            <PageHeaderHeading className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            <PageHeaderHeading className="bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Supercharge Your Next.js Development
             </PageHeaderHeading>
             <PageHeaderDescription>

@@ -158,7 +158,7 @@ export function PopoverContent({ children, className, align = "start" }: Popover
           onKeyDown={closeOnEscape}
           layoutId={`popover-${uniqueId}`}
           className={cn(
-            "absolute z-50 h-[200px] w-[364px] overflow-hidden border border-zinc-950/10 bg-white outline-none dark:bg-zinc-700",
+            "absolute z-50 h-[200px] w-[364px] overflow-hidden border border-zinc-950/10 bg-white outline-hidden dark:bg-zinc-700",
             className
           )}
           style={{
@@ -233,7 +233,7 @@ export function PopoverTextarea({ className }: PopoverTextareaProps) {
   return (
     <textarea
       className={cn(
-        "h-full w-full resize-none rounded-md bg-transparent px-4 py-3 text-sm outline-none",
+        "h-full w-full resize-none rounded-md bg-transparent px-4 py-3 text-sm outline-hidden",
         className
       )}
       value={note}

@@ -64,7 +64,7 @@ export default function MusicPage() {
                         </Button>
                       </div>
                     </div>
-                    <TabsContent value="music" className="border-none p-0 outline-none">
+                    <TabsContent value="music" className="border-none p-0 outline-hidden">
                       <div className="flex items-center justify-between">
                         <div className="space-y-1">
                           <h2 className="text-2xl font-semibold tracking-tight">Listen Now</h2>
@@ -84,7 +84,7 @@ export default function MusicPage() {
                                 className="w-[250px]"
                                 aspectRatio="portrait"
                                 width={250}
-                                height={330}
+                                height={333}
                               />
                             ))}
                           </div>

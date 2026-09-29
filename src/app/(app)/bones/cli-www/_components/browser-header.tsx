@@ -103,7 +103,7 @@ export function BrowserHeader({
                           !currentRegistry ? "opacity-100" : "opacity-0"
                         )}
                       />
-                      <div className="h-2 w-2 rounded-full bg-gradient-to-r from-primary to-primary/50" />
+                      <div className="h-2 w-2 rounded-full bg-linear-to-r from-primary to-primary/50" />
                       All Registries
                     </div>
                   </CommandItem>

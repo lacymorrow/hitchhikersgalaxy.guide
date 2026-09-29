@@ -21,7 +21,7 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
       >
         <DashboardHeader />
 
-        <div className="flex flex-1 pt-24 md:pt-[--header-height]">
+        <div className="flex flex-1 pt-24 md:pt-(--header-height)">
           <AppSidebar />
           <SidebarInset>
             <div className="flex flex-1 flex-col">

@@ -271,7 +271,7 @@
       "categories": ["shipkit", "faq"],
       "files": [
         {
-          "path": "src/app/(app)/(kit)/faq/page.tsx",
+          "path": "src/app/(app)/faq/page.tsx",
           "type": "registry:page",
           "target": "~/src/app/(app)/faq/page.tsx"
         },
@@ -318,9 +318,9 @@
           "target": "~/src/app/(app)/docs/[[...slug]]/page.tsx"
         },
         {
-          "path": "src/app/(app)/docs/loading.tsx",
+          "path": "src/app/(app)/docs/[[...slug]]/loading.tsx",
           "type": "registry:component",
-          "target": "~/src/app/(app)/docs/loading.tsx"
+          "target": "~/src/app/(app)/docs/[[...slug]]/loading.tsx"
         },
         {
           "path": "src/app/(app)/docs/not-found.tsx",
@@ -358,11 +358,6 @@
           "target": "~/src/hooks/use-docs-search.ts"
         },
         {
-          "path": "src/server/services/docs-search.ts",
-          "type": "registry:lib",
-          "target": "~/src/server/services/docs-search.ts"
-        },
-        {
           "path": "src/app/(app)/api/docs/search/route.ts",
           "type": "registry:lib",
           "target": "~/src/app/(app)/api/docs/search/route.ts"
@@ -398,11 +393,6 @@
           "path": "src/app/(app)/blog/page.tsx",
           "type": "registry:page",
           "target": "~/src/app/(app)/blog/page.tsx"
-        },
-        {
-          "path": "src/app/(app)/blog/loading.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(app)/blog/loading.tsx"
         },
         {
           "path": "src/app/(app)/blog/[...slug]/page.tsx",
@@ -941,11 +931,6 @@
           "path": "src/app/(app)/changelog/page.tsx",
           "type": "registry:page",
           "target": "~/src/app/(app)/changelog/page.tsx"
-        },
-        {
-          "path": "src/app/(app)/changelog/loading.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(app)/changelog/loading.tsx"
         },
         {
           "path": "src/app/(app)/changelog/[...slug]/page.tsx",

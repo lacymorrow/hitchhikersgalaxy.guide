@@ -68,7 +68,7 @@ export function WaitlistFAQ() {
                   >
                     <AccordionTrigger className="group text-left hover:no-underline">
                       <div className="flex items-start gap-3">
-                        <HelpCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-violet-600 dark:text-violet-400" />
+                        <HelpCircle className="mt-0.5 h-5 w-5 shrink-0 text-violet-600 dark:text-violet-400" />
                         <span className="text-slate-900 transition-colors group-hover:text-violet-600 dark:text-slate-100 dark:group-hover:text-violet-400">
                           {faq.question}
                         </span>

@@ -278,7 +278,7 @@ export function FileDropzone() {
   return (
     <div className="h-auto w-full p-8">
       <motion.div
-        className={`relative size-full cursor-pointer rounded-xl border-2 border-dashed p-12 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+        className={`relative size-full cursor-pointer rounded-xl border-2 border-dashed p-12 text-center transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
           isDragActive
             ? "border-blue-500 bg-blue-500/5"
             : "border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 dark:hover:border-neutral-500"
@@ -363,7 +363,7 @@ export function FileDropzone() {
                 {file.file.type.startsWith("image/") ? (
                   <img
                     alt={file.file.name}
-                    className="mr-2 size-10 rounded object-cover"
+                    className="mr-2 size-10 rounded-lg object-cover"
                     src={file.preview}
                   />
                 ) : (
@@ -400,7 +400,7 @@ export function FileDropzone() {
                   ) : (
                     <button
                       type="button"
-                      className="mr-2 rounded-sm text-red-500 transition-colors hover:text-red-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      className="mr-2 rounded-sm text-red-500 transition-colors hover:text-red-600 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteFile(file);

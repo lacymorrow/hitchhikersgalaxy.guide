@@ -5,7 +5,7 @@ export function BackgroundBeamsDemo() {
   return (
     <div className="relative flex h-[40rem] w-full flex-col items-center justify-center rounded-md bg-neutral-950 antialiased">
       <div className="mx-auto max-w-2xl p-4">
-        <h1 className="relative z-10 bg-gradient-to-b from-neutral-200 to-neutral-600 bg-clip-text text-center font-sans text-lg font-bold text-transparent md:text-7xl">
+        <h1 className="relative z-10 bg-linear-to-b from-neutral-200 to-neutral-600 bg-clip-text text-center font-sans text-lg font-bold text-transparent md:text-7xl">
           Join the waitlist
         </h1>
         <p />

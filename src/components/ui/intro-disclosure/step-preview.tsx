@@ -42,7 +42,7 @@ export function StepPreview({ step, direction }: { step: Step; direction: 1 | -1
               <video src={step.media.src} controls className="h-full w-full object-cover" />
             )}
           </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+          <div className="absolute inset-0 bg-linear-to-t from-black/80 to-transparent" />
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={controls}

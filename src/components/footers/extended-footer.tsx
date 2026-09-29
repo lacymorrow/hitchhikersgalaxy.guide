@@ -213,7 +213,7 @@ export const Footer: React.FC<FooterProps> = ({
         </div>
       </div>
       <RetroGrid
-        className={"hidden [mask-image:linear-gradient(to_top,white,transparent)] md:block"}
+        className={"hidden mask-[linear-gradient(to_top,white,transparent)] md:block"}
       />
     </footer>
   );

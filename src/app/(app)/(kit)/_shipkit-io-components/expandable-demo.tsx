@@ -296,7 +296,7 @@ export function WeatherForecastCard() {
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <Sun className="mr-2 h-8 w-8 text-yellow-400" />
-                <ExpandableContent preset="blur-sm" keepMounted={true}>
+                <ExpandableContent preset="blur-xs" keepMounted={true}>
                   <h3 className="text-lg font-medium">Today&apos;s Weather</h3>
                 </ExpandableContent>
               </div>
@@ -315,7 +315,7 @@ export function WeatherForecastCard() {
               <div className="text-right">
                 <p className="font-medium">Sunny</p>
                 <ExpandableContent
-                  preset="blur-sm"
+                  preset="blur-xs"
                   stagger
                   staggerChildren={0.1}
                   keepMounted={true}
@@ -330,7 +330,7 @@ export function WeatherForecastCard() {
               </div>
             </div>
             <ExpandableContent
-              preset="blur-sm"
+              preset="blur-xs"
               stagger
               staggerChildren={0.1}
               keepMounted={true}

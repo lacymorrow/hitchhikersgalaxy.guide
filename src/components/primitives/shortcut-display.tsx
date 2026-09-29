@@ -16,7 +16,7 @@ interface ShortcutDisplayProps {
 
 // Default styles mimicking Shadcn kbd
 const defaultKbdStyles =
-  "h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium";
+  "h-5 select-none items-center gap-1 rounded-lg border bg-muted px-1.5 font-mono text-[10px] font-medium";
 
 /**
  * The key bound to an action, as a person reads it.

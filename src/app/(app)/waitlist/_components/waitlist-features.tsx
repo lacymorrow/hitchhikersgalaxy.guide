@@ -152,7 +152,7 @@ export function WaitlistFeatures() {
                   <CardContent className="p-6">
                     <div className="relative">
                       <div
-                        className={`inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${item.gradient} mb-4`}
+                        className={`inline-flex h-12 w-12 items-center justify-center rounded-lg bg-linear-to-br ${item.gradient} mb-4`}
                       >
                         <Icon className="h-6 w-6 text-white" />
                       </div>

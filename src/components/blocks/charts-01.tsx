@@ -52,7 +52,7 @@ export default function Charts() {
               config={{
                 steps: {
                   label: "Steps",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
               }}
             >
@@ -129,7 +129,7 @@ export default function Charts() {
                 />
                 <ReferenceLine
                   y={1200}
-                  stroke="hsl(var(--muted-foreground))"
+                  stroke="var(--muted-foreground)"
                   strokeDasharray="3 3"
                   strokeWidth={1}
                 >
@@ -137,13 +137,13 @@ export default function Charts() {
                     position="insideBottomLeft"
                     value="Average Steps"
                     offset={10}
-                    fill="hsl(var(--foreground))"
+                    fill="var(--foreground)"
                   />
                   <Label
                     position="insideTopLeft"
                     value="12,343"
                     className="text-lg"
-                    fill="hsl(var(--foreground))"
+                    fill="var(--foreground)"
                     offset={10}
                     startOffset={100}
                   />
@@ -191,7 +191,7 @@ export default function Charts() {
               config={{
                 resting: {
                   label: "Resting",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
               }}
               className="w-full"
@@ -237,7 +237,7 @@ export default function Charts() {
                 <CartesianGrid
                   strokeDasharray="4 4"
                   vertical={false}
-                  stroke="hsl(var(--muted-foreground))"
+                  stroke="var(--muted-foreground)"
                   strokeOpacity={0.5}
                 />
                 <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
@@ -306,7 +306,7 @@ export default function Charts() {
                 config={{
                   steps: {
                     label: "Steps",
-                    color: "hsl(var(--chart-1))",
+                    color: "var(--chart-1)",
                   },
                 }}
                 className="aspect-auto h-[32px] w-full"
@@ -350,7 +350,7 @@ export default function Charts() {
                 config={{
                   steps: {
                     label: "Steps",
-                    color: "hsl(var(--muted))",
+                    color: "var(--muted)",
                   },
                 }}
                 className="aspect-auto h-[32px] w-full"
@@ -377,7 +377,7 @@ export default function Charts() {
                       dataKey="date"
                       offset={8}
                       fontSize={12}
-                      fill="hsl(var(--muted-foreground))"
+                      fill="var(--muted-foreground)"
                     />
                   </Bar>
                   <YAxis dataKey="date" type="category" tickCount={1} hide />
@@ -406,7 +406,7 @@ export default function Charts() {
               config={{
                 steps: {
                   label: "Steps",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
               }}
               className="ml-auto w-[72px]"
@@ -465,15 +465,15 @@ export default function Charts() {
               config={{
                 move: {
                   label: "Move",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
                 stand: {
                   label: "Stand",
-                  color: "hsl(var(--chart-2))",
+                  color: "var(--chart-2)",
                 },
                 exercise: {
                   label: "Exercise",
-                  color: "hsl(var(--chart-3))",
+                  color: "var(--chart-3)",
                 },
               }}
               className="h-[140px] w-full"
@@ -592,15 +592,15 @@ export default function Charts() {
               config={{
                 move: {
                   label: "Move",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
                 exercise: {
                   label: "Exercise",
-                  color: "hsl(var(--chart-2))",
+                  color: "var(--chart-2)",
                 },
                 stand: {
                   label: "Stand",
-                  color: "hsl(var(--chart-3))",
+                  color: "var(--chart-3)",
                 },
               }}
               className="mx-auto aspect-square w-full max-w-[80%]"
@@ -656,7 +656,7 @@ export default function Charts() {
               config={{
                 calories: {
                   label: "Calories",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
               }}
               className="ml-auto w-[64px]"
@@ -728,7 +728,7 @@ export default function Charts() {
               config={{
                 time: {
                   label: "Time",
-                  color: "hsl(var(--chart-2))",
+                  color: "var(--chart-2)",
                 },
               }}
             >

@@ -113,7 +113,7 @@ const HoverExpand_001 = ({
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
-                    className="absolute h-full w-full bg-gradient-to-t from-black/40 to-transparent"
+                    className="absolute h-full w-full bg-linear-to-t from-black/40 to-transparent"
                   />
                 )}
               </AnimatePresence>

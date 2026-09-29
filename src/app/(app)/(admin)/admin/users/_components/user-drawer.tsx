@@ -149,7 +149,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
           </DrawerDescription>
         </DrawerHeader>
 
-        <ScrollArea className="flex-grow overflow-y-auto">
+        <ScrollArea className="grow overflow-y-auto">
           <div className="mx-auto w-full max-w-2xl p-6">
             <div className="space-y-6">
               <section>
@@ -205,7 +205,7 @@ export const UserDrawer = ({ user, open, onClose }: UserDrawerProps) => {
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                               <span>User ID:</span>
-                              <code className="rounded bg-muted px-1 py-0.5 font-mono text-xs">
+                              <code className="rounded-lg bg-muted px-1 py-0.5 font-mono text-xs">
                                 {user.id}
                               </code>
                             </div>

@@ -25,14 +25,14 @@ import { bounceRateData, pageViewsData, statusVariant, teamMembers } from "./moc
 const pageViewsConfig = {
   views: {
     label: "Page Views",
-    color: "hsl(var(--chart-1))",
+    color: "var(--chart-1)",
   },
 } satisfies ChartConfig;
 
 const bounceRateConfig = {
   rate: {
     label: "Bounce Rate %",
-    color: "hsl(var(--chart-3))",
+    color: "var(--chart-3)",
   },
 } satisfies ChartConfig;
 

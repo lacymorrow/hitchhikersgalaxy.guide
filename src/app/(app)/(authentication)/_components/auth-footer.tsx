@@ -5,7 +5,7 @@ import { routes } from "@/config/routes";
 export function AuthFooter() {
   return (
     <CardFooter>
-      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 [&_a]:hover:text-primary">
+      <div className="text-balance text-center text-xs text-muted-foreground [&_a]:underline [&_a]:underline-offset-4 hover:[&_a]:text-primary">
         By signing up, you agree to our <Link href={routes.terms}>Terms of Service</Link> and{" "}
         <Link href={routes.privacy}>Privacy Policy</Link>.
       </div>

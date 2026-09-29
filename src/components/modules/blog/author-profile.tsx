@@ -210,7 +210,7 @@ export const AuthorByline = ({
     <div className={cn("flex items-center gap-3", className)}>
       <Link
         href={authorUtils.getAuthorUrl(author)}
-        className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+        className="rounded-full focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2"
         aria-label={`View ${displayName}'s profile`}
       >
         {!imageError ? (

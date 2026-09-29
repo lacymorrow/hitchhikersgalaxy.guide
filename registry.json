@@ -1030,7 +1030,8 @@
         "@auth/drizzle-adapter",
         "bcryptjs",
         "zod",
-        "zsa"
+        "zsa",
+        "@auth/core@0.41.3"
       ],
       "registryDependencies": [
         "@shipkit/cn",

@@ -10,7 +10,7 @@
   "files": [
     {
       "path": "src/lib/utils/cn.ts",
-      "content": "import { type ClassValue, clsx } from \"clsx\";\nimport { twMerge } from \"tailwind-merge\";\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n",
+      "content": "import { type ClassValue, clsx } from \"clsx\";\nimport { extendTailwindMerge } from \"tailwind-merge\";\n\n// Custom shadows from theme.css (--shadow-hairline*). Without this, twMerge keeps\n// both `shadow-hairline` and a caller's `shadow-lg`, and the hairline wins on CSS order.\nconst twMerge = extendTailwindMerge({\n  extend: {\n    theme: {\n      shadow: [\"hairline\", \"hairline-b\", \"hairline-t\"],\n    },\n  },\n});\n\nexport function cn(...inputs: ClassValue[]) {\n  return twMerge(clsx(inputs));\n}\n",
       "type": "registry:lib",
       "target": "~/src/lib/utils/cn.ts"
     }

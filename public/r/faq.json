@@ -4,8 +4,7 @@
   "title": "FAQ",
   "description": "A full FAQ page with accordion layout, CMS integration, and static content fallback.",
   "registryDependencies": [
-    "@shipkit/cn",
-    "accordion"
+    "@shipkit/cn"
   ],
   "files": [
     {

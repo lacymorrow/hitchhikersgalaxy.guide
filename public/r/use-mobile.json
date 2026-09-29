@@ -3,6 +3,7 @@
   "name": "use-mobile",
   "title": "useIsMobile",
   "description": "A hook that detects mobile viewport using matchMedia.",
+  "registryDependencies": [],
   "files": [
     {
       "path": "src/hooks/use-mobile.tsx",

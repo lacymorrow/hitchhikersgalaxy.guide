@@ -18,7 +18,8 @@
       "dependencies": [
         "clsx",
         "tailwind-merge"
-      ]
+      ],
+      "registryDependencies": []
     },
     {
       "name": "marquee",
@@ -211,7 +212,8 @@
           "path": "src/hooks/use-copy-to-clipboard.ts",
           "type": "registry:hook"
         }
-      ]
+      ],
+      "registryDependencies": []
     },
     {
       "name": "use-mobile",
@@ -223,7 +225,8 @@
           "path": "src/hooks/use-mobile.tsx",
           "type": "registry:hook"
         }
-      ]
+      ],
+      "registryDependencies": []
     },
     {
       "name": "data-table",
@@ -231,16 +234,10 @@
       "title": "Data Table",
       "description": "Feature-rich data table with search, pagination, column visibility, and row actions built on TanStack Table.",
       "dependencies": [
-        "@tanstack/react-table"
+        "@tanstack/react-table@8.21.3"
       ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "button",
-        "input",
-        "dialog",
-        "dropdown-menu",
-        "table",
-        "select"
+        "@shipkit/cn"
       ],
       "files": [
         {
@@ -266,7 +263,8 @@
           "type": "registry:lib",
           "target": "~/src/config/routes.ts"
         }
-      ]
+      ],
+      "registryDependencies": []
     },
     {
       "name": "features-config",
@@ -278,8 +276,14 @@
           "path": "src/config/features-config.ts",
           "type": "registry:lib",
           "target": "~/src/config/features-config.ts"
+        },
+        {
+          "path": "src/config/features-table.ts",
+          "type": "registry:lib",
+          "target": "~/src/config/features-table.ts"
         }
-      ]
+      ],
+      "registryDependencies": []
     },
     {
       "name": "faq",
@@ -308,8 +312,7 @@
         }
       ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "accordion"
+        "@shipkit/cn"
       ],
       "docs": "Static FAQ page with accordion UI. Optionally integrates with Payload CMS for dynamic FAQ management."
     },
@@ -327,17 +330,13 @@
         "remark-gfm",
         "gray-matter",
         "zod",
-        "openai"
+        "openai",
+        "fumadocs-core@16.14.5",
+        "fumadocs-mdx@15.2.3"
       ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config",
-        "accordion",
-        "scroll-area",
-        "skeleton",
-        "badge",
-        "command",
-        "input"
+        "@shipkit/routes-config"
       ],
       "files": [
         {
@@ -414,9 +413,14 @@
           "path": "src/lib/open-ai.ts",
           "type": "registry:lib",
           "target": "~/src/lib/open-ai.ts"
+        },
+        {
+          "path": "source.config.ts",
+          "type": "registry:file",
+          "target": "~/source.config.ts"
         }
       ],
-      "docs": "Full docs system powered by MDX. Place your `.mdx` files in `docs/` at the project root. Includes sidebar navigation, search with optional AI-powered answers, and responsive layout."
+      "docs": "Full docs system powered by MDX. Place your `.mdx` files in `docs/` at the project root. Includes sidebar navigation, search with optional AI-powered answers, and responsive layout. After install run `pnpm fumadocs-mdx` (ShipKit runs it in postinstall) to generate the `.source` folder the docs page imports."
     },
     {
       "name": "blog",
@@ -432,18 +436,12 @@
         "next-mdx-remote",
         "remark-gfm",
         "lucide-react",
-        "@emblemvault/ask-ai"
+        "@emblemvault/ask-ai",
+        "react-error-boundary@6.1.5"
       ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config",
-        "badge",
-        "button",
-        "input",
-        "scroll-area",
-        "separator",
-        "sheet",
-        "skeleton"
+        "@shipkit/routes-config"
       ],
       "files": [
         {
@@ -606,7 +604,7 @@
         {
           "path": "src/builder-registry.ts",
           "type": "registry:lib",
-          "target": "~/builder-registry.ts"
+          "target": "~/src/builder-registry.ts"
         },
         {
           "path": "src/components/modules/builder/index.ts",
@@ -996,10 +994,6 @@
         "@shipkit/cn",
         "@shipkit/features-config",
         "@shipkit/builder-io",
-        "button",
-        "card",
-        "carousel",
-        "avatar",
         "@shipkit/payload"
       ],
       "files": [
@@ -1488,9 +1482,7 @@
       ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config",
-        "badge",
-        "button"
+        "@shipkit/routes-config"
       ],
       "files": [
         {
@@ -1553,14 +1545,7 @@
       ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config",
-        "button",
-        "card",
-        "input",
-        "form",
-        "label",
-        "checkbox",
-        "textarea"
+        "@shipkit/routes-config"
       ],
       "files": [
         {
@@ -1605,12 +1590,7 @@
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "@shipkit/features-config",
-        "button",
-        "input",
-        "card",
-        "badge",
-        "accordion"
+        "@shipkit/features-config"
       ],
       "files": [
         {
@@ -1686,13 +1666,6 @@
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card",
-        "badge",
-        "input",
-        "separator",
-        "table",
-        "skeleton",
         "@shipkit/auth",
         "@shipkit/data-table",
         "@shipkit/payments",
@@ -1879,12 +1852,6 @@
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "button",
-        "card",
-        "input",
-        "separator",
-        "form",
-        "label",
         "@shipkit/auth",
         "@shipkit/payments",
         "@shipkit/github-connect",
@@ -1977,29 +1944,6 @@
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "button",
-        "card",
-        "badge",
-        "input",
-        "separator",
-        "tabs",
-        "avatar",
-        "dialog",
-        "dropdown-menu",
-        "popover",
-        "select",
-        "textarea",
-        "tooltip",
-        "scroll-area",
-        "command",
-        "label",
-        "switch",
-        "slider",
-        "radio-group",
-        "calendar",
-        "checkbox",
-        "table",
-        "form",
         "@shipkit/storage",
         "@shipkit/blog"
       ],
@@ -2486,10 +2430,7 @@
         "zod"
       ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "button",
-        "input",
-        "label"
+        "@shipkit/cn"
       ],
       "files": [
         {
@@ -2574,13 +2515,7 @@
         "lucide-react"
       ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "button",
-        "dialog",
-        "popover",
-        "textarea",
-        "label",
-        "input"
+        "@shipkit/cn"
       ],
       "files": [
         {
@@ -2745,9 +2680,7 @@
         "@aws-sdk/s3-request-presigner"
       ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "button",
-        "input"
+        "@shipkit/cn"
       ],
       "files": [
         {
@@ -2810,12 +2743,7 @@
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "@shipkit/features-config",
-        "button",
-        "card",
-        "badge",
-        "separator",
-        "tabs"
+        "@shipkit/features-config"
       ],
       "files": [
         {
@@ -2861,12 +2789,12 @@
         "payments"
       ],
       "dependencies": [
+        "stripe",
+        "@lemonsqueezy/lemonsqueezy.js",
         "zod",
         "lucide-react",
-        "@polar-sh/nextjs@0.9.6",
-        "stripe@20.3.1",
-        "@lemonsqueezy/lemonsqueezy.js@4.0.0",
-        "canvas-confetti@1.9.4",
+        "@polar-sh/nextjs",
+        "canvas-confetti",
         "@polar-sh/sdk@0.43.1"
       ],
       "registryDependencies": [
@@ -3067,18 +2995,6 @@
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card",
-        "badge",
-        "input",
-        "separator",
-        "tabs",
-        "table",
-        "dialog",
-        "dropdown-menu",
-        "skeleton",
-        "avatar",
-        "scroll-area",
         "@shipkit/data-table",
         "@shipkit/auth",
         "@shipkit/payments",
@@ -3505,17 +3421,13 @@
         "ai"
       ],
       "dependencies": [
-        "openai",
+        "openai@6.49.0",
         "@anthropic-ai/sdk",
-        "@emblemvault/ask-ai"
+        "@emblemvault/ask-ai@0.1.1",
+        "@huggingface/transformers@3.8.1"
       ],
       "registryDependencies": [
         "@shipkit/cn",
-        "button",
-        "card",
-        "input",
-        "textarea",
-        "scroll-area",
         "@shipkit/payments",
         "@shipkit/auth",
         "@shipkit/better-auth"

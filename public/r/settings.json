@@ -9,12 +9,6 @@
   "registryDependencies": [
     "@shipkit/cn",
     "@shipkit/routes-config",
-    "button",
-    "card",
-    "input",
-    "separator",
-    "form",
-    "label",
     "@shipkit/auth",
     "@shipkit/payments",
     "@shipkit/github-connect",

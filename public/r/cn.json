@@ -7,6 +7,7 @@
     "clsx",
     "tailwind-merge"
   ],
+  "registryDependencies": [],
   "files": [
     {
       "path": "src/lib/utils/cn.ts",

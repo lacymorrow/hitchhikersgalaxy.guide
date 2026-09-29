@@ -3,6 +3,7 @@
   "name": "routes-config",
   "title": "Routes Config",
   "description": "Centralized route definitions for Shipkit apps.",
+  "registryDependencies": [],
   "files": [
     {
       "path": "src/config/routes.ts",

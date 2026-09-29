@@ -16,7 +16,7 @@ import { Label } from "@/components/ui/label";
 export function DemoCreateAccount() {
   return (
     <Card>
-      <CardHeader className="space-y-1">
+      <CardHeader className="gap-y-1">
         <CardTitle className="text-2xl">Create an account</CardTitle>
         <CardDescription>Enter your email below to create your account</CardDescription>
       </CardHeader>

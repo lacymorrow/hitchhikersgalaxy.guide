@@ -53,7 +53,7 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
             <p className="text-muted-foreground">Manage your account settings and preferences.</p>
           </div>
           <Separator className="my-6" />
-          <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+          <div className="flex flex-col gap-y-8 lg:flex-row lg:gap-x-12 lg:gap-y-0">
             <aside className="lg:w-1/5">
               <SidebarNav items={navItems} />
             </aside>

@@ -69,7 +69,7 @@ export function ConsoleComponent({ onCreateTestKey, apiKey }: ConsoleComponentPr
       <div className="overflow-hidden rounded-lg bg-gray-800 shadow-xl">
         {/* Mac-style chrome */}
         <div className="flex items-center justify-between bg-gray-700 px-4 py-2">
-          <div className="flex space-x-2">
+          <div className="flex gap-x-2">
             <div className="h-3 w-3 rounded-full bg-red-500" />
             <div className="h-3 w-3 rounded-full bg-yellow-500" />
             <div className="h-3 w-3 rounded-full bg-green-500" />

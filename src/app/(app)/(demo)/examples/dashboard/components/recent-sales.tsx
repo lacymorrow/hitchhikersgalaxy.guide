@@ -18,7 +18,7 @@ export function RecentSales() {
         <div className="ml-auto font-medium">+$1,999.00</div>
       </div>
       <div className="flex items-center">
-        <Avatar className="flex h-9 w-9 items-center justify-center space-y-0 border">
+        <Avatar className="flex h-9 w-9 items-center justify-center gap-y-0 border">
           <AvatarImage
             src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/02.png"
             alt="Avatar"

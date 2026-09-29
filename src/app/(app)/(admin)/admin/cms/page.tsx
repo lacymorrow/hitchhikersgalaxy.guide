@@ -121,7 +121,7 @@ export default function CMSPage() {
           <CardDescription>Manage your Payload CMS instance.</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-6 sm:grid-cols-2">
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-col gap-2">
             <h3 className="font-semibold">Payload Admin</h3>
             <p className="text-sm text-muted-foreground">
               Access the full Payload CMS admin interface.
@@ -137,7 +137,7 @@ export default function CMSPage() {
             </Link>
           </div>
 
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-col gap-2">
             <h3 className="font-semibold">Seed CMS Data</h3>
             <p className="text-sm text-muted-foreground">
               Populate the CMS with initial data. Clears existing data first. (Requires admin

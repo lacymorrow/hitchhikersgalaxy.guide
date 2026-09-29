@@ -86,11 +86,11 @@ export function GitHubConnectContent() {
     return (
       <div className="container mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center">
         <Card className="w-full">
-          <CardHeader className="space-y-1">
+          <CardHeader className="gap-y-1">
             <CardTitle className="text-2xl">Connecting GitHub Account</CardTitle>
             <CardDescription>Please wait while we process your GitHub connection</CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center space-y-4 py-8">
+          <CardContent className="flex flex-col items-center justify-center gap-4 py-8">
             <Icons.spinner className="h-8 w-8 animate-spin text-primary" />
           </CardContent>
         </Card>
@@ -102,7 +102,7 @@ export function GitHubConnectContent() {
     <ClientOnly>
       <div className="container mx-auto flex min-h-screen max-w-xl flex-col items-center justify-center">
         <Card className="w-full">
-          <CardHeader className="space-y-1">
+          <CardHeader className="gap-y-1">
             <CardTitle className="text-2xl">GitHub Connection</CardTitle>
             <CardDescription>
               {isSuccess
@@ -112,13 +112,13 @@ export function GitHubConnectContent() {
                   : "Connect your GitHub account to access repository features"}
             </CardDescription>
           </CardHeader>
-          <CardContent className="flex flex-col items-center justify-center space-y-4 py-8">
+          <CardContent className="flex flex-col items-center justify-center gap-4 py-8">
             {error ? (
               <div className="rounded-lg bg-destructive/10 p-4 text-destructive">
                 <p>{error}</p>
               </div>
             ) : isSuccess ? (
-              <div className="flex flex-col items-center justify-center space-y-4">
+              <div className="flex flex-col items-center justify-center gap-4">
                 <div className="flex h-16 w-16 items-center justify-center rounded-full bg-green-100 text-green-500">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -144,7 +144,7 @@ export function GitHubConnectContent() {
                 </p>
               </div>
             ) : isConnected ? (
-              <div className="flex flex-col items-center justify-center space-y-4">
+              <div className="flex flex-col items-center justify-center gap-4">
                 <Icons.github className="h-16 w-16" />
                 <p className="text-center">
                   Your account is connected to GitHub as{" "}
@@ -152,7 +152,7 @@ export function GitHubConnectContent() {
                 </p>
               </div>
             ) : (
-              <div className="flex flex-col items-center justify-center space-y-4">
+              <div className="flex flex-col items-center justify-center gap-4">
                 <Icons.github className="h-16 w-16" />
                 <p className="text-center">Connect your GitHub account to get started</p>
                 <GitHubOAuthButton

@@ -439,7 +439,7 @@ function ControlledExpandableCard() {
 export function ExpandableCardExamples() {
   return (
     <div className="mx-auto w-full max-w-7xl space-y-12 p-8">
-      <div className="flex flex-col items-center space-y-24">
+      <div className="flex flex-col items-center gap-24">
         <div className="min-h-[480px]">
           <DesignSyncExample />
         </div>

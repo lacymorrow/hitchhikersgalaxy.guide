@@ -122,7 +122,7 @@ export default function Dashboard() {
       <main className="flex flex-1 flex-col gap-4 p-4 md:gap-8 md:p-8">
         <div className="grid gap-4 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
           <Card x-chunk="A card showing the total revenue in USD and the percentage difference from last month.">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardHeader className="flex flex-row items-center justify-between gap-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
               <DollarSign className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -132,7 +132,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
           <Card x-chunk="A card showing the total subscriptions and the percentage difference from last month.">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardHeader className="flex flex-row items-center justify-between gap-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Subscriptions</CardTitle>
               <Users className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -142,7 +142,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
           <Card x-chunk="A card showing the total sales and the percentage difference from last month.">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardHeader className="flex flex-row items-center justify-between gap-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Sales</CardTitle>
               <CreditCard className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
@@ -152,7 +152,7 @@ export default function Dashboard() {
             </CardContent>
           </Card>
           <Card x-chunk="A card showing the total active users and the percentage difference from last hour.">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardHeader className="flex flex-row items-center justify-between gap-y-0 pb-2">
               <CardTitle className="text-sm font-medium">Active Now</CardTitle>
               <Activity className="h-4 w-4 text-muted-foreground" />
             </CardHeader>

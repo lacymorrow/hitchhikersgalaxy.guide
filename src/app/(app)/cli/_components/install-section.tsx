@@ -92,7 +92,7 @@ export function InstallSection() {
             />
           )}
           <div className="mb-4 hidden items-center justify-between md:flex">
-            <div className="flex space-x-1">
+            <div className="flex gap-x-1">
               <div className="h-2 w-2 rounded-full bg-gray-100/40" />
               <div className="h-2 w-2 rounded-full bg-gray-100/20" />
               <div className="h-2 w-2 rounded-full bg-gray-100/20" />

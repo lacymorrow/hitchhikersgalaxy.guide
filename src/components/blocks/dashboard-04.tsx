@@ -151,7 +151,7 @@ export default function Dashboard() {
               <CardContent>
                 <form className="flex flex-col gap-4">
                   <Input placeholder="Project Name" defaultValue="/content/plugins" />
-                  <div className="flex items-center space-x-2">
+                  <div className="flex items-center gap-x-2">
                     <Checkbox id="include" defaultChecked />
                     <label
                       htmlFor="include"

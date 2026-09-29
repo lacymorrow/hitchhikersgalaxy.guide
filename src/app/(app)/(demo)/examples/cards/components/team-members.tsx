@@ -21,8 +21,8 @@ export function DemoTeamMembers() {
         <CardDescription>Invite your team members to collaborate.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">
-        <div className="flex items-center justify-between space-x-4">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between gap-x-4">
+          <div className="flex items-center gap-x-4">
             <Avatar>
               <AvatarImage src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/01.png" />
               <AvatarFallback>OM</AvatarFallback>
@@ -70,8 +70,8 @@ export function DemoTeamMembers() {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="flex items-center justify-between space-x-4">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between gap-x-4">
+          <div className="flex items-center gap-x-4">
             <Avatar>
               <AvatarImage src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/02.png" />
               <AvatarFallback>JL</AvatarFallback>

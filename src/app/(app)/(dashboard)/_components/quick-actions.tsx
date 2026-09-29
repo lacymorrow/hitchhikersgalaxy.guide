@@ -12,7 +12,7 @@ export function QuickActions() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold text-green-500">Secure</div>
-          <div className="mt-2 flex space-x-2">
+          <div className="mt-2 flex gap-x-2">
             <Badge variant="outline" className="">
               SSL Active
             </Badge>

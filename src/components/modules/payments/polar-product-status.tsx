@@ -148,7 +148,7 @@ export function PolarProductStatus({
 
   if (isLoading) {
     return (
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-x-2">
         <Icons.spinner className="h-4 w-4 animate-spin" />
         <span className="text-sm text-muted-foreground">{loadingText}</span>
       </div>
@@ -166,7 +166,7 @@ export function PolarProductStatus({
 
   if (isPurchased) {
     return (
-      <div className="flex items-center space-x-2">
+      <div className="flex items-center gap-x-2">
         <CheckCircle className="h-4 w-4 text-green-500" />
         <span className="text-sm font-medium">{successText}</span>
       </div>

@@ -19,7 +19,7 @@ export function HeroSection() {
       {/* <BackgroundAnimation /> */}
       <div className="container relative z-10 px-4 md:px-6">
         <div className="grid gap-6 lg:grid-cols-[1fr_400px] lg:gap-12 xl:grid-cols-[1fr_600px]">
-          <div className="flex flex-col justify-center space-y-4">
+          <div className="flex flex-col justify-center gap-4">
             <PageHeader>
               <PageHeaderHeading className="text-3xl tracking-tighter sm:text-5xl xl:text-6xl/none">
                 {siteConfig.title}:
@@ -51,15 +51,15 @@ export function HeroSection() {
           </div>
         </div>
         <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          <div className="flex items-center space-x-3 rounded-lg bg-muted p-4">
+          <div className="flex items-center gap-x-3 rounded-lg bg-muted p-4">
             <Zap className="h-6 w-6 text-primary" />
             <p className="text-sm font-medium">Lightning-fast performance</p>
           </div>
-          <div className="flex items-center space-x-3 rounded-lg bg-muted p-4">
+          <div className="flex items-center gap-x-3 rounded-lg bg-muted p-4">
             <Box className="h-6 w-6 text-primary" />
             <p className="text-sm font-medium">Pre-configured components</p>
           </div>
-          <div className="flex items-center space-x-3 rounded-lg bg-muted p-4">
+          <div className="flex items-center gap-x-3 rounded-lg bg-muted p-4">
             <Code className="h-6 w-6 text-primary" />
             <p className="text-sm font-medium">TypeScript ready</p>
           </div>

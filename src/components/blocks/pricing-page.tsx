@@ -23,7 +23,7 @@ export function PricingPageComponent() {
   return (
     <div className="min-h-screen bg-black p-8 text-white">
       <div className="mx-auto max-w-6xl">
-        <div className="mb-8 flex justify-center space-x-4">
+        <div className="mb-8 flex justify-center gap-x-4">
           <Switch checked={isApplicationLogs} onCheckedChange={() => setIsApplicationLogs(true)} />
           <span className={isApplicationLogs ? "font-bold" : ""}>Application Logs</span>
           <Switch
@@ -118,7 +118,7 @@ function Feature({
   included?: boolean;
 }) {
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center gap-x-2">
       {included ? (
         <Check className="h-5 w-5 text-green-500" />
       ) : (

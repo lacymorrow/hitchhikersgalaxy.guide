@@ -22,7 +22,7 @@ export function CardsShare() {
         <CardDescription>Anyone with the link can view this document.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex space-x-2">
+        <div className="flex gap-x-2">
           <Label htmlFor="link" className="sr-only">
             Link
           </Label>
@@ -33,8 +33,8 @@ export function CardsShare() {
         <div className="space-y-4">
           <div className="text-sm font-medium">People with access</div>
           <div className="grid gap-6">
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between gap-x-4">
+              <div className="flex items-center gap-x-4">
                 <Avatar>
                   <AvatarImage
                     src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/03.png"
@@ -57,8 +57,8 @@ export function CardsShare() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between gap-x-4">
+              <div className="flex items-center gap-x-4">
                 <Avatar>
                   <AvatarImage
                     src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/05.png"
@@ -81,8 +81,8 @@ export function CardsShare() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between gap-x-4">
+              <div className="flex items-center gap-x-4">
                 <Avatar>
                   <AvatarImage
                     src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/01.png"

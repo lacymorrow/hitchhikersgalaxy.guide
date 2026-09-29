@@ -38,7 +38,7 @@ export default function Charts() {
           x-chunk="A bar chart showing the number of steps you have walked in the past 7 days."
           className="lg:max-w-md"
         >
-          <CardHeader className="space-y-0 pb-2">
+          <CardHeader className="gap-y-0 pb-2">
             <CardDescription>Today</CardDescription>
             <CardTitle className="text-4xl tabular-nums">
               12,584{" "}
@@ -166,7 +166,7 @@ export default function Charts() {
           x-chunk="A line chart showing the resting heart rate for the past 7 days."
           className="flex flex-col lg:max-w-md"
         >
-          <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
+          <CardHeader className="flex flex-row items-center gap-4 gap-y-0 pb-2 [&>div]:flex-1">
             <div>
               <CardDescription>Resting HR</CardDescription>
               <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
@@ -710,7 +710,7 @@ export default function Charts() {
           x-chunk="An area chart showing the time spent in bed for the past 7 days."
           className="max-w-xs"
         >
-          <CardHeader className="space-y-0 pb-0">
+          <CardHeader className="gap-y-0 pb-0">
             <CardDescription>Time in Bed</CardDescription>
             <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
               8

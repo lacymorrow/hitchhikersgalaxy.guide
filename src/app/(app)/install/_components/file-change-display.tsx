@@ -151,7 +151,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
           <Card>
             <CardHeader className="flex flex-row items-center justify-between py-3">
               <CardTitle className="text-sm font-medium">{selectedFile?.path}</CardTitle>
-              <div className="flex space-x-2">
+              <div className="flex gap-x-2">
                 <Button
                   variant="ghost"
                   size="sm"

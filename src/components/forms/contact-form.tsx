@@ -146,7 +146,7 @@ export function ContactForm({ defaultValues, onSuccess, className }: ContactForm
             control={form.control}
             name="newsletter"
             render={({ field }) => (
-              <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+              <FormItem className="flex flex-row items-start gap-x-3 gap-y-0">
                 <FormControl>
                   <Checkbox
                     checked={field.value}

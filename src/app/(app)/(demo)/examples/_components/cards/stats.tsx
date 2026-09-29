@@ -55,7 +55,7 @@ export function CardsStats() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardHeader className="flex flex-row items-center justify-between gap-y-0 pb-2">
           <CardTitle className="text-sm font-normal">Total Revenue</CardTitle>
         </CardHeader>
         <CardContent className="pb-0">
@@ -85,7 +85,7 @@ export function CardsStats() {
         </CardContent>
       </Card>
       <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardHeader className="flex flex-row items-center justify-between gap-y-0 pb-2">
           <CardTitle className="text-sm font-normal">Subscriptions</CardTitle>
         </CardHeader>
         <CardContent>

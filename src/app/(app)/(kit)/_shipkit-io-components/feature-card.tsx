@@ -15,7 +15,7 @@ export const FeatureCard: FC<FeatureCardProps> = ({ feature, className }) => {
   const Icon = feature.icon ? (Icons[feature.icon as keyof typeof Icons] as LucideIcon) : null;
 
   return (
-    <Card className={cn("flex flex-col items-start justify-start space-y-3 p-6", className)}>
+    <Card className={cn("flex flex-col items-start justify-start gap-y-3 p-6", className)}>
       {Icon && <Icon className="h-6 w-6 text-primary" />}
       <div className="space-y-1">
         <div className="flex items-center gap-2">

@@ -23,8 +23,8 @@ export function CardsTeamMembers() {
         <CardDescription>Invite your team members to collaborate.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">
-        <div className="flex items-center justify-between space-x-4">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between gap-x-4">
+          <div className="flex items-center gap-x-4">
             <Avatar className="h-8 w-8">
               <AvatarImage
                 src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/01.png"
@@ -49,21 +49,21 @@ export function CardsTeamMembers() {
                 <CommandList>
                   <CommandEmpty>No roles found.</CommandEmpty>
                   <CommandGroup>
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Viewer</p>
                       <p className="text-sm text-muted-foreground">Can view and comment.</p>
                     </CommandItem>
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Developer</p>
                       <p className="text-sm text-muted-foreground">Can view, comment and edit.</p>
                     </CommandItem>
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Billing</p>
                       <p className="text-sm text-muted-foreground">
                         Can view, comment and manage billing.
                       </p>
                     </CommandItem>
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Owner</p>
                       <p className="text-sm text-muted-foreground">
                         Admin-level access to all resources.
@@ -75,8 +75,8 @@ export function CardsTeamMembers() {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="flex items-center justify-between space-x-4">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between gap-x-4">
+          <div className="flex items-center gap-x-4">
             <Avatar className="h-8 w-8">
               <AvatarImage
                 src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/02.png"
@@ -101,21 +101,21 @@ export function CardsTeamMembers() {
                 <CommandList>
                   <CommandEmpty>No roles found.</CommandEmpty>
                   <CommandGroup className="p-1.5">
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Viewer</p>
                       <p className="text-sm text-muted-foreground">Can view and comment.</p>
                     </CommandItem>
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Developer</p>
                       <p className="text-sm text-muted-foreground">Can view, comment and edit.</p>
                     </CommandItem>
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Billing</p>
                       <p className="text-sm text-muted-foreground">
                         Can view, comment and manage billing.
                       </p>
                     </CommandItem>
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Owner</p>
                       <p className="text-sm text-muted-foreground">
                         Admin-level access to all resources.
@@ -127,8 +127,8 @@ export function CardsTeamMembers() {
             </PopoverContent>
           </Popover>
         </div>
-        <div className="flex items-center justify-between space-x-4">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between gap-x-4">
+          <div className="flex items-center gap-x-4">
             <Avatar className="h-8 w-8">
               <AvatarImage
                 src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/03.png"
@@ -153,21 +153,21 @@ export function CardsTeamMembers() {
                 <CommandList>
                   <CommandEmpty>No roles found.</CommandEmpty>
                   <CommandGroup className="p-1.5">
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Viewer</p>
                       <p className="text-sm text-muted-foreground">Can view and comment.</p>
                     </CommandItem>
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Developer</p>
                       <p className="text-sm text-muted-foreground">Can view, comment and edit.</p>
                     </CommandItem>
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Billing</p>
                       <p className="text-sm text-muted-foreground">
                         Can view, comment and manage billing.
                       </p>
                     </CommandItem>
-                    <CommandItem className="flex flex-col items-start space-y-1 px-4 py-2">
+                    <CommandItem className="flex flex-col items-start gap-y-1 px-4 py-2">
                       <p>Owner</p>
                       <p className="text-sm text-muted-foreground">
                         Admin-level access to all resources.

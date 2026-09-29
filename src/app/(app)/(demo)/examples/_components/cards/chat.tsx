@@ -85,7 +85,7 @@ export function CardsChat() {
     <>
       <Card>
         <CardHeader className="flex flex-row items-center">
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-x-4">
             <Avatar>
               <AvatarImage
                 src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/01.png"
@@ -147,7 +147,7 @@ export function CardsChat() {
               ]);
               setInput("");
             }}
-            className="flex w-full items-center space-x-2"
+            className="flex w-full items-center gap-x-2"
           >
             <Input
               id="message"

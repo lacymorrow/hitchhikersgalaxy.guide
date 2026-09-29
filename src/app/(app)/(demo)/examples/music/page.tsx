@@ -46,7 +46,7 @@ export default function MusicPage() {
               <Sidebar playlists={playlists} className="hidden lg:block" />
               <div className="col-span-3 lg:col-span-4 lg:border-l">
                 <div className="h-full px-4 py-6 lg:px-8">
-                  <Tabs defaultValue="music" className="h-full space-y-6">
+                  <Tabs defaultValue="music" className="h-full gap-y-6">
                     <div className="space-between flex items-center">
                       <TabsList>
                         <TabsTrigger value="music" className="relative">
@@ -76,7 +76,7 @@ export default function MusicPage() {
                       <Separator className="my-4" />
                       <div className="relative">
                         <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
+                          <div className="flex gap-x-4 pb-4">
                             {listenNowAlbums.map((album) => (
                               <AlbumArtwork
                                 key={album.name}
@@ -100,7 +100,7 @@ export default function MusicPage() {
                       <Separator className="my-4" />
                       <div className="relative">
                         <ScrollArea>
-                          <div className="flex space-x-4 pb-4">
+                          <div className="flex gap-x-4 pb-4">
                             {madeForYouAlbums.map((album) => (
                               <AlbumArtwork
                                 key={album.name}

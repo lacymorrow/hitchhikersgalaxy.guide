@@ -41,21 +41,21 @@ export default function DashboardPage() {
           <div className="flex h-16 items-center px-4">
             <TeamSwitcher />
             <MainNav className="mx-6" />
-            <div className="ml-auto flex items-center space-x-4">
+            <div className="ml-auto flex items-center gap-x-4">
               <Search />
               <UserNav />
             </div>
           </div>
         </div>
         <div className="flex-1 space-y-4 p-8 pt-6">
-          <div className="flex items-center justify-between space-y-2">
+          <div className="flex items-center justify-between gap-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-x-2">
               <CalendarDateRangePicker />
               <Button>Download</Button>
             </div>
           </div>
-          <Tabs defaultValue="overview" className="space-y-4">
+          <Tabs defaultValue="overview" className="gap-y-4">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="analytics" disabled>
@@ -71,7 +71,7 @@ export default function DashboardPage() {
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex flex-row items-center justify-between gap-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -92,7 +92,7 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex flex-row items-center justify-between gap-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Subscriptions</CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -115,7 +115,7 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex flex-row items-center justify-between gap-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Sales</CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -137,7 +137,7 @@ export default function DashboardPage() {
                   </CardContent>
                 </Card>
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex flex-row items-center justify-between gap-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Active Now</CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"

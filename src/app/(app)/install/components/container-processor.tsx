@@ -131,7 +131,7 @@ export const ContainerProcessor = ({
       <Alert variant="destructive">
         <AlertTriangleIcon className="h-4 w-4" />
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription className="space-y-4">
+        <AlertDescription className="gap-y-4">
           <p>{error}</p>
           {logs.length > 0 && (
             <Collapsible open={showLogs} onOpenChange={setShowLogs} className="space-y-2">

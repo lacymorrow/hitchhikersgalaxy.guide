@@ -33,7 +33,7 @@ const columns: ColumnDef<ApiKey>[] = [
     cell: ({ row }) => {
       const key = row.getValue<string>("key");
       return (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-x-2">
           <code className="rounded-lg bg-muted px-2 py-1">
             {key.slice(0, 12)}...{key.slice(-4)}
           </code>

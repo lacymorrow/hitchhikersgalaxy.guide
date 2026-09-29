@@ -78,7 +78,7 @@ export function CardsActivityGoal() {
         <CardDescription>Set your daily activity goal.</CardDescription>
       </CardHeader>
       <CardContent className="pb-2">
-        <div className="flex items-center justify-center space-x-2">
+        <div className="flex items-center justify-center gap-x-2">
           <Button
             variant="outline"
             size="icon"

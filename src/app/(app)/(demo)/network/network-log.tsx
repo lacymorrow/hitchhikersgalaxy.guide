@@ -157,7 +157,7 @@ export const NetworkLog = ({
   return (
     <div className={cn(networkLogVariants({ variant, size }), className)}>
       <div className="flex items-center justify-between border-b border-gray-700 p-4">
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-x-2">
           <h2
             className={cn(
               "font-semibold",
@@ -167,7 +167,7 @@ export const NetworkLog = ({
             Network Activity
           </h2>
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-x-4">
           <Button
             variant="ghost"
             size="icon"
@@ -223,11 +223,11 @@ export const NetworkLog = ({
                       : "bg-gray-800/50 text-gray-300"
                   )}
                 >
-                  <div className="flex items-center space-x-3">
+                  <div className="flex items-center gap-x-3">
                     <StatusIndicator status={request.status} />
                     <span className="max-w-[150px] truncate font-medium">{request.name}</span>
                   </div>
-                  <div className="flex space-x-4 text-xs text-gray-400">
+                  <div className="flex gap-x-4 text-xs text-gray-400">
                     <span>{request.type}</span>
                     <span>{request.size}</span>
                     <span>{request.time}ms</span>

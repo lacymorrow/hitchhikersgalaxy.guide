@@ -88,7 +88,7 @@ export const columns: ColumnDef<GitHubUserData>[] = [
             </div>
           </HoverCardTrigger>
           <HoverCardContent className="w-80">
-            <div className="flex justify-between space-x-4">
+            <div className="flex justify-between gap-x-4">
               <Avatar className="h-12 w-12">
                 <AvatarImage src={details.avatar_url} alt={details.login} />
                 <AvatarFallback>{details.login.slice(0, 2).toUpperCase()}</AvatarFallback>

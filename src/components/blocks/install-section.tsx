@@ -78,7 +78,7 @@ export function InstallSection() {
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <div className="mb-4 flex items-center justify-between">
-            <div className="flex space-x-2">
+            <div className="flex gap-x-2">
               <div className="h-3 w-3 rounded-full bg-gray-100/40" />
               <div className="h-3 w-3 rounded-full bg-gray-100/30" />
               <div className="h-3 w-3 rounded-full bg-gray-100/20" />
@@ -112,7 +112,7 @@ export function InstallSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="flex justify-center space-x-4"
+          className="flex justify-center gap-x-4"
         >
           <Button
             size="lg"

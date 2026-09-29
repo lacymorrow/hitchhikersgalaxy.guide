@@ -208,7 +208,7 @@ export default function AILoadingState({
   return (
     <div className={className ?? "flex min-h-full w-full items-center justify-center"}>
       <div className="w-auto space-y-4">
-        <div className="ml-2 flex items-center space-x-2 font-medium text-gray-600 dark:text-gray-300">
+        <div className="ml-2 flex items-center gap-x-2 font-medium text-gray-600 dark:text-gray-300">
           <LoadingAnimation progress={(sequenceIndex / taskSequences.length) * 100} />
           <span className="text-sm">{currentSequence?.status}...</span>
         </div>

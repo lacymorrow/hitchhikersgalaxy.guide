@@ -31,7 +31,7 @@ shipkit create --template user/repo  # custom template
 What happens:
 
 1. Creates a new GitHub repo from the ShipKit template (falls back to `git clone` if `gh` auth fails)
-2. Sets `upstream` remote to `https://github.com/lacymorrow/shipkit.git`
+2. Sets the `upstream` remote to the template you chose (`https://github.com/shipkit-io/bones.git` by default)
 3. Grafts upstream history with `--allow-unrelated-histories`
 4. Installs dependencies with `bun install`
 

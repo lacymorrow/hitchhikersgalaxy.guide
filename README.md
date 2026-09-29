@@ -52,11 +52,19 @@ No environment variables needed to start! The setup wizard guides you through co
 ## Quick Start
 
 ```bash
-git clone https://github.com/shipkit-io/shipkit
+# Start from Bones (public) and add ShipKit integrations from the registry
+npx create-shipkit my-app
+cd my-app
+bun dev
+
+# Or clone the everything-included repo
+git clone https://github.com/lacymorrow/shipkit
 cd shipkit
 bun install --frozen-lockfile
 bun dev
 ```
+
+ShipKit's upstream is [Bones](https://github.com/shipkit-io/bones). Bones is the root template; ShipKit is the everything-included build that proves the integrations work together.
 
 ## Documentation
 
@@ -71,14 +79,14 @@ bun dev
 
 ShipKit is built and maintained full-time. Your sponsorship directly funds new features and faster releases.
 
-- 💬 [GitHub Discussions](https://github.com/shipkit-io/shipkit/discussions)
+- 💬 [GitHub Discussions](https://github.com/shipkit-io/bones/discussions)
 - 🐦 [Follow Updates](https://twitter.com/lacybuilds)
 - 📧 [Contact](https://shipkit.io/contact)
 - 🌐 [Website](https://shipkit.io)
 
 ## Found a bug?
 
-[GitHub Issues](https://github.com/shipkit-io/shipkit/issues)
+[GitHub Issues](https://github.com/lacymorrow/shipkit/issues)
 
 ## License
 

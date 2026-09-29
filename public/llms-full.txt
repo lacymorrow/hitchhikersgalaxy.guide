@@ -3,11 +3,11 @@
 > Next.js starter kit with auth, CMS, payments, and everything apps need to ship fast.
 
 ## What is ShipKit?
-ShipKit is a production-ready Next.js 15 starter template. Clone it, configure it, deploy to Vercel. Auth, payments, CMS, email, AI, analytics, database, storage, all pre-wired.
+ShipKit is a production-ready Next.js 16 starter template. Clone it, configure it, deploy to Vercel. Auth, payments, CMS, email, AI, analytics, database, storage, all pre-wired.
 
 ## Quick Start
-git clone https://github.com/shipkit-io/shipkit
-cd shipkit
+npx create-shipkit my-app
+cd my-app
 bun install --frozen-lockfile
 bun dev
 
@@ -23,7 +23,7 @@ No environment variables needed to start. The setup wizard guides you through co
 
 ## Links
 - Website: https://shipkit.io
-- GitHub: https://github.com/shipkit-io/shipkit
+- GitHub: https://github.com/lacymorrow/shipkit
 - Free Template: https://github.com/shipkit-io/bones
 - Twitter: https://twitter.com/lacybuilds
 
@@ -70,7 +70,7 @@ Integrated billing and subscription management. Configure your provider and star
 - Vercel Blob: Simple blob storage integrated with the Vercel platform.
 
 ## Tech Stack
-- Next.js 15: React framework with App Router, Server Components, Server Actions, and streaming.
+- Next.js 16: React framework with App Router, Server Components, Server Actions, and streaming.
 - TypeScript: Full type safety across the entire codebase.
 - Tailwind CSS: Utility-first CSS framework for rapid styling.
 - Shadcn/UI: Accessible, composable UI components built on Radix primitives.
@@ -137,6 +137,6 @@ ShipKit includes a `CLAUDE.md` file at the repository root. This file provides A
 ShipKit is open source software. See the repository for license details.
 
 ## Support
-- GitHub Issues: https://github.com/shipkit-io/shipkit/issues
+- GitHub Issues: https://github.com/lacymorrow/shipkit/issues
 - Documentation: https://shipkit.io/docs
 - Twitter: https://twitter.com/lacybuilds

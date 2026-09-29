@@ -221,7 +221,7 @@ export const AISmollmWebGPU = () => {
   return (
     <div className="items mx-auto flex h-screen flex-col justify-end bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
       {status === null && messages.length === 0 && (
-        <div className="scrollbar-thin relative flex h-full flex-col items-center justify-center overflow-auto">
+        <div className="relative flex h-full scrollbar-thin flex-col items-center justify-center overflow-auto">
           <div className="mb-1 flex max-w-[320px] flex-col items-center text-center">
             <img src="logo.png" width="80%" height="auto" alt="SmolLM2 Logo" className="block" />
             <h1 className="mb-1 text-4xl font-bold">SmolLM2 WebGPU</h1>
@@ -274,7 +274,7 @@ export const AISmollmWebGPU = () => {
 
             <button
               type="button"
-              className="select-none rounded-lg border bg-blue-400 px-4 py-2 text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-blue-100"
+              className="rounded-lg border bg-blue-400 px-4 py-2 text-white select-none hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-blue-100"
               onClick={() => {
                 worker.current.postMessage({ type: "load" });
                 setStatus("loading");
@@ -299,7 +299,7 @@ export const AISmollmWebGPU = () => {
       {status === "ready" && (
         <div
           ref={chatContainerRef}
-          className="scrollbar-thin flex h-full w-full flex-col items-center overflow-y-auto"
+          className="flex h-full w-full scrollbar-thin flex-col items-center overflow-y-auto"
         >
           <Chat messages={messages} />
           {messages.length === 0 && (
@@ -357,10 +357,10 @@ export const AISmollmWebGPU = () => {
         </div>
       )}
 
-      <div className="relative mx-auto mb-3 mt-2 flex max-h-[200px] w-[600px] max-w-[80%] rounded-lg border dark:bg-gray-700">
+      <div className="relative mx-auto mt-2 mb-3 flex max-h-[200px] w-[600px] max-w-[80%] rounded-lg border dark:bg-gray-700">
         <textarea
           ref={textareaRef}
-          className="scrollbar-thin w-[550px] resize-none rounded-lg border-none bg-transparent px-3 py-4 text-gray-800 placeholder-gray-500 outline-hidden disabled:cursor-not-allowed disabled:text-gray-400 disabled:placeholder-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
+          className="w-[550px] resize-none scrollbar-thin rounded-lg border-none bg-transparent px-3 py-4 text-gray-800 placeholder-gray-500 outline-hidden disabled:cursor-not-allowed disabled:text-gray-400 disabled:placeholder-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
           placeholder="Type your message..."
           value={input}
           disabled={status !== "ready"}
@@ -386,7 +386,7 @@ export const AISmollmWebGPU = () => {
             }}
             aria-label="Stop generation"
           >
-            <StopIcon className="absolute bottom-3 right-3 h-8 w-8 rounded-md p-1 text-gray-800 dark:text-gray-100" />
+            <StopIcon className="absolute right-3 bottom-3 h-8 w-8 rounded-md p-1 text-gray-800 dark:text-gray-100" />
           </button>
         ) : input.length > 0 ? (
           <button
@@ -400,11 +400,11 @@ export const AISmollmWebGPU = () => {
             }}
             aria-label="Send message"
           >
-            <ArrowRightIcon className="absolute bottom-3 right-3 h-8 w-8 rounded-md bg-gray-800 p-1 text-white dark:bg-gray-100 dark:text-black" />
+            <ArrowRightIcon className="absolute right-3 bottom-3 h-8 w-8 rounded-md bg-gray-800 p-1 text-white dark:bg-gray-100 dark:text-black" />
           </button>
         ) : (
           <div aria-hidden="true">
-            <ArrowRightIcon className="absolute bottom-3 right-3 h-8 w-8 rounded-md bg-gray-200 p-1 text-gray-50 dark:bg-gray-600 dark:text-gray-800" />
+            <ArrowRightIcon className="absolute right-3 bottom-3 h-8 w-8 rounded-md bg-gray-200 p-1 text-gray-50 dark:bg-gray-600 dark:text-gray-800" />
           </div>
         )}
       </div>

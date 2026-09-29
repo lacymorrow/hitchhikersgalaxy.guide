@@ -94,7 +94,7 @@ export function ShipkitIoView() {
       />
       <div className="flex flex-col gap-16 overflow-hidden">
         <ParticlesHero quantity={50} speed={80}>
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 blur-3xl" aria-hidden="true">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 blur-3xl" aria-hidden="true">
             <div
               className="aspect-1155/678 w-[72.1875rem] animate-galaxy-shimmer bg-linear-to-tr from-[#ff80b5] via-[#9089fc] to-[#ff80b5] opacity-0"
               style={{
@@ -120,13 +120,13 @@ export function ShipkitIoView() {
               </BlurFade>
 
               <BlurFade delay={0.5} duration={0.5}>
-                <h1 className="mx-auto max-w-4xl text-balance bg-linear-to-br from-black from-30% to-black/40 bg-clip-text py-6 text-5xl font-medium leading-none tracking-tighter text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-8xl">
+                <h1 className="mx-auto max-w-4xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text py-6 text-5xl leading-none font-medium tracking-tighter text-balance text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40">
                   {headings[0]}
                 </h1>
               </BlurFade>
 
               <BlurFade delay={1} duration={1}>
-                <div className="mb-8 max-w-2xl text-balance text-lg tracking-tight text-muted-foreground md:text-xl">
+                <div className="mb-8 max-w-2xl text-lg tracking-tight text-balance text-muted-foreground md:text-xl">
                   The production stack you&apos;d build yourself if you had three months. Auth,
                   payments, database, CMS, AI. Already wired.
                 </div>

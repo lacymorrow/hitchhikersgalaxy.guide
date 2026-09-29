@@ -105,7 +105,7 @@ export async function TestimonialsGrid() {
           />
         ))}
       </div>
-      <div className="animate-marquee-reverse flex gap-8">
+      <div className="flex animate-marquee-reverse gap-8">
         {secondRow.map((testimonial) => (
           <TestimonialCard
             key={"id" in testimonial ? testimonial.id : testimonial.name}

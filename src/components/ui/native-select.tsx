@@ -8,7 +8,10 @@ function NativeSelect({
   ...props
 }: Omit<React.ComponentProps<"select">, "size"> & { size?: "sm" | "default" }) {
   return (
-    <div className="group/native-select relative w-fit has-[select:disabled]:opacity-50" data-slot="native-select-wrapper">
+    <div
+      className="group/native-select relative w-fit has-[select:disabled]:opacity-50"
+      data-slot="native-select-wrapper"
+    >
       <select
         data-slot="native-select"
         data-size={size}
@@ -30,12 +33,22 @@ function NativeSelect({
 }
 
 function NativeSelectOption({ className, ...props }: React.ComponentProps<"option">) {
-  return <option data-slot="native-select-option" className={cn("bg-[Canvas] text-[CanvasText]", className)} {...props} />;
+  return (
+    <option
+      data-slot="native-select-option"
+      className={cn("bg-[Canvas] text-[CanvasText]", className)}
+      {...props}
+    />
+  );
 }
 
 function NativeSelectOptGroup({ className, ...props }: React.ComponentProps<"optgroup">) {
   return (
-    <optgroup data-slot="native-select-optgroup" className={cn("bg-[Canvas] text-[CanvasText]", className)} {...props} />
+    <optgroup
+      data-slot="native-select-optgroup"
+      className={cn("bg-[Canvas] text-[CanvasText]", className)}
+      {...props}
+    />
   );
 }
 

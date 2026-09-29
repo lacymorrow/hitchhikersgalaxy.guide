@@ -437,7 +437,7 @@ export const ToolsSection = () => {
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex flex-col gap-4 sm:flex-1 sm:flex-row sm:items-center">
           <div className="relative w-full sm:w-[300px] md:w-[350px]">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
               placeholder="Search tools..."
@@ -573,7 +573,7 @@ const ToolCardContent = ({
             <tool.icon className={cn("h-5 w-5 text-primary")} />
           </div>
           <div className="min-w-0 flex-1">
-            <CardTitle className="line-clamp-2 wrap-break-word text-base leading-tight">
+            <CardTitle className="line-clamp-2 text-base leading-tight wrap-break-word">
               {tool.title}
             </CardTitle>
             <div className="text-xs text-muted-foreground">
@@ -598,7 +598,7 @@ const ToolCardContent = ({
               "inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-accent hover:text-accent-foreground"
             }
           >
-            <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+            <ArrowUpRight className="h-4 w-4 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             <span className="sr-only">Open {tool.title} in new tab</span>
           </Link>
         </div>

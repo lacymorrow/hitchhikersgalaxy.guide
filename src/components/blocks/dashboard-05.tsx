@@ -224,7 +224,7 @@ export default function Dashboard() {
             </BreadcrumbList>
           </Breadcrumb>
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search..."
@@ -262,7 +262,7 @@ export default function Dashboard() {
               >
                 <CardHeader className="pb-3">
                   <CardTitle>Your Orders</CardTitle>
-                  <CardDescription className="max-w-lg text-balance leading-relaxed">
+                  <CardDescription className="max-w-lg leading-relaxed text-balance">
                     Introducing Our Dynamic Orders Dashboard for Seamless Management and Insightful
                     Analysis.
                   </CardDescription>
@@ -566,7 +566,7 @@ export default function Dashboard() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-3">
                     <div className="font-semibold">Shipping Information</div>
-                    <address className="grid gap-0.5 not-italic text-muted-foreground">
+                    <address className="grid gap-0.5 text-muted-foreground not-italic">
                       <span>Liam Johnson</span>
                       <span>1234 Main St.</span>
                       <span>Anytown, CA 12345</span>
@@ -617,7 +617,7 @@ export default function Dashboard() {
                 <div className="text-xs text-muted-foreground">
                   Updated <time dateTime="2023-11-23">November 23, 2023</time>
                 </div>
-                <Pagination className="ml-auto mr-0 w-auto">
+                <Pagination className="mr-0 ml-auto w-auto">
                   <PaginationContent>
                     <PaginationItem>
                       <Button size="icon" variant="outline" className="h-6 w-6">

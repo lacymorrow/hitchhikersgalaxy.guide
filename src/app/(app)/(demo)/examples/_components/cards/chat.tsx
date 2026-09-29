@@ -94,7 +94,7 @@ export function CardsChat() {
               <AvatarFallback>OM</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium leading-none">Sofia Davis</p>
+              <p className="text-sm leading-none font-medium">Sofia Davis</p>
               <p className="text-sm text-muted-foreground">m@example.com</p>
             </div>
           </div>
@@ -166,7 +166,7 @@ export function CardsChat() {
       </Card>
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="gap-0 p-0 outline-hidden">
-          <DialogHeader className="px-4 pb-4 pt-5">
+          <DialogHeader className="px-4 pt-5 pb-4">
             <DialogTitle>New message</DialogTitle>
             <DialogDescription>
               Invite a user to this thread. This will create a new group message.
@@ -198,7 +198,7 @@ export function CardsChat() {
                       <AvatarFallback>{user.name[0]}</AvatarFallback>
                     </Avatar>
                     <div className="ml-2">
-                      <p className="text-sm font-medium leading-none">{user.name}</p>
+                      <p className="text-sm leading-none font-medium">{user.name}</p>
                       <p className="text-sm text-muted-foreground">{user.email}</p>
                     </div>
                     {selectedUsers.includes(user) ? (

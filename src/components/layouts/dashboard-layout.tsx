@@ -11,7 +11,7 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
     <SidebarLayout>
       <div
         // The app shell sets its own type scale: 13/20 with tabular figures, like a native toolbar.
-        className="flex min-h-svh w-full flex-col text-[13px] tabular-nums leading-5"
+        className="flex min-h-svh w-full flex-col text-[13px] leading-5 tabular-nums"
         style={
           {
             "--header-height": "2.75rem",

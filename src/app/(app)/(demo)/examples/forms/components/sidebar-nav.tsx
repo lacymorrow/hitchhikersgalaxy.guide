@@ -17,10 +17,7 @@ export function SidebarNav({ className, items, ...props }: SidebarNavProps) {
   const pathname = usePathname();
 
   return (
-    <nav
-      className={cn("flex gap-x-2 lg:flex-col lg:gap-x-0 lg:gap-y-1", className)}
-      {...props}
-    >
+    <nav className={cn("flex gap-x-2 lg:flex-col lg:gap-x-0 lg:gap-y-1", className)} {...props}>
       {items.map((item) => (
         <Link
           key={item.href}

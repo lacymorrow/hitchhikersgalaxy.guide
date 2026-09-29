@@ -33,7 +33,7 @@ export function CardsTeamMembers() {
               <AvatarFallback>OM</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium leading-none">Sofia Davis</p>
+              <p className="text-sm leading-none font-medium">Sofia Davis</p>
               <p className="text-sm text-muted-foreground">m@example.com</p>
             </div>
           </div>
@@ -85,7 +85,7 @@ export function CardsTeamMembers() {
               <AvatarFallback>JL</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium leading-none">Jackson Lee</p>
+              <p className="text-sm leading-none font-medium">Jackson Lee</p>
               <p className="text-sm text-muted-foreground">p@example.com</p>
             </div>
           </div>
@@ -137,7 +137,7 @@ export function CardsTeamMembers() {
               <AvatarFallback>IN</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium leading-none">Isabella Nguyen</p>
+              <p className="text-sm leading-none font-medium">Isabella Nguyen</p>
               <p className="text-sm text-muted-foreground">i@example.com</p>
             </div>
           </div>

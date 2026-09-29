@@ -47,8 +47,7 @@ function ScrollArea({
     const element = viewportRef.current;
     if (!element) return;
 
-    const { scrollTop, scrollLeft, scrollWidth, clientWidth, scrollHeight, clientHeight } =
-      element;
+    const { scrollTop, scrollLeft, scrollWidth, clientWidth, scrollHeight, clientHeight } = element;
     setShowMask((prev) => ({
       ...prev,
       top: scrollTop > 0,
@@ -98,7 +97,7 @@ function ScrollArea({
             ref={viewportRef}
             data-slot="scroll-area-viewport"
             className={cn(
-              "size-full overflow-auto rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1 focus-visible:ring-ring/50",
+              "size-full overflow-auto rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1",
               viewportClassName
             )}
           >
@@ -121,7 +120,7 @@ function ScrollArea({
             ref={viewportRef}
             data-slot="scroll-area-viewport"
             className={cn(
-              "size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1 focus-visible:ring-ring/50",
+              "size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50 focus-visible:outline-1",
               viewportClassName
             )}
           >
@@ -153,9 +152,9 @@ function ScrollBar({
       orientation={orientation}
       data-slot="scroll-area-scrollbar"
       className={cn(
-        "flex touch-none select-none p-px transition-[colors] duration-150 hover:bg-muted data-[state=visible]:animate-in data-[state=hidden]:animate-out data-[state=hidden]:fade-out-0 data-[state=visible]:fade-in-0 dark:hover:bg-muted/50",
+        "flex touch-none p-px transition-[colors] duration-150 select-none hover:bg-muted data-[state=hidden]:animate-out data-[state=hidden]:fade-out-0 data-[state=visible]:animate-in data-[state=visible]:fade-in-0 dark:hover:bg-muted/50",
         orientation === "vertical" && "h-full w-2.5 border-l border-l-transparent",
-        orientation === "horizontal" && "pr-1.25 h-2.5 flex-col border-t border-t-transparent px-1",
+        orientation === "horizontal" && "h-2.5 flex-col border-t border-t-transparent px-1 pr-1.25",
         className
       )}
       {...props}

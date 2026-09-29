@@ -139,9 +139,9 @@ export const Cover = ({
       >
         {children}
       </motion.span>
-      <CircleIcon className="absolute right-[-2px] top-[-2px]" />
-      <CircleIcon className="absolute bottom-[-2px] right-[-2px]" delay={0.4} />
-      <CircleIcon className="absolute left-[-2px] top-[-2px]" delay={0.8} />
+      <CircleIcon className="absolute top-[-2px] right-[-2px]" />
+      <CircleIcon className="absolute right-[-2px] bottom-[-2px]" delay={0.4} />
+      <CircleIcon className="absolute top-[-2px] left-[-2px]" delay={0.8} />
       <CircleIcon className="absolute bottom-[-2px] left-[-2px]" delay={1.6} />
     </div>
   );

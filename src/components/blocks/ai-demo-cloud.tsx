@@ -155,7 +155,7 @@ export const AIDemoCloud: React.FC = () => {
     <>
       <div className="mb-8 grid grid-cols-1 gap-8 md:grid-cols-2">
         <Card className="relative overflow-hidden p-6">
-          <div className="absolute right-0 top-0 p-2">
+          <div className="absolute top-0 right-0 p-2">
             <Bot className="h-5 w-5 text-primary" />
           </div>
           <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
@@ -203,7 +203,7 @@ export const AIDemoCloud: React.FC = () => {
         </Card>
 
         <Card className="relative overflow-hidden p-6">
-          <div className="absolute right-0 top-0 p-2">
+          <div className="absolute top-0 right-0 p-2">
             <Sparkles className="h-5 w-5 text-yellow-500" />
           </div>
           <h3 className="mb-4 flex items-center gap-2 text-lg font-semibold">
@@ -235,7 +235,7 @@ export const AIDemoCloud: React.FC = () => {
               <Button
                 size="icon"
                 variant="outline"
-                className="absolute bottom-2 right-2 h-8 w-8 rounded-full opacity-90 transition-opacity hover:opacity-100"
+                className="absolute right-2 bottom-2 h-8 w-8 rounded-full opacity-90 transition-opacity hover:opacity-100"
                 onClick={() => scrollToBottom(responseRef.current)}
               >
                 <Send className="h-4 w-4 rotate-90" />

@@ -458,7 +458,7 @@ export function AIVoiceDemo() {
 
           {(transcript || currentStream) && (
             <div className="mt-4 rounded-lg bg-muted p-4">
-              <p className="whitespace-pre-wrap text-sm">
+              <p className="text-sm whitespace-pre-wrap">
                 {transcript}
                 {currentStream && (
                   <>

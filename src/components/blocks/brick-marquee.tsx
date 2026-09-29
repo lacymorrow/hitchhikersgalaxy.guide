@@ -221,7 +221,7 @@ export function BrickMarquee() {
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="hover:scale-120 mx-2 inline-block transform text-primary-foreground transition-transform duration-300 ease-in-out hover:text-primary-foreground/80"
+                  className="mx-2 inline-block transform text-primary-foreground transition-transform duration-300 ease-in-out hover:scale-120 hover:text-primary-foreground/80"
                   style={{ textShadow: "0 1px 2px rgba(0,0,0,0.2)" }}
                 >
                   <span>{link.name}</span>

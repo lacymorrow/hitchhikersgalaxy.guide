@@ -4,7 +4,7 @@ export const Spotlight = ({ className }: { className?: string }) => {
   return (
     <div className={cn("relative flex h-[600px] w-[600px] flex-col gap-20", className)}>
       <svg
-        className="md:-top-50 pointer-events-none absolute -left-20 -top-40 z-1 h-[119%] w-[288%] animate-spotlight opacity-0 md:left-60 lg:h-[169%] lg:w-[94%]"
+        className="pointer-events-none absolute -top-40 -left-20 z-1 h-[119%] w-[288%] animate-spotlight opacity-0 md:-top-50 md:left-60 lg:h-[169%] lg:w-[94%]"
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 3787 2842"
         fill="none"

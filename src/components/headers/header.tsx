@@ -296,7 +296,7 @@ export const Header: React.FC<HeaderProps> = ({
                           <TooltipContent
                             side="bottom"
                             sideOffset={3}
-                            className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
+                            className="-mt-3 border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none select-none data-[state=delayed-open]:animate-fadeDown"
                           >
                             <LoginButton className="hover:text-foreground">or Login</LoginButton>
                           </TooltipContent>

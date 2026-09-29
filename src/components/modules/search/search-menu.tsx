@@ -141,7 +141,7 @@ export function SearchMenu({
           <ShortcutDisplay
             action={ShortcutAction.OPEN_SEARCH}
             className={cn(
-              "pointer-events-none absolute right-[0.3rem] top-[0.3rem] text-xs",
+              "pointer-events-none absolute top-[0.3rem] right-[0.3rem] text-xs",
               "transition-opacity duration-300",
               collapsible ? "hidden xl:flex" : "hidden lg:flex",
               isClient ? "opacity-100" : "opacity-0"

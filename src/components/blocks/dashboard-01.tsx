@@ -93,7 +93,7 @@ export default function Dashboard() {
         <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
           <form className="ml-auto flex-1 sm:flex-initial">
             <div className="relative">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
               <Input
                 type="search"
                 placeholder="Search products..."
@@ -296,7 +296,7 @@ export default function Dashboard() {
                   <AvatarFallback>OM</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">Olivia Martin</p>
+                  <p className="text-sm leading-none font-medium">Olivia Martin</p>
                   <p className="text-sm text-muted-foreground">olivia.martin@email.com</p>
                 </div>
                 <div className="ml-auto font-medium">+$1,999.00</div>
@@ -310,7 +310,7 @@ export default function Dashboard() {
                   <AvatarFallback>JL</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">Jackson Lee</p>
+                  <p className="text-sm leading-none font-medium">Jackson Lee</p>
                   <p className="text-sm text-muted-foreground">jackson.lee@email.com</p>
                 </div>
                 <div className="ml-auto font-medium">+$39.00</div>
@@ -321,7 +321,7 @@ export default function Dashboard() {
                   <AvatarFallback>IN</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">Isabella Nguyen</p>
+                  <p className="text-sm leading-none font-medium">Isabella Nguyen</p>
                   <p className="text-sm text-muted-foreground">isabella.nguyen@email.com</p>
                 </div>
                 <div className="ml-auto font-medium">+$299.00</div>
@@ -335,7 +335,7 @@ export default function Dashboard() {
                   <AvatarFallback>WK</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">William Kim</p>
+                  <p className="text-sm leading-none font-medium">William Kim</p>
                   <p className="text-sm text-muted-foreground">will@email.com</p>
                 </div>
                 <div className="ml-auto font-medium">+$99.00</div>
@@ -346,7 +346,7 @@ export default function Dashboard() {
                   <AvatarFallback>SD!</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
-                  <p className="text-sm font-medium leading-none">Sofia Davis</p>
+                  <p className="text-sm leading-none font-medium">Sofia Davis</p>
                   <p className="text-sm text-muted-foreground">sofia.davis@email.com</p>
                 </div>
                 <div className="ml-auto font-medium">+$39.00</div>

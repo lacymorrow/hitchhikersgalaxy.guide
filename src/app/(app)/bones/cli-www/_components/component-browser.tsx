@@ -139,7 +139,7 @@ const ComponentCard = memo(
         onClick={() => onOpenSidebar(component)}
       >
         <div
-          className="absolute left-0 top-0 h-0 w-0 border-8 border-transparent"
+          className="absolute top-0 left-0 h-0 w-0 border-8 border-transparent"
           style={{ borderTopColor: registryColor, borderLeftColor: registryColor }}
         />
         {/* <div className="absolute top-0 right-0 w-0 h-0 border-8 border-transparent" style={{ borderTopColor: categoryColor, borderRightColor: categoryColor }} /> */}
@@ -147,7 +147,7 @@ const ComponentCard = memo(
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <div className="absolute bottom-0 right-0 h-0 w-0 cursor-help border-8 border-transparent border-b-emerald-500 border-r-emerald-500" />
+                <div className="absolute right-0 bottom-0 h-0 w-0 cursor-help border-8 border-transparent border-r-emerald-500 border-b-emerald-500" />
               </TooltipTrigger>
               <TooltipContent side="left">
                 <p className="text-xs">Installed</p>
@@ -494,7 +494,7 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-4 right-4 z-50 w-[500px]"
+          className="fixed right-4 bottom-4 z-50 w-[500px]"
         >
           <Card className="border-black/10 bg-[#1E1E1E] shadow-2xl">
             <div className="relative">
@@ -524,7 +524,7 @@ export function ComponentBrowser({ currentStyle: initialStyle = "modern" }: Comp
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="absolute right-1 top-1 z-10 h-6 w-6 p-0 text-zinc-400 hover:text-zinc-300"
+                  className="absolute top-1 right-1 z-10 h-6 w-6 p-0 text-zinc-400 hover:text-zinc-300"
                   onClick={hideInstallation}
                   disabled={installationProgress.status === "installing"}
                 >

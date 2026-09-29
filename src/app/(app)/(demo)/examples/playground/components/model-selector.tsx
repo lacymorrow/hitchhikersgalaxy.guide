@@ -59,11 +59,11 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
           <HoverCard>
             <HoverCardContent side="left" align="start" forceMount className="min-h-[280px]">
               <div className="grid gap-2">
-                <h4 className="font-medium leading-none">{peekedModel?.name}</h4>
+                <h4 className="leading-none font-medium">{peekedModel?.name}</h4>
                 <div className="text-sm text-muted-foreground">{peekedModel?.description}</div>
                 {peekedModel?.strengths && (
                   <div className="mt-4 grid gap-2">
-                    <h5 className="text-sm font-medium leading-none">Strengths</h5>
+                    <h5 className="text-sm leading-none font-medium">Strengths</h5>
                     <ul className="text-sm text-muted-foreground">{peekedModel?.strengths}</ul>
                   </div>
                 )}

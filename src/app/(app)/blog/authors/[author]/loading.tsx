@@ -45,7 +45,7 @@ export default function AuthorPageLoading() {
                   <div className="flex flex-wrap gap-2">
                     <Skeleton className="h-8 w-20" />
                     <Skeleton className="h-8 w-16" />
-                    <Skeleton className="w-18 h-8" />
+                    <Skeleton className="h-8 w-18" />
                   </div>
                 </div>
 

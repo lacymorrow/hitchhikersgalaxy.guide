@@ -106,7 +106,7 @@ export function UserMenuDropdown({
       >
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col gap-1">
-            <p className="text-sm font-medium leading-none">{user?.name ?? "Guest User"}</p>
+            <p className="text-sm leading-none font-medium">{user?.name ?? "Guest User"}</p>
             <p className="text-xs leading-none text-muted-foreground">
               {user?.email ?? "Not signed in"}
             </p>

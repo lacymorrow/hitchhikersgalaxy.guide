@@ -5,7 +5,7 @@ import logoImage from "@/public/logo.png";
 export const BlogHero = () => {
   return (
     <header className="px-4 py-12 sm:px-6 lg:px-8">
-      <div className="relative mx-auto max-w-[37.5rem] pb-20 pt-20 text-center">
+      <div className="relative mx-auto max-w-[37.5rem] pt-20 pb-20 text-center">
         <div className="flex items-center justify-center gap-x-3">
           {/* <Icon name="logo" className="w-10 h-10" /> */}
           <Image src={logoImage} alt="Shipkit" width={100} height={100} priority />

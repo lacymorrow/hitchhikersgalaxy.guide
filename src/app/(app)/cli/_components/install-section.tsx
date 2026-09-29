@@ -86,7 +86,7 @@ export function InstallSection() {
           {!isMobile && (
             <CopyButton
               value={installCommand}
-              className="absolute right-2 top-2"
+              className="absolute top-2 right-2"
               successTitle="Command Copied!"
               successDescription="Paste it in your terminal to install Bones CLI."
             />
@@ -98,7 +98,7 @@ export function InstallSection() {
               <div className="h-2 w-2 rounded-full bg-gray-100/20" />
             </div>
           </div>
-          <div className="flex w-full flex-wrap items-center justify-center gap-2 break-all font-mono text-sm sm:text-base md:text-lg">
+          <div className="flex w-full flex-wrap items-center justify-center gap-2 font-mono text-sm break-all sm:text-base md:text-lg">
             {!isMobile && <Terminal className="mr-2 inline text-blue-400" />}
             <button
               ref={textRef}

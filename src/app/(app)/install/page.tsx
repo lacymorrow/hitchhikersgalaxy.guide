@@ -94,7 +94,7 @@ export default function InstallPage() {
     <div className="min-h-screen bg-linear-to-b from-background to-muted/30 dark:from-background dark:to-background/80">
       <div className="bg-grid-pattern pointer-events-none absolute inset-0 opacity-[0.03]" />
 
-      <div className="container relative mx-auto max-w-4xl px-4 py-12">
+      <div className="relative container mx-auto max-w-4xl px-4 py-12">
         {/* Header */}
         <div className="mb-8 space-y-2">
           <div className="mb-4 flex items-center justify-center">

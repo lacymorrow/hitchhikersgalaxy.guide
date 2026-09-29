@@ -278,7 +278,7 @@ export function FileDropzone() {
   return (
     <div className="h-auto w-full p-8">
       <motion.div
-        className={`relative size-full cursor-pointer rounded-xl border-2 border-dashed p-12 text-center transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 ${
+        className={`relative size-full cursor-pointer rounded-xl border-2 border-dashed p-12 text-center transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden ${
           isDragActive
             ? "border-blue-500 bg-blue-500/5"
             : "border-neutral-300 hover:border-neutral-400 dark:border-neutral-700 dark:hover:border-neutral-500"
@@ -316,8 +316,8 @@ export function FileDropzone() {
               initial={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
             >
-              <Upload className="pointer-events-none mx-auto size-8 select-none text-blue-500" />
-              <p className="pointer-events-none mt-2 select-none text-sm text-blue-500">
+              <Upload className="pointer-events-none mx-auto size-8 text-blue-500 select-none" />
+              <p className="pointer-events-none mt-2 text-sm text-blue-500 select-none">
                 Drop files here...
               </p>
             </motion.div>
@@ -329,7 +329,7 @@ export function FileDropzone() {
               transition={{ duration: 0.2 }}
             >
               <Upload className="mx-auto size-8 text-neutral-400 dark:text-neutral-500" />
-              <p className="mt-2 text-balance text-sm font-medium tracking-tighter text-neutral-400 dark:text-neutral-500">
+              <p className="mt-2 text-sm font-medium tracking-tighter text-balance text-neutral-400 dark:text-neutral-500">
                 Drag and drop files here, or click to select
               </p>
             </motion.div>
@@ -354,7 +354,7 @@ export function FileDropzone() {
                 key={file.id}
               >
                 <div
-                  className={`absolute left-0 top-0 z-0 h-full rounded-lg transition-all duration-300 ${getStatusColor(
+                  className={`absolute top-0 left-0 z-0 h-full rounded-lg transition-all duration-300 ${getStatusColor(
                     file.status
                   )}`}
                   style={{ width: `${file.progress}%`, opacity: 0.2 }}
@@ -400,7 +400,7 @@ export function FileDropzone() {
                   ) : (
                     <button
                       type="button"
-                      className="mr-2 rounded-sm text-red-500 transition-colors hover:text-red-600 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                      className="mr-2 rounded-sm text-red-500 transition-colors hover:text-red-600 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden"
                       onClick={(e) => {
                         e.stopPropagation();
                         handleDeleteFile(file);

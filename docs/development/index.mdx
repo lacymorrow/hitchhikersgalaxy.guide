@@ -177,7 +177,10 @@ To add or loosen a contract, edit the `contracts` array under `shadcn/no-restyle
 for the contract and custom-message format. To silence a specific, reviewed exception:
 
 ```tsx
-{/* eslint-disable-next-line shadcn/no-restyle -- reason */}
+<Button
+  // eslint-disable-next-line shadcn/no-restyle -- reason
+  className="p-4"
+/>
 ```
 
 ## Before Production

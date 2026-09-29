@@ -39,7 +39,7 @@ const Beam = ({
         } as React.CSSProperties
       }
       className={
-        "absolute left-(--x) top-0 aspect-[1/var(--aspect-ratio)] [background:var(--background)] w-(--width)"
+        "absolute top-0 left-(--x) aspect-[1/var(--aspect-ratio)] w-(--width) [background:var(--background)]"
       }
       initial={{ y: "100cqmax", x: "-50%" }}
       animate={{ y: "-100%", x: "-50%" }}
@@ -94,11 +94,11 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
           } as React.CSSProperties
         }
         className={
-          "pointer-events-none absolute left-0 top-0 size-full overflow-hidden [clip-path:inset(0)] @container-size perspective-(--perspective) transform-3d"
+          "@container-size pointer-events-none absolute top-0 left-0 size-full overflow-hidden [clip-path:inset(0)] perspective-(--perspective) transform-3d"
         }
       >
         {/* top side */}
-        <div className="absolute bg-size-[var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] @container h-[100cqmax] origin-[50%_0%] transform-3d transform-[rotateX(-90deg)] w-[100cqi]">
+        <div className="@container absolute h-[100cqmax] w-[100cqi] origin-[50%_0%] transform-[rotateX(-90deg)] bg-size-[var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] transform-3d">
           {topBeams.map((beam, index) => (
             <Beam
               // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
@@ -111,7 +111,7 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
           ))}
         </div>
         {/* bottom side */}
-        <div className="absolute top-full bg-size-[var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] @container h-[100cqmax] origin-[50%_0%] transform-3d transform-[rotateX(-90deg)] w-[100cqi]">
+        <div className="@container absolute top-full h-[100cqmax] w-[100cqi] origin-[50%_0%] transform-[rotateX(-90deg)] bg-size-[var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] transform-3d">
           {bottomBeams.map((beam, index) => (
             <Beam
               // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
@@ -124,7 +124,7 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
           ))}
         </div>
         {/* left side */}
-        <div className="absolute left-0 top-0 bg-size-[var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] @container h-[100cqmax] origin-[0%_0%] transform-3d transform-[rotate(90deg)_rotateX(-90deg)] w-[100cqh]">
+        <div className="@container absolute top-0 left-0 h-[100cqmax] w-[100cqh] origin-[0%_0%] transform-[rotate(90deg)_rotateX(-90deg)] bg-size-[var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] transform-3d">
           {leftBeams.map((beam, index) => (
             <Beam
               // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
@@ -137,7 +137,7 @@ export const WarpBackground: React.FC<WarpBackgroundProps> = ({
           ))}
         </div>
         {/* right side */}
-        <div className="absolute right-0 top-0 bg-size-[var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] @container h-[100cqmax] origin-[100%_0%] transform-3d transform-[rotate(-90deg)_rotateX(-90deg)] w-[100cqh]">
+        <div className="@container absolute top-0 right-0 h-[100cqmax] w-[100cqh] origin-[100%_0%] transform-[rotate(-90deg)_rotateX(-90deg)] bg-size-[var(--beam-size)_var(--beam-size)] [background:linear-gradient(var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_-0.5px_/var(--beam-size)_var(--beam-size),linear-gradient(90deg,var(--grid-color)_0_1px,transparent_1px_var(--beam-size))_50%_50%_/var(--beam-size)_var(--beam-size)] transform-3d">
           {rightBeams.map((beam, index) => (
             <Beam
               // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index

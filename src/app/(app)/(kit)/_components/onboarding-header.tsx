@@ -8,7 +8,7 @@ export function OnboardingHeader() {
   return (
     <div className="relative overflow-hidden bg-linear-to-r from-primary/5 via-primary/10 to-primary/5 py-16">
       <div className="bg-grid-pattern absolute inset-0 opacity-5" />
-      <div className="container relative mx-auto px-4">
+      <div className="relative container mx-auto px-4">
         <div className="mx-auto max-w-4xl text-center">
           <div className="mb-6 flex items-center justify-center gap-2">
             <CheckCircle className="h-8 w-8 text-green-500" />
@@ -17,7 +17,7 @@ export function OnboardingHeader() {
             </Badge>
           </div>
 
-          <h1 className="mb-4 text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl md:text-6xl">
+          <h1 className="mb-4 text-4xl font-bold tracking-tight text-balance text-foreground sm:text-5xl md:text-6xl">
             Welcome to{" "}
             <span className="bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Shipkit

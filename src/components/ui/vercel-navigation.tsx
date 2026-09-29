@@ -91,7 +91,7 @@ export const VercelNavigation = ({
             {elementFocused === index && (
               <motion.div
                 animate={{ opacity: 1, scale: 1 }}
-                className="absolute bottom-0 left-0 right-0 top-0 -z-10 rounded-md bg-neutral-200 dark:bg-neutral-800"
+                className="absolute top-0 right-0 bottom-0 left-0 -z-10 rounded-md bg-neutral-200 dark:bg-neutral-800"
                 exit={{ opacity: 0, scale: 0.9 }}
                 initial={{ opacity: 0, scale: 0.95 }}
                 layout={true}

@@ -11,13 +11,13 @@ export function WaitlistHeroWithStats() {
       {/* Grid pattern overlay */}
       <div className="bg-grid-small-black/[0.02] dark:bg-grid-small-white/[0.02] absolute inset-0" />
 
-      <div className="container relative z-10 px-4 md:px-6">
+      <div className="relative z-10 container px-4 md:px-6">
         <div className="mx-auto max-w-4xl text-center">
           {/* Content from WaitlistHero but with server-side stats */}
           <WaitlistHero />
 
           {/* Replace the hardcoded stats with real ones */}
-          <div className="absolute left-1/2 top-[60%] w-full max-w-4xl -translate-x-1/2 -translate-y-1/2 transform">
+          <div className="absolute top-[60%] left-1/2 w-full max-w-4xl -translate-x-1/2 -translate-y-1/2 transform">
             <Suspense
               fallback={
                 <div className="mb-12 flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">

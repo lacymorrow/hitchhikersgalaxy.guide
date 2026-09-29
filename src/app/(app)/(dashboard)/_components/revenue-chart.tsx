@@ -41,7 +41,7 @@ export const RevenueChart = () => {
           </div>
         </div>
         <div className="flex items-baseline gap-2 pt-1">
-          <span className="text-3xl font-semibold tabular-nums tracking-tight">$7,340</span>
+          <span className="text-3xl font-semibold tracking-tight tabular-nums">$7,340</span>
           <span className="text-xs text-muted-foreground">today</span>
         </div>
       </CardHeader>

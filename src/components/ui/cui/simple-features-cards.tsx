@@ -49,7 +49,7 @@ export function SimpleFeaturesCards() {
       {data.map((card, index) => (
         <Card
           className={cn(
-            "transform-gpu hover:rotate-0 hover:scale-110",
+            "transform-gpu hover:scale-110 hover:rotate-0",
             index % 2 === 0 ? "rotate-12" : "-rotate-12",
             `-translate-x-[${index * 30}px]`
           )}
@@ -77,7 +77,7 @@ function Card({
   return (
     <div
       className={cn(
-        "h-42 group flex w-28 rotate-12 transform-gpu flex-col rounded-xl border border-neutral-500/30 bg-white p-3 shadow-2xl shadow-neutral-500/30 transition-all hover:shadow-xl dark:bg-neutral-800",
+        "group flex h-42 w-28 rotate-12 transform-gpu flex-col rounded-xl border border-neutral-500/30 bg-white p-3 shadow-2xl shadow-neutral-500/30 transition-all hover:shadow-xl dark:bg-neutral-800",
         className
       )}
     >

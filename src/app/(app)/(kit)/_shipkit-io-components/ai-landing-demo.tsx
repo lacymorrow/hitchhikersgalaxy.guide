@@ -297,7 +297,7 @@ export function AILandingDemo() {
 
         {output && (
           <div className="mt-4 rounded-lg bg-muted p-4">
-            <p className="whitespace-pre-wrap text-sm">{output}</p>
+            <p className="text-sm whitespace-pre-wrap">{output}</p>
           </div>
         )}
       </form>

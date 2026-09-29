@@ -221,7 +221,7 @@ function SortableListItem({
             >
               <button
                 type="button"
-                className="inline-flex h-10 items-center justify-center whitespace-nowrap rounded-md px-3 text-sm font-medium transition-colors duration-150 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+                className="inline-flex h-10 items-center justify-center rounded-md px-3 text-sm font-medium whitespace-nowrap transition-colors duration-150 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
                 onClick={() => onRemoveItem(item.id)}
               >
                 <Trash className="h-4 w-4 fill-red-400/60 text-red-400 transition-colors duration-150" />

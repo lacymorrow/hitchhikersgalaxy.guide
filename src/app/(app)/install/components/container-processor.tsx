@@ -164,7 +164,7 @@ export const ContainerProcessor = ({
                       </span>
                       {log.data && typeof log.data === "string" && (
                         <pre
-                          className={`mt-1 whitespace-pre-wrap wrap-break-word pl-6 ${
+                          className={`mt-1 pl-6 wrap-break-word whitespace-pre-wrap ${
                             log.data.includes("Ok to proceed?") ||
                             log.data.includes("Need to install")
                               ? "text-yellow-300"
@@ -246,7 +246,7 @@ export const ContainerProcessor = ({
                       </span>
                       {log.data && typeof log.data === "string" && (
                         <pre
-                          className={`mt-1 whitespace-pre-wrap wrap-break-word pl-6 ${
+                          className={`mt-1 pl-6 wrap-break-word whitespace-pre-wrap ${
                             log.data.includes("Ok to proceed?") ||
                             log.data.includes("Need to install")
                               ? "text-yellow-300"

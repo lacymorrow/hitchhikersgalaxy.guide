@@ -14,7 +14,7 @@ export function Section({ title, children, visible = true }: SectionProps) {
 
   return (
     <section className="mb-10">
-      <h2 className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+      <h2 className="mb-4 text-xs font-bold tracking-[0.2em] text-muted-foreground uppercase">
         {title}
       </h2>
       {children}
@@ -174,7 +174,7 @@ export function ExtrasSection({
           {references.map((r) => (
             <blockquote
               key={r.name}
-              className="border-l-2 border-muted pl-4 text-sm italic text-muted-foreground"
+              className="border-l-2 border-muted pl-4 text-sm text-muted-foreground italic"
             >
               <p>&quot;{r.reference}&quot;</p>
               <footer className="mt-1 text-xs font-medium not-italic">— {r.name}</footer>

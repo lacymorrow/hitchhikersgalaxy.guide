@@ -38,8 +38,7 @@ const buttonVariants = cva(
 );
 
 export interface ButtonProps
-  extends React.ComponentProps<"button">,
-    VariantProps<typeof buttonVariants> {
+  extends React.ComponentProps<"button">, VariantProps<typeof buttonVariants> {
   asChild?: boolean;
   /** @deprecated unused — kept for backward compatibility with existing call sites */
   icon?: React.ElementType;
@@ -67,7 +66,7 @@ function Button({
       data-slot="button"
       data-variant={variant}
       data-size={size}
-      data-haptic={noHaptics ? undefined : hapticPattern ?? "light"}
+      data-haptic={noHaptics ? undefined : (hapticPattern ?? "light")}
       className={cn(buttonVariants({ variant, size, className }))}
       {...props}
     />

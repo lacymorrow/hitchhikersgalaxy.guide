@@ -139,7 +139,7 @@ export const Footer: React.FC<FooterProps> = ({
 
   return (
     <footer className={cn(footerStyles({ variant }), className)} {...rest}>
-      <div className="container relative flex w-full flex-col items-stretch gap-2xl py-2xl md:min-h-80">
+      <div className="relative container flex w-full flex-col items-stretch gap-2xl py-2xl md:min-h-80">
         <div className="flex flex-col justify-between gap-2xl lg:flex-row">
           <div className="flex flex-col gap-2xl">
             <Link href={routes.home}>
@@ -212,9 +212,7 @@ export const Footer: React.FC<FooterProps> = ({
           <TextHoverEffect text={siteConfig.title} />
         </div>
       </div>
-      <RetroGrid
-        className={"hidden mask-[linear-gradient(to_top,white,transparent)] md:block"}
-      />
+      <RetroGrid className={"hidden mask-[linear-gradient(to_top,white,transparent)] md:block"} />
     </footer>
   );
 };

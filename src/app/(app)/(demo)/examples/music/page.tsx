@@ -57,7 +57,7 @@ export default function MusicPage() {
                           Live
                         </TabsTrigger>
                       </TabsList>
-                      <div className="ml-auto mr-4">
+                      <div className="mr-4 ml-auto">
                         <Button>
                           <PlusCircle />
                           Add music

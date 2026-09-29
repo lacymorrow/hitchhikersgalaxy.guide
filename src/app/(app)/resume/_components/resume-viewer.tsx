@@ -104,7 +104,7 @@ export function ResumeViewer({ data }: { data: ResumeSchema }) {
       </div>
 
       {/* Mobile filter FAB */}
-      <div className="fixed bottom-6 right-6 z-50 lg:hidden print:hidden">
+      <div className="fixed right-6 bottom-6 z-50 lg:hidden print:hidden">
         <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
           <SheetTrigger asChild>
             <Button size="lg" className="h-14 w-14 rounded-full shadow-lg">

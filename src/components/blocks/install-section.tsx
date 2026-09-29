@@ -84,7 +84,7 @@ export function InstallSection() {
               <div className="h-3 w-3 rounded-full bg-gray-100/20" />
             </div>
           </div>
-          <div className="relative flex w-full items-center justify-center break-all font-mono text-sm sm:text-base md:text-lg">
+          <div className="relative flex w-full items-center justify-center font-mono text-sm break-all sm:text-base md:text-lg">
             <Terminal className="mr-2 inline text-blue-400" />
             <button
               ref={textRef}

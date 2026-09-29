@@ -38,7 +38,7 @@ export const TableOfContents = ({ headings }: TableOfContentsProps) => {
   }, [headings]);
 
   return (
-    <nav className="sticky top-20 max-h-[calc(100vh-8rem)] overflow-y-auto overflow-x-hidden rounded-lg border bg-card p-4 shadow-xs">
+    <nav className="sticky top-20 max-h-[calc(100vh-8rem)] overflow-x-hidden overflow-y-auto rounded-lg border bg-card p-4 shadow-xs">
       <h4 className="mb-4 font-semibold text-foreground">On This Page</h4>
       <ul className="space-y-2.5 text-sm">
         {headings.map((heading) => (

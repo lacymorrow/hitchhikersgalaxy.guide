@@ -28,7 +28,7 @@ export const NotFoundPage = ({
           <NotFoundTerminalBackground />
         </div>
 
-        <div className="container relative z-10 flex h-full w-full flex-col items-center justify-center px-4 sm:px-6">
+        <div className="relative z-10 container flex h-full w-full flex-col items-center justify-center px-4 sm:px-6">
           <Card
             className={cn(
               "mx-auto w-full max-w-md bg-background/80 backdrop-blur-xs",

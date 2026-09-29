@@ -298,7 +298,7 @@ export default function Charts() {
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="grid auto-rows-min gap-2">
-              <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+              <div className="flex items-baseline gap-1 text-2xl leading-none font-bold tabular-nums">
                 12,453
                 <span className="text-sm font-normal text-muted-foreground">steps/day</span>
               </div>
@@ -342,7 +342,7 @@ export default function Charts() {
               </ChartContainer>
             </div>
             <div className="grid auto-rows-min gap-2">
-              <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+              <div className="flex items-baseline gap-1 text-2xl leading-none font-bold tabular-nums">
                 10,103
                 <span className="text-sm font-normal text-muted-foreground">steps/day</span>
               </div>
@@ -398,7 +398,7 @@ export default function Charts() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
-            <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
+            <div className="flex items-baseline gap-1 text-3xl leading-none font-bold tabular-nums">
               12.5
               <span className="text-sm font-normal text-muted-foreground">miles/day</span>
             </div>
@@ -534,7 +534,7 @@ export default function Charts() {
             <div className="flex w-full items-center gap-2">
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-xs text-muted-foreground">Move</div>
-                <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-2xl leading-none font-bold tabular-nums">
                   562
                   <span className="text-sm font-normal text-muted-foreground">kcal</span>
                 </div>
@@ -542,7 +542,7 @@ export default function Charts() {
               <Separator orientation="vertical" className="mx-2 h-10 w-px" />
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-xs text-muted-foreground">Exercise</div>
-                <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-2xl leading-none font-bold tabular-nums">
                   73
                   <span className="text-sm font-normal text-muted-foreground">min</span>
                 </div>
@@ -550,7 +550,7 @@ export default function Charts() {
               <Separator orientation="vertical" className="mx-2 h-10 w-px" />
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-xs text-muted-foreground">Stand</div>
-                <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-2xl leading-none font-bold tabular-nums">
                   14
                   <span className="text-sm font-normal text-muted-foreground">hr</span>
                 </div>
@@ -568,21 +568,21 @@ export default function Charts() {
             <div className="grid items-center gap-2">
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-sm text-muted-foreground">Move</div>
-                <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-xl leading-none font-bold tabular-nums">
                   562/600
                   <span className="text-sm font-normal text-muted-foreground">kcal</span>
                 </div>
               </div>
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-sm text-muted-foreground">Exercise</div>
-                <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-xl leading-none font-bold tabular-nums">
                   73/120
                   <span className="text-sm font-normal text-muted-foreground">min</span>
                 </div>
               </div>
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-sm text-muted-foreground">Stand</div>
-                <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-xl leading-none font-bold tabular-nums">
                   8/12
                   <span className="text-sm font-normal text-muted-foreground">hr</span>
                 </div>
@@ -648,7 +648,7 @@ export default function Charts() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-2">
-            <div className="flex items-baseline gap-2 text-3xl font-bold tabular-nums leading-none">
+            <div className="flex items-baseline gap-2 text-3xl leading-none font-bold tabular-nums">
               1,254
               <span className="text-sm font-normal text-muted-foreground">kcal/day</span>
             </div>
@@ -792,7 +792,7 @@ export default function Charts() {
                   formatter={(value) => (
                     <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
                       Time in bed
-                      <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                      <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium text-foreground tabular-nums">
                         {value}
                         <span className="font-normal text-muted-foreground">hr</span>
                       </div>

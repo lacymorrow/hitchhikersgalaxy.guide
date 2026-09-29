@@ -66,7 +66,7 @@ export default function PlaygroundPage() {
                 <div className="grid gap-2">
                   <HoverCard openDelay={200}>
                     <HoverCardTrigger asChild>
-                      <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                      <span className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                         Mode
                       </span>
                     </HoverCardTrigger>

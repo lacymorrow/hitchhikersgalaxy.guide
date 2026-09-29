@@ -79,7 +79,7 @@ export function ComponentDetails({
         exit={{ opacity: 0, scale: 0.95 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
         className={cn(
-          "fixed bottom-4 right-4 top-4 z-50 w-[600px] bg-background shadow-2xl",
+          "fixed top-4 right-4 bottom-4 z-50 w-[600px] bg-background shadow-2xl",
           currentStyle === "brutalist" ? "border-2 border-primary" : "rounded-lg border"
         )}
       >

@@ -73,8 +73,8 @@ export async function LaunchPageContent() {
             </div>
           </Section>
 
-          <div className="container relative z-10 mx-auto mt-header flex flex-col items-center justify-center gap-4 text-center">
-            <h1 className="text-balance bg-linear-to-b from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-transparent sm:text-5xl lg:text-6xl">
+          <div className="relative z-10 container mx-auto mt-header flex flex-col items-center justify-center gap-4 text-center">
+            <h1 className="bg-linear-to-b from-foreground to-foreground/70 bg-clip-text text-4xl font-bold tracking-tight text-balance text-transparent sm:text-5xl lg:text-6xl">
               Launch Your App Today
             </h1>
             <p className="max-w-[42rem] leading-normal text-muted-foreground sm:text-xl sm:leading-8">

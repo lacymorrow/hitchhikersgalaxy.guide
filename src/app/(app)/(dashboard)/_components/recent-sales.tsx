@@ -14,7 +14,7 @@ export function RecentSales() {
             <AvatarFallback>{sale.fallback}</AvatarFallback>
           </Avatar>
           <div className="min-w-0">
-            <p className="truncate font-medium leading-4">{sale.name}</p>
+            <p className="truncate leading-4 font-medium">{sale.name}</p>
             <p className="truncate text-[11px] leading-4 text-muted-foreground">{sale.email}</p>
           </div>
           <div className="ml-auto font-medium tabular-nums">{sale.amount.replace(/^\+/, "")}</div>

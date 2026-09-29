@@ -88,7 +88,7 @@ export const BrowserSidebar = memo(
               </Badge>
             </div>
             <div className="relative">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute top-2.5 left-2 h-4 w-4 text-muted-foreground" />
               <Input
                 id="search"
                 placeholder="Search components..."

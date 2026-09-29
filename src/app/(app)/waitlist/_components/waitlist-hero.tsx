@@ -48,7 +48,7 @@ export function WaitlistHero() {
         <div className="absolute inset-0 bg-linear-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-800" />
         <div className="absolute inset-0 opacity-40">
           <div
-            className="absolute -left-1/4 top-1/4 h-96 w-96 animate-pulse rounded-full bg-linear-to-br from-violet-400/20 to-transparent blur-3xl"
+            className="absolute top-1/4 -left-1/4 h-96 w-96 animate-pulse rounded-full bg-linear-to-br from-violet-400/20 to-transparent blur-3xl"
             style={{ animationDuration: "6s" }}
           />
           <div
@@ -62,7 +62,7 @@ export function WaitlistHero() {
         />
       </div>
 
-      <div className="container relative z-10 px-4 text-center md:px-6">
+      <div className="relative z-10 container px-4 text-center md:px-6">
         <div className="mx-auto max-w-4xl">
           {/* Launch Badge */}
           <div className="mb-8 flex justify-center">
@@ -76,7 +76,7 @@ export function WaitlistHero() {
           </div>
 
           {/* Main Headline */}
-          <h1 className="mb-6 text-balance text-5xl font-bold tracking-tight md:text-6xl lg:text-7xl">
+          <h1 className="mb-6 text-5xl font-bold tracking-tight text-balance md:text-6xl lg:text-7xl">
             <span className="block bg-linear-to-r from-violet-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">
               Ship in Days
             </span>
@@ -84,7 +84,7 @@ export function WaitlistHero() {
           </h1>
 
           {/* Value Proposition */}
-          <p className="mx-auto mb-8 max-w-2xl text-xl leading-relaxed text-slate-600 dark:text-slate-300 md:text-2xl">
+          <p className="mx-auto mb-8 max-w-2xl text-xl leading-relaxed text-slate-600 md:text-2xl dark:text-slate-300">
             The Next.js starter that actually works.{" "}
             <span className="font-semibold text-slate-900 dark:text-white">
               Auth, payments, database, and deployment

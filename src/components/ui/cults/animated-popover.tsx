@@ -214,7 +214,7 @@ export function PopoverLabel({ children, className }: PopoverLabelProps) {
         opacity: note ? 0 : 1,
       }}
       className={cn(
-        "absolute left-4 top-3 select-none text-sm text-zinc-500 dark:text-zinc-400",
+        "absolute top-3 left-4 text-sm text-zinc-500 select-none dark:text-zinc-400",
         className
       )}
     >
@@ -282,7 +282,7 @@ export function PopoverSubmitButton({ className }: PopoverSubmitButtonProps) {
   return (
     <button
       className={cn(
-        "relative ml-1 flex h-8 shrink-0 scale-100 select-none appearance-none items-center justify-center rounded-lg border border-zinc-950/10 bg-transparent px-2 text-sm text-zinc-500 transition-colors hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:text-zinc-50 dark:hover:bg-zinc-800",
+        "relative ml-1 flex h-8 shrink-0 scale-100 appearance-none items-center justify-center rounded-lg border border-zinc-950/10 bg-transparent px-2 text-sm text-zinc-500 transition-colors select-none hover:bg-zinc-100 hover:text-zinc-800 focus-visible:ring-2 active:scale-[0.98] dark:border-zinc-50/10 dark:text-zinc-50 dark:hover:bg-zinc-800",
         className
       )}
       type="submit"

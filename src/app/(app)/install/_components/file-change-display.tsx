@@ -181,7 +181,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
                       Binary file content cannot be displayed.
                     </div>
                   ) : (
-                    <pre className="whitespace-pre-wrap rounded-md bg-slate-900 p-4 font-mono text-sm text-slate-50">
+                    <pre className="rounded-md bg-slate-900 p-4 font-mono text-sm whitespace-pre-wrap text-slate-50">
                       {selectedFile.content}
                     </pre>
                   )}

@@ -83,7 +83,7 @@ export const CustomInstallDialog = memo(({ onInstall }: CustomInstallDialogProps
       <PopoverContent className="w-[400px] p-4" onClick={(e) => e.stopPropagation()}>
         <div className="space-y-4">
           <div className="space-y-2">
-            <h4 className="font-medium leading-none">Install Component</h4>
+            <h4 className="leading-none font-medium">Install Component</h4>
             <p className="text-sm text-muted-foreground">
               Enter any component URL or install command.
             </p>

@@ -131,7 +131,7 @@ export function ConsoleComponent({ onCreateTestKey, apiKey }: ConsoleComponentPr
           )}
           {isRunning && (
             <motion.div
-              className="absolute bottom-4 right-4 h-4 w-4 rounded-full bg-green-500"
+              className="absolute right-4 bottom-4 h-4 w-4 rounded-full bg-green-500"
               animate={{
                 scale: [1, 1.5, 1],
                 opacity: [0.7, 0.3, 0.7],

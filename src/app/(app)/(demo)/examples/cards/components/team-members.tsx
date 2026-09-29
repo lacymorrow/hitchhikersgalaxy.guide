@@ -28,7 +28,7 @@ export function DemoTeamMembers() {
               <AvatarFallback>OM</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium leading-none">Sofia Davis</p>
+              <p className="text-sm leading-none font-medium">Sofia Davis</p>
               <p className="text-sm text-muted-foreground">m@example.com</p>
             </div>
           </div>
@@ -77,7 +77,7 @@ export function DemoTeamMembers() {
               <AvatarFallback>JL</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm font-medium leading-none">Jackson Lee</p>
+              <p className="text-sm leading-none font-medium">Jackson Lee</p>
               <p className="text-sm text-muted-foreground">p@example.com</p>
             </div>
           </div>

@@ -299,7 +299,7 @@ export const SearchAi = ({
           <ShortcutDisplay
             action={ShortcutAction.OPEN_SEARCH}
             className={cn(
-              "pointer-events-none absolute right-[0.3rem] top-[0.3rem] text-xs",
+              "pointer-events-none absolute top-[0.3rem] right-[0.3rem] text-xs",
               "transition-opacity duration-300",
               collapsible ? "hidden xl:flex" : "hidden lg:flex",
               isClient ? "opacity-100" : "opacity-0"
@@ -326,7 +326,7 @@ export const SearchAi = ({
                       ref={textareaRef}
                       placeholder="What would you like to know?"
                       className={cn(
-                        "w-full max-w-full resize-none text-wrap rounded-2xl border-none bg-transparent pb-3 pr-10 pt-3 leading-[1.2] text-black placeholder:text-black/70 focus:ring-3 focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-white dark:placeholder:text-white/70",
+                        "w-full max-w-full resize-none rounded-2xl border-none bg-transparent pt-3 pr-10 pb-3 leading-[1.2] text-wrap text-black placeholder:text-black/70 focus:ring-3 focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-white dark:placeholder:text-white/70",
                         `min-h-[${MIN_HEIGHT}px]`
                       )}
                       value={query}
@@ -381,7 +381,7 @@ export const SearchAi = ({
                   variant="ghost"
                   size="icon"
                   className={cn(
-                    "absolute right-3 top-3 h-4 w-4 transition-all duration-200 dark:text-white",
+                    "absolute top-3 right-3 h-4 w-4 transition-all duration-200 dark:text-white",
                     query ? "scale-100 opacity-100" : "scale-95 opacity-30"
                   )}
                 >

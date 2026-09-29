@@ -193,7 +193,7 @@ export function MailDisplay({ mail }: MailDisplayProps) {
             )}
           </div>
           <Separator />
-          <div className="flex-1 whitespace-pre-wrap p-4 text-sm">{mail.text}</div>
+          <div className="flex-1 p-4 text-sm whitespace-pre-wrap">{mail.text}</div>
           <Separator className="mt-auto" />
           <div className="p-4">
             <form>

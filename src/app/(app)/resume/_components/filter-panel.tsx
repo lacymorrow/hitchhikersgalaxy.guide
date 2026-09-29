@@ -85,7 +85,7 @@ export function FilterPanel({
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between px-4 pb-2 pt-4">
+      <div className="flex items-center justify-between px-4 pt-4 pb-2">
         <h2 className="text-sm font-semibold">Filters</h2>
         <div className="flex items-center gap-1">
           <Button variant="ghost" size="icon" className="h-7 w-7" onClick={reset}>
@@ -109,7 +109,7 @@ export function FilterPanel({
       <div className="flex-1 space-y-5 overflow-y-auto px-4 py-3">
         {/* Preset */}
         <div>
-          <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <Label className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
             Preset
           </Label>
           <Select value={filters.activePreset ?? ""} onValueChange={setPreset}>
@@ -128,7 +128,7 @@ export function FilterPanel({
 
         {/* Sections */}
         <div>
-          <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <Label className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
             Sections
           </Label>
           <div className="mt-2 space-y-2">
@@ -152,7 +152,7 @@ export function FilterPanel({
 
         {/* Match mode */}
         <div>
-          <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <Label className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
             Tag Matching
           </Label>
           <Select
@@ -182,7 +182,7 @@ export function FilterPanel({
         {/* Tags */}
         <div>
           <div className="flex items-center justify-between">
-            <Label className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            <Label className="text-xs font-medium tracking-wider text-muted-foreground uppercase">
               Technologies
             </Label>
             {filters.selectedTags.length > 0 && (

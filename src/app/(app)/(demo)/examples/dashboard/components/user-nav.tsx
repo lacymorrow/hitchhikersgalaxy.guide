@@ -28,7 +28,7 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col gap-1">
-            <p className="text-sm font-medium leading-none">shadcn</p>
+            <p className="text-sm leading-none font-medium">shadcn</p>
             <p className="text-xs leading-none text-muted-foreground">m@example.com</p>
           </div>
         </DropdownMenuLabel>

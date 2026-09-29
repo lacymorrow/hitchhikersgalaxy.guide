@@ -181,7 +181,7 @@ export function TeamSwitcher({
                   <span className="truncate font-semibold">
                     {activeTeam?.team?.name || "Select Team"}
                   </span>
-                  <span className="truncate text-xs capitalize text-muted-foreground">
+                  <span className="truncate text-xs text-muted-foreground capitalize">
                     {activeTeam?.role || "No team selected"}
                     {activeTeam?.team?.type === "personal" && " (Personal)"}
                   </span>

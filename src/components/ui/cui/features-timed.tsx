@@ -68,7 +68,7 @@ export const FeaturesTimed = () => {
   return (
     <div className="container">
       <div className="mb-20 text-center">
-        <p className="mb-2 text-sm font-medium uppercase text-neutral-500">How does it work ?</p>
+        <p className="mb-2 text-sm font-medium text-neutral-500 uppercase">How does it work ?</p>
 
         <h2 className="mb-4 text-3xl font-semibold tracking-tighter text-neutral-800 dark:text-neutral-300">
           How to use the Easiest component librairy : Cuicui
@@ -165,7 +165,7 @@ const TextComponent = ({
         <div className="w-full px-4 pb-4">
           <div className="relative h-1 w-full overflow-hidden rounded-full">
             <div
-              className={cn("absolute left-0 top-0 h-1 bg-neutral-500")}
+              className={cn("absolute top-0 left-0 h-1 bg-neutral-500")}
               style={{ width: `${loadingWidthPercent}%` }}
             />
           </div>

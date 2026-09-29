@@ -458,7 +458,7 @@ const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
                   <button
                     type="button"
                     className={cn(
-                      "ml-1 rounded-full outline-hidden ring-offset-background focus:ring-2 focus:ring-ring focus:ring-offset-2",
+                      "ml-1 rounded-full ring-offset-background outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2",
                       (disabled || option.fixed) && "hidden"
                     )}
                     onKeyDown={(e) => {
@@ -531,7 +531,7 @@ const MultiSelect = React.forwardRef<MultiSelectRef, MultiSelectProps>(
         <div className="relative">
           {open && (
             <CommandList
-              className="absolute top-1 z-10 w-full rounded-md border bg-popover text-popover-foreground shadow-md outline-hidden animate-in"
+              className="absolute top-1 z-10 w-full animate-in rounded-md border bg-popover text-popover-foreground shadow-md outline-hidden"
               onMouseLeave={() => {
                 setOnScrollbar(false);
               }}

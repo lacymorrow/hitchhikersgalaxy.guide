@@ -128,11 +128,11 @@ const NeonGradientCard: React.FC<NeonGradientCardProps> = ({
       <div
         className={cn(
           "relative size-full min-h-[inherit] rounded-(--card-content-radius) bg-gray-100 p-3",
-          "before:absolute before:-left-(--border-size) before:-top-(--border-size) before:-z-10 before:block",
+          "before:absolute before:-top-(--border-size) before:-left-(--border-size) before:-z-10 before:block",
           "before:h-(--pseudo-element-height) before:w-(--pseudo-element-width) before:rounded-(--border-radius) before:content-['']",
           "before:bg-[linear-gradient(0deg,var(--neon-first-color),var(--neon-second-color))] before:bg-size-[100%_200%]",
           "before:animate-background-position-spin",
-          "after:absolute after:-left-(--border-size) after:-top-(--border-size) after:-z-10 after:block",
+          "after:absolute after:-top-(--border-size) after:-left-(--border-size) after:-z-10 after:block",
           "after:h-(--pseudo-element-height) after:w-(--pseudo-element-width) after:rounded-(--border-radius) after:blur-(--after-blur) after:content-['']",
           "after:bg-[linear-gradient(0deg,var(--neon-first-color),var(--neon-second-color))] after:bg-size-[100%_200%] after:opacity-80",
           "after:animate-background-position-spin",

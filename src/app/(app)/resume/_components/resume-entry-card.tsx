@@ -47,11 +47,11 @@ export function ResumeEntryCard({
       data-match={isMatched}
       className="group relative border-l-2 border-border py-4 pl-6 transition-all duration-300 data-[match=false]:opacity-25 data-[match=false]:grayscale-50"
     >
-      <div className="absolute left-[-5px] top-6 h-2 w-2 rounded-full bg-primary transition-colors group-data-[match=false]:bg-muted" />
+      <div className="absolute top-6 left-[-5px] h-2 w-2 rounded-full bg-primary transition-colors group-data-[match=false]:bg-muted" />
 
       <div className="flex items-start justify-between gap-2">
         <div>
-          <h3 className="font-semibold leading-tight">
+          <h3 className="leading-tight font-semibold">
             {url ? (
               <a
                 href={url}

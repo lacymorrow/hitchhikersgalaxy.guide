@@ -64,7 +64,7 @@ export const SubscribeForm: React.FC = () => {
           variant="outline"
           disabled={status === "loading"}
           className={cn(
-            "absolute bottom-0 right-0 top-0 z-10 rounded-s-none border-0 border-s-0 bg-transparent text-primary"
+            "absolute top-0 right-0 bottom-0 z-10 rounded-s-none border-0 border-s-0 bg-transparent text-primary"
           )}
         >
           {status === "loading" ? (

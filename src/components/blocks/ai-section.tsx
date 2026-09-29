@@ -88,10 +88,10 @@ export function ${prompt
               onChange={(e) => setPrompt(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Ask v0 a question..."
-              className="h-[60px] border-0 bg-transparent px-6 text-lg text-white shadow-none outline-hidden ring-0 placeholder:text-white/50 focus-visible:ring-0"
+              className="h-[60px] border-0 bg-transparent px-6 text-lg text-white shadow-none ring-0 outline-hidden placeholder:text-white/50 focus-visible:ring-0"
               disabled={isGenerating}
             />
-            <div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-1.5">
+            <div className="absolute top-1/2 right-3 flex -translate-y-1/2 items-center gap-1.5">
               <div className="h-6 w-px bg-white/10" />
               <Button
                 size="icon"

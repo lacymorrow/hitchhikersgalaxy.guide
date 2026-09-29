@@ -40,7 +40,7 @@ const IntegrationCard = ({ status }: { status: IntegrationStatus }) => {
         <CardDescription>Configuration Status</CardDescription>
       </CardHeader>
       <CardContent className="flex grow flex-col justify-between">
-        <div className="mb-4 flex items-start gap-x-2 break-all text-sm">
+        <div className="mb-4 flex items-start gap-x-2 text-sm break-all">
           {status.configured ? (
             <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-green-600" />
           ) : (

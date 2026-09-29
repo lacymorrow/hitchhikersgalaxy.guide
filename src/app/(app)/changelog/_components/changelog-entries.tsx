@@ -21,14 +21,14 @@ export async function ChangelogEntries() {
 
   return (
     <div className="relative space-y-0">
-      <div className="absolute bottom-2 left-[7px] top-2 w-px bg-border" />
+      <div className="absolute top-2 bottom-2 left-[7px] w-px bg-border" />
 
       {entries.map((entry) => {
         const date = formatDate(entry.publishedAt);
         const size = describeEntrySize(entry);
         return (
           <div key={entry.slug} className="relative pb-10 pl-8">
-            <div className="absolute left-0 top-1.5 h-[15px] w-[15px] rounded-full border-2 border-primary bg-background" />
+            <div className="absolute top-1.5 left-0 h-[15px] w-[15px] rounded-full border-2 border-primary bg-background" />
 
             <div className="mb-1 flex items-center gap-3">
               {entry.badge && (

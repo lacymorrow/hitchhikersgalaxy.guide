@@ -48,7 +48,7 @@ export const BlogAuthors = ({ authors }: BlogAuthorsProps) => {
             <Link
               key={isNewAuthor ? author.id : `legacy-${i}`}
               href={authorUrl}
-              className="rounded-full focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              className="rounded-full focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden"
               aria-label={`View ${displayName}'s profile`}
             >
               {imageElement}

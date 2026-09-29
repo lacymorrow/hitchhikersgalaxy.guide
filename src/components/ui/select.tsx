@@ -7,10 +7,7 @@ import { Select as SelectPrimitive } from "radix-ui";
 import { haptic } from "@/hooks/use-haptics";
 import { cn } from "@/lib/utils";
 
-function Select({
-  onValueChange,
-  ...props
-}: React.ComponentProps<typeof SelectPrimitive.Root>) {
+function Select({ onValueChange, ...props }: React.ComponentProps<typeof SelectPrimitive.Root>) {
   return (
     <SelectPrimitive.Root
       data-slot="select"

@@ -43,8 +43,8 @@ export default function CliPage() {
             </pre>
             <div className="space-y-1 text-sm text-muted-foreground">
               <p>
-                <code className="rounded-lg bg-muted px-1 text-xs">-t, --template</code> Template repo
-                (owner/name)
+                <code className="rounded-lg bg-muted px-1 text-xs">-t, --template</code> Template
+                repo (owner/name)
               </p>
               <p>
                 <code className="rounded-lg bg-muted px-1 text-xs">-d, --directory</code> Target
@@ -54,8 +54,8 @@ export default function CliPage() {
                 <code className="rounded-lg bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
               </p>
               <p>
-                <code className="rounded-lg bg-muted px-1 text-xs">--no-install</code> Skip installing
-                dependencies
+                <code className="rounded-lg bg-muted px-1 text-xs">--no-install</code> Skip
+                installing dependencies
               </p>
             </div>
           </CardContent>
@@ -99,8 +99,8 @@ export default function CliPage() {
             </pre>
             <div className="space-y-1 text-sm text-muted-foreground">
               <p>
-                <code className="rounded-lg bg-muted px-1 text-xs">--open</code> Open the Vercel import
-                page in your browser
+                <code className="rounded-lg bg-muted px-1 text-xs">--open</code> Open the Vercel
+                import page in your browser
               </p>
               <p>
                 <code className="rounded-lg bg-muted px-1 text-xs">-y, --yes</code> Skip prompts

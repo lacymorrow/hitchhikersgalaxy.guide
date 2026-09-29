@@ -93,7 +93,7 @@ export default async function ChangelogEntryPage({ params }: Props) {
           )}
         </header>
 
-        <div className="prose prose-neutral max-w-none dark:prose-invert">
+        <div className="prose max-w-none prose-neutral dark:prose-invert">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.content}</ReactMarkdown>
         </div>
       </article>

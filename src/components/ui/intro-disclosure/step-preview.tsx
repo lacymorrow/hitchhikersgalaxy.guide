@@ -46,7 +46,7 @@ export function StepPreview({ step, direction }: { step: Step; direction: 1 | -1
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={controls}
-            className="absolute bottom-0 left-0 right-0 p-6"
+            className="absolute right-0 bottom-0 left-0 p-6"
           >
             <h3 className="mb-2 text-2xl font-semibold text-white">{step.title}</h3>
             <p className="hidden text-white md:block">{step.full_description}</p>

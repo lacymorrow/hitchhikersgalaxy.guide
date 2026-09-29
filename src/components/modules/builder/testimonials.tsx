@@ -92,7 +92,7 @@ export const Testimonials = ({ title, subtitle, testimonials }: TestimonialsProp
             variant="outline"
             size="icon"
             className={cn(
-              "absolute left-0 top-1/2 -translate-x-full -translate-y-1/2",
+              "absolute top-1/2 left-0 -translate-x-full -translate-y-1/2",
               !canScrollPrev && "cursor-not-allowed opacity-50"
             )}
             onClick={scrollPrev}
@@ -104,7 +104,7 @@ export const Testimonials = ({ title, subtitle, testimonials }: TestimonialsProp
             variant="outline"
             size="icon"
             className={cn(
-              "absolute right-0 top-1/2 -translate-y-1/2 translate-x-full",
+              "absolute top-1/2 right-0 translate-x-full -translate-y-1/2",
               !canScrollNext && "cursor-not-allowed opacity-50"
             )}
             onClick={scrollNext}

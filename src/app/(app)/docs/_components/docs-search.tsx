@@ -300,7 +300,7 @@ export function DocsSearch() {
   return (
     <>
       <div className="relative w-full">
-        <MagnifyingGlassIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
+        <MagnifyingGlassIcon className="absolute top-3 left-2 h-4 w-4 text-muted-foreground" />
         <Input
           className="h-9 w-full rounded-[0.5rem] bg-background pl-8 text-sm text-muted-foreground"
           placeholder="Search docs..."

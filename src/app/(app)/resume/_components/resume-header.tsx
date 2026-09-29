@@ -54,7 +54,7 @@ export function ResumeHeader({ basics }: { basics: ResumeBasics }) {
         })}
       </div>
 
-      <p className="mt-4 whitespace-pre-line text-sm leading-relaxed">
+      <p className="mt-4 text-sm leading-relaxed whitespace-pre-line">
         {basics.summary.split("\n\n")[0]}
       </p>
     </header>

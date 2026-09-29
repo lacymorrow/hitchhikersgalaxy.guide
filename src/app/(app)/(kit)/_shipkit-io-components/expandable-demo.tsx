@@ -209,7 +209,7 @@ export function ProductShowcaseCard() {
                           animate={{ opacity: 1, width: "auto" }}
                           exit={{ opacity: 0, width: 0 }}
                           transition={{ duration: 0.2 }}
-                          className="ml-2 overflow-hidden whitespace-nowrap text-sm text-gray-600 dark:text-gray-400"
+                          className="ml-2 overflow-hidden text-sm whitespace-nowrap text-gray-600 dark:text-gray-400"
                         >
                           (128 reviews)
                         </motion.span>
@@ -220,7 +220,7 @@ export function ProductShowcaseCard() {
                           animate={{ opacity: 1, width: "auto" }}
                           exit={{ opacity: 0, width: 0 }}
                           transition={{ duration: 0.2 }}
-                          className="ml-2 overflow-hidden whitespace-nowrap text-sm text-gray-600 dark:text-gray-400"
+                          className="ml-2 overflow-hidden text-sm whitespace-nowrap text-gray-600 dark:text-gray-400"
                         >
                           (128)
                         </motion.span>

@@ -27,7 +27,7 @@ export default async function DashboardPage() {
   return (
     <div className="flex-1 space-y-5 p-4 pt-5 md:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-lg font-semibold leading-6 tracking-[-0.02em]">Dashboard</h1>
+        <h1 className="text-lg leading-6 font-semibold tracking-[-0.02em]">Dashboard</h1>
         <DownloadSection
           isAuthenticated={!!session.user?.id}
           isCustomer={isCustomer || isUserAdmin}

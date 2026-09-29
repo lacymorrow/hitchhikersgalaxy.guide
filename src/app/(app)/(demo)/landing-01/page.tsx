@@ -89,7 +89,7 @@ export default function FeaturesPage() {
               <Rocket className="mr-2 h-5 w-5" />
               <span className="px-2 py-1 text-sm font-medium">Ship Faster</span>
             </div>
-            <h2 className="mb-8 mt-4 text-3xl font-bold">Ready to Start Building?</h2>
+            <h2 className="mt-4 mb-8 text-3xl font-bold">Ready to Start Building?</h2>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Button size="lg" className="gap-2">
                 Get Started

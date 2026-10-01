@@ -29,34 +29,44 @@ export const activityIcons: Record<string, LucideIcon> = {
 // ---------------------------------------------------------------------------
 export interface StatItem {
   title: string;
-  value: string;
-  change: string;
+  /** Plain number so the strip can count up to it. */
+  value: number;
+  prefix?: string;
+  /** The change, as a short chip: "+20.1%". */
+  delta: string;
+  /** What the change is against: "vs last month". */
+  deltaLabel: string;
   Icon: LucideIcon;
 }
 
 export const stats: StatItem[] = [
   {
-    title: "Total Revenue",
-    value: "$45,231.89",
-    change: "+20.1% from last month",
+    title: "Revenue",
+    value: 45231.89,
+    prefix: "$",
+    delta: "+20.1%",
+    deltaLabel: "vs last month",
     Icon: DollarSign,
   },
   {
     title: "Subscriptions",
-    value: "+2,350",
-    change: "+180.1% from last month",
+    value: 2350,
+    delta: "+180.1%",
+    deltaLabel: "vs last month",
     Icon: Users,
   },
   {
     title: "Sales",
-    value: "+12,234",
-    change: "+19% from last month",
+    value: 12234,
+    delta: "+19.0%",
+    deltaLabel: "vs last month",
     Icon: CreditCard,
   },
   {
-    title: "Active Now",
-    value: "+573",
-    change: "+201 since last hour",
+    title: "Active now",
+    value: 573,
+    delta: "+201",
+    deltaLabel: "in the last hour",
     Icon: Activity,
   },
 ];

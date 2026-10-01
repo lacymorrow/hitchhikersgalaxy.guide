@@ -8,13 +8,13 @@ export default function Loading() {
         <Skeleton className="h-4 w-[80%]" />
       </div>
       <div className="space-y-4">
-        <Skeleton className="h-4 w-[100%]" />
+        <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-[90%]" />
         <Skeleton className="h-4 w-[80%]" />
         <Skeleton className="h-4 w-[85%]" />
       </div>
       <div className="space-y-4">
-        <Skeleton className="h-4 w-[100%]" />
+        <Skeleton className="h-4 w-full" />
         <Skeleton className="h-4 w-[90%]" />
         <Skeleton className="h-4 w-[95%]" />
         <Skeleton className="h-4 w-[85%]" />

@@ -7,7 +7,7 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import {
 	Facebook,
 	Link as LinkIcon,
@@ -32,7 +32,6 @@ export const Share = ({
 	via = "shipkit",
 	className,
 }: ShareProps) => {
-	const { toast } = useToast();
 	const pathname = usePathname();
 	const url = `${process.env.NEXT_PUBLIC_APP_URL}${pathname}`;
 
@@ -46,37 +45,23 @@ export const Share = ({
 		try {
 			if (navigator?.share) {
 				await navigator.share(shareData);
-				toast({
-					title: "Shared!",
-					description: "Content shared successfully",
-				});
+				toast("Shared!", { description: "Content shared successfully" });
 			} else {
 				throw new Error("Native sharing not supported");
 			}
 		} catch (error) {
 			console.error("Error sharing:", error);
-			toast({
-				title: "Error",
-				description: "Failed to share content",
-				variant: "destructive",
-			});
+			toast.error("Error", { description: "Failed to share content" });
 		}
 	};
 
 	const handleCopyLink = async () => {
 		try {
 			await navigator.clipboard.writeText(url);
-			toast({
-				title: "Copied!",
-				description: "Link copied to clipboard",
-			});
+			toast("Copied!", { description: "Link copied to clipboard" });
 		} catch (error) {
 			console.error("Error copying:", error);
-			toast({
-				title: "Error",
-				description: "Failed to copy link",
-				variant: "destructive",
-			});
+			toast.error("Error", { description: "Failed to copy link" });
 		}
 	};
 

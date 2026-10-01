@@ -93,7 +93,7 @@ export function Attribution({
         <div className="container flex items-center justify-between">
           <Content />
           {children}
-          <button onClick={handleClose} type="button" className="absolute right-2 top-2">
+          <button onClick={handleClose} type="button" className="absolute top-2 right-2">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -104,7 +104,7 @@ export function Attribution({
   if (variant === "popover" && isOpen) {
     return (
       <Card className={cn(builtByVariants({ variant }), className)} {...props}>
-        <button onClick={handleClose} type="button" className="absolute right-2 top-2">
+        <button onClick={handleClose} type="button" className="absolute top-2 right-2">
           <X className="h-4 w-4" />
         </button>
 

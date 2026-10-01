@@ -284,7 +284,9 @@ export const SearchAi = ({
         size="sm"
         className={cn(
           "relative bg-muted/50 text-sm font-normal text-muted-foreground shadow-none",
-          collapsible ? "justify-center lg:justify-start lg:pr-12" : "justify-start sm:pr-12",
+          collapsible
+            ? "justify-center lg:justify-start lg:pr-12 lg:has-[>svg]:pr-12"
+            : "justify-start sm:pr-12 sm:has-[>svg]:pr-12",
           className
         )}
         {...props}
@@ -299,7 +301,7 @@ export const SearchAi = ({
           <ShortcutDisplay
             action={ShortcutAction.OPEN_SEARCH}
             className={cn(
-              "pointer-events-none absolute right-[0.3rem] top-[0.3rem] text-xs",
+              "pointer-events-none absolute top-[0.3rem] right-[0.3rem] text-xs",
               "transition-opacity duration-300",
               collapsible ? "hidden xl:flex" : "hidden lg:flex",
               isClient ? "opacity-100" : "opacity-0"
@@ -319,14 +321,14 @@ export const SearchAi = ({
 
           <div className="w-full shrink-0 py-4">
             <div className="relative mx-auto w-full max-w-full">
-              <div className="relative rounded-2xl border border-black/10 bg-black/[0.03] focus-within:border-black/20 dark:border-white/10 dark:bg-white/[0.03] dark:focus-within:border-white/20">
+              <div className="relative rounded-2xl border border-black/10 bg-black/3 focus-within:border-black/20 dark:border-white/10 dark:bg-white/3 dark:focus-within:border-white/20">
                 <div className="flex flex-col">
                   <div className="overflow-y-auto" style={{ maxHeight: `${MAX_HEIGHT - 48}px` }}>
                     <Textarea
                       ref={textareaRef}
                       placeholder="What would you like to know?"
                       className={cn(
-                        "w-full max-w-full resize-none text-wrap rounded-2xl border-none bg-transparent pb-3 pr-10 pt-3 leading-[1.2] text-black placeholder:text-black/70 focus:ring focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-white dark:placeholder:text-white/70",
+                        "w-full max-w-full resize-none rounded-2xl border-none bg-transparent pt-3 pr-10 pb-3 leading-[1.2] text-wrap text-black placeholder:text-black/70 focus:ring-3 focus-visible:ring-0 focus-visible:ring-offset-0 dark:text-white dark:placeholder:text-white/70",
                         `min-h-[${MIN_HEIGHT}px]`
                       )}
                       value={query}
@@ -354,7 +356,7 @@ export const SearchAi = ({
                           disabled={isSearchInProgress}
                           className={cn(
                             "inline-flex items-center gap-1.5",
-                            "rounded-md border px-2 py-0.5 text-xs font-medium shadow-sm",
+                            "rounded-md border px-2 py-0.5 text-xs font-medium shadow-xs",
                             "animate-fadeIn transition-colors duration-200",
                             isSearchInProgress
                               ? "cursor-not-allowed opacity-50"
@@ -381,7 +383,7 @@ export const SearchAi = ({
                   variant="ghost"
                   size="icon"
                   className={cn(
-                    "absolute right-3 top-3 h-4 w-4 transition-all duration-200 dark:text-white",
+                    "absolute top-3 right-3 h-4 w-4 transition-all duration-200 dark:text-white",
                     query ? "scale-100 opacity-100" : "scale-95 opacity-30"
                   )}
                 >
@@ -399,7 +401,7 @@ export const SearchAi = ({
                       "rounded-full px-3 py-1.5 text-xs font-medium",
                       "border transition-all duration-200",
                       "border-black/10 bg-white hover:bg-black/5 dark:border-white/10 dark:bg-gray-900 dark:hover:bg-white/5",
-                      "flex-shrink-0"
+                      "shrink-0"
                     )}
                     onClick={() => toggleSuggestion(text)}
                   >

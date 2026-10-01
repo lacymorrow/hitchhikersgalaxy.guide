@@ -168,7 +168,7 @@ const BlogPostPage = async ({ params }: Props) => {
           </header>
 
           {/* Content section */}
-          <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <div className="prose max-w-none prose-neutral dark:prose-invert">
             {/* Featured image */}
             {post.image && (
               <BlogImage src={post.image} alt={post.title} className="mb-8" priority={true} />

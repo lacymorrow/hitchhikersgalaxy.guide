@@ -9,7 +9,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useDebounce } from "@/hooks/use-debounce";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { searchGuide } from "@/server/actions/guide-search";
 import type { GuideEntry } from "@/server/db/schema";
@@ -24,7 +24,6 @@ interface GuideSearchInlineProps {
 }
 
 export function GuideSearchInline({ results: initialResults }: GuideSearchInlineProps) {
-	const { toast } = useToast();
 	const router = useRouter();
 	const [open, setOpen] = React.useState(false);
 	const [searchLoading, setSearchLoading] = React.useState(false);
@@ -171,11 +170,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 		console.log("[GuideSearchInline] Validation result:", validationResult);
 
 		if (!validationResult.valid) {
-			toast({
-				title: "Invalid search",
-				description: validationResult.message,
-				variant: "destructive"
-			});
+			toast.error("Invalid search", { description: validationResult.message });
 			console.log("[GuideSearchInline] Search term invalid, returning.");
 			return;
 		}
@@ -201,11 +196,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 				const errorMessage = result.error || "An error occurred while searching the Guide.";
 				console.error("[GuideSearchInline] searchGuide was not successful or data is missing. Error:", errorMessage);
 				setError(errorMessage);
-				toast({
-					title: "Search Failed",
-					description: errorMessage,
-					variant: "destructive",
-				});
+				toast.error("Search Failed", { description: errorMessage });
 			}
 		} catch (err) {
 			console.error("[GuideSearchInline] Error in onSearch try block:", err);

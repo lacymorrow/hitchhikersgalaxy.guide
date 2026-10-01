@@ -19,6 +19,32 @@ import type { User } from "@/types/user";
  *
  * @see https://next-auth.js.org/configuration/options
  */
+/**
+ * Whether the OAuth provider asserts that it verified this email address.
+ *
+ * `allowDangerousEmailAccountLinking` is enabled on every provider so one
+ * person can sign in with Google today and GitHub tomorrow. The danger in the
+ * name is real: without this check, anyone who can get a provider to issue a
+ * token for an address they do not own is handed the existing account using
+ * it. Providers spell the claim differently, so normalise here and refuse to
+ * link when none of them says yes.
+ */
+const providerAssertsVerifiedEmail = (
+  provider: string | undefined,
+  profile: Record<string, unknown> | undefined
+): boolean => {
+  if (!profile) return false;
+
+  // Google and most OIDC providers.
+  if (profile.email_verified === true || profile.email_verified === "true") return true;
+  // Discord reports it on the user object.
+  if (provider === "discord" && profile.verified === true) return true;
+  // GitHub only exposes the primary email here, and only once it is verified.
+  if (provider === "github" && typeof profile.email === "string") return true;
+
+  return false;
+};
+
 export const authOptions: NextAuthConfig = {
   debug: process.env.DEBUG_AUTH === "true",
   providers,
@@ -55,8 +81,30 @@ export const authOptions: NextAuthConfig = {
         return true; // Always allow guest sign-in
       }
 
-      // Account linking: allowDangerousEmailAccountLinking is enabled on all OAuth providers,
-      // so multiple providers can be linked to the same email address automatically.
+      /*
+       * Account linking gate. allowDangerousEmailAccountLinking lets a new
+       * provider attach itself to whatever account already owns this email.
+       * Only allow that when the provider says it verified the address. A
+       * first-time sign-up links to nothing, so there is nothing to steal.
+       */
+      if (account && account.provider !== "credentials" && user.email) {
+        const existing = await db?.query.users.findFirst({
+          where: eq(users.email, user.email.toLowerCase()),
+          columns: { id: true },
+        });
+
+        if (
+          existing &&
+          existing.id !== user.id &&
+          !providerAssertsVerifiedEmail(account.provider, profile)
+        ) {
+          logger.warn("Refused to link OAuth account: provider did not verify the email", {
+            provider: account.provider,
+            email: user.email,
+          });
+          return false;
+        }
+      }
 
       // Handle GitHub OAuth connection
       if (account?.provider === "github" && account.access_token) {

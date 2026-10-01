@@ -3,7 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { AlertTriangle, CheckCircle2, Loader2, Rocket } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Icons } from "@/components/assets/icons";
 import { VercelConnectButton } from "@/components/buttons/vercel-connect-button";
@@ -620,7 +620,7 @@ export const DashboardVercelDeploy = ({
                     )}
                   />
                   {isValidating && (
-                    <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                    <div className="absolute top-1/2 right-3 -translate-y-1/2">
                       <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                     </div>
                   )}

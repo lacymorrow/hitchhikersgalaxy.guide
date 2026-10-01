@@ -22,7 +22,7 @@ export default function CliPage() {
         </CardHeader>
         <CardContent>
           <pre className="overflow-x-auto rounded-md bg-muted p-4 text-sm">
-            <code>npx create-shipkit@latest my-app</code>
+            <code>npm create shipkit-app@latest my-app</code>
           </pre>
         </CardContent>
       </Card>
@@ -43,19 +43,19 @@ export default function CliPage() {
             </pre>
             <div className="space-y-1 text-sm text-muted-foreground">
               <p>
-                <code className="rounded bg-muted px-1 text-xs">-t, --template</code> Template repo
-                (owner/name)
+                <code className="rounded-lg bg-muted px-1 text-xs">-t, --template</code> Template
+                repo (owner/name)
               </p>
               <p>
-                <code className="rounded bg-muted px-1 text-xs">-d, --directory</code> Target
+                <code className="rounded-lg bg-muted px-1 text-xs">-d, --directory</code> Target
                 directory
               </p>
               <p>
-                <code className="rounded bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
+                <code className="rounded-lg bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
               </p>
               <p>
-                <code className="rounded bg-muted px-1 text-xs">--no-install</code> Skip installing
-                dependencies
+                <code className="rounded-lg bg-muted px-1 text-xs">--no-install</code> Skip
+                installing dependencies
               </p>
             </div>
           </CardContent>
@@ -75,11 +75,11 @@ export default function CliPage() {
             </pre>
             <div className="space-y-1 text-sm text-muted-foreground">
               <p>
-                <code className="rounded bg-muted px-1 text-xs">--direct</code> Merge directly
+                <code className="rounded-lg bg-muted px-1 text-xs">--direct</code> Merge directly
                 instead of a PR branch
               </p>
               <p>
-                <code className="rounded bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
+                <code className="rounded-lg bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
               </p>
             </div>
           </CardContent>
@@ -99,11 +99,11 @@ export default function CliPage() {
             </pre>
             <div className="space-y-1 text-sm text-muted-foreground">
               <p>
-                <code className="rounded bg-muted px-1 text-xs">--open</code> Open the Vercel import
-                page in your browser
+                <code className="rounded-lg bg-muted px-1 text-xs">--open</code> Open the Vercel
+                import page in your browser
               </p>
               <p>
-                <code className="rounded bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
+                <code className="rounded-lg bg-muted px-1 text-xs">-y, --yes</code> Skip prompts
               </p>
             </div>
           </CardContent>
@@ -128,7 +128,7 @@ export default function CliPage() {
               <div>
                 <p className="font-medium">Create</p>
                 <pre className="mt-1 overflow-x-auto rounded-md bg-muted p-3 text-sm">
-                  <code>npx create-shipkit@latest my-app</code>
+                  <code>npm create shipkit-app@latest my-app</code>
                 </pre>
               </div>
             </div>
@@ -199,19 +199,19 @@ export default function CliPage() {
           <div>
             <h3 className="mb-2 font-medium">npx (recommended)</h3>
             <pre className="overflow-x-auto rounded-md bg-muted p-3 text-sm">
-              <code>npx create-shipkit@latest my-app</code>
+              <code>npm create shipkit-app@latest my-app</code>
             </pre>
           </div>
           <div>
             <h3 className="mb-2 font-medium">npm</h3>
             <pre className="overflow-x-auto rounded-md bg-muted p-3 text-sm">
-              <code>npm install -g create-shipkit</code>
+              <code>npm install -g create-shipkit-app</code>
             </pre>
           </div>
           <div>
             <h3 className="mb-2 font-medium">pnpm</h3>
             <pre className="overflow-x-auto rounded-md bg-muted p-3 text-sm">
-              <code>pnpm add -g create-shipkit</code>
+              <code>pnpm add -g create-shipkit-app</code>
             </pre>
           </div>
         </CardContent>

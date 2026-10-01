@@ -32,7 +32,7 @@ export function StepTab({ step, isActive, onClick, isCompleted }: StepTabProps) 
         {step.short_description}
       </div>
       {isCompleted && (
-        <motion.div {...fadeInScale} className="absolute right-2 top-2">
+        <motion.div {...fadeInScale} className="absolute top-2 right-2">
           <div className="rounded-full bg-primary p-1">
             <CheckIcon className="h-2 w-2 text-primary-foreground" />
           </div>

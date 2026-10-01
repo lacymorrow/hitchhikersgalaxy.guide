@@ -147,12 +147,12 @@ export function WaitlistFeatures() {
               return (
                 <Card
                   key={item.problem}
-                  className="group relative overflow-hidden transition-all duration-300 hover:shadow-lg"
+                  className="group relative gap-0 overflow-hidden py-0 transition-all duration-300 hover:shadow-lg"
                 >
                   <CardContent className="p-6">
                     <div className="relative">
                       <div
-                        className={`inline-flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br ${item.gradient} mb-4`}
+                        className={`inline-flex h-12 w-12 items-center justify-center rounded-lg bg-linear-to-br ${item.gradient} mb-4`}
                       >
                         <Icon className="h-6 w-6 text-white" />
                       </div>
@@ -196,7 +196,7 @@ export function WaitlistFeatures() {
               return (
                 <Card
                   key={feature.title}
-                  className="group relative border-slate-200 transition-all duration-300 hover:shadow-lg dark:border-slate-700"
+                  className="group relative gap-0 border-slate-200 py-0 transition-all duration-300 hover:shadow-lg dark:border-slate-700"
                 >
                   <CardContent className="p-6">
                     <div className="flex items-start gap-4">

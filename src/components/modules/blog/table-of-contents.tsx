@@ -90,7 +90,7 @@ function TableOfContentsInner({ headings }: TableOfContentsProps) {
     <aside className="blog-toc" aria-label="Table of contents">
       <div className="border-b border-border px-4 py-3">
         <h4
-          className="text-sm font-medium uppercase tracking-wide text-muted-foreground"
+          className="text-sm font-medium tracking-wide text-muted-foreground uppercase"
           id="toc-heading"
         >
           Table of Contents
@@ -105,7 +105,7 @@ function TableOfContentsInner({ headings }: TableOfContentsProps) {
                 onClick={() => handleClick(id)}
                 onKeyDown={(e) => handleKeyDown(e, id)}
                 className={cn(
-                  "block w-full rounded-md px-2 py-1.5 text-left text-sm transition-colors duration-200 hover:bg-muted/60 focus:bg-muted/60 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1",
+                  "block w-full rounded-md px-2 py-1.5 text-left text-sm transition-colors duration-200 hover:bg-muted/60 focus:bg-muted/60 focus:ring-2 focus:ring-ring focus:ring-offset-1 focus:outline-hidden",
                   "toc-link",
                   activeId === id && "active bg-muted/80 font-medium text-foreground",
                   level === 2 && "pl-2",
@@ -134,7 +134,7 @@ function TOCErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
   return (
     <div className="blog-toc">
       <div className="border-b border-border px-4 py-3">
-        <h4 className="text-sm font-medium uppercase tracking-wide text-muted-foreground">
+        <h4 className="text-sm font-medium tracking-wide text-muted-foreground uppercase">
           Table of Contents
         </h4>
       </div>

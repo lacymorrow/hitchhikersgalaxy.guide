@@ -25,11 +25,9 @@ export default async function DashboardPage() {
   } = await getDashboardData();
 
   return (
-    <div className="flex-1 space-y-4 p-4 pt-6 md:p-8">
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <h2 className="text-3xl font-bold tracking-tight">
-          Welcome back, {session.user.name ?? "friend"}
-        </h2>
+    <div className="flex-1 space-y-5 p-4 pt-5 md:p-6">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-lg leading-6 font-semibold tracking-[-0.02em]">Dashboard</h1>
         <DownloadSection
           isAuthenticated={!!session.user?.id}
           isCustomer={isCustomer || isUserAdmin}
@@ -42,21 +40,16 @@ export default async function DashboardPage() {
       <StatsCards />
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
-        <Card className="col-span-4">
-          <CardHeader>
-            <CardTitle>Revenue Overview</CardTitle>
-            <CardDescription>Monthly revenue and expenses for the current year</CardDescription>
+        {/* RevenueChart carries its own card. */}
+        <div className="col-span-4">
+          <RevenueChart />
+        </div>
+        <Card className="col-span-3 gap-0 py-0">
+          <CardHeader className="p-6 pb-4">
+            <CardTitle className="text-sm">Recent sales</CardTitle>
+            <CardDescription className="text-xs">265 this month</CardDescription>
           </CardHeader>
-          <CardContent className="pl-2">
-            <RevenueChart />
-          </CardContent>
-        </Card>
-        <Card className="col-span-3">
-          <CardHeader>
-            <CardTitle>Recent Sales</CardTitle>
-            <CardDescription>You made 265 sales this month.</CardDescription>
-          </CardHeader>
-          <CardContent>
+          <CardContent className="p-6 pt-0">
             <RecentSales />
           </CardContent>
         </Card>

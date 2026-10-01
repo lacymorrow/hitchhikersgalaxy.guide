@@ -49,7 +49,7 @@ export const AppSidebar = React.forwardRef<HTMLDivElement, AppSidebarProps>(
         {...props}
       >
         <SidebarContent>
-          <ScrollArea className="[&>div>div]:!block">
+          <ScrollArea className="[&>div>div]:block!">
             <NavMain />
           </ScrollArea>
         </SidebarContent>

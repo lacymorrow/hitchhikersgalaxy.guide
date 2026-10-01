@@ -3,6 +3,7 @@
 import { Facebook, Linkedin, Link as LinkIcon, Share2, Twitter } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -12,7 +13,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { BASE_URL } from "@/config/base-url";
 import { haptic } from "@/hooks/use-haptics";
-import { useToast } from "@/hooks/use-toast";
 
 interface ShareProps {
   title?: string;
@@ -29,7 +29,6 @@ export const Share = ({
   via = "shipkit",
   className,
 }: ShareProps) => {
-  const { toast } = useToast();
   const pathname = usePathname();
   const url = `${BASE_URL}${pathname}`;
   const [supportsNativeShare, setSupportsNativeShare] = useState(false);
@@ -48,8 +47,7 @@ export const Share = ({
     try {
       if (navigator?.share) {
         await navigator.share(shareData);
-        toast({
-          title: "Shared!",
+        toast.success("Shared!", {
           description: "Content shared successfully",
         });
       } else {
@@ -57,10 +55,8 @@ export const Share = ({
       }
     } catch (error) {
       console.error("Error sharing:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to share content",
-        variant: "destructive",
       });
     }
   };
@@ -69,16 +65,13 @@ export const Share = ({
     try {
       await navigator.clipboard.writeText(url);
       haptic("success");
-      toast({
-        title: "Copied!",
+      toast.success("Copied!", {
         description: "Link copied to clipboard",
       });
     } catch (error) {
       console.error("Error copying:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to copy link",
-        variant: "destructive",
       });
     }
   };

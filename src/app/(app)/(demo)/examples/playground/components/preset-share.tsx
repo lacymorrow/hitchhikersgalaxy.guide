@@ -12,13 +12,13 @@ export function PresetShare() {
         <Button variant="secondary">Share</Button>
       </PopoverTrigger>
       <PopoverContent align="end" className="w-[520px]">
-        <div className="flex flex-col space-y-2 text-center sm:text-left">
+        <div className="flex flex-col gap-2 text-center sm:text-left">
           <h3 className="text-lg font-semibold">Share preset</h3>
           <p className="text-sm text-muted-foreground">
             Anyone who has this link and an OpenAI account will be able to view this.
           </p>
         </div>
-        <div className="flex items-center space-x-2 pt-4">
+        <div className="flex items-center gap-x-2 pt-4">
           <div className="grid flex-1 gap-2">
             <Label htmlFor="link" className="sr-only">
               Link

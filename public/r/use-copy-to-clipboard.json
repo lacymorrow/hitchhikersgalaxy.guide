@@ -3,6 +3,7 @@
   "name": "use-copy-to-clipboard",
   "title": "useCopyToClipboard",
   "description": "A hook for copying text to the clipboard with a timeout reset.",
+  "registryDependencies": [],
   "files": [
     {
       "path": "src/hooks/use-copy-to-clipboard.ts",

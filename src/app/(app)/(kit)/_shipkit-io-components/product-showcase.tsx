@@ -32,7 +32,7 @@ const BrowserChrome = ({
   description: string;
   gradient: string;
 }) => (
-  <div className="overflow-hidden rounded-lg border border-border/50 bg-card shadow-sm">
+  <div className="overflow-hidden rounded-lg border border-border/50 bg-card shadow-xs">
     {/* Browser top bar */}
     <div className="flex items-center gap-2 border-b border-border/50 bg-muted/50 px-4 py-2.5">
       <div className="flex gap-1.5">
@@ -47,7 +47,7 @@ const BrowserChrome = ({
     {/* Content area */}
     <div
       className={cn(
-        "flex min-h-[200px] flex-col items-center justify-center gap-3 bg-gradient-to-br p-8",
+        "flex min-h-[200px] flex-col items-center justify-center gap-3 bg-linear-to-br p-8",
         gradient
       )}
     >

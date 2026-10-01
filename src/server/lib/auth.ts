@@ -11,7 +11,7 @@ export async function getSession(protect = true) {
 
 export async function requireAdmin() {
   const session = await getSession();
-  if (!session?.user?.email || !isAdmin({ email: session.user.email })) {
+  if (!session?.user?.email || !(await isAdmin({ email: session.user.email }))) {
     throw new Error("Unauthorized: Admin access required");
   }
   return session;

@@ -120,8 +120,8 @@ export const GithubStarsButton = ({
           />
         </span>
 
-        <span className="relative z-[1] flex w-full items-center justify-center gap-1 overflow-hidden rounded-full bg-neutral-50/90 px-4 py-2 pl-2 dark:bg-neutral-950/90">
-          <span className="relative transition-transform group-hover:rotate-[360deg] group-hover:scale-105">
+        <span className="relative z-1 flex w-full items-center justify-center gap-1 overflow-hidden rounded-full bg-neutral-50/90 px-4 py-2 pl-2 dark:bg-neutral-950/90">
+          <span className="relative transition-transform group-hover:scale-105 group-hover:rotate-360">
             <CuicuiStarIcon
               className="opacity-80 dark:opacity-100"
               style={{
@@ -130,7 +130,7 @@ export const GithubStarsButton = ({
               }}
             />
             <span
-              className="absolute left-1/2 top-1/2 size-11 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 blur-lg dark:opacity-30"
+              className="absolute top-1/2 left-1/2 size-11 -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 blur-lg dark:opacity-30"
               style={{
                 animation: "14s ease-in-out infinite alternate star-shine",
                 background: "linear-gradient(135deg, #3BC4F2, #7A69F9, #F26378, #F5833F)",
@@ -145,7 +145,7 @@ export const GithubStarsButton = ({
             className="z-20 text-xs font-semibold tracking-tighter text-neutral-400 dark:text-neutral-500"
           />
           {children && (
-            <span className="ml-1.5 transform-gpu bg-gradient-to-b from-neutral-950 to-neutral-950/50 bg-clip-text text-xs text-transparent transition group-hover:scale-105 dark:from-white dark:to-white/50">
+            <span className="ml-1.5 transform-gpu bg-linear-to-b from-neutral-950 to-neutral-950/50 bg-clip-text text-xs text-transparent transition group-hover:scale-105 dark:from-white dark:to-white/50">
               {children}
             </span>
           )}

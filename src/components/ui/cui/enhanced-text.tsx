@@ -45,7 +45,7 @@ export function EnhancedText({
         className={cn(
           "w-full cursor-pointer text-center text-3xl font-bold",
           "tracking-widest transition-all duration-200 ease-in-out",
-          "italic text-black dark:text-white",
+          "text-black italic dark:text-white",
           "stroke-[#d6f4f4]",
           className
         )}

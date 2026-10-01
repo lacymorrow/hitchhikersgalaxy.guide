@@ -3,12 +3,17 @@ import { CredentialsForm } from "@/app/(app)/(authentication)/_components/creden
 import { GuestForm } from "@/app/(app)/(authentication)/_components/guest-form";
 import { Divider } from "@/components/primitives/divider";
 import { env } from "@/env";
-// Compute guest-only on server component via build flags
 
 export const SignIn = () => {
-  // Special handling for guest-only mode
-  const isGuestOnlyMode =
-    !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
+  const isGuestEnabled = !!env.NEXT_PUBLIC_FEATURE_AUTH_GUEST_ENABLED;
+
+  /**
+   * Guest-only mode: guest is the sole way in, so it gets the whole screen.
+   * Otherwise guest sits under the other methods — a demo needs a door that
+   * works even when OAuth is configured, so this is not a fallback.
+   */
+  const isGuestOnlyMode = isGuestEnabled && !env.NEXT_PUBLIC_FEATURE_AUTH_METHODS_ENABLED;
+
   if (isGuestOnlyMode) {
     return (
       <AuthForm
@@ -28,6 +33,13 @@ export const SignIn = () => {
         <>
           <Divider text="Or continue with email" />
           <CredentialsForm />
+        </>
+      )}
+
+      {isGuestEnabled && (
+        <>
+          <Divider text="Or try it as a guest" />
+          <GuestForm />
         </>
       )}
     </AuthForm>

@@ -65,11 +65,11 @@ export function ConsoleComponent({ onCreateTestKey, apiKey }: ConsoleComponentPr
   };
 
   return (
-    <div className="relative mx-auto mt-10 w-full max-w-screen-sm text-inherit">
+    <div className="relative mx-auto mt-10 w-full max-w-(--breakpoint-sm) text-inherit">
       <div className="overflow-hidden rounded-lg bg-gray-800 shadow-xl">
         {/* Mac-style chrome */}
         <div className="flex items-center justify-between bg-gray-700 px-4 py-2">
-          <div className="flex space-x-2">
+          <div className="flex gap-x-2">
             <div className="h-3 w-3 rounded-full bg-red-500" />
             <div className="h-3 w-3 rounded-full bg-yellow-500" />
             <div className="h-3 w-3 rounded-full bg-green-500" />
@@ -111,7 +111,7 @@ export function ConsoleComponent({ onCreateTestKey, apiKey }: ConsoleComponentPr
               </AnimatePresence>
             </ScrollArea>
           ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50">
+            <div className="absolute inset-0 flex items-center justify-center bg-black/50">
               <Button onClick={handleStart} variant="outline">
                 {apiKey ? "Start Console" : "Live Demo"}
               </Button>
@@ -131,7 +131,7 @@ export function ConsoleComponent({ onCreateTestKey, apiKey }: ConsoleComponentPr
           )}
           {isRunning && (
             <motion.div
-              className="absolute bottom-4 right-4 h-4 w-4 rounded-full bg-green-500"
+              className="absolute right-4 bottom-4 h-4 w-4 rounded-full bg-green-500"
               animate={{
                 scale: [1, 1.5, 1],
                 opacity: [0.7, 0.3, 0.7],

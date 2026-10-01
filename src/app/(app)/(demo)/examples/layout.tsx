@@ -21,7 +21,7 @@ export default function ExamplesLayout({ children }: { children: React.ReactNode
       </div>
       <div className="container-wrapper">
         <div className="container py-6">
-          <section className="overflow-hidden rounded-[0.5rem] border bg-background shadow">
+          <section className="overflow-hidden rounded-[0.5rem] border bg-background shadow-sm">
             {children}
           </section>
         </div>

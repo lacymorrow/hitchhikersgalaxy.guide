@@ -15,7 +15,7 @@ import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site-config";
 import { cn } from "@/lib/utils";
 import type { Deployment } from "@/server/db/schema";
-import { DeploymentActions } from "./deployment-actions";
+import { DeploymentActions } from "./deployment-actions-menu";
 
 // Constants for polling configuration
 const POLLING_INTERVAL_MS = 3000; // 3 seconds

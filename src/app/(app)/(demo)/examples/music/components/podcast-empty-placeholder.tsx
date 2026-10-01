@@ -31,7 +31,7 @@ export function PodcastEmptyPlaceholder() {
         </svg>
 
         <h3 className="mt-4 text-lg font-semibold">No episodes added</h3>
-        <p className="mb-4 mt-2 text-sm text-muted-foreground">
+        <p className="mt-2 mb-4 text-sm text-muted-foreground">
           You have not added any podcasts. Add one below.
         </p>
         <Dialog>

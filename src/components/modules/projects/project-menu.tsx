@@ -2,7 +2,8 @@
 
 import { DotsHorizontalIcon, Pencil2Icon, TrashIcon } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
+import { toast } from "sonner";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { SidebarMenuAction } from "@/components/ui/sidebar";
-import { useToast } from "@/hooks/use-toast";
 import { ProjectDialog } from "./project-dialog";
 
 interface Project {
@@ -26,7 +26,6 @@ interface ProjectMenuProps {
 }
 
 export const ProjectMenu = ({ project, teamId, deleteAction }: ProjectMenuProps) => {
-  const { toast } = useToast();
   const router = useRouter();
   const { data: session } = useSession();
 
@@ -34,8 +33,7 @@ export const ProjectMenu = ({ project, teamId, deleteAction }: ProjectMenuProps)
     try {
       const success = await deleteAction(project.id);
       if (success) {
-        toast({
-          title: "Project deleted",
+        toast.success("Project deleted", {
           description: `${project.name} has been successfully deleted.`,
         });
         router.refresh();
@@ -44,10 +42,8 @@ export const ProjectMenu = ({ project, teamId, deleteAction }: ProjectMenuProps)
       }
     } catch (error) {
       console.error("Failed to delete project:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to delete project. Please try again.",
-        variant: "destructive",
       });
     }
   };

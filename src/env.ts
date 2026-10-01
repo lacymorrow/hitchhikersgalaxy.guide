@@ -25,6 +25,12 @@ const serverSchema = {
   PAYLOAD_PUBLIC_DRAFT_SECRET: z.string().optional(),
 
   // ======== Authentication ========
+  // Which server-side auth implementation owns sessions. Unset lets
+  // src/lib/auth/auth-strategy.ts pick from the configured features.
+  // "clerk" is never picked automatically (it needs a paid Clerk account).
+  AUTH_STRATEGY: z.enum(["better-auth", "authjs", "clerk"]).optional(),
+  // Auth.js session strategy override (an Auth.js-specific signal).
+  NEXTAUTH_SESSION_STRATEGY: z.enum(["jwt", "database"]).optional(),
   AUTH_SECRET: z.string().optional(),
   AUTH_URL: z.preprocess(
     (str) => BASE_URL ?? str,
@@ -193,6 +199,9 @@ export const env = createEnv({
     // Clerk Authentication (alternative to Auth.js)
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: z.string().optional(),
 
+    // Mirror of AUTH_STRATEGY (features-config.ts) so client code agrees with the server
+    NEXT_PUBLIC_AUTH_STRATEGY: z.enum(["better-auth", "authjs", "clerk"]).optional(),
+
     // ======== Supabase Authentication ========
     NEXT_PUBLIC_SUPABASE_URL: z.string().url().optional(),
     NEXT_PUBLIC_SUPABASE_ANON_KEY: z.string().optional(),
@@ -283,6 +292,8 @@ export const env = createEnv({
 
     // Clerk Authentication (alternative to Auth.js)
     NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
+
+    NEXT_PUBLIC_AUTH_STRATEGY: process.env.NEXT_PUBLIC_AUTH_STRATEGY,
 
     NEXT_PUBLIC_GOOGLE_MAPS_API_KEY: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY,
     NEXT_PUBLIC_TURNSTILE_SITE_KEY: process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY,

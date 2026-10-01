@@ -144,7 +144,7 @@ export default function FileInput() {
           >
             <div className="truncate">{typeof file === "string" ? file : file.name}</div>
             {!isUploaded && (
-              <div className="flex items-center space-x-2">
+              <div className="flex items-center gap-x-2">
                 <div className="text-sm text-muted-foreground">
                   {((file as File).size / 1024 / 1024).toFixed(2)} MB
                 </div>

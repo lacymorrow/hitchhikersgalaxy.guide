@@ -16,13 +16,13 @@ import { Separator } from "@/components/ui/separator";
 
 export function CardsShare() {
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="gap-0 py-0">
+      <CardHeader className="p-6 pb-3">
         <CardTitle>Share this document</CardTitle>
         <CardDescription>Anyone with the link can view this document.</CardDescription>
       </CardHeader>
-      <CardContent>
-        <div className="flex space-x-2">
+      <CardContent className="p-6 pt-0">
+        <div className="flex gap-x-2">
           <Label htmlFor="link" className="sr-only">
             Link
           </Label>
@@ -33,8 +33,8 @@ export function CardsShare() {
         <div className="space-y-4">
           <div className="text-sm font-medium">People with access</div>
           <div className="grid gap-6">
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between gap-x-4">
+              <div className="flex items-center gap-x-4">
                 <Avatar>
                   <AvatarImage
                     src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/03.png"
@@ -43,7 +43,7 @@ export function CardsShare() {
                   <AvatarFallback>OM</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium leading-none">Olivia Martin</p>
+                  <p className="text-sm leading-none font-medium">Olivia Martin</p>
                   <p className="text-sm text-muted-foreground">m@example.com</p>
                 </div>
               </div>
@@ -57,8 +57,8 @@ export function CardsShare() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between gap-x-4">
+              <div className="flex items-center gap-x-4">
                 <Avatar>
                   <AvatarImage
                     src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/05.png"
@@ -67,7 +67,7 @@ export function CardsShare() {
                   <AvatarFallback>IN</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium leading-none">Isabella Nguyen</p>
+                  <p className="text-sm leading-none font-medium">Isabella Nguyen</p>
                   <p className="text-sm text-muted-foreground">b@example.com</p>
                 </div>
               </div>
@@ -81,8 +81,8 @@ export function CardsShare() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between gap-x-4">
+              <div className="flex items-center gap-x-4">
                 <Avatar>
                   <AvatarImage
                     src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/01.png"
@@ -91,7 +91,7 @@ export function CardsShare() {
                   <AvatarFallback>SD</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium leading-none">Sofia Davis</p>
+                  <p className="text-sm leading-none font-medium">Sofia Davis</p>
                   <p className="text-sm text-muted-foreground">p@example.com</p>
                 </div>
               </div>

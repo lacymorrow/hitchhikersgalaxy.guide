@@ -1,19 +1,18 @@
 "use client";
 import type { FormEvent } from "react";
 import { useState } from "react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { DismissibleCard } from "@/components/ui/dismissible-card";
 import { SidebarInput } from "@/components/ui/sidebar";
 import { LOCAL_STORAGE_KEYS } from "@/config/local-storage-keys";
-import { useToast } from "@/hooks/use-toast";
 import { addAudienceUser } from "@/server/actions/resend-actions";
 
 export const SidebarOptInForm = () => {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
-  const { toast } = useToast();
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -25,26 +24,21 @@ export const SidebarOptInForm = () => {
       if (result.success) {
         setStatus("success");
         setEmail("");
-        toast({
-          title: "Subscribed!",
+        toast.success("Subscribed!", {
           description: "You've been successfully subscribed to our newsletter.",
         });
       } else {
         console.error("Error adding contact:", result.error);
         setStatus("error");
-        toast({
-          title: "Subscription failed",
+        toast.error("Subscription failed", {
           description: result.error || "Failed to subscribe. Please try again.",
-          variant: "destructive",
         });
       }
     } catch (error) {
       console.error("Error submitting form:", error);
       setStatus("error");
-      toast({
-        title: "Subscription failed",
+      toast.error("Subscription failed", {
         description: "An unexpected error occurred. Please try again.",
-        variant: "destructive",
       });
     } finally {
       // Reset status after a delay to remove the inline message

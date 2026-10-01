@@ -113,7 +113,7 @@ export function WaitlistSocialProof() {
             {testimonials.map((testimonial) => (
               <Card
                 key={testimonial.name}
-                className="border-slate-200 transition-all duration-300 hover:shadow-lg dark:border-slate-800"
+                className="gap-0 border-slate-200 py-0 transition-all duration-300 hover:shadow-lg dark:border-slate-800"
               >
                 <CardContent className="p-6">
                   <div className="mb-4 flex items-center gap-1">

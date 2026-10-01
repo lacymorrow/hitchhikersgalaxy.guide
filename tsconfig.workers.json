@@ -2,6 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./public/workers",
+    "rootDir": "./src/workers",
     "target": "ES6",
     "module": "preserve",
     "moduleResolution": "Bundler",
@@ -10,7 +11,6 @@
     "sourceMap": true,
     "types": ["node", "ws"],
     "allowImportingTsExtensions": false,
-    "downlevelIteration": true,
     "isolatedModules": false,
     "noEmit": false
   },

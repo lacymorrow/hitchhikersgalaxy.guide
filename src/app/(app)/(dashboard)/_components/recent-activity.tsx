@@ -48,7 +48,7 @@ export function RecentActivity({ activities = [] }: RecentActivityProps) {
                       </AvatarFallback>
                     </Avatar>
                     <div className="ml-4 space-y-1">
-                      <p className="text-sm font-medium leading-none">{activity.title}</p>
+                      <p className="text-sm leading-none font-medium">{activity.title}</p>
                       <p className="text-sm text-muted-foreground">
                         {activity.user.name} • {activity.time}
                       </p>

@@ -96,7 +96,7 @@ export function WavyLine({ className, ...props }: ComponentProps<"div">) {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       />
-      <svg className="absolute -top-[50px] h-[100px] w-full">
+      <svg className="absolute top-[-50px] h-[100px] w-full">
         <title>Wavy Line</title>
         <path
           ref={path}

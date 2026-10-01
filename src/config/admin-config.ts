@@ -22,23 +22,37 @@ export interface AdminConfig {
  * during deployment without touching code
  */
 export const adminConfig: AdminConfig = {
-  // Admin emails - comma-separated list from environment variable or defaults
+  /*
+   * No defaults. These previously fell back to the template author's address
+   * and domain, which meant every downstream deployment granted admin to
+   * anyone holding a lacymorrow.com email. Deployments opt in via ADMIN_EMAIL
+   * and ADMIN_DOMAINS.
+   */
   emails: env.ADMIN_EMAIL
-    ? env.ADMIN_EMAIL.split(",").map((email) => email.trim())
-    : ["me@lacymorrow.com"],
+    ? env.ADMIN_EMAIL.split(",")
+        .map((email) => email.trim().toLowerCase())
+        .filter(Boolean)
+    : [],
 
-  // Admin domains - using default values
   domains: env.ADMIN_DOMAINS
-    ? env.ADMIN_DOMAINS.split(",").map((domain) => domain.trim())
-    : ["lacymorrow.com"],
+    ? env.ADMIN_DOMAINS.split(",")
+        .map((domain) => domain.trim().toLowerCase().replace(/^@/, ""))
+        .filter(Boolean)
+    : [],
 
   // Check if an email is an admin based on config
   isAdminByEmailConfig: (email?: string | null): boolean => {
     if (!email) return false;
 
+    const normalised = email.trim().toLowerCase();
+    if (!normalised.includes("@")) return false;
+    const domain = normalised.slice(normalised.lastIndexOf("@") + 1);
+
     return (
-      adminConfig.emails.includes(email) ||
-      adminConfig.domains.some((domain) => email.endsWith(`@${domain}`))
+      adminConfig.emails.includes(normalised) ||
+      // Compare the domain exactly. `endsWith("@evil-lacymorrow.com")` style
+      // suffix matching would have accepted a lookalike domain.
+      adminConfig.domains.includes(domain)
     );
   },
 };

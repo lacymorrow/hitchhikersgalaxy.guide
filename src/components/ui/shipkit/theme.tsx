@@ -784,8 +784,8 @@ export const useThemeToggle = ({
 
 const ThemeButton = React.forwardRef<HTMLButtonElement, ButtonProps>((props, ref) => (
   <Button variant="ghost" size="icon" {...props} ref={ref}>
-    <SunIcon className="size-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-    <MoonIcon className="absolute size-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+    <SunIcon className="size-5 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
+    <MoonIcon className="absolute size-5 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
     <span className="sr-only">Toggle theme</span>
   </Button>
 ));

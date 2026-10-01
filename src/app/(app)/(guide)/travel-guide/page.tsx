@@ -34,7 +34,7 @@ export default function TravelGuidePage() {
 
 					{/* Main content */}
 					<div className="grid gap-6 md:grid-cols-2">
-						<Card className="border-blue-500/20 bg-black">
+						<Card className="rounded-xl border shadow border-blue-500/20 bg-black">
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2 text-blue-500">
 									<AlertTriangle className="h-5 w-5" />
@@ -85,7 +85,7 @@ export default function TravelGuidePage() {
 							</CardContent>
 						</Card>
 
-						<Card className="border-blue-500/20 bg-black">
+						<Card className="rounded-xl border shadow border-blue-500/20 bg-black">
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2 text-blue-500">
 									<Rocket className="h-5 w-5" />
@@ -137,7 +137,7 @@ export default function TravelGuidePage() {
 							</CardContent>
 						</Card>
 
-						<Card className="border-blue-500/20 bg-black md:col-span-2">
+						<Card className="rounded-xl border shadow border-blue-500/20 bg-black md:col-span-2">
 							<CardHeader>
 								<CardTitle className="flex items-center gap-2 text-blue-500">
 									<HeartFilledIcon className="h-5 w-5" />

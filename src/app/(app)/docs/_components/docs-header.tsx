@@ -16,7 +16,7 @@ export function DocsHeader({ className, onToggleNav }: DocsHeaderProps) {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
         className
       )}
     >
@@ -27,11 +27,11 @@ export function DocsHeader({ className, onToggleNav }: DocsHeaderProps) {
             <span className="sr-only">Toggle Menu</span>
           </Button>
         </div>
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+        <div className="flex flex-1 items-center justify-between gap-x-2 md:justify-end">
           <div className="w-full flex-1 md:w-auto md:flex-none">
             <SearchMenu />
           </div>
-          <nav className="flex items-center space-x-1">
+          <nav className="flex items-center gap-x-1">
             <Button variant="ghost" size="icon" asChild>
               <Link href={siteConfig.repo.url} target="_blank" rel="noreferrer">
                 <Github className="h-4 w-4" />

@@ -4,6 +4,7 @@ import { Fragment, Suspense } from "react";
 import { AppRouterLayout } from "@/components/layouts/app-router-layout";
 import { FontSelector } from "@/components/modules/devtools/font-selector";
 import { ReactGrab } from "@/components/modules/devtools/react-grab";
+import { buildTimeFeatures } from "@/config/features-config";
 import { fontSans, fontSerif } from "@/config/fonts";
 import {
   metadata as defaultMetadata,
@@ -13,13 +14,21 @@ import {
 } from "@/config/metadata";
 import { siteConfig } from "@/config/site-config";
 import { env } from "@/env";
-import { initializePaymentProviders } from "@/server/providers";
 
 export const fetchCache = "default-cache";
 export const metadata: Metadata = defaultMetadata;
 export const viewport: Viewport = sharedViewport;
 
-await initializePaymentProviders();
+// Only follow the payment provider import chain when a provider is enabled, so
+// the provider SDKs are not pulled into every importer of this layout.
+if (
+  buildTimeFeatures.STRIPE_ENABLED ||
+  buildTimeFeatures.LEMONSQUEEZY_ENABLED ||
+  buildTimeFeatures.POLAR_ENABLED
+) {
+  const { initializePaymentProviders } = await import("@/server/providers");
+  await initializePaymentProviders();
+}
 
 // Synchronous layout: do NOT make this async. An async layout lets React start
 // streaming and commit HTTP 200 before a child page can call notFound(), so

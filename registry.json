@@ -15,7 +15,11 @@
           "target": "~/src/lib/utils/cn.ts"
         }
       ],
-      "dependencies": ["clsx", "tailwind-merge"]
+      "dependencies": [
+        "clsx@2.1.1",
+        "tailwind-merge@3.7.0"
+      ],
+      "registryDependencies": []
     },
     {
       "name": "marquee",
@@ -28,7 +32,9 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["@shipkit/cn"],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "tailwind": {
         "config": {
           "theme": {
@@ -71,7 +77,9 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["@shipkit/cn"],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "tailwind": {
         "config": {
           "theme": {
@@ -102,7 +110,9 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["@shipkit/cn"],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "tailwind": {
         "config": {
           "theme": {
@@ -136,7 +146,9 @@
           "type": "registry:ui"
         }
       ],
-      "registryDependencies": ["@shipkit/cn"],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "tailwind": {
         "config": {
           "theme": {
@@ -182,8 +194,13 @@
           "type": "registry:ui"
         }
       ],
-      "dependencies": ["framer-motion", "class-variance-authority"],
-      "registryDependencies": ["@shipkit/cn"]
+      "dependencies": [
+        "framer-motion@12.43.0",
+        "class-variance-authority@0.7.1"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ]
     },
     {
       "name": "use-copy-to-clipboard",
@@ -195,7 +212,8 @@
           "path": "src/hooks/use-copy-to-clipboard.ts",
           "type": "registry:hook"
         }
-      ]
+      ],
+      "registryDependencies": []
     },
     {
       "name": "use-mobile",
@@ -207,22 +225,19 @@
           "path": "src/hooks/use-mobile.tsx",
           "type": "registry:hook"
         }
-      ]
+      ],
+      "registryDependencies": []
     },
     {
       "name": "data-table",
       "type": "registry:ui",
       "title": "Data Table",
       "description": "Feature-rich data table with search, pagination, column visibility, and row actions built on TanStack Table.",
-      "dependencies": ["@tanstack/react-table"],
+      "dependencies": [
+        "@tanstack/react-table@8.21.3"
+      ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "button",
-        "input",
-        "dialog",
-        "dropdown-menu",
-        "table",
-        "select"
+        "@shipkit/cn"
       ],
       "files": [
         {
@@ -248,7 +263,8 @@
           "type": "registry:lib",
           "target": "~/src/config/routes.ts"
         }
-      ]
+      ],
+      "registryDependencies": []
     },
     {
       "name": "features-config",
@@ -260,18 +276,27 @@
           "path": "src/config/features-config.ts",
           "type": "registry:lib",
           "target": "~/src/config/features-config.ts"
+        },
+        {
+          "path": "src/config/features-table.ts",
+          "type": "registry:lib",
+          "target": "~/src/config/features-table.ts"
         }
-      ]
+      ],
+      "registryDependencies": []
     },
     {
       "name": "faq",
       "type": "registry:block",
       "title": "FAQ",
       "description": "A full FAQ page with accordion layout, CMS integration, and static content fallback.",
-      "categories": ["shipkit", "faq"],
+      "categories": [
+        "shipkit",
+        "faq"
+      ],
       "files": [
         {
-          "path": "src/app/(app)/(kit)/faq/page.tsx",
+          "path": "src/app/(app)/faq/page.tsx",
           "type": "registry:page",
           "target": "~/src/app/(app)/faq/page.tsx"
         },
@@ -286,7 +311,9 @@
           "target": "~/src/content/faq/faq-content.tsx"
         }
       ],
-      "registryDependencies": ["@shipkit/cn", "accordion"],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "docs": "Static FAQ page with accordion UI. Optionally integrates with Payload CMS for dynamic FAQ management."
     },
     {
@@ -294,17 +321,22 @@
       "type": "registry:block",
       "title": "Docs",
       "description": "Full documentation system with sidebar navigation, search, and MDX rendering.",
-      "categories": ["shipkit", "docs"],
-      "dependencies": ["next-mdx-remote", "remark-gfm", "gray-matter", "zod"],
+      "categories": [
+        "shipkit",
+        "docs"
+      ],
+      "dependencies": [
+        "next-mdx-remote@6.0.0",
+        "remark-gfm@4.0.1",
+        "gray-matter@4.0.3",
+        "zod@3.25.76",
+        "openai@6.49.0",
+        "fumadocs-core@16.14.5",
+        "fumadocs-mdx@15.2.3"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config",
-        "accordion",
-        "scroll-area",
-        "skeleton",
-        "badge",
-        "command",
-        "input"
+        "@shipkit/routes-config"
       ],
       "files": [
         {
@@ -318,9 +350,9 @@
           "target": "~/src/app/(app)/docs/[[...slug]]/page.tsx"
         },
         {
-          "path": "src/app/(app)/docs/loading.tsx",
+          "path": "src/app/(app)/docs/[[...slug]]/loading.tsx",
           "type": "registry:component",
-          "target": "~/src/app/(app)/docs/loading.tsx"
+          "target": "~/src/app/(app)/docs/[[...slug]]/loading.tsx"
         },
         {
           "path": "src/app/(app)/docs/not-found.tsx",
@@ -358,35 +390,58 @@
           "target": "~/src/hooks/use-docs-search.ts"
         },
         {
-          "path": "src/server/services/docs-search.ts",
-          "type": "registry:lib",
-          "target": "~/src/server/services/docs-search.ts"
-        },
-        {
           "path": "src/app/(app)/api/docs/search/route.ts",
           "type": "registry:lib",
           "target": "~/src/app/(app)/api/docs/search/route.ts"
+        },
+        {
+          "path": "src/components/modules/search/search-menu.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/modules/search/search-menu.tsx"
+        },
+        {
+          "path": "src/components/modules/search/example.ts",
+          "type": "registry:lib",
+          "target": "~/src/components/modules/search/example.ts"
+        },
+        {
+          "path": "src/config/docs-provider.ts",
+          "type": "registry:lib",
+          "target": "~/src/config/docs-provider.ts"
+        },
+        {
+          "path": "src/lib/open-ai.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/open-ai.ts"
+        },
+        {
+          "path": "source.config.ts",
+          "type": "registry:file",
+          "target": "~/source.config.ts"
         }
       ],
-      "docs": "Full docs system powered by MDX. Place your `.mdx` files in `docs/` at the project root. Includes sidebar navigation, search with optional AI-powered answers, and responsive layout."
+      "docs": "Full docs system powered by MDX. Place your `.mdx` files in `docs/` at the project root. Includes sidebar navigation, search with optional AI-powered answers, and responsive layout. After install run `pnpm fumadocs-mdx` (ShipKit runs it in postinstall) to generate the `.source` folder the docs page imports."
     },
     {
       "name": "blog",
       "type": "registry:block",
       "title": "Blog",
       "description": "Complete blog system with MDX posts, author profiles, categories, sidebar, and feed-style timeline layout.",
-      "categories": ["shipkit", "blog"],
-      "dependencies": ["gray-matter", "next-mdx-remote", "remark-gfm", "lucide-react"],
+      "categories": [
+        "shipkit",
+        "blog"
+      ],
+      "dependencies": [
+        "gray-matter@4.0.3",
+        "next-mdx-remote@6.0.0",
+        "remark-gfm@4.0.1",
+        "lucide-react@0.564.0",
+        "@emblemvault/ask-ai@0.1.1",
+        "react-error-boundary@6.1.5"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config",
-        "badge",
-        "button",
-        "input",
-        "scroll-area",
-        "separator",
-        "sheet",
-        "skeleton"
+        "@shipkit/routes-config"
       ],
       "files": [
         {
@@ -398,11 +453,6 @@
           "path": "src/app/(app)/blog/page.tsx",
           "type": "registry:page",
           "target": "~/src/app/(app)/blog/page.tsx"
-        },
-        {
-          "path": "src/app/(app)/blog/loading.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(app)/blog/loading.tsx"
         },
         {
           "path": "src/app/(app)/blog/[...slug]/page.tsx",
@@ -508,6 +558,16 @@
           "path": "src/styles/blog.css",
           "type": "registry:style",
           "target": "~/src/styles/blog.css"
+        },
+        {
+          "path": "src/components/modules/mdx/heading.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/modules/mdx/heading.tsx"
+        },
+        {
+          "path": "src/components/primitives/ask-ai-buttons.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/primitives/ask-ai-buttons.tsx"
         }
       ],
       "docs": "MDX-powered blog with author profiles, categories, feed-style timeline, and sidebar navigation. Place `.mdx` posts in `src/content/blog/`. Add `withBlog()` to your `next.config.ts` to auto-detect blog content."
@@ -517,9 +577,19 @@
       "type": "registry:block",
       "title": "Builder.io",
       "description": "Visual page builder integration with Builder.io for no-code content editing.",
-      "categories": ["shipkit", "cms", "builder"],
-      "dependencies": ["@builder.io/react", "@builder.io/sdk", "@builder.io/dev-tools"],
-      "registryDependencies": ["@shipkit/cn"],
+      "categories": [
+        "shipkit",
+        "cms",
+        "builder"
+      ],
+      "dependencies": [
+        "@builder.io/react@9.4.6",
+        "@builder.io/sdk@6.3.3",
+        "@builder.io/dev-tools@1.83.1"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "files": [
         {
           "path": "src/app/(app)/(integrations)/builder.io/[...slug]/page.tsx",
@@ -534,7 +604,7 @@
         {
           "path": "src/builder-registry.ts",
           "type": "registry:lib",
-          "target": "~/builder-registry.ts"
+          "target": "~/src/builder-registry.ts"
         },
         {
           "path": "src/components/modules/builder/index.ts",
@@ -577,101 +647,392 @@
           "target": "~/src/styles/builder-io.css"
         }
       ],
-      "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add your `BUILDER_API_KEY` to `.env`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard."
+      "envVars": {
+        "NEXT_PUBLIC_BUILDER_API_KEY": ""
+      },
+      "docs": "Visual page builder powered by Builder.io. Sign up at builder.io, add `NEXT_PUBLIC_BUILDER_API_KEY` to `.env.local`, and wrap your Next.js config with `withBuilderConfig()`. Create pages visually in the Builder.io dashboard."
+    },
+    {
+      "name": "payload",
+      "type": "registry:block",
+      "title": "Payload CMS",
+      "description": "Payload CMS 3 wired into the app: config, collections, globals, blocks, seed data, admin UI routes, REST and GraphQL API routes, and the draft preview route.",
+      "categories": [
+        "shipkit",
+        "cms",
+        "payload"
+      ],
+      "dependencies": [
+        "payload@^3.89.0",
+        "@payloadcms/next@^3.89.0",
+        "@payloadcms/db-postgres@^3.89.0",
+        "@payloadcms/email-resend@^3.89.0",
+        "@payloadcms/payload-cloud@^3.89.0",
+        "@payloadcms/richtext-lexical@^3.89.0",
+        "@payloadcms/storage-s3@^3.89.0",
+        "@payloadcms/storage-vercel-blob@^3.89.0",
+        "sharp@^0.35.4",
+        "ogl@1.0.11"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "@shipkit/features-config"
+      ],
+      "files": [
+        {
+          "path": "src/payload.config.ts",
+          "type": "registry:lib",
+          "target": "~/src/payload.config.ts"
+        },
+        {
+          "path": "src/lib/payload/blocks/content.tsx",
+          "type": "registry:component",
+          "target": "~/src/lib/payload/blocks/content.tsx"
+        },
+        {
+          "path": "src/lib/payload/blocks/features.tsx",
+          "type": "registry:component",
+          "target": "~/src/lib/payload/blocks/features.tsx"
+        },
+        {
+          "path": "src/lib/payload/blocks/hero.tsx",
+          "type": "registry:component",
+          "target": "~/src/lib/payload/blocks/hero.tsx"
+        },
+        {
+          "path": "src/lib/payload/blocks/index.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/blocks/index.ts"
+        },
+        {
+          "path": "src/lib/payload/blocks/testimonials.tsx",
+          "type": "registry:component",
+          "target": "~/src/lib/payload/blocks/testimonials.tsx"
+        },
+        {
+          "path": "src/lib/payload/collections/FAQs.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/collections/FAQs.ts"
+        },
+        {
+          "path": "src/lib/payload/collections/Features.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/collections/Features.ts"
+        },
+        {
+          "path": "src/lib/payload/collections/Media.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/collections/Media.ts"
+        },
+        {
+          "path": "src/lib/payload/collections/Pages.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/collections/Pages.ts"
+        },
+        {
+          "path": "src/lib/payload/collections/RBAC.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/collections/RBAC.ts"
+        },
+        {
+          "path": "src/lib/payload/collections/Testimonials.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/collections/Testimonials.ts"
+        },
+        {
+          "path": "src/lib/payload/collections/Users.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/collections/Users.ts"
+        },
+        {
+          "path": "src/lib/payload/collections/VercelDeployments.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/collections/VercelDeployments.ts"
+        },
+        {
+          "path": "src/lib/payload/components/payload-icon.tsx",
+          "type": "registry:component",
+          "target": "~/src/lib/payload/components/payload-icon.tsx"
+        },
+        {
+          "path": "src/lib/payload/components/payload-logo.tsx",
+          "type": "registry:component",
+          "target": "~/src/lib/payload/components/payload-logo.tsx"
+        },
+        {
+          "path": "src/lib/payload/globals/Settings.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/globals/Settings.ts"
+        },
+        {
+          "path": "src/lib/payload/globals/index.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/globals/index.ts"
+        },
+        {
+          "path": "src/lib/payload/payload.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/payload.ts"
+        },
+        {
+          "path": "src/lib/payload/seed-utils.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/seed-utils.ts"
+        },
+        {
+          "path": "src/lib/payload/seed/faqs.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/seed/faqs.ts"
+        },
+        {
+          "path": "src/lib/payload/seed/features.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/seed/features.ts"
+        },
+        {
+          "path": "src/lib/payload/seed/index.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/seed/index.ts"
+        },
+        {
+          "path": "src/lib/payload/seed/rbac.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/seed/rbac.ts"
+        },
+        {
+          "path": "src/lib/payload/seed/testimonials.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/payload/seed/testimonials.ts"
+        },
+        {
+          "path": "src/app/(cms)/api/preview/route.ts",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/api/preview/route.ts"
+        },
+        {
+          "path": "src/app/(cms)/cms-api/[...slug]/route.ts",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/cms-api/[...slug]/route.ts"
+        },
+        {
+          "path": "src/app/(cms)/cms-api/graphql-playground/route.ts",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/cms-api/graphql-playground/route.ts"
+        },
+        {
+          "path": "src/app/(cms)/cms-api/graphql/route.ts",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/cms-api/graphql/route.ts"
+        },
+        {
+          "path": "src/app/(cms)/cms/[[...segments]]/not-found.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/cms/[[...segments]]/not-found.tsx"
+        },
+        {
+          "path": "src/app/(cms)/cms/[[...segments]]/page.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/cms/[[...segments]]/page.tsx"
+        },
+        {
+          "path": "src/app/(cms)/cms/importMap.js",
+          "type": "registry:file",
+          "target": "~/src/app/(cms)/cms/importMap.js"
+        },
+        {
+          "path": "src/app/(cms)/content.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/content.tsx"
+        },
+        {
+          "path": "src/app/(cms)/features.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/features.tsx"
+        },
+        {
+          "path": "src/app/(cms)/hero.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/hero.tsx"
+        },
+        {
+          "path": "src/app/(cms)/layout.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/layout.tsx"
+        },
+        {
+          "path": "src/app/(cms)/not-found.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/not-found.tsx"
+        },
+        {
+          "path": "src/app/(cms)/payload-blocks.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/payload-blocks.tsx"
+        },
+        {
+          "path": "src/app/(cms)/payload-root-layout.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/payload-root-layout.tsx"
+        },
+        {
+          "path": "src/app/(cms)/testimonials.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(cms)/testimonials.tsx"
+        },
+        {
+          "path": "src/config/nextjs/with-payload.ts",
+          "type": "registry:lib",
+          "target": "~/src/config/nextjs/with-payload.ts"
+        },
+        {
+          "path": "src/payload-types.ts",
+          "type": "registry:lib",
+          "target": "~/src/payload-types.ts"
+        },
+        {
+          "path": "src/payload-generated-schema.ts",
+          "type": "registry:lib",
+          "target": "~/src/payload-generated-schema.ts"
+        },
+        {
+          "path": "src/lib/utils/get-payload-content.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/utils/get-payload-content.ts"
+        },
+        {
+          "path": "src/lib/utils/get-payload-collection.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/utils/get-payload-collection.ts"
+        },
+        {
+          "path": "src/components/layouts/app-router-layout.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/layouts/app-router-layout.tsx"
+        },
+        {
+          "path": "src/components/providers/kit-provider.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/providers/kit-provider.tsx"
+        },
+        {
+          "path": "src/components/providers/font-provider.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/providers/font-provider.tsx"
+        },
+        {
+          "path": "src/components/providers/haptics-provider.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/providers/haptics-provider.tsx"
+        },
+        {
+          "path": "src/components/ui/shipkit/theme.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/ui/shipkit/theme.tsx"
+        },
+        {
+          "path": "src/lib/auth/auth-strategy.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/auth-strategy.ts"
+        },
+        {
+          "path": "src/components/pages/not-found-page.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/pages/not-found-page.tsx"
+        },
+        {
+          "path": "src/components/ui/backgrounds/background-terminal.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/ui/backgrounds/background-terminal.tsx"
+        },
+        {
+          "path": "src/components/blocks/FaultyTerminal.jsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/FaultyTerminal.jsx"
+        },
+        {
+          "path": "src/components/blocks/FaultyTerminal.css",
+          "type": "registry:file",
+          "target": "~/src/components/blocks/FaultyTerminal.css"
+        },
+        {
+          "path": "src/components/assets/icon.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/assets/icon.tsx"
+        },
+        {
+          "path": "src/components/assets/kit-icon.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/assets/kit-icon.tsx"
+        },
+        {
+          "path": "src/types/blocks.ts",
+          "type": "registry:lib",
+          "target": "~/src/types/blocks.ts"
+        }
+      ],
+      "envVars": {
+        "DATABASE_URL": "",
+        "PAYLOAD_SECRET": "",
+        "PAYLOAD_PUBLIC_DRAFT_SECRET": ""
+      },
+      "docs": "Payload CMS with the ShipKit collections (Pages, Media, Users, FAQs, Features, Testimonials, RBAC, VercelDeployments) and the Settings global. Admin UI at `/cms`, API at `/cms-api`. Set `DATABASE_URL` and `PAYLOAD_SECRET` (`PAYLOAD_PUBLIC_DRAFT_SECRET` enables draft preview). Overwrites the Bones stubs `src/payload.config.ts`, `src/lib/payload/payload.ts`, `src/lib/utils/get-payload-content.ts` and `src/payload-types.ts`; run with --overwrite. Needs `\"@payload-config\": [\"./src/payload.config.ts\"]` in tsconfig `paths` (Bones already has it) and `src/config/nextjs/with-payload.ts` is auto-loaded by Bones' Next.js plugin loader. After install run `pnpm payload generate:types`. Tables are created with the `shipkit_` prefix, so keep `DB_PREFIX=shipkit`."
     },
     {
       "name": "cms-pages",
       "type": "registry:block",
       "title": "CMS Pages",
       "description": "Shared catch-all route that renders dynamic pages from Payload CMS and/or Builder.io with automatic fallback.",
-      "categories": ["shipkit", "cms"],
-      "dependencies": ["@builder.io/sdk", "uuid"],
+      "categories": [
+        "shipkit",
+        "cms"
+      ],
+      "dependencies": [
+        "@builder.io/sdk@6.3.3",
+        "uuid@13.0.2"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/features-config",
-        "builder-io",
-        "button",
-        "card",
-        "carousel",
-        "avatar"
+        "@shipkit/builder-io",
+        "@shipkit/payload"
       ],
       "files": [
         {
           "path": "src/app/(app)/[...slug]/page.tsx",
           "type": "registry:page",
           "target": "~/src/app/(app)/[...slug]/page.tsx"
-        },
-        {
-          "path": "src/app/(cms)/layout.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(cms)/layout.tsx"
-        },
-        {
-          "path": "src/app/(cms)/payload-root-layout.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(cms)/payload-root-layout.tsx"
-        },
-        {
-          "path": "src/app/(cms)/not-found.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(cms)/not-found.tsx"
-        },
-        {
-          "path": "src/app/(cms)/payload-blocks.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(cms)/payload-blocks.tsx"
-        },
-        {
-          "path": "src/app/(cms)/hero.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(cms)/hero.tsx"
-        },
-        {
-          "path": "src/app/(cms)/content.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(cms)/content.tsx"
-        },
-        {
-          "path": "src/app/(cms)/features.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(cms)/features.tsx"
-        },
-        {
-          "path": "src/app/(cms)/testimonials.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(cms)/testimonials.tsx"
-        },
-        {
-          "path": "src/types/blocks.ts",
-          "type": "registry:lib",
-          "target": "~/src/types/blocks.ts"
-        },
-        {
-          "path": "src/styles/builder-io.css",
-          "type": "registry:style",
-          "target": "~/src/styles/builder-io.css"
         }
       ],
-      "docs": "Shared CMS catch-all route. Checks Payload CMS first, then falls back to Builder.io. Both CMS systems coexist on the same URL space. Requires `features-config` to detect which CMS is enabled via env vars. Install `builder-io` block for Builder.io support and/or configure Payload CMS separately."
+      "envVars": {
+        "DATABASE_URL": "",
+        "PAYLOAD_SECRET": "",
+        "NEXT_PUBLIC_BUILDER_API_KEY": ""
+      },
+      "docs": "Shared CMS catch-all route at `src/app/(app)/[...slug]/page.tsx`. Checks Payload CMS first, then falls back to Builder.io, so both CMS systems coexist on the same URL space. Installs the `payload` and `builder-io` items as registry dependencies; `features-config` detects which CMS is enabled from env vars. Payload CMS needs `DATABASE_URL` and `PAYLOAD_SECRET`; Builder.io needs `NEXT_PUBLIC_BUILDER_API_KEY`."
     },
     {
       "name": "auth",
       "type": "registry:block",
       "title": "Auth",
       "description": "Full authentication system with NextAuth.js v5, multi-provider OAuth, credentials, magic link, and guest access.",
-      "categories": ["shipkit", "auth"],
-      "dependencies": ["next-auth@beta", "@auth/drizzle-adapter", "bcryptjs", "zod", "zsa"],
+      "categories": [
+        "shipkit",
+        "auth"
+      ],
+      "dependencies": [
+        "next-auth@beta",
+        "@auth/drizzle-adapter@1.11.3",
+        "bcryptjs",
+        "zod@3.25.76",
+        "zsa@0.6.0",
+        "@auth/core@0.41.3"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "input",
-        "card",
-        "separator",
-        "form",
-        "label",
-        "tooltip"
+        "@shipkit/github-connect",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -790,11 +1151,6 @@
           "target": "~/src/app/(app)/api/auth/[...nextauth]/route.ts"
         },
         {
-          "path": "src/server/db/schema.ts",
-          "type": "registry:lib",
-          "target": "~/src/server/db/schema.ts"
-        },
-        {
           "path": "src/server/auth.ts",
           "type": "registry:lib",
           "target": "~/src/server/auth.ts"
@@ -870,11 +1226,6 @@
           "target": "~/src/components/buttons/sign-in-button.tsx"
         },
         {
-          "path": "src/components/buttons/github-oauth-button.tsx",
-          "type": "registry:component",
-          "target": "~/src/components/buttons/github-oauth-button.tsx"
-        },
-        {
           "path": "src/components/assets/icon.tsx",
           "type": "registry:component",
           "target": "~/src/components/assets/icon.tsx"
@@ -883,17 +1234,208 @@
           "path": "src/components/assets/kit-icon.tsx",
           "type": "registry:component",
           "target": "~/src/components/assets/kit-icon.tsx"
+        },
+        {
+          "path": "src/server/lib/auth.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/lib/auth.ts"
         }
       ],
-      "docs": "Full auth system with NextAuth.js v5. Run `npx auth secret` to generate `AUTH_SECRET`. Configure at least one OAuth provider (e.g. `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`) or enable guest access with `ENABLE_AUTH_GUEST=true`. Requires a database \u2014 set `DATABASE_URL` and run Drizzle migrations."
+      "envVars": {
+        "DATABASE_URL": "",
+        "APP_SECRET": "",
+        "AUTH_URL": "",
+        "AUTH_GITHUB_ID": "",
+        "AUTH_GITHUB_SECRET": "",
+        "AUTH_GOOGLE_ID": "",
+        "AUTH_GOOGLE_SECRET": ""
+      },
+      "docs": "Auth.js v5 auth system (Better Auth is ShipKit's default; this item is the Auth.js alternative). Set `APP_SECRET` (one secret derives `AUTH_SECRET` and the others) or run `npx auth secret` for `AUTH_SECRET`. Configure at least one OAuth provider (e.g. `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET`) or enable guest access with `ENABLE_AUTH_GUEST=true`. Requires a database: set `DATABASE_URL` and run Drizzle migrations."
+    },
+    {
+      "name": "better-auth",
+      "type": "registry:block",
+      "title": "Better Auth",
+      "description": "Better Auth on the app's own user tables: server config, session facade, session service, React client, the strategy-aware useSession/signIn/signOut hook, OAuth buttons, provider, and the API route handler.",
+      "categories": [
+        "shipkit",
+        "auth",
+        "better-auth"
+      ],
+      "dependencies": [
+        "better-auth@^1.6.33"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
+      "files": [
+        {
+          "path": "src/server/better-auth/config.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/better-auth/config.ts"
+        },
+        {
+          "path": "src/server/better-auth/facade.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/better-auth/facade.ts"
+        },
+        {
+          "path": "src/server/better-auth/service.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/better-auth/service.ts"
+        },
+        {
+          "path": "src/lib/better-auth/client.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/better-auth/client.ts"
+        },
+        {
+          "path": "src/app/(app)/(authentication)/api/better-auth/[...path]/route.ts",
+          "type": "registry:page",
+          "target": "~/src/app/(app)/(authentication)/api/better-auth/[...path]/route.ts"
+        },
+        {
+          "path": "src/components/modules/auth/better-auth-oauth-buttons.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/modules/auth/better-auth-oauth-buttons.tsx"
+        },
+        {
+          "path": "src/components/providers/better-auth-provider.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/providers/better-auth-provider.tsx"
+        },
+        {
+          "path": "src/lib/auth/auth-strategy.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/auth-strategy.ts"
+        },
+        {
+          "path": "src/lib/auth/session-mapping.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/session-mapping.ts"
+        },
+        {
+          "path": "src/lib/auth/use-session.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/use-session.ts"
+        }
+      ],
+      "envVars": {
+        "AUTH_STRATEGY": "better-auth",
+        "APP_SECRET": "",
+        "BETTER_AUTH_SECRET": "",
+        "BETTER_AUTH_BASE_URL": "",
+        "AUTH_GITHUB_ID": "",
+        "AUTH_GITHUB_SECRET": "",
+        "AUTH_GOOGLE_ID": "",
+        "AUTH_GOOGLE_SECRET": ""
+      },
+      "docs": "Better Auth with email/password and GitHub/Google OAuth, reading and writing the app's own `users`, `accounts`, `sessions` and `verificationTokens` tables. Set `DATABASE_URL` and `APP_SECRET` (it derives `BETTER_AUTH_SECRET`) or set `BETTER_AUTH_SECRET` directly, and `BETTER_AUTH_BASE_URL` if it differs from the site URL. `AUTH_STRATEGY=better-auth` makes it the active strategy behind `@/server/auth`; leave it unset and Better Auth is picked whenever nothing Auth.js-specific is configured. Add `AUTH_GITHUB_ID`/`AUTH_GITHUB_SECRET` and/or `AUTH_GOOGLE_ID`/`AUTH_GOOGLE_SECRET` for OAuth. The handler mounts at `/api/better-auth`. Run `pnpm db:push` so the nullable Better Auth columns exist on the auth tables."
+    },
+    {
+      "name": "clerk",
+      "type": "registry:block",
+      "title": "Clerk",
+      "description": "Clerk as the auth strategy: server session facade, client hooks, provider, request proxy with Clerk's middleware, prebuilt sign-in/sign-up/user-button components, and the strategy dispatch in the shared auth files.",
+      "categories": [
+        "shipkit",
+        "auth",
+        "clerk"
+      ],
+      "dependencies": [
+        "@clerk/nextjs@^6.39.6"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
+      "files": [
+        {
+          "path": "src/lib/auth/clerk-config.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/clerk-config.ts"
+        },
+        {
+          "path": "src/lib/auth/clerk-utils.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/clerk-utils.ts"
+        },
+        {
+          "path": "src/lib/auth/clerk-client.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/clerk-client.ts"
+        },
+        {
+          "path": "src/server/clerk/facade.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/clerk/facade.ts"
+        },
+        {
+          "path": "src/config/providers/clerk.provider.tsx",
+          "type": "registry:component",
+          "target": "~/src/config/providers/clerk.provider.tsx"
+        },
+        {
+          "path": "src/proxy.ts",
+          "type": "registry:lib",
+          "target": "~/src/proxy.ts"
+        },
+        {
+          "path": "src/components/modules/auth/clerk-provider.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/modules/auth/clerk-provider.tsx"
+        },
+        {
+          "path": "src/components/modules/auth/clerk-auth-forms.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/modules/auth/clerk-auth-forms.tsx"
+        },
+        {
+          "path": "src/components/ui/badge-clerk.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/ui/badge-clerk.tsx"
+        },
+        {
+          "path": "src/lib/auth/auth-strategy.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/auth-strategy.ts"
+        },
+        {
+          "path": "src/lib/auth/session-mapping.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/session-mapping.ts"
+        },
+        {
+          "path": "src/lib/auth/use-session.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/auth/use-session.ts"
+        },
+        {
+          "path": "src/server/auth.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/auth.ts"
+        }
+      ],
+      "envVars": {
+        "AUTH_STRATEGY": "clerk",
+        "NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY": "",
+        "CLERK_SECRET_KEY": "",
+        "CLERK_WEBHOOK_SECRET": ""
+      },
+      "docs": "Clerk (hosted, paid) as the app's auth strategy. Create an application at https://dashboard.clerk.com and copy the publishable and secret keys from API Keys into `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` and `CLERK_SECRET_KEY` (`CLERK_WEBHOOK_SECRET` from Webhooks, if you add one). `AUTH_STRATEGY=clerk` turns it on; the keys alone do nothing, and Clerk is never picked automatically (Better Auth stays the default). `src/env.ts` must accept `\"clerk\"` in its `AUTH_STRATEGY` enum (Bones has it from shipkit-io/bones#107). Once on: `auth()`, `signIn()` and `signOut()` from `@/server/auth` and `useSession()` from `@/lib/auth/use-session` read Clerk, `src/config/providers/clerk.provider.tsx` mounts `ClerkProvider`, and `src/proxy.ts` runs `clerkMiddleware()` and forwards `/sign-in` and `/sign-up` to Clerk's hosted Account Portal (`next` becomes the return URL; a signed-in visitor goes to the dashboard). Set `publicMetadata.role` to `admin` on a user in the dashboard to make them an admin. Overwrites the Bones stubs `src/server/clerk/facade.ts` and `src/lib/auth/clerk-client.ts`, and the shared `auth-strategy.ts`, `session-mapping.ts`, `use-session.ts` and `server/auth.ts` (same content Bones ships). Not on: the proxy is a pass-through and the provider renders children unchanged."
     },
     {
       "name": "legal",
       "type": "registry:block",
       "title": "Legal Pages",
-      "description": "Legal pages with privacy policy, terms of service, EULA, and legal information \u2014 all in MDX with shared layout and header navigation.",
-      "categories": ["shipkit", "legal"],
-      "registryDependencies": ["@shipkit/cn", "@shipkit/routes-config"],
+      "description": "Legal pages with privacy policy, terms of service, EULA, and legal information, all in MDX with shared layout and header navigation.",
+      "categories": [
+        "shipkit",
+        "legal"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "@shipkit/routes-config"
+      ],
       "files": [
         {
           "path": "src/app/(app)/(legal)/layout.tsx",
@@ -928,9 +1470,20 @@
       "type": "registry:block",
       "title": "Changelog",
       "description": "Changelog with markdown file support and GitHub commit fallback, timeline view, and individual entry pages.",
-      "categories": ["shipkit", "changelog"],
-      "dependencies": ["react-markdown", "remark-gfm", "lucide-react", "gray-matter"],
-      "registryDependencies": ["@shipkit/cn", "@shipkit/routes-config", "badge", "button"],
+      "categories": [
+        "shipkit",
+        "changelog"
+      ],
+      "dependencies": [
+        "react-markdown@10.1.0",
+        "remark-gfm@4.0.1",
+        "lucide-react@0.564.0",
+        "gray-matter@4.0.3"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "@shipkit/routes-config"
+      ],
       "files": [
         {
           "path": "src/app/(app)/changelog/layout.tsx",
@@ -941,11 +1494,6 @@
           "path": "src/app/(app)/changelog/page.tsx",
           "type": "registry:page",
           "target": "~/src/app/(app)/changelog/page.tsx"
-        },
-        {
-          "path": "src/app/(app)/changelog/loading.tsx",
-          "type": "registry:component",
-          "target": "~/src/app/(app)/changelog/loading.tsx"
         },
         {
           "path": "src/app/(app)/changelog/[...slug]/page.tsx",
@@ -961,27 +1509,43 @@
           "path": "src/lib/changelog.ts",
           "type": "registry:lib",
           "target": "~/src/lib/changelog.ts"
+        },
+        {
+          "path": "src/lib/changelog-markdown.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/changelog-markdown.ts"
+        },
+        {
+          "path": "src/lib/changelog-types.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/changelog-types.ts"
         }
       ],
-      "docs": "Auto-generated changelog from your GitHub repo's commits and tags. Set `GITHUB_REPO_OWNER` and `GITHUB_REPO_NAME` env vars (defaults to lacymorrow/shipkit). Optionally set `GITHUB_TOKEN` for higher API rate limits."
+      "envVars": {
+        "GITHUB_REPO_OWNER": "",
+        "GITHUB_REPO_NAME": "",
+        "GITHUB_ACCESS_TOKEN": ""
+      },
+      "docs": "Auto-generated changelog from your GitHub repo's commits and tags. Set `GITHUB_REPO_OWNER` and `GITHUB_REPO_NAME` env vars (defaults to lacymorrow/shipkit). Optionally set `GITHUB_ACCESS_TOKEN` for higher API rate limits."
     },
     {
       "name": "contact",
       "type": "registry:block",
       "title": "Contact",
       "description": "Contact page with animated background, email card, and contact form with Resend email integration and newsletter opt-in.",
-      "categories": ["shipkit", "contact"],
-      "dependencies": ["zod", "react-hook-form", "@hookform/resolvers", "lucide-react"],
+      "categories": [
+        "shipkit",
+        "contact"
+      ],
+      "dependencies": [
+        "zod@3.25.76",
+        "react-hook-form@7.88.0",
+        "@hookform/resolvers@5.9.1",
+        "lucide-react@0.564.0"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
-        "@shipkit/routes-config",
-        "button",
-        "card",
-        "input",
-        "form",
-        "label",
-        "checkbox",
-        "textarea"
+        "@shipkit/routes-config"
       ],
       "files": [
         {
@@ -1005,6 +1569,9 @@
           "target": "~/src/types/contact.ts"
         }
       ],
+      "envVars": {
+        "RESEND_API_KEY": ""
+      },
       "docs": "Contact page with form that sends emails via Resend. Set `RESEND_API_KEY` to enable email delivery. The form includes name, contact info, message, and optional newsletter opt-in."
     },
     {
@@ -1012,17 +1579,18 @@
       "type": "registry:block",
       "title": "Waitlist",
       "description": "Pre-launch waitlist with signup form, hero section, social proof, FAQ, database storage, and Resend email notifications.",
-      "categories": ["shipkit", "waitlist"],
-      "dependencies": ["zod", "lucide-react"],
+      "categories": [
+        "shipkit",
+        "waitlist"
+      ],
+      "dependencies": [
+        "zod@3.25.76",
+        "lucide-react@0.564.0"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "@shipkit/features-config",
-        "button",
-        "input",
-        "card",
-        "badge",
-        "accordion"
+        "@shipkit/features-config"
       ],
       "files": [
         {
@@ -1076,6 +1644,10 @@
           "target": "~/src/server/services/waitlist-service.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": "",
+        "RESEND_API_KEY": ""
+      },
       "docs": "Pre-launch waitlist page with email signup, social proof, and FAQ. Requires a database (`DATABASE_URL`) for storing entries. Optionally set `RESEND_API_KEY` for confirmation emails."
     },
     {
@@ -1083,19 +1655,24 @@
       "type": "registry:block",
       "title": "Admin Dashboard",
       "description": "Role-based admin panel with user management, payments, GitHub repos, integrations, feedback, waitlist, and CMS admin sections.",
-      "categories": ["shipkit", "admin"],
-      "dependencies": ["lucide-react"],
+      "categories": [
+        "shipkit",
+        "admin"
+      ],
+      "dependencies": [
+        "lucide-react@0.564.0"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card",
-        "badge",
-        "input",
-        "separator",
-        "table",
-        "skeleton"
+        "@shipkit/auth",
+        "@shipkit/data-table",
+        "@shipkit/payments",
+        "@shipkit/payload",
+        "@shipkit/github-connect",
+        "@shipkit/waitlist",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -1254,6 +1831,10 @@
           "target": "~/src/server/services/integration-service.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": "",
+        "ADMIN_EMAIL": ""
+      },
       "docs": "Role-based admin dashboard. Set `ADMIN_EMAIL` (comma-separated) to grant admin access by email. Requires auth block for session management and database for user/role queries."
     },
     {
@@ -1261,17 +1842,21 @@
       "type": "registry:block",
       "title": "Settings",
       "description": "User settings pages with profile, appearance, account management, sidebar navigation, and server actions for profile/theme updates.",
-      "categories": ["shipkit", "settings"],
-      "dependencies": ["lucide-react"],
+      "categories": [
+        "shipkit",
+        "settings"
+      ],
+      "dependencies": [
+        "lucide-react@0.564.0"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "button",
-        "card",
-        "input",
-        "separator",
-        "form",
-        "label"
+        "@shipkit/auth",
+        "@shipkit/payments",
+        "@shipkit/github-connect",
+        "@shipkit/vercel-connect",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -1335,6 +1920,9 @@
           "target": "~/src/components/blocks/settings-dialog.tsx"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": ""
+      },
       "docs": "User settings with profile editing, appearance/theme picker, account deletion, and provider disconnect. Requires auth block for session management and database for persisting changes."
     },
     {
@@ -1342,40 +1930,22 @@
       "type": "registry:block",
       "title": "Demo Pages",
       "description": "Showcase demo pages with UI examples including dashboard, mail, music, playground, forms, cards, authentication, file browser, and more.",
-      "categories": ["shipkit", "demo"],
+      "categories": [
+        "shipkit",
+        "demo"
+      ],
       "dependencies": [
-        "recharts",
-        "date-fns",
-        "react-day-picker",
-        "lucide-react",
-        "react-resizable-panels"
+        "recharts@3.10.1",
+        "date-fns@4.4.0",
+        "lucide-react@0.564.0",
+        "react-resizable-panels@4.12.4",
+        "react-day-picker@9.13.2"
       ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "button",
-        "card",
-        "badge",
-        "input",
-        "separator",
-        "tabs",
-        "avatar",
-        "dialog",
-        "dropdown-menu",
-        "popover",
-        "select",
-        "textarea",
-        "tooltip",
-        "scroll-area",
-        "command",
-        "label",
-        "switch",
-        "slider",
-        "radio-group",
-        "calendar",
-        "checkbox",
-        "table",
-        "form"
+        "@shipkit/storage",
+        "@shipkit/blog"
       ],
       "files": [
         {
@@ -1851,9 +2421,17 @@
       "type": "registry:block",
       "title": "Email",
       "description": "Resend email integration with client setup, subscribe/audience actions, email service, and newsletter form component.",
-      "categories": ["shipkit", "email"],
-      "dependencies": ["resend", "zod"],
-      "registryDependencies": ["@shipkit/cn", "button", "input", "label"],
+      "categories": [
+        "shipkit",
+        "email"
+      ],
+      "dependencies": [
+        "resend@6.28.0",
+        "zod@3.25.76"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "files": [
         {
           "path": "src/lib/resend.ts",
@@ -1886,23 +2464,58 @@
           "target": "~/src/components/forms/subscribe-form.tsx"
         }
       ],
+      "envVars": {
+        "RESEND_API_KEY": "",
+        "RESEND_AUDIENCE_ID": ""
+      },
       "docs": "Email integration via Resend. Set `RESEND_API_KEY` to enable. Optionally set `RESEND_AUDIENCE_ID` for newsletter audience management. Includes subscribe form component and email utility functions."
+    },
+    {
+      "name": "turnstile",
+      "type": "registry:block",
+      "title": "Cloudflare Turnstile",
+      "description": "Cloudflare Turnstile bot protection: server-side token verification helper and a themed widget component.",
+      "categories": [
+        "shipkit",
+        "security",
+        "turnstile"
+      ],
+      "registryDependencies": [
+        "@shipkit/features-config"
+      ],
+      "files": [
+        {
+          "path": "src/lib/turnstile.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/turnstile.ts"
+        },
+        {
+          "path": "src/components/turnstile.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/turnstile.tsx"
+        }
+      ],
+      "envVars": {
+        "TURNSTILE_SECRET_KEY": "",
+        "NEXT_PUBLIC_TURNSTILE_SITE_KEY": ""
+      },
+      "docs": "Cloudflare Turnstile bot protection. Create a widget at dash.cloudflare.com, then set `NEXT_PUBLIC_TURNSTILE_SITE_KEY` (client) and `TURNSTILE_SECRET_KEY` (server). Render `<Turnstile />` in a form and call `verifyTurnstileToken()` in the server action. The feature turns on automatically when both keys are set."
     },
     {
       "name": "feedback",
       "type": "registry:block",
       "title": "Feedback",
       "description": "User feedback system with dialog and popover components, server actions, and database-backed feedback service.",
-      "categories": ["shipkit", "feedback"],
-      "dependencies": ["zod", "lucide-react"],
+      "categories": [
+        "shipkit",
+        "feedback"
+      ],
+      "dependencies": [
+        "zod@3.25.76",
+        "lucide-react@0.564.0"
+      ],
       "registryDependencies": [
-        "@shipkit/cn",
-        "button",
-        "dialog",
-        "popover",
-        "textarea",
-        "label",
-        "input"
+        "@shipkit/cn"
       ],
       "files": [
         {
@@ -1926,16 +2539,28 @@
           "target": "~/src/server/services/feedback-service.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": "",
+        "RESEND_API_KEY": ""
+      },
       "docs": "User feedback collection with dialog and popover UI. Stores feedback in the database and optionally emails it via Resend. Requires `DATABASE_URL` for storage."
     },
     {
       "name": "analytics",
       "type": "registry:block",
       "title": "Analytics",
-      "description": "Multi-provider analytics with PostHog, Umami, DataFast, Google Analytics, Google Tag Manager, and Statsig \u2014 all behind feature flags.",
-      "categories": ["shipkit", "analytics"],
-      "dependencies": ["posthog-js"],
-      "registryDependencies": ["@shipkit/cn", "@shipkit/features-config"],
+      "description": "Multi-provider analytics with PostHog, Umami, DataFast, Google Analytics, Google Tag Manager, and Statsig, all behind feature flags.",
+      "categories": [
+        "shipkit",
+        "analytics"
+      ],
+      "dependencies": [
+        "posthog-js@1.431.6"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "@shipkit/features-config"
+      ],
       "files": [
         {
           "path": "src/lib/posthog/posthog-config.ts",
@@ -1983,16 +2608,35 @@
           "target": "~/src/components/providers/consent-provider.tsx"
         }
       ],
-      "docs": "Multi-provider analytics. Each provider auto-enables via env vars: `NEXT_PUBLIC_POSTHOG_KEY` (PostHog), `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Umami), `NEXT_PUBLIC_DATAFAST_ID` (DataFast), `NEXT_PUBLIC_GA_ID` (Google Analytics), `NEXT_PUBLIC_GTM_ID` (GTM), `NEXT_PUBLIC_STATSIG_CLIENT_KEY` (Statsig). Add `<AnalyticsProvider />` to your root layout."
+      "envVars": {
+        "NEXT_PUBLIC_POSTHOG_KEY": "",
+        "NEXT_PUBLIC_POSTHOG_HOST": "",
+        "NEXT_PUBLIC_UMAMI_WEBSITE_ID": "",
+        "NEXT_PUBLIC_DATAFAST_WEBSITE_ID": "",
+        "NEXT_PUBLIC_DATAFAST_DOMAIN": "",
+        "NEXT_PUBLIC_STATSIG_CLIENT_KEY": "",
+        "NEXT_PUBLIC_GOOGLE_ANALYTICS_ID": "",
+        "NEXT_PUBLIC_GOOGLE_GTM_ID": ""
+      },
+      "docs": "Multi-provider analytics. Each provider auto-enables via env vars: `NEXT_PUBLIC_POSTHOG_KEY` (PostHog), `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Umami), `NEXT_PUBLIC_DATAFAST_WEBSITE_ID` (DataFast), `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` (Google Analytics), `NEXT_PUBLIC_GOOGLE_GTM_ID` (GTM), `NEXT_PUBLIC_STATSIG_CLIENT_KEY` (Statsig). Add `<AnalyticsProvider />` to your root layout."
     },
     {
       "name": "caching",
       "type": "registry:block",
       "title": "Caching & Rate Limiting",
       "description": "Redis-based caching and rate limiting via Upstash with configurable per-route limits.",
-      "categories": ["shipkit", "caching", "infrastructure"],
-      "dependencies": ["@upstash/redis", "@upstash/ratelimit"],
-      "registryDependencies": ["@shipkit/features-config"],
+      "categories": [
+        "shipkit",
+        "caching",
+        "infrastructure"
+      ],
+      "dependencies": [
+        "@upstash/redis@1.38.4",
+        "@upstash/ratelimit@2.1.0"
+      ],
+      "registryDependencies": [
+        "@shipkit/features-config"
+      ],
       "files": [
         {
           "path": "src/server/services/redis-service.ts",
@@ -2015,6 +2659,10 @@
           "target": "~/src/config/rate-limits.ts"
         }
       ],
+      "envVars": {
+        "UPSTASH_REDIS_REST_URL": "",
+        "UPSTASH_REDIS_REST_TOKEN": ""
+      },
       "docs": "Redis caching and rate limiting via Upstash. Set `UPSTASH_REDIS_REST_URL` and `UPSTASH_REDIS_REST_TOKEN` to enable. Configure per-route rate limits in `config/rate-limits.ts`."
     },
     {
@@ -2022,9 +2670,18 @@
       "type": "registry:block",
       "title": "Storage",
       "description": "File storage with AWS S3 presigned uploads, file service, server actions, and upload components.",
-      "categories": ["shipkit", "storage", "infrastructure"],
-      "dependencies": ["@aws-sdk/client-s3", "@aws-sdk/s3-request-presigner"],
-      "registryDependencies": ["@shipkit/cn", "button", "input"],
+      "categories": [
+        "shipkit",
+        "storage",
+        "infrastructure"
+      ],
+      "dependencies": [
+        "@aws-sdk/client-s3@3.1131.0",
+        "@aws-sdk/s3-request-presigner@3.1131.0"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn"
+      ],
       "files": [
         {
           "path": "src/server/services/s3.ts",
@@ -2055,26 +2712,38 @@
           "path": "src/components/inputs/file-input.tsx",
           "type": "registry:component",
           "target": "~/src/components/inputs/file-input.tsx"
+        },
+        {
+          "path": "src/server/actions/schemas.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/actions/schemas.ts"
         }
       ],
-      "docs": "File storage via AWS S3 with presigned URL uploads. Set `AWS_S3_BUCKET_NAME`, `AWS_S3_REGION`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`. Includes file upload components and server actions for managing uploads."
+      "envVars": {
+        "AWS_REGION": "",
+        "AWS_ACCESS_KEY_ID": "",
+        "AWS_SECRET_ACCESS_KEY": "",
+        "AWS_BUCKET_NAME": ""
+      },
+      "docs": "File storage via AWS S3 with presigned URL uploads. Set `AWS_REGION`, `AWS_BUCKET_NAME`, `AWS_ACCESS_KEY_ID`, and `AWS_SECRET_ACCESS_KEY`. Vercel Blob (`VERCEL_BLOB_READ_WRITE_TOKEN`) is detected too but ships with the Payload CMS item. Includes file upload components and server actions for managing uploads. Overwrites the Bones stub `src/server/services/s3.ts`; run with --overwrite."
     },
     {
       "name": "pricing",
       "type": "registry:block",
       "title": "Pricing",
       "description": "Pricing page with plan cards, features showcase, testimonials, and static content data files.",
-      "categories": ["shipkit", "pricing", "marketing"],
-      "dependencies": ["lucide-react"],
+      "categories": [
+        "shipkit",
+        "pricing",
+        "marketing"
+      ],
+      "dependencies": [
+        "lucide-react@0.564.0"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
-        "@shipkit/features-config",
-        "button",
-        "card",
-        "badge",
-        "separator",
-        "tabs"
+        "@shipkit/features-config"
       ],
       "files": [
         {
@@ -2106,11 +2775,6 @@
           "path": "src/components/blocks/pricing-section-single.tsx",
           "type": "registry:component",
           "target": "~/src/components/blocks/pricing-section-single.tsx"
-        },
-        {
-          "path": "src/lib/utils/get-payload-content.ts",
-          "type": "registry:lib",
-          "target": "~/src/lib/utils/get-payload-content.ts"
         }
       ],
       "docs": "Pricing page with plan cards and feature comparison. Customize plans in `content/pricing/pricing-content.ts`, features in `content/features/features-content.ts`, and testimonials in `content/testimonials/testimonials-content.ts`."
@@ -2119,24 +2783,26 @@
       "name": "payments",
       "type": "registry:block",
       "title": "Payments",
-      "description": "Unified payment system with Stripe, Lemon Squeezy, and Polar providers \u2014 checkout flows, webhook handlers, and subscription management.",
-      "categories": ["shipkit", "payments"],
+      "description": "Unified payment system with Stripe, Lemon Squeezy, and Polar providers: checkout flows, webhook handlers, and subscription management.",
+      "categories": [
+        "shipkit",
+        "payments"
+      ],
       "dependencies": [
-        "stripe",
-        "@lemonsqueezy/lemonsqueezy.js",
-        "@polar-sh/sdk",
-        "zod",
-        "lucide-react",
-        "@polar-sh/nextjs",
-        "canvas-confetti"
+        "stripe@20.3.1",
+        "@lemonsqueezy/lemonsqueezy.js@4.0.0",
+        "zod@3.25.76",
+        "lucide-react@0.564.0",
+        "@polar-sh/nextjs@0.9.6",
+        "canvas-confetti@1.9.4",
+        "@polar-sh/sdk@0.43.1"
       ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card",
-        "badge"
+        "@shipkit/auth",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -2295,32 +2961,46 @@
           "target": "~/src/components/ui/magicui/confetti/confetti-side-cannons.tsx"
         }
       ],
-      "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `STRIPE_PUBLISHABLE_KEY` (Stripe), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records."
+      "envVars": {
+        "DATABASE_URL": "",
+        "STRIPE_SECRET_KEY": "",
+        "NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY": "",
+        "STRIPE_WEBHOOK_SECRET": "",
+        "LEMONSQUEEZY_API_KEY": "",
+        "LEMONSQUEEZY_STORE_ID": "",
+        "LEMONSQUEEZY_WEBHOOK_SECRET": "",
+        "POLAR_ACCESS_TOKEN": ""
+      },
+      "docs": "Unified payment system supporting Stripe, Lemon Squeezy, and Polar. Each provider auto-enables via env vars: `STRIPE_SECRET_KEY` + `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY` (Stripe, plus `STRIPE_WEBHOOK_SECRET` for webhooks), `LEMONSQUEEZY_API_KEY` + `LEMONSQUEEZY_STORE_ID` (Lemon Squeezy), `POLAR_ACCESS_TOKEN` (Polar). Includes webhook handlers, checkout flows, and subscription management. Requires `DATABASE_URL` for storing payment records. Overwrites the Bones stubs `src/server/providers/stripe-provider.ts`, `src/server/providers/lemonsqueezy-provider.ts`, `src/server/providers/polar-provider.ts` and `src/lib/lemonsqueezy/lemonsqueezy.ts`; run with --overwrite.",
+      "devDependencies": [
+        "@types/canvas-confetti@1.9.0"
+      ]
     },
     {
       "name": "dashboard",
       "type": "registry:block",
       "title": "Dashboard",
       "description": "User dashboard with projects, teams, API keys, deployments, downloads, tools, stats, and revenue chart.",
-      "categories": ["shipkit", "dashboard"],
-      "dependencies": ["recharts", "lucide-react", "date-fns"],
+      "categories": [
+        "shipkit",
+        "dashboard"
+      ],
+      "dependencies": [
+        "recharts@3.10.1",
+        "lucide-react@0.564.0",
+        "date-fns@4.4.0",
+        "evlog@2.29.0"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card",
-        "badge",
-        "input",
-        "separator",
-        "tabs",
-        "table",
-        "dialog",
-        "dropdown-menu",
-        "skeleton",
-        "avatar",
-        "scroll-area",
-        "@shipkit/data-table"
+        "@shipkit/data-table",
+        "@shipkit/auth",
+        "@shipkit/payments",
+        "@shipkit/vercel-connect",
+        "@shipkit/github-connect",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -2384,9 +3064,9 @@
           "target": "~/src/app/(app)/(dashboard)/deployments/page.tsx"
         },
         {
-          "path": "src/app/(app)/(dashboard)/deployments/deployment-actions.tsx",
+          "path": "src/app/(app)/(dashboard)/deployments/deployment-actions-menu.tsx",
           "type": "registry:component",
-          "target": "~/src/app/(app)/(dashboard)/deployments/deployment-actions.tsx"
+          "target": "~/src/app/(app)/(dashboard)/deployments/deployment-actions-menu.tsx"
         },
         {
           "path": "src/app/(app)/(dashboard)/deployments/deployments-list.tsx",
@@ -2484,11 +3164,6 @@
           "target": "~/src/server/services/api-key-service.ts"
         },
         {
-          "path": "src/server/services/deployment-service.ts",
-          "type": "registry:lib",
-          "target": "~/src/server/services/deployment-service.ts"
-        },
-        {
           "path": "src/server/actions/projects.ts",
           "type": "registry:lib",
           "target": "~/src/server/actions/projects.ts"
@@ -2502,11 +3177,6 @@
           "path": "src/server/actions/api-key-actions.ts",
           "type": "registry:lib",
           "target": "~/src/server/actions/api-key-actions.ts"
-        },
-        {
-          "path": "src/server/actions/deployment-actions.ts",
-          "type": "registry:lib",
-          "target": "~/src/server/actions/deployment-actions.ts"
         },
         {
           "path": "src/server/actions/deploy-private-repo.ts",
@@ -2642,8 +3312,66 @@
           "path": "src/components/blocks/nav-secondary.tsx",
           "type": "registry:component",
           "target": "~/src/components/blocks/nav-secondary.tsx"
+        },
+        {
+          "path": "src/components/blocks/dashboard-footer.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/dashboard-footer.tsx"
+        },
+        {
+          "path": "src/components/blocks/scroll-edge-header.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/scroll-edge-header.tsx"
+        },
+        {
+          "path": "src/components/primitives/count-up.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/primitives/count-up.tsx"
+        },
+        {
+          "path": "src/components/ui/shipkit/theme.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/ui/shipkit/theme.tsx"
+        },
+        {
+          "path": "src/hooks/use-is-admin.ts",
+          "type": "registry:hook",
+          "target": "~/src/hooks/use-is-admin.ts"
+        },
+        {
+          "path": "src/lib/evlog.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/evlog.ts"
+        },
+        {
+          "path": "src/server/actions/temporary-links.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/actions/temporary-links.ts"
+        },
+        {
+          "path": "src/server/services/audit-service.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/services/audit-service.ts"
+        },
+        {
+          "path": "src/server/services/validation-service.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/services/validation-service.ts"
+        },
+        {
+          "path": "src/server/actions/schemas.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/actions/schemas.ts"
+        },
+        {
+          "path": "src/components/modules/onboarding/onboarding-wizard.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/modules/onboarding/onboarding-wizard.tsx"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": ""
+      },
       "docs": "User dashboard with projects, teams, API keys, deployments, downloads, and analytics charts. Requires `auth` block for session management and `DATABASE_URL` for data persistence. Install `payments` block for subscription-aware features."
     },
     {
@@ -2651,8 +3379,16 @@
       "type": "registry:block",
       "title": "RBAC",
       "description": "Role-based access control with permission service, client-side hook, and API permission check endpoint.",
-      "categories": ["shipkit", "rbac", "auth"],
-      "registryDependencies": ["@shipkit/cn", "@shipkit/routes-config"],
+      "categories": [
+        "shipkit",
+        "rbac",
+        "auth"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "@shipkit/routes-config",
+        "@shipkit/better-auth"
+      ],
       "files": [
         {
           "path": "src/server/services/rbac.ts",
@@ -2670,16 +3406,34 @@
           "target": "~/src/app/(app)/api/permissions/check/route.ts"
         }
       ],
+      "envVars": {
+        "DATABASE_URL": ""
+      },
       "docs": "Role-based access control. Provides `rbacService.hasPermission(userId, resource, action)` on the server and `usePermission()` hook on the client. Requires `auth` block and `DATABASE_URL` for permission storage."
     },
     {
       "name": "ai",
       "type": "registry:block",
       "title": "AI",
-      "description": "Browser-based AI with SmolLM via WebGPU and cloud AI with OpenAI \u2014 demo components, utilities, and worker scripts.",
-      "categories": ["shipkit", "ai"],
-      "dependencies": ["openai", "@anthropic-ai/sdk"],
-      "registryDependencies": ["@shipkit/cn", "button", "card", "input", "textarea", "scroll-area"],
+      "description": "Browser-based AI with SmolLM via WebGPU and cloud AI with OpenAI: demo components, utilities, and worker scripts.",
+      "categories": [
+        "shipkit",
+        "ai"
+      ],
+      "dependencies": [
+        "openai@6.49.0",
+        "@anthropic-ai/sdk",
+        "@emblemvault/ask-ai@0.1.1",
+        "@huggingface/transformers@3.8.1",
+        "dompurify@3.4.15",
+        "marked@17.0.6"
+      ],
+      "registryDependencies": [
+        "@shipkit/cn",
+        "@shipkit/payments",
+        "@shipkit/auth",
+        "@shipkit/better-auth"
+      ],
       "files": [
         {
           "path": "src/lib/ai/ai-analyzer.ts",
@@ -2732,14 +3486,19 @@
           "target": "~/src/components/blocks/ai/smollm-web/page.tsx"
         },
         {
-          "path": "src/components/blocks/ai/smollm-web/worker.js",
+          "path": "src/components/blocks/ai/smollm-web/worker.ts",
           "type": "registry:lib",
-          "target": "~/src/components/blocks/ai/smollm-web/worker.js"
+          "target": "~/src/components/blocks/ai/smollm-web/worker.ts"
         },
         {
-          "path": "src/components/blocks/ai/smollm-web/_components/Chat.jsx",
+          "path": "src/components/blocks/ai/smollm-web/types.ts",
+          "type": "registry:lib",
+          "target": "~/src/components/blocks/ai/smollm-web/types.ts"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/_components/Chat.tsx",
           "type": "registry:component",
-          "target": "~/src/components/blocks/ai/smollm-web/_components/Chat.jsx"
+          "target": "~/src/components/blocks/ai/smollm-web/_components/Chat.tsx"
         },
         {
           "path": "src/components/blocks/ai/smollm-web/_components/Chat.css",
@@ -2747,16 +3506,40 @@
           "target": "~/src/components/blocks/ai/smollm-web/_components/Chat.css"
         },
         {
-          "path": "src/components/blocks/ai/smollm-web/_components/Progress.jsx",
+          "path": "src/components/blocks/ai/smollm-web/_components/Progress.tsx",
           "type": "registry:component",
-          "target": "~/src/components/blocks/ai/smollm-web/_components/Progress.jsx"
+          "target": "~/src/components/blocks/ai/smollm-web/_components/Progress.tsx"
         },
         {
           "path": "src/components/primitives/ask-ai-buttons.tsx",
           "type": "registry:component",
           "target": "~/src/components/primitives/ask-ai-buttons.tsx"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/_components/icons/ArrowRightIcon.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/ArrowRightIcon.tsx"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/_components/icons/BotIcon.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/BotIcon.tsx"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/_components/icons/StopIcon.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/StopIcon.tsx"
+        },
+        {
+          "path": "src/components/blocks/ai/smollm-web/_components/icons/UserIcon.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/blocks/ai/smollm-web/_components/icons/UserIcon.tsx"
         }
       ],
+      "envVars": {
+        "OPENAI_API_KEY": "",
+        "ANTHROPIC_API_KEY": ""
+      },
       "docs": "AI integration with browser-based SmolLM (WebGPU, no server) and cloud AI (OpenAI, Anthropic). Set `OPENAI_API_KEY` for cloud AI. SmolLM runs entirely in-browser with no API key needed. Includes demo components and WebGPU detection utility."
     },
     {
@@ -2764,15 +3547,22 @@
       "type": "registry:block",
       "title": "GitHub Connect",
       "description": "GitHub OAuth integration with repo creation, collaborator management, invitation checks, and download service.",
-      "categories": ["shipkit", "github", "integration"],
-      "dependencies": ["octokit", "@octokit/rest"],
+      "categories": [
+        "shipkit",
+        "github",
+        "integration"
+      ],
+      "dependencies": [
+        "octokit",
+        "@octokit/rest@22.0.1",
+        "jszip@3.10.2"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card",
-        "input"
+        "@shipkit/vercel-connect",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -2824,8 +3614,28 @@
           "path": "src/lib/utils/generate-project-name-suggestions.ts",
           "type": "registry:lib",
           "target": "~/src/lib/utils/generate-project-name-suggestions.ts"
+        },
+        {
+          "path": "src/app/(app)/connect/github/_components/github-connect-content.tsx",
+          "type": "registry:page",
+          "target": "~/src/app/(app)/connect/github/_components/github-connect-content.tsx"
+        },
+        {
+          "path": "src/components/buttons/github-oauth-button.tsx",
+          "type": "registry:component",
+          "target": "~/src/components/buttons/github-oauth-button.tsx"
+        },
+        {
+          "path": "src/lib/github-template.ts",
+          "type": "registry:lib",
+          "target": "~/src/lib/github-template.ts"
         }
       ],
+      "envVars": {
+        "AUTH_GITHUB_ID": "",
+        "AUTH_GITHUB_SECRET": "",
+        "GITHUB_ACCESS_TOKEN": ""
+      },
       "docs": "GitHub integration for repo management. Requires `AUTH_GITHUB_ID` + `AUTH_GITHUB_SECRET` for OAuth. Provides repo creation, collaborator invitations, download service, and API routes for checking repo availability."
     },
     {
@@ -2833,14 +3643,21 @@
       "type": "registry:block",
       "title": "Vercel Connect",
       "description": "Vercel integration with OAuth, deploy triggers, webhook handling, deployment status, and deploy button components.",
-      "categories": ["shipkit", "vercel", "integration"],
-      "dependencies": ["lucide-react"],
+      "categories": [
+        "shipkit",
+        "vercel",
+        "integration"
+      ],
+      "dependencies": [
+        "lucide-react@0.564.0",
+        "canvas-confetti@1.9.4"
+      ],
       "registryDependencies": [
         "@shipkit/cn",
         "@shipkit/routes-config",
         "@shipkit/features-config",
-        "button",
-        "card"
+        "@shipkit/github-connect",
+        "@shipkit/better-auth"
       ],
       "files": [
         {
@@ -2907,9 +3724,32 @@
           "path": "src/lib/schemas/deployment.ts",
           "type": "registry:lib",
           "target": "~/src/lib/schemas/deployment.ts"
+        },
+        {
+          "path": "src/server/services/deployment-service.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/services/deployment-service.ts"
+        },
+        {
+          "path": "src/server/actions/deployment-actions.ts",
+          "type": "registry:lib",
+          "target": "~/src/server/actions/deployment-actions.ts"
+        },
+        {
+          "path": "src/components/ui/magicui/confetti/confetti-side-cannons.tsx",
+          "type": "registry:ui",
+          "target": "~/src/components/ui/magicui/confetti/confetti-side-cannons.tsx"
         }
       ],
-      "docs": "Vercel deployment integration. Set `VERCEL_TOKEN` and `VERCEL_TEAM_ID` for API access. Provides OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components."
+      "envVars": {
+        "VERCEL_INTEGRATION_SLUG": "",
+        "VERCEL_CLIENT_ID": "",
+        "VERCEL_CLIENT_SECRET": ""
+      },
+      "docs": "Vercel deployment integration. Set `VERCEL_INTEGRATION_SLUG`, `VERCEL_CLIENT_ID` and `VERCEL_CLIENT_SECRET` from your Vercel integration. Provides OAuth connect flow, deploy triggers, webhook receiver, deployment status tracking, and deploy button components.",
+      "devDependencies": [
+        "@types/canvas-confetti@1.9.0"
+      ]
     }
   ]
 }

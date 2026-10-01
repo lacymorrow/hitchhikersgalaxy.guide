@@ -1,4 +1,4 @@
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { useCallback, useEffect, useState } from "react";
 
 interface PermissionContext {

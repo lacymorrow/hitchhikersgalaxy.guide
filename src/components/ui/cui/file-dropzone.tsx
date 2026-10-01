@@ -96,8 +96,8 @@ export function FileDropzone() {
               initial={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
             >
-              <Upload className="pointer-events-none mx-auto size-8 select-none text-blue-500" />
-              <p className="pointer-events-none mt-2 select-none text-sm text-blue-500">
+              <Upload className="pointer-events-none mx-auto size-8 text-blue-500 select-none" />
+              <p className="pointer-events-none mt-2 text-sm text-blue-500 select-none">
                 Drop files here...
               </p>
             </motion.div>
@@ -109,7 +109,7 @@ export function FileDropzone() {
               transition={{ duration: 0.2 }}
             >
               <Upload className="mx-auto size-8 text-neutral-400 dark:text-neutral-500" />
-              <p className="mt-2 text-balance text-sm font-medium tracking-tighter text-neutral-400 dark:text-neutral-500">
+              <p className="mt-2 text-sm font-medium tracking-tighter text-balance text-neutral-400 dark:text-neutral-500">
                 Drag and drop files here, or click to select
               </p>
             </motion.div>
@@ -136,7 +136,7 @@ export function FileDropzone() {
                 {file.type.startsWith("image/") ? (
                   <img
                     alt={file.name}
-                    className="mr-2 size-10 rounded object-cover"
+                    className="mr-2 size-10 rounded-lg object-cover"
                     src={file.preview}
                   />
                 ) : (

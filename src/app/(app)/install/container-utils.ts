@@ -609,7 +609,10 @@ export class ContainerManager {
             (lowerText.includes("copying component") && lowerText.includes("complete")) ||
             // Configuration complete phrases
             (lowerText.includes("configuration") && !lowerText.includes("configuring")) ||
+            // v3 projects: shadcn prints the config file it patched. v4 projects have
+            // no tailwind.config, so shadcn instead confirms the CSS file it patched.
             lowerText.includes("tailwind.config") ||
+            lowerText.includes("globals.css") ||
             // Explicit completion
             lowerText.includes("import the styles in your app") ||
             lowerText.includes("for more information") ||

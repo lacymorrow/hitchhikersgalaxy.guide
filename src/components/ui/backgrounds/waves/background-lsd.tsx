@@ -101,7 +101,7 @@ export const WavesBackground: React.FC = () => {
   return (
     <canvas
       ref={canvasRef}
-      className="fixed left-0 top-0 h-full w-full bg-black"
+      className="fixed top-0 left-0 h-full w-full bg-black"
       style={{
         filter: "contrast(1.2) saturate(1.5) brightness(1.2)",
         mixBlendMode: "screen",

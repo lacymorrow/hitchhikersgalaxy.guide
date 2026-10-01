@@ -32,7 +32,7 @@ export function DocsSidebar({ className, navigation }: DocsSidebarProps) {
               <span className="font-medium text-foreground/70">{section.title}</span>
             </AccordionTrigger>
             {section.items?.length && (
-              <AccordionContent className="pb-1 pt-0">
+              <AccordionContent className="pt-0 pb-1">
                 <div className="ml-3 flex flex-col gap-1">
                   {section.items.map((item) => (
                     <Link

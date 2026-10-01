@@ -45,7 +45,7 @@ export function CommandMenu() {
         <span className="inline-flex lg:hidden">Search...</span>
         <ShortcutDisplay
           action={ShortcutAction.OPEN_SEARCH}
-          className="pointer-events-none absolute right-1.5 top-2 hidden opacity-100 sm:flex"
+          className="pointer-events-none absolute top-2 right-1.5 hidden opacity-100 sm:flex"
         />
       </Button>
       <CommandDialog open={open} onOpenChange={setOpen}>

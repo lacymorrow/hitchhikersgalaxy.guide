@@ -239,7 +239,7 @@ export default function BlogAuthorsDemo() {
             <CardContent className="space-y-3">
               <div className="text-sm">
                 <p className="mb-2 font-medium">Location:</p>
-                <code className="rounded bg-muted px-2 py-1 text-xs">
+                <code className="rounded-lg bg-muted px-2 py-1 text-xs">
                   src/config/blog-authors.ts
                 </code>
               </div>
@@ -261,19 +261,19 @@ export default function BlogAuthorsDemo() {
             <CardContent className="space-y-3">
               <div className="space-y-2 text-sm">
                 <p>
-                  <code className="rounded bg-muted px-1 text-xs">getAuthorById()</code> - Get
+                  <code className="rounded-lg bg-muted px-1 text-xs">getAuthorById()</code> - Get
                   author by ID
                 </p>
                 <p>
-                  <code className="rounded bg-muted px-1 text-xs">getAuthorByName()</code> - Get
+                  <code className="rounded-lg bg-muted px-1 text-xs">getAuthorByName()</code> - Get
                   author by name
                 </p>
                 <p>
-                  <code className="rounded bg-muted px-1 text-xs">convertLegacyAuthor()</code> -
+                  <code className="rounded-lg bg-muted px-1 text-xs">convertLegacyAuthor()</code> -
                   Convert legacy data
                 </p>
                 <p>
-                  <code className="rounded bg-muted px-1 text-xs">
+                  <code className="rounded-lg bg-muted px-1 text-xs">
                     authorUtils.getSocialLinks()
                   </code>{" "}
                   - Generate social links
@@ -301,7 +301,7 @@ export default function BlogAuthorsDemo() {
               <CardTitle>Single Author</CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="overflow-x-auto rounded bg-muted p-3 text-xs">
+              <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-xs">
                 {`---
 title: "My Blog Post"
 publishedAt: 2024-12-28
@@ -317,7 +317,7 @@ categories: ["Development"]
               <CardTitle>Multiple Authors</CardTitle>
             </CardHeader>
             <CardContent>
-              <pre className="overflow-x-auto rounded bg-muted p-3 text-xs">
+              <pre className="overflow-x-auto rounded-lg bg-muted p-3 text-xs">
                 {`---
 title: "Team Post"
 publishedAt: 2024-12-28

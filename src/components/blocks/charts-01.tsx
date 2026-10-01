@@ -36,9 +36,9 @@ export default function Charts() {
       <div className="grid w-full gap-6 sm:grid-cols-2 lg:max-w-[22rem] lg:grid-cols-1 xl:max-w-[25rem]">
         <Card
           x-chunk="A bar chart showing the number of steps you have walked in the past 7 days."
-          className="lg:max-w-md"
+          className="gap-0 py-0 lg:max-w-md"
         >
-          <CardHeader className="space-y-0 pb-2">
+          <CardHeader className="gap-y-0 p-6 pb-2">
             <CardDescription>Today</CardDescription>
             <CardTitle className="text-4xl tabular-nums">
               12,584{" "}
@@ -47,12 +47,12 @@ export default function Charts() {
               </span>
             </CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-6 pt-0">
             <ChartContainer
               config={{
                 steps: {
                   label: "Steps",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
               }}
             >
@@ -129,7 +129,7 @@ export default function Charts() {
                 />
                 <ReferenceLine
                   y={1200}
-                  stroke="hsl(var(--muted-foreground))"
+                  stroke="var(--muted-foreground)"
                   strokeDasharray="3 3"
                   strokeWidth={1}
                 >
@@ -137,13 +137,13 @@ export default function Charts() {
                     position="insideBottomLeft"
                     value="Average Steps"
                     offset={10}
-                    fill="hsl(var(--foreground))"
+                    fill="var(--foreground)"
                   />
                   <Label
                     position="insideTopLeft"
                     value="12,343"
                     className="text-lg"
-                    fill="hsl(var(--foreground))"
+                    fill="var(--foreground)"
                     offset={10}
                     startOffset={100}
                   />
@@ -151,7 +151,7 @@ export default function Charts() {
               </BarChart>
             </ChartContainer>
           </CardContent>
-          <CardFooter className="flex-col items-start gap-1">
+          <CardFooter className="flex-col items-start gap-1 p-6 pt-0">
             <CardDescription>
               Over the past 7 days, you have walked{" "}
               <span className="font-medium text-foreground">53,305</span> steps.
@@ -164,9 +164,9 @@ export default function Charts() {
         </Card>
         <Card
           x-chunk="A line chart showing the resting heart rate for the past 7 days."
-          className="flex flex-col lg:max-w-md"
+          className="flex flex-col gap-0 py-0 lg:max-w-md"
         >
-          <CardHeader className="flex flex-row items-center gap-4 space-y-0 pb-2 [&>div]:flex-1">
+          <CardHeader className="flex flex-row items-center gap-4 gap-y-0 p-6 pb-2 [&>div]:flex-1">
             <div>
               <CardDescription>Resting HR</CardDescription>
               <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
@@ -186,12 +186,12 @@ export default function Charts() {
               </CardTitle>
             </div>
           </CardHeader>
-          <CardContent className="flex flex-1 items-center">
+          <CardContent className="flex flex-1 items-center p-6 pt-0">
             <ChartContainer
               config={{
                 resting: {
                   label: "Resting",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
               }}
               className="w-full"
@@ -237,7 +237,7 @@ export default function Charts() {
                 <CartesianGrid
                   strokeDasharray="4 4"
                   vertical={false}
-                  stroke="hsl(var(--muted-foreground))"
+                  stroke="var(--muted-foreground)"
                   strokeOpacity={0.5}
                 />
                 <YAxis hide domain={["dataMin - 10", "dataMax + 10"]} />
@@ -298,7 +298,7 @@ export default function Charts() {
           </CardHeader>
           <CardContent className="grid gap-4">
             <div className="grid auto-rows-min gap-2">
-              <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+              <div className="flex items-baseline gap-1 text-2xl leading-none font-bold tabular-nums">
                 12,453
                 <span className="text-sm font-normal text-muted-foreground">steps/day</span>
               </div>
@@ -306,7 +306,7 @@ export default function Charts() {
                 config={{
                   steps: {
                     label: "Steps",
-                    color: "hsl(var(--chart-1))",
+                    color: "var(--chart-1)",
                   },
                 }}
                 className="aspect-auto h-[32px] w-full"
@@ -342,7 +342,7 @@ export default function Charts() {
               </ChartContainer>
             </div>
             <div className="grid auto-rows-min gap-2">
-              <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+              <div className="flex items-baseline gap-1 text-2xl leading-none font-bold tabular-nums">
                 10,103
                 <span className="text-sm font-normal text-muted-foreground">steps/day</span>
               </div>
@@ -350,7 +350,7 @@ export default function Charts() {
                 config={{
                   steps: {
                     label: "Steps",
-                    color: "hsl(var(--muted))",
+                    color: "var(--muted)",
                   },
                 }}
                 className="aspect-auto h-[32px] w-full"
@@ -377,7 +377,7 @@ export default function Charts() {
                       dataKey="date"
                       offset={8}
                       fontSize={12}
-                      fill="hsl(var(--muted-foreground))"
+                      fill="var(--muted-foreground)"
                     />
                   </Bar>
                   <YAxis dataKey="date" type="category" tickCount={1} hide />
@@ -389,7 +389,7 @@ export default function Charts() {
         </Card>
         <Card
           x-chunk="A bar chart showing the walking and running distance for the past 7 days."
-          className="max-w-xs"
+          className="max-w-xs gap-0 py-0"
         >
           <CardHeader className="p-4 pb-0">
             <CardTitle>Walking Distance</CardTitle>
@@ -398,7 +398,7 @@ export default function Charts() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-0">
-            <div className="flex items-baseline gap-1 text-3xl font-bold tabular-nums leading-none">
+            <div className="flex items-baseline gap-1 text-3xl leading-none font-bold tabular-nums">
               12.5
               <span className="text-sm font-normal text-muted-foreground">miles/day</span>
             </div>
@@ -406,7 +406,7 @@ export default function Charts() {
               config={{
                 steps: {
                   label: "Steps",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
               }}
               className="ml-auto w-[72px]"
@@ -458,22 +458,22 @@ export default function Charts() {
         </Card>
         <Card
           x-chunk="A bar chart showing move, exercise, and stand progress."
-          className="max-w-xs"
+          className="max-w-xs gap-0 py-0"
         >
           <CardContent className="flex gap-4 p-4 pb-2">
             <ChartContainer
               config={{
                 move: {
                   label: "Move",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
                 stand: {
                   label: "Stand",
-                  color: "hsl(var(--chart-2))",
+                  color: "var(--chart-2)",
                 },
                 exercise: {
                   label: "Exercise",
-                  color: "hsl(var(--chart-3))",
+                  color: "var(--chart-3)",
                 },
               }}
               className="h-[140px] w-full"
@@ -534,7 +534,7 @@ export default function Charts() {
             <div className="flex w-full items-center gap-2">
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-xs text-muted-foreground">Move</div>
-                <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-2xl leading-none font-bold tabular-nums">
                   562
                   <span className="text-sm font-normal text-muted-foreground">kcal</span>
                 </div>
@@ -542,7 +542,7 @@ export default function Charts() {
               <Separator orientation="vertical" className="mx-2 h-10 w-px" />
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-xs text-muted-foreground">Exercise</div>
-                <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-2xl leading-none font-bold tabular-nums">
                   73
                   <span className="text-sm font-normal text-muted-foreground">min</span>
                 </div>
@@ -550,7 +550,7 @@ export default function Charts() {
               <Separator orientation="vertical" className="mx-2 h-10 w-px" />
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-xs text-muted-foreground">Stand</div>
-                <div className="flex items-baseline gap-1 text-2xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-2xl leading-none font-bold tabular-nums">
                   14
                   <span className="text-sm font-normal text-muted-foreground">hr</span>
                 </div>
@@ -562,27 +562,27 @@ export default function Charts() {
       <div className="grid w-full flex-1 gap-6">
         <Card
           x-chunk="A radial bar chart showing the percentage of time spent moving, exercising, and standing."
-          className="max-w-xs"
+          className="max-w-xs gap-0 py-0"
         >
           <CardContent className="flex gap-4 p-4">
             <div className="grid items-center gap-2">
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-sm text-muted-foreground">Move</div>
-                <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-xl leading-none font-bold tabular-nums">
                   562/600
                   <span className="text-sm font-normal text-muted-foreground">kcal</span>
                 </div>
               </div>
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-sm text-muted-foreground">Exercise</div>
-                <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-xl leading-none font-bold tabular-nums">
                   73/120
                   <span className="text-sm font-normal text-muted-foreground">min</span>
                 </div>
               </div>
               <div className="grid flex-1 auto-rows-min gap-0.5">
                 <div className="text-sm text-muted-foreground">Stand</div>
-                <div className="flex items-baseline gap-1 text-xl font-bold tabular-nums leading-none">
+                <div className="flex items-baseline gap-1 text-xl leading-none font-bold tabular-nums">
                   8/12
                   <span className="text-sm font-normal text-muted-foreground">hr</span>
                 </div>
@@ -592,15 +592,15 @@ export default function Charts() {
               config={{
                 move: {
                   label: "Move",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
                 exercise: {
                   label: "Exercise",
-                  color: "hsl(var(--chart-2))",
+                  color: "var(--chart-2)",
                 },
                 stand: {
                   label: "Stand",
-                  color: "hsl(var(--chart-3))",
+                  color: "var(--chart-3)",
                 },
               }}
               className="mx-auto aspect-square w-full max-w-[80%]"
@@ -640,7 +640,10 @@ export default function Charts() {
             </ChartContainer>
           </CardContent>
         </Card>
-        <Card x-chunk="A bar chart showing active energy in the past 7 days." className="max-w-xs">
+        <Card
+          x-chunk="A bar chart showing active energy in the past 7 days."
+          className="max-w-xs gap-0 py-0"
+        >
           <CardHeader className="p-4 pb-0">
             <CardTitle>Active Energy</CardTitle>
             <CardDescription>
@@ -648,7 +651,7 @@ export default function Charts() {
             </CardDescription>
           </CardHeader>
           <CardContent className="flex flex-row items-baseline gap-4 p-4 pt-2">
-            <div className="flex items-baseline gap-2 text-3xl font-bold tabular-nums leading-none">
+            <div className="flex items-baseline gap-2 text-3xl leading-none font-bold tabular-nums">
               1,254
               <span className="text-sm font-normal text-muted-foreground">kcal/day</span>
             </div>
@@ -656,7 +659,7 @@ export default function Charts() {
               config={{
                 calories: {
                   label: "Calories",
-                  color: "hsl(var(--chart-1))",
+                  color: "var(--chart-1)",
                 },
               }}
               className="ml-auto w-[64px]"
@@ -708,9 +711,9 @@ export default function Charts() {
         </Card>
         <Card
           x-chunk="An area chart showing the time spent in bed for the past 7 days."
-          className="max-w-xs"
+          className="max-w-xs gap-0 py-0"
         >
-          <CardHeader className="space-y-0 pb-0">
+          <CardHeader className="gap-y-0 p-6 pb-0">
             <CardDescription>Time in Bed</CardDescription>
             <CardTitle className="flex items-baseline gap-1 text-4xl tabular-nums">
               8
@@ -728,7 +731,7 @@ export default function Charts() {
               config={{
                 time: {
                   label: "Time",
-                  color: "hsl(var(--chart-2))",
+                  color: "var(--chart-2)",
                 },
               }}
             >
@@ -792,7 +795,7 @@ export default function Charts() {
                   formatter={(value) => (
                     <div className="flex min-w-[120px] items-center text-xs text-muted-foreground">
                       Time in bed
-                      <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium tabular-nums text-foreground">
+                      <div className="ml-auto flex items-baseline gap-0.5 font-mono font-medium text-foreground tabular-nums">
                         {value}
                         <span className="font-normal text-muted-foreground">hr</span>
                       </div>

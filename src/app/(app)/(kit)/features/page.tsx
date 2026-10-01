@@ -46,7 +46,7 @@ export default function Features() {
       <section className="mx-auto">
         <h2 className="mb-8 text-center text-2xl font-semibold">Feature Comparison</h2>
 
-        <div className="mx-auto max-w-screen-lg">
+        <div className="mx-auto max-w-(--breakpoint-lg)">
           <FeaturesTable />
         </div>
       </section>

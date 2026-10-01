@@ -1,8 +1,8 @@
 "use client";
 
-import type { PopoverProps } from "@radix-ui/react-popover";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
+import type { Popover as PopoverPrimitive } from "radix-ui";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import { cn } from "@/lib/utils";
 
 import type { Preset } from "../data/presets";
 
-interface PresetSelectorProps extends PopoverProps {
+interface PresetSelectorProps extends PopoverPrimitive.PopoverProps {
   presets: Preset[];
 }
 

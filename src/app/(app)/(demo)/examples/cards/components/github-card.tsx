@@ -16,7 +16,7 @@ import { Separator } from "@/components/ui/separator";
 export function DemoGithub() {
   return (
     <Card>
-      <CardHeader className="grid grid-cols-[1fr_110px] items-start gap-4 space-y-0">
+      <CardHeader className="grid grid-cols-[1fr_110px] items-start gap-4 gap-y-0">
         <div className="space-y-1">
           <CardTitle>shadcn/ui</CardTitle>
           <CardDescription>
@@ -24,7 +24,7 @@ export function DemoGithub() {
             Customizable. Open Source.
           </CardDescription>
         </div>
-        <div className="flex items-center space-x-1 rounded-md bg-secondary text-secondary-foreground">
+        <div className="flex items-center gap-x-1 rounded-md bg-secondary text-secondary-foreground">
           <Button variant="secondary" className="px-3 shadow-none">
             <Star />
             Star
@@ -51,7 +51,7 @@ export function DemoGithub() {
         </div>
       </CardHeader>
       <CardContent>
-        <div className="flex space-x-4 text-sm text-muted-foreground">
+        <div className="flex gap-x-4 text-sm text-muted-foreground">
           <div className="flex items-center">
             <Circle className="mr-1 h-3 w-3 fill-sky-400 text-sky-400" />
             TypeScript

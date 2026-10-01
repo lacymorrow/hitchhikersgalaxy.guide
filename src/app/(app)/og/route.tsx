@@ -69,22 +69,22 @@ export async function GET(request: Request) {
     >
       <div
         // eslint-disable-next-line react/no-unknown-property
-        tw="flex absolute inset-y-0 left-16 w-[1px]"
+        tw="flex absolute inset-y-0 left-16 w-px"
         style={{ borderLeft: `1px dashed ${colors.border}` }}
       />
       <div
         // eslint-disable-next-line react/no-unknown-property
-        tw="flex absolute inset-y-0 right-16 w-[1px]"
+        tw="flex absolute inset-y-0 right-16 w-px"
         style={{ borderLeft: `1px dashed ${colors.border}` }}
       />
       <div
         // eslint-disable-next-line react/no-unknown-property
-        tw="flex absolute inset-x-0 h-[1px] top-16"
+        tw="flex absolute inset-x-0 h-px top-16"
         style={{ borderTop: `1px solid ${colors.border}` }}
       />
       <div
         // eslint-disable-next-line react/no-unknown-property
-        tw="flex absolute inset-x-0 h-[1px] bottom-16"
+        tw="flex absolute inset-x-0 h-px bottom-16"
         style={{ borderTop: `1px solid ${colors.border}` }}
       />
       {/* eslint-disable-next-line react/no-unknown-property */}
@@ -102,7 +102,7 @@ export async function GET(request: Request) {
       <div tw="flex flex-col absolute w-[896px] justify-center inset-32">
         <div
           // eslint-disable-next-line react/no-unknown-property
-          tw="tracking-tight flex-grow-1 flex flex-col justify-center leading-[1.1]"
+          tw="tracking-tight grow flex flex-col justify-center leading-[1.1]"
           style={{
             textWrap: "balance",
             fontWeight: 600,
@@ -114,7 +114,7 @@ export async function GET(request: Request) {
         </div>
         <div
           // eslint-disable-next-line react/no-unknown-property
-          tw="text-[40px] leading-[1.5] flex-grow-1"
+          tw="text-[40px] leading-normal grow"
           style={{
             fontWeight: 500,
             textWrap: "balance",

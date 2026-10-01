@@ -5,7 +5,7 @@ import type React from "react";
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative min-h-screen">
-      <header className="border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <header className="border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
         <div className="container flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 transition-colors hover:opacity-80">

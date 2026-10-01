@@ -13,14 +13,14 @@ interface VercelConnectionCardProps {
 
 export const VercelConnectionCard = ({ hasVercelConnection, user }: VercelConnectionCardProps) => {
   return (
-    <Card>
-      <CardHeader className="pb-3">
+    <Card className="gap-0 py-0">
+      <CardHeader className="p-6 pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
           <Zap className="h-5 w-5" />
           Vercel Integration
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-3 p-6 pt-0">
         {hasVercelConnection ? (
           <>
             <div className="flex items-center gap-2">

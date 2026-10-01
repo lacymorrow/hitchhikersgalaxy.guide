@@ -353,7 +353,7 @@ export function AIVoiceDemo() {
 
   if (!isWebGPUAvailable) {
     return (
-      <Card className="w-full max-w-2xl p-4 md:p-6">
+      <Card className="w-full max-w-2xl gap-0 p-4 md:p-6">
         <div className="space-y-4 text-center">
           <h2 className="text-lg font-semibold">Browser Not Supported</h2>
           <p className="text-sm text-muted-foreground">
@@ -367,7 +367,7 @@ export function AIVoiceDemo() {
 
   if (!hasAcceptedPermissions) {
     return (
-      <Card className="w-full max-w-2xl p-4 md:p-6">
+      <Card className="w-full max-w-2xl gap-0 p-4 md:p-6">
         <div className="space-y-6">
           <div className="space-y-2">
             <h2 className="text-lg font-semibold">AI Voice Demo</h2>
@@ -384,7 +384,7 @@ export function AIVoiceDemo() {
             </div>
           </div>
 
-          <div className="flex flex-col space-y-4">
+          <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span className="flex h-6 w-6 items-center justify-center rounded-full border">
                 1
@@ -417,8 +417,8 @@ export function AIVoiceDemo() {
     return (
       <>
         <LoadingBar />
-        <Card className="w-full max-w-2xl p-4 md:p-6">
-          <div className="flex flex-col items-center justify-center space-y-4">
+        <Card className="w-full max-w-2xl gap-0 p-4 md:p-6">
+          <div className="flex flex-col items-center justify-center gap-4">
             <div className="space-y-2 text-center">
               <h2 className="text-lg font-semibold">Loading AI Model</h2>
               <p className="text-sm text-muted-foreground">
@@ -433,7 +433,7 @@ export function AIVoiceDemo() {
 
   return (
     <SuspenseBoundary onRetry={() => setError(null)}>
-      <Card className="w-full max-w-2xl p-4 md:p-6">
+      <Card className="w-full max-w-2xl gap-0 p-4 md:p-6">
         <div className="space-y-4">
           <div className="flex flex-col items-center gap-4">
             <AudioVisualizer stream={stream} simulate={!!error || (!isReady && !stream)} />
@@ -458,7 +458,7 @@ export function AIVoiceDemo() {
 
           {(transcript || currentStream) && (
             <div className="mt-4 rounded-lg bg-muted p-4">
-              <p className="whitespace-pre-wrap text-sm">
+              <p className="text-sm whitespace-pre-wrap">
                 {transcript}
                 {currentStream && (
                   <>

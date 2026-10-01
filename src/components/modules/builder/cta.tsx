@@ -41,7 +41,7 @@ export const CTA = ({
       )}
 
       {/* Content */}
-      <div className="container relative z-10 mx-auto px-4">
+      <div className="relative z-10 container mx-auto px-4">
         <div className="mx-auto max-w-3xl text-center">
           <h2
             className={`mb-6 text-3xl font-bold md:text-4xl ${

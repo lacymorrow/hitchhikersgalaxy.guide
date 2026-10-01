@@ -208,7 +208,7 @@ export default function AILoadingState({
   return (
     <div className={className ?? "flex min-h-full w-full items-center justify-center"}>
       <div className="w-auto space-y-4">
-        <div className="ml-2 flex items-center space-x-2 font-medium text-gray-600 dark:text-gray-300">
+        <div className="ml-2 flex items-center gap-x-2 font-medium text-gray-600 dark:text-gray-300">
           <LoadingAnimation progress={(sequenceIndex / taskSequences.length) * 100} />
           <span className="text-sm">{currentSequence?.status}...</span>
         </div>
@@ -225,7 +225,7 @@ export default function AILoadingState({
                   key={`${line.number}-${line.text}`}
                   className="flex h-[28px] items-center px-2"
                 >
-                  <div className="w-6 select-none pr-3 text-right text-gray-400 dark:text-gray-500">
+                  <div className="w-6 pr-3 text-right text-gray-400 select-none dark:text-gray-500">
                     {line.number}
                   </div>
 
@@ -236,7 +236,7 @@ export default function AILoadingState({
           </div>
 
           <div
-            className="pointer-events-none absolute bottom-0 left-0 right-0 top-0 rounded-lg from-white/90 via-white/50 to-transparent dark:from-black/90 dark:via-black/50 dark:to-transparent"
+            className="pointer-events-none absolute top-0 right-0 bottom-0 left-0 rounded-lg from-white/90 via-white/50 to-transparent dark:from-black/90 dark:via-black/50 dark:to-transparent"
             style={{
               background:
                 "linear-gradient(to bottom, var(--tw-gradient-from) 0%, var(--tw-gradient-via) 30%, var(--tw-gradient-to) 100%)",

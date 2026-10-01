@@ -19,8 +19,8 @@ export const Testimonials = ({ block, className }: TestimonialsProps) => {
   const { heading, testimonials, layout = "grid", background = "none" } = block;
 
   const renderTestimonial = (testimonial: any) => (
-    <Card className="h-full">
-      <CardContent className="pt-6">
+    <Card className="h-full gap-0 py-0">
+      <CardContent className="p-6">
         <div className="mb-4 flex items-center gap-4">
           <Avatar>
             {testimonial.image ? (

@@ -26,7 +26,7 @@ export async function getIntegrationStatuses(): Promise<CategorizedIntegrationSt
   const session = await auth();
 
   // Authorization still makes sense here, as only admins should see this.
-  if (!isAdmin({ email: session?.user?.email })) {
+  if (!(await isAdmin({ email: session?.user?.email }))) {
     return {
       Authorization: [
         {

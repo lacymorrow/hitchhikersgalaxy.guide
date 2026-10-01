@@ -20,7 +20,7 @@ export default async function FeedbackPage() {
         {feedbackItems?.map((item) => (
           <div
             key={item.id}
-            className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm"
+            className="rounded-lg border bg-card p-4 text-card-foreground shadow-xs"
           >
             <div className="mb-2 flex items-center justify-between">
               <span className="text-sm text-muted-foreground">

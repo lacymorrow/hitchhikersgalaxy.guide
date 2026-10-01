@@ -2,15 +2,14 @@
 
 import { UserPlus } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
 import { addCollaboratorAction } from "../actions";
 
 export function AddCollaboratorForm() {
   const [username, setUsername] = useState("");
   const [loading, setLoading] = useState(false);
-  const { toast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,23 +19,18 @@ export function AddCollaboratorForm() {
     try {
       const result = await addCollaboratorAction(username);
       if (result.success) {
-        toast({
-          title: "Invitation Sent",
+        toast.success("Invitation Sent", {
           description: `GitHub invitation sent to @${username}.`,
         });
         setUsername("");
       } else {
-        toast({
-          title: "Error",
+        toast.error("Error", {
           description: result.error ?? "Failed to add collaborator",
-          variant: "destructive",
         });
       }
     } catch {
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to add collaborator",
-        variant: "destructive",
       });
     } finally {
       setLoading(false);

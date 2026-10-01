@@ -106,7 +106,7 @@ export function OAuthButtons({
           <div
             className={cn(
               "flex items-center justify-center",
-              currentVariant === "icons" ? "order-last" : "absolute right-1 top-[2px]"
+              currentVariant === "icons" ? "order-last" : "absolute top-[2px] right-1"
             )}
           >
             <Button variant="ghost" size="sm" onClick={toggleVariant} className="text-xs">

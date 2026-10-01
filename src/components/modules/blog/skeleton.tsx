@@ -41,7 +41,7 @@ export const BlogPostSkeleton = ({ className }: { className?: string }) => {
           </header>
 
           {/* Content skeleton */}
-          <div className="prose prose-neutral max-w-none dark:prose-invert">
+          <div className="prose max-w-none prose-neutral dark:prose-invert">
             {/* Featured image skeleton */}
             <Skeleton className="mb-8 h-64 w-full rounded-lg" />
 
@@ -210,7 +210,7 @@ export const BlogCategoriesSkeleton = ({ className }: { className?: string }) =>
       <Skeleton className="h-6 w-16" />
       <Skeleton className="h-6 w-20" />
       <Skeleton className="h-6 w-14" />
-      <Skeleton className="w-18 h-6" />
+      <Skeleton className="h-6 w-18" />
     </div>
   );
 };

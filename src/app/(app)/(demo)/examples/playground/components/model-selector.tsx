@@ -1,7 +1,7 @@
 "use client";
 
-import type { PopoverProps } from "@radix-ui/react-popover";
 import { Check, ChevronsUpDown } from "lucide-react";
+import type { Popover as PopoverPrimitive } from "radix-ui";
 import * as React from "react";
 
 import { Button } from "@/components/ui/button";
@@ -21,7 +21,7 @@ import { cn } from "@/lib/utils";
 
 import type { Model, ModelType } from "../data/models";
 
-interface ModelSelectorProps extends PopoverProps {
+interface ModelSelectorProps extends PopoverPrimitive.PopoverProps {
   types: readonly ModelType[];
   models: Model[];
 }
@@ -59,18 +59,18 @@ export function ModelSelector({ models, types, ...props }: ModelSelectorProps) {
           <HoverCard>
             <HoverCardContent side="left" align="start" forceMount className="min-h-[280px]">
               <div className="grid gap-2">
-                <h4 className="font-medium leading-none">{peekedModel?.name}</h4>
+                <h4 className="leading-none font-medium">{peekedModel?.name}</h4>
                 <div className="text-sm text-muted-foreground">{peekedModel?.description}</div>
                 {peekedModel?.strengths && (
                   <div className="mt-4 grid gap-2">
-                    <h5 className="text-sm font-medium leading-none">Strengths</h5>
+                    <h5 className="text-sm leading-none font-medium">Strengths</h5>
                     <ul className="text-sm text-muted-foreground">{peekedModel?.strengths}</ul>
                   </div>
                 )}
               </div>
             </HoverCardContent>
             <Command loop>
-              <CommandList className="h-[var(--cmdk-list-height)] max-h-[400px]">
+              <CommandList className="h-(--cmdk-list-height) max-h-[400px]">
                 <CommandInput placeholder="Search Models..." />
                 <CommandEmpty>No Models found.</CommandEmpty>
                 <HoverCardTrigger />

@@ -62,7 +62,7 @@ const OfferCard = ({
       )}
     >
       {isBestValue && (
-        <div className="absolute -top-5 left-0 right-0 mx-auto w-32 rounded-full bg-primary px-3 py-2 text-center text-sm font-medium text-primary-foreground">
+        <div className="absolute -top-5 right-0 left-0 mx-auto w-32 rounded-full bg-primary px-3 py-2 text-center text-sm font-medium text-primary-foreground">
           Most popular
         </div>
       )}

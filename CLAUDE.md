@@ -32,6 +32,11 @@ bun run lint:fix       # Fix all linting issues
 bun run typecheck      # Run TypeScript type checking
 ```
 
+`bun run lint:eslint` also runs [`@shadcn/lint`](https://github.com/shadcn-ui/lint), which checks
+Tailwind v4 usage against Shipkit's design system (Button, Card, theme scale). It reports at
+`warn`, not `error`, so it won't fail CI on its own. See [`docs/development/index.mdx`](./docs/development/index.mdx#design-system-lint-shadcnlint)
+for the rules and where the contracts live in `eslint.config.mjs`.
+
 ### Database Operations
 
 ```bash
@@ -59,6 +64,14 @@ bun run build:registry # Build shadcn registry (npx shadcn build)
 ```
 
 Source: `registry.json` (project root). Output: `public/r/*.json`. See `docs/features/registry.mdx` for full documentation.
+
+### Doctor
+
+```bash
+bun run doctor         # Which features are on, waiting on a key, or off (reads .env.local then .env)
+```
+
+One table: feature, status (`on`, `waiting`, `off`), and the missing keys with a URL for where each comes from. `waiting` means some keys are set but not all, or a feature it depends on is off. Exit code is always 0; it is a report, not a gate. Every feature is declared once in `src/config/features-table.ts`; `features-config.ts` and the doctor both read that table, so add new features there.
 
 ## Architecture Overview
 
@@ -152,9 +165,9 @@ src/
 
 Shipkit uses environment variables for feature toggles:
 
-- `NEXT_PUBLIC_FEATURE_AUTH_*_ENABLED` - Authentication providers
-- `NEXT_PUBLIC_FEATURE_PAYMENTS_*_ENABLED` - Payment providers
-- `NEXT_PUBLIC_FEATURE_CMS_ENABLED` - CMS functionality
+- Features turn on when their env vars are present. Set `DISABLE_<FEATURE>=true` to force one off. Table: `src/config/features-table.ts`; evaluation: `src/config/features-config.ts`; report: `bun run doctor`
+- Each enabled feature is exposed to the client as `NEXT_PUBLIC_FEATURE_<NAME>_ENABLED`, for example `NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED`, `NEXT_PUBLIC_FEATURE_AUTH_GITHUB_ENABLED`, `NEXT_PUBLIC_FEATURE_STRIPE_ENABLED`, `NEXT_PUBLIC_FEATURE_PAYLOAD_ENABLED`. The full list is in `src/env.ts`
+- Auth: Auth.js v5 runs today; Better Auth is the chosen default and the switch is in progress. Both are detected (`NEXT_PUBLIC_FEATURE_AUTH_JS_ENABLED`, `NEXT_PUBLIC_FEATURE_BETTER_AUTH_ENABLED`)
 - **Graceful degradation** - Features disable cleanly when not configured
 
 ## Critical Development Rules
@@ -179,6 +192,15 @@ Shipkit uses environment variables for feature toggles:
 - **Prefer Link over router.push** - Use `src/components/primitives/link-with-transition`
 - **Button-like links** - Use `<Link className={cn(buttonVariants(...))} ...>`
 - **Multi-zone navigation** - Use anchor tags (`<a>`) for cross-zone links
+
+### CI Minutes and Local Verification
+
+GitHub Actions minutes are billed on this private repo, and automated upstream syncs and agent-authored PRs burn them on checks that were already run locally.
+
+- **Run `bun run verify` before opening a PR** - `scripts/verify.sh` runs typecheck, lint, unit and node tests, a production build, and a `next start` smoke (`--routes "/ /blog /blog/nope-xyz=404 /nope-404=404"` to customize). Paste its Markdown summary in the PR body.
+- **Skip Actions when you verified locally** - put `[skip ci]` in the commit message (GitHub-native; also skips gitleaks, so run `gitleaks protect --staged` locally). Vercel still builds, and the Deployment Check smoke still runs because it triggers off the Vercel deployment.
+- **Cheap jobs run on every PR, expensive ones on demand** - `ci.yml` runs typecheck, lint, and unit tests on every PR; integration, production build, Playwright e2e, and the docs link check run on pushes to `main` and on PRs labeled `ci:full`. Add the label for changes to auth, payments, the build pipeline, or docs routing.
+- **Suspense and loading files** - never add `loading.tsx` or `<Suspense>` above a page that calls `notFound()`; the shell streams a 200 first (see `tests/node/app/no-loading-above-not-found.test.ts`).
 
 ### Database Best Practices
 
@@ -286,16 +308,16 @@ Always run `bun run lint` and `bun run typecheck` before committing changes.
 
 ## Scaffolding New ShipKit Sites
 
-Use the ShipKit CLI to create new sites from this template. The CLI lives in its own repo: [lacymorrow/shipkit-cli](https://github.com/lacymorrow/shipkit-cli), published to npm as `create-shipkit`.
+Use the ShipKit CLI to create new sites from this template. The CLI lives in its own repo: [lacymorrow/shipkit-cli](https://github.com/lacymorrow/shipkit-cli), published to npm as `create-shipkit-app` (the npm name `create-shipkit` is not ours).
 
 ### Using the CLI
 
 ```bash
 # From anywhere — interactive
-npx create-shipkit my-new-site
+npm create shipkit-app@latest my-new-site
 
 # Non-interactive (CI/agent)
-npx create-shipkit create my-new-site --yes
+npx create-shipkit-app my-new-site --yes
 ```
 
 ### Manual Steps (if CLI unavailable)
@@ -305,8 +327,8 @@ npx create-shipkit create my-new-site --yes
 gh repo create my-new-site --template shipkit-io/bones --clone --public
 cd my-new-site
 
-# 2. Add upstream remote (premium first, bones fallback)
-git remote add upstream https://github.com/shipkit-io/shipkit.git || \
+# 2. Add upstream remote. Bones is the root template; use lacymorrow/shipkit
+#    instead if you created the repo from the ShipKit template.
 git remote add upstream https://github.com/shipkit-io/bones.git
 
 # 3. Graft upstream history
@@ -324,13 +346,13 @@ bun dev
 
 ```bash
 # Via CLI (creates PR branch)
-npx create-shipkit sync --yes
+npx create-shipkit-app sync --yes
 
 # Via npm script (from within a ShipKit project)
 bun run upstream:pull
 
 # Direct merge (no PR)
-npx create-shipkit sync --yes --direct
+npx create-shipkit-app sync --yes --direct
 ```
 
 ### CLI Development

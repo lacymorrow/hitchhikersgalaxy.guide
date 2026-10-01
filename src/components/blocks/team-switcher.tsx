@@ -3,8 +3,9 @@
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { PlusIcon } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import * as React from "react";
+import { toast } from "sonner";
 import { useTeam } from "@/components/providers/team-provider";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,6 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { useSidebar } from "@/components/ui/sidebar";
 import { routes } from "@/config/routes";
-import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { type AvatarType, getAvatarUrl } from "@/lib/utils/avatar";
 import { createTeam } from "@/server/actions/teams";
@@ -62,7 +62,6 @@ export function TeamSwitcher({
   const { open: sidebarOpen } = useSidebar();
   const { data: session } = useSession();
   const router = useRouter();
-  const { toast } = useToast();
   const { setSelectedTeamId } = useTeam();
 
   // Get userId from props or session
@@ -104,8 +103,7 @@ export function TeamSwitcher({
     setOpen(false);
     setSelectedTeamId(team.team.id);
     onTeamChange?.(team.team.id);
-    toast({
-      title: "Team switched",
+    toast.success("Team switched", {
       description: `Switched to ${team.team.name} team`,
     });
   };
@@ -134,16 +132,13 @@ export function TeamSwitcher({
       setShowNewTeamDialog(false);
       setNewTeamName("");
       router.refresh();
-      toast({
-        title: "Team created",
+      toast.success("Team created", {
         description: `Successfully created team "${newTeamName.trim()}"`,
       });
     } catch (error) {
       console.error("Failed to create team:", error);
-      toast({
-        title: "Error",
+      toast.error("Error", {
         description: "Failed to create team",
-        variant: "destructive",
       });
     } finally {
       setIsLoading(false);
@@ -186,7 +181,7 @@ export function TeamSwitcher({
                   <span className="truncate font-semibold">
                     {activeTeam?.team?.name || "Select Team"}
                   </span>
-                  <span className="truncate text-xs capitalize text-muted-foreground">
+                  <span className="truncate text-xs text-muted-foreground capitalize">
                     {activeTeam?.role || "No team selected"}
                     {activeTeam?.team?.type === "personal" && " (Personal)"}
                   </span>
@@ -202,7 +197,7 @@ export function TeamSwitcher({
             variant === "header"
               ? "w-[260px]"
               : sidebarOpen
-                ? "w-[var(--radix-popover-trigger-width)]"
+                ? "w-(--radix-popover-trigger-width)"
                 : undefined
           )}
           align="start"

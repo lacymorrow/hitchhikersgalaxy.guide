@@ -7,7 +7,7 @@ import { STATUS_CODES } from "@/config/status-codes";
 // This service can be imported by Node scripts; avoid importing "server-only" here
 import { env } from "@/env";
 import { logger } from "@/lib/logger";
-import { getPayloadClient, payload } from "@/lib/payload/payload";
+import { getPayloadClient } from "@/lib/payload/payload";
 import { signInSchema } from "@/lib/schemas/auth";
 import { signIn, signOut } from "@/server/auth";
 import { db } from "@/server/db";
@@ -417,6 +417,7 @@ export const AuthService = {
     redirectTo?: string;
   }) {
     try {
+      const payload = await getPayloadClient();
       if (!payload) {
         logger.error("Payload CMS is not initialized");
         throw new Error("Authentication service unavailable");
@@ -555,6 +556,7 @@ export const AuthService = {
   async forgotPassword(email: string): Promise<{ ok: true }> {
     try {
       // Validate email exists in Payload CMS first
+      const payload = await getPayloadClient();
       if (!payload) {
         logger.error("Payload CMS is not initialized");
         throw new Error("Authentication service unavailable");
@@ -600,6 +602,7 @@ export const AuthService = {
    */
   async resetPassword(token: string, password: string): Promise<{ ok: true }> {
     try {
+      const payload = await getPayloadClient();
       if (!payload) {
         logger.error("Payload CMS is not initialized");
         throw new Error("Authentication service unavailable");
@@ -649,6 +652,7 @@ export const AuthService = {
       const { email, password } = parsedCredentials.data;
 
       // Use Payload CMS for authentication
+      const payload = await getPayloadClient();
       if (!payload) {
         logger.error("Payload CMS is not initialized");
         throw new Error(STATUS_CODES.AUTH_ERROR.message);

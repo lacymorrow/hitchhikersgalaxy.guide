@@ -21,8 +21,8 @@ export const EntryCard = ({ entry, index }: EntryCardProps) => {
 				href={`/${encodeURIComponent(entry.searchTerm)}`}
 				className="mx-4 transition-transform hover:scale-[1.02]"
 			>
-				<Card className="w-[300px] h-[150px] border border-[#70c8cd]/60 bg-gray-900/70 hover:border-[#70c8cd]/90 hover:bg-gray-900/90 transition-colors duration-200">
-					<CardHeader className="pb-2">
+				<Card className="gap-0 py-0 rounded-xl shadow w-[300px] h-[150px] border border-[#70c8cd]/60 bg-gray-900/70 hover:border-[#70c8cd]/90 hover:bg-gray-900/90 transition-colors duration-200">
+					<CardHeader className="p-6 pb-2">
 						<CardTitle className="line-clamp-1 text-lg capitalize text-[#70c8cd]">
 							{entry.searchTerm}
 						</CardTitle>
@@ -33,7 +33,7 @@ export const EntryCard = ({ entry, index }: EntryCardProps) => {
 							{formatDistanceToNow(entry.createdAt, { addSuffix: true })}
 						</p>
 					</CardHeader>
-					<CardContent>
+					<CardContent className="p-6 pt-0">
 						<p className="line-clamp-2 text-sm text-[#70c8cd]/80">
 							{entry.content}
 						</p>

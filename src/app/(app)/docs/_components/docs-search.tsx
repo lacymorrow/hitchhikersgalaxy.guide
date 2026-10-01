@@ -1,6 +1,5 @@
 "use client";
 
-import { DialogTitle } from "@radix-ui/react-dialog";
 import {
   ChevronRightIcon,
   ClockIcon,
@@ -8,6 +7,7 @@ import {
   MagnifyingGlassIcon,
 } from "@radix-ui/react-icons";
 import { useRouter } from "next/navigation";
+import { Dialog as DialogPrimitive } from "radix-ui";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -243,7 +243,7 @@ export function DocsSearch() {
         onSelect={() => handleResultSelect(result)}
         className={cn("flex cursor-pointer items-start gap-3 p-3", isSelected && "bg-accent")}
       >
-        <FileTextIcon className="mt-0.5 h-4 w-4 flex-shrink-0 text-muted-foreground" />
+        <FileTextIcon className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
             <span className="truncate text-sm font-medium">{result.title}</span>
@@ -255,7 +255,7 @@ export function DocsSearch() {
           </div>
           <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{result.content}</p>
         </div>
-        <ChevronRightIcon className="h-3 w-3 flex-shrink-0 text-muted-foreground" />
+        <ChevronRightIcon className="h-3 w-3 shrink-0 text-muted-foreground" />
       </CommandItem>
     );
   };
@@ -300,7 +300,7 @@ export function DocsSearch() {
   return (
     <>
       <div className="relative w-full">
-        <MagnifyingGlassIcon className="absolute left-2 top-3 h-4 w-4 text-muted-foreground" />
+        <MagnifyingGlassIcon className="absolute top-3 left-2 h-4 w-4 text-muted-foreground" />
         <Input
           className="h-9 w-full rounded-[0.5rem] bg-background pl-8 text-sm text-muted-foreground"
           placeholder="Search docs..."
@@ -311,7 +311,7 @@ export function DocsSearch() {
 
       <CommandDialog open={open} onOpenChange={handleOpenChange}>
         <div className="flex h-[300px] w-full flex-col">
-          <DialogTitle className="sr-only">Search Documentation</DialogTitle>
+          <DialogPrimitive.Title className="sr-only">Search Documentation</DialogPrimitive.Title>
           <CommandInput
             ref={inputRef}
             placeholder="Type to search documentation..."

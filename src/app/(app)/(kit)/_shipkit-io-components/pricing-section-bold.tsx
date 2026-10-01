@@ -12,7 +12,7 @@ export const PricingSectionBold = ({
   backgroundImage = advancedGradient.src,
 }: PricingSectionBoldProps) => {
   return (
-    <section className="py-24 text-neutral-800 dark:text-neutral-50 lg:pb-32">
+    <section className="py-24 text-neutral-800 lg:pb-32 dark:text-neutral-50">
       <div className="container mx-auto px-4">
         <div className="flex flex-wrap *:mx-auto">
           {plans.map((plan, index) => {

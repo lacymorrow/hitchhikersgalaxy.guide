@@ -30,7 +30,7 @@ export const PricingSection = ({ plans, backgroundImage }: PricingSectionProps) 
               }
             >
               {/* Overlay for better text readability */}
-              <div className="absolute inset-0 rounded-3xl bg-neutral-950/80 backdrop-blur-sm" />
+              <div className="absolute inset-0 rounded-3xl bg-neutral-950/80 backdrop-blur-xs" />
 
               {/* Content */}
               <div className="relative z-10">
@@ -92,7 +92,7 @@ const PricingButton = ({
     <Link
       href={href ?? "#"}
       className={cn(
-        "group flex items-center justify-center gap-2 rounded-xl border border-neutral-800 bg-neutral-900/50 px-4 py-2 text-sm font-medium text-white backdrop-blur transition-colors hover:bg-neutral-900",
+        "group flex items-center justify-center gap-2 rounded-xl border border-neutral-800 bg-neutral-900/50 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm transition-colors hover:bg-neutral-900",
         noCardRequired && "border-emerald-900/50 bg-emerald-950/10 hover:bg-emerald-950/30"
       )}
     >

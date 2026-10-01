@@ -2,7 +2,7 @@
 
 import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons";
 import { PlusIcon } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import * as React from "react";
 import { ProjectDialog } from "@/components/modules/projects/project-dialog";
 import { useTeam } from "@/components/providers/team-provider";

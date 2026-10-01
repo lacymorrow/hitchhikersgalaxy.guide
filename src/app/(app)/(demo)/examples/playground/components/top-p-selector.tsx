@@ -1,6 +1,6 @@
 "use client";
 
-import type { SliderProps } from "@radix-ui/react-slider";
+import type { Slider as SliderPrimitive } from "radix-ui";
 import * as React from "react";
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
 interface TopPSelectorProps {
-  defaultValue: SliderProps["defaultValue"];
+  defaultValue: SliderPrimitive.SliderProps["defaultValue"];
 }
 
 export function TopPSelector({ defaultValue }: TopPSelectorProps) {
@@ -31,7 +31,7 @@ export function TopPSelector({ defaultValue }: TopPSelectorProps) {
               defaultValue={value}
               step={0.1}
               onValueChange={setValue}
-              className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
+              className="**:[[role=slider]]:h-4 **:[[role=slider]]:w-4"
               aria-label="Top P"
             />
           </div>

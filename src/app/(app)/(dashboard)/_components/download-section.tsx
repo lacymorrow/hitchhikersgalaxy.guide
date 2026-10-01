@@ -55,7 +55,7 @@ export const DownloadSection = ({
       <div className="flex w-full flex-wrap items-stretch justify-stretch gap-3">
         <Link
           href={routes.api.download}
-          className={cn(buttonVariants({ variant: "default" }), "min-w-1/2 w-full grow")}
+          className={cn(buttonVariants({ variant: "default" }), "w-full min-w-1/2 grow")}
         >
           <DownloadIcon className="mr-2 h-4 w-4" />
           Download {siteConfig.title}

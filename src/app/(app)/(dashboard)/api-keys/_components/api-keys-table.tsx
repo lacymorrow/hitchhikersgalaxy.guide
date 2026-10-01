@@ -33,8 +33,8 @@ const columns: ColumnDef<ApiKey>[] = [
     cell: ({ row }) => {
       const key = row.getValue<string>("key");
       return (
-        <div className="flex items-center space-x-2">
-          <code className="rounded bg-muted px-2 py-1">
+        <div className="flex items-center gap-x-2">
+          <code className="rounded-lg bg-muted px-2 py-1">
             {key.slice(0, 12)}...{key.slice(-4)}
           </code>
         </div>
@@ -113,7 +113,7 @@ export function ApiKeysTable({ apiKeys, userId }: ApiKeysTableProps) {
       <DataTable columns={columns} data={apiKeys} searchPlaceholder="Search API keys..." />
 
       {/* Create dialog with its own trigger button */}
-      <div className="absolute right-0 top-[-60px]">
+      <div className="absolute top-[-60px] right-0">
         <CreateApiKeyDialog onSubmit={createApiKey} userId={userId} />
       </div>
 

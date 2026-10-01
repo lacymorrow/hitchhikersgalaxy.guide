@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { Button } from "@/components/ui/button";
 import { routes } from "@/config/routes";
 import { getUserPaymentStatus } from "@/server/actions/payments";

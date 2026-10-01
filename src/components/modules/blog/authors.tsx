@@ -48,7 +48,7 @@ export const BlogAuthors = ({ authors }: BlogAuthorsProps) => {
             <Link
               key={isNewAuthor ? author.id : `legacy-${i}`}
               href={authorUrl}
-              className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+              className="rounded-full focus:ring-2 focus:ring-ring focus:ring-offset-2 focus:outline-hidden"
               aria-label={`View ${displayName}'s profile`}
             >
               {imageElement}
@@ -58,7 +58,7 @@ export const BlogAuthors = ({ authors }: BlogAuthorsProps) => {
 
         // Legacy author or no URL
         return (
-          <div key={isNewAuthor ? author.id : `legacy-${i}`} className="focus:outline-none">
+          <div key={isNewAuthor ? author.id : `legacy-${i}`} className="focus:outline-hidden">
             {imageElement}
           </div>
         );

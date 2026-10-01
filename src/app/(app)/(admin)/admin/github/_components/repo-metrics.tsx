@@ -21,14 +21,14 @@ export function RepoMetricsSkeleton() {
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       {Array.from({ length: 4 }).map((_, i) => (
         // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
-        <Card key={i}>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <div className="h-4 w-24 animate-pulse rounded bg-muted" />
-            <div className="h-4 w-4 animate-pulse rounded bg-muted" />
+        <Card className="gap-0 py-0" key={i}>
+          <CardHeader className="flex flex-row items-center justify-between gap-y-0 p-6 pb-2">
+            <div className="h-4 w-24 animate-pulse rounded-lg bg-muted" />
+            <div className="h-4 w-4 animate-pulse rounded-lg bg-muted" />
           </CardHeader>
-          <CardContent>
-            <div className="mb-1 h-8 w-16 animate-pulse rounded bg-muted" />
-            <div className="h-3 w-32 animate-pulse rounded bg-muted" />
+          <CardContent className="p-6 pt-0">
+            <div className="mb-1 h-8 w-16 animate-pulse rounded-lg bg-muted" />
+            <div className="h-3 w-32 animate-pulse rounded-lg bg-muted" />
           </CardContent>
         </Card>
       ))}
@@ -137,12 +137,12 @@ export async function RepoMetricsContent() {
     return (
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         {metrics.map((metric) => (
-          <Card key={metric.id}>
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+          <Card className="gap-0 py-0" key={metric.id}>
+            <CardHeader className="flex flex-row items-center justify-between gap-y-0 p-6 pb-2">
               <CardTitle className="text-sm font-medium">{metric.title}</CardTitle>
               {metric.icon}
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-6 pt-0">
               <div className="text-2xl font-bold">{metric.value}</div>
               <p className="text-xs text-muted-foreground">{metric.description}</p>
             </CardContent>

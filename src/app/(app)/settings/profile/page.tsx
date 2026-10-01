@@ -1,6 +1,6 @@
 "use client";
 
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import * as React from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -92,20 +92,20 @@ export default function SettingsPage() {
     return (
       <div className="animate-pulse space-y-6">
         <div>
-          <div className="h-6 w-32 rounded bg-muted" />
-          <div className="mt-2 h-4 w-64 rounded bg-muted" />
+          <div className="h-6 w-32 rounded-lg bg-muted" />
+          <div className="mt-2 h-4 w-64 rounded-lg bg-muted" />
         </div>
         <Separator />
         <Card>
           <CardHeader>
-            <div className="h-6 w-48 rounded bg-muted" />
-            <div className="mt-2 h-4 w-96 rounded bg-muted" />
+            <div className="h-6 w-48 rounded-lg bg-muted" />
+            <div className="mt-2 h-4 w-96 rounded-lg bg-muted" />
           </CardHeader>
           <CardContent className="space-y-6">
             {[1, 2].map((i) => (
               <div key={i} className="space-y-2">
-                <div className="h-4 w-24 rounded bg-muted" />
-                <div className="h-10 w-full rounded bg-muted" />
+                <div className="h-4 w-24 rounded-lg bg-muted" />
+                <div className="h-10 w-full rounded-lg bg-muted" />
               </div>
             ))}
           </CardContent>

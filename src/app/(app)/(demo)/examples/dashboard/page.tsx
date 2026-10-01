@@ -41,21 +41,21 @@ export default function DashboardPage() {
           <div className="flex h-16 items-center px-4">
             <TeamSwitcher />
             <MainNav className="mx-6" />
-            <div className="ml-auto flex items-center space-x-4">
+            <div className="ml-auto flex items-center gap-x-4">
               <Search />
               <UserNav />
             </div>
           </div>
         </div>
         <div className="flex-1 space-y-4 p-8 pt-6">
-          <div className="flex items-center justify-between space-y-2">
+          <div className="flex items-center justify-between gap-y-2">
             <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-x-2">
               <CalendarDateRangePicker />
               <Button>Download</Button>
             </div>
           </div>
-          <Tabs defaultValue="overview" className="space-y-4">
+          <Tabs defaultValue="overview" className="gap-y-4">
             <TabsList>
               <TabsTrigger value="overview">Overview</TabsTrigger>
               <TabsTrigger value="analytics" disabled>
@@ -70,8 +70,8 @@ export default function DashboardPage() {
             </TabsList>
             <TabsContent value="overview" className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Card className="gap-0 py-0">
+                  <CardHeader className="flex flex-row items-center justify-between gap-y-0 p-6 pb-2">
                     <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -86,13 +86,13 @@ export default function DashboardPage() {
                       <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                     </svg>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-6 pt-0">
                     <div className="text-2xl font-bold">$45,231.89</div>
                     <p className="text-xs text-muted-foreground">+20.1% from last month</p>
                   </CardContent>
                 </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Card className="gap-0 py-0">
+                  <CardHeader className="flex flex-row items-center justify-between gap-y-0 p-6 pb-2">
                     <CardTitle className="text-sm font-medium">Subscriptions</CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -109,13 +109,13 @@ export default function DashboardPage() {
                       <path d="M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
                     </svg>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-6 pt-0">
                     <div className="text-2xl font-bold">+2350</div>
                     <p className="text-xs text-muted-foreground">+180.1% from last month</p>
                   </CardContent>
                 </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Card className="gap-0 py-0">
+                  <CardHeader className="flex flex-row items-center justify-between gap-y-0 p-6 pb-2">
                     <CardTitle className="text-sm font-medium">Sales</CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -131,13 +131,13 @@ export default function DashboardPage() {
                       <path d="M2 10h20" />
                     </svg>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-6 pt-0">
                     <div className="text-2xl font-bold">+12,234</div>
                     <p className="text-xs text-muted-foreground">+19% from last month</p>
                   </CardContent>
                 </Card>
-                <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                <Card className="gap-0 py-0">
+                  <CardHeader className="flex flex-row items-center justify-between gap-y-0 p-6 pb-2">
                     <CardTitle className="text-sm font-medium">Active Now</CardTitle>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -152,7 +152,7 @@ export default function DashboardPage() {
                       <path d="M22 12h-4l-3 9L9 3l-3 9H2" />
                     </svg>
                   </CardHeader>
-                  <CardContent>
+                  <CardContent className="p-6 pt-0">
                     <div className="text-2xl font-bold">+573</div>
                     <p className="text-xs text-muted-foreground">+201 since last hour</p>
                   </CardContent>

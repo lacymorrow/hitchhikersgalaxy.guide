@@ -272,7 +272,7 @@ export function GitHubIntegration({ changedFiles, disabled, command }: GitHubInt
 
       <div className="transition-[height,opacity] duration-200 ease-in-out">
         {(error ?? (progressMessages.length > 0 || success)) && (
-          <div className="rounded-lg border bg-card p-4 text-card-foreground shadow-sm">
+          <div className="rounded-lg border bg-card p-4 text-card-foreground shadow-xs">
             {error && (
               <Alert variant="destructive" className="mb-3">
                 <AlertDescription>{error}</AlertDescription>

@@ -1,12 +1,6 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site-config";
 
-/*
- * LLM-discoverable content files:
- * - /llms.txt       (short intro for LLMs)
- * - /llms-full.txt  (comprehensive reference for LLMs)
- * These are served as static files from the public/ directory.
- */
 
 /* Robots.txt Configuration
  * This file controls how search engines and other web robots interact with your site

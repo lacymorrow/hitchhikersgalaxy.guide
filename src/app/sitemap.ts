@@ -1,45 +1,8 @@
-import type { Buffer } from "buffer";
-import { readdir, stat } from "fs/promises";
 import type { MetadataRoute } from "next";
-import { join } from "path";
-import { routes } from "@/config/routes";
 import { siteConfig } from "@/config/site";
 import { dedupeGuideEntries, guideEntryPath } from "@/lib/seo";
 import { db } from "@/server/db";
 import { guideEntries } from "@/server/db/schema";
-
-interface ContentFile {
-  slug: string;
-  path: string;
-}
-
-// Utility function to get content files
-async function getContentFiles(contentDir: string): Promise<ContentFile[]> {
-  try {
-    let fullPath: string;
-
-    // Docs are in root docs/ directory, other content is in src/content/
-    if (contentDir === "docs") {
-      fullPath = join(process.cwd(), "docs");
-    } else {
-      fullPath = join(process.cwd(), "src/content", contentDir);
-    }
-
-    const files = await readdir(fullPath, { recursive: true });
-    return files
-      .filter(
-        (file: string | Buffer): file is string =>
-          typeof file === "string" && (file.endsWith(".mdx") || file.endsWith(".md"))
-      )
-      .map((file: string) => ({
-        slug: file.replace(/\.(mdx|md)$/, ""),
-        path: join(fullPath, file),
-      }));
-  } catch (error) {
-    console.error(`Error reading ${contentDir} directory:`, error);
-    return [];
-  }
-}
 
 // Get all guide entries from the database for sitemap
 async function getGuideEntries() {
@@ -99,38 +62,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
     .filter((page) => !staticUrls.has(page.url));
 
-  // Blog posts + docs (only when blog is enabled)
-  const contentPages: MetadataRoute.Sitemap = [];
-  if (process.env.NEXT_PUBLIC_HAS_BLOG === "true") {
-    const blogFiles = await getContentFiles("blog");
-    contentPages.push(
-      ...(await Promise.all(
-        blogFiles.map(async (file) => {
-          const stats = await stat(file.path);
-          return {
-            url: `${baseUrl}${routes.blog}/${file.slug}`,
-            lastModified: stats.mtime,
-            changeFrequency: "monthly" as const,
-            priority: 0.6,
-          };
-        })
-      ))
-    );
-    const docFiles = await getContentFiles("docs");
-    contentPages.push(
-      ...(await Promise.all(
-        docFiles.map(async (file) => {
-          const stats = await stat(file.path);
-          return {
-            url: `${baseUrl}${routes.docs}/${file.slug}`,
-            lastModified: stats.mtime,
-            changeFrequency: "weekly" as const,
-            priority: 0.7,
-          };
-        })
-      ))
-    );
-  }
-
-  return [...staticPages, ...entryPages, ...contentPages];
+  return [...staticPages, ...entryPages];
 }

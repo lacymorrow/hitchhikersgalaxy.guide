@@ -224,7 +224,7 @@ export default function Dashboard() {
             </BreadcrumbList>
           </Breadcrumb>
           <div className="relative ml-auto flex-1 md:grow-0">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
               placeholder="Search..."
@@ -257,41 +257,47 @@ export default function Dashboard() {
           <div className="grid auto-rows-max items-start gap-4 md:gap-8 lg:col-span-2">
             <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4">
               <Card
-                className="sm:col-span-2"
+                className="gap-0 py-0 sm:col-span-2"
                 x-chunk="A card for an orders dashboard with a description and a button to create a new order."
               >
-                <CardHeader className="pb-3">
+                <CardHeader className="p-6 pb-3">
                   <CardTitle>Your Orders</CardTitle>
-                  <CardDescription className="max-w-lg text-balance leading-relaxed">
+                  <CardDescription className="max-w-lg leading-relaxed text-balance">
                     Introducing Our Dynamic Orders Dashboard for Seamless Management and Insightful
                     Analysis.
                   </CardDescription>
                 </CardHeader>
-                <CardFooter>
+                <CardFooter className="p-6 pt-0">
                   <Button>Create New Order</Button>
                 </CardFooter>
               </Card>
-              <Card x-chunk="A stats card showing this week's total sales in USD, the percentage difference from last week, and a progress bar.">
-                <CardHeader className="pb-2">
+              <Card
+                className="gap-0 py-0"
+                x-chunk="A stats card showing this week's total sales in USD, the percentage difference from last week, and a progress bar."
+              >
+                <CardHeader className="p-6 pb-2">
                   <CardDescription>This Week</CardDescription>
                   <CardTitle className="text-4xl">$1,329</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6 pt-0">
                   <div className="text-xs text-muted-foreground">+25% from last week</div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="p-6 pt-0">
                   <Progress value={25} aria-label="25% increase" />
                 </CardFooter>
               </Card>
-              <Card x-chunk="A stats card showing this month's total sales in USD, the percentage difference from last month, and a progress bar.">
-                <CardHeader className="pb-2">
+              <Card
+                className="gap-0 py-0"
+                x-chunk="A stats card showing this month's total sales in USD, the percentage difference from last month, and a progress bar."
+              >
+                <CardHeader className="p-6 pb-2">
                   <CardDescription>This Month</CardDescription>
                   <CardTitle className="text-4xl">$5,329</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6 pt-0">
                   <div className="text-xs text-muted-foreground">+10% from last month</div>
                 </CardContent>
-                <CardFooter>
+                <CardFooter className="p-6 pt-0">
                   <Progress value={12} aria-label="12% increase" />
                 </CardFooter>
               </Card>
@@ -484,10 +490,10 @@ export default function Dashboard() {
           </div>
           <div>
             <Card
-              className="overflow-hidden"
+              className="gap-0 overflow-hidden py-0"
               x-chunk="An order details card with order details, shipping information, customer information and payment information."
             >
-              <CardHeader className="flex flex-row items-start bg-muted/50">
+              <CardHeader className="flex flex-row items-start bg-muted/50 p-6">
                 <div className="grid gap-0.5">
                   <CardTitle className="group flex items-center gap-2 text-lg">
                     Order Oe31b70H
@@ -566,7 +572,7 @@ export default function Dashboard() {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="grid gap-3">
                     <div className="font-semibold">Shipping Information</div>
-                    <address className="grid gap-0.5 not-italic text-muted-foreground">
+                    <address className="grid gap-0.5 text-muted-foreground not-italic">
                       <span>Liam Johnson</span>
                       <span>1234 Main St.</span>
                       <span>Anytown, CA 12345</span>
@@ -613,11 +619,11 @@ export default function Dashboard() {
                   </dl>
                 </div>
               </CardContent>
-              <CardFooter className="flex flex-row items-center border-t bg-muted/50 px-6 py-3">
+              <CardFooter className="flex flex-row items-center border-t bg-muted/50 p-6 px-6 py-3">
                 <div className="text-xs text-muted-foreground">
                   Updated <time dateTime="2023-11-23">November 23, 2023</time>
                 </div>
-                <Pagination className="ml-auto mr-0 w-auto">
+                <Pagination className="mr-0 ml-auto w-auto">
                   <PaginationContent>
                     <PaginationItem>
                       <Button size="icon" variant="outline" className="h-6 w-6">

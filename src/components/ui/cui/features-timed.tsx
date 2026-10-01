@@ -68,7 +68,7 @@ export const FeaturesTimed = () => {
   return (
     <div className="container">
       <div className="mb-20 text-center">
-        <p className="mb-2 text-sm font-medium uppercase text-neutral-500">How does it work ?</p>
+        <p className="mb-2 text-sm font-medium text-neutral-500 uppercase">How does it work ?</p>
 
         <h2 className="mb-4 text-3xl font-semibold tracking-tighter text-neutral-800 dark:text-neutral-300">
           How to use the Easiest component librairy : Cuicui
@@ -139,7 +139,7 @@ const TextComponent = ({
       className={cn(
         "transform-gpu rounded-lg border transition-all",
         isOpen
-          ? "border-neutral-500/10 bg-gradient-to-b from-neutral-200/15 to-neutral-200/5 dark:border-neutral-500/15 dark:from-neutral-600/15 dark:to-neutral-600/5 dark:shadow-[2px_4px_25px_0px_rgba(248,248,248,0.06)_inset]"
+          ? "border-neutral-500/10 bg-linear-to-b from-neutral-200/15 to-neutral-200/5 dark:border-neutral-500/15 dark:from-neutral-600/15 dark:to-neutral-600/5 dark:shadow-[2px_4px_25px_0px_rgba(248,248,248,0.06)_inset]"
           : "scale-90 border-transparent opacity-50 saturate-0"
       )}
     >
@@ -165,7 +165,7 @@ const TextComponent = ({
         <div className="w-full px-4 pb-4">
           <div className="relative h-1 w-full overflow-hidden rounded-full">
             <div
-              className={cn("absolute left-0 top-0 h-1 bg-neutral-500")}
+              className={cn("absolute top-0 left-0 h-1 bg-neutral-500")}
               style={{ width: `${loadingWidthPercent}%` }}
             />
           </div>

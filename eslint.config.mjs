@@ -5,6 +5,7 @@ import ts from "@typescript-eslint/eslint-plugin";
 import tsParser from "@typescript-eslint/parser";
 import pluginReact from "eslint-plugin-react";
 import pluginReactHooks from "eslint-plugin-react-hooks";
+import { plugin as shadcn } from "@shadcn/lint";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -72,6 +73,81 @@ const eslintConfig = [
 		rules: {
 			...pluginNext.configs.recommended.rules,
 			...pluginNext.configs["core-web-vitals"].rules,
+		},
+	},
+
+	// @shadcn/lint: Tailwind v4 design-system rules. Call sites only:
+	// src/components/ui/** and src/components/blocks/** are excluded by the
+	// global ignores above, so components can style their own internals.
+	// Contracts and levels below are informed by a violation-count pass on
+	// this codebase; see docs/development/index.mdx#design-system-lint.
+	{
+		files: ["**/*.{ts,tsx}"],
+		languageOptions: {
+			parser: tsParser,
+			parserOptions: {
+				ecmaVersion: "latest",
+				sourceType: "module",
+				ecmaFeatures: { jsx: true },
+			},
+		},
+		plugins: { shadcn },
+		rules: {
+			"shadcn/no-restyle": [
+				"warn",
+				{
+					allow: ["layout"],
+					contracts: [
+						{
+							// Button (src/components/ui/button.tsx) owns its own
+							// padding, height, radius, and type via `size`. Callers
+							// get margin, width, and other layout/placement classes.
+							// `{{sizes}}` only fills in on spacing findings (it's
+							// literal otherwise per @shadcn/lint's docs), so height
+							// (an explicit `deny`, category `layout`) gets its own
+							// message instead of reusing the spacing one.
+							pattern: "^Button$",
+							allow: ["layout"],
+							deny: ["h", "min-h", "max-h"],
+							message: {
+								spacing:
+									'Button owns its padding via size. Use a Button size ({{sizes|none defined}}) from {{file}} instead of "{{className}}".',
+								shape: 'Button\'s corner radius comes from its size in {{file}}. Use a size instead of "{{className}}".',
+								typography:
+									'Button\'s type comes from its size in {{file}}. Use a size instead of "{{className}}".',
+								layout:
+									'Button\'s height comes from its size in {{file}}. Use a size instead of "{{className}}", or margin/width here for placement.',
+								default:
+									'"{{className}}" is not allowed on <Button>. Use a variant ({{variants|none defined}}) or size from {{file}}, or margin/width here for placement.',
+							},
+						},
+						{
+							// CardTitle may resize its text but not change the
+							// family or weight the design system sets.
+							pattern: "^CardTitle$",
+							allow: ["layout", "typography"],
+							deny: ["font-*"],
+							message: {
+								typography:
+									"CardTitle can resize its text (e.g. text-lg) but not its font family or weight. See {{file}}.",
+								default:
+									'"{{className}}" is not allowed on <CardTitle>. It can change layout and text size; other styling stays with the design system. See {{file}}.',
+							},
+						},
+						{
+							// CardContent may adjust spacing but not typography or
+							// color; those stay with the design system.
+							pattern: "^CardContent$",
+							allow: ["layout", "spacing"],
+							message: {
+								default:
+									'"{{className}}" is not allowed on <CardContent>. It can change layout and spacing (padding/gap); typography and color stay with the design system. See {{file}}.',
+							},
+						},
+					],
+				},
+			],
+			"shadcn/no-arbitrary-values": ["warn", { allow: ["layout"] }],
 		},
 	},
 

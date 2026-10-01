@@ -43,22 +43,22 @@ const data = [
 const chartConfig = {
   revenue: {
     label: "Revenue",
-    color: "hsl(var(--primary))",
+    color: "var(--primary)",
   },
   subscription: {
     label: "Subscriptions",
-    color: "hsl(var(--primary))",
+    color: "var(--primary)",
   },
 } satisfies ChartConfig;
 
 export function CardsStats() {
   return (
     <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-2">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <Card className="gap-0 py-0">
+        <CardHeader className="flex flex-row items-center justify-between gap-y-0 p-6 pb-2">
           <CardTitle className="text-sm font-normal">Total Revenue</CardTitle>
         </CardHeader>
-        <CardContent className="pb-0">
+        <CardContent className="p-6 pt-0 pb-0">
           <div className="text-2xl font-bold">$15,231.89</div>
           <p className="text-xs text-muted-foreground">+20.1% from last month</p>
           <ChartContainer config={chartConfig} className="h-[80px] w-full">
@@ -84,11 +84,11 @@ export function CardsStats() {
           </ChartContainer>
         </CardContent>
       </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+      <Card className="gap-0 py-0">
+        <CardHeader className="flex flex-row items-center justify-between gap-y-0 p-6 pb-2">
           <CardTitle className="text-sm font-normal">Subscriptions</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6 pt-0">
           <div className="text-2xl font-bold">+2350</div>
           <p className="text-xs text-muted-foreground">+180.1% from last month</p>
           <ChartContainer config={chartConfig} className="mt-2 h-[80px] w-full">

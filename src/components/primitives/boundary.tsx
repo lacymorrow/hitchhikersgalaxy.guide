@@ -25,7 +25,7 @@ export const Boundary = ({
   return (
     <div
       className={cn(
-        "container flex w-full flex-1 items-center justify-center border border-dashed p-md shadow-sm",
+        "container flex w-full flex-1 items-center justify-center border border-dashed p-md shadow-xs",
         className
       )}
     >

@@ -73,7 +73,7 @@ export default async function SubscriptionsPage() {
               <CardTitle>{tier.name}</CardTitle>
               <CardDescription>{tier.description}</CardDescription>
               {userId && purchasedProducts[tier.id] && (
-                <div className="absolute right-4 top-4">
+                <div className="absolute top-4 right-4">
                   {tier.id === process.env.NEXT_PUBLIC_POLAR_SUBSCRIPTION_PRICE_ID ? (
                     <Badge variant="default" className="bg-green-500">
                       Active
@@ -86,7 +86,7 @@ export default async function SubscriptionsPage() {
                 </div>
               )}
             </CardHeader>
-            <CardContent className="flex-grow">
+            <CardContent className="grow">
               <p className="text-3xl font-bold">{tier.price}</p>
             </CardContent>
             <CardFooter>

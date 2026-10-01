@@ -215,7 +215,7 @@ export default async function CheckoutSuccessPage({
 
           {session ? (
             // Logged in state
-            <Card className="mb-8 w-full max-w-md p-6 text-center">
+            <Card className="mb-8 w-full max-w-md gap-0 p-6 text-center">
               <p className="mb-4">
                 Your account is ready to go! Head to the dashboard to get started.
               </p>

@@ -267,7 +267,7 @@ const FeatureName = ({ name, description, badge }: FeatureNameProps) => (
             variant={badge === "New" ? "default" : badge === "Popular" ? "secondary" : "outline"}
             className={cn(
               "h-5 text-xs",
-              badge === "Pro" && "bg-gradient-to-r from-indigo-500 to-purple-500"
+              badge === "Pro" && "bg-linear-to-r from-indigo-500 to-purple-500"
             )}
           >
             {badge}

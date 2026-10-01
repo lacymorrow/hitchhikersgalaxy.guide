@@ -1,4 +1,5 @@
 import { eq } from "drizzle-orm";
+import { logger } from "@/lib/logger";
 import { adminConfig } from "@/config/admin-config";
 import { getPayloadClient } from "@/lib/payload/payload";
 import { db } from "@/server/db";
@@ -32,21 +33,29 @@ export async function isAdmin({
     return false;
   }
 
-  // 1. Check admin config (static configuration) - works without userId
-  if (adminConfig.isAdminByEmailConfig(email)) {
-    return true;
-  }
-
-  // For the remaining checks, we need either userId or we can try to get it from the database
-  // 2. Check if user is admin by querying the database directly
+  // Load the account first. The config check below used to run against the raw
+  // email string alone, which meant anyone who could present a matching address
+  // was an admin, whether or not they had ever proved they owned it.
   const user = await db?.query.users.findFirst({
     where: eq(users.email, email.toLowerCase()),
     columns: {
       role: true,
       id: true,
+      emailVerified: true,
     },
   });
 
+  // 1. Static configuration, but only for a real account with a verified email.
+  if (adminConfig.isAdminByEmailConfig(email)) {
+    if (user?.emailVerified) {
+      return true;
+    }
+    logger.warn("Admin config matched an email with no verified account; refusing admin", {
+      email,
+    });
+  }
+
+  // 2. Explicit role on the account.
   if (user?.role === "admin") {
     return true;
   }

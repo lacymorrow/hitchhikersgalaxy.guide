@@ -13,25 +13,25 @@ import { revenueChartData } from "./mock-data";
 const chartConfig = {
   revenue: {
     label: "Revenue",
-    color: "hsl(var(--foreground))",
+    color: "var(--primary)",
   },
   expenses: {
     label: "Expenses",
-    color: "hsl(var(--muted-foreground))",
+    color: "var(--muted-foreground)",
   },
 } satisfies ChartConfig;
 
 export const RevenueChart = () => {
   return (
-    <Card className="border-border/50 bg-card/50">
-      <CardHeader className="pb-2">
+    <Card className="gap-0 py-0">
+      <CardHeader className="p-6 pb-2">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-sm font-medium uppercase tracking-wider text-muted-foreground">
-            Revenue
+          <CardTitle className="text-sm">
+            Revenue <span className="ml-1.5 font-normal text-muted-foreground">Jan to Dec</span>
           </CardTitle>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5">
-              <span className="h-2 w-2 rounded-full bg-foreground" />
+              <span className="h-2 w-2 rounded-full bg-primary" />
               Revenue
             </span>
             <span className="flex items-center gap-1.5">
@@ -41,11 +41,11 @@ export const RevenueChart = () => {
           </div>
         </div>
         <div className="flex items-baseline gap-2 pt-1">
-          <span className="text-3xl font-semibold tabular-nums tracking-tight">$7,340</span>
+          <span className="text-3xl font-semibold tracking-tight tabular-nums">$7,340</span>
           <span className="text-xs text-muted-foreground">today</span>
         </div>
       </CardHeader>
-      <CardContent className="px-2 pb-2">
+      <CardContent className="p-6 px-2 pt-0 pb-2">
         <ChartContainer config={chartConfig} className="aspect-auto h-[280px] w-full">
           <AreaChart data={revenueChartData} margin={{ top: 8, right: 8, bottom: 0, left: 0 }}>
             <defs>
@@ -61,7 +61,7 @@ export const RevenueChart = () => {
             <CartesianGrid
               vertical={false}
               strokeDasharray="3 3"
-              stroke="hsl(var(--border))"
+              stroke="var(--border)"
               strokeOpacity={0.5}
             />
             <XAxis

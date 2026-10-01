@@ -110,8 +110,8 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="space-y-4 lg:col-span-1">
-          <Card>
-            <CardHeader className="py-3">
+          <Card className="gap-0 py-0">
+            <CardHeader className="p-6 py-3">
               <CardTitle className="text-sm font-medium">Files</CardTitle>
             </CardHeader>
             <CardContent className="p-0">
@@ -148,10 +148,10 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
         </div>
 
         <div className="lg:col-span-2">
-          <Card>
-            <CardHeader className="flex flex-row items-center justify-between py-3">
+          <Card className="gap-0 py-0">
+            <CardHeader className="flex flex-row items-center justify-between p-6 py-3">
               <CardTitle className="text-sm font-medium">{selectedFile?.path}</CardTitle>
-              <div className="flex space-x-2">
+              <div className="flex gap-x-2">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -181,7 +181,7 @@ export const FileChangeDisplay = ({ changedFiles, onDownloadAll }: FileChangeDis
                       Binary file content cannot be displayed.
                     </div>
                   ) : (
-                    <pre className="whitespace-pre-wrap rounded-md bg-slate-900 p-4 font-mono text-sm text-slate-50">
+                    <pre className="rounded-md bg-slate-900 p-4 font-mono text-sm whitespace-pre-wrap text-slate-50">
                       {selectedFile.content}
                     </pre>
                   )}

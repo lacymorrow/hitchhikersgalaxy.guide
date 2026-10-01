@@ -331,7 +331,7 @@ export const ShadcnCommand = ({
               <TerminalIcon className="h-4 w-4 text-muted-foreground" />
             </div>
             <Input
-              className="h-12 border-muted bg-muted/40 pl-10 pr-20 font-mono text-sm focus:border-primary/50 focus:ring-1 focus:ring-primary/50"
+              className="h-12 border-muted bg-muted/40 pr-20 pl-10 font-mono text-sm focus:border-primary/50 focus:ring-1 focus:ring-primary/50"
               placeholder="npx shadcn@latest add button"
               value={command}
               onChange={(e) => setCommand(e.target.value)}
@@ -397,7 +397,7 @@ export const ShadcnCommand = ({
             <AlertTriangleIcon className="h-4 w-4" />
             <AlertTitle>Error</AlertTitle>
             <AlertDescription>
-              <pre className="mt-1 w-full whitespace-pre-wrap font-mono text-xs">
+              <pre className="mt-1 w-full font-mono text-xs whitespace-pre-wrap">
                 {commandError}
               </pre>
             </AlertDescription>

@@ -1,5 +1,5 @@
 import { usePathname, useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { useEffect } from "react";
 import { routes } from "@/config/routes";
 import { createRedirectUrl } from "@/lib/utils/redirect";

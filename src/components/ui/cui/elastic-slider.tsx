@@ -46,7 +46,7 @@ function Slider() {
   return (
     <>
       <motion.div
-        className="flex w-full touch-none select-none items-center justify-center gap-3"
+        className="flex w-full touch-none items-center justify-center gap-3 select-none"
         onHoverEnd={() => animate(scale, 1)}
         onHoverStart={() => animate(scale, 1.2)}
         onTouchEnd={() => animate(scale, 1)}
@@ -69,7 +69,7 @@ function Slider() {
         </motion.div>
 
         <RadixSlider.Root
-          className="relative flex w-full max-w-[200px] grow cursor-grab touch-none select-none items-center py-4 active:cursor-grabbing"
+          className="relative flex w-full max-w-[200px] grow cursor-grab touch-none items-center py-4 select-none active:cursor-grabbing"
           onLostPointerCapture={() => {
             animate(overflow, 0, { type: "spring", bounce: 0.5 });
           }}

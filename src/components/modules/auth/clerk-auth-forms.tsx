@@ -1,31 +1,32 @@
 "use client";
 
 import { SignIn, SignOutButton, SignUp, UserButton } from "@clerk/nextjs";
-import { getAuthStrategy } from "@/lib/auth/auth-strategy";
+import { isClerkActive } from "@/lib/auth/auth-strategy";
 import { clerkConfig } from "@/lib/auth/clerk-config";
 
 /**
- * Clerk Authentication Form Components
+ * Clerk's prebuilt auth UI, themed to match the app.
  *
- * These components provide Clerk-specific authentication UI that integrates
- * with Clerk's built-in components and Shipkit's design system.
+ * The default flow uses Clerk's hosted Account Portal (see
+ * `src/lib/auth/clerk-config.ts`), so nothing renders these by default. Drop
+ * `<ClerkSignInForm />` on a page to embed the form instead; hash routing keeps
+ * it working on any route without a catch-all segment.
+ *
+ * Every component renders nothing unless Clerk is the active strategy.
  */
 
 /**
  * Clerk Sign In Component
  */
 export function ClerkSignInForm() {
-  const authStrategy = getAuthStrategy();
-
-  if (authStrategy !== "clerk") {
-    return null;
-  }
+  if (!isClerkActive()) return null;
 
   return (
     <div className="flex items-center justify-center">
       <SignIn
+        routing="hash"
         appearance={clerkConfig.appearance}
-        afterSignInUrl={clerkConfig.afterSignInUrl}
+        fallbackRedirectUrl={clerkConfig.afterSignInUrl}
         signUpUrl={clerkConfig.signUpUrl}
       />
     </div>
@@ -36,17 +37,14 @@ export function ClerkSignInForm() {
  * Clerk Sign Up Component
  */
 export function ClerkSignUpForm() {
-  const authStrategy = getAuthStrategy();
-
-  if (authStrategy !== "clerk") {
-    return null;
-  }
+  if (!isClerkActive()) return null;
 
   return (
     <div className="flex items-center justify-center">
       <SignUp
+        routing="hash"
         appearance={clerkConfig.appearance}
-        afterSignUpUrl={clerkConfig.afterSignUpUrl}
+        fallbackRedirectUrl={clerkConfig.afterSignUpUrl}
         signInUrl={clerkConfig.signInUrl}
       />
     </div>
@@ -57,17 +55,13 @@ export function ClerkSignUpForm() {
  * Clerk User Button - Shows user profile menu when authenticated
  */
 export function ClerkUserButton() {
-  const authStrategy = getAuthStrategy();
-
-  if (authStrategy !== "clerk") {
-    return null;
-  }
+  if (!isClerkActive()) return null;
 
   return (
     <UserButton
       appearance={clerkConfig.appearance}
       userProfileUrl={clerkConfig.userProfileUrl}
-      afterSignOutUrl="/"
+      afterSignOutUrl={clerkConfig.afterSignOutUrl}
     />
   );
 }
@@ -81,14 +75,10 @@ interface ClerkSignOutButtonProps {
 }
 
 export function ClerkSignOutButton({ children, className }: ClerkSignOutButtonProps) {
-  const authStrategy = getAuthStrategy();
-
-  if (authStrategy !== "clerk") {
-    return null;
-  }
+  if (!isClerkActive()) return null;
 
   return (
-    <SignOutButton redirectUrl="/">
+    <SignOutButton redirectUrl={clerkConfig.afterSignOutUrl}>
       {children ?? (
         <button type="button" className={className}>
           Sign Out
@@ -110,11 +100,5 @@ export function ConditionalClerkComponent({
   children,
   fallback = null,
 }: ConditionalClerkComponentProps) {
-  const authStrategy = getAuthStrategy();
-
-  if (authStrategy === "clerk") {
-    return <>{children}</>;
-  }
-
-  return <>{fallback}</>;
+  return <>{isClerkActive() ? children : fallback}</>;
 }

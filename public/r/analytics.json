@@ -2,9 +2,14 @@
   "$schema": "https://ui.shadcn.com/schema/registry-item.json",
   "name": "analytics",
   "title": "Analytics",
-  "description": "Multi-provider analytics with PostHog, Umami, DataFast, Google Analytics, Google Tag Manager, and Statsig — all behind feature flags.",
-  "dependencies": ["posthog-js"],
-  "registryDependencies": ["@shipkit/cn", "@shipkit/features-config"],
+  "description": "Multi-provider analytics with PostHog, Umami, DataFast, Google Analytics, Google Tag Manager, and Statsig, all behind feature flags.",
+  "dependencies": [
+    "posthog-js@1.431.6"
+  ],
+  "registryDependencies": [
+    "@shipkit/cn",
+    "@shipkit/features-config"
+  ],
   "files": [
     {
       "path": "src/lib/posthog/posthog-config.ts",
@@ -50,7 +55,7 @@
     },
     {
       "path": "src/components/providers/analytics-provider.tsx",
-      "content": "import { Analytics as VercelAnalytics } from \"@vercel/analytics/react\";\nimport { SpeedInsights } from \"@vercel/speed-insights/next\";\nimport type { ReactNode } from \"react\";\nimport { WebVitals } from \"@/components/primitives/web-vitals\";\nimport { DataFastAnalytics } from \"@/lib/datafast/datafast-analytics\";\nimport { GoogleAnalytics } from \"@/lib/google-analytics/google-analytics\";\nimport { GoogleTagManager } from \"@/lib/google-tag-manager/google-tag-manager\";\nimport { ShipkitStatsigProvider } from \"@/lib/statsig/statsig-provider\";\nimport { UmamiAnalytics } from \"@/lib/umami/umami-analytics\";\n\nexport const AnalyticsProvider = ({ children }: { children: ReactNode }) => {\n  return (\n    <>\n      <ShipkitStatsigProvider>\n        {/* Web Vitals - Above children to track page metrics */}\n        <WebVitals />\n\n        {children}\n\n        {/* Metrics - Below children to avoid blocking */}\n        <SpeedInsights />\n\n        {/* Analytics */}\n        <GoogleAnalytics />\n        <GoogleTagManager />\n        <UmamiAnalytics />\n        <DataFastAnalytics />\n        <VercelAnalytics />\n      </ShipkitStatsigProvider>\n    </>\n  );\n};\n",
+      "content": "import { Analytics as VercelAnalytics } from \"@vercel/analytics/react\";\nimport { SpeedInsights } from \"@vercel/speed-insights/next\";\nimport type { ReactNode } from \"react\";\nimport { WebVitals } from \"@/components/primitives/web-vitals\";\nimport { DataFastAnalytics } from \"@/lib/datafast/datafast-analytics\";\nimport { GoogleAnalytics } from \"@/lib/google-analytics/google-analytics\";\nimport { GoogleTagManager } from \"@/lib/google-tag-manager/google-tag-manager\";\nimport { ShipkitStatsigProvider } from \"@/lib/statsig/statsig-provider\";\nimport { UmamiAnalytics } from \"@/lib/umami/umami-analytics\";\n\nexport const AnalyticsProvider = ({ children }: { children: ReactNode }) => {\n  return (\n    <ShipkitStatsigProvider>\n      {/* Web Vitals - Above children to track page metrics */}\n      <WebVitals />\n\n      {children}\n\n      {/* Metrics - Below children to avoid blocking */}\n      <SpeedInsights />\n\n      {/* Analytics */}\n      <GoogleAnalytics />\n      <GoogleTagManager />\n      <UmamiAnalytics />\n      <DataFastAnalytics />\n      <VercelAnalytics />\n    </ShipkitStatsigProvider>\n  );\n};\n",
       "type": "registry:component",
       "target": "~/src/components/providers/analytics-provider.tsx"
     },
@@ -61,7 +66,20 @@
       "target": "~/src/components/providers/consent-provider.tsx"
     }
   ],
-  "docs": "Multi-provider analytics. Each provider auto-enables via env vars: `NEXT_PUBLIC_POSTHOG_KEY` (PostHog), `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Umami), `NEXT_PUBLIC_DATAFAST_ID` (DataFast), `NEXT_PUBLIC_GA_ID` (Google Analytics), `NEXT_PUBLIC_GTM_ID` (GTM), `NEXT_PUBLIC_STATSIG_CLIENT_KEY` (Statsig). Add `<AnalyticsProvider />` to your root layout.",
-  "categories": ["shipkit", "analytics"],
+  "envVars": {
+    "NEXT_PUBLIC_POSTHOG_KEY": "",
+    "NEXT_PUBLIC_POSTHOG_HOST": "",
+    "NEXT_PUBLIC_UMAMI_WEBSITE_ID": "",
+    "NEXT_PUBLIC_DATAFAST_WEBSITE_ID": "",
+    "NEXT_PUBLIC_DATAFAST_DOMAIN": "",
+    "NEXT_PUBLIC_STATSIG_CLIENT_KEY": "",
+    "NEXT_PUBLIC_GOOGLE_ANALYTICS_ID": "",
+    "NEXT_PUBLIC_GOOGLE_GTM_ID": ""
+  },
+  "docs": "Multi-provider analytics. Each provider auto-enables via env vars: `NEXT_PUBLIC_POSTHOG_KEY` (PostHog), `NEXT_PUBLIC_UMAMI_WEBSITE_ID` (Umami), `NEXT_PUBLIC_DATAFAST_WEBSITE_ID` (DataFast), `NEXT_PUBLIC_GOOGLE_ANALYTICS_ID` (Google Analytics), `NEXT_PUBLIC_GOOGLE_GTM_ID` (GTM), `NEXT_PUBLIC_STATSIG_CLIENT_KEY` (Statsig). Add `<AnalyticsProvider />` to your root layout.",
+  "categories": [
+    "shipkit",
+    "analytics"
+  ],
   "type": "registry:block"
 }

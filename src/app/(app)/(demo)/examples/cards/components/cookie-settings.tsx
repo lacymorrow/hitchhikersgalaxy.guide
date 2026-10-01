@@ -20,28 +20,28 @@ export function DemoCookieSettings() {
         <CardDescription>Manage your cookie settings here.</CardDescription>
       </CardHeader>
       <CardContent className="grid gap-6">
-        <div className="flex items-center justify-between space-x-2">
-          <Label htmlFor="necessary" className="flex flex-col space-y-1">
+        <div className="flex items-center justify-between gap-x-2">
+          <Label htmlFor="necessary" className="flex flex-col gap-y-1">
             <span>Strictly Necessary</span>
-            <span className="font-normal leading-snug text-muted-foreground">
+            <span className="leading-snug font-normal text-muted-foreground">
               These cookies are essential in order to use the website and use its features.
             </span>
           </Label>
           <Switch id="necessary" defaultChecked />
         </div>
-        <div className="flex items-center justify-between space-x-2">
-          <Label htmlFor="functional" className="flex flex-col space-y-1">
+        <div className="flex items-center justify-between gap-x-2">
+          <Label htmlFor="functional" className="flex flex-col gap-y-1">
             <span>Functional Cookies</span>
-            <span className="font-normal leading-snug text-muted-foreground">
+            <span className="leading-snug font-normal text-muted-foreground">
               These cookies allow the website to provide personalized functionality.
             </span>
           </Label>
           <Switch id="functional" />
         </div>
-        <div className="flex items-center justify-between space-x-2">
-          <Label htmlFor="performance" className="flex flex-col space-y-1">
+        <div className="flex items-center justify-between gap-x-2">
+          <Label htmlFor="performance" className="flex flex-col gap-y-1">
             <span>Performance Cookies</span>
-            <span className="font-normal leading-snug text-muted-foreground">
+            <span className="leading-snug font-normal text-muted-foreground">
               These cookies help to improve the performance of the website.
             </span>
           </Label>

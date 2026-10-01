@@ -87,8 +87,8 @@ export default async function PolarProductsPage() {
             <h2 className="mb-4 text-2xl font-bold">Your Purchases</h2>
             <div className="grid gap-4">
               {userProducts.map((product) => (
-                <Card key={product.id}>
-                  <CardContent className="pt-6">
+                <Card className="gap-0 py-0" key={product.id}>
+                  <CardContent className="p-6">
                     <div className="flex items-center justify-between">
                       <div>
                         <h3 className="font-semibold">{product.name}</h3>

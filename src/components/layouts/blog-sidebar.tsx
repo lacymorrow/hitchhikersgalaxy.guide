@@ -69,7 +69,7 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
 
       {/* Search */}
       <div className="relative mb-4 px-2">
-        <SearchIcon className="absolute left-5 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <SearchIcon className="absolute top-1/2 left-5 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           placeholder="Search articles..."
           value={searchQuery}
@@ -79,7 +79,7 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
       </div>
 
       {/* Navigation Content */}
-      <ScrollArea className="w-full flex-1 px-2 [&>[data-radix-scroll-area-viewport]>div]:!block">
+      <ScrollArea className="w-full flex-1 px-2 [&>[data-radix-scroll-area-viewport]>div]:block!">
         <div className="w-full max-w-full space-y-6">
           {/* Search Results */}
           {searchQuery && (
@@ -221,7 +221,7 @@ const BlogNavigation = ({ posts }: BlogSidebarProps) => {
     <>
       {/* Desktop Sidebar */}
       <aside className="hidden w-64 min-w-0 shrink-0 lg:block xl:w-80">
-        <div className="sticky top-[var(--navbar-height)] h-[calc(100vh-var(--navbar-height))] w-full overflow-hidden">
+        <div className="sticky top-(--navbar-height) h-[calc(100vh-var(--navbar-height))] w-full overflow-hidden">
           {content}
         </div>
       </aside>

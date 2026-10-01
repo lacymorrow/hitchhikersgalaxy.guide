@@ -1,14 +1,9 @@
 "use client";
 
 import { ChevronRightIcon } from "@radix-ui/react-icons";
+import { motion } from "framer-motion";
 import type { LucideIcon } from "lucide-react";
-import {
-  ArrowLeftFromLineIcon,
-  FileTerminalIcon,
-  Settings2,
-  SquareTerminal,
-  Wrench,
-} from "lucide-react";
+import { ArrowLeftFromLineIcon, FlaskConical, Folder, LayoutDashboard, Wrench } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { buttonVariants } from "@/components/ui/button";
@@ -30,7 +25,8 @@ const data = [
   {
     title: "Dashboard",
     url: routes.app.dashboard,
-    icon: SquareTerminal,
+    icon: LayoutDashboard,
+    iconName: "dashboard",
   },
   // {
   // 	title: `Download ${siteConfig.title}`,
@@ -39,7 +35,8 @@ const data = [
   // },
   {
     title: "Management",
-    icon: Settings2,
+    icon: Folder,
+    iconName: "folder",
     items: [
       { title: "Projects", url: routes.app.projects },
       { title: "Teams", url: routes.app.teams },
@@ -49,7 +46,8 @@ const data = [
   },
   {
     title: "Demos",
-    icon: FileTerminalIcon,
+    icon: FlaskConical,
+    iconName: "flask",
     items: [
       { title: "UI Demo", url: routes.examples.index },
       ...(env.NEXT_PUBLIC_FEATURE_BUILDER_ENABLED
@@ -117,8 +115,22 @@ const data = [
     title: "Tools",
     url: routes.app.tools,
     icon: Wrench,
+    iconName: "wrench",
   },
 ];
+
+/**
+ * The selected row's background is one element shared by every row. framer-motion's
+ * layoutId makes it spring from the old row to the new one instead of blinking.
+ */
+const ActivePill = () => (
+  <motion.span
+    layoutId="sidebar-active-pill"
+    aria-hidden
+    className="absolute inset-0 -z-10 rounded-md bg-sidebar-accent"
+    transition={{ type: "spring", stiffness: 420, damping: 32, mass: 0.8 }}
+  />
+);
 
 // Helper function to determine if a route is active
 const isRouteActive = (currentPath: string, itemPath: string) => {
@@ -130,6 +142,8 @@ type NavItem = {
   title: string;
   url?: string;
   icon?: LucideIcon;
+  /** Picks the icon's hover move in sidebar-icons.css. */
+  iconName?: string;
   isActive?: boolean;
   items?: (NavItem | { title: string; url: string })[];
 };
@@ -154,15 +168,13 @@ export function NavMain({ items = data }: { items?: NavItem[] }) {
             asChild
             tooltip={item.title}
             data-active={isActive}
-            className={cn(
-              "relative",
-              "before:absolute before:left-0 before:top-1/2 before:h-8 before:w-[2px] before:-translate-y-1/2 before:rounded-l before:bg-primary before:opacity-0 before:transition-opacity",
-              "data-[active=true]:bg-muted data-[active=true]:before:opacity-100"
-            )}
+            className="relative isolate active:scale-[0.98] data-[active=true]:bg-transparent data-[active=true]:hover:bg-transparent"
           >
-            <Link href={item?.url ?? "#"} className="w-full max-w-full">
+            <Link href={item?.url ?? "#"} className="w-full max-w-full" data-icon-host>
+              {isActive && <ActivePill />}
               {"icon" in item && item.icon && (
                 <item.icon
+                  data-icon={"iconName" in item ? item.iconName : undefined}
                   className={cn(
                     "shrink-0 text-muted-foreground transition-colors",
                     "group-hover:text-foreground",
@@ -198,10 +210,13 @@ export function NavMain({ items = data }: { items?: NavItem[] }) {
               tooltip={item.title}
               data-active={isActive || hasActiveChild}
               asChild
+              className="relative isolate active:scale-[0.98] data-[active=true]:bg-transparent data-[active=true]:hover:bg-transparent"
             >
-              <Link href={item?.url ?? "#"} className="w-full max-w-full">
+              <Link href={item?.url ?? "#"} className="w-full max-w-full" data-icon-host>
+                {isActive && !hasActiveChild && <ActivePill />}
                 {item.icon && (
                   <item.icon
+                    data-icon={item.iconName}
                     className={cn(
                       "shrink-0 text-muted-foreground transition-colors",
                       "group-hover:text-foreground",

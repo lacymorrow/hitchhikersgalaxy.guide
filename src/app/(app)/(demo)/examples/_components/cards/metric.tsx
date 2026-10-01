@@ -44,24 +44,24 @@ const data = [
 const chartConfig = {
   today: {
     label: "Today",
-    color: "hsl(var(--primary))",
+    color: "var(--primary)",
   },
   average: {
     label: "Average",
-    color: "hsl(var(--primary))",
+    color: "var(--primary)",
   },
 } satisfies ChartConfig;
 
 export function CardsMetric() {
   return (
-    <Card>
-      <CardHeader>
+    <Card className="gap-0 py-0">
+      <CardHeader className="p-6">
         <CardTitle>Exercise Minutes</CardTitle>
         <CardDescription>
           Your exercise minutes are ahead of where you normally are.
         </CardDescription>
       </CardHeader>
-      <CardContent className="pb-4">
+      <CardContent className="p-6 pt-0 pb-4">
         <ChartContainer config={chartConfig} className="w-full md:h-[200px]">
           <LineChart
             data={data}

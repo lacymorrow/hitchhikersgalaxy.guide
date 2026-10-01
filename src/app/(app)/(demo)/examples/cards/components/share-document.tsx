@@ -21,7 +21,7 @@ export function DemoShareDocument() {
         <CardDescription>Anyone with the link can view this document.</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="flex space-x-2">
+        <div className="flex gap-x-2">
           <Input value="http://example.com/link/to/document" readOnly />
           <Button variant="secondary" className="shrink-0">
             Copy Link
@@ -31,14 +31,14 @@ export function DemoShareDocument() {
         <div className="space-y-4">
           <div className="text-sm font-medium">People with access</div>
           <div className="grid gap-6">
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between gap-x-4">
+              <div className="flex items-center gap-x-4">
                 <Avatar>
                   <AvatarImage src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/03.png" />
                   <AvatarFallback>OM</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium leading-none">Olivia Martin</p>
+                  <p className="text-sm leading-none font-medium">Olivia Martin</p>
                   <p className="text-sm text-muted-foreground">m@example.com</p>
                 </div>
               </div>
@@ -52,14 +52,14 @@ export function DemoShareDocument() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between gap-x-4">
+              <div className="flex items-center gap-x-4">
                 <Avatar>
                   <AvatarImage src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/05.png" />
                   <AvatarFallback>IN</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium leading-none">Isabella Nguyen</p>
+                  <p className="text-sm leading-none font-medium">Isabella Nguyen</p>
                   <p className="text-sm text-muted-foreground">b@example.com</p>
                 </div>
               </div>
@@ -73,14 +73,14 @@ export function DemoShareDocument() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center justify-between space-x-4">
-              <div className="flex items-center space-x-4">
+            <div className="flex items-center justify-between gap-x-4">
+              <div className="flex items-center gap-x-4">
                 <Avatar>
                   <AvatarImage src="https://raw.githubusercontent.com/shadcn/ui/main/apps/www/public/avatars/01.png" />
                   <AvatarFallback>SD</AvatarFallback>
                 </Avatar>
                 <div>
-                  <p className="text-sm font-medium leading-none">Sofia Davis</p>
+                  <p className="text-sm leading-none font-medium">Sofia Davis</p>
                   <p className="text-sm text-muted-foreground">p@example.com</p>
                 </div>
               </div>

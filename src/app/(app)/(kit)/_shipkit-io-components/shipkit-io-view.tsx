@@ -94,9 +94,9 @@ export function ShipkitIoView() {
       />
       <div className="flex flex-col gap-16 overflow-hidden">
         <ParticlesHero quantity={50} speed={80}>
-          <div className="absolute left-1/2 top-0 -translate-x-1/2 blur-3xl" aria-hidden="true">
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 blur-3xl" aria-hidden="true">
             <div
-              className="aspect-[1155/678] w-[72.1875rem] animate-galaxy-shimmer bg-gradient-to-tr from-[#ff80b5] via-[#9089fc] to-[#ff80b5] opacity-0"
+              className="aspect-1155/678 w-[72.1875rem] animate-galaxy-shimmer bg-linear-to-tr from-[#ff80b5] via-[#9089fc] to-[#ff80b5] opacity-0"
               style={{
                 clipPath:
                   "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)",
@@ -104,7 +104,7 @@ export function ShipkitIoView() {
             />
           </div>
           <div className="mt-header flex min-h-[calc(100vh-16rem)] flex-col items-center justify-center">
-            <div className="relative mx-auto flex min-h-64 max-w-[80rem] flex-col items-center justify-center gap-4 px-6 text-center md:px-8">
+            <div className="relative mx-auto flex min-h-64 max-w-7xl flex-col items-center justify-center gap-4 px-6 text-center md:px-8">
               <BlurFade delay={1} duration={1}>
                 <div className="flex flex-col items-center gap-4">
                   <AnimatedGradientText className="bg-primary-foreground">
@@ -120,13 +120,13 @@ export function ShipkitIoView() {
               </BlurFade>
 
               <BlurFade delay={0.5} duration={0.5}>
-                <h1 className="mx-auto max-w-4xl text-balance bg-gradient-to-br from-black from-30% to-black/40 bg-clip-text py-6 text-5xl font-medium leading-none tracking-tighter text-transparent dark:from-white dark:to-white/40 sm:text-6xl md:text-7xl lg:text-8xl">
+                <h1 className="mx-auto max-w-4xl bg-linear-to-br from-black from-30% to-black/40 bg-clip-text py-6 text-5xl leading-none font-medium tracking-tighter text-balance text-transparent sm:text-6xl md:text-7xl lg:text-8xl dark:from-white dark:to-white/40">
                   {headings[0]}
                 </h1>
               </BlurFade>
 
               <BlurFade delay={1} duration={1}>
-                <div className="mb-8 max-w-2xl text-balance text-lg tracking-tight text-muted-foreground md:text-xl">
+                <div className="mb-8 max-w-2xl text-lg tracking-tight text-balance text-muted-foreground md:text-xl">
                   The production stack you&apos;d build yourself if you had three months. Auth,
                   payments, database, CMS, AI. Already wired.
                 </div>

@@ -109,8 +109,8 @@ export default async function VercelDeployPage({
                 <Link href={deploymentInfo.repositoryUrl} className="text-sm underline">
                   GitHub Repository →
                 </Link>
-                <div className="flex items-center space-x-2 rounded-md bg-muted p-2">
-                  <code className="flex-grow overflow-x-auto text-sm">
+                <div className="flex items-center gap-x-2 rounded-md bg-muted p-2">
+                  <code className="grow overflow-x-auto text-sm">
                     git clone {deploymentInfo.repositoryUrl}
                   </code>
                   <CopyButton

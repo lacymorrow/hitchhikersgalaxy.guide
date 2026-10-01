@@ -222,11 +222,11 @@ export const PrivateRepoDeployButton = () => {
           <div className="space-y-4">
             <Separator />
             <div className="grid gap-4 md:grid-cols-2">
-              <Card>
-                <CardHeader className="pb-3">
+              <Card className="gap-0 py-0">
+                <CardHeader className="p-6 pb-3">
                   <CardTitle className="text-sm font-medium">GitHub Repository</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6 pt-0">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">{status.githubRepo.name}</span>
                     <Button variant="ghost" size="sm" asChild>
@@ -244,11 +244,11 @@ export const PrivateRepoDeployButton = () => {
                 </CardContent>
               </Card>
 
-              <Card>
-                <CardHeader className="pb-3">
+              <Card className="gap-0 py-0">
+                <CardHeader className="p-6 pb-3">
                   <CardTitle className="text-sm font-medium">Vercel Project</CardTitle>
                 </CardHeader>
-                <CardContent>
+                <CardContent className="p-6 pt-0">
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-muted-foreground">Dashboard</span>
                     <Button variant="ghost" size="sm" asChild>

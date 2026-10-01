@@ -384,7 +384,7 @@ export const KitLogoParticles = () => {
     <div ref={containerRef} className="relative h-full w-full overflow-hidden">
       <canvas
         ref={canvasRef}
-        className="absolute left-0 top-0 h-full w-full"
+        className="absolute top-0 left-0 h-full w-full"
         aria-label="Interactive particle effect with shipkit logo and fission animation"
       />
     </div>

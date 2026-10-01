@@ -1,4 +1,5 @@
 import { type ReactNode, Suspense } from "react";
+import { DashboardFooter } from "@/components/blocks/dashboard-footer";
 import { DashboardHeader } from "@/components/blocks/dashboard-header";
 import { SidebarLayout } from "@/components/layouts/sidebar-layout";
 import { AppSidebar } from "@/components/modules/sidebar/app-sidebar";
@@ -9,22 +10,24 @@ export const DashboardLayout = ({ children }: { children: ReactNode }) => {
   return (
     <SidebarLayout>
       <div
-        className="flex min-h-svh w-full flex-col"
+        // The app shell sets its own type scale: 13/20 with tabular figures, like a native toolbar.
+        className="flex min-h-svh w-full flex-col text-[13px] leading-5 tabular-nums"
         style={
           {
-            "--header-height": "4rem",
+            "--header-height": "2.75rem",
             "--sidebar-top": "var(--header-height)",
           } as React.CSSProperties
         }
       >
-        <Suspense fallback={<SuspenseFallback />}>
-          <DashboardHeader />
-        </Suspense>
+        <DashboardHeader />
 
-        <div className="flex flex-1 pt-28 md:pt-[--header-height]">
+        <div className="flex flex-1 pt-24 md:pt-(--header-height)">
           <AppSidebar />
           <SidebarInset>
-            <main className="flex flex-1 flex-col">{children}</main>
+            <div className="flex flex-1 flex-col">
+              <Suspense fallback={<SuspenseFallback />}>{children}</Suspense>
+            </div>
+            <DashboardFooter />
           </SidebarInset>
         </div>
       </div>

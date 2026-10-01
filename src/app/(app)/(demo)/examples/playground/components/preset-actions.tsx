@@ -2,6 +2,7 @@
 
 import { MoreHorizontal } from "lucide-react";
 import * as React from "react";
+import { toast } from "sonner";
 
 import {
   AlertDialog,
@@ -30,7 +31,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { toast } from "@/hooks/use-toast";
 
 export function PresetActions() {
   const [open, setIsOpen] = React.useState(false);
@@ -67,7 +67,7 @@ export function PresetActions() {
           </DialogHeader>
           <div className="py-6">
             <h4 className="text-sm text-muted-foreground">Playground Warnings</h4>
-            <div className="flex items-start justify-between space-x-4 pt-3">
+            <div className="flex items-start justify-between gap-x-4 pt-3">
               <Switch name="show" id="show" defaultChecked={true} />
               <Label className="grid gap-1 font-normal" htmlFor="show">
                 <span className="font-semibold">Show a warning when content is flagged</span>
@@ -100,9 +100,7 @@ export function PresetActions() {
               variant="destructive"
               onClick={() => {
                 setShowDeleteDialog(false);
-                toast({
-                  description: "This preset has been deleted.",
-                });
+                toast("This preset has been deleted.");
               }}
             >
               Delete

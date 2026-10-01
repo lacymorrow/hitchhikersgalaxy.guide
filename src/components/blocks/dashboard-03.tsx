@@ -42,7 +42,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 export default function Dashboard() {
   return (
     <div className="grid h-screen w-full pl-[53px]">
-      <aside className="fixed inset-y left-0 z-20 flex h-full flex-col border-r">
+      <aside className="inset-y fixed left-0 z-20 flex h-full flex-col border-r">
         <div className="border-b p-2">
           <Button variant="outline" size="icon" aria-label="Home">
             <Triangle className="size-5 fill-foreground" />
@@ -156,10 +156,7 @@ export default function Dashboard() {
                   <div className="grid gap-3">
                     <Label htmlFor="model">Model</Label>
                     <Select>
-                      <SelectTrigger
-                        id="model"
-                        className="items-start [&_[data-description]]:hidden"
-                      >
+                      <SelectTrigger id="model" className="items-start **:data-description:hidden">
                         <SelectValue placeholder="Select a model" />
                       </SelectTrigger>
                       <SelectContent>
@@ -257,7 +254,7 @@ export default function Dashboard() {
                 <div className="grid gap-3">
                   <Label htmlFor="model">Model</Label>
                   <Select>
-                    <SelectTrigger id="model" className="items-start [&_[data-description]]:hidden">
+                    <SelectTrigger id="model" className="items-start **:data-description:hidden">
                       <SelectValue placeholder="Select a model" />
                     </SelectTrigger>
                     <SelectContent>
@@ -341,7 +338,7 @@ export default function Dashboard() {
             </form>
           </div>
           <div className="relative flex h-full min-h-[50vh] flex-col rounded-xl bg-muted/50 p-4 lg:col-span-2">
-            <Badge variant="outline" className="absolute right-3 top-3">
+            <Badge variant="outline" className="absolute top-3 right-3">
               Output
             </Badge>
             <div className="flex-1" />

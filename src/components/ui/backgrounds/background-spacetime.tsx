@@ -37,7 +37,7 @@ export const BackgroundSpacetime: React.FC = () => {
   const grid = generateGrid();
 
   return (
-    <div className="fixed inset-0 z-[-1] bg-gradient-to-br from-gray-900 to-blue-900">
+    <div className="fixed inset-0 z-[-1] bg-linear-to-br from-gray-900 to-blue-900">
       <svg width="100%" height="100%">
         <defs>
           <linearGradient id="grid-gradient" x1="0%" y1="0%" x2="100%" y2="100%">

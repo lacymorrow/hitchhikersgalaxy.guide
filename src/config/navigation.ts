@@ -1,5 +1,3 @@
-import { routes } from "@/config/routes";
-
 export interface NavLink {
   href: string;
   label: string;
@@ -12,8 +10,6 @@ export interface NavLink {
   authVisibility?: "authenticated" | "unauthenticated";
 }
 
-export const defaultNavLinks: NavLink[] = [
-  { href: routes.faq, label: "Faqs" },
-  { href: routes.features, label: "Features" },
-  { href: routes.pricing, label: "Pricing" },
-];
+// Shipkit's marketing pages (faq, features, pricing) were removed; this site's
+// header links come from the layouts that render it.
+export const defaultNavLinks: NavLink[] = [];

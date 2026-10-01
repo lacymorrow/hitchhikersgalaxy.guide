@@ -209,7 +209,7 @@ export function ProductShowcaseCard() {
                           animate={{ opacity: 1, width: "auto" }}
                           exit={{ opacity: 0, width: 0 }}
                           transition={{ duration: 0.2 }}
-                          className="ml-2 overflow-hidden whitespace-nowrap text-sm text-gray-600 dark:text-gray-400"
+                          className="ml-2 overflow-hidden text-sm whitespace-nowrap text-gray-600 dark:text-gray-400"
                         >
                           (128 reviews)
                         </motion.span>
@@ -220,7 +220,7 @@ export function ProductShowcaseCard() {
                           animate={{ opacity: 1, width: "auto" }}
                           exit={{ opacity: 0, width: 0 }}
                           transition={{ duration: 0.2 }}
-                          className="ml-2 overflow-hidden whitespace-nowrap text-sm text-gray-600 dark:text-gray-400"
+                          className="ml-2 overflow-hidden text-sm whitespace-nowrap text-gray-600 dark:text-gray-400"
                         >
                           (128)
                         </motion.span>
@@ -296,7 +296,7 @@ export function WeatherForecastCard() {
             <div className="flex items-center justify-between">
               <div className="flex items-center">
                 <Sun className="mr-2 h-8 w-8 text-yellow-400" />
-                <ExpandableContent preset="blur-sm" keepMounted={true}>
+                <ExpandableContent preset="blur-xs" keepMounted={true}>
                   <h3 className="text-lg font-medium">Today&apos;s Weather</h3>
                 </ExpandableContent>
               </div>
@@ -315,7 +315,7 @@ export function WeatherForecastCard() {
               <div className="text-right">
                 <p className="font-medium">Sunny</p>
                 <ExpandableContent
-                  preset="blur-sm"
+                  preset="blur-xs"
                   stagger
                   staggerChildren={0.1}
                   keepMounted={true}
@@ -330,7 +330,7 @@ export function WeatherForecastCard() {
               </div>
             </div>
             <ExpandableContent
-              preset="blur-sm"
+              preset="blur-xs"
               stagger
               staggerChildren={0.1}
               keepMounted={true}
@@ -439,7 +439,7 @@ function ControlledExpandableCard() {
 export function ExpandableCardExamples() {
   return (
     <div className="mx-auto w-full max-w-7xl space-y-12 p-8">
-      <div className="flex flex-col items-center space-y-24">
+      <div className="flex flex-col items-center gap-24">
         <div className="min-h-[480px]">
           <DesignSyncExample />
         </div>

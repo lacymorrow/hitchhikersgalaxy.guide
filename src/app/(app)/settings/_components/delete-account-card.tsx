@@ -1,6 +1,6 @@
 "use client";
 
-import { signOut } from "next-auth/react";
+import { signOut } from "@/lib/auth/use-session";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import {

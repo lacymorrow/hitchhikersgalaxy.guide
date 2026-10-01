@@ -56,7 +56,7 @@ export function InstallSection() {
         >
           <h1
             className={cn(
-              "mb-6 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-4xl font-light text-transparent md:text-6xl lg:text-8xl",
+              "mb-6 bg-linear-to-r from-blue-400 to-purple-600 bg-clip-text text-4xl font-light text-transparent md:text-6xl lg:text-8xl",
               fontBungee.className
             )}
           >
@@ -78,13 +78,13 @@ export function InstallSection() {
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <div className="mb-4 flex items-center justify-between">
-            <div className="flex space-x-2">
+            <div className="flex gap-x-2">
               <div className="h-3 w-3 rounded-full bg-gray-100/40" />
               <div className="h-3 w-3 rounded-full bg-gray-100/30" />
               <div className="h-3 w-3 rounded-full bg-gray-100/20" />
             </div>
           </div>
-          <div className="relative flex w-full items-center justify-center break-all font-mono text-sm sm:text-base md:text-lg">
+          <div className="relative flex w-full items-center justify-center font-mono text-sm break-all sm:text-base md:text-lg">
             <Terminal className="mr-2 inline text-blue-400" />
             <button
               ref={textRef}
@@ -102,7 +102,7 @@ export function InstallSection() {
             />
           </div>
           <motion.div
-            className="absolute bottom-0 left-0 h-1 bg-gradient-to-r from-blue-500 to-purple-600"
+            className="absolute bottom-0 left-0 h-1 bg-linear-to-r from-blue-500 to-purple-600"
             animate={controls}
             initial={{ width: 0 }}
             style={{ width: "100%" }}
@@ -112,7 +112,7 @@ export function InstallSection() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.6 }}
-          className="flex justify-center space-x-4"
+          className="flex justify-center gap-x-4"
         >
           <Button
             size="lg"

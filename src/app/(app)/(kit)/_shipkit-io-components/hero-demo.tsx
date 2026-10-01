@@ -39,7 +39,7 @@ const tabs = [
 
 export const HeroDemo = () => {
   return (
-    <Card className="overflow-hidden border-0 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900">
+    <Card className="gap-0 overflow-hidden border-0 bg-linear-to-b from-gray-50 to-white py-0 dark:from-gray-950 dark:to-gray-900">
       <Tabs defaultValue="auth" className="w-full">
         <div className="border-b border-gray-100 px-6 py-4 dark:border-gray-800">
           <TabsList className="inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1">
@@ -47,7 +47,7 @@ export const HeroDemo = () => {
               <TabsTrigger
                 key={tab.id}
                 value={tab.id}
-                className="inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow"
+                className="inline-flex items-center justify-center rounded-md px-3 py-1 text-sm font-medium whitespace-nowrap ring-offset-background transition-all focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow-sm"
               >
                 {tab.label}
               </TabsTrigger>
@@ -73,7 +73,7 @@ export const HeroDemo = () => {
                   alt={tab.content.title}
                   className="absolute inset-0 h-full w-full object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/20 to-transparent" />
               </div>
             </div>
           </TabsContent>

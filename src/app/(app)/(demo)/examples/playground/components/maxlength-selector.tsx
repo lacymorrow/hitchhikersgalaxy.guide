@@ -1,6 +1,6 @@
 "use client";
 
-import type { SliderProps } from "@radix-ui/react-slider";
+import type { Slider as SliderPrimitive } from "radix-ui";
 import * as React from "react";
 
 import { HoverCard, HoverCardContent, HoverCardTrigger } from "@/components/ui/hover-card";
@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 
 interface MaxLengthSelectorProps {
-  defaultValue: SliderProps["defaultValue"];
+  defaultValue: SliderPrimitive.SliderProps["defaultValue"];
 }
 
 export function MaxLengthSelector({ defaultValue }: MaxLengthSelectorProps) {
@@ -31,7 +31,7 @@ export function MaxLengthSelector({ defaultValue }: MaxLengthSelectorProps) {
               defaultValue={value}
               step={10}
               onValueChange={setValue}
-              className="[&_[role=slider]]:h-4 [&_[role=slider]]:w-4"
+              className="**:[[role=slider]]:h-4 **:[[role=slider]]:w-4"
               aria-label="Maximum Length"
             />
           </div>

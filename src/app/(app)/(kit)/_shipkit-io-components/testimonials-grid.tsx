@@ -29,9 +29,9 @@ const TestimonialCard = ({ testimonial }: { testimonial: Testimonial | StaticTes
         "relative w-80 cursor-pointer overflow-hidden rounded-xl border p-4",
         "transform-gpu transition-all duration-300 ease-out hover:scale-[1.02]",
         // light styles
-        "border-gray-950/[.1] bg-gray-950/[.01] hover:bg-gray-950/[.05]",
+        "border-gray-950/10 bg-gray-950/1 hover:bg-gray-950/5",
         // dark styles
-        "dark:border-gray-50/[.1] dark:bg-gray-50/[.10] dark:hover:bg-gray-50/[.15]"
+        "dark:border-gray-50/10 dark:bg-gray-50/10 dark:hover:bg-gray-50/15"
       )}
     >
       <div className="flex flex-row items-start justify-between">
@@ -105,7 +105,7 @@ export async function TestimonialsGrid() {
           />
         ))}
       </div>
-      <div className="animate-marquee-reverse flex gap-8">
+      <div className="flex animate-marquee-reverse gap-8">
         {secondRow.map((testimonial) => (
           <TestimonialCard
             key={"id" in testimonial ? testimonial.id : testimonial.name}

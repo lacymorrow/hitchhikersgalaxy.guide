@@ -303,73 +303,110 @@ async function ensureGlobalsCss(container: any): Promise<void> {
     }
 
     // If no alternative paths work, create a default globals.css
-    const defaultContent = `/* ! Tailwind directives */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+    // Tailwind v4: CSS-first config, no tailwind.config.ts. Colors are full
+    // oklch() values directly on :root/.dark, so @theme references them with
+    // a plain var() (no hsl()/oklch() wrapper), matching shadcn's current
+    // v4 template. Values are converted 1:1 from the previous hsl palette.
+    const defaultContent = `@import "tailwindcss";
+@import "tw-animate-css";
 
-@layer base {
-  :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+@custom-variant dark (&:is(.dark *));
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
 
-    --radius: 0.5rem;
-  }
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
 
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+:root {
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.137 0.036 258.5);
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.137 0.036 258.5);
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.137 0.036 258.5);
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+  --primary: oklch(0.208 0.04 265.7);
+  --primary-foreground: oklch(0.984 0.003 247.9);
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+  --secondary: oklch(0.968 0.007 247.9);
+  --secondary-foreground: oklch(0.208 0.04 265.7);
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+  --muted: oklch(0.968 0.007 247.9);
+  --muted-foreground: oklch(0.555 0.041 257.4);
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+  --accent: oklch(0.968 0.007 247.9);
+  --accent-foreground: oklch(0.208 0.04 265.7);
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-  }
+  --destructive: oklch(0.637 0.208 25.3);
+  --destructive-foreground: oklch(0.984 0.003 247.9);
+
+  --border: oklch(0.929 0.013 255.5);
+  --input: oklch(0.929 0.013 255.5);
+  --ring: oklch(0.137 0.036 258.5);
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: oklch(0.137 0.036 258.5);
+  --foreground: oklch(0.984 0.003 247.9);
+
+  --card: oklch(0.137 0.036 258.5);
+  --card-foreground: oklch(0.984 0.003 247.9);
+
+  --popover: oklch(0.137 0.036 258.5);
+  --popover-foreground: oklch(0.984 0.003 247.9);
+
+  --primary: oklch(0.984 0.003 247.9);
+  --primary-foreground: oklch(0.208 0.04 265.7);
+
+  --secondary: oklch(0.28 0.037 260);
+  --secondary-foreground: oklch(0.984 0.003 247.9);
+
+  --muted: oklch(0.28 0.037 260);
+  --muted-foreground: oklch(0.711 0.035 256.8);
+
+  --accent: oklch(0.28 0.037 260);
+  --accent-foreground: oklch(0.984 0.003 247.9);
+
+  --destructive: oklch(0.396 0.133 25.7);
+  --destructive-foreground: oklch(0.984 0.003 247.9);
+
+  --border: oklch(0.28 0.037 260);
+  --input: oklch(0.28 0.037 260);
+  --ring: oklch(0.869 0.02 252.8);
 }
 
 @layer base {

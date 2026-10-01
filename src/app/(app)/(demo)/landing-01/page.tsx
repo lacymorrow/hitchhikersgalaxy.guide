@@ -61,7 +61,7 @@ export default function FeaturesPage() {
       <section className="relative py-20">
         <div className="container mx-auto px-4">
           <PageHeader className="mx-auto mb-16 max-w-3xl text-center">
-            <PageHeaderHeading className="bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
+            <PageHeaderHeading className="bg-linear-to-r from-primary to-primary/60 bg-clip-text text-transparent">
               Supercharge Your Next.js Development
             </PageHeaderHeading>
             <PageHeaderDescription>
@@ -73,7 +73,7 @@ export default function FeaturesPage() {
           {/* Features Grid */}
           <div className="mt-16 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {features.map((feature) => (
-              <Card key={feature.id} className="p-6 transition-shadow hover:shadow-lg">
+              <Card key={feature.id} className="gap-0 p-6 transition-shadow hover:shadow-lg">
                 <div className={`${feature.color} mb-4`}>
                   <feature.icon size={24} />
                 </div>
@@ -89,7 +89,7 @@ export default function FeaturesPage() {
               <Rocket className="mr-2 h-5 w-5" />
               <span className="px-2 py-1 text-sm font-medium">Ship Faster</span>
             </div>
-            <h2 className="mb-8 mt-4 text-3xl font-bold">Ready to Start Building?</h2>
+            <h2 className="mt-4 mb-8 text-3xl font-bold">Ready to Start Building?</h2>
             <div className="flex flex-col justify-center gap-4 sm:flex-row">
               <Button size="lg" className="gap-2">
                 Get Started

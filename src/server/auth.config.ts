@@ -11,8 +11,8 @@ declare module "next-auth" {
 			name: string | null;
 			email: string | null;
 			image: string | null;
-			bio: string | null;
-			githubUsername: string | null;
+			bio?: string | null;
+			githubUsername?: string | null;
 			theme?: "light" | "dark" | "system";
 			emailNotifications?: boolean;
 			emailVerified: Date | null;

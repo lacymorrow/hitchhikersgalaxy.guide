@@ -5,7 +5,6 @@ import { HapticsProvider } from "@/components/providers/haptics-provider";
 import { KeyboardShortcutProvider } from "@/components/providers/keyboard-shortcut-provider";
 import { ThemeProvider as ShipkitThemeProvider } from "@/components/ui/shipkit/theme";
 import { Toaster } from "@/components/ui/sonner";
-import { Toaster as LegacyToaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { TRPCReactProvider } from "@/lib/trpc/react";
 // import ConsentProvider from "@/components/providers/consent-provider";
@@ -66,8 +65,6 @@ export function KitProvider({ children, session, pageProps }: KitProviderProps) 
 
                       {/* Toast - Display messages to the user */}
                       <Toaster />
-
-                      <LegacyToaster />
 
                       {/* Error Toast - Display error messages to the user based on search params */}
                       <Suspense>

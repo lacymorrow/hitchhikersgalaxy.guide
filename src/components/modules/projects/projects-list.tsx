@@ -34,7 +34,7 @@ export async function ProjectsList() {
   const _hasCollapsedProjects = collapsedProjects.length > 0;
 
   return (
-    <SidebarGroup className="space-y-1 pb-10">
+    <SidebarGroup className="gap-1 pb-10">
       <div className="flex items-center justify-between py-2">
         <SidebarGroupLabel>Projects</SidebarGroupLabel>
         <ProjectDialog userId={session.user.id} variant="create">

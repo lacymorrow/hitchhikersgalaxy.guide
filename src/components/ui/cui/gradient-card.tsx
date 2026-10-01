@@ -45,7 +45,7 @@ export const GradientCard = ({
       ref={setRef}
     >
       {withArrow && (
-        <ArrowUpRightIcon className="absolute right-2 top-2 z-10 size-5 translate-y-4 text-neutral-700 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100 dark:text-neutral-300" />
+        <ArrowUpRightIcon className="absolute top-2 right-2 z-10 size-5 translate-y-4 text-neutral-700 opacity-0 transition-all group-hover:translate-y-0 group-hover:opacity-100 dark:text-neutral-300" />
       )}
       <div
         className={cn(
@@ -72,7 +72,7 @@ export const GradientCard = ({
           {children}
         </div>
       )}
-      <div className="relative flex flex-col px-4 pb-4 pt-4">
+      <div className="relative flex flex-col px-4 pt-4 pb-4">
         <h3 className="text-lg font-semibold text-neutral-800 dark:text-neutral-300">{title}</h3>
         <p className="mt-2 line-clamp-3 text-neutral-600 dark:text-neutral-400">{description}</p>
       </div>

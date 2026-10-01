@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { submitGuideEntry } from "@/server/actions/guide-submit";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { BookOpen, Loader2 } from "lucide-react";
@@ -66,7 +66,6 @@ interface SubmitEntryFormProps {
 }
 
 function SubmitEntryForm({ form }: SubmitEntryFormProps) {
-	const { toast } = useToast();
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -79,20 +78,10 @@ function SubmitEntryForm({ form }: SubmitEntryFormProps) {
 				throw new Error(result.error || "Failed to submit entry");
 			}
 
-			toast({
-				title: "Entry Submitted!",
-				description:
-					"Your contribution to the Guide has been recorded. Don't forget your towel!",
-				className: "bg-blue-500/10 text-blue-500 border-blue-500/20",
-			});
+			toast.success("Entry Submitted!", { description: "Your contribution to the Guide has been recorded. Don't forget your towel!" });
 			router.push(`/${encodeURIComponent(result.data.searchTerm)}`);
 		} catch (error) {
-			toast({
-				title: "Error",
-				description:
-					"The Babel fish seems to be having trouble. Please try again.",
-				variant: "destructive",
-			});
+			toast.error("Error", { description: "The Babel fish seems to be having trouble. Please try again." });
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -122,7 +111,7 @@ function SubmitEntryForm({ form }: SubmitEntryFormProps) {
 					</div>
 
 					{/* Form */}
-					<Card className="border-blue-500/20 bg-black">
+					<Card className="rounded-xl border shadow border-blue-500/20 bg-black">
 						<CardHeader>
 							<CardTitle className="text-blue-500">New Guide Entry</CardTitle>
 							<CardDescription className="text-blue-400/60">

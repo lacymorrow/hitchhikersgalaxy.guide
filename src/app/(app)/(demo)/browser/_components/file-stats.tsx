@@ -50,7 +50,7 @@ export function FileStats({ file, extraStats }: FileStatsProps) {
 
         <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted p-4">
           <span className="text-muted-foreground">Path</span>
-          <span className="break-all font-medium">{file.path}</span>
+          <span className="font-medium break-all">{file.path}</span>
         </div>
 
         {file.type === "file" && (

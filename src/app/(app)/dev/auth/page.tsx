@@ -25,10 +25,10 @@ export default async function AuthDebugPage() {
       </div>
 
       <div className="space-y-6">
-        <section className="rounded-lg border bg-white p-6 shadow-sm">
+        <section className="rounded-lg border bg-white p-6 shadow-xs">
           <h2 className="mb-4 text-xl font-semibold">Session Status</h2>
           <div className="rounded-md bg-slate-50 p-4">
-            <pre className="whitespace-pre-wrap text-sm">
+            <pre className="text-sm whitespace-pre-wrap">
               {JSON.stringify(
                 {
                   authenticated: !!session?.user,
@@ -53,7 +53,7 @@ export default async function AuthDebugPage() {
           </div>
         </section>
 
-        <section className="rounded-lg border bg-white p-6 shadow-sm">
+        <section className="rounded-lg border bg-white p-6 shadow-xs">
           <h2 className="mb-4 text-xl font-semibold">Authentication Troubleshooting</h2>
 
           <div className="space-y-4">
@@ -62,7 +62,7 @@ export default async function AuthDebugPage() {
               <ul className="list-inside list-disc space-y-2">
                 <li>
                   <span className="font-medium">Session not persisting after sign-in</span>
-                  <ul className="ml-6 mt-1 list-disc text-slate-600">
+                  <ul className="mt-1 ml-6 list-disc text-slate-600">
                     <li>Check cookies configuration in auth.config.ts</li>
                     <li>Ensure database session strategy is properly configured</li>
                     <li>Verify the database adapter is working correctly</li>
@@ -71,7 +71,7 @@ export default async function AuthDebugPage() {
                 </li>
                 <li>
                   <span className="font-medium">OAuth sign-in not working</span>
-                  <ul className="ml-6 mt-1 list-disc text-slate-600">
+                  <ul className="mt-1 ml-6 list-disc text-slate-600">
                     <li>Verify OAuth provider credentials</li>
                     <li>Check callback URLs and permissions</li>
                     <li>Ensure OAuth provider is enabled</li>
@@ -79,7 +79,7 @@ export default async function AuthDebugPage() {
                 </li>
                 <li>
                   <span className="font-medium">Credentials sign-in issues</span>
-                  <ul className="ml-6 mt-1 list-disc text-slate-600">
+                  <ul className="mt-1 ml-6 list-disc text-slate-600">
                     <li>Check credentials provider configuration</li>
                     <li>Verify user data is saved to both databases</li>
                     <li>Ensure passwords are compared correctly</li>

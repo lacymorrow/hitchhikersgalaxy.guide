@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/command";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useDebounce } from "@/hooks/use-debounce";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { searchGuide } from "@/server/actions/guide-search";
 import type { GuideEntry } from "@/server/db/schema";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
@@ -24,7 +24,6 @@ interface GuideSearchProps {
 }
 
 export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
-	const { toast } = useToast();
 	const router = useRouter();
 	const [open, setOpen] = React.useState(false);
 	const [loading, setLoading] = React.useState(false);
@@ -89,21 +88,13 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 			} else {
 				const message = result.error || "Failed to find or create guide entry.";
 				setError(message);
-				toast({
-					title: "Error",
-					description: message,
-					variant: "destructive",
-				});
+				toast.error("Error", { description: message });
 			}
 		} catch (error) {
 			const message =
 				error instanceof Error ? error.message : "Failed to search";
 			setError(message);
-			toast({
-				title: "Error",
-				description: message,
-				variant: "destructive",
-			});
+			toast.error("Error", { description: message });
 		} finally {
 			setLoading(false);
 		}

@@ -45,8 +45,8 @@ function SingleFilePreview({ file }: SingleFilePreviewProps) {
 
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <Card>
-        <CardHeader className="py-3">
+      <Card className="gap-0 py-0">
+        <CardHeader className="p-6 py-3">
           <div className="flex items-center justify-between">
             <CardTitle className="text-sm font-medium">{file.path}</CardTitle>
             <CollapsibleTrigger className="rounded-full p-1 hover:bg-accent hover:text-accent-foreground">
@@ -65,7 +65,7 @@ function SingleFilePreview({ file }: SingleFilePreviewProps) {
             </pre>
           </CardContent>
         </CollapsibleContent>
-        <CardFooter className="flex justify-end gap-2 px-6 py-2">
+        <CardFooter className="flex justify-end gap-2 p-6 px-6 py-2">
           <Button variant="outline" size="sm" onClick={handleCopy}>
             {copied ? <CheckIcon className="h-4 w-4" /> : <CopyIcon className="h-4 w-4" />}
             <span className="ml-2">{copied ? "Copied" : "Copy"}</span>

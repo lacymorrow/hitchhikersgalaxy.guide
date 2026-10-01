@@ -131,7 +131,7 @@ export const ContainerProcessor = ({
       <Alert variant="destructive">
         <AlertTriangleIcon className="h-4 w-4" />
         <AlertTitle>Error</AlertTitle>
-        <AlertDescription className="space-y-4">
+        <AlertDescription className="gap-y-4">
           <p>{error}</p>
           {logs.length > 0 && (
             <Collapsible open={showLogs} onOpenChange={setShowLogs} className="space-y-2">
@@ -164,7 +164,7 @@ export const ContainerProcessor = ({
                       </span>
                       {log.data && typeof log.data === "string" && (
                         <pre
-                          className={`mt-1 whitespace-pre-wrap break-words pl-6 ${
+                          className={`mt-1 pl-6 wrap-break-word whitespace-pre-wrap ${
                             log.data.includes("Ok to proceed?") ||
                             log.data.includes("Need to install")
                               ? "text-yellow-300"
@@ -246,7 +246,7 @@ export const ContainerProcessor = ({
                       </span>
                       {log.data && typeof log.data === "string" && (
                         <pre
-                          className={`mt-1 whitespace-pre-wrap break-words pl-6 ${
+                          className={`mt-1 pl-6 wrap-break-word whitespace-pre-wrap ${
                             log.data.includes("Ok to proceed?") ||
                             log.data.includes("Need to install")
                               ? "text-yellow-300"

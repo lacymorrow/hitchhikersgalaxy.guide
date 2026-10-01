@@ -31,7 +31,7 @@ docker run -p 3000:3000 ${siteConfig.branding.projectSlug}`;
 
 export function DashboardTabs({ hasGitHubConnection }: { hasGitHubConnection: boolean }) {
   return (
-    <Tabs defaultValue="overview" className="space-y-4">
+    <Tabs defaultValue="overview" className="gap-y-4">
       <TabsList>
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="downloads">Downloads</TabsTrigger>

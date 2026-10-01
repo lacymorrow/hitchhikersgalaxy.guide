@@ -5,10 +5,12 @@ import { createServerAction } from "zsa";
 import { BASE_URL } from "@/config/base-url";
 import { STATUS_CODES } from "@/config/status-codes";
 import { env } from "@/env";
+import { isBetterAuthActive } from "@/lib/auth/auth-strategy";
 import { resend } from "@/lib/resend";
 import { forgotPasswordSchema, resetPasswordSchema, signInActionSchema } from "@/lib/schemas/auth";
 import type { ActionState } from "@/lib/utils/validated-action";
 import { AuthService } from "@/server/services/auth-service";
+import { betterAuthCredentials } from "@/server/better-auth/facade";
 import type { UserRole } from "@/types/user";
 
 export interface AuthOptions {
@@ -34,6 +36,15 @@ export const signInWithOAuthAction = async ({
 export const signInAction = createServerAction()
   .input(signInActionSchema)
   .handler(async ({ input }) => {
+    if (isBetterAuthActive()) {
+      await betterAuthCredentials.signIn({
+        email: input.email,
+        password: input.password,
+        redirect: input.redirect ?? true,
+        redirectTo: input.redirectTo,
+      });
+      return null;
+    }
     await AuthService.signInWithCredentials({
       email: input.email,
       password: input.password,
@@ -61,6 +72,17 @@ export const signInWithCredentialsAction = async (input: SignInCredentialsInput)
   }
 
   const { email, password, redirect, redirectTo } = parsed.data;
+
+  if (isBetterAuthActive()) {
+    // Redirects throw past this action on purpose; only the non-redirect
+    // result needs the same `{ ok, url | error }` shape as the Auth.js path.
+    return betterAuthCredentials.signIn({
+      email,
+      password,
+      redirect: redirect ?? false,
+      redirectTo,
+    });
+  }
 
   try {
     const result = await AuthService.signInWithCredentials({
@@ -96,6 +118,11 @@ export const signUpWithCredentialsAction = async (_prevState: ActionState, formD
 
   if (!parsed.success) {
     return { ok: false, error: "Invalid form data" };
+  }
+  if (isBetterAuthActive()) {
+    // Better Auth hashes the password, creates the rows and sets the session
+    // cookie; verification email (when Resend is configured) is sent by its config.
+    return betterAuthCredentials.signUp(parsed.data);
   }
   try {
     const result = await AuthService.signUpWithCredentials(parsed.data);
@@ -141,6 +168,10 @@ export const forgotPasswordAction = createServerAction()
   .input(forgotPasswordSchema)
   .handler(async ({ input }) => {
     try {
+      if (isBetterAuthActive()) {
+        await betterAuthCredentials.forgotPassword(input.email);
+        return { ok: true };
+      }
       await AuthService.forgotPassword(input.email);
       return { ok: true };
     } catch (error) {
@@ -156,6 +187,10 @@ export const resetPasswordAction = createServerAction()
   .input(resetPasswordSchema)
   .handler(async ({ input }) => {
     try {
+      if (isBetterAuthActive()) {
+        await betterAuthCredentials.resetPassword(input.token, input.password);
+        return { ok: true };
+      }
       await AuthService.resetPassword(input.token, input.password);
       return { ok: true };
     } catch (error) {

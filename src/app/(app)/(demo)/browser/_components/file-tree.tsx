@@ -1,7 +1,7 @@
 "use client";
 
-import * as AccordionPrimitive from "@radix-ui/react-accordion";
 import { FileIcon, FolderIcon, FolderOpenIcon } from "lucide-react";
+import { Accordion as AccordionPrimitive } from "radix-ui";
 import type { HTMLAttributes, ReactNode } from "react";
 import * as React from "react";
 
@@ -275,7 +275,7 @@ const File = React.forwardRef<HTMLButtonElement, FileProps>(
         type="button"
         disabled={!isSelectable}
         className={cn(
-          "flex w-fit max-w-full items-center gap-1 rounded-md pr-1 text-sm duration-200 ease-in-out rtl:pl-1 rtl:pr-0",
+          "flex w-fit max-w-full items-center gap-1 rounded-md pr-1 text-sm duration-200 ease-in-out rtl:pr-0 rtl:pl-1",
           {
             "bg-muted": isSelected && isSelectable,
           },
@@ -330,7 +330,7 @@ const CollapseButton = React.forwardRef<HTMLButtonElement, CollapseButtonProps>(
     return (
       <Button
         variant={"ghost"}
-        className="absolute bottom-1 right-2 h-8 w-fit p-1"
+        className="absolute right-2 bottom-1 h-8 w-fit p-1"
         onClick={
           expandedItems && expandedItems.length > 0 ? closeAll : () => expendAllTree(elements)
         }

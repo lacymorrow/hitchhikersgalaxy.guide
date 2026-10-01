@@ -46,14 +46,14 @@ export default async function SettingsLayout({ children }: SettingsLayoutProps) 
   return (
     <div className="flex min-h-screen w-full flex-col">
       <Header />
-      <main className="flex min-h-[calc(100vh_-_theme(spacing.16))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
+      <main className="flex min-h-[calc(100vh-(--spacing(16)))] flex-1 flex-col gap-4 bg-muted/40 p-4 md:gap-8 md:p-10">
         <div className="container space-y-6">
           <div className="space-y-0.5">
             <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
             <p className="text-muted-foreground">Manage your account settings and preferences.</p>
           </div>
           <Separator className="my-6" />
-          <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
+          <div className="flex flex-col gap-y-8 lg:flex-row lg:gap-x-12 lg:gap-y-0">
             <aside className="lg:w-1/5">
               <SidebarNav items={navItems} />
             </aside>

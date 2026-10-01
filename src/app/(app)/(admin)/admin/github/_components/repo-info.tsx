@@ -43,7 +43,7 @@ export async function RepoInfoContent() {
           <CardDescription>Unable to fetch repository details</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center space-x-2 text-muted-foreground">
+          <div className="flex items-center gap-x-2 text-muted-foreground">
             <AlertCircle className="h-5 w-5" />
             <p>
               Could not retrieve repository information. Check your GitHub API token and repository

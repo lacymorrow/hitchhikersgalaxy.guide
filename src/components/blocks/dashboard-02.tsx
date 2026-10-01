@@ -84,7 +84,7 @@ export default function Dashboard() {
             </nav>
           </div>
           <div className="mt-auto p-4">
-            <Card x-chunk="A card with a call to action">
+            <Card className="gap-0 py-0" x-chunk="A card with a call to action">
               <CardHeader className="p-2 pt-0 md:p-4">
                 <CardTitle>Upgrade to Pro</CardTitle>
                 <CardDescription>
@@ -174,7 +174,7 @@ export default function Dashboard() {
           <div className="w-full flex-1">
             <form>
               <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute top-2.5 left-2.5 h-4 w-4 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder="Search products..."
@@ -206,7 +206,7 @@ export default function Dashboard() {
           </div>
           <div
             x-chunk="An empty state showing no products with a heading, description and a call to action to add a product."
-            className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-sm"
+            className="flex flex-1 items-center justify-center rounded-lg border border-dashed shadow-xs"
           >
             <div className="flex flex-col items-center gap-1 text-center">
               <h3 className="text-2xl font-bold tracking-tight">You have no products</h3>

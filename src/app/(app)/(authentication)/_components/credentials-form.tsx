@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LockClosedIcon } from "@radix-ui/react-icons";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";

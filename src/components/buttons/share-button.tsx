@@ -10,7 +10,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { guideQuotes } from "@/lib/constants/quotes";
 import { motion } from "framer-motion";
 import { Copy, Facebook, Share, Share2 } from "lucide-react";
@@ -82,7 +82,6 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 	const [showTowel, setShowTowel] = useState(false);
 	const [quote, setQuote] = useState(guideQuotes[0]);
 	const [canNativeShare, setCanNativeShare] = useState(false);
-	const { toast } = useToast();
 	const shareUrl = url || typeof window !== "undefined" ? window.location.href : "";
 	const shareTitle = title || "The Hitchhiker's Guide to the Galaxy";
 
@@ -114,17 +113,9 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 	const handleCopy = async () => {
 		try {
 			await navigator.clipboard.writeText(shareUrl);
-			toast({
-				title: "Sub-Etha Network Transmission Complete!",
-				description: "The coordinates have been copied to your local data matrix.",
-				className: "bg-[#70c8cd]/10 text-[#70c8cd] border-[#70c8cd]/20",
-			});
+			toast.success("Sub-Etha Network Transmission Complete!", { description: "The coordinates have been copied to your local data matrix." });
 		} catch (error) {
-			toast({
-				title: "Transmission Failed",
-				description: "The Babel fish seems to be having trouble. Please try again.",
-				variant: "destructive",
-			});
+			toast.error("Transmission Failed", { description: "The Babel fish seems to be having trouble. Please try again." });
 		}
 	};
 
@@ -135,20 +126,12 @@ export function ShareButton({ title, url, variant = "default" }: ShareButtonProp
 				text: `Check out this entry in the Hitchhiker's Guide to the Galaxy: ${shareTitle}`,
 				url: shareUrl,
 			});
-			toast({
-				title: "Sub-Etha Network Transmission Complete!",
-				description: "The coordinates have been shared across the galaxy.",
-				className: "bg-[#70c8cd]/10 text-[#70c8cd] border-[#70c8cd]/20",
-			});
+			toast.success("Sub-Etha Network Transmission Complete!", { description: "The coordinates have been shared across the galaxy." });
 			setOpen(false);
 		} catch (error) {
 			// User cancelled or sharing failed
 			if ((error as Error)?.name !== "AbortError") {
-				toast({
-					title: "Transmission Failed",
-					description: "The Babel fish seems to be having trouble. Please try again.",
-					variant: "destructive",
-				});
+				toast.error("Transmission Failed", { description: "The Babel fish seems to be having trouble. Please try again." });
 			}
 		}
 	};

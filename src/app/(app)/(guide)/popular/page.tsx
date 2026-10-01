@@ -44,7 +44,7 @@ export default async function PopularEntriesPage() {
 								href={`/${encodeURIComponent(entry.searchTerm)}`}
 								className="transition-transform hover:scale-[1.02]"
 							>
-								<Card className="flex h-full flex-col border-blue-500/20 bg-black hover:border-blue-500/40">
+								<Card className="rounded-xl border shadow flex h-full flex-col border-blue-500/20 bg-black hover:border-blue-500/40">
 									<CardHeader>
 										<CardTitle className="line-clamp-1 text-lg capitalize text-blue-500">
 											{entry.searchTerm}

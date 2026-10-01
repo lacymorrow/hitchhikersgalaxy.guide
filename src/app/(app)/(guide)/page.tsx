@@ -49,11 +49,11 @@ export default function GuidePage() {
 							{/* Image removed, using div background and mask */}
 						</div>
 
-						<h1 className="font-mono text-5xl font-bold text-[#70c8cd] sm:text-6xl md:text-7xl lg:text-8xl mt-8">
+						<h1 className="font-mono text-5xl font-bold text-[#70c8cd] sm:text-6xl md:text-7xl lg:text-8xl mt-6">
 							DON'T PANIC
 						</h1>
 
-						<p className="max-w-[42rem] text-[#70c8cd]/80 sm:text-lg sm:leading-8 mt-4">
+						<p className="max-w-[42rem] text-[#70c8cd]/80 sm:text-lg sm:leading-8">
 							The standard repository of all knowledge and wisdom. An
 							indispensable companion for all hitchhikers in the universe.
 						</p>
@@ -99,7 +99,7 @@ export default function GuidePage() {
 						<Link href="/travel-guide">
 							<Button
 								variant="outline"
-								className="border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10"
+								className="border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10 has-[>svg]:px-4"
 							>
 								<MapIcon className="mr-2 h-4 w-4" />
 								Travel Guide
@@ -108,7 +108,7 @@ export default function GuidePage() {
 						<Link href="/popular">
 							<Button
 								variant="outline"
-								className="border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10"
+								className="border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10 has-[>svg]:px-4"
 							>
 								<StarFilledIcon className="mr-2 h-4 w-4" />
 								Popular Entries
@@ -120,7 +120,7 @@ export default function GuidePage() {
 						<Link href="/browse">
 							<Button
 								variant="outline"
-								className="border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10"
+								className="border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10 has-[>svg]:px-4"
 							>
 								<BookOpen className="mr-2 h-4 w-4" />
 								Guide Index
@@ -129,7 +129,7 @@ export default function GuidePage() {
 						<Link href="/about">
 							<Button
 								variant="outline"
-								className="border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10"
+								className="border-[#70c8cd] text-[#70c8cd] hover:bg-[#70c8cd]/10 has-[>svg]:px-4"
 							>
 								<Info className="mr-2 h-4 w-4" />
 								About the Guide

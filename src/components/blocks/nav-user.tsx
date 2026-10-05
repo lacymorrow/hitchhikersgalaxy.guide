@@ -1,7 +1,7 @@
 "use client";
 
 import { CaretSortIcon } from "@radix-ui/react-icons";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import { useState } from "react";
 import { UserMenuDropdown } from "@/components/modules/user/user-menu-dropdown";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -53,7 +53,7 @@ export function NavUser({ className, showUpgrade = true }: NavUserProps) {
           side={isMobile ? "bottom" : "right"}
           align="end"
           sideOffset={4}
-          contentClassName="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+          contentClassName="w-(--radix-dropdown-menu-trigger-width) min-w-56 rounded-lg"
         >
           <SidebarMenuButton
             size="lg"

@@ -61,7 +61,7 @@ const AnimatedButton: React.FC<AnimatedButtonProps> = ({
       <div
         className={cn(
           styles.animatedBackground,
-          "absolute z-[-2] m-auto h-[200px] w-[200px] translate-x-[-50%] translate-y-[-50%] bg-cover bg-[0_0] bg-no-repeat",
+          "absolute z-[-2] m-auto h-[200px] w-[200px] translate-x-[-50%] translate-y-[-50%] bg-[0_0] bg-cover bg-no-repeat",
           className
         )}
       />

@@ -1,7 +1,7 @@
 version: "1"
 rules:
   - base: main
-    upstream: lacymorrow/shipkit:main
+    upstream: shipkit-io/bones:main
     mergeMethod: merge
     assignees:
       - lacymorrow

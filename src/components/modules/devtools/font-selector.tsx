@@ -261,7 +261,7 @@ export function FontSelector() {
   };
 
   return (
-    <div className="fixed bottom-4 right-4 z-[1000]">
+    <div className="fixed right-4 bottom-4 z-1000">
       <Popover
         open={open}
         onOpenChange={(isOpen) => {

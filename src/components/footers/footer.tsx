@@ -39,9 +39,6 @@ const defaultGroups: FooterElement[] = [
       header: { label: "Product" },
       items: [
         { href: routes.home, label: "Home" },
-        { href: routes.features, label: "Features" },
-        { href: routes.pricing, label: "Pricing" },
-        { href: routes.external.bones, label: "Bones" },
       ],
     },
   },
@@ -50,11 +47,6 @@ const defaultGroups: FooterElement[] = [
     content: {
       header: { label: "Resources" },
       items: [
-        { href: routes.docs, label: "Documentation" },
-        // Only include blog link when blog is enabled
-        ...(process.env.NEXT_PUBLIC_HAS_BLOG === "true"
-          ? [{ href: routes.blog, label: "Blog" }]
-          : []),
         { href: routes.contact, label: "Support" },
         { href: routes.auth.signIn, label: "Sign in" },
       ],
@@ -133,7 +125,7 @@ export const Footer: FC<FooterProps> = ({
 
   return (
     <footer className={cn(footerStyles({ variant }), className)} {...rest}>
-      <div className="container relative flex w-full flex-col items-stretch gap-2xl py-2xl md:min-h-80">
+      <div className="relative container flex w-full flex-col items-stretch gap-2xl py-2xl md:min-h-80">
         <div className="flex flex-col justify-between gap-2xl lg:flex-row">
           <div className="flex flex-col gap-4">
             <Link href={routes.home}>

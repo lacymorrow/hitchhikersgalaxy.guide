@@ -82,18 +82,24 @@ export function KeyboardShortcutProvider({
   );
 
   const hotkeys = useMemo<readonly HotkeyItem[]>(() => {
-    return shortcutConfig.map(([hotkey, action]) => [
+    return shortcutConfig.map(([hotkey, action, binding]) => [
       hotkey,
       (event: KeyboardEvent) => {
-        // Prevent default browser behavior for handled shortcuts if necessary
-        // event.preventDefault(); // Uncomment if needed for specific shortcuts
         triggerAction(action, event);
       },
+      // Mantine swallows the key unless told otherwise, and that default was
+      // being applied to Escape: every Escape press anywhere in the app was
+      // consumed to close a popover that was usually not even mounted. A
+      // binding that shares its key with the browser sets preventDefault
+      // false and leaves the choice to the handler that actually acts.
+      { preventDefault: binding?.preventDefault ?? true },
     ]);
   }, [triggerAction]);
 
   // useHotkeys expects a mutable array, so we need to cast it.
   useHotkeys(hotkeys as HotkeyItem[]);
+
+  useUnhandledShortcutWarning(handlers);
 
   const contextValue = useMemo(
     () => ({ registerShortcut, triggerAction }),
@@ -105,6 +111,45 @@ export function KeyboardShortcutProvider({
       {children}
     </KeyboardShortcutContext.Provider>
   );
+}
+
+/**
+ * In development, name the shortcuts nothing is listening for.
+ *
+ * A key in `shortcutConfig` with no handler still binds, still swallows the
+ * press, and still does nothing -- with no build, lint or test failure
+ * anywhere, so the only way to find out is to press it. That is a trap for
+ * anyone forking this: removing a component removes its handler and leaves
+ * the key advertised. Keepsake shipped ten dead shortcuts this way.
+ *
+ * One pass a second after mount, so components that register on their own
+ * screens are not accused before they render. Bindings marked `onDemand` are
+ * skipped entirely: their handler mounts with something transient, so its
+ * absence is the normal case and naming it every time would turn this into
+ * noise nobody reads. Development only: this is a
+ * message to whoever is adding a shortcut, not to the person using the app.
+ */
+function useUnhandledShortcutWarning(
+  handlers: Map<ShortcutActionType, Set<ShortcutHandler>>
+): void {
+  useEffect(() => {
+    if (process.env.NODE_ENV !== "development") return;
+    const timer = setTimeout(() => {
+      const orphans = shortcutConfig
+        .filter(([, , binding]) => !binding?.onDemand)
+        .filter(([, action]) => (handlers.get(action)?.size ?? 0) === 0)
+        .map(([hotkey, action]) => `${hotkey} (${action})`);
+      if (orphans.length > 0) {
+        console.warn(
+          `[shortcuts] bound but handled by nothing: ${orphans.join(", ")}. ` +
+            "Either register a handler with useKeyboardShortcut or take it out " +
+            "of src/config/keyboard-shortcuts.ts -- a key that does nothing " +
+            "still swallows the press."
+        );
+      }
+    }, 1_000);
+    return () => clearTimeout(timer);
+  }, [handlers]);
 }
 
 export function useKeyboardShortcutContext(): KeyboardShortcutContextProps {

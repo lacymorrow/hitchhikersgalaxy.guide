@@ -271,7 +271,7 @@ async function GuideEntry({ slug }: { slug: string }) {
 								href={guideEntryPath(relatedEntry?.searchTerm || '')}
 								className="transition-transform hover:scale-[1.02]"
 							>
-								<Card className="h-full border-[#70c8cd]/20 bg-black hover:border-[#70c8cd]/40">
+								<Card className="rounded-xl border shadow h-full border-[#70c8cd]/20 bg-black hover:border-[#70c8cd]/40">
 									<CardHeader>
 										<CardTitle className="line-clamp-1 text-lg capitalize text-[#70c8cd]">
 											{relatedDisplayTerm}

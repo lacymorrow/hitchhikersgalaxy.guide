@@ -1,36 +1,35 @@
+import { ChevronRight } from "lucide-react";
 import { DashboardHeaderHomeLink } from "@/components/blocks/dashboard-header-home-link";
 import { ProjectSwitcher } from "@/components/blocks/project-switcher";
+import { ScrollEdgeHeader } from "@/components/blocks/scroll-edge-header";
 import { TeamSwitcher } from "@/components/blocks/team-switcher";
-import { Separator } from "@/components/ui/separator";
 import { SidebarTrigger } from "@/components/ui/sidebar";
-import { auth } from "@/server/auth";
 
-export const DashboardHeader = async () => {
-  const _session = await auth();
-
+export const DashboardHeader = () => {
   return (
-    <header className="fixed top-0 z-30 w-full border-b bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="flex h-16 items-center gap-3 px-4">
+    <ScrollEdgeHeader className="fixed top-0 z-30 w-full">
+      <div className="flex h-11 items-center gap-2 px-4">
         {/* Keep a sidebar trigger on mobile so the off-canvas sidebar is still accessible. */}
         <SidebarTrigger className="-ml-1 md:hidden" />
 
-        <div className="flex min-w-0 items-center gap-2">
+        <div className="flex min-w-0 items-center gap-1.5">
           <div className="truncate text-sm font-semibold">
             <DashboardHeaderHomeLink />
           </div>
 
-          <Separator orientation="vertical" className="hidden h-4 md:block" />
-
-          <div className="hidden items-center gap-2 md:flex">
+          {/* Breadcrumb: workspace, then project. */}
+          <div className="hidden items-center gap-1.5 md:flex">
+            <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/60" aria-hidden />
             <TeamSwitcher variant="header" />
+            <ChevronRight className="size-3.5 shrink-0 text-muted-foreground/60" aria-hidden />
             <ProjectSwitcher />
           </div>
         </div>
       </div>
-      <div className="flex items-center gap-2 px-4 pb-3 md:hidden">
+      <div className="flex items-center gap-2 px-4 pb-2 md:hidden">
         <TeamSwitcher variant="header" />
         <ProjectSwitcher />
       </div>
-    </header>
+    </ScrollEdgeHeader>
   );
 };

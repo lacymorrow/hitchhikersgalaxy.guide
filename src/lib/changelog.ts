@@ -1,20 +1,13 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { parseChangelogMarkdown } from "@/lib/changelog-markdown";
+import type { ChangelogEntry } from "@/lib/changelog-types";
 import { changelogManifest } from "@/lib/generated/changelog-manifest";
 
 // ---------------------------------------------------------------------------
 // Types
 // ---------------------------------------------------------------------------
-export interface ChangelogEntry {
-  title: string;
-  slug: string;
-  content: string;
-  description: string;
-  publishedAt: string;
-  badge?: string;
-  categories: string[];
-  commitCount: number;
-}
+export type { ChangelogEntry } from "@/lib/changelog-types";
 
 interface GitHubCommit {
   sha: string;
@@ -37,6 +30,12 @@ const REPO_NAME = process.env.GITHUB_REPO_NAME ?? "shipkit";
 const GITHUB_API = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
 const COMMITS_PER_PAGE = 100;
 const MAX_PAGES = 5; // 500 commits max
+
+/**
+ * Path to the repo's Keep a Changelog file, looked for on disk first and then in the
+ * configured GitHub repo. Set CHANGELOG_PATH to "" to skip this source entirely.
+ */
+const CHANGELOG_PATH = process.env.CHANGELOG_PATH ?? "CHANGELOG.md";
 
 // ---------------------------------------------------------------------------
 // GitHub fetcher (works unauthenticated for public repos, uses token if set)
@@ -340,6 +339,46 @@ async function getMarkdownEntries(): Promise<ChangelogEntry[]> {
 }
 
 // ---------------------------------------------------------------------------
+// Repo CHANGELOG.md (Keep a Changelog format)
+//
+// Read from disk when the site ships its own changelog, otherwise fetched from the
+// configured GitHub repo. This is what lets a downstream ShipKit site publish the
+// changelog of whatever repo it is the website for.
+// ---------------------------------------------------------------------------
+interface GitHubContentFile {
+  content?: string;
+  encoding?: string;
+}
+
+async function readLocalChangelogFile(): Promise<string | null> {
+  try {
+    return await fs.readFile(path.join(process.cwd(), CHANGELOG_PATH), "utf-8");
+  } catch {
+    return null;
+  }
+}
+
+async function fetchRemoteChangelogFile(): Promise<string | null> {
+  try {
+    const file = await ghFetch<GitHubContentFile>(`/contents/${encodeURI(CHANGELOG_PATH)}`);
+    if (!file.content || file.encoding !== "base64") return null;
+    return Buffer.from(file.content, "base64").toString("utf-8");
+  } catch {
+    // A repo without a CHANGELOG.md is the normal case, not an error worth surfacing.
+    return null;
+  }
+}
+
+async function getRepoChangelogEntries(): Promise<ChangelogEntry[]> {
+  if (!CHANGELOG_PATH) return [];
+
+  const source = (await readLocalChangelogFile()) ?? (await fetchRemoteChangelogFile());
+  if (!source) return [];
+
+  return parseChangelogMarkdown(source);
+}
+
+// ---------------------------------------------------------------------------
 // GitHub API-based changelog (fallback when no .md files exist)
 // ---------------------------------------------------------------------------
 async function getGitHubEntries(): Promise<ChangelogEntry[]> {
@@ -352,10 +391,24 @@ async function getGitHubEntries(): Promise<ChangelogEntry[]> {
 // ---------------------------------------------------------------------------
 // Public API
 // ---------------------------------------------------------------------------
+/**
+ * Loads changelog entries from the first source that has something to say:
+ *
+ * 1. Curated per-entry markdown in `src/content/changelog/`, for sites that write
+ *    their own release posts.
+ * 2. The repo's `CHANGELOG.md`, on disk or from GitHub. One canonical changelog,
+ *    written once, rendered here.
+ * 3. Generated from the repo's commits and tags, so a site with neither still
+ *    gets a changelog out of the box.
+ */
 export async function getChangelogEntries(): Promise<ChangelogEntry[]> {
   try {
     const mdEntries = await getMarkdownEntries();
     if (mdEntries.length > 0) return mdEntries;
+
+    const repoEntries = await getRepoChangelogEntries();
+    if (repoEntries.length > 0) return repoEntries;
+
     return await getGitHubEntries();
   } catch (err) {
     console.error("[changelog] Failed to load changelog:", err);

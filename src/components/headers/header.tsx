@@ -4,7 +4,7 @@ import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 import { useWindowScroll } from "@uidotdev/usehooks";
 import { cva } from "class-variance-authority";
 import { AnimatePresence, motion } from "framer-motion";
-import { useSession } from "next-auth/react";
+import { useSession } from "@/lib/auth/use-session";
 import type React from "react";
 
 import { Icon } from "@/components/assets/icon";
@@ -66,7 +66,7 @@ const headerVariants = cva("translate-z-0 z-50 p-md", {
       default: "relative",
       floating: "fixed top-0 h-24 w-full",
       sticky:
-        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60",
+        "sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60",
       "logo-only": "relative",
       minimal: "relative",
     },
@@ -101,11 +101,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   // Minimal variant: logo + a few text links + theme toggle
   if (variant === "minimal") {
-    const minimalLinks: NavLink[] = [
-      { href: routes.blog, label: "Blog" },
-      { href: "/changelog", label: "Changelog" },
-      { href: routes.docs, label: "Docs" },
-    ];
+    const minimalLinks: NavLink[] = [];
 
     return (
       <header className={cn(headerVariants({ variant: "minimal" }), className)}>
@@ -146,7 +142,7 @@ export const Header: React.FC<HeaderProps> = ({
         variant === "floating" && isOpaque && styles.opaque,
         variant === "floating" &&
           isOpaque &&
-          "-top-[12px] [--header-background:#fafafc70] dark:[--header-background:#1c1c2270]",
+          "top-[-12px] [--header-background:#fafafc70] dark:[--header-background:#1c1c2270]",
         className
       )}
     >
@@ -223,17 +219,6 @@ export const Header: React.FC<HeaderProps> = ({
                       </Link>
                     </>
                   )}
-                  {isLoggedIn && (
-                    <Link
-                      href={routes.app.dashboard}
-                      className={cn(
-                        buttonVariants({ variant: "default" }),
-                        "w-full justify-center"
-                      )}
-                    >
-                      Dashboard
-                    </Link>
-                  )}
                 </nav>
               </SheetContent>
             </Sheet>
@@ -296,7 +281,7 @@ export const Header: React.FC<HeaderProps> = ({
                           <TooltipContent
                             side="bottom"
                             sideOffset={3}
-                            className="-mt-3 select-none border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none data-[state=delayed-open]:animate-fadeDown"
+                            className="-mt-3 border-none bg-transparent p-0 text-xs text-muted-foreground shadow-none select-none data-[state=delayed-open]:animate-fadeDown"
                           >
                             <LoginButton className="hover:text-foreground">or Login</LoginButton>
                           </TooltipContent>

@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 
@@ -7,8 +5,8 @@ import Chat from "./_components/Chat";
 import ArrowRightIcon from "./_components/icons/ArrowRightIcon";
 import StopIcon from "./_components/icons/StopIcon";
 import Progress from "./_components/Progress";
+import type { ChatMessage, ProgressItem, WorkerRequest, WorkerResponse } from "./types";
 
-const _IS_WEBGPU_AVAILABLE = !!navigator?.gpu;
 const STICKY_SCROLL_THRESHOLD = 120;
 const EXAMPLES = [
   "Give me some tips to improve my time management skills.",
@@ -16,34 +14,43 @@ const EXAMPLES = [
   "Write python code to compute the nth fibonacci number.",
 ];
 
-export const AISmollmWebGPU = () => {
-  // Add state for WebGPU availability
+type LoadStatus = "loading" | "ready" | null;
+
+interface AISmollmWebGPUProps {
+  /** Called once the model has loaded and warmed up. */
+  onReady?: () => void;
+}
+
+export const AISmollmWebGPU = ({ onReady }: AISmollmWebGPUProps) => {
   const [isWebGPUAvailable, setIsWebGPUAvailable] = useState<boolean | null>(null);
 
-  // Create a reference to the worker object.
-  const worker = useRef(null);
-
-  const textareaRef = useRef(null);
-  const chatContainerRef = useRef(null);
+  const worker = useRef<Worker | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
   // Model loading and progress
-  const [status, setStatus] = useState(null);
-  const [error, setError] = useState(null);
+  const [status, setStatus] = useState<LoadStatus>(null);
+  const [error, setError] = useState<string | null>(null);
   const [loadingMessage, setLoadingMessage] = useState("");
-  const [progressItems, setProgressItems] = useState([]);
+  const [progressItems, setProgressItems] = useState<ProgressItem[]>([]);
   const [isRunning, setIsRunning] = useState(false);
 
   // Inputs and outputs
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState([]);
-  const [tps, setTps] = useState(null);
-  const [numTokens, setNumTokens] = useState(null);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [tps, setTps] = useState<number | null>(null);
+  const [numTokens, setNumTokens] = useState<number | null>(null);
+
+  const send = useCallback((request: WorkerRequest) => {
+    worker.current?.postMessage(request);
+  }, []);
 
   // Check for WebGPU support on mount
   useEffect(() => {
     const checkWebGPU = async () => {
       try {
-        const gpu = navigator?.gpu;
+        const gpu = (navigator as Navigator & { gpu?: { requestAdapter: () => Promise<unknown> } })
+          .gpu;
         if (!gpu) {
           setIsWebGPUAvailable(false);
           return;
@@ -55,7 +62,7 @@ export const AISmollmWebGPU = () => {
       }
     };
 
-    checkWebGPU();
+    void checkWebGPU();
   }, []);
 
   const onEnter = useCallback((message: string) => {
@@ -66,14 +73,14 @@ export const AISmollmWebGPU = () => {
   }, []);
 
   const onInterrupt = useCallback(() => {
-    worker.current?.postMessage({ type: "interrupt" });
-  }, []);
+    send({ type: "interrupt" });
+  }, [send]);
 
   // Resize textarea effect
   useEffect(() => {
     function resizeTextarea() {
-      if (!textareaRef.current) return;
       const target = textareaRef.current;
+      if (!target) return;
       target.style.height = "auto";
       const newHeight = Math.min(Math.max(target.scrollHeight, 24), 200);
       target.style.height = `${newHeight}px`;
@@ -81,74 +88,61 @@ export const AISmollmWebGPU = () => {
     resizeTextarea();
   }, []);
 
-  // We use the `useEffect` hook to setup the worker as soon as the `App` component is mounted.
+  // Create the worker on mount and wire its messages into state.
   useEffect(() => {
-    // Create the worker if it does not yet exist.
     if (!worker.current) {
-      worker.current = new Worker(new URL("./worker.js", import.meta.url));
-      worker.current.postMessage({ type: "check" }); // Do a feature check
+      worker.current = new Worker(new URL("./worker.ts", import.meta.url), { type: "module" });
+      worker.current.postMessage({ type: "check" } satisfies WorkerRequest);
     }
+    const current = worker.current;
 
-    // Create a callback function for messages from the worker thread.
-    const onMessageReceived = (e) => {
-      switch (e.data.status) {
+    const onMessageReceived = (e: MessageEvent<WorkerResponse>) => {
+      const data = e.data;
+      switch (data.status) {
         case "loading":
           // Model file start load: add a new progress item to the list.
           setStatus("loading");
-          setLoadingMessage(e.data.data);
+          setLoadingMessage(data.data);
           break;
 
         case "initiate":
-          setProgressItems((prev) => [...prev, e.data]);
+          setProgressItems((prev) => [...prev, { file: data.file, name: data.name }]);
           break;
 
         case "progress":
           // Model file progress: update one of the progress items.
           setProgressItems((prev) =>
-            prev.map((item) => {
-              if (item.file === e.data.file) {
-                return { ...item, ...e.data };
-              }
-              return item;
-            })
+            prev.map((item) => (item.file === data.file ? { ...item, ...data } : item))
           );
           break;
 
         case "done":
           // Model file loaded: remove the progress item from the list.
-          setProgressItems((prev) => prev.filter((item) => item.file !== e.data.file));
+          setProgressItems((prev) => prev.filter((item) => item.file !== data.file));
           break;
 
         case "ready":
           // Pipeline ready: the worker is ready to accept messages.
           setStatus("ready");
+          onReady?.();
           break;
 
         case "start":
-          {
-            // Start generation
-            setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
-          }
+          // Start generation
+          setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
           break;
 
-        case "update":
-          {
-            // Generation update: update the output text.
-            // Parse messages
-            const { output, tps, numTokens } = e.data;
-            setTps(tps);
-            setNumTokens(numTokens);
-            setMessages((prev) => {
-              const cloned = [...prev];
-              const last = cloned.at(-1);
-              cloned[cloned.length - 1] = {
-                ...last,
-                content: last.content + output,
-              };
-              return cloned;
-            });
-          }
+        case "update": {
+          // Generation update: append the new text to the last assistant message.
+          setTps(data.tps ?? null);
+          setNumTokens(data.numTokens);
+          setMessages((prev) => {
+            const last = prev.at(-1);
+            if (!last) return prev;
+            return [...prev.slice(0, -1), { ...last, content: last.content + data.output }];
+          });
           break;
+        }
 
         case "complete":
           // Generation complete: re-enable the "Generate" button
@@ -156,25 +150,27 @@ export const AISmollmWebGPU = () => {
           break;
 
         case "error":
-          setError(e.data.data);
+          setError(data.data);
+          break;
+
+        default:
+          // "download" and other Transformers.js progress events need no UI.
           break;
       }
     };
 
-    const onErrorReceived = (e) => {
+    const onErrorReceived = (e: ErrorEvent) => {
       console.error("Worker error:", e);
     };
 
-    // Attach the callback function as an event listener.
-    worker.current.addEventListener("message", onMessageReceived);
-    worker.current.addEventListener("error", onErrorReceived);
+    current.addEventListener("message", onMessageReceived);
+    current.addEventListener("error", onErrorReceived);
 
-    // Define a cleanup function for when the component is unmounted.
     return () => {
-      worker.current.removeEventListener("message", onMessageReceived);
-      worker.current.removeEventListener("error", onErrorReceived);
+      current.removeEventListener("message", onMessageReceived);
+      current.removeEventListener("error", onErrorReceived);
     };
-  }, []);
+  }, [onReady]);
 
   // Send the messages to the worker thread whenever the `messages` state changes.
   useEffect(() => {
@@ -182,17 +178,18 @@ export const AISmollmWebGPU = () => {
       // No user messages yet: do nothing.
       return;
     }
-    if (messages.at(-1).role === "assistant") {
+    if (messages.at(-1)?.role === "assistant") {
       // Do not update if the last message is from the assistant
       return;
     }
     setTps(null);
-    worker.current.postMessage({ type: "generate", data: messages });
-  }, [messages, isRunning]);
+    send({ type: "generate", data: messages });
+  }, [messages, send]);
 
+  // Keep the newest output in view while it streams, unless the reader scrolled up.
   useEffect(() => {
-    if (!chatContainerRef.current || !isRunning) return;
     const element = chatContainerRef.current;
+    if (!element || !isRunning || messages.length === 0) return;
     if (element.scrollHeight - element.scrollTop - element.clientHeight < STICKY_SCROLL_THRESHOLD) {
       element.scrollTop = element.scrollHeight;
     }
@@ -201,7 +198,7 @@ export const AISmollmWebGPU = () => {
   // Show loading state while checking WebGPU
   if (isWebGPUAvailable === null) {
     return (
-      <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-black bg-opacity-[92%] text-center text-2xl font-semibold text-white">
+      <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-black/[92%] text-center text-2xl font-semibold text-white">
         Checking WebGPU support...
       </div>
     );
@@ -210,7 +207,7 @@ export const AISmollmWebGPU = () => {
   // Show not supported message
   if (!isWebGPUAvailable) {
     return (
-      <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-black bg-opacity-[92%] text-center text-2xl font-semibold text-white">
+      <div className="fixed z-10 flex h-screen w-screen items-center justify-center bg-black/[92%] text-center text-2xl font-semibold text-white">
         WebGPU is not supported
         <br />
         by this browser :&#40;
@@ -221,7 +218,7 @@ export const AISmollmWebGPU = () => {
   return (
     <div className="items mx-auto flex h-screen flex-col justify-end bg-white text-gray-800 dark:bg-gray-900 dark:text-gray-200">
       {status === null && messages.length === 0 && (
-        <div className="scrollbar-thin relative flex h-full flex-col items-center justify-center overflow-auto">
+        <div className="relative flex h-full scrollbar-thin flex-col items-center justify-center overflow-auto">
           <div className="mb-1 flex max-w-[320px] flex-col items-center text-center">
             <img src="logo.png" width="80%" height="auto" alt="SmolLM2 Logo" className="block" />
             <h1 className="mb-1 text-4xl font-bold">SmolLM2 WebGPU</h1>
@@ -274,9 +271,9 @@ export const AISmollmWebGPU = () => {
 
             <button
               type="button"
-              className="select-none rounded-lg border bg-blue-400 px-4 py-2 text-white hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-blue-100"
+              className="rounded-lg border bg-blue-400 px-4 py-2 text-white select-none hover:bg-blue-500 disabled:cursor-not-allowed disabled:bg-blue-100"
               onClick={() => {
-                worker.current.postMessage({ type: "load" });
+                send({ type: "load" });
                 setStatus("loading");
               }}
               disabled={status !== null || error !== null}
@@ -289,9 +286,8 @@ export const AISmollmWebGPU = () => {
       {status === "loading" && (
         <div className="bottom-0 mx-auto mt-auto w-full max-w-[500px] p-4 text-left">
           <p className="mb-1 text-center">{loadingMessage}</p>
-          {progressItems.map(({ file, progress, total }, i) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
-            <Progress key={i} text={file} percentage={progress} total={total} />
+          {progressItems.map(({ file, progress, total }) => (
+            <Progress key={file} text={file} percentage={progress} total={total} />
           ))}
         </div>
       )}
@@ -299,22 +295,20 @@ export const AISmollmWebGPU = () => {
       {status === "ready" && (
         <div
           ref={chatContainerRef}
-          className="scrollbar-thin flex h-full w-full flex-col items-center overflow-y-auto"
+          className="flex h-full w-full scrollbar-thin flex-col items-center overflow-y-auto"
         >
           <Chat messages={messages} />
           {messages.length === 0 && (
             <div>
-              {EXAMPLES.map((msg, i) => (
-                // biome-ignore lint/a11y/noStaticElementInteractions: decorative/UI hover interaction, not primary action
-                // biome-ignore lint/a11y/useKeyWithClickEvents: decorative click target, no keyboard handler required
-                <div
-                  // biome-ignore lint/suspicious/noArrayIndexKey: decorative/static array, key is stable index
-                  key={i}
-                  className="m-1 cursor-pointer rounded-md border bg-gray-100 p-2 dark:border-gray-600 dark:bg-gray-700"
+              {EXAMPLES.map((msg) => (
+                <button
+                  type="button"
+                  key={msg}
+                  className="m-1 block w-full cursor-pointer rounded-md border bg-gray-100 p-2 text-left dark:border-gray-600 dark:bg-gray-700"
                   onClick={() => onEnter(msg)}
                 >
                   {msg}
-                </div>
+                </button>
               ))}
             </div>
           )}
@@ -323,32 +317,27 @@ export const AISmollmWebGPU = () => {
               <>
                 {!isRunning && (
                   <span>
-                    Generated {numTokens} tokens in {(numTokens / tps).toFixed(2)}{" "}
+                    Generated {numTokens ?? 0} tokens in {((numTokens ?? 0) / tps).toFixed(2)}{" "}
                     seconds&nbsp;&#40;
                   </span>
                 )}
-                {
-                  <>
-                    <span className="mr-1 text-center font-medium text-black dark:text-white">
-                      {tps.toFixed(2)}
-                    </span>
-                    <span className="text-gray-500 dark:text-gray-300">tokens/second</span>
-                  </>
-                }
+                <span className="mr-1 text-center font-medium text-black dark:text-white">
+                  {tps.toFixed(2)}
+                </span>
+                <span className="text-gray-500 dark:text-gray-300">tokens/second</span>
                 {!isRunning && (
                   <>
                     <span className="mr-1">&#41;.</span>
-                    {/* biome-ignore lint/a11y/noStaticElementInteractions: decorative/UI hover interaction, not primary action */}
-                    {/* biome-ignore lint/a11y/useKeyWithClickEvents: decorative click target, no keyboard handler required */}
-                    <span
+                    <button
+                      type="button"
                       className="cursor-pointer underline"
                       onClick={() => {
-                        worker.current.postMessage({ type: "reset" });
+                        send({ type: "reset" });
                         setMessages([]);
                       }}
                     >
                       Reset
-                    </span>
+                    </button>
                   </>
                 )}
               </>
@@ -357,10 +346,10 @@ export const AISmollmWebGPU = () => {
         </div>
       )}
 
-      <div className="relative mx-auto mb-3 mt-2 flex max-h-[200px] w-[600px] max-w-[80%] rounded-lg border dark:bg-gray-700">
+      <div className="relative mx-auto mt-2 mb-3 flex max-h-[200px] w-[600px] max-w-[80%] rounded-lg border dark:bg-gray-700">
         <textarea
           ref={textareaRef}
-          className="scrollbar-thin w-[550px] resize-none rounded-lg border-none bg-transparent px-3 py-4 text-gray-800 placeholder-gray-500 outline-none disabled:cursor-not-allowed disabled:text-gray-400 disabled:placeholder-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
+          className="w-[550px] resize-none scrollbar-thin rounded-lg border-none bg-transparent px-3 py-4 text-gray-800 placeholder-gray-500 outline-hidden disabled:cursor-not-allowed disabled:text-gray-400 disabled:placeholder-gray-200 dark:bg-gray-700 dark:text-gray-200 dark:placeholder-gray-400"
           placeholder="Type your message..."
           value={input}
           disabled={status !== "ready"}
@@ -379,32 +368,22 @@ export const AISmollmWebGPU = () => {
             type="button"
             className="cursor-pointer"
             onClick={onInterrupt}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                onInterrupt();
-              }
-            }}
             aria-label="Stop generation"
           >
-            <StopIcon className="absolute bottom-3 right-3 h-8 w-8 rounded-md p-1 text-gray-800 dark:text-gray-100" />
+            <StopIcon className="absolute right-3 bottom-3 h-8 w-8 rounded-md p-1 text-gray-800 dark:text-gray-100" />
           </button>
         ) : input.length > 0 ? (
           <button
             type="button"
             className="cursor-pointer"
             onClick={() => onEnter(input)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                onEnter(input);
-              }
-            }}
             aria-label="Send message"
           >
-            <ArrowRightIcon className="absolute bottom-3 right-3 h-8 w-8 rounded-md bg-gray-800 p-1 text-white dark:bg-gray-100 dark:text-black" />
+            <ArrowRightIcon className="absolute right-3 bottom-3 h-8 w-8 rounded-md bg-gray-800 p-1 text-white dark:bg-gray-100 dark:text-black" />
           </button>
         ) : (
           <div aria-hidden="true">
-            <ArrowRightIcon className="absolute bottom-3 right-3 h-8 w-8 rounded-md bg-gray-200 p-1 text-gray-50 dark:bg-gray-600 dark:text-gray-800" />
+            <ArrowRightIcon className="absolute right-3 bottom-3 h-8 w-8 rounded-md bg-gray-200 p-1 text-gray-50 dark:bg-gray-600 dark:text-gray-800" />
           </div>
         )}
       </div>

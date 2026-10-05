@@ -7,7 +7,6 @@ import { toast } from "sonner";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { env } from "@/env";
-import { useToast } from "@/hooks/use-toast";
 import { cn } from "@/lib/utils";
 import { disconnectAccount, markVercelConnectionAttempt } from "@/server/actions/settings";
 import type { User } from "@/types/user";
@@ -26,7 +25,6 @@ export const VercelConnectButton = ({
 }: VercelConnectButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
-  const { toast: legacyToast } = useToast();
 
   // Use prop if provided, otherwise fall back to checking session accounts
   const hasVercelAccount = user?.accounts?.some((account) => account.provider === "vercel");
@@ -63,10 +61,8 @@ export const VercelConnectButton = ({
       const link = `https://vercel.com/integrations/${client_slug}/new?state=${state}`;
       window.location.assign(link);
     } catch (error) {
-      legacyToast({
-        title: "Error",
+      toast.error("Error", {
         description: error instanceof Error ? error.message : "Failed to connect to Vercel",
-        variant: "destructive",
       });
       setIsLoading(false);
     }

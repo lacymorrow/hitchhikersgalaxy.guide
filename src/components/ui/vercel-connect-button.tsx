@@ -1,12 +1,11 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useState } from "react";
 
 export const VercelConnectButton = () => {
 	const [isLoading, setIsLoading] = useState(false);
-	const { toast } = useToast();
 
 	const handleConnect = async () => {
 		try {
@@ -40,29 +39,18 @@ export const VercelConnectButton = () => {
 				// Handle the OAuth callback
 				if (event.data?.type === "vercel-oauth-success") {
 					popup?.close();
-					toast({
-						title: "Success",
-						description: "Successfully connected to Vercel!",
-					});
+					toast("Success", { description: "Successfully connected to Vercel!" });
 					// Refresh the page to update the auth state
 					window.location.reload();
 				}
 
 				if (event.data?.type === "vercel-oauth-error") {
 					popup?.close();
-					toast({
-						title: "Error",
-						description: event.data.error || "Failed to connect to Vercel",
-						variant: "destructive",
-					});
+					toast.error("Error", { description: event.data.error || "Failed to connect to Vercel" });
 				}
 			});
 		} catch (error) {
-			toast({
-				title: "Error",
-				description: error instanceof Error ? error.message : "Failed to connect to Vercel",
-				variant: "destructive",
-			});
+			toast.error("Error", { description: error instanceof Error ? error.message : "Failed to connect to Vercel" });
 		} finally {
 			setIsLoading(false);
 		}

@@ -202,7 +202,7 @@ export function IntroDisclosure({
                   />
                 ))}
               </div>
-              <div className="relative aspect-[16/9] overflow-hidden rounded-lg ring-2 ring-border ring-offset-8 ring-offset-background">
+              <div className="relative aspect-video overflow-hidden rounded-lg ring-2 ring-border ring-offset-8 ring-offset-background">
                 {steps[currentStep] && (
                   <StepPreview step={steps[currentStep]} direction={direction} />
                 )}
@@ -237,7 +237,7 @@ export function IntroDisclosure({
             </div>
           </div>
 
-          <div className="absolute bottom-0 left-0 right-0 border-t bg-background">
+          <div className="absolute right-0 bottom-0 left-0 border-t bg-background">
             <div className="p-4">
               <div className="mb-4 flex items-center justify-between">
                 <Button

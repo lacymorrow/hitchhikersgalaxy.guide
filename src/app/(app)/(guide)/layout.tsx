@@ -1,4 +1,5 @@
 import { ShareButton } from "@/components/buttons/share-button";
+import { MoreByLacy } from "@/components/primitives/more-by-lacy";
 import { Link } from "@/components/primitives/link-with-transition";
 import { SuspenseFallback } from "@/components/primitives/suspense-fallback";
 import { Suspense } from "react";
@@ -88,6 +89,7 @@ export default function GuideLayout({
 							Terms
 						</Link>
 					</nav>
+					<MoreByLacy className="mt-2" />
 				</div>
 			</footer>
 		</div>

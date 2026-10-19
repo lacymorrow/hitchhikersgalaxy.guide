@@ -1,6 +1,8 @@
 import { BookOpen } from "lucide-react";
 import type { Metadata } from "next";
 import { Link } from "@/components/primitives/link-with-transition";
+import { isBlockedSearchTerm } from "@/lib/guide-blocklist";
+import { getShadowRouteSegments } from "@/lib/guide-routes";
 import { dedupeGuideEntries, guideEntryPath } from "@/lib/seo";
 import { db } from "@/server/db";
 import { guideEntries } from "@/server/db/schema";
@@ -27,9 +29,19 @@ async function getAllEntries() {
 				updatedAt: guideEntries.updatedAt,
 			})
 			.from(guideEntries);
-		return dedupeGuideEntries(entries).sort((a, b) =>
-			a.searchTerm.localeCompare(b.searchTerm)
-		);
+		// Match the sitemap filter so /browse never links to pages Ahrefs
+		// would flag as noindex-in-sitemap (LAC-4156): drop vulnerability-
+		// probe entries (dumpsql, mainjs, …) whose slug page renders
+		// notFound(), and drop terms that collide with static routes (upload,
+		// trpc, …) which the (demo)/dashboard layouts mark noindex.
+		const shadowSegments = await getShadowRouteSegments();
+		return dedupeGuideEntries(entries)
+			.filter(
+				(entry) =>
+					!isBlockedSearchTerm(entry.searchTerm) &&
+					!shadowSegments.has(entry.searchTerm.toLowerCase()),
+			)
+			.sort((a, b) => a.searchTerm.localeCompare(b.searchTerm));
 	} catch (error) {
 		console.error("[Browse] Error fetching guide entries:", error);
 		return [];

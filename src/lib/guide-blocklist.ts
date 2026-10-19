@@ -17,14 +17,15 @@ const BLOCKED_PATTERNS = [
 	/\.php/i,
 	/php\d*$/i,
 	/\.asp/i,
-	/aspx?$/i,
+	/aspx$/i,
 	/\.jsp/i,
 	/jsp$/i,
 	/\.cgi/i,
 	/cgi$/i,
 	/\.env/i,
-	/^env/i,
-	/env$/i,
+	// Not /^env/ or /env$/: those blocked "environment", "envelope", "heaven".
+	/^env(local|prod|production|dev|development|example|sample|staging|test|bak|backup|old|save|txt)?$/i,
+	/dotenv$/i,
 	/\.git/i,
 	/\.sql/i,
 	/sql$/i,
@@ -34,9 +35,9 @@ const BLOCKED_PATTERNS = [
 	/\.config/i,
 	/config$/i,
 	/\.ini/i,
-	/ini$/i,
+	/(php|my|config|settings|web|desktop|boot|win|system|user)ini$/i,
 	/\.log/i,
-	/log$/i,
+	/(error|access|debug|install|php|server|app|laravel|wp|sql|npm|yarn)_?log$/i,
 	/\.xml/i,
 	/xml$/i,
 	/\.yml/i,
@@ -66,19 +67,19 @@ const BLOCKED_PATTERNS = [
 	/passwordvault/i,
 	/oauth/i,
 	/openid/i,
-	/^aws/i,
+	/^aws(config|credentials?|keys?|s3)?$/i,
 	/^azure/i,
 	/^boto$/i,
 	/^s3cfg$/i,
 	/docker/i,
 	/kubernetes/i,
 	/^k8s/i,
-	/composer/i,
+	/composer(json|lock|phar)/i,
 	/gitlab/i,
-	/travis/i,
+	/travis\.?ya?ml/i,
 	/jenkins/i,
 	/credential/i,
-	/secret/i,
+	/^(client_?)?secrets?(json|ya?ml|txt|key|env)?$/i,
 	/apikey/i,
 	/api[_-]?key/i,
 	/token/i,
@@ -88,10 +89,10 @@ const BLOCKED_PATTERNS = [
 	/sitemap/i,
 	/^rss/i,
 	/rss$/i,
-	/^atom$/i,
-	/atom$/i,
-	/^feed/i,
-	/feed$/i,
+	/^atom(xml)?$/i,
+	/atomxml$/i,
+	/^feeds?(xml|rss|atom|json)?$/i,
+	/(rss|atom)feed$/i,
 	/^ssrf$/i,
 	/^curl$/i,
 	/^fetch$/i,
@@ -128,7 +129,7 @@ const BLOCKED_PATTERNS = [
 	/webshell/i,
 	/c99/i,
 	/r57/i,
-	/alfa/i,
+	/^alfa(_|cgi|data|team|shell|rex)/i,
 	/^debug/i,
 	/debug$/i,
 	/_debug/i,
@@ -159,29 +160,10 @@ const BLOCKED_EXACT_TERMS = new Set([
 
 const ALLOWED_SHORT_TERMS = new Set(["ai", "uk", "us", "tv", "pc", "42"]);
 
-const REAL_EIGHT_LETTER_WORDS = new Set([
-	"dolphins",
-	"penguins",
-	"keyboard",
-	"universe",
-	"galactic",
-	"spaceman",
-	"starship",
-	"asteroid",
-	"magratha",
-	"betelgeu",
-	"infinite",
-	"improbab",
-	"pangalac",
-	"garglebl",
-]);
-
-const isRandomGibberish = (term: string): boolean => {
-	if (/^[a-z]{8}$/.test(term)) {
-		return !REAL_EIGHT_LETTER_WORDS.has(term);
-	}
-	return false;
-};
+// Used to block every 8-letter word outside a short allowlist, which also
+// blocked real topics ("elephant", "sandwich"). Now: only vowel-less ones.
+const isRandomGibberish = (term: string): boolean =>
+	/^[a-z]{8}$/.test(term) && !/[aeiouy]/.test(term);
 
 export const isBlockedSearchTerm = (term: string): boolean => {
 	const lowerTerm = term.toLowerCase();

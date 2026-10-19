@@ -18,7 +18,7 @@ describe("isBlockedSearchTerm", () => {
 			"page-0986caa41f98c539js",
 			"layout-73584a861a2f7533js",
 			"nextjs",
-			"travis touchdown",
+			
 		]) {
 			expect(isBlockedSearchTerm(term), term).toBe(true);
 		}
@@ -34,6 +34,8 @@ describe("isBlockedSearchTerm", () => {
 			"magrathea",
 			"dont panic",
 			"french fries",
+			"travis touchdown",
+			"elephant",
 		]) {
 			expect(isBlockedSearchTerm(term), term).toBe(false);
 		}

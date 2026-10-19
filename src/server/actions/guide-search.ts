@@ -3,8 +3,9 @@
 import { isBlockedSearchTerm } from "@/lib/guide-blocklist";
 import { openai } from "@/lib/open-ai";
 import { normalizeSlug } from "@/lib/utils";
+import { checkGuideTerm } from "@/lib/guide-gate";
+import { allowGuideCreation } from "@/server/services/guide-generation-limit";
 import { guideService } from "@/server/services/guide-service";
-import { rateLimitService, rateLimits } from "@/server/services/rate-limit-service";
 
 
 const generateGuideEntry = async (searchTerm: string) => {
@@ -104,17 +105,6 @@ export const searchGuide = async (searchTerm: string, exactMatch = false) => {
 		};
 	}
 
-	// Rate limiting
-	try {
-		await rateLimitService.checkLimit("guide-search", searchTerm, rateLimits.api.search);
-	} catch (error) {
-		console.error("[Guide Search] Rate limit error:", error);
-		return {
-			success: false,
-			error: "Too many searches. Please try again in a minute.",
-		};
-	}
-
 	// First, try to find an existing entry using the normalized term
 	try {
 		console.log(
@@ -134,6 +124,25 @@ export const searchGuide = async (searchTerm: string, exactMatch = false) => {
 		console.error("[Guide Search] Database search error:", error);
 		// Don't return error here, try to create a new entry instead
 		// This prevents 403 errors when database search fails but creation might work
+	}
+
+	// Nothing stored yet. Before spending an OpenAI call and writing a row,
+	// the term has to pass the gate (probes, payloads, test names, spam)
+	// and the creation limits. Failing either is a plain miss: the slug page
+	// 404s, nothing is written.
+	const gate = checkGuideTerm(searchTerm);
+	if (!gate.ok) {
+		console.log("[searchGuide] Gate rejected new term:", normalizedSearchTerm, gate.reason);
+		return {
+			success: false,
+			error: "This search term is not permitted in the Guide.",
+		};
+	}
+	if (!(await allowGuideCreation())) {
+		return {
+			success: false,
+			error: "Too many new entries right now. Please try again in a few minutes.",
+		};
 	}
 
 	// If no entry exists, generate one using AI

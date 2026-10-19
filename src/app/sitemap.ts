@@ -1,5 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
+import { isBlockedSearchTerm } from "@/lib/guide-blocklist";
+import { getShadowRouteSegments } from "@/lib/guide-routes";
 import { dedupeGuideEntries, guideEntryPath } from "@/lib/seo";
 import { db } from "@/server/db";
 import { guideEntries } from "@/server/db/schema";
@@ -49,10 +51,26 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Dynamic guide entries from database. The table holds duplicate rows per
   // term, which emitted 38 duplicate sitemap URLs (LAC-3918); dedupe on the
   // normalized term the entry pages canonicalize to.
-  // Static routes shadow the [slug] catch-all, so a DB entry whose term
-  // matches one (e.g. "contact") would emit the same URL twice.
+  //
+  // Three classes of entries get filtered out before we emit them:
+  //   1. Vulnerability-probe terms (mainjs, dumpsql, alfa_data, …) — these
+  //      exist in the DB from pre-blocklist crawls. searchGuide blocks them
+  //      now, so their slug page renders notFound() + robots:noindex. Keeping
+  //      them in the sitemap triggered Ahrefs "Noindex page in sitemap" on
+  //      311 URLs (LAC-4156).
+  //   2. First-segment collisions with static routes (upload, trpc, admin, …)
+  //      — Next.js serves the static route instead of the [slug] page, and
+  //      several of those static routes are intentionally noindex (demo and
+  //      dashboard layouts). Same Ahrefs error, different cause.
+  //   3. Explicit sitemap statics (contact, popular, …) — already listed
+  //      above; stops duplicate URLs for DB rows named after a static page.
   const staticUrls = new Set(staticPages.map((page) => page.url));
-  const entries = dedupeGuideEntries(await getGuideEntries());
+  const shadowSegments = await getShadowRouteSegments();
+  const entries = dedupeGuideEntries(await getGuideEntries()).filter(
+    (entry) =>
+      !isBlockedSearchTerm(entry.searchTerm) &&
+      !shadowSegments.has(entry.searchTerm.toLowerCase()),
+  );
   const entryPages: MetadataRoute.Sitemap = entries
     .map((entry) => ({
       url: `${baseUrl}${guideEntryPath(entry.searchTerm)}`,

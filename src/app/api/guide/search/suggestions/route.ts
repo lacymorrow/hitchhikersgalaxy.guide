@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
+import { checkGuideTerm } from "@/lib/guide-gate";
 
 // Initialize OpenAI client
 const openai = new OpenAI({
@@ -10,7 +11,8 @@ export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
 	const term = searchParams.get("term");
 
-	if (!term || term.length < 3) {
+	// Same gate as entry generation: probes and payloads get no OpenAI call.
+	if (!term || term.length < 3 || !checkGuideTerm(term).ok) {
 		return NextResponse.json({ suggestions: [] }, { status: 200 });
 	}
 

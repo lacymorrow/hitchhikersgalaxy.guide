@@ -3,6 +3,7 @@ import { Link } from "@/components/primitives/link-with-transition";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/config/site";
+import { checkRawShape } from "@/lib/guide-gate";
 import { guideEntryPath, guideEntrySeo } from "@/lib/seo";
 import { normalizeSlug } from "@/lib/utils";
 import { searchGuide } from "@/server/actions/guide-search";
@@ -313,6 +314,13 @@ export default async function GuidePage({
 		console.error("[GuidePage] Error decoding slug:", rawSlug, e);
 		// Handle cases where decoding might fail (e.g., malformed URI)
 		// Depending on requirements, you might notFound() or use rawSlug as is
+	}
+
+	// File, path, and payload shapes (`settings.py`, `.env`, `%2e%2e`) 404
+	// here, before the canonical redirect below strips their dots and turns
+	// them into a generatable slug like `settingspy`.
+	if (checkRawShape(rawSlug)) {
+		notFound();
 	}
 
 	// Normalize the raw slug using the same logic as the service

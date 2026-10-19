@@ -1,5 +1,7 @@
 "use server";
 
+import { checkGuideTerm, checkSubmissionText } from "@/lib/guide-gate";
+import { allowGuideCreation } from "@/server/services/guide-generation-limit";
 import { guideService } from "@/server/services/guide-service";
 import { z } from "zod";
 
@@ -40,9 +42,21 @@ export async function submitGuideEntry(values: z.infer<typeof formSchema>) {
 		// Validate the input
 		const validatedData = formSchema.parse(values);
 
+		// Same gate as AI generation: the page is dev-only, but the action is
+		// still reachable by its id in production.
+		const { searchTerm, ...text } = validatedData;
+		const termGate = checkGuideTerm(searchTerm);
+		if (!termGate.ok || !checkSubmissionText(text).ok) {
+			return { success: false, error: "This entry is not permitted in the Guide." };
+		}
+		if (!(await allowGuideCreation())) {
+			return { success: false, error: "Too many new entries right now. Please try again later." };
+		}
+
 		// Add reliability and danger level
 		const entry = await guideService.createEntry({
 			...validatedData,
+			searchTerm: termGate.term,
 			reliability: Math.floor(Math.random() * 40) + 60, // 60-100%
 			dangerLevel: Math.floor(Math.random() * 100), // 0-100%
 		});

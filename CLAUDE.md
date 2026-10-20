@@ -193,13 +193,16 @@ Shipkit uses environment variables for feature toggles:
 - **Button-like links** - Use `<Link className={cn(buttonVariants(...))} ...>`
 - **Multi-zone navigation** - Use anchor tags (`<a>`) for cross-zone links
 
-### CI Minutes and Local Verification
+### CI and Local Verification
 
-GitHub Actions minutes are billed on this private repo, and automated upstream syncs and agent-authored PRs burn them on checks that were already run locally.
+This repo is public, so Actions minutes are free. Jobs here really run, unlike the private shipkit repos where every job is gated off.
 
-- **Run `bun run verify` before opening a PR** - `scripts/verify.sh` runs typecheck, lint, unit and node tests, a production build, and a `next start` smoke (`--routes "/ /blog /blog/nope-xyz=404 /nope-404=404"` to customize). Paste its Markdown summary in the PR body.
-- **Skip Actions when you verified locally** - put `[skip ci]` in the commit message (GitHub-native; also skips gitleaks, so run `gitleaks protect --staged` locally). Vercel still builds, and the Deployment Check smoke still runs because it triggers off the Vercel deployment.
-- **Cheap jobs run on every PR, expensive ones on demand** - `ci.yml` runs typecheck, lint, and unit tests on every PR; integration, production build, Playwright e2e, and the docs link check run on pushes to `main` and on PRs labeled `ci:full`. Add the label for changes to auth, payments, the build pipeline, or docs routing.
+- **`ci.yml` runs the unit and node test suites on every PR** - that is all it runs, and green means exactly that. Neither typecheck nor lint is a gate yet: both are red on clean `main` from inherited ShipKit template debt (229 tsc errors, 38 biome + 109 eslint errors, 187 unformatted files), tracked in LAC-3529 and LAC-5163. The workflow file explains the omission; delete those notes when you add the jobs.
+- **CI installs with pnpm, not bun** - `vercel.json` installs and builds with pnpm and `pnpm-lock.yaml` is the only committed lockfile, so CI matches the dependency tree production ships. There is no `bun.lock`, so `bun install --frozen-lockfile` fails. `bun run <script>` is still fine locally; it is the installer that differs.
+- **Run `bun run verify` before opening a PR** - `scripts/verify.sh` runs typecheck, lint, unit and node tests, a production build, and a `next start` smoke (`--routes "/ /blog /blog/nope-xyz=404 /nope-404=404"` to customize). Paste its Markdown summary in the PR body. This is still worth doing: it covers the build and the two checks CI cannot gate yet.
+- **Don't trust a local-only test run** - `tests/setup-env.ts` calls `loadEnvConfig`, which loads your `.env.local`. A suite can pass locally on real secrets and fail in CI. To check a suite the way CI sees it, run it from a clean worktree with no `.env.local`.
+- **`[skip ci]` skips gitleaks too** - if you use it, run `gitleaks protect --staged` locally. Vercel still builds, and the Deployment Check smoke still runs because it triggers off the Vercel deployment.
+- **No build job in Actions** - Vercel builds every PR and `deployment-check.yml` smoke-tests the result, so a second production build would re-prove the same thing.
 - **Suspense and loading files** - never add `loading.tsx` or `<Suspense>` above a page that calls `notFound()`; the shell streams a 200 first (see `tests/node/app/no-loading-above-not-found.test.ts`).
 
 ### Database Best Practices

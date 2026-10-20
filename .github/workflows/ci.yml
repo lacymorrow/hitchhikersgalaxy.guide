@@ -1,0 +1,71 @@
+# CI gate for pull requests.
+#
+# What runs here is deliberately narrow: the unit and node suites, nothing else.
+# Green on this workflow means "both test suites pass", and nothing more.
+#
+# Why typecheck and lint are NOT here (LAC-5129):
+#   `bun run typecheck` reports 229 errors across 55 files, and lint reports 38
+#   biome errors, 109 eslint errors and 187 unformatted files, all pre-existing
+#   on main and all inherited ShipKit template debt. Adding those jobs today
+#   would paint the workflow permanently red, and a red check nobody can fix is
+#   the same false confidence this workflow exists to remove. They get added
+#   once the debt is cleared: LAC-3529 (types) and LAC-5163 (lint).
+#
+# Why no build, integration or e2e job:
+#   Vercel already builds every pull request from vercel.json, and
+#   deployment-check.yml smoke-tests the resulting deployment. A second
+#   production build in Actions would cost minutes to re-prove the same thing.
+#
+# Package manager is pnpm, not bun. vercel.json installs and builds with pnpm
+# and pnpm-lock.yaml is the only committed lockfile, so CI resolves the same
+# dependency tree production does. `bun run <script>` still works locally; it
+# is the installer that differs. There is no bun.lock, so
+# `bun install --frozen-lockfile` cannot work here.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+# Supersede in-flight PR runs when new commits land; never cancel a main push.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Tests (unit + node)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+
+      # package.json has no `packageManager` field, so the version is explicit.
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 10
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+          cache: pnpm
+
+      # --ignore-scripts skips the isolated-vm native build (a @builder.io/react
+      # dependency). No test imports it, and compiling it here buys nothing but
+      # a node-gyp toolchain to maintain.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      # Both suites run without secrets or a database: verified on a clean
+      # checkout with no .env.local and a scrubbed environment.
+      - name: Unit tests (jsdom)
+        run: pnpm run test
+
+      - name: Node tests
+        run: pnpm run test:node

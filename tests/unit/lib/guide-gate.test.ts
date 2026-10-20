@@ -166,6 +166,25 @@ describe("checkGuideTerm", () => {
 		});
 	});
 
+	// The gate is where the OpenAI call is decided, so prove the ex-template
+	// paths stop here and not only in the sitemap filter downstream. Before the
+	// blocklist was restored, 25 of these reached generation and every crawler
+	// hit on a stale /dashboard or /trpc link cost a model call plus a row.
+	it("rejects stale Shipkit template paths before they reach generation", () => {
+		for (const term of [
+			"dashboard",
+			"pricing",
+			"docs",
+			"trpc",
+			"cms-api",
+			"builder-io",
+			"landing-01",
+			"llms-fulltxt",
+		]) {
+			expect(checkGuideTerm(term).ok, term).toBe(false);
+		}
+	});
+
 	it("rejects spam and slurs", () => {
 		for (const term of ["casino bonus", "viagra", "slot gacor", "kill yourself"]) {
 			expect(checkGuideTerm(term).ok, term).toBe(false);

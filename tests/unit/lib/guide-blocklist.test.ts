@@ -24,6 +24,58 @@ describe("isBlockedSearchTerm", () => {
 		}
 	});
 
+	// Regression for the PR #19 review: extracting this module out of
+	// guide-search.ts carried only the first 15 exact terms and left the whole
+	// ex-Shipkit template block behind. #18 deleted those pages, so each of these
+	// paths fell through to [slug] and spent an OpenAI call plus a guide_entries
+	// row on every crawler hit of a stale URL. The sitemap filter then hid the
+	// result, so nothing would have surfaced it but the bill.
+	it("blocks top-level paths left over from the Shipkit template", () => {
+		for (const term of [
+			"dashboard",
+			"pricing",
+			"features",
+			"faq",
+			"docs",
+			"blog",
+			"changelog",
+			"waitlist",
+			"settings",
+			"install",
+			"checkout",
+			"connect",
+			"dev",
+			"cms",
+			"cms-api",
+			"bones",
+			"download",
+			"downloads",
+			"deployments",
+			"projects",
+			"teams",
+			"tools",
+			"api-keys",
+			"examples",
+			"landing-01",
+			"pricing-01",
+			"blog-authors",
+			"browser",
+			"network",
+			"trpc",
+			"upload",
+			"launch",
+			"builder-io",
+			"google-docs",
+			"polar",
+			"pages",
+			"rssxml",
+			"llmstxt",
+			"llms-fulltxt",
+		]) {
+			expect(isBlockedSearchTerm(term), term).toBe(true);
+		}
+	});
+
 	it("allows legitimate guide entries", () => {
 		for (const term of [
 			"babel fish",

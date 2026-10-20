@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { siteConfig } from "@/config/site";
 import { isBlockedSearchTerm } from "@/lib/guide-blocklist";
-import { getShadowRouteSegments } from "@/lib/guide-routes";
+import { isShadowRouteSegment } from "@/lib/guide-routes";
 import { dedupeGuideEntries, guideEntryPath } from "@/lib/seo";
 import { db } from "@/server/db";
 import { guideEntries } from "@/server/db/schema";
@@ -65,11 +65,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   //   3. Explicit sitemap statics (contact, popular, …) — already listed
   //      above; stops duplicate URLs for DB rows named after a static page.
   const staticUrls = new Set(staticPages.map((page) => page.url));
-  const shadowSegments = await getShadowRouteSegments();
   const entries = dedupeGuideEntries(await getGuideEntries()).filter(
     (entry) =>
-      !isBlockedSearchTerm(entry.searchTerm) &&
-      !shadowSegments.has(entry.searchTerm.toLowerCase()),
+      !isBlockedSearchTerm(entry.searchTerm) && !isShadowRouteSegment(entry.searchTerm),
   );
   const entryPages: MetadataRoute.Sitemap = entries
     .map((entry) => ({

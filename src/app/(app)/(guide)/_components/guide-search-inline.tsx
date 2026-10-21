@@ -238,18 +238,19 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 				e.preventDefault();
 				setSelectedIndex((prev) => (prev - 1 + totalItems) % totalItems);
 				break;
-			case "Enter":
+			case "Enter": {
 				e.preventDefault();
 				if (selectedIndex >= 0 && !searchLoading) {
-					if (selectedIndex < results.length) {
-						void onSearch(results[selectedIndex].searchTerm);
-					} else if (selectedIndex < results.length + aiSuggestions.length) {
-						void onSearch(aiSuggestions[selectedIndex - results.length]);
-					} else {
-						void onSearch(search);
-					}
+					// The lists can shrink between render and keypress, so resolve the
+					// highlighted item and fall back to the raw term when it is gone.
+					const picked =
+						selectedIndex < results.length
+							? results[selectedIndex]?.searchTerm
+							: aiSuggestions[selectedIndex - results.length];
+					void onSearch(picked ?? search);
 				}
 				break;
+			}
 			case "Escape":
 				setOpen(false);
 				inputRef.current?.blur();

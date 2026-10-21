@@ -1,11 +1,15 @@
 import { useEffect, useRef } from "react";
-import { UseFormReturn, PathValue } from "react-hook-form";
-import { z } from "zod";
+import type { UseFormReturn } from "react-hook-form";
+import type { z } from "zod";
 
-interface WithFormPersistenceProps<T extends z.ZodType> {
-	form: UseFormReturn<z.infer<T>>;
+// The HOC restores arbitrary JSON out of localStorage and writes it back with
+// setValue, so it is schema-agnostic by nature. Keeping the form loosely typed
+// here is what lets a concrete UseFormReturn<MySchema> be passed in; a bound
+// generic cannot be inferred from the wrapped component's props.
+interface WithFormPersistenceProps {
+	form: UseFormReturn<any>;
 	formKey: string;
-	zodSchema: T;
+	zodSchema: z.ZodType;
 }
 
 /**
@@ -16,7 +20,7 @@ interface WithFormPersistenceProps<T extends z.ZodType> {
  * @param options.debounceMs Debounce time for saving to localStorage (default: 500ms)
  * @returns A wrapped component with form persistence
  */
-export function withFormPersistence<T extends z.ZodType, P extends WithFormPersistenceProps<T>>(
+export function withFormPersistence<P extends WithFormPersistenceProps>(
 	WrappedComponent: React.ComponentType<P>,
 	options: {
 		clearOnSubmit?: boolean;
@@ -41,7 +45,7 @@ export function withFormPersistence<T extends z.ZodType, P extends WithFormPersi
 					Object.entries(parsedData).forEach(([key, value]) => {
 						// Only restore non-null, non-undefined, non-empty string values
 						if (value !== null && value !== undefined && value !== "") {
-							form.setValue(key, value as PathValue<z.infer<T>, any>, {
+							form.setValue(key, value, {
 								shouldDirty: true,
 								shouldTouch: true,
 								shouldValidate: true,
@@ -69,8 +73,8 @@ export function withFormPersistence<T extends z.ZodType, P extends WithFormPersi
 				timeout = setTimeout(() => {
 					try {
 						// Store data if any field has a non-empty value
-						const hasValue = Object.entries(formData).some(([_, value]) =>
-							value !== null && value !== undefined && value !== ""
+						const hasValue = Object.values(formData as Record<string, unknown>).some(
+							(value) => value !== null && value !== undefined && value !== ""
 						);
 
 						if (hasValue) {
@@ -94,21 +98,15 @@ export function withFormPersistence<T extends z.ZodType, P extends WithFormPersi
 			};
 		}, [form, formKey, options.debounceMs]);
 
-		// Wrap the original submit handler to optionally clear storage
-		const originalSubmit = form.handleSubmit;
-		form.handleSubmit = (onValid, onInvalid) => {
-			return originalSubmit(async (...args) => {
-				try {
-					await onValid?.(...args);
-					if (options.clearOnSubmit) {
-						localStorage.removeItem(`form_${formKey}`);
-					}
-				} catch (error) {
-					console.error("[Form Persistence] Error in submit handler:", error);
-					throw error;
-				}
-			}, onInvalid);
-		};
+		// Clear storage once a submit resolves cleanly. This used to reassign
+		// form.handleSubmit during render, which re-wrapped the already-wrapped
+		// handler on every render and nested it deeper each time.
+		const { isSubmitSuccessful } = form.formState;
+		useEffect(() => {
+			if (options.clearOnSubmit && isSubmitSuccessful) {
+				localStorage.removeItem(`form_${formKey}`);
+			}
+		}, [isSubmitSuccessful, formKey, options.clearOnSubmit]);
 
 		return <WrappedComponent {...props} />;
 	};

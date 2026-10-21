@@ -31,7 +31,12 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 	const [error, setError] = React.useState<string | null>(null);
 	const [results, setResults] = React.useState<GuideEntry[]>(initialResults);
 	const debouncedSearch = useDebounce(search, 300);
-	const [selectedEntry, setSelectedEntry] = React.useState<GuideEntry | null>(null);
+	// searchGuide returns a row joined with its relations, which is not a bare
+	// GuideEntry. Only these two fields are rendered, so that is what we store.
+	const [selectedEntry, setSelectedEntry] = React.useState<Pick<
+		GuideEntry,
+		"searchTerm" | "content"
+	> | null>(null);
 	const searchInputRef = React.useRef<HTMLInputElement>(null);
 	const [activeItem, setActiveItem] = React.useState<string | null>(null);
 

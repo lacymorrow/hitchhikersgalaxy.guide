@@ -61,15 +61,21 @@ const formSchema = z.object({
 		.transform((val) => val || ""),
 });
 
+// advertisement is `.optional().transform(...)`, so the schema's input and output
+// types differ. react-hook-form has to be told both, otherwise the resolver it
+// gets back is keyed on the input type and does not match the form.
+type SubmitEntryInput = z.input<typeof formSchema>;
+type SubmitEntryValues = z.output<typeof formSchema>;
+
 interface SubmitEntryFormProps {
-	form: ReturnType<typeof useForm<z.infer<typeof formSchema>>>;
+	form: ReturnType<typeof useForm<SubmitEntryInput, unknown, SubmitEntryValues>>;
 }
 
 function SubmitEntryForm({ form }: SubmitEntryFormProps) {
 	const router = useRouter();
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	async function onSubmit(values: z.infer<typeof formSchema>) {
+	async function onSubmit(values: SubmitEntryValues) {
 		try {
 			setIsSubmitting(true);
 			const result = await submitGuideEntry(values);
@@ -323,7 +329,7 @@ const PersistentSubmitEntryForm = withFormPersistence(
 
 // Export the page component that creates the form and passes it to the wrapped component
 export default function SubmitEntryPage() {
-	const form = useForm<z.infer<typeof formSchema>>({
+	const form = useForm<SubmitEntryInput, unknown, SubmitEntryValues>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
 			searchTerm: "",

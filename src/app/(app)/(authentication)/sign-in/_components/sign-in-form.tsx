@@ -20,11 +20,14 @@ import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { signInActionSchema } from "@/lib/schemas/auth";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
+import { getSafeNextUrl } from "@/lib/utils/safe-next-url";
 import { signInWithCredentialsAction } from "@/server/actions/auth";
 
 export const SignInForm = () => {
   const searchParams = useSearchParams();
   const nextUrl = searchParams?.get(SEARCH_PARAM_KEYS.nextUrl) ?? null;
+  // Only a same-origin path is safe to hand to the action; see getSafeNextUrl.
+  const safeNextUrl = getSafeNextUrl(nextUrl);
   // The action takes redirectTo and redirect, which live on signInActionSchema and
   // not on signInSchema. Typing the form with the narrower schema meant those two
   // defaults were excess properties, and `mode` was sitting inside defaultValues
@@ -34,7 +37,7 @@ export const SignInForm = () => {
     defaultValues: {
       ...getSchemaDefaults(signInActionSchema),
       // Send the user back where they came from, falling back to home.
-      redirectTo: nextUrl ?? routes.home,
+      redirectTo: safeNextUrl ?? routes.home,
       redirect: true,
     },
     mode: "onChange",

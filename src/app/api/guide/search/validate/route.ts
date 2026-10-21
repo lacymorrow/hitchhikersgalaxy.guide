@@ -71,7 +71,7 @@ export async function GET(request: Request) {
 		});
 
 		// Extract validation result from the response
-		const content = response.choices[0].message.content;
+		const content = response.choices[0]?.message?.content;
 		let validationResult = { valid: false, reason: "Failed to validate term" };
 
 		try {

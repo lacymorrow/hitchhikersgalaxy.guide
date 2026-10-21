@@ -27,7 +27,9 @@ export const getSchemaDefaults = <T extends z.ZodTypeAny>(
 
   function getDefaultValue(schema: z.ZodTypeAny): unknown {
     if (schema instanceof z.ZodDefault) {
-      return schema._def.defaultValue();
+      // Zod 4 stores the default as a value. Zod 3 stored a thunk, and calling
+      // it here threw "defaultValue is not a function" at runtime.
+      return (schema._def as { defaultValue: unknown }).defaultValue;
     }
     if (schema instanceof z.ZodArray) {
       return [];
@@ -45,12 +47,14 @@ export const getSchemaDefaults = <T extends z.ZodTypeAny>(
     if (!("innerType" in schema._def)) {
       return undefined;
     }
-    return getDefaultValue(schema._def.innerType);
+    return getDefaultValue((schema._def as { innerType: z.ZodTypeAny }).innerType);
   }
 
   return Object.fromEntries(
-    Object.entries((schema as ZodObjectLike).shape).map(([key, value]) => {
-      return [key, getDefaultValue(value as z.ZodTypeAny)];
-    })
-  );
+    Object.entries((schema as ZodObjectLike).shape as Record<string, z.ZodTypeAny>).map(
+      ([key, value]) => {
+        return [key, getDefaultValue(value)];
+      }
+    )
+  ) as z.infer<T>;
 };

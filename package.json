@@ -52,7 +52,7 @@
     "test:node": "vitest --config=vitest.config.node.ts",
     "test:integration": "vitest run --config=vitest.config.integration.ts",
     "test:all": "bun run test && bun run test:integration",
-    "typecheck": "fumadocs-mdx && tsc --noEmit",
+    "typecheck": "node scripts/prebuild-content.mjs && fumadocs-mdx && tsc --noEmit",
     "build:registry": "npx --yes shadcn@latest build",
     "registry:check": "bash scripts/registry-check.sh",
     "registry:closure": "bun scripts/registry-closure.ts",

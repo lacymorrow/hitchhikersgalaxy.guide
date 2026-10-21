@@ -42,7 +42,7 @@ export async function GET(request: Request) {
 		});
 
 		// Extract suggestions from the response
-		const content = response.choices[0].message.content;
+		const content = response.choices[0]?.message?.content;
 		let suggestions: string[] = [];
 
 		try {

@@ -28,15 +28,19 @@ export const addToWaitlist = async (formData: WaitlistFormData) => {
     }
 
     // Store in database first
+    // The waitlist table has no columns for the qualifying answers, so they go
+    // into metadata. Spreading them into the insert silently dropped them.
     const entry = await addWaitlistEntry({
       email: formData.email,
       name: formData.name,
-      company: formData.company ?? null,
-      role: formData.role ?? null,
-      projectType: formData.projectType ?? null,
-      timeline: formData.timeline ?? null,
-      interests: formData.interests ?? null,
-      source: "website",
+      referralSource: "website",
+      metadata: JSON.stringify({
+        company: formData.company ?? null,
+        role: formData.role ?? null,
+        projectType: formData.projectType ?? null,
+        timeline: formData.timeline ?? null,
+        interests: formData.interests ?? null,
+      }),
     });
 
     // If database is not available, entry will be null but we don't fail

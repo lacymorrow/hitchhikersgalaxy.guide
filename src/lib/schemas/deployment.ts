@@ -59,7 +59,7 @@ const DANGEROUS_PATTERNS = [
  * - Must be between 1 and 100 characters
  */
 const projectNameValidation = z
-  .string({ required_error: "Project name is required" })
+  .string({ error: "Project name is required" })
   .min(1, { message: "Project name is required" })
   .max(100, { message: "Project name must be between 1 and 100 characters" })
   .trim()

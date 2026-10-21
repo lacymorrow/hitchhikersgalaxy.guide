@@ -8,14 +8,10 @@ import {
   parseOverridesFromParams,
   parseTruthy,
 } from "@/lib/preview-flags";
+import { getSafeNextUrl } from "@/lib/utils/safe-next-url";
 
 const COOKIE_MAX_AGE = 60 * 60 * 8; // 8 hours
 const MAX_COOKIE_SIZE = 2048;
-
-function safeRedirect(raw: string): string {
-  if (raw.startsWith("/") && !raw.startsWith("//")) return raw;
-  return "/";
-}
 
 function secretsMatch(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
@@ -38,7 +34,7 @@ export async function GET(request: NextRequest) {
   }
 
   if (parseTruthy(searchParams.get("clear") ?? "") === true) {
-    const redirectUrl = safeRedirect(searchParams.get("redirect") ?? "/");
+    const redirectUrl = getSafeNextUrl(searchParams.get("redirect")) ?? "/";
     const response = NextResponse.redirect(new URL(redirectUrl, request.url));
     response.cookies.delete(PREVIEW_COOKIE);
     return response;
@@ -65,7 +61,7 @@ export async function GET(request: NextRequest) {
     );
   }
 
-  const redirectUrl = safeRedirect(searchParams.get("redirect") ?? "/");
+  const redirectUrl = getSafeNextUrl(searchParams.get("redirect")) ?? "/";
   const response = NextResponse.redirect(new URL(redirectUrl, request.url));
   response.cookies.set(PREVIEW_COOKIE, json, {
     path: "/",

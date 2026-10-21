@@ -5,7 +5,7 @@ export const userSchema = z.object({
   name: z.string().min(1, { message: "Name is required" }),
 
   email: z.string().email("Please enter a valid email address."),
-  password: z.string({ required_error: "Password is required" }).min(6, {
+  password: z.string({ error: "Password is required" }).min(6, {
     message: "Password must be at least 6 characters.",
   }),
 

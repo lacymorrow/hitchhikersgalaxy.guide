@@ -10,17 +10,22 @@ function isZodPipe(schema: z.ZodTypeAny): schema is z.ZodPipe<any, any> {
   return schema instanceof z.ZodPipe;
 }
 
-export const getSchemaDefaults = <T extends z.ZodTypeAny>(
-  schema: ZodObjectLike | z.ZodPipe<any, any>
+// The generic has to be bound to the argument. While it was a free
+// `T extends z.ZodTypeAny`, any caller that did not pass it explicitly got
+// `z.infer<ZodTypeAny>` back, which is `unknown`. Spreading that is a type
+// error, so only the explicit-generic callers ever got typed defaults.
+export const getSchemaDefaults = <T extends ZodObjectLike | z.ZodPipe<any, any>>(
+  schema: T
 ): z.infer<T> => {
   // Handle ZodPipe (replaces ZodEffects in Zod v4)
   if (isZodPipe(schema)) {
     const inner = (schema as any)._def?.in ?? (schema as any).in;
     if (inner && isZodPipe(inner)) {
-      return getSchemaDefaults(inner);
+      return getSchemaDefaults(inner) as z.infer<T>;
     }
     if (inner instanceof z.ZodObject) {
-      return getSchemaDefaults(inner);
+      // The unwrapped schema is not T, so its defaults have to be re-asserted.
+      return getSchemaDefaults(inner) as z.infer<T>;
     }
     return {} as z.infer<T>;
   }

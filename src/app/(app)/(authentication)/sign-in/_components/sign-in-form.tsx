@@ -18,38 +18,46 @@ import {
 import { Input } from "@/components/ui/input";
 import { routes } from "@/config/routes";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
-import { signInSchema } from "@/lib/schemas/auth";
+import { signInActionSchema } from "@/lib/schemas/auth";
 import { getSchemaDefaults } from "@/lib/utils/get-schema-defaults";
+import { getSafeNextUrl } from "@/lib/utils/safe-next-url";
 import { signInWithCredentialsAction } from "@/server/actions/auth";
 
 export const SignInForm = () => {
   const searchParams = useSearchParams();
   const nextUrl = searchParams?.get(SEARCH_PARAM_KEYS.nextUrl) ?? null;
-  const form = useForm<z.infer<typeof signInSchema>>({
-    resolver: zodResolver(signInSchema),
+  // Only a same-origin path is safe to hand to the action; see getSafeNextUrl.
+  const safeNextUrl = getSafeNextUrl(nextUrl);
+  // The action takes redirectTo and redirect, which live on signInActionSchema and
+  // not on signInSchema. Typing the form with the narrower schema meant those two
+  // defaults were excess properties, and `mode` was sitting inside defaultValues
+  // where react-hook-form never reads it, so the form never validated on change.
+  const form = useForm<z.infer<typeof signInActionSchema>>({
+    resolver: zodResolver(signInActionSchema),
     defaultValues: {
-      ...getSchemaDefaults(signInSchema),
-      redirectTo: routes.home,
+      ...getSchemaDefaults(signInActionSchema),
+      // Send the user back where they came from, falling back to home.
+      redirectTo: safeNextUrl ?? routes.home,
       redirect: true,
-      mode: "onChange",
     },
+    mode: "onChange",
   });
 
-  async function onSubmit(values: z.infer<typeof signInSchema>) {
+  async function onSubmit(values: z.infer<typeof signInActionSchema>) {
     try {
-      const formData = new FormData();
-      for (const [key, value] of Object.entries(values)) {
-        if (value !== undefined && value !== null) {
-          formData.append(key, value.toString());
-        }
-      }
+      const result = await signInWithCredentialsAction(values);
 
-      // Redirect back to the page that the user was on before signing in
-      if (nextUrl) {
-        formData.append(SEARCH_PARAM_KEYS.nextUrl, nextUrl);
+      // A rejected sign-in resolves with { ok: false } instead of throwing, so
+      // without this the form reported success on a bad password.
+      if (result && !result.ok) {
+        toast.error("Error", {
+          description:
+            "error" in result && result.error
+              ? String(result.error)
+              : "Invalid email or password. Please try again.",
+        });
+        return;
       }
-
-      await signInWithCredentialsAction(values);
 
       toast.success("Success", {
         description: "Signed in successfully.",

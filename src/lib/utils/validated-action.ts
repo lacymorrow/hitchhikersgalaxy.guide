@@ -12,7 +12,8 @@ export interface ActionState {
 }
 
 const parseFormErrors = (errors: z.ZodError) => {
-  const formErrors = Object.entries(z.flattenError(errors).fieldErrors).reduce(
+  const fieldErrors = z.flattenError(errors).fieldErrors as Record<string, string[] | undefined>;
+  const formErrors = Object.entries(fieldErrors).reduce(
     (acc, [key, value]) => {
       acc[key] = { message: value?.[0] ?? "" };
       return acc;

@@ -121,7 +121,7 @@ export function validateProjectName(projectName: string): {
     if (error instanceof z.ZodError) {
       return {
         isValid: false,
-        error: error.errors[0]?.message ?? "Invalid project name",
+        error: error.issues[0]?.message ?? "Invalid project name",
       };
     }
     return {

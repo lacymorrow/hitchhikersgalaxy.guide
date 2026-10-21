@@ -788,6 +788,8 @@ export const waitlistEntries = createTable("waitlist_entry", {
 	name: varchar("name", { length: 255 }),
 	referralSource: varchar("referral_source", { length: 255 }),
 	isNotified: boolean("is_notified").default(false).notNull(),
+	notifiedAt: timestamp("notified_at", { withTimezone: true }),
+	metadata: text("metadata").default("{}"),
 	createdAt: timestamp("created_at", { withTimezone: true }).defaultNow().notNull(),
 	updatedAt: timestamp("updated_at", { withTimezone: true }).defaultNow().notNull(),
 });

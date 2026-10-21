@@ -26,7 +26,7 @@ export class ValidationService {
       };
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldErrors = Object.entries(error.formErrors.fieldErrors).reduce(
+        const fieldErrors = Object.entries(z.flattenError(error).fieldErrors).reduce(
           (acc, [key, value]) => {
             if (value) {
               acc[key] = Array.isArray(value) ? value.filter(Boolean) : [value];

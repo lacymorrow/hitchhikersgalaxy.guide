@@ -245,6 +245,10 @@ export const guideService = {
 				throw new Error("Normalized search term cannot be empty for creating an entry.");
 			}
 
+			if (!db) {
+				throw new Error("Database is not configured; cannot create a guide entry.");
+			}
+
 			const [newEntry] = await db
 				.insert(guideEntries)
 				.values({

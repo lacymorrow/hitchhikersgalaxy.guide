@@ -29,6 +29,9 @@ async function checkSimilaritySearch() {
 export const guideService = {
 	getSimilarSearches: cache(async (searchTerm: string, limit = 5) => {
 		if (!searchTerm?.trim()) return [];
+		// Without this guard `db?.query` widens the return type to include undefined,
+		// and GuideSearch maps over the result directly.
+		if (!db) return [];
 
 		try {
 			const normalizedTerm = normalizeSlug(searchTerm);
@@ -39,7 +42,7 @@ export const guideService = {
 
 			// Always use basic search during SSR or if similarity search isn't available
 			if (isSSR() || !(await checkSimilaritySearch())) {
-				return db?.query.guideEntries.findMany({
+				return db.query.guideEntries.findMany({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
 						eq(guideEntries.searchTerm, alternativeTerm),
@@ -57,7 +60,7 @@ export const guideService = {
 			}
 
 			// Use full similarity search at runtime
-			return db?.query.guideEntries.findMany({
+			return db.query.guideEntries.findMany({
 				where: and(
 					or(
 						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
@@ -259,6 +262,10 @@ export const guideService = {
 					updatedAt: new Date(),
 				})
 				.returning();
+
+			if (!newEntry) {
+				throw new Error("Insert returned no guide entry row.");
+			}
 
 			return newEntry;
 		} catch (error) {

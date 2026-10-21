@@ -148,11 +148,7 @@ export default function GuidePage() {
 							<ShareButton title="The Hitchhiker's Guide to the Galaxy" />
 						</div>
 						<div className="min-h-[200px]">
-							<Suspense
-								fallback={
-									<SuspenseFallback height="200px" />
-								}
-							>
+							<Suspense fallback={<SuspenseFallback />}>
 								<RecentEntries />
 							</Suspense>
 						</div>

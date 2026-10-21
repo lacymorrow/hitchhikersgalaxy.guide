@@ -1,7 +1,7 @@
 // Actions middleware
 import { auth } from "@/server/auth";
 import type { User } from "next-auth";
-import type { z } from "zod";
+import { z } from "zod";
 
 export interface ActionState {
 	error?: string;
@@ -11,7 +11,7 @@ export interface ActionState {
 }
 
 const parseFormErrors = (errors: z.ZodError) => {
-	const formErrors = Object.entries(errors.formErrors.fieldErrors).reduce(
+	const formErrors = Object.entries(z.flattenError(errors).fieldErrors).reduce(
 		(acc, [key, value]) => {
 			acc[key] = { message: value?.[0] ?? "" };
 			return acc;
@@ -58,7 +58,7 @@ export function validatedActionWithUser<S extends z.ZodType<any, any>, T>(
 
 		const result = schema.safeParse(Object.fromEntries(formData));
 		if (!result.success) {
-			return { error: result?.error?.errors[0]?.message } as T;
+			return { error: result?.error?.issues[0]?.message } as T;
 		}
 
 		return action(result.data, formData, session.user);

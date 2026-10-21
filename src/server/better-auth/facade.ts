@@ -1,13 +1,14 @@
 import { APIError } from "better-auth/api";
-import type { Auth } from "@/server/better-auth/config";
-import type { Session } from "next-auth";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import type { Session } from "next-auth";
 import { BASE_URL } from "@/config/base-url";
 import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { type BetterAuthSessionResult, mapBetterAuthSession } from "@/lib/auth/session-mapping";
 import { logger } from "@/lib/logger";
+import { getSafeNextUrl } from "@/lib/utils/safe-next-url";
+import type { Auth } from "@/server/better-auth/config";
 
 export { type BetterAuthSessionResult, mapBetterAuthSession };
 
@@ -70,7 +71,9 @@ const isCredentialsError = (error: unknown) =>
  */
 export async function betterAuthSignIn(provider?: string, options?: FormData | SignInOptions) {
   const opts = toOptions(options);
-  const redirectTo = opts.redirectTo ?? opts.callbackUrl ?? routes.home;
+  // Last line of defense: this value reaches redirect() and the provider
+  // callbackURL unmodified, and callers include public server actions.
+  const redirectTo = getSafeNextUrl(opts.redirectTo ?? opts.callbackUrl) ?? routes.home;
   const shouldRedirect = opts.redirect !== false;
   const auth = await getBetterAuth();
   const requestHeaders = await headers();
@@ -112,7 +115,8 @@ export async function betterAuthSignIn(provider?: string, options?: FormData | S
  */
 export async function betterAuthSignOut(options?: SignInOptions) {
   const opts = toOptions(options);
-  const redirectTo = opts.redirectTo ?? routes.home;
+  // Same reasoning as betterAuthSignIn: signOutAction forwards caller options.
+  const redirectTo = getSafeNextUrl(opts.redirectTo) ?? routes.home;
   const auth = await getBetterAuth();
   try {
     await auth.api.signOut({ headers: await headers() });

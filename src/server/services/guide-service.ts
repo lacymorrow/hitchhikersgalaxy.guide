@@ -3,6 +3,7 @@ import { isSSR } from "@/lib/utils/runtime";
 import { db } from "@/server/db";
 import { guideEntries } from "@/server/db/schema";
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
 
 // Since we're in a service, we can assume the database is initialized
@@ -13,13 +14,76 @@ import { cache } from "react";
 // runs and the rejection reaches the caller. That is what failed the build:
 // `/popular` prerenders getPopularEntries(), and while the Neon compute quota
 // was out `next build` died on it, which held the next 16.3.8 og-RCE fix off
-// production for a day (LAC-5405). Keep the `await`s.
+// production for a day (LAC-5405). Keep the `await`s. Where a read is wrapped
+// in `unstable_cache` below, the `await` that matters is the one on the cached
+// call itself: it is inside the try, so a rejection from the query it wraps
+// still reaches the catch.
 
 /** Shared by the reads below so the shape stays identical. */
 const UNAVAILABLE = { status: "unavailable" } as const;
 
 /** A read that came back and found nothing. A real miss, not an outage. */
 const FOUND_NOTHING = { status: "ok", data: null } as const;
+
+// The three reads a crawler can reach -- an entry by its slug, and the recent
+// and popular lists -- also cache *across* requests. React `cache` only dedupes
+// within one render, so every hit on an entry URL reached Postgres: roughly two
+// uncached queries a minute, against a Neon endpoint that only suspends after
+// five quiet minutes. The compute therefore never slept, which spends the
+// 100 CU-hour free monthly budget in 16.7 days by arithmetic rather than by bad
+// luck (LAC-5516). Caching the reads is what lets it idle.
+//
+// Only answers are cached. A read that failed and a term with no row are both
+// left out of the cache on purpose; see `EntryMiss`.
+
+/** On every cached read here, so one `revalidateTag("guide-entries")` purges
+ *  the lot. It has to be called from a server action or a route handler --
+ *  `createEntry` runs during the slug page's render, where it would throw. */
+const GUIDE_ENTRIES_TAG = "guide-entries";
+
+/** An entry's text never changes once written, so it can be held for a day. */
+const ENTRY_TTL_S = 60 * 60 * 24;
+
+/** The lists change whenever an entry is created, so they are held for an hour. */
+const LIST_TTL_S = 60 * 60;
+
+// `unstable_cache` stores its value as JSON, so timestamps come back from the
+// cache as ISO strings while the row type still says `Date` -- and callers do
+// call Date methods on them (`formatDistanceToNow(entry.createdAt)`). Revive
+// them on the way out so a cache hit and a fresh read are the same shape.
+// Done in place: the value is either a row this call just read or this call's
+// own copy of the cached JSON, never one shared with another caller.
+const DATE_KEYS = new Set(["createdAt", "updatedAt"]);
+
+function reviveDates<T>(value: T): T {
+	if (Array.isArray(value)) return value.map(reviveDates) as T;
+	if (value === null || typeof value !== "object") return value;
+	for (const [key, nested] of Object.entries(value)) {
+		(value as Record<string, unknown>)[key] =
+			DATE_KEYS.has(key) && typeof nested === "string" ? new Date(nested) : reviveDates(nested);
+	}
+	return value;
+}
+
+/**
+ * Thrown from inside a cached lookup when the term has no row, so that the
+ * miss is never written to the cache: `unstable_cache` only stores what its
+ * callback resolves to, and passes a rejection straight through.
+ *
+ * It has to stay that way. The slug page generates a missing entry *during
+ * render*, where `revalidateTag` cannot run, so a cached "no row" would
+ * outlive the entry written moments later and 404 it for a day. A cached
+ * failed read would be worse still: it would keep serving a false 404 long
+ * after the database came back. Caching misses is the one way this file can
+ * turn a performance fix into an outage.
+ */
+class EntryMiss extends Error {
+	readonly isEntryMiss = true;
+}
+
+/** Structural too, so a duplicated module copy cannot read a miss as a failure. */
+const isEntryMiss = (error: unknown): boolean =>
+	error instanceof EntryMiss || (error as EntryMiss | null)?.isEntryMiss === true;
 
 // Track if similarity search is available
 let hasSimilaritySearch: boolean | null = null;
@@ -109,15 +173,23 @@ export const guideService = {
 	// apart from an empty table instead of flattening both to `[]` (LAC-5520).
 	getRecentEntries: cache(async (limit = 10) => {
 		if (!db) return UNAVAILABLE;
+		// Aliased because the guard above does not narrow an imported binding
+		// inside the callback below, and `db?.` there would widen the row type.
+		const database = db;
 		try {
-			const data = await db.query.guideEntries.findMany({
-				orderBy: [desc(guideEntries.createdAt)],
-				limit,
-				with: {
-					category: true,
-				},
-			});
-			return { status: "ok", data } as const;
+			const rows = await unstable_cache(
+				async () =>
+					database.query.guideEntries.findMany({
+						orderBy: [desc(guideEntries.createdAt)],
+						limit,
+						with: {
+							category: true,
+						},
+					}),
+				["guide-recent", String(limit)],
+				{ revalidate: LIST_TTL_S, tags: [GUIDE_ENTRIES_TAG] },
+			)();
+			return { status: "ok", data: reviveDates(rows) } as const;
 		} catch (error) {
 			console.error("[Guide Service] Error in getRecentEntries:", error);
 			return UNAVAILABLE;
@@ -126,15 +198,21 @@ export const guideService = {
 
 	getPopularEntries: cache(async (limit = 10) => {
 		if (!db) return UNAVAILABLE;
+		const database = db;
 		try {
-			const data = await db.query.guideEntries.findMany({
-				orderBy: [desc(guideEntries.popularity)],
-				limit,
-				with: {
-					category: true,
-				},
-			});
-			return { status: "ok", data } as const;
+			const rows = await unstable_cache(
+				async () =>
+					database.query.guideEntries.findMany({
+						orderBy: [desc(guideEntries.popularity)],
+						limit,
+						with: {
+							category: true,
+						},
+					}),
+				["guide-popular", String(limit)],
+				{ revalidate: LIST_TTL_S, tags: [GUIDE_ENTRIES_TAG] },
+			)();
+			return { status: "ok", data: reviveDates(rows) } as const;
 		} catch (error) {
 			console.error("[Guide Service] Error in getPopularEntries:", error);
 			return UNAVAILABLE;
@@ -169,28 +247,49 @@ export const guideService = {
 		if (!db) {
 			return UNAVAILABLE;
 		}
+		const database = db;
 
 		try {
 			// Create an alternative version of the term (with spaces instead of hyphens)
 			const alternativeTerm = normalizedTerm.replace(/-/g, " ");
 
-			// If exactMatch is true, only look for exact matches
+			// If exactMatch is true, only look for exact matches. This is the
+			// slug page's lookup, so it is the one crawlers hit and the one
+			// worth caching. An answer is held for a day; a miss is not held
+			// at all, which is what `EntryMiss` is for.
 			if (exactMatch) {
-				const entry = await db.query.guideEntries.findFirst({
-					where: or(
-						eq(guideEntries.searchTerm, normalizedTerm),
-						eq(guideEntries.searchTerm, alternativeTerm)
-					),
-					with: {
-						category: true,
-						sourceCrossReferences: {
-							with: {
-								targetEntry: true,
-							},
+				try {
+					const entry = await unstable_cache(
+						async () => {
+							const found = await database.query.guideEntries.findFirst({
+								where: or(
+									eq(guideEntries.searchTerm, normalizedTerm),
+									eq(guideEntries.searchTerm, alternativeTerm)
+								),
+								with: {
+									category: true,
+									sourceCrossReferences: {
+										with: {
+											targetEntry: true,
+										},
+									},
+								},
+							});
+							if (!found) throw new EntryMiss();
+							return found;
 						},
-					},
-				});
-				return { status: "ok", data: entry ?? null } as const;
+						["guide-entry-exact", normalizedTerm],
+						{ revalidate: ENTRY_TTL_S, tags: [GUIDE_ENTRIES_TAG] },
+					)();
+					return { status: "ok", data: reviveDates(entry) } as const;
+				} catch (error) {
+					// A miss is an answer: report it, and leave the cache empty
+					// so the entry generated next can be read back immediately.
+					if (isEntryMiss(error)) return FOUND_NOTHING;
+					// Anything else is the query itself failing. Rethrow into
+					// the catch below, which reports the outage.
+					throw error;
+				}
 			}
 
 			// Always use basic search during SSR or if similarity search isn't available

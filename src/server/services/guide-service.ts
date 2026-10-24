@@ -3,7 +3,36 @@ import { isSSR } from "@/lib/utils/runtime";
 import { db } from "@/server/db";
 import { guideEntries } from "@/server/db/schema";
 import { and, desc, eq, ilike, or, sql } from "drizzle-orm";
+import { unstable_cache } from "next/cache";
 import { cache } from "react";
+
+/**
+ * Cross-request cache for the public read paths. React `cache` only dedupes
+ * inside one request, so every crawler hit on a guide page used to reach
+ * Postgres, and a steady trickle of them kept the Neon compute from ever
+ * scaling to zero (110 CU-h by Oct 21, over the free cap, site builds failing).
+ */
+export const GUIDE_ENTRIES_TAG = "guide-entries";
+const ENTRY_TTL_S = 60 * 60 * 24;
+const LIST_TTL_S = 60 * 60;
+
+// unstable_cache round-trips through JSON, so Dates come back as strings.
+const DATE_KEYS = new Set(["createdAt", "updatedAt"]);
+function reviveDates<T>(value: T): T {
+	if (Array.isArray(value)) return value.map(reviveDates) as T;
+	if (value && typeof value === "object") {
+		for (const [key, v] of Object.entries(value)) {
+			(value as Record<string, unknown>)[key] =
+				DATE_KEYS.has(key) && typeof v === "string" ? new Date(v) : reviveDates(v);
+		}
+	}
+	return value;
+}
+
+// Thrown inside a cached lookup so a miss is never stored: the slug page
+// generates missing entries during render, where revalidateTag cannot run,
+// so a cached "not found" would outlive the entry it was about.
+class EntryMiss extends Error {}
 
 // Since we're in a service, we can assume the database is initialized
 // The connection is handled at the app level
@@ -94,13 +123,19 @@ export const guideService = {
 
 	getRecentEntries: cache(async (limit = 10) => {
 		try {
-			return db?.query.guideEntries.findMany({
-				orderBy: [desc(guideEntries.createdAt)],
-				limit,
-				with: {
-					category: true,
-				},
-			});
+			const rows = await unstable_cache(
+				async () =>
+					db?.query.guideEntries.findMany({
+						orderBy: [desc(guideEntries.createdAt)],
+						limit,
+						with: {
+							category: true,
+						},
+					}),
+				["guide-recent", String(limit)],
+				{ revalidate: LIST_TTL_S, tags: [GUIDE_ENTRIES_TAG] },
+			)();
+			return reviveDates(rows);
 		} catch (error) {
 			console.error("[Guide Service] Error in getRecentEntries:", error);
 			return [];
@@ -109,13 +144,19 @@ export const guideService = {
 
 	getPopularEntries: cache(async (limit = 10) => {
 		try {
-			return db?.query.guideEntries.findMany({
-				orderBy: [desc(guideEntries.popularity)],
-				limit,
-				with: {
-					category: true,
-				},
-			});
+			const rows = await unstable_cache(
+				async () =>
+					db?.query.guideEntries.findMany({
+						orderBy: [desc(guideEntries.popularity)],
+						limit,
+						with: {
+							category: true,
+						},
+					}),
+				["guide-popular", String(limit)],
+				{ revalidate: LIST_TTL_S, tags: [GUIDE_ENTRIES_TAG] },
+			)();
+			return reviveDates(rows);
 		} catch (error) {
 			console.error("[Guide Service] Error in getPopularEntries:", error);
 			return [];
@@ -136,22 +177,37 @@ export const guideService = {
 			// Create an alternative version of the term (with spaces instead of hyphens)
 			const alternativeTerm = normalizedTerm.replace(/-/g, " ");
 
-			// If exactMatch is true, only look for exact matches
+			// If exactMatch is true, only look for exact matches. This is the slug
+			// page's lookup, so hits are cached across requests; misses are not.
 			if (exactMatch) {
-				return db?.query.guideEntries.findFirst({
-					where: or(
-						eq(guideEntries.searchTerm, normalizedTerm),
-						eq(guideEntries.searchTerm, alternativeTerm)
-					),
-					with: {
-						category: true,
-						sourceCrossReferences: {
-							with: {
-								targetEntry: true,
-							},
+				try {
+					const entry = await unstable_cache(
+						async () => {
+							const found = await db?.query.guideEntries.findFirst({
+								where: or(
+									eq(guideEntries.searchTerm, normalizedTerm),
+									eq(guideEntries.searchTerm, alternativeTerm)
+								),
+								with: {
+									category: true,
+									sourceCrossReferences: {
+										with: {
+											targetEntry: true,
+										},
+									},
+								},
+							});
+							if (!found) throw new EntryMiss();
+							return found;
 						},
-					},
-				});
+						["guide-entry-exact", normalizedTerm],
+						{ revalidate: ENTRY_TTL_S, tags: [GUIDE_ENTRIES_TAG] },
+					)();
+					return reviveDates(entry);
+				} catch (error) {
+					if (error instanceof EntryMiss) return undefined;
+					throw error;
+				}
 			}
 
 			// Always use basic search during SSR or if similarity search isn't available

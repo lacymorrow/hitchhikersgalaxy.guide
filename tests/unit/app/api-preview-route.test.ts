@@ -249,6 +249,44 @@ describe("/api/flags route", () => {
       expect(new URL(res.url).pathname).toBe("/");
     });
 
+    // A prefix-only check ("/" and not "//") passed this through, and the URL
+    // parser reads the backslash as a separator, so the 307 Location landed on
+    // the attacker's host. This was live on prod, unauthenticated.
+    it("redirects to / when redirect param uses a backslash to reach a host", async () => {
+      const req = await makeRequest(
+        "http://localhost:3000/api/flags?feature_flag_database=1&redirect=/\\example.com"
+      );
+      const res = (await GET(req)) as any;
+      expect(new URL(res.url).host).toBe("localhost:3000");
+      expect(new URL(res.url).pathname).toBe("/");
+    });
+
+    it("redirects to / when the backslash vector is percent-encoded", async () => {
+      const req = await makeRequest(
+        "http://localhost:3000/api/flags?feature_flag_database=1&redirect=%2F%5Cexample.com"
+      );
+      const res = (await GET(req)) as any;
+      expect(new URL(res.url).host).toBe("localhost:3000");
+      expect(new URL(res.url).pathname).toBe("/");
+    });
+
+    it("keeps the backslash vector off-host on the clear path too", async () => {
+      const req = await makeRequest(
+        "http://localhost:3000/api/flags?clear=1&redirect=/\\example.com"
+      );
+      const res = (await GET(req)) as any;
+      expect(new URL(res.url).host).toBe("localhost:3000");
+      expect(deletedCookies).toContain("_shipkit_preview");
+    });
+
+    it("pins the host for an external redirect, not just the path", async () => {
+      const req = await makeRequest(
+        "http://localhost:3000/api/flags?feature_flag_database=1&redirect=https://evil.com"
+      );
+      const res = (await GET(req)) as any;
+      expect(new URL(res.url).host).toBe("localhost:3000");
+    });
+
     it("redirect works with clear param", async () => {
       const req = await makeRequest("http://localhost:3000/api/flags?clear=1&redirect=/settings");
       const res = (await GET(req)) as any;

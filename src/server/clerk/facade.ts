@@ -5,6 +5,7 @@ import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { clerkConfig } from "@/lib/auth/clerk-config";
 import { mapClerkSession } from "@/lib/auth/session-mapping";
 import { logger } from "@/lib/logger";
+import { getSafeNextUrl } from "@/lib/utils/safe-next-url";
 
 /**
  * Clerk behind the `@/server/auth` facade.
@@ -50,18 +51,18 @@ interface SignInOptions {
 const toOptions = (options?: FormData | SignInOptions): SignInOptions =>
   options instanceof FormData ? Object.fromEntries(options) : (options ?? {});
 
-/** Only same-origin paths may be used as a return URL, so `next` cannot be an open redirect. */
-const isSafePath = (value: unknown): value is string =>
-  typeof value === "string" && value.startsWith("/") && !value.startsWith("//");
-
 /**
  * The in-app sign-in (or sign-up) route carrying `next`. `src/proxy.ts` turns
  * it into Clerk's hosted page with `returnBackUrl` set to the same path.
  */
 export function clerkSignInUrl(nextUrl?: string, page: "signIn" | "signUp" = "signIn"): string {
   const base = page === "signUp" ? clerkConfig.signUpUrl : clerkConfig.signInUrl;
-  if (!isSafePath(nextUrl)) return base;
-  const params = new URLSearchParams({ [SEARCH_PARAM_KEYS.nextUrl]: nextUrl });
+  // src/proxy.ts resolves this param against the request origin, so an
+  // off-origin value here would become a redirect there. A prefix check is not
+  // enough: the URL parser reads "/\evil.com" as a host.
+  const safeNextUrl = getSafeNextUrl(nextUrl);
+  if (!safeNextUrl) return base;
+  const params = new URLSearchParams({ [SEARCH_PARAM_KEYS.nextUrl]: safeNextUrl });
   return `${base}?${params.toString()}`;
 }
 
@@ -85,7 +86,8 @@ export async function clerkSignIn(_provider?: string, options?: FormData | SignI
  */
 export async function clerkSignOut(options?: FormData | SignInOptions) {
   const opts = toOptions(options);
-  const redirectTo = isSafePath(opts.redirectTo) ? opts.redirectTo : clerkConfig.afterSignOutUrl;
+  // Reaches redirect() unmodified, and signOutAction forwards caller options.
+  const redirectTo = getSafeNextUrl(opts.redirectTo) ?? clerkConfig.afterSignOutUrl;
   try {
     const { sessionId } = await clerkAuth();
     if (sessionId) {

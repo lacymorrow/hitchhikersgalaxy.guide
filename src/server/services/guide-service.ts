@@ -8,6 +8,13 @@ import { cache } from "react";
 // Since we're in a service, we can assume the database is initialized
 // The connection is handled at the app level
 
+// Every read below awaits its query *inside* its own try block. Returning the
+// promise instead lets it settle after the try has exited, so the catch never
+// runs and the rejection reaches the caller. That is what failed the build:
+// `/popular` prerenders getPopularEntries(), and while the Neon compute quota
+// was out `next build` died on it, which held the next 16.3.8 og-RCE fix off
+// production for a day (LAC-5405). Keep the `await`s.
+
 // Track if similarity search is available
 let hasSimilaritySearch: boolean | null = null;
 
@@ -42,7 +49,7 @@ export const guideService = {
 
 			// Always use basic search during SSR or if similarity search isn't available
 			if (isSSR() || !(await checkSimilaritySearch())) {
-				return db.query.guideEntries.findMany({
+				return await db.query.guideEntries.findMany({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
 						eq(guideEntries.searchTerm, alternativeTerm),
@@ -60,7 +67,7 @@ export const guideService = {
 			}
 
 			// Use full similarity search at runtime
-			return db.query.guideEntries.findMany({
+			return await db.query.guideEntries.findMany({
 				where: and(
 					or(
 						ilike(guideEntries.searchTerm, `%${normalizedTerm}%`),
@@ -94,7 +101,7 @@ export const guideService = {
 
 	getRecentEntries: cache(async (limit = 10) => {
 		try {
-			return db?.query.guideEntries.findMany({
+			return await db?.query.guideEntries.findMany({
 				orderBy: [desc(guideEntries.createdAt)],
 				limit,
 				with: {
@@ -109,7 +116,7 @@ export const guideService = {
 
 	getPopularEntries: cache(async (limit = 10) => {
 		try {
-			return db?.query.guideEntries.findMany({
+			return await db?.query.guideEntries.findMany({
 				orderBy: [desc(guideEntries.popularity)],
 				limit,
 				with: {
@@ -138,7 +145,7 @@ export const guideService = {
 
 			// If exactMatch is true, only look for exact matches
 			if (exactMatch) {
-				return db?.query.guideEntries.findFirst({
+				return await db?.query.guideEntries.findFirst({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
 						eq(guideEntries.searchTerm, alternativeTerm)
@@ -156,7 +163,7 @@ export const guideService = {
 
 			// Always use basic search during SSR or if similarity search isn't available
 			if (isSSR() || !(await checkSimilaritySearch())) {
-				return db?.query.guideEntries.findFirst({
+				return await db?.query.guideEntries.findFirst({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
 						eq(guideEntries.searchTerm, alternativeTerm),

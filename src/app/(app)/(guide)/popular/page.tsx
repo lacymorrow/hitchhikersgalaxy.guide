@@ -12,6 +12,11 @@ export const metadata: Metadata = {
 	},
 };
 
+// Popularity changes as people search, and a build that runs while the
+// database is unreachable prerenders the empty state. Revalidate hourly, the
+// same cadence as /browse, so neither one is frozen into the deployment.
+export const revalidate = 3600;
+
 export default async function PopularEntriesPage() {
 	const entries = await guideService.getPopularEntries(20); // Get top 20 entries
 

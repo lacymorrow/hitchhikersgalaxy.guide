@@ -10,12 +10,12 @@
  * blocked the next 16.3.8 security deploy (GHSA-vcvr-r3jv-pc5j) from reaching
  * production.
  *
- * Each read is expected to resolve to its documented empty value so pages can
- * render their empty state. Resolving, not rejecting, is the whole point: do
- * not relax these to `.rejects`.
+ * Each read is expected to resolve to its documented failure value so pages
+ * can render a state instead of crashing the prerender. Resolving, not
+ * rejecting, is the whole point: do not relax these to `.rejects`.
  */
 
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   findMany: vi.fn(),
@@ -43,6 +43,15 @@ const quotaError = () => {
   return error;
 };
 
+/** Importing the service pulls Drizzle and the schema through the transform,
+ *  which on a cold cache costs more than the default per-test timeout. Doing
+ *  it once here keeps whichever test runs first from flaking on that cost. */
+let guideService: typeof import("@/server/services/guide-service").guideService;
+
+beforeAll(async () => {
+  ({ guideService } = await import("@/server/services/guide-service"));
+}, 60_000);
+
 describe("guideService under a database outage", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -53,28 +62,25 @@ describe("guideService under a database outage", () => {
     mocks.execute.mockRejectedValue(quotaError());
   });
 
-  it("resolves getPopularEntries to an empty list rather than rejecting", async () => {
-    const { guideService } = await import("@/server/services/guide-service");
-    await expect(guideService.getPopularEntries(20)).resolves.toEqual([]);
+  // These two report `unavailable` rather than `[]` so the pages can tell an
+  // outage from an empty table (LAC-5520). Resolving is still the contract.
+  it("resolves getPopularEntries rather than rejecting", async () => {
+    await expect(guideService.getPopularEntries(20)).resolves.toEqual({ status: "unavailable" });
   });
 
-  it("resolves getRecentEntries to an empty list rather than rejecting", async () => {
-    const { guideService } = await import("@/server/services/guide-service");
-    await expect(guideService.getRecentEntries(20)).resolves.toEqual([]);
+  it("resolves getRecentEntries rather than rejecting", async () => {
+    await expect(guideService.getRecentEntries(20)).resolves.toEqual({ status: "unavailable" });
   });
 
   it("resolves getSimilarSearches to an empty list rather than rejecting", async () => {
-    const { guideService } = await import("@/server/services/guide-service");
     await expect(guideService.getSimilarSearches("vogon poetry", 5)).resolves.toEqual([]);
   });
 
   it("resolves findExistingEntry to null rather than rejecting", async () => {
-    const { guideService } = await import("@/server/services/guide-service");
     await expect(guideService.findExistingEntry("vogon poetry")).resolves.toBeNull();
   });
 
   it("resolves findExistingEntry to null on the exact-match path", async () => {
-    const { guideService } = await import("@/server/services/guide-service");
     await expect(guideService.findExistingEntry("towel", true)).resolves.toBeNull();
   });
 });

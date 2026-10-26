@@ -1,6 +1,7 @@
 import { Link } from "@/components/primitives/link-with-transition";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { guideService } from "@/server/services/guide-service";
+import { GuideEmpty, GuideUnavailable } from "../_components/guide-states";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
 
@@ -18,7 +19,9 @@ export const metadata: Metadata = {
 export const revalidate = 3600;
 
 export default async function PopularEntriesPage() {
-	const entries = await guideService.getPopularEntries(20); // Get top 20 entries
+	const popular = await guideService.getPopularEntries(20); // Get top 20 entries
+	const entries = popular.status === "ok" ? popular.data : [];
+	const unavailable = popular.status === "unavailable";
 
 	return (
 		<div className="container relative min-h-screen max-w-6xl py-6 lg:py-10">
@@ -34,16 +37,20 @@ export default async function PopularEntriesPage() {
 								Popular Entries
 							</h1>
 						</div>
-						<p className="max-w-[42rem] font-mono leading-normal text-blue-400/80 sm:text-xl sm:leading-8">
-							The most frequently consulted entries in the Guide, as determined by
-							our sophisticated popularity algorithm (we count how many times
-							they're viewed).
-						</p>
+						{/* The subhead promises entries the page cannot reach, so it reads as a
+						    contradiction sitting above the outage state. */}
+						{!unavailable && (
+							<p className="max-w-[42rem] font-mono leading-normal text-blue-400/80 sm:text-xl sm:leading-8">
+								The most frequently consulted entries in the Guide, as determined by
+								our sophisticated popularity algorithm (we count how many times
+								they're viewed).
+							</p>
+						)}
 					</div>
 
 					{/* Popular entries grid */}
 					<div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-						{entries?.map((entry) => (
+						{entries.map((entry) => (
 							<Link
 								key={entry.id}
 								href={`/${encodeURIComponent(entry.searchTerm)}`}
@@ -67,10 +74,9 @@ export default async function PopularEntriesPage() {
 								</Card>
 							</Link>
 						))}
-						{(entries?.length === 0 || !entries) && (
-							<div className="col-span-full text-center text-muted-foreground">
-								No entries yet. Start exploring to create some!
-							</div>
+						{unavailable && <GuideUnavailable className="col-span-full py-10 text-blue-400" />}
+						{!unavailable && entries.length === 0 && (
+							<GuideEmpty className="col-span-full text-blue-400" />
 						)}
 					</div>
 				</div>

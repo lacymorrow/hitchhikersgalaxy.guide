@@ -17,11 +17,12 @@ import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   findMany: vi.fn(),
+  findFirst: vi.fn(),
   isSSR: vi.fn(),
 }));
 
 vi.mock("@/server/db", () => ({
-  db: { query: { guideEntries: { findMany: mocks.findMany } } },
+  db: { query: { guideEntries: { findMany: mocks.findMany, findFirst: mocks.findFirst } } },
 }));
 
 vi.mock("@/lib/utils/runtime", () => ({ isSSR: mocks.isSSR }));
@@ -79,6 +80,59 @@ describe("guideService with no database configured", () => {
     const fresh = (await import("@/server/services/guide-service")).guideService;
     await expect(fresh.getPopularEntries(20)).resolves.toEqual({ status: "unavailable" });
     await expect(fresh.getRecentEntries(20)).resolves.toEqual({ status: "unavailable" });
+    vi.doUnmock("@/server/db");
+    vi.resetModules();
+  }, 60_000);
+});
+
+// The lookup behind every entry URL. Same distinction, and the expensive one:
+// reading `unavailable` as a miss sent the slug page to OpenAI (LAC-5648).
+describe("guideService.findExistingEntry", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+    mocks.isSSR.mockReturnValue(true);
+  });
+
+  it("reports a term with no row as ok with no entry", async () => {
+    mocks.findFirst.mockResolvedValue(undefined);
+    await expect(guideService.findExistingEntry("towel", true)).resolves.toEqual({
+      status: "ok",
+      data: null,
+    });
+  });
+
+  it("reports a stored row as ok with the entry", async () => {
+    mocks.findFirst.mockResolvedValue(entry);
+    await expect(guideService.findExistingEntry("towel", true)).resolves.toEqual({
+      status: "ok",
+      data: entry,
+    });
+  });
+
+  it("reports a failed query as unavailable, not as a miss", async () => {
+    mocks.findFirst.mockRejectedValue(quotaError());
+    await expect(guideService.findExistingEntry("towel", true)).resolves.toEqual({
+      status: "unavailable",
+    });
+  });
+
+  it("reports an empty term as ok with no entry, since no query was needed", async () => {
+    await expect(guideService.findExistingEntry("   ", true)).resolves.toEqual({
+      status: "ok",
+      data: null,
+    });
+    expect(mocks.findFirst).not.toHaveBeenCalled();
+  });
+});
+
+describe("guideService.findExistingEntry with no database configured", () => {
+  it("reports unavailable rather than a miss", async () => {
+    vi.resetModules();
+    vi.doMock("@/server/db", () => ({ db: undefined }));
+    const fresh = (await import("@/server/services/guide-service")).guideService;
+    await expect(fresh.findExistingEntry("towel", true)).resolves.toEqual({
+      status: "unavailable",
+    });
     vi.doUnmock("@/server/db");
     vi.resetModules();
   }, 60_000);

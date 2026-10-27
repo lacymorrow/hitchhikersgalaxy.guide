@@ -85,7 +85,7 @@ export const GuideSearch = ({ results: initialResults }: GuideSearchProps) => {
 		try {
 			setLoading(true);
 			const result = await searchGuide(searchTerm);
-			if (result.success && result.data) {
+			if (result.success) {
 				setSelectedEntry(result.data);
 				setError(null);
 				router.push(`/${encodeURIComponent(result.data.searchTerm)}`);

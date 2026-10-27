@@ -114,13 +114,14 @@ async function GuideEntry({ slug }: { slug: string }) {
 	// Use searchGuide which finds or generates the entry
 	const searchResult = await searchGuide(slug, true); // true for exact match on the slug
 
-	if (!searchResult.success || !searchResult.data) {
-		// Log the error if generation/search failed for a reason other than not found
-		if (searchResult.error) {
-			console.error(
-				`[GuideEntry] Failed to find or generate entry for slug "${slug}": ${searchResult.error}`,
-			);
-		}
+	// `searchResult.status` separates a term that is not in the Guide from a
+	// Guide that cannot answer (LAC-5648). Both still 404 here; mapping
+	// `unavailable` to a retryable 5xx is LAC-5888, and it has to happen
+	// above the Suspense boundary below, before the shell streams a 200.
+	if (!searchResult.success) {
+		console.error(
+			`[GuideEntry] No entry for slug "${slug}" (${searchResult.status}): ${searchResult.error}`,
+		);
 		notFound(); // Or, display a more specific error page
 	}
 

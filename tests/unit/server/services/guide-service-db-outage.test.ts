@@ -76,11 +76,18 @@ describe("guideService under a database outage", () => {
     await expect(guideService.getSimilarSearches("vogon poetry", 5)).resolves.toEqual([]);
   });
 
-  it("resolves findExistingEntry to null rather than rejecting", async () => {
-    await expect(guideService.findExistingEntry("vogon poetry")).resolves.toBeNull();
+  // Also `unavailable` rather than a miss since LAC-5648: a `null` here sent
+  // the slug page down the generation path, which paid OpenAI for an entry it
+  // had merely failed to read. Resolving is still the contract.
+  it("resolves findExistingEntry to unavailable rather than rejecting", async () => {
+    await expect(guideService.findExistingEntry("vogon poetry")).resolves.toEqual({
+      status: "unavailable",
+    });
   });
 
-  it("resolves findExistingEntry to null on the exact-match path", async () => {
-    await expect(guideService.findExistingEntry("towel", true)).resolves.toBeNull();
+  it("resolves findExistingEntry to unavailable on the exact-match path", async () => {
+    await expect(guideService.findExistingEntry("towel", true)).resolves.toEqual({
+      status: "unavailable",
+    });
   });
 });

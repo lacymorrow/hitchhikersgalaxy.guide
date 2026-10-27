@@ -19,3 +19,13 @@ export type GuideRead<T> =
  *  only decorate a page with entries and have no state of their own to show. */
 export const guideReadOr = <T>(result: GuideRead<T>, fallback: T): T =>
   result.status === "ok" ? result.data : fallback;
+
+/**
+ * Why a find-or-generate search came back without an entry.
+ *
+ * The same distinction as `GuideRead`, one layer up: `not_found` means the
+ * term was refused or is empty, and `unavailable` means the Guide could not
+ * answer. The second must not reach a visitor or a crawler as a 404 -- see
+ * the status table in `src/server/actions/guide-search.ts`.
+ */
+export type GuideSearchFailure = "not_found" | "unavailable";

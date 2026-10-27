@@ -32,9 +32,12 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: "Invalid token" }, { status: 401 });
     }
   } else if (process.env.NODE_ENV === "production") {
-    console.warn(
-      "[preview-flags] PREVIEW_SECRET is not set — endpoint is unauthenticated in production"
-    );
+    // Deployed with no secret: there is no way to tell a developer from a
+    // visitor, so the endpoint stays closed rather than letting anyone flip
+    // flags for their own session. Covers Vercel preview builds too, which run
+    // with NODE_ENV=production. Local dev keeps open access.
+    console.warn("[preview-flags] PREVIEW_SECRET is not set — endpoint disabled");
+    return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   if (parseTruthy(searchParams.get("clear") ?? "") === true) {

@@ -4,14 +4,13 @@ import { guideService } from "@/server/services/guide-service";
 import { GuideEmpty, GuideUnavailable } from "../_components/guide-states";
 import { StarFilledIcon } from "@radix-ui/react-icons";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/config/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+	path: "/popular",
 	title: "Popular Entries",
 	description: "Explore the most popular entries in the Hitchhiker's Guide to the Galaxy. Discover the best-loved topics, from Vogons to the Answer to Life, the Universe, and Everything.",
-	alternates: {
-		canonical: "/popular",
-	},
-};
+});
 
 // Popularity changes as people search, and a build that runs while the
 // database is unreachable prerenders the empty state. Revalidate hourly, the

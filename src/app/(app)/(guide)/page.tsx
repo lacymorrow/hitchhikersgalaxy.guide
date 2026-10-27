@@ -9,17 +9,16 @@ import { BookOpen, Info, MapIcon } from "lucide-react";
 import { Suspense } from "react";
 import { GuideSearchInlineServer } from "./_components/guide-search-inline-server";
 import { RecentEntries } from "./_components/recent-entries";
+import { pageMetadata } from "@/config/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+	path: "/",
 	// Absolute: a plain string here gets the layout's "| The Hitchhiker's Guide"
 	// template appended, duplicating the brand in the homepage title.
 	title: { absolute: "The Hitchhiker's Guide to the Galaxy Guide" },
 	description:
 		"Your indispensable companion through the vast, bewildering, and often absurd universe. Search the Guide for travel advice and fun facts. Don't Panic!",
-	alternates: {
-		canonical: "/",
-	},
-};
+});
 
 export const dynamic = 'force-dynamic';
 

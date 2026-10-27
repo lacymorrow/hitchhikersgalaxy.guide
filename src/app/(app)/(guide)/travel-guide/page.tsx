@@ -2,14 +2,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { HeartFilledIcon } from "@radix-ui/react-icons";
 import { AlertTriangle, MapIcon, Rocket } from "lucide-react";
 import type { Metadata } from "next";
+import { pageMetadata } from "@/config/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+	path: "/travel-guide",
 	title: "Travel Guide",
 	description: "Your essential galactic travel guide. Tips on navigating the universe, avoiding Vogon poetry, and always knowing where your towel is.",
-	alternates: {
-		canonical: "/travel-guide",
-	},
-};
+});
 
 export default function TravelGuidePage() {
 	return (

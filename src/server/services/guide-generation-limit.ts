@@ -66,8 +66,22 @@ async function allowPerIp(ip: string): Promise<boolean> {
 	return allowInMemory(ip);
 }
 
+/**
+ * Whether the hourly cap leaves room for another entry.
+ *
+ * Fails closed. A cap that cannot be read is a cap that is not enforced, and
+ * the failure that blinds it is the same failure that sends every entry URL
+ * down the generation path: an unreachable database. Returning `true` here
+ * meant an outage turned the OpenAI spend limiter off at the exact moment it
+ * had the most to stop, with a crawler sweep multiplying the bill by the
+ * number of entries (LAC-5648). Refusing to generate while blind costs a
+ * handful of new terms during an outage; allowing it costs money.
+ */
 async function allowGlobal(): Promise<boolean> {
-	if (!db) return true;
+	if (!db) {
+		console.warn("[guide-generation-limit] no database configured; refusing creation");
+		return false;
+	}
 	try {
 		const since = new Date(Date.now() - 60 * 60 * 1000);
 		const [row] = await db
@@ -76,8 +90,8 @@ async function allowGlobal(): Promise<boolean> {
 			.where(gte(guideEntries.createdAt, since));
 		return Number(row?.count ?? 0) < GENERATION_LIMITS.globalPerHour;
 	} catch (error) {
-		console.error("[guide-generation-limit] global count failed:", error);
-		return true;
+		console.error("[guide-generation-limit] global count failed; refusing creation:", error);
+		return false;
 	}
 }
 

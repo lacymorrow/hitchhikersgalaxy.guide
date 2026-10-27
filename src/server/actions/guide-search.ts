@@ -1,6 +1,7 @@
 "use server";
 
 import { isBlockedSearchTerm } from "@/lib/guide-blocklist";
+import type { GuideSearchFailure } from "@/lib/guide-read";
 import { openai } from "@/lib/open-ai";
 import { normalizeSlug } from "@/lib/utils";
 import { checkGuideTerm } from "@/lib/guide-gate";
@@ -83,121 +84,118 @@ Keep the total length under 400 words. Make it entertaining and informative, wit
 	return JSON.parse(response);
 };
 
+/**
+ * Everything below the happy path is one of two answers, and the slug page
+ * owes visitors and Googlebot a different HTTP status for each.
+ *
+ * `not_found` is a judgement about the term: empty after normalization, or
+ * refused by the gate. Nothing was attempted, a retry changes nothing, 404 is
+ * the truth.
+ *
+ * `unavailable` is a judgement about the Guide: the lookup, the generation or
+ * the write did not come back. It is no evidence that the term has no entry,
+ * so it has to end in a retryable 5xx. Google drops a 404 and retries a 503,
+ * and flattening these two into one `{ success: false }` is how an unreachable
+ * database told it that ~309 indexed entries had stopped existing (LAC-5648).
+ */
+type GuideSearchMiss = {
+	readonly success: false;
+	readonly status: GuideSearchFailure;
+	readonly error: string;
+};
+
+const notInTheGuide = (error: string): GuideSearchMiss => ({
+	success: false,
+	status: "not_found",
+	error,
+});
+
+const guideUnavailable = (error: string): GuideSearchMiss => ({
+	success: false,
+	status: "unavailable",
+	error,
+});
+
+/** Same voice as the `GuideUnavailable` state, which says the same thing. */
+const RECORDS_UNREACHABLE =
+	"The Guide can't reach its records right now. The entries are all still there.";
+
 export const searchGuide = async (searchTerm: string, exactMatch = false) => {
-	console.log("[searchGuide] Original searchTerm:", searchTerm, "exactMatch:", exactMatch);
 	const normalizedSearchTerm = normalizeSlug(searchTerm);
-	console.log("[searchGuide] Normalized searchTerm for processing:", normalizedSearchTerm);
 
 	if (!normalizedSearchTerm) {
-		console.log("[searchGuide] Normalized searchTerm is empty, returning error.");
-		return {
-			success: false,
-			error: "Search term is required after normalization",
-		};
+		return notInTheGuide("Search term is required after normalization");
 	}
 
 	// Block vulnerability probes and spam patterns
 	if (isBlockedSearchTerm(searchTerm) || isBlockedSearchTerm(normalizedSearchTerm)) {
 		console.log("[searchGuide] Blocked spam/vulnerability probe:", searchTerm);
-		return {
-			success: false,
-			error: "This search term is not permitted in the Guide.",
-		};
+		return notInTheGuide("This search term is not permitted in the Guide.");
 	}
 
-	// First, try to find an existing entry using the normalized term
-	try {
-		console.log(
-			"[searchGuide] Attempting to find existing entry with normalized term:",
-			normalizedSearchTerm
-		);
-		const existingEntry = await guideService.findExistingEntry(normalizedSearchTerm, exactMatch);
-		if (existingEntry) {
-			console.log("[searchGuide] Found existing entry:", existingEntry);
-			return {
-				success: true,
-				data: { ...existingEntry, searchTerm: normalizedSearchTerm },
-			};
-		}
-		console.log("[searchGuide] No existing entry found for normalized term:", normalizedSearchTerm);
-	} catch (error) {
-		console.error("[Guide Search] Database search error:", error);
-		// Don't return error here, try to create a new entry instead
-		// This prevents 403 errors when database search fails but creation might work
+	// First, try to find an existing entry using the normalized term.
+	// A failed lookup used to fall through to generation, which is how an
+	// outage spent an OpenAI call per request on entries that were already
+	// written and then discarded the result against the same dead database.
+	const existing = await guideService.findExistingEntry(normalizedSearchTerm, exactMatch);
+	if (existing.status === "unavailable") {
+		console.error("[searchGuide] Lookup unavailable, not generating:", normalizedSearchTerm);
+		return guideUnavailable(RECORDS_UNREACHABLE);
+	}
+	if (existing.data) {
+		return {
+			success: true,
+			status: "ok",
+			data: { ...existing.data, searchTerm: normalizedSearchTerm },
+		} as const;
 	}
 
 	// Nothing stored yet. Before spending an OpenAI call and writing a row,
 	// the term has to pass the gate (probes, payloads, test names, spam)
-	// and the creation limits. Failing either is a plain miss: the slug page
-	// 404s, nothing is written.
+	// and the creation limits. Failing the gate is a plain miss: the slug
+	// page 404s, nothing is written. Failing a limit is not -- the caps are
+	// hourly and per-IP minutes, so the term may well exist on a retry.
 	const gate = checkGuideTerm(searchTerm);
 	if (!gate.ok) {
 		console.log("[searchGuide] Gate rejected new term:", normalizedSearchTerm, gate.reason);
-		return {
-			success: false,
-			error: "This search term is not permitted in the Guide.",
-		};
+		return notInTheGuide("This search term is not permitted in the Guide.");
 	}
 	if (!(await allowGuideCreation())) {
-		return {
-			success: false,
-			error: "Too many new entries right now. Please try again in a few minutes.",
-		};
+		return guideUnavailable("Too many new entries right now. Please try again in a few minutes.");
+	}
+
+	if (!openai) {
+		console.error("[Guide Search] OpenAI API key is not configured");
+		return guideUnavailable("Our researchers are currently indisposed. Please try again later.");
 	}
 
 	// If no entry exists, generate one using AI
+	let entryContent: Awaited<ReturnType<typeof generateGuideEntry>>;
 	try {
-		if (!openai) {
-			console.error("[Guide Search] OpenAI API key is not configured");
-			return {
-				success: false,
-				error: "Our researchers are currently indisposed. Please try again later.",
-			};
-		}
-
-		console.log(
-			"[searchGuide] Generating new entry with original term for AI context:",
-			searchTerm
-		);
-		const entryContent = await generateGuideEntry(searchTerm);
-		try {
-			console.log(
-				"[searchGuide] Creating new entry in DB with normalized term:",
-				normalizedSearchTerm,
-				"and content:",
-				entryContent
-			);
-			const newEntry = await guideService.createEntry({
-				searchTerm: normalizedSearchTerm,
-				...entryContent,
-			});
-			console.log("[searchGuide] Successfully created new entry:", newEntry);
-			return {
-				success: true,
-				data: { ...newEntry, searchTerm: normalizedSearchTerm },
-			};
-		} catch (dbError) {
-			console.error("[Guide Search] Database creation error:", dbError);
-			return {
-				success: false,
-				error: "Failed to save your search to the Guide. Please try again later.",
-			};
-		}
+		entryContent = await generateGuideEntry(searchTerm);
 	} catch (error) {
 		console.error("[Guide Search] AI generation error:", error);
-		let errorMessage =
-			"Our researchers are currently indisposed in the Restaurant at the End of the Universe. Please try again later.";
+		// An OpenAI failure says nothing about whether the term belongs in the
+		// Guide, so it is unavailable rather than missing.
+		const errorMessage =
+			error instanceof Error && error.message.includes("OpenAI")
+				? "Our AI researchers are taking a tea break. Please try again in a moment."
+				: "Our researchers are currently indisposed in the Restaurant at the End of the Universe. Please try again later.";
+		return guideUnavailable(errorMessage);
+	}
 
-		if (error instanceof Error) {
-			// If it's an OpenAI API error, provide a more specific message
-			if (error.message.includes("OpenAI")) {
-				errorMessage = "Our AI researchers are taking a tea break. Please try again in a moment.";
-			}
-		}
-
+	try {
+		const newEntry = await guideService.createEntry({
+			searchTerm: normalizedSearchTerm,
+			...entryContent,
+		});
 		return {
-			success: false,
-			error: errorMessage,
-		};
+			success: true,
+			status: "ok",
+			data: { ...newEntry, searchTerm: normalizedSearchTerm },
+		} as const;
+	} catch (dbError) {
+		console.error("[Guide Search] Database creation error:", dbError);
+		return guideUnavailable("Failed to save your search to the Guide. Please try again later.");
 	}
 };

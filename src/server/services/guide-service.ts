@@ -15,8 +15,11 @@ import { cache } from "react";
 // was out `next build` died on it, which held the next 16.3.8 og-RCE fix off
 // production for a day (LAC-5405). Keep the `await`s.
 
-/** Shared by the two reads below so the shape stays identical. */
+/** Shared by the reads below so the shape stays identical. */
 const UNAVAILABLE = { status: "unavailable" } as const;
+
+/** A read that came back and found nothing. A real miss, not an outage. */
+const FOUND_NOTHING = { status: "ok", data: null } as const;
 
 // Track if similarity search is available
 let hasSimilaritySearch: boolean | null = null;
@@ -138,23 +141,42 @@ export const guideService = {
 		}
 	}),
 
+	/**
+	 * The stored entry for a term, when there is one.
+	 *
+	 * Reports a `GuideRead` because the caller's next move depends on which
+	 * kind of nothing this is. `{ status: "ok", data: null }` is a genuine
+	 * miss, and a term worth paying OpenAI to write. `unavailable` means the
+	 * query never came back, which says nothing at all about whether the
+	 * entry exists. Both were `null` until LAC-5648, so an unreachable
+	 * database read as a miss on every one of the ~309 entry URLs: each
+	 * request spent a generation call to rewrite a row it could not then
+	 * write, and 404'd the entry it had simply failed to read.
+	 */
 	findExistingEntry: async (searchTerm: string | null | undefined, exactMatch = false) => {
+		if (!searchTerm?.trim()) {
+			return FOUND_NOTHING;
+		}
+
+		const normalizedTerm = normalizeSlug(searchTerm);
+		if (!normalizedTerm) {
+			return FOUND_NOTHING;
+		}
+
+		// No connection string is an outage, not a miss -- the same call the
+		// two reads above make. Generating against it would burn the OpenAI
+		// call and then fail the insert.
+		if (!db) {
+			return UNAVAILABLE;
+		}
+
 		try {
-			if (!searchTerm?.trim()) {
-				return null;
-			}
-
-			const normalizedTerm = normalizeSlug(searchTerm);
-			if (!normalizedTerm) {
-				return null;
-			}
-
 			// Create an alternative version of the term (with spaces instead of hyphens)
 			const alternativeTerm = normalizedTerm.replace(/-/g, " ");
 
 			// If exactMatch is true, only look for exact matches
 			if (exactMatch) {
-				return await db?.query.guideEntries.findFirst({
+				const entry = await db.query.guideEntries.findFirst({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
 						eq(guideEntries.searchTerm, alternativeTerm)
@@ -168,11 +190,12 @@ export const guideService = {
 						},
 					},
 				});
+				return { status: "ok", data: entry ?? null } as const;
 			}
 
 			// Always use basic search during SSR or if similarity search isn't available
 			if (isSSR() || !(await checkSimilaritySearch())) {
-				return await db?.query.guideEntries.findFirst({
+				const entry = await db.query.guideEntries.findFirst({
 					where: or(
 						eq(guideEntries.searchTerm, normalizedTerm),
 						eq(guideEntries.searchTerm, alternativeTerm),
@@ -188,10 +211,11 @@ export const guideService = {
 						},
 					},
 				});
+				return { status: "ok", data: entry ?? null } as const;
 			}
 
 			// Find the most similar existing entry
-			const existingEntry = await db?.query.guideEntries.findFirst({
+			const existingEntry = await db.query.guideEntries.findFirst({
 				where: or(
 					sql`similarity(${guideEntries.searchTerm}, ${normalizedTerm}) > 0.3`,
 					sql`similarity(${guideEntries.searchTerm}, ${alternativeTerm}) > 0.3`
@@ -218,7 +242,7 @@ export const guideService = {
 				try {
 					// Increment popularity only at runtime
 					await db
-						?.update(guideEntries)
+						.update(guideEntries)
 						.set({
 							popularity: sql`${guideEntries.popularity} + 1`,
 							updatedAt: new Date(),
@@ -230,10 +254,10 @@ export const guideService = {
 				}
 			}
 
-			return existingEntry;
+			return { status: "ok", data: existingEntry ?? null } as const;
 		} catch (error) {
 			console.error("[Guide Service] Error in findExistingEntry:", error);
-			return null;
+			return UNAVAILABLE;
 		}
 	},
 

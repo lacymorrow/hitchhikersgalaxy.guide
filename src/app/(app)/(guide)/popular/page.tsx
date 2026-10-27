@@ -37,15 +37,11 @@ export default async function PopularEntriesPage() {
 								Popular Entries
 							</h1>
 						</div>
-						{/* The subhead promises entries the page cannot reach, so it reads as a
-						    contradiction sitting above the outage state. */}
-						{!unavailable && (
-							<p className="max-w-[42rem] font-mono leading-normal text-blue-400/80 sm:text-xl sm:leading-8">
-								The most frequently consulted entries in the Guide, as determined by
-								our sophisticated popularity algorithm (we count how many times
-								they're viewed).
-							</p>
-						)}
+						<p className="max-w-[42rem] font-mono leading-normal text-blue-400/80 sm:text-xl sm:leading-8">
+							The most frequently consulted entries in the Guide, as determined by
+							our sophisticated popularity algorithm (we count how many times
+							they're viewed).
+						</p>
 					</div>
 
 					{/* Popular entries grid */}

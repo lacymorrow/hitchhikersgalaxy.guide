@@ -41,7 +41,9 @@ export const GuideUnavailable = ({
 );
 
 export const GuideEmpty = ({ className }: { className?: string }) => (
-  <p className={cn("max-w-[32rem] text-center font-mono text-balance opacity-60", className)}>
+  <p
+    className={cn("mx-auto max-w-[32rem] text-center font-mono text-balance opacity-60", className)}
+  >
     The Guide is still being written. Search for anything to add the first entry.
   </p>
 );

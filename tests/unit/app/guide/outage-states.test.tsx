@@ -147,6 +147,22 @@ describe.each(surfaces)("$name", (surface) => {
     }
   });
 
+  it("keeps its descriptive copy during an outage", async () => {
+    surface.down();
+    const markup = await html();
+
+    // The description of what the page is for stays true while the database
+    // is down. Hiding it left these prerendered, crawled routes with no body
+    // copy at all for the length of the outage.
+    const description = {
+      "/popular": "most frequently consulted entries",
+      "/browse": "Every entry in the Guide, A to Z.",
+      "home recent-entries marquee": null,
+    }[surface.name];
+
+    if (description) expect(markup).toContain(description);
+  });
+
   it("does not claim a count of zero during an outage", async () => {
     surface.down();
     const markup = await html();

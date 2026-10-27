@@ -82,14 +82,13 @@ export default async function BrowsePage() {
 								Guide Index
 							</h1>
 						</div>
-						{/* "All 0 of them" is false during an outage, so the count only
-						    renders when the index actually came back. */}
-						{index.status === "ok" && (
-							<p className="max-w-[42rem] font-mono leading-normal text-[#70c8cd]/80">
-								Every entry in the Guide, A to Z. All {allTerms.length} of them,
-								mostly harmless.
-							</p>
-						)}
+						{/* Only the count is false during an outage, not the description, so
+						    the sentence stays and the number drops. */}
+						<p className="max-w-[42rem] font-mono leading-normal text-[#70c8cd]/80">
+							{index.status === "ok"
+								? `Every entry in the Guide, A to Z. All ${allTerms.length} of them, mostly harmless.`
+								: "Every entry in the Guide, A to Z. Mostly harmless."}
+						</p>
 					</div>
 
 					{index.status === "unavailable" ? (

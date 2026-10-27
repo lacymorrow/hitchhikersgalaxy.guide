@@ -8,6 +8,7 @@
       "**/*.js",
       "**/*.jsx",
       "!**/node_modules",
+      "!**/.worktrees",
       "!**/.next",
       "!**/.vercel",
       "!**/.claude",

@@ -55,6 +55,33 @@ describe("pageMetadata", () => {
     expect(meta.openGraph?.title).toBe(absolute);
   });
 
+  /**
+   * `guideEntrySeo` has two branches and they resolve the card title
+   * differently: short terms get the `%s | brand` suffix, terms too long for
+   * it get an absolute clamped title instead. `pageMetadata` has to agree with
+   * both, or long entries share under a title that does not match their page.
+   */
+  it("agrees with guideEntrySeo on a term too long for the title template", () => {
+    const longTerm =
+      "The Restaurant At The End Of The Universe And Its Many Peculiar Patrons Including Vogons";
+    const { title, displayTitle, description } = guideEntrySeo(longTerm);
+    // Precondition: this term must actually take the absolute branch.
+    expect(typeof title).toBe("object");
+
+    const meta = pageMetadata({
+      path: guideEntryPath("long-term"),
+      title,
+      description,
+      type: "article",
+    });
+
+    expect(meta.openGraph?.title).toBe(displayTitle);
+    expect(meta.twitter?.title).toBe(displayTitle);
+    // Both card titles now equal displayTitle, so clamping it clamps them.
+    // The whole point of the absolute branch is staying inside Google's limit.
+    expect(displayTitle.length).toBeLessThanOrEqual(60);
+  });
+
   it("agrees with guideEntrySeo on a guide entry's card title", () => {
     const { title, displayTitle, description } = guideEntrySeo("Babel Fish");
     const meta = pageMetadata({
@@ -70,27 +97,54 @@ describe("pageMetadata", () => {
 });
 
 /**
- * The helper only holds if pages actually use it. A page that hand-writes
- * `alternates.canonical` re-opens the mismatch, and the symptom is invisible
- * locally: the tags render, they just point at the wrong URL.
+ * The helper only holds if pages actually use it, and both halves of the
+ * defect regress independently:
+ *
+ *  - a page hand-writing `alternates.canonical` re-opens the URL mismatch
+ *  - a page hand-writing `openGraph` re-opens the dropped image, because Next
+ *    replaces the inherited object rather than merging into it
+ *
+ * The second one needs no canonical at all to regress, so scanning only for
+ * `canonical` would leave the larger error class (309 URLs) unguarded. Both
+ * symptoms are invisible locally: the tags render, they are just wrong.
  */
-describe("pages that declare a canonical", () => {
-  it("route every canonical through pageMetadata", async () => {
+describe("pages that declare their own metadata", () => {
+  /** Matches `canonical:` in a metadata object, not the word in prose or an identifier. */
+  const DECLARES_CANONICAL = /\bcanonical\s*:/;
+  /** Matches `openGraph:` as a metadata key. */
+  const DECLARES_OPEN_GRAPH = /\bopenGraph\s*:/;
+
+  const appPages = async () => {
     const appDir = join(process.cwd(), "src/app");
     const files = (await readdir(appDir, { recursive: true })) as string[];
     const pages = files.filter((f) => f.endsWith("page.tsx") || f.endsWith("page.mdx"));
     expect(pages.length).toBeGreaterThan(0);
+    return Promise.all(
+      pages.map(async (page) => ({ page, source: await readFile(join(appDir, page), "utf8") }))
+    );
+  };
 
-    const offenders: string[] = [];
-    let withCanonical = 0;
-    for (const page of pages) {
-      const source = await readFile(join(appDir, page), "utf8");
-      if (!source.includes("canonical")) continue;
-      withCanonical++;
-      if (!source.includes("pageMetadata(")) offenders.push(page);
-    }
+  it("route every canonical and every openGraph through pageMetadata", async () => {
+    const offenders = (await appPages())
+      .filter(({ source }) => DECLARES_CANONICAL.test(source) || DECLARES_OPEN_GRAPH.test(source))
+      .filter(({ source }) => !source.includes("pageMetadata("))
+      .map(({ page }) => page);
 
-    expect(withCanonical).toBeGreaterThan(0);
     expect(offenders).toEqual([]);
+  });
+
+  /**
+   * Guards the guard. The check above is a source scan, so it passes trivially
+   * if the patterns stop matching anything. Assert the helper is actually in
+   * use on the pages we converted, which is what makes a zero-offender result
+   * mean something.
+   */
+  it("still finds the pages that were converted to the helper", async () => {
+    const users = (await appPages())
+      .filter(({ source }) => source.includes("pageMetadata("))
+      .map(({ page }) => page);
+
+    expect(users.length).toBeGreaterThanOrEqual(11);
+    expect(users.filter((p) => p.endsWith(".mdx")).length).toBeGreaterThanOrEqual(4);
   });
 });

@@ -9,6 +9,10 @@ import { siteConfig } from "./site";
 // declares its own Open Graph silently drops the image, site name and locale
 // set here. Spread this into every page-level `openGraph` (Ahrefs: 309 "Open
 // Graph tags incomplete", all of them guide entry pages).
+//
+// `satisfies` rather than a bare object: properties that arrive via a spread
+// are exempt from excess-property checking, so a typo like `siteNames` here
+// would type-check at every call site and just quietly emit nothing.
 const sharedOpenGraph = {
 	locale: "en_US",
 	siteName: siteConfig.name,
@@ -20,7 +24,7 @@ const sharedOpenGraph = {
 			alt: siteConfig.name,
 		},
 	],
-};
+} satisfies OpenGraph;
 
 const defaultOpenGraph: OpenGraph = {
 	...sharedOpenGraph,
@@ -148,8 +152,14 @@ export const pageMetadata = ({
 	description,
 	type = "website",
 }: PageMetadataProps): Metadata => {
-	// siteConfig.url has no trailing slash, and Next resolves a "/" canonical
-	// to the bare origin, so the homepage must not gain one here either.
+	// One string, used for both the canonical and og:url. That is the actual
+	// guarantee: Next resolves `alternates.canonical` and `openGraph.url`
+	// through the same `resolveAbsoluteUrlWithPathname`, so identical input
+	// cannot render as a mismatched pair however it is spelled.
+	//
+	// The homepage needs no trailing slash for the same reason. That resolver
+	// returns the bare origin whenever the resolved pathname is "/" with no
+	// query, so "/" and the origin are already the same output.
 	const url = `${siteConfig.url}${path === "/" ? "" : path}`;
 	const cardTitle = typeof title === "string" ? `${title} | ${SEO_TITLE_BRAND}` : title.absolute;
 
@@ -181,30 +191,28 @@ export const viewport: Viewport = {
 	],
 };
 
+/*
+ * Used only by the five auth pages, which all pass `noIndex: true`. They set no
+ * canonical and render `noindex, follow`, so they sit outside both Open Graph
+ * error classes and inheriting the layout's site-level card is fine for them.
+ *
+ * New indexable pages want `pageMetadata` above instead. If one of these ever
+ * needs to be indexed, give `pageMetadata` a `noIndex` option and migrate it
+ * rather than growing this.
+ *
+ * The former `images` option is gone: it only ever fed an Open Graph merge that
+ * was commented out, and no caller passed it.
+ */
 type ConstructMetadataProps = Metadata & {
-	images?: { url: string; width: number; height: number; alt: string }[];
 	noIndex?: boolean;
 };
 
 export const constructMetadata = ({
-	images = [],
 	noIndex = false,
 	...metadata
 }: ConstructMetadataProps = {}): Metadata => ({
 	...defaultMetadata,
 	...metadata,
-	// openGraph: {
-	// 	...defaultOpenGraph,
-	// 	title: metadata.title ?? defaultOpenGraph.title,
-	// 	description: metadata.description ?? defaultOpenGraph.description,
-	// 	images: images.length > 0 ? images : defaultOpenGraph.images,
-	// },
-	// twitter: {
-	// 	...defaultTwitter,
-	// 	title: metadata.title ?? defaultTwitter.title,
-	// 	description: metadata.description ?? defaultTwitter.description,
-	// 	images: images.length > 0 ? images : defaultTwitter.images,
-	// },
 	robots: noIndex ? { index: false, follow: true } : defaultMetadata.robots,
 });
 

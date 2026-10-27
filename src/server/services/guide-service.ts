@@ -15,6 +15,9 @@ import { cache } from "react";
 // was out `next build` died on it, which held the next 16.3.8 og-RCE fix off
 // production for a day (LAC-5405). Keep the `await`s.
 
+/** Shared by the two reads below so the shape stays identical. */
+const UNAVAILABLE = { status: "unavailable" } as const;
+
 // Track if similarity search is available
 let hasSimilaritySearch: boolean | null = null;
 
@@ -99,33 +102,39 @@ export const guideService = {
 		}
 	}),
 
+	// These two feed pages that render an empty state, so they report an outage
+	// apart from an empty table instead of flattening both to `[]` (LAC-5520).
 	getRecentEntries: cache(async (limit = 10) => {
+		if (!db) return UNAVAILABLE;
 		try {
-			return await db?.query.guideEntries.findMany({
+			const data = await db.query.guideEntries.findMany({
 				orderBy: [desc(guideEntries.createdAt)],
 				limit,
 				with: {
 					category: true,
 				},
 			});
+			return { status: "ok", data } as const;
 		} catch (error) {
 			console.error("[Guide Service] Error in getRecentEntries:", error);
-			return [];
+			return UNAVAILABLE;
 		}
 	}),
 
 	getPopularEntries: cache(async (limit = 10) => {
+		if (!db) return UNAVAILABLE;
 		try {
-			return await db?.query.guideEntries.findMany({
+			const data = await db.query.guideEntries.findMany({
 				orderBy: [desc(guideEntries.popularity)],
 				limit,
 				with: {
 					category: true,
 				},
 			});
+			return { status: "ok", data } as const;
 		} catch (error) {
 			console.error("[Guide Service] Error in getPopularEntries:", error);
-			return [];
+			return UNAVAILABLE;
 		}
 	}),
 

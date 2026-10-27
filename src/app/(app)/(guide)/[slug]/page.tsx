@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { siteConfig } from "@/config/site";
 import { checkRawShape } from "@/lib/guide-gate";
+import { guideReadOr } from "@/lib/guide-read";
 import { guideEntryPath, guideEntrySeo } from "@/lib/seo";
 import { normalizeSlug } from "@/lib/utils";
 import { searchGuide } from "@/server/actions/guide-search";
@@ -154,8 +155,9 @@ async function GuideEntry({ slug }: { slug: string }) {
 	const typedEntry = entry as GuideEntryWithPotentialRelations;
 
 	// Fetch recent entries
-	const rawRecentEntries = await guideService.getRecentEntries(4);
-	const recentEntries = rawRecentEntries || []; // Default to empty array if rawRecentEntries is undefined
+	// Related entries only decorate the page, so an outage here means a shorter
+	// related list rather than a state of its own.
+	const recentEntries = guideReadOr(await guideService.getRecentEntries(4), []);
 
 	// Filter out the current entry from recent entries
 	const otherRecentEntries = recentEntries.filter((e) => e.id !== typedEntry.id);

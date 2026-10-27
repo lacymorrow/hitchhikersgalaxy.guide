@@ -6,36 +6,23 @@ describe("useCopyToClipboard", () => {
     // Mock clipboard API
     const mockWriteText = vi.fn(() => Promise.resolve());
     const mockExecCommand = vi.fn(() => true);
-    const originalNavigator = global.navigator;
-    const originalDocument = global.document;
 
     beforeEach(() => {
         vi.useFakeTimers();
-        Object.defineProperty(global, "navigator", {
-            value: {
-                clipboard: {
-                    writeText: mockWriteText,
-                },
-            },
+
+        // Stub only the two entry points the hook uses. Replacing `global.document`
+        // wholesale leaves React with a container that is not a real DOM node, and
+        // every `renderHook` here dies with "Target container is not a DOM element".
+        // jsdom already supplies a real document; the fallback path just needs
+        // `execCommand`, which jsdom does not implement.
+        Object.defineProperty(navigator, "clipboard", {
+            value: { writeText: mockWriteText },
+            configurable: true,
             writable: true,
         });
-
-        // Mock document methods for fallback
-        Object.defineProperty(global, "document", {
-            value: {
-                ...originalDocument,
-                execCommand: mockExecCommand,
-                createElement: vi.fn().mockReturnValue({
-                    value: "",
-                    style: {},
-                    select: vi.fn(),
-                    focus: vi.fn(),
-                }),
-                body: {
-                    appendChild: vi.fn(),
-                    removeChild: vi.fn(),
-                },
-            },
+        Object.defineProperty(document, "execCommand", {
+            value: mockExecCommand,
+            configurable: true,
             writable: true,
         });
     });
@@ -43,14 +30,10 @@ describe("useCopyToClipboard", () => {
     afterEach(() => {
         vi.useRealTimers();
         vi.clearAllMocks();
-        Object.defineProperty(global, "navigator", {
-            value: originalNavigator,
-            writable: true,
-        });
-        Object.defineProperty(global, "document", {
-            value: originalDocument,
-            writable: true,
-        });
+        // Both stubs are own properties, so deleting them hands the globals back
+        // to jsdom untouched.
+        Reflect.deleteProperty(navigator, "clipboard");
+        Reflect.deleteProperty(document, "execCommand");
     });
 
     test("should copy text to clipboard and set isCopied to true", async () => {
@@ -104,8 +87,9 @@ describe("useCopyToClipboard", () => {
 
     test("should handle missing clipboard API gracefully", async () => {
         // Remove clipboard API but keep document.execCommand for fallback
-        Object.defineProperty(global, "navigator", {
-            value: {},
+        Object.defineProperty(navigator, "clipboard", {
+            value: undefined,
+            configurable: true,
             writable: true,
         });
 

@@ -4,12 +4,13 @@ import type { Twitter } from "next/dist/lib/metadata/types/twitter-types";
 import { SEO_TITLE_BRAND } from "@/lib/seo";
 import { siteConfig } from "./site";
 
-const defaultOpenGraph: OpenGraph = {
-	type: "website",
+// The parts of Open Graph every page shares. Next.js replaces an inherited
+// `openGraph` object wholesale instead of deep-merging it, so any page that
+// declares its own Open Graph silently drops the image, site name and locale
+// set here. Spread this into every page-level `openGraph` (Ahrefs: 309 "Open
+// Graph tags incomplete", all of them guide entry pages).
+const sharedOpenGraph = {
 	locale: "en_US",
-	url: siteConfig.url,
-	title: siteConfig.title,
-	description: siteConfig.description,
 	siteName: siteConfig.name,
 	images: [
 		{
@@ -19,6 +20,18 @@ const defaultOpenGraph: OpenGraph = {
 			alt: siteConfig.name,
 		},
 	],
+};
+
+const defaultOpenGraph: OpenGraph = {
+	...sharedOpenGraph,
+	type: "website",
+	// The site root. A page that sets its own canonical must set its own
+	// `openGraph.url` too, or it inherits this one and reports the homepage as
+	// its Open Graph URL (Ahrefs: 9 "OG URL not matching canonical"). Use
+	// `pageMetadata` below rather than hand-writing the pair.
+	url: siteConfig.url,
+	title: siteConfig.title,
+	description: siteConfig.description,
 };
 
 const defaultTwitter: Twitter = {
@@ -102,6 +115,55 @@ export const defaultMetadata: Metadata = {
 };
 
 export const metadata: Metadata = defaultMetadata;
+
+interface PageMetadataProps {
+	/** Site-relative path, with a leading slash. `"/"` for the homepage. */
+	path: string;
+	/**
+	 * Title relative to the `%s | brand` template, or `{ absolute }` to opt out
+	 * of the brand suffix (the homepage already carries the brand).
+	 */
+	title: string | { absolute: string };
+	description: string;
+	/** Guide entries are articles; everything else is a website. */
+	type?: "website" | "article";
+}
+
+/**
+ * Metadata for one indexable page: canonical URL, Open Graph and Twitter card,
+ * all describing the same URL and the same title.
+ *
+ * Both SEO defects this fixes came from writing those by hand. The canonical
+ * and `og:url` were separate strings that drifted, and a page-level
+ * `openGraph` replaced the layout's instead of extending it. Here the URL is
+ * one string used in both places, and the shared Open Graph fields are always
+ * spread in, so neither can happen again.
+ *
+ * Next.js does not apply the title template to `openGraph.title`, so the card
+ * title is resolved here rather than left template-relative.
+ */
+export const pageMetadata = ({
+	path,
+	title,
+	description,
+	type = "website",
+}: PageMetadataProps): Metadata => {
+	// siteConfig.url has no trailing slash, and Next resolves a "/" canonical
+	// to the bare origin, so the homepage must not gain one here either.
+	const url = `${siteConfig.url}${path === "/" ? "" : path}`;
+	const cardTitle = typeof title === "string" ? `${title} | ${SEO_TITLE_BRAND}` : title.absolute;
+
+	return {
+		title,
+		description,
+		alternates: { canonical: url },
+		openGraph:
+			type === "article"
+				? { ...sharedOpenGraph, type: "article", url, title: cardTitle, description }
+				: { ...sharedOpenGraph, type: "website", url, title: cardTitle, description },
+		twitter: { ...defaultTwitter, title: cardTitle, description },
+	};
+};
 
 export const viewport: Viewport = {
 	width: "device-width",

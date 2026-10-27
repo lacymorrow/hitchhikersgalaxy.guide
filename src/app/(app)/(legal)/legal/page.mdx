@@ -4,14 +4,13 @@ description: Legal information
 ---
 
 import { siteConfig } from "@/config/site-config";
+import { pageMetadata } from "@/config/metadata";
 
-export const metadata = {
+export const metadata = pageMetadata({
+	path: "/legal",
 	title: "Legal Information",
 	description: "Legal notices and information for the Hitchhiker's Guide.",
-	alternates: {
-		canonical: "/legal",
-	},
-};
+});
 
 # Legal Information
 

@@ -4,12 +4,17 @@ import type { Twitter } from "next/dist/lib/metadata/types/twitter-types";
 import { SEO_TITLE_BRAND } from "@/lib/seo";
 import { siteConfig } from "./site";
 
-const defaultOpenGraph: OpenGraph = {
-	type: "website",
+// The parts of Open Graph every page shares. Next.js replaces an inherited
+// `openGraph` object wholesale instead of deep-merging it, so any page that
+// declares its own Open Graph silently drops the image, site name and locale
+// set here. Spread this into every page-level `openGraph` (Ahrefs: 309 "Open
+// Graph tags incomplete", all of them guide entry pages).
+//
+// `satisfies` rather than a bare object: properties that arrive via a spread
+// are exempt from excess-property checking, so a typo like `siteNames` here
+// would type-check at every call site and just quietly emit nothing.
+const sharedOpenGraph = {
 	locale: "en_US",
-	url: siteConfig.url,
-	title: siteConfig.title,
-	description: siteConfig.description,
 	siteName: siteConfig.name,
 	images: [
 		{
@@ -19,6 +24,18 @@ const defaultOpenGraph: OpenGraph = {
 			alt: siteConfig.name,
 		},
 	],
+} satisfies OpenGraph;
+
+const defaultOpenGraph: OpenGraph = {
+	...sharedOpenGraph,
+	type: "website",
+	// The site root. A page that sets its own canonical must set its own
+	// `openGraph.url` too, or it inherits this one and reports the homepage as
+	// its Open Graph URL (Ahrefs: 9 "OG URL not matching canonical"). Use
+	// `pageMetadata` below rather than hand-writing the pair.
+	url: siteConfig.url,
+	title: siteConfig.title,
+	description: siteConfig.description,
 };
 
 const defaultTwitter: Twitter = {
@@ -103,6 +120,61 @@ export const defaultMetadata: Metadata = {
 
 export const metadata: Metadata = defaultMetadata;
 
+interface PageMetadataProps {
+	/** Site-relative path, with a leading slash. `"/"` for the homepage. */
+	path: string;
+	/**
+	 * Title relative to the `%s | brand` template, or `{ absolute }` to opt out
+	 * of the brand suffix (the homepage already carries the brand).
+	 */
+	title: string | { absolute: string };
+	description: string;
+	/** Guide entries are articles; everything else is a website. */
+	type?: "website" | "article";
+}
+
+/**
+ * Metadata for one indexable page: canonical URL, Open Graph and Twitter card,
+ * all describing the same URL and the same title.
+ *
+ * Both SEO defects this fixes came from writing those by hand. The canonical
+ * and `og:url` were separate strings that drifted, and a page-level
+ * `openGraph` replaced the layout's instead of extending it. Here the URL is
+ * one string used in both places, and the shared Open Graph fields are always
+ * spread in, so neither can happen again.
+ *
+ * Next.js does not apply the title template to `openGraph.title`, so the card
+ * title is resolved here rather than left template-relative.
+ */
+export const pageMetadata = ({
+	path,
+	title,
+	description,
+	type = "website",
+}: PageMetadataProps): Metadata => {
+	// One string, used for both the canonical and og:url. That is the actual
+	// guarantee: Next resolves `alternates.canonical` and `openGraph.url`
+	// through the same `resolveAbsoluteUrlWithPathname`, so identical input
+	// cannot render as a mismatched pair however it is spelled.
+	//
+	// The homepage needs no trailing slash for the same reason. That resolver
+	// returns the bare origin whenever the resolved pathname is "/" with no
+	// query, so "/" and the origin are already the same output.
+	const url = `${siteConfig.url}${path === "/" ? "" : path}`;
+	const cardTitle = typeof title === "string" ? `${title} | ${SEO_TITLE_BRAND}` : title.absolute;
+
+	return {
+		title,
+		description,
+		alternates: { canonical: url },
+		openGraph:
+			type === "article"
+				? { ...sharedOpenGraph, type: "article", url, title: cardTitle, description }
+				: { ...sharedOpenGraph, type: "website", url, title: cardTitle, description },
+		twitter: { ...defaultTwitter, title: cardTitle, description },
+	};
+};
+
 export const viewport: Viewport = {
 	width: "device-width",
 	initialScale: 1,
@@ -119,30 +191,28 @@ export const viewport: Viewport = {
 	],
 };
 
+/*
+ * Used only by the five auth pages, which all pass `noIndex: true`. They set no
+ * canonical and render `noindex, follow`, so they sit outside both Open Graph
+ * error classes and inheriting the layout's site-level card is fine for them.
+ *
+ * New indexable pages want `pageMetadata` above instead. If one of these ever
+ * needs to be indexed, give `pageMetadata` a `noIndex` option and migrate it
+ * rather than growing this.
+ *
+ * The former `images` option is gone: it only ever fed an Open Graph merge that
+ * was commented out, and no caller passed it.
+ */
 type ConstructMetadataProps = Metadata & {
-	images?: { url: string; width: number; height: number; alt: string }[];
 	noIndex?: boolean;
 };
 
 export const constructMetadata = ({
-	images = [],
 	noIndex = false,
 	...metadata
 }: ConstructMetadataProps = {}): Metadata => ({
 	...defaultMetadata,
 	...metadata,
-	// openGraph: {
-	// 	...defaultOpenGraph,
-	// 	title: metadata.title ?? defaultOpenGraph.title,
-	// 	description: metadata.description ?? defaultOpenGraph.description,
-	// 	images: images.length > 0 ? images : defaultOpenGraph.images,
-	// },
-	// twitter: {
-	// 	...defaultTwitter,
-	// 	title: metadata.title ?? defaultTwitter.title,
-	// 	description: metadata.description ?? defaultTwitter.description,
-	// 	images: images.length > 0 ? images : defaultTwitter.images,
-	// },
 	robots: noIndex ? { index: false, follow: true } : defaultMetadata.robots,
 });
 

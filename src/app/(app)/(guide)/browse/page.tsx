@@ -8,15 +8,14 @@ import { dedupeGuideEntries, guideEntryPath } from "@/lib/seo";
 import { db } from "@/server/db";
 import { guideEntries } from "@/server/db/schema";
 import { GuideEmpty, GuideUnavailable } from "../_components/guide-states";
+import { pageMetadata } from "@/config/metadata";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
+	path: "/browse",
 	title: "Guide Index",
 	description:
 		"Every entry in the Hitchhiker's Guide to the Galaxy, A to Z. Browse the complete index of travel advice, fun facts, and things to avoid.",
-	alternates: {
-		canonical: "/browse",
-	},
-};
+});
 
 // Entries are generated at runtime as people search, so refresh the index
 // hourly rather than freezing it at build time.

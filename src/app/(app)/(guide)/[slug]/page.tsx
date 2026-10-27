@@ -2,7 +2,7 @@ import { ShareButton } from "@/components/buttons/share-button";
 import { Link } from "@/components/primitives/link-with-transition";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { siteConfig } from "@/config/site";
+import { pageMetadata } from "@/config/metadata";
 import { checkRawShape } from "@/lib/guide-gate";
 import { guideReadOr } from "@/lib/guide-read";
 import { guideEntryPath, guideEntrySeo } from "@/lib/seo";
@@ -36,27 +36,14 @@ export async function generateMetadata({
 	const displayName = canonicalSlug.replace(/-/g, " ");
 	const capitalizedName = displayName.replace(/\b\w/g, (c) => c.toUpperCase());
 
-	const { title, displayTitle, description } = guideEntrySeo(capitalizedName);
-	const pageUrl = `${siteConfig.url}${guideEntryPath(canonicalSlug)}`;
+	const { title, description } = guideEntrySeo(capitalizedName);
 
-	return {
+	return pageMetadata({
+		path: guideEntryPath(canonicalSlug),
 		title,
 		description,
-		alternates: {
-			canonical: pageUrl,
-		},
-		openGraph: {
-			title: displayTitle,
-			description,
-			url: pageUrl,
-			type: "article",
-		},
-		twitter: {
-			card: "summary_large_image",
-			title: displayTitle,
-			description,
-		},
-	};
+		type: "article",
+	});
 }
 
 // Loading skeleton component

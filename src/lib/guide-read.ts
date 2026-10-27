@@ -29,3 +29,18 @@ export const guideReadOr = <T>(result: GuideRead<T>, fallback: T): T =>
  * the status table in `src/server/actions/guide-search.ts`.
  */
 export type GuideSearchFailure = "not_found" | "unavailable";
+
+/**
+ * Thrown by a route that cannot answer because the Guide is unreachable.
+ *
+ * It exists to be uncaught. Next.js settles the document status from whether
+ * the server render threw, so throwing before the first byte is the only way a
+ * page can answer with a retryable 5xx instead of 200 or 404. Catch it and you
+ * are back to the soft 404 this replaced (LAC-5888).
+ */
+export class GuideUnavailableError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = "GuideUnavailableError";
+  }
+}

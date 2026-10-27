@@ -10,7 +10,11 @@ export default async function GuidePage({
 	params: Promise<{ slug: string }>;
 }) {
 	const { slug } = await params;
-	const entry = await guideService.findExistingEntry(slug);
+	// A literal `/slug` route, left over from an earlier version of the entry
+	// page and shadowing `[slug]` for that one term. It 404s an outage the
+	// same way `[slug]` does today; see LAC-5888.
+	const read = await guideService.findExistingEntry(slug);
+	const entry = read.status === "ok" ? read.data : null;
 
 	if (!entry) {
 		notFound();

@@ -188,7 +188,7 @@ export function GuideSearchInline({ results: initialResults }: GuideSearchInline
 			const result = await searchGuide(term, exactMatch);
 			console.log("[GuideSearchInline] searchGuide result:", result);
 
-			if (result.success && result.data) {
+			if (result.success) {
 				const path = `/${encodeURIComponent(result.data.searchTerm)}`;
 				console.log("[GuideSearchInline] Navigating to path:", path);
 				router.push(path);

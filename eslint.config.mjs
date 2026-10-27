@@ -19,6 +19,11 @@ const eslintConfig = [
 			".next/**",
 			".vercel/**",
 			".claude/**",
+			// A git worktree checked out inside the repo root is a second full
+			// copy of src/, and none of it is in the root tsconfig, so every file
+			// fails type-aware parsing. Worktrees belong in a sibling directory;
+			// this is a guard for when one lands here anyway (LAC-5892).
+			".worktrees/**",
 			"public/**",
 			// tsconfig excludes (demo) examples; ESLint needs to match or it
 			// can't find them in any TS project for type-aware linting.

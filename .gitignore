@@ -89,3 +89,12 @@ logs
 
 # mirrored from docs/images by scripts/sync-docs-images.mjs
 public/docs
+
+# Local agent git worktrees. These belong in a sibling directory, not here: a
+# worktree inside the repo root is a second full checkout, so its nested
+# biome.json aborts `biome lint` and its src/ confuses eslint and prettier
+# (LAC-5892). Ignored so a stray one never gets committed.
+.worktrees/
+
+# Local scratch for video/storyboard work. Not part of the site.
+media/

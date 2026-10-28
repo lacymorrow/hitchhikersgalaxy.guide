@@ -31,6 +31,13 @@ vi.mock("@/server/db", () => ({
   },
 }));
 
+// The reads under test now cache across requests (LAC-5917). `unstable_cache`
+// needs a Next incremental cache, which a unit test has no business standing
+// up, and a working cache would also hold the first mocked answer across the
+// cases below. Pass the read straight through; what the cache does and does
+// not store is covered in guide-service-cache.test.ts.
+vi.mock("next/cache", () => ({ unstable_cache: (read: unknown) => read }));
+
 vi.mock("@/lib/utils/runtime", () => ({
   isSSR: mocks.isSSR,
 }));

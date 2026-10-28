@@ -106,14 +106,44 @@ describe("/api/flags route", () => {
 
   afterEach(() => {
     vi.restoreAllMocks();
+    vi.unstubAllEnvs();
   });
 
   describe("authentication", () => {
-    it("allows open access when PREVIEW_SECRET is unset", async () => {
+    it("allows open access when PREVIEW_SECRET is unset outside production", async () => {
       mockPreviewSecret = undefined;
+      vi.stubEnv("NODE_ENV", "development");
       const req = await makeRequest("http://localhost:3000/api/flags?feature_flag_database=1");
       const res = (await GET(req)) as any;
       expect(res.type).toBe("redirect");
+    });
+
+    it("returns 404 when PREVIEW_SECRET is unset in production", async () => {
+      mockPreviewSecret = undefined;
+      vi.stubEnv("NODE_ENV", "production");
+      const req = await makeRequest("http://localhost:3000/api/flags?feature_flag_database=1");
+      const res = (await GET(req)) as any;
+      expect(res.status).toBe(404);
+      expect(res.body).toEqual({ error: "Not found" });
+      expect(setCookies.length).toBe(0);
+    });
+
+    it("returns 404 for a read-only request when PREVIEW_SECRET is unset in production", async () => {
+      mockPreviewSecret = undefined;
+      vi.stubEnv("NODE_ENV", "production");
+      const req = await makeRequest("http://localhost:3000/api/flags");
+      const res = (await GET(req)) as any;
+      expect(res.status).toBe(404);
+      expect(res.body).toEqual({ error: "Not found" });
+    });
+
+    it("returns 404 when PREVIEW_SECRET is unset in production even with a token", async () => {
+      mockPreviewSecret = undefined;
+      vi.stubEnv("NODE_ENV", "production");
+      const req = await makeRequest("http://localhost:3000/api/flags?token=anything&clear=1");
+      const res = (await GET(req)) as any;
+      expect(res.status).toBe(404);
+      expect(deletedCookies).not.toContain("_shipkit_preview");
     });
 
     it("returns 401 when PREVIEW_SECRET is set and no token provided", async () => {

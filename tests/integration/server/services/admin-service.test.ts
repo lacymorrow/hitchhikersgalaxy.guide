@@ -2,14 +2,19 @@
  * Characterization tests for admin-service.isAdmin() against the live
  * Testcontainers DB. Sets up the SPEC for plan 011 (isAdmin refactor).
  *
- * isAdmin() has 4 layered checks (any one → true):
- *   1. adminConfig.isAdminByEmailConfig — static env-driven list/domain
+ * isAdmin() has 3 layered checks (any one → true):
+ *   1. adminConfig.isAdminByEmailConfig — static env-driven list/domain, but
+ *      only for an account whose email is verified
  *   2. DB `users.role === "admin"` lookup by lowercased email
  *   3. RBAC permission check ("system", "admin") for the resolved userId
- *   4. Payload CMS user existence
  *
- * We mock Payload (returns null in tests) so this suite exercises 1-3
- * on the real DB. Check #1 is exercised by spying on the config.
+ * There was a fourth: Payload CMS user existence. It granted admin to every
+ * credentials-registered account and is gone (LAC-5048, ported here by
+ * LAC-5245). This suite mocked the Payload client to `null`, which is why it
+ * never saw the hole; the regression coverage lives in
+ * tests/unit/server/services/admin-service.test.ts, where the client answers.
+ * The mock stays so the suite keeps exercising 1-3 against the real DB with no
+ * Payload dependency. Check #1 is exercised by spying on the config.
  */
 
 import { describe, expect, it, vi } from "vitest";

@@ -27,13 +27,21 @@ export const GuideUnavailable = ({
    * there looks like a rendering fault rather than a considered state.
    */
   compact = false,
+  /**
+   * Render "Don't panic." as a real heading. The listing pages already have an
+   * h1 above this, so there it stays a paragraph; on the guide error page it is
+   * the only content, and a page whose sole message is not a heading leaves
+   * anyone navigating by heading with nothing to land on.
+   */
+  headingAs: Heading = "p",
 }: {
   className?: string;
   compact?: boolean;
+  headingAs?: "p" | "h1" | "h2";
 }) => (
   <div className={cn("flex flex-col items-center justify-center gap-3 text-center", className)}>
     <SatelliteDish aria-hidden className="h-8 w-8 opacity-40" />
-    {!compact && <p className="font-mono text-lg font-bold">Don't panic.</p>}
+    {!compact && <Heading className="font-mono text-lg font-bold">Don't panic.</Heading>}
     <p className="max-w-[32rem] font-mono text-sm text-balance opacity-70">
       The Guide can't reach its records right now. The entries are all still there.
     </p>

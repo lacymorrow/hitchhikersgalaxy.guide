@@ -29,3 +29,31 @@ export const guideReadOr = <T>(result: GuideRead<T>, fallback: T): T =>
  * the status table in `src/server/actions/guide-search.ts`.
  */
 export type GuideSearchFailure = "not_found" | "unavailable";
+
+/**
+ * The digest the guide error boundary matches on.
+ *
+ * In production Next.js replaces a server error's message and name with a
+ * generic string before it reaches the client boundary, and forwards only the
+ * digest. A digest we set ourselves survives that, so it is the one channel
+ * that can tell the boundary "this was an outage, not a bug" without putting
+ * anything internal in the page.
+ */
+export const GUIDE_UNAVAILABLE_DIGEST = "GUIDE_RECORDS_UNAVAILABLE";
+
+/**
+ * Thrown by a route that cannot answer because the Guide is unreachable.
+ *
+ * It exists to be uncaught. Next.js settles the document status from whether
+ * the server render threw, so throwing before the first byte is the only way a
+ * page can answer with a retryable 5xx instead of 200 or 404. Catch it and you
+ * are back to the soft 404 this replaced (LAC-5888).
+ */
+export class GuideUnavailableError extends Error {
+  readonly digest = GUIDE_UNAVAILABLE_DIGEST;
+
+  constructor(message: string) {
+    super(message);
+    this.name = "GuideUnavailableError";
+  }
+}

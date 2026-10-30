@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { isClerkActive } from "@/lib/auth/auth-strategy";
 import { clerkConfig } from "@/lib/auth/clerk-config";
+import { getSafeNextUrl } from "@/lib/utils/safe-next-url";
 
 /**
  * Request proxy (Next 16's name for middleware; `middleware.ts` is deprecated).
@@ -28,10 +29,6 @@ const isSignUp = createRouteMatcher([`${clerkConfig.signUpUrl}(.*)`]);
 const clerkOwnsSignInRoute = process.env.NEXT_PUBLIC_CLERK_SIGN_IN_URL?.startsWith("/") ?? false;
 const clerkOwnsSignUpRoute = process.env.NEXT_PUBLIC_CLERK_SIGN_UP_URL?.startsWith("/") ?? false;
 
-/** Same-origin paths only, so `next` cannot be an open redirect. */
-const isSafePath = (value: string | null): value is string =>
-  !!value && value.startsWith("/") && !value.startsWith("//");
-
 const clerk = clerkMiddleware(async (auth, request) => {
   const signIn = isSignIn(request) && !clerkOwnsSignInRoute;
   const signUp = isSignUp(request) && !clerkOwnsSignUpRoute;
@@ -40,7 +37,9 @@ const clerk = clerkMiddleware(async (auth, request) => {
   const { userId, redirectToSignIn, redirectToSignUp } = await auth();
   const next = request.nextUrl.searchParams.get(SEARCH_PARAM_KEYS.nextUrl);
   const after = signIn ? clerkConfig.afterSignInUrl : clerkConfig.afterSignUpUrl;
-  const returnBackUrl = new URL(isSafePath(next) ? next : after, request.url);
+  // Same-origin paths only: a prefix check is not enough, because the URL
+  // parser reads "/\evil.com" as a host. getSafeNextUrl is the shared guard.
+  const returnBackUrl = new URL(getSafeNextUrl(next) ?? after, request.url);
 
   if (userId) return NextResponse.redirect(returnBackUrl);
 

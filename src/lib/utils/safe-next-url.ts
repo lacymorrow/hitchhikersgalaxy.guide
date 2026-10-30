@@ -45,3 +45,18 @@ export function getSafeNextUrl(nextUrl: string | null | undefined): string | nul
   const path = `${resolved.pathname}${resolved.search}${resolved.hash}`;
   return isRootedPath(path) ? path : null;
 }
+
+/**
+ * Narrows a caller-supplied redirect target that already has a known-safe
+ * default behind it.
+ *
+ * Returns `undefined` when the caller supplied nothing, so the callee's own
+ * default still applies, and `fallback` when the caller supplied something
+ * that would leave the site. Server actions are public POST endpoints, so
+ * every one of them that forwards a `redirectTo` has to run it through this
+ * even when the form that calls it already checked.
+ */
+export function getSafeRedirectTo(redirectTo: unknown, fallback: string): string | undefined {
+  if (redirectTo === undefined || redirectTo === null) return undefined;
+  return getSafeNextUrl(typeof redirectTo === "string" ? redirectTo : null) ?? fallback;
+}

@@ -169,6 +169,56 @@ describe("signIn and signOut under Clerk", () => {
     expect(result).toMatchObject({ url: "/sign-in" });
   });
 
+  // toReturnPath early-returned on a prefix-only check, so this reached
+  // window.location.href as-is and the browser read the backslash as a
+  // separator, resolving it to https://evil.test.
+  it("drops a callback that the URL parser reads as a host", async () => {
+    stubLocation();
+    const { signIn } = await load();
+    const result = await signIn(undefined, { callbackUrl: "/\\evil.test", redirect: false });
+    expect(result).toMatchObject({ url: "/sign-in" });
+  });
+
+  // A tab is stripped rather than treated as a separator, so this one is a
+  // real same-origin path once normalized. Keeping it is correct; what matters
+  // is that it cannot name a different host.
+  it("normalizes a stripped control character to a same-origin path", async () => {
+    stubLocation();
+    const { signIn } = await load();
+    const result = await signIn(undefined, { callbackUrl: "/\tevil.test", redirect: false });
+    expect(result).toMatchObject({ url: "/sign-in?next=%2Fevil.test" });
+  });
+
+  // A same-origin absolute URL is still accepted, but it is reduced to a path
+  // and re-checked: "//evil.test" as a pathname is protocol-relative.
+  it("drops a same-origin absolute callback whose path is protocol-relative", async () => {
+    stubLocation();
+    const { signIn } = await load();
+    const result = await signIn(undefined, {
+      callbackUrl: "http://localhost//evil.test",
+      redirect: false,
+    });
+    expect(result).toMatchObject({ url: "/sign-in" });
+  });
+
+  it("still reduces a same-origin absolute callback to its path", async () => {
+    stubLocation();
+    const { signIn } = await load();
+    const result = await signIn(undefined, {
+      callbackUrl: "http://localhost/app?tab=2",
+      redirect: false,
+    });
+    expect(result).toMatchObject({ url: "/sign-in?next=%2Fapp%3Ftab%3D2" });
+  });
+
+  it("sends sign-out home when the callback would leave the origin", async () => {
+    const location = stubLocation();
+    (window as Window & { Clerk?: unknown }).Clerk = { signOut: vi.fn(async () => {}) };
+    const { signOut } = await load();
+    await signOut({ callbackUrl: "/\\evil.test" });
+    expect(location.href).toBe("/");
+  });
+
   it("ends the Clerk session through the Clerk global, then navigates", async () => {
     const location = stubLocation();
     const clerkSignOut = vi.fn(async () => {});

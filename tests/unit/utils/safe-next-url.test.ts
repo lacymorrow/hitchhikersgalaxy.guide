@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getSafeNextUrl } from "@/lib/utils/safe-next-url";
+import { getSafeNextUrl, getSafeRedirectTo } from "@/lib/utils/safe-next-url";
 
 describe("getSafeNextUrl", () => {
   it("keeps a same-origin path", () => {
@@ -51,5 +51,40 @@ describe("getSafeNextUrl", () => {
     expect(getSafeNextUrl("")).toBeNull();
     expect(getSafeNextUrl("dashboard")).toBeNull();
     expect(getSafeNextUrl("javascript:alert(1)")).toBeNull();
+  });
+});
+
+describe("getSafeRedirectTo", () => {
+  const FALLBACK = "/";
+
+  it("passes an absent value through so the callee keeps its own default", () => {
+    // AuthService.signOut spreads caller options over a home-plus-status-code
+    // default; an explicit undefined here would wipe it out.
+    expect(getSafeRedirectTo(undefined, FALLBACK)).toBeUndefined();
+    expect(getSafeRedirectTo(null, FALLBACK)).toBeUndefined();
+  });
+
+  it("keeps a same-origin path", () => {
+    expect(getSafeRedirectTo("/dashboard", FALLBACK)).toBe("/dashboard");
+    expect(getSafeRedirectTo("/?code=LOGOUT", FALLBACK)).toBe("/?code=LOGOUT");
+  });
+
+  it("falls back for anything that would leave the site", () => {
+    expect(getSafeRedirectTo("https://evil.example", FALLBACK)).toBe(FALLBACK);
+    expect(getSafeRedirectTo("//evil.example", FALLBACK)).toBe(FALLBACK);
+    expect(getSafeRedirectTo("/\\evil.example", FALLBACK)).toBe(FALLBACK);
+    expect(getSafeRedirectTo("/..//evil.example", FALLBACK)).toBe(FALLBACK);
+    expect(getSafeRedirectTo("", FALLBACK)).toBe(FALLBACK);
+  });
+
+  it("falls back for a non-string a direct action call could send", () => {
+    // A server action takes whatever JSON the caller posts, and FormData
+    // entries can be a File rather than a string.
+    expect(getSafeRedirectTo(42, FALLBACK)).toBe(FALLBACK);
+    expect(getSafeRedirectTo({ toString: () => "/dashboard" }, FALLBACK)).toBe(FALLBACK);
+  });
+
+  it("uses the caller's fallback, not a hardcoded one", () => {
+    expect(getSafeRedirectTo("https://evil.example", "/sign-in")).toBe("/sign-in");
   });
 });

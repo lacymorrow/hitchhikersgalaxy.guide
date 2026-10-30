@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo } from "react";
 import { SEARCH_PARAM_KEYS } from "@/config/search-param-keys";
 import { clerkConfig } from "@/lib/auth/clerk-config";
 import { mapClerkSession } from "@/lib/auth/session-mapping";
+import { getSafeNextUrl } from "@/lib/utils/safe-next-url";
 
 /**
  * Clerk behind the `@/lib/auth/use-session` hooks.
@@ -54,14 +55,24 @@ const navigate = (url: string) => {
   if (typeof window !== "undefined") window.location.href = url;
 };
 
-/** Same-origin paths only, so `next` cannot become an open redirect. */
+/**
+ * Same-origin paths only, so `next` cannot become an open redirect. The result
+ * is handed to `navigate`, which assigns `window.location.href`, so it has to
+ * survive URL resolution: "/\evil.com" and "//evil.com" both reach a host.
+ *
+ * An absolute URL is still accepted when it is on this origin, because
+ * `currentPage()` returns `window.location.href`, but it is reduced to a path
+ * and re-checked rather than passed through.
+ */
 const toReturnPath = (value: string | undefined): string | undefined => {
   if (!value) return undefined;
-  if (value.startsWith("/") && !value.startsWith("//")) return value;
+  const path = getSafeNextUrl(value);
+  if (path) return path;
   if (typeof window === "undefined") return undefined;
   try {
     const url = new URL(value, window.location.origin);
-    return url.origin === window.location.origin ? url.pathname + url.search + url.hash : undefined;
+    if (url.origin !== window.location.origin) return undefined;
+    return getSafeNextUrl(`${url.pathname}${url.search}${url.hash}`) ?? undefined;
   } catch {
     return undefined;
   }

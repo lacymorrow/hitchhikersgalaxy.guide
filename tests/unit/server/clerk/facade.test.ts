@@ -94,6 +94,21 @@ describe("clerk facade", () => {
       expect(clerkSignInUrl()).toBe("/sign-in");
       expect(clerkSignInUrl("/app", "signUp")).toBe("/sign-up?next=%2Fapp");
     });
+
+    // The old prefix-only check let these through as "rooted" paths. src/proxy.ts
+    // resolves the next param against the request origin, so a value the URL
+    // parser reads as a host becomes a redirect off-site there.
+    it("drops a next path that the URL parser reads as a host", async () => {
+      const { clerkSignInUrl } = await loadFacade();
+      for (const vector of ["/\\evil.test", "/\tevil.test", "/\revil.test", "/\nevil.test"]) {
+        expect(clerkSignInUrl(vector)).toBe("/sign-in");
+      }
+    });
+
+    it("drops a next path that normalizes into a protocol-relative URL", async () => {
+      const { clerkSignInUrl } = await loadFacade();
+      expect(clerkSignInUrl("/..//evil.test")).toBe("/sign-in");
+    });
   });
 
   describe("clerkSignIn", () => {
@@ -135,6 +150,14 @@ describe("clerk facade", () => {
       const { clerkSignOut } = await loadFacade();
       await expect(clerkSignOut({ redirectTo: "/bye" })).rejects.toThrow("NEXT_REDIRECT:/bye");
       expect(clerk.revokeSession).not.toHaveBeenCalled();
+    });
+
+    it("refuses a sign-out redirect that uses a backslash to reach a host", async () => {
+      clerk.auth.mockResolvedValue({ userId: "user_1", sessionId: "sess_1" });
+      const { clerkSignOut } = await loadFacade();
+      const result = await clerkSignOut({ redirectTo: "/\\evil.test", redirect: false });
+      expect(result).toEqual({ url: "/" });
+      expect(redirect).not.toHaveBeenCalled();
     });
 
     it("swallows a revoke failure and refuses an off-site redirect", async () => {

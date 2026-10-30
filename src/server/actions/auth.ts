@@ -3,14 +3,16 @@
 import { z } from "zod";
 import { createServerAction } from "zsa";
 import { BASE_URL } from "@/config/base-url";
+import { routes } from "@/config/routes";
 import { STATUS_CODES } from "@/config/status-codes";
 import { env } from "@/env";
 import { isBetterAuthActive } from "@/lib/auth/auth-strategy";
 import { resend } from "@/lib/resend";
 import { forgotPasswordSchema, resetPasswordSchema, signInActionSchema } from "@/lib/schemas/auth";
+import { getSafeRedirectTo } from "@/lib/utils/safe-next-url";
 import type { ActionState } from "@/lib/utils/validated-action";
-import { AuthService } from "@/server/services/auth-service";
 import { betterAuthCredentials } from "@/server/better-auth/facade";
+import { AuthService } from "@/server/services/auth-service";
 import type { UserRole } from "@/types/user";
 
 export interface AuthOptions {
@@ -23,6 +25,27 @@ export interface AuthOptions {
   email?: string;
 }
 
+/**
+ * Every action below is a public POST endpoint, so a `redirectTo` that arrives
+ * here has not been checked by anything, whatever the sign-in form does. The
+ * form guard is a nicety; this is the check that counts.
+ *
+ * `undefined` is passed through untouched so each callee keeps its own default
+ * (sign-out, for one, defaults to home plus a status code).
+ */
+const safeRedirectTo = (redirectTo: unknown) => getSafeRedirectTo(redirectTo, routes.home);
+
+/**
+ * Rewrites `redirectTo` in place without adding the key when it was absent:
+ * both AuthService.signInWithOAuth and AuthService.signOut spread these
+ * options over their own default, so an explicit `redirectTo: undefined`
+ * would clobber it.
+ */
+const withSafeRedirectTo = <T extends AuthOptions>(options?: T) => {
+  if (options?.redirectTo === undefined) return options;
+  return { ...options, redirectTo: safeRedirectTo(options.redirectTo) };
+};
+
 export const signInWithOAuthAction = async ({
   providerId,
   options,
@@ -30,7 +53,7 @@ export const signInWithOAuthAction = async ({
   providerId: string;
   options?: AuthOptions;
 }) => {
-  return await AuthService.signInWithOAuth(providerId, options);
+  return await AuthService.signInWithOAuth(providerId, withSafeRedirectTo(options));
 };
 
 export const signInAction = createServerAction()
@@ -41,7 +64,7 @@ export const signInAction = createServerAction()
         email: input.email,
         password: input.password,
         redirect: input.redirect ?? true,
-        redirectTo: input.redirectTo,
+        redirectTo: safeRedirectTo(input.redirectTo),
       });
       return null;
     }
@@ -49,7 +72,7 @@ export const signInAction = createServerAction()
       email: input.email,
       password: input.password,
       redirect: input.redirect,
-      redirectTo: input.redirectTo,
+      redirectTo: safeRedirectTo(input.redirectTo),
     });
     return null;
   });
@@ -71,7 +94,8 @@ export const signInWithCredentialsAction = async (input: SignInCredentialsInput)
     return { ok: false, error: "Invalid input data" };
   }
 
-  const { email, password, redirect, redirectTo } = parsed.data;
+  const { email, password, redirect } = parsed.data;
+  const redirectTo = safeRedirectTo(parsed.data.redirectTo);
 
   if (isBetterAuthActive()) {
     // Redirects throw past this action on purpose; only the non-redirect
@@ -161,7 +185,7 @@ export const signUpWithCredentialsAction = async (_prevState: ActionState, formD
 };
 
 export const signOutAction = async (options?: AuthOptions) => {
-  return await AuthService.signOut(options);
+  return await AuthService.signOut(withSafeRedirectTo(options));
 };
 
 export const forgotPasswordAction = createServerAction()

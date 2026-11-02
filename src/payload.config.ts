@@ -87,8 +87,13 @@ const config = {
   // This allows us to use the same database for Payload and the application, payload will use a different schema.
   db: postgresAdapter({
     schemaName: dbSchemaName,
+    // node-postgres defaults to 10 connections and a frozen Vercel instance never
+    // returns them, which wedges the role's CONNECTION LIMIT on projects-db.
     pool: {
       connectionString: process.env.DATABASE_URL,
+      max: 3,
+      idleTimeoutMillis: 10_000,
+      allowExitOnIdle: true,
     },
     beforeSchemaInit: [
       ({ schema, adapter }: { schema: any; adapter: any }) => {

@@ -117,7 +117,7 @@
     "@payloadcms/payload-cloud": "^3.89.0",
     "@payloadcms/richtext-lexical": "^3.89.0",
     "@payloadcms/storage-s3": "^3.89.0",
-    "@payloadcms/storage-vercel-blob": "^3.89.0",
+    "@payloadcms/storage-vercel-blob": "^3.90.0",
     "@polar-sh/nextjs": "^0.9.6",
     "@polar-sh/sdk": "^0.43.1",
     "@qwik.dev/partytown": "^0.11.2",

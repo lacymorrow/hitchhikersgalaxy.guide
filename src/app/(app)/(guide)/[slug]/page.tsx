@@ -3,9 +3,10 @@ import { Link } from "@/components/primitives/link-with-transition";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { pageMetadata } from "@/config/metadata";
+import { siteConfig } from "@/config/site";
 import { checkRawShape } from "@/lib/guide-gate";
 import { GuideUnavailableError, guideReadOr } from "@/lib/guide-read";
-import { guideEntryPath, guideEntrySeo } from "@/lib/seo";
+import { guideEntryArticleJsonLd, guideEntryPath, guideEntrySeo } from "@/lib/seo";
 import { normalizeSlug } from "@/lib/utils";
 import { searchGuide } from "@/server/actions/guide-search";
 import type { GuideCrossReference as GuideCrossReferenceSchemaType, GuideEntry as GuideEntrySchemaType } from "@/server/db/schema";
@@ -302,8 +303,17 @@ export default async function GuidePage({
         permanentRedirect(guideEntryPath(entry.searchTerm));
     }
 
+    const articleJsonLd = guideEntryArticleJsonLd(siteConfig.url, entry);
+
     return (
         <div className="container relative min-h-screen max-w-4xl py-6 lg:py-10">
+            <script
+                type="application/ld+json"
+                // Escape "<" so entry text can never close the script tag.
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(articleJsonLd).replace(/</g, "\\u003c"),
+                }}
+            />
             <GuideEntry entry={entry} />
         </div>
     );

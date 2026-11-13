@@ -80,3 +80,36 @@ export function guideEntrySeo(name: string): GuideEntrySeo {
     description,
   };
 }
+
+/**
+ * Article structured data for a guide entry (Ahrefs: 209 entry pages missing
+ * Article schema, LAC-7441). `@id` is per-URL so it never collides with the
+ * site-wide graph in the root layout.
+ */
+export function guideEntryArticleJsonLd(
+  baseUrl: string,
+  entry: { searchTerm: string; createdAt?: Date | null; updatedAt?: Date | null },
+) {
+  const url = `${baseUrl}${guideEntryPath(entry.searchTerm)}`;
+  const name = entry.searchTerm.replace(/-/g, " ");
+  const { displayTitle, description } = guideEntrySeo(name.replace(/\b\w/g, (c) => c.toUpperCase()));
+  const published = entry.createdAt ?? entry.updatedAt ?? null;
+  const modified = entry.updatedAt ?? published;
+
+  return {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "@id": `${url}#article`,
+    headline: clampAtWord(displayTitle, 110),
+    description,
+    url,
+    mainEntityOfPage: { "@type": "WebPage", "@id": url },
+    image: `${baseUrl}/opengraph-image.png`,
+    ...(published && { datePublished: published.toISOString() }),
+    ...(modified && { dateModified: modified.toISOString() }),
+    author: { "@id": `${baseUrl}/#organization` },
+    publisher: { "@id": `${baseUrl}/#organization` },
+    isPartOf: { "@id": `${baseUrl}/#website` },
+    inLanguage: "en-US",
+  };
+}

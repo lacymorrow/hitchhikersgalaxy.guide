@@ -57,14 +57,6 @@ bun start              # Start production server
 bun run analyze        # Analyze bundle size
 ```
 
-### Registry
-
-```bash
-bun run build:registry # Build shadcn registry (npx shadcn build)
-```
-
-Source: `registry.json` (project root). Output: `public/r/*.json`. See `docs/features/registry.mdx` for full documentation.
-
 ### Doctor
 
 ```bash

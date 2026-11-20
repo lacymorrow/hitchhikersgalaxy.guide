@@ -9,6 +9,15 @@ import { allowGuideCreation } from "@/server/services/guide-generation-limit";
 import { guideService } from "@/server/services/guide-service";
 
 
+/**
+ * OpenAI retires pinned snapshots. `gpt-4-1106-preview` was shut off and every
+ * request for a term without a stored entry started answering 404
+ * `model_not_found`, which this file reports as `unavailable`, so each new term
+ * served a 5xx (LAC-5888). Use a maintained alias and let an env var move it
+ * without a deploy of code.
+ */
+const GUIDE_MODEL = process.env.GUIDE_OPENAI_MODEL || "gpt-4o-mini";
+
 const generateGuideEntry = async (searchTerm: string) => {
 	if (!openai) {
 		throw new Error("OpenAI API key is not set.");
@@ -31,7 +40,7 @@ Format your response as a JSON object with the following structure:
 Keep the total length under 400 words. Make it entertaining and informative, with that distinctive Douglas Adams style of mixing profound observations with complete nonsense.`;
 
 	const completion = await openai.chat.completions.create({
-		model: "gpt-4-1106-preview",
+		model: GUIDE_MODEL,
 		messages: [
 			{
 				role: "system",
@@ -46,42 +55,25 @@ Keep the total length under 400 words. Make it entertaining and informative, wit
 		temperature: 0.9,
 		max_tokens: 800,
 		response_format: { type: "json_object" },
-		functions: [
-			{
-				name: "create_guide_entry",
-				parameters: {
-					type: "object",
-					properties: {
-						content: { type: "string" },
-						travelAdvice: { type: "string" },
-						whereToFind: { type: "string" },
-						whatToAvoid: { type: "string" },
-						funFact: { type: "string" },
-						advertisement: { type: "string" },
-						reliability: { type: "integer", minimum: 0, maximum: 100 },
-						dangerLevel: { type: "integer", minimum: 0, maximum: 100 },
-					},
-					required: [
-						"content",
-						"travelAdvice",
-						"whereToFind",
-						"whatToAvoid",
-						"funFact",
-						"advertisement",
-						"reliability",
-						"dangerLevel",
-					],
-				},
-			},
-		],
 	});
 
-	const response = completion.choices[0]?.message?.function_call?.arguments;
+	const response = completion.choices[0]?.message?.content;
 	if (!response) {
 		throw new Error("Failed to generate guide entry");
 	}
 
-	return JSON.parse(response);
+	// The old function schema forced integers. JSON mode only asks nicely, so
+	// coerce here: a "75" or 82.5 would otherwise fail the integer column.
+	const entry = JSON.parse(response);
+	const toScore = (value: unknown, fallback: number) => {
+		const n = Math.round(Number(value));
+		return Number.isFinite(n) ? Math.min(100, Math.max(0, n)) : fallback;
+	};
+	return {
+		...entry,
+		reliability: toScore(entry.reliability, 42),
+		dangerLevel: toScore(entry.dangerLevel, 0),
+	};
 };
 
 /**

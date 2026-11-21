@@ -48,7 +48,7 @@ const generated = {
 };
 
 const completion = {
-  choices: [{ message: { function_call: { arguments: JSON.stringify(generated) } } }],
+  choices: [{ message: { content: JSON.stringify(generated) } }],
 };
 
 const entry = { id: 1, searchTerm: "towel", ...generated };
@@ -100,6 +100,19 @@ describe("searchGuide", () => {
     expect(result).toMatchObject({ success: true, status: "ok" });
     expect(mocks.create).toHaveBeenCalledTimes(1);
     expect(mocks.createEntry).toHaveBeenCalledTimes(1);
+  });
+
+  it("asks for a model OpenAI still serves and coerces scores to integers", async () => {
+    mocks.findExistingEntry.mockResolvedValue({ status: "ok", data: null });
+    mocks.create.mockResolvedValue({
+      choices: [{ message: { content: JSON.stringify({ ...generated, reliability: "75", dangerLevel: 8.6 }) } }],
+    });
+    await searchGuide("towel", true);
+    // gpt-4-1106-preview was retired and every new term then served a 5xx (LAC-5888).
+    expect(mocks.create.mock.calls[0][0].model).not.toBe("gpt-4-1106-preview");
+    expect(mocks.createEntry).toHaveBeenCalledWith(
+      expect.objectContaining({ reliability: 75, dangerLevel: 9 }),
+    );
   });
 
   it("reports a refused term as not found, without generating", async () => {

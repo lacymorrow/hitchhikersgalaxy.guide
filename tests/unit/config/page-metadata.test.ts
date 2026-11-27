@@ -1,7 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { pageMetadata } from "@/config/metadata";
+import { defaultMetadata, pageMetadata } from "@/config/metadata";
 import { siteConfig } from "@/config/site";
 import { guideEntryPath, guideEntrySeo } from "@/lib/seo";
 
@@ -17,6 +17,14 @@ import { guideEntryPath, guideEntrySeo } from "@/lib/seo";
  *    declaring a page-level `openGraph` dropped the layout's image, site name
  *    and locale.
  */
+describe("defaultMetadata", () => {
+  // Both rendered a <link rel> to a route this site does not have (LAC-7441).
+  it("emits no archives or assets links", () => {
+    expect(defaultMetadata.archives).toBeUndefined();
+    expect(defaultMetadata.assets).toBeUndefined();
+  });
+});
+
 describe("pageMetadata", () => {
   const paths = ["/", "/browse", "/popular", "/about", "/travel-guide", "/contact", "/legal"];
 

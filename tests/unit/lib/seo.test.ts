@@ -96,3 +96,19 @@ describe("dedupeGuideEntries", () => {
     expect(dedupeGuideEntries([{ searchTerm: "  ", updatedAt: null }])).toEqual([]);
   });
 });
+
+describe("guideEntryArticleJsonLd", () => {
+  it("builds a per-URL Article with ISO dates", async () => {
+    const { guideEntryArticleJsonLd } = await import("@/lib/seo");
+    const ld = guideEntryArticleJsonLd("https://example.test", {
+      searchTerm: "vogon-poetry",
+      createdAt: new Date("2026-01-02T00:00:00Z"),
+      updatedAt: new Date("2026-02-03T00:00:00Z"),
+    });
+    expect(ld["@type"]).toBe("Article");
+    expect(ld["@id"]).toBe("https://example.test/vogon-poetry#article");
+    expect(ld.headline).toContain("Vogon Poetry");
+    expect(ld.datePublished).toBe("2026-01-02T00:00:00.000Z");
+    expect(ld.dateModified).toBe("2026-02-03T00:00:00.000Z");
+  });
+});

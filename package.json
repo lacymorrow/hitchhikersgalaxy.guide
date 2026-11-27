@@ -391,7 +391,6 @@
       "geckodriver",
       "isolated-vm",
       "msw",
-      "onnxruntime-node",
       "protobufjs",
       "puppeteer",
       "sharp",

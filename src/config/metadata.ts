@@ -111,8 +111,6 @@ export const defaultMetadata: Metadata = {
 			should_fallback: true,
 		},
 	},
-	archives: [`${siteConfig.url}/blog`],
-	assets: [`${siteConfig.url}/assets`],
 	bookmarks: [`${siteConfig.url}/`],
 	category: "technology",
 	classification: "Business Software",
